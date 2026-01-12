@@ -49,6 +49,8 @@ export const DLOBulkSchedule = ({
 }) => {
     const defaultFormValues = {
         schedule_status: true,
+        schedule_start_date: moment.tz('Australia/Brisbane').format('YYYY-MM-DD'),
+        schedule_end_date: moment.tz('Australia/Brisbane').format('YYYY-MM-DD'),
     };
     const [viewOnly, setViewOnly] = React.useState(false);
 
@@ -343,7 +345,7 @@ export const DLOBulkSchedule = ({
         const defaultDate = moment.tz('Australia/Brisbane').startOf('day');
         const newStart = formValues?.schedule_start_date
             ? moment.tz(formValues.schedule_start_date, 'YYYY-MM-DD', 'Australia/Brisbane')
-            : defaultDate;
+            : /* istanbul ignore next */ defaultDate;
         const newEnd = formValues?.schedule_end_date
             ? moment.tz(formValues.schedule_end_date, 'YYYY-MM-DD', 'Australia/Brisbane')
             : /* istanbul ignore next */ defaultDate;
@@ -466,7 +468,7 @@ export const DLOBulkSchedule = ({
                             value={
                                 formValues?.schedule_start_date
                                     ? moment.tz(formValues.schedule_start_date, 'YYYY-MM-DD', 'Australia/Brisbane')
-                                    : moment.tz('Australia/Brisbane')
+                                    : /* istanbul ignore next */ moment.tz('Australia/Brisbane')
                             }
                             onChange={handleDateChange('schedule_start_date')}
                             minDate={moment().subtract(12, 'months')}
@@ -485,7 +487,7 @@ export const DLOBulkSchedule = ({
                             value={
                                 formValues?.schedule_end_date
                                     ? moment.tz(formValues.schedule_end_date, 'YYYY-MM-DD', 'Australia/Brisbane')
-                                    : moment.tz('Australia/Brisbane')
+                                    : /* istanbul ignore next */ moment.tz('Australia/Brisbane')
                             }
                             onChange={handleDateChange('schedule_end_date')}
                             format="DD/MM/YYYY"
@@ -683,11 +685,11 @@ export const DLOBulkSchedule = ({
                         {`Effective from ${
                             formValues?.schedule_start_date
                                 ? moment.tz(formValues.schedule_start_date, 'Australia/Brisbane').format('DD/MM/YYYY')
-                                : defaultDate.format('DD/MM/YYYY')
+                                : /* istanbul ignore next */ defaultDate.format('DD/MM/YYYY')
                         } to ${
                             formValues?.schedule_end_date
                                 ? moment.tz(formValues.schedule_end_date, 'Australia/Brisbane').format('DD/MM/YYYY')
-                                : defaultDate.format('DD/MM/YYYY')
+                                : /* istanbul ignore next */ defaultDate.format('DD/MM/YYYY')
                         } — Featured`}
                     </Typography>
                     {formMessage && (
@@ -777,8 +779,8 @@ export const DLOBulkSchedule = ({
                                     setIsEditBoxOpened(false);
                                     setViewOnly(false);
                                     setFormValues(defaultFormValues);
-                                    // setScheduleItems([]);
-                                    // setEditingScheduleId(null);
+                                    setScheduleItems([]);
+                                    setEditingScheduleId(null);
                                 }}
                                 data-testid="schedule-close-button"
                             >
