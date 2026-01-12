@@ -8,9 +8,17 @@ import Popper from '@mui/material/Popper';
 
 const rootId = 'label_printer_selector';
 
-const LabelPrinterSelector = async ({ id, list, value, onChange, disabled, classNames }) => {
+const LabelPrinterSelector = ({ id, list, value, onChange, disabled, disableUnknownPrinters, classNames }) => {
     const componentId = `${rootId}-${id}`;
-
+    console.log('LabelPrinterSelector Rendered with props:', {
+        id,
+        list,
+        value,
+        onChange,
+        disabled,
+        disableUnknownPrinters,
+        classNames,
+    });
     const customPopper = props => (
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
     );
@@ -23,10 +31,13 @@ const LabelPrinterSelector = async ({ id, list, value, onChange, disabled, class
                 className={classNames?.autocomplete}
                 fullWidth
                 options={list ?? /* istanbul ignore next */ []}
-                value={value ?? null}
+                value={value ? list.find(option => option.name === value) : null}
                 onChange={onChange}
-                getOptionLabel={option => option.name ?? /* istanbul ignore next */ null}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={option => (option.noconfig ? `${option.name} (Unknown)` : option.name)}
+                {...(disableUnknownPrinters && {
+                    getOptionDisabled: option => option.noconfig === true,
+                })}
+                isOptionEqualToValue={(option, value) => option.name === value}
                 autoHighlight
                 renderInput={params => (
                     <TextField
@@ -53,7 +64,8 @@ LabelPrinterSelector.propTypes = {
     list: PropTypes.array,
     onChange: PropTypes.func,
     disabled: PropTypes.bool,
-    value: PropTypes.object,
+    disableUnknownPrinters: PropTypes.bool,
+    value: PropTypes.string,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
 };
 

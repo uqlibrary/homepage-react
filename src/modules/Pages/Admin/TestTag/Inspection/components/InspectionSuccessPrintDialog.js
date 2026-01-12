@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -30,13 +30,17 @@ export const InspectionSuccessPrintDialog = ({
     noMinContentWidth = true,
     disableButtonsWhenBusy = true,
     isBusy = false,
-    printer = null,
     onPrint = null,
     onClose = null,
     onPrinterSelectionChange = null,
+    printerPreference = null,
+    availablePrinters = [],
+    shouldDisableUnknownPrinters = false,
+    forcePrinterSelection = false,
 }) => {
-    const [availablePrinters, setAvailablePrinters] = useState([]);
+    console.log('InspectionSuccessPrintDialog Rendered with props:', availablePrinters, forcePrinterSelection);
     const _onPrint = () => {
+        console.log('Print button clicked');
         onPrint?.();
     };
 
@@ -44,19 +48,11 @@ export const InspectionSuccessPrintDialog = ({
         onClose?.();
     };
 
-    const _onPrinterSelectionChange = event => {
-        onPrinterSelectionChange?.(event);
+    const _onPrinterSelectionChange = (event, newValue) => {
+        console.log('Printer selection changed:', newValue.name);
+        onPrinterSelectionChange?.(newValue.name);
     };
 
-    useEffect(() => {
-        const enumerateAvailablePrinters = async () => {
-            const printers = await printer.getAvailablePrinters();
-            setAvailablePrinters(printers);
-            console.log('Available Printers:', printers);
-        };
-
-        enumerateAvailablePrinters();
-    }, [printer]);
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${inspectionSuccessPrintDialogId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
@@ -89,14 +85,14 @@ export const InspectionSuccessPrintDialog = ({
                             onClick={_onPrint}
                             id="confirm-alternate-action"
                             data-testid={`confirm-alternate-${inspectionSuccessPrintDialogId}`}
-                            disabled={disableButtonsWhenBusy && isBusy}
+                            disabled={forcePrinterSelection || (disableButtonsWhenBusy && isBusy)}
                         >
                             Print Tag
                         </StyledSecondaryButton>
                     </Grid>
                 </Grid>
             </DialogActions>
-            <Accordion>
+            <Accordion {...(forcePrinterSelection && { expanded: true })}>
                 <AccordionSummary
                     expandIcon={<ArrowDownwardIcon />}
                     aria-controls="printer-selector-content"
@@ -108,8 +104,9 @@ export const InspectionSuccessPrintDialog = ({
                     <LabelPrinterSelector
                         id={inspectionSuccessPrintDialogId}
                         list={availablePrinters}
-                        value={availablePrinters?.[0] ?? null}
+                        value={printerPreference}
                         onChange={_onPrinterSelectionChange}
+                        disableUnknownPrinters={shouldDisableUnknownPrinters}
                     />
                 </AccordionDetails>
             </Accordion>
@@ -136,10 +133,13 @@ InspectionSuccessPrintDialog.propTypes = {
     disableButtonsWhenBusy: PropTypes.bool,
     isBusy: PropTypes.bool,
     autoFocusPrimaryButton: PropTypes.bool,
-    printer: PropTypes.object,
+    printerPreference: PropTypes.string,
+    availablePrinters: PropTypes.array,
     onPrint: PropTypes.func,
     onClose: PropTypes.func,
     onPrinterSelectionChange: PropTypes.func,
+    shouldDisableUnknownPrinters: PropTypes.bool,
+    forcePrinterSelection: PropTypes.bool,
 };
 
 export default React.memo(InspectionSuccessPrintDialog);

@@ -40,7 +40,7 @@ export const createPrinter = () => {
     const code = 'emulator';
 
     const getAvailablePrinters = async () => {
-        return await [printerDescriptor];
+        return await [printerDescriptor, { ...printerDescriptor, name: 'Unregistered Printer' }];
     };
 
     const getDefaultPrinter = async () => {
@@ -56,6 +56,7 @@ export const createPrinter = () => {
     };
 
     const setPrinter = async selectedPrinter => {
+        console.log('Selected printer set to:', selectedPrinter);
         return await selectedPrinter;
     };
 

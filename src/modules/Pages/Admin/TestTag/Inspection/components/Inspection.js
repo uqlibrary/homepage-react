@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { styled } from '@mui/material/styles';
@@ -163,6 +163,7 @@ const Inspection = ({
     saveInspectionError,
     saveAssetTypeSaving,
     saveAssetTypeError,
+    saveInspectionSuccess: successData,
 }) => {
     const isDevEnvironment = isDevEnv();
     const isTestEnvironment = isTest();
@@ -173,7 +174,9 @@ const Inspection = ({
     const { user } = useAccountUser();
     const deptPrinterDefault = getDefaultDeptPrinter(user?.user_department);
     const deptPrintingEnabled = getDeptLabelPrintingEnabled(user?.user_department);
-    const { printer } = useLabelPrinter({ printerCode: shouldUsePrinterEmulator ? 'emulator' : deptPrinterDefault });
+    const { printer, printerPreference, availablePrinters, setPrinterPreference } = useLabelPrinter({
+        printerCode: shouldUsePrinterEmulator ? 'emulator' : deptPrinterDefault,
+    });
 
     const inspectionLocale = locale.pages.inspect;
 
@@ -227,12 +230,6 @@ const Inspection = ({
     });
 
     const { location, setLocation } = useLocation();
-
-    // useEffect(() => {
-    //     if (!!saveInspectionSuccess) {
-    //         showSaveSuccessConfirmation();
-    //     }
-    // }, [saveInspectionSuccess, showSaveSuccessConfirmation]);
 
     const [inView, setInView] = React.useState(false);
 
@@ -291,23 +288,36 @@ const Inspection = ({
         }
     };
 
-    const printTagAction = async (printer, data) => {
+    const printTagAction = useCallback(async () => {
+        if (!printerPreference) {
+            console.error('No printer selected');
+            return;
+        }
+        if (!successData) {
+            console.error('No inspection data available for printing');
+            return;
+        }
         try {
+            console.log('Preparing to print label with printer / preference:', printer, printerPreference);
             printer
-                ?.selectDefaultPrinter()
-                .then(defaultPrinter => {
-                    console.log('Using default printer:', defaultPrinter);
+                ?.setPrinter(printerPreference)
+                .then(selectedPrinter => {
+                    console.log('Using  printer:', selectedPrinter);
                     console.log(printer.debug());
                     printer.getConnectionStatus().then(status => {
                         console.log('Printer connection status:', status);
                         if (status.ready) {
-                            const template = LabelPrinterTemplate['GK888t (EPL) (19J153101586)'].template({
+                            const template = LabelPrinterTemplate?.[selectedPrinter]?.template({
                                 logo: LabelLogo,
-                                userId: data.user_licence_number,
-                                assetId: data.asset_id_displayed,
-                                testDate: data.action_date,
-                                dueDate: data.asset_next_test_due_date,
+                                userId: successData.user_licence_number,
+                                assetId: successData.asset_id_displayed,
+                                testDate: successData.action_date,
+                                dueDate: successData.asset_next_test_due_date,
                             });
+                            if (!template) {
+                                console.error('No template found for printer:', selectedPrinter);
+                                return;
+                            }
                             printer
                                 .print(template)
                                 .then(() => console.log('Print job sent'))
@@ -323,16 +333,8 @@ const Inspection = ({
         } catch (error) {
             console.error('Printing error:', error);
         }
-    };
-
-    // this stuff above and bleow needs changing once the printer dialog is ready
-    // const [successDialogLocale, additionalConfirmBoxProps] = React.useMemo(() => {
-    //     const { configLocale, additionalConfirmBoxProps = {} } = getSuccessDialog(
-    //         saveInspectionSuccess,
-    //         inspectionLocale,
-    //     );
-    //     return [configLocale, additionalConfirmBoxProps];
-    // }, [inspectionLocale, saveInspectionSuccess]);
+    }, [printer, printerPreference, successData]);
+    console.log(printerPreference);
 
     return (
         <StandardAuthPage
@@ -362,6 +364,11 @@ const Inspection = ({
                     isOpen={isPrinterSaveSuccessDialogOpen}
                     locale={successDialogLocale}
                     noMinContentWidth
+                    shouldDisableUnknownPrinters
+                    printerPreference={printerPreference}
+                    onPrinterSelectionChange={setPrinterPreference}
+                    availablePrinters={availablePrinters}
+                    forcePrinterSelection={!!!printerPreference}
                 />
                 <EventPanel
                     id={componentId}
