@@ -95,6 +95,7 @@ test.describe('Digital Learning Hub', () => {
             await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
             await page.getByTestId('pending-schedule-edit-button-0').click();
             await page.getByTestId('schedule-close-button').click();
+            await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
             await page.getByTestId('pending-schedule-edit-button-0').click();
             await page.getByTestId('add-schedule-item-0').click();
             await page.getByTestId('modal-save-button').click();
