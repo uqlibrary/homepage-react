@@ -91,6 +91,7 @@ test.describe('Digital Learning Hub', () => {
                 'Schedule saved successfully',
             );
         });
+
         test('can view a running schedule', async ({ page }) => {
             await page.locator('[data-testid="running-schedule-expand"] > svg').click();
             await page.getByTestId('running-schedule-edit-button-0').click();
@@ -100,6 +101,15 @@ test.describe('Digital Learning Hub', () => {
         test('can edit existing schedule', async ({ page }) => {
             await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
             await page.getByTestId('pending-schedule-edit-button-0').click();
+            await expect(page.getByTestId('add-schedule-item-0')).toHaveAttribute(
+                'aria-label',
+                'Add Advanced literature searching to schedule',
+            );
+            await page.getByTestId('dlor-search-input').fill('Blak');
+            await expect(page.getByTestId('add-schedule-item-0')).toHaveAttribute(
+                'aria-label',
+                'Add UQ has a Blak History to schedule',
+            );
             await page.getByTestId('schedule-close-button').click();
             await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
             await page.getByTestId('pending-schedule-edit-button-0').click();
