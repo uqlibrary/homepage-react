@@ -835,7 +835,7 @@ export const DLOBulkSchedule = ({
                                                             si => si.object_public_uuid === item.object_public_uuid,
                                                         ) &&
                                                         (!dlorSearch ||
-                                                            (item.object_title || '')
+                                                            item.object_title
                                                                 .toLowerCase()
                                                                 .includes(dlorSearch.toLowerCase())),
                                                 )
