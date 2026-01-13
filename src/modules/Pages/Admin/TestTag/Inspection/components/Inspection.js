@@ -291,21 +291,19 @@ const Inspection = ({
     const printTagAction = useCallback(async () => {
         if (!printerPreference) {
             console.error('No printer selected');
+            openConfirmationAlert(locale.pages.general.labelPrinting.error.noPrinterSelected, 'error');
             return;
         }
         if (!successData) {
             console.error('No inspection data available for printing');
+            openConfirmationAlert(locale.pages.general.labelPrinting.error.noLabelData, 'error');
             return;
         }
         try {
-            console.log('Preparing to print label with printer / preference:', printer, printerPreference);
             printer
                 ?.setPrinter(printerPreference)
                 .then(selectedPrinter => {
-                    console.log('Using  printer:', selectedPrinter);
-                    console.log(printer.debug());
                     printer.getConnectionStatus().then(status => {
-                        console.log('Printer connection status:', status);
                         if (status.ready) {
                             const template = LabelPrinterTemplate?.[selectedPrinter]?.template({
                                 logo: LabelLogo,
@@ -316,25 +314,31 @@ const Inspection = ({
                             });
                             if (!template) {
                                 console.error('No template found for printer:', selectedPrinter);
+                                openConfirmationAlert(
+                                    locale.pages.general.labelPrinting.error.noLabelTemplate,
+                                    'error',
+                                );
                                 return;
                             }
-                            printer
-                                .print(template)
-                                .then(() => console.log('Print job sent'))
-                                .catch(error => console.error('Print job error:', error));
+                            printer.print(template).catch(error => {
+                                openConfirmationAlert(locale.pages.general.labelPrinting.error.printJobError, 'error');
+                                console.error('Print job error:', error);
+                            });
                         } else {
+                            openConfirmationAlert(locale.pages.general.labelPrinting.error.printerNotReady, 'error');
                             throw new Error('Printer is not ready: ' + JSON.stringify(status.errors));
                         }
                     });
                 })
                 .catch(error => {
+                    openConfirmationAlert(locale.pages.general.labelPrinting.error.noConnection, 'error');
                     console.error('Printer connection error:', error);
                 });
         } catch (error) {
+            openConfirmationAlert(locale.pages.general.labelPrinting.error.uncaughtException, 'error');
             console.error('Printing error:', error);
         }
-    }, [printer, printerPreference, successData]);
-    console.log(printerPreference);
+    }, [openConfirmationAlert, printer, printerPreference, successData]);
 
     return (
         <StandardAuthPage
@@ -363,7 +367,6 @@ const Inspection = ({
                     onClose={hideSuccessMessage}
                     isOpen={isPrinterSaveSuccessDialogOpen}
                     locale={successDialogLocale}
-                    noMinContentWidth
                     shouldDisableUnknownPrinters
                     printerPreference={printerPreference}
                     onPrinterSelectionChange={setPrinterPreference}
@@ -394,7 +397,6 @@ const Inspection = ({
                     saveAssetTypeSaving={saveAssetTypeSaving}
                     isMobileView={isMobileView}
                     canAddAssetType
-                    confirmationAlert={confirmationAlert}
                     openConfirmationAlert={openConfirmationAlert}
                     closeConfirmationAlert={closeConfirmationAlert}
                 />

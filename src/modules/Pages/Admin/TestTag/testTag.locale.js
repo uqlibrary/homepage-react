@@ -111,6 +111,18 @@ export default {
                     {count > 1 ? 's' : ''}
                 </>
             ),
+            labelPrinting: {
+                error: {
+                    noPrinterSelected: 'No printer selected to print label.',
+                    noLabelData: 'No label data available to print.',
+                    noLabelTemplate: 'No label template found for the selected printer.',
+                    noConnection:
+                        'Unable to connect to the selected printer. Please check the printer connection and try again.',
+                    printerNotReady: 'The selected printer is not ready. Please check the printer and try again.',
+                    printJobError: 'An error occurred while sending the print job. Please try again.',
+                    uncaughtException: 'An unexpected error occurred during the printing process.',
+                },
+            },
         },
         dashboard: {
             header: {
@@ -390,6 +402,11 @@ export default {
                     outOfService: 'OUT OF SERVICE',
                     tagPlacedBy: 'TAG PLACED BY:',
                 },
+            },
+            labelPrinting: {
+                unknownPrinter: 'Unconfigured',
+                selectPrinter: 'Label Printer Selection',
+                printButton: 'Print Tag',
             },
         },
         manage: {

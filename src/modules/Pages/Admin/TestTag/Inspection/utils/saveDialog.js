@@ -11,7 +11,7 @@ const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 export const savedDialogMessages = {
     [testStatusEnum.CURRENT.value]: (data, locale) => (
-        <Grid container item xs={12} sm={6} alignItems="center" className={'dialogContainer dialogPassedContainer'}>
+        <Grid container item xs={12} sm={8} alignItems="center" className={'dialogContainer dialogPassedContainer'}>
             <Grid item xs={12} className={'dialogTitle dialogSuccessTitle'} variant="subtitle1">
                 <Typography gutterBottom id="saved-asset-id" data-testid="saved-licence-number">
                     <span id="saved-licence-number-label" data-testid="saved-licence-number-label">
@@ -55,7 +55,7 @@ export const savedDialogMessages = {
         </Grid>
     ),
     other: (data, locale) => (
-        <Grid container item xs={12} sm={6} alignItems="center" className={'dialogContainer dialogFailedContaine'}>
+        <Grid container item xs={12} sm={8} alignItems="center" className={'dialogContainer dialogFailedContaine'}>
             <Grid item xs={12} className={'dialogTitle dialogFailedTitle'}>
                 <Typography gutterBottom variant="h4" id="saved-title-label" data-testid="saved-title-label">
                     {locale.outOfService}

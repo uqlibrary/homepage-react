@@ -14,8 +14,12 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
+import inspectLocale from 'modules/Pages/Admin/TestTag/testTag.locale';
+
 import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 import LabelPrinterSelector from '../../SharedComponents/LabelPrinter/LabelPrinterSelector';
+
+const MIN_CONTENT_WIDTH = 400;
 
 export const InspectionSuccessPrintDialog = ({
     inspectionSuccessPrintDialogId,
@@ -27,7 +31,7 @@ export const InspectionSuccessPrintDialog = ({
         confirmButtonLabel: 'Yes',
         alternateActionButtonLabel: 'Cancel',
     },
-    noMinContentWidth = true,
+    noMinContentWidth = false,
     disableButtonsWhenBusy = true,
     isBusy = false,
     onPrint = null,
@@ -38,9 +42,14 @@ export const InspectionSuccessPrintDialog = ({
     shouldDisableUnknownPrinters = false,
     forcePrinterSelection = false,
 }) => {
-    console.log('InspectionSuccessPrintDialog Rendered with props:', availablePrinters, forcePrinterSelection);
+    const [expanded, setExpanded] = React.useState(forcePrinterSelection);
+    const inspectionLocale = inspectLocale.pages.inspect;
+
+    const handleExpand = (event, isExpanded) => {
+        setExpanded(isExpanded);
+    };
+
     const _onPrint = () => {
-        console.log('Print button clicked');
         onPrint?.();
     };
 
@@ -49,20 +58,19 @@ export const InspectionSuccessPrintDialog = ({
     };
 
     const _onPrinterSelectionChange = (event, newValue) => {
-        console.log('Printer selection changed:', newValue.name);
         onPrinterSelectionChange?.(newValue.name);
     };
 
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${inspectionSuccessPrintDialogId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
-            <DialogContent style={{ minWidth: !noMinContentWidth ? 400 : 'auto' }}>
+            <DialogContent style={{ maxWidth: !noMinContentWidth ? MIN_CONTENT_WIDTH : 'auto' }}>
                 <DialogContentText data-testid="message-content" component="div">
                     {locale.confirmationMessage}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Grid container spacing={1} justifyContent="space-between">
+                <Grid container spacing={1} padding={2} justifyContent="space-between">
                     <Hidden smDown>
                         <Grid item xs />
                     </Hidden>
@@ -81,24 +89,25 @@ export const InspectionSuccessPrintDialog = ({
                     <Grid item xs={12} sm={'auto'}>
                         <StyledSecondaryButton
                             variant={'contained'}
-                            fullWidth
                             onClick={_onPrint}
                             id="confirm-alternate-action"
                             data-testid={`confirm-alternate-${inspectionSuccessPrintDialogId}`}
                             disabled={forcePrinterSelection || (disableButtonsWhenBusy && isBusy)}
                         >
-                            Print Tag
+                            {inspectionLocale.labelPrinting.printButton}
                         </StyledSecondaryButton>
                     </Grid>
                 </Grid>
             </DialogActions>
-            <Accordion {...(forcePrinterSelection && { expanded: true })}>
+            <Accordion expanded={forcePrinterSelection || expanded} onChange={handleExpand}>
                 <AccordionSummary
                     expandIcon={<ArrowDownwardIcon />}
                     aria-controls="printer-selector-content"
                     id="printerSelectorContainer"
                 >
-                    <Typography>Label Printer Settings</Typography>
+                    <Typography sx={{ color: theme => (forcePrinterSelection ? theme.palette.error.main : 'inherit') }}>
+                        {inspectionLocale.labelPrinting.selectPrinter}
+                    </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <LabelPrinterSelector
@@ -107,6 +116,8 @@ export const InspectionSuccessPrintDialog = ({
                         value={printerPreference}
                         onChange={_onPrinterSelectionChange}
                         disableUnknownPrinters={shouldDisableUnknownPrinters}
+                        locale={inspectionLocale.labelPrinting}
+                        error={forcePrinterSelection}
                     />
                 </AccordionDetails>
             </Accordion>

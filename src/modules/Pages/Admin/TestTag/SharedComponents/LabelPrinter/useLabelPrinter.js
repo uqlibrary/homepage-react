@@ -26,7 +26,6 @@ const useLabelPrinter = ({ printerCode = 'zebra', shouldDisableUnknownPrinters =
     useEffect(() => {
         const getAvailablePrinters = async () => {
             const allPrinterList = (await printerInstance?.getAvailablePrinters()) || null;
-            console.log('Available Printers:', allPrinterList);
             if (!allPrinterList) return [];
             if (shouldDisableUnknownPrinters) {
                 allPrinterList.forEach(
