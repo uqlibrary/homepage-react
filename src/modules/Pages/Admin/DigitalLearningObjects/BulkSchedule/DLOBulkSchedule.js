@@ -311,7 +311,7 @@ export const DLOBulkSchedule = ({
                 .format('YYYY-MM-DD'),
             schedule_status: schedule.schedule_status,
         };
-
+        setDlorSearch('');
         setFormValues(fv);
         setScheduleItems(getItemsFromSchedule(schedule));
         setEditingScheduleId(schedule.schedule_id);
@@ -408,13 +408,14 @@ export const DLOBulkSchedule = ({
                 setFormValues(defaultFormValues);
                 setScheduleItems([]);
                 setEditingScheduleId(null);
-
+                setDlorSearch('');
                 setIsAlertOpen(true);
             })
             .catch(err => {
                 const msg = err && err.message;
                 setFormMessage(msg);
                 setIsAlertOpen(true);
+                setDlorSearch('');
                 console.error('Schedule save error', err);
             });
     };
@@ -783,6 +784,7 @@ export const DLOBulkSchedule = ({
                                     setFormValues(defaultFormValues);
                                     setScheduleItems([]);
                                     setEditingScheduleId(null);
+                                    setDlorSearch('');
                                 }}
                                 data-testid="schedule-close-button"
                             >
@@ -886,6 +888,7 @@ export const DLOBulkSchedule = ({
                                                 setScheduleItems([]);
                                                 setEditingScheduleId(null);
                                                 setIsEditBoxOpened(false);
+                                                setDlorSearch('');
                                             }}
                                             data-testid="schedule-close-button"
                                         >
