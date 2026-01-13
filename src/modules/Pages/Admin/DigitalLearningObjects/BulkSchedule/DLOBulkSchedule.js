@@ -152,6 +152,8 @@ export const DLOBulkSchedule = ({
         </Accordion>
     );
     const [formValues, setFormValues] = React.useState(defaultFormValues);
+    // Search state for dlorList filtering
+    const [dlorSearch, setDlorSearch] = React.useState('');
     const [isEditBoxOpened, setIsEditBoxOpened] = React.useState(false);
     const [scheduleItems, setScheduleItems] = React.useState([]);
     const [editingScheduleId, setEditingScheduleId] = React.useState(null);
@@ -793,6 +795,19 @@ export const DLOBulkSchedule = ({
                             <Typography variant="h6" component="h3" data-testid="Schedule-add-edit-title">
                                 {'Add / Edit items to schedule'}
                             </Typography>
+                            {/* Search bar for filtering dlorList by object_title */}
+                            <Box sx={{ mt: 1, mb: 1 }}>
+                                <FormControl fullWidth variant="outlined" size="small">
+                                    <InputLabel htmlFor="dlor-search">Search items by title</InputLabel>
+                                    <Input
+                                        id="dlor-search"
+                                        value={dlorSearch || ''}
+                                        onChange={e => setDlorSearch(e.target.value)}
+                                        placeholder="Search items by title"
+                                        inputProps={{ 'data-testid': 'dlor-search-input' }}
+                                    />
+                                </FormControl>
+                            </Box>
                             <TableContainer
                                 component={Paper}
                                 sx={{
@@ -818,7 +833,11 @@ export const DLOBulkSchedule = ({
                                                     item =>
                                                         !scheduleItems.some(
                                                             si => si.object_public_uuid === item.object_public_uuid,
-                                                        ),
+                                                        ) &&
+                                                        (!dlorSearch ||
+                                                            (item.object_title || '')
+                                                                .toLowerCase()
+                                                                .includes(dlorSearch.toLowerCase())),
                                                 )
                                                 .map((item, index) => {
                                                     return (
@@ -836,7 +855,6 @@ export const DLOBulkSchedule = ({
                                                                     color="secondary"
                                                                     data-testid={`add-schedule-item-${index}`}
                                                                     onClick={() => handleAddToSchedule(item)}
-                                                                    // ACCESSIBILITY FIX 7: Descriptive aria-label
                                                                     aria-label={`Add ${item.object_title} to schedule`}
                                                                 >
                                                                     Add
