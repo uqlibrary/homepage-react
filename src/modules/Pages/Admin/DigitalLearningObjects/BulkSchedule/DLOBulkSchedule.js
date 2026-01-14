@@ -204,14 +204,22 @@ export const DLOBulkSchedule = ({
         setPendingSchedules(
             dlorSchedule
                 ? dlorSchedule.filter(s => {
-                      return !s.schedule_running && !s.schedule_processed;
+                      return (
+                          !s.schedule_running &&
+                          !s.schedule_processed &&
+                          moment.tz(s.schedule_end_date, 'YYYY-MM-DD', 'Australia/Brisbane').isSameOrAfter(defaultDate)
+                      );
                   })
                 : [],
         );
         setCompletedSchedules(
             dlorSchedule
                 ? dlorSchedule.filter(s => {
-                      return !s.schedule_running && s.schedule_processed;
+                      return (
+                          !s.schedule_running &&
+                          (s.schedule_processed ||
+                              moment.tz(s.schedule_end_date, 'YYYY-MM-DD', 'Australia/Brisbane').isBefore(defaultDate))
+                      );
                   })
                 : [],
         );
