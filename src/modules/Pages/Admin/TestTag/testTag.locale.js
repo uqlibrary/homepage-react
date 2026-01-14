@@ -119,8 +119,8 @@ export default {
                     noConnection:
                         'Unable to connect to the selected printer. Please check the printer connection and try again.',
                     printerNotReady: 'The selected printer is not ready. Please check the printer and try again.',
-                    printJobError: 'An error occurred while sending the print job. Please try again.',
-                    uncaughtException: 'An unexpected error occurred during the printing process.',
+                    printJobError: 'Unable to send the print job. Please try again.',
+                    uncaughtException: 'An unhandled error occurred during the printing process.',
                 },
                 printJobSent: printerName => `Print job sent to ${printerName}.`,
             },

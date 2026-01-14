@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import { styled } from '@mui/material/styles';
@@ -195,6 +195,8 @@ const Inspection = ({
     ] = useConfirmationState();
     const [successDialogLocale, setSuccessDialogLocale] = useState({});
 
+    const errorMessageFormatter = useMemo(() => locale.config.alerts.error, []);
+
     const onCloseConfirmationAlert = () => {
         !!inspectionConfigError && actions.clearInspectionConfigError();
         !!saveInspectionError && actions.clearSaveInspectionError();
@@ -207,7 +209,7 @@ const Inspection = ({
         onClose: onCloseConfirmationAlert,
         errorMessage:
             inspectionConfigError || saveInspectionError || saveAssetTypeError || floorListError || roomListError,
-        errorMessageFormatter: locale.config.alerts.error,
+        errorMessageFormatter,
     });
     const { isValid, validateValues } = useValidation({ testStatusEnum, user });
     const assignAssetDefaults = React.useCallback(
@@ -238,6 +240,13 @@ const Inspection = ({
     const { location, setLocation } = useLocation();
 
     const [inView, setInView] = React.useState(false);
+
+    const showAlert = useCallback(
+        (alert, type = 'error') => {
+            openConfirmationAlert(type === 'error' ? errorMessageFormatter(alert) : alert, type);
+        },
+        [openConfirmationAlert, errorMessageFormatter],
+    );
 
     const assignCurrentAsset = asset => {
         const newFormValues = assignAssetDefaults(asset, formValues, location);
@@ -300,12 +309,12 @@ const Inspection = ({
     const handlePrintTag = useCallback(async () => {
         if (!printerPreference) {
             console.error('No printer selected');
-            openConfirmationAlert(locale.pages.general.labelPrinting.error.noPrinterSelected, 'error');
+            showAlert(locale.pages.general.labelPrinting.error.noPrinterSelected);
             return;
         }
         if (!successData) {
             console.error('No inspection data available for printing');
-            openConfirmationAlert(locale.pages.general.labelPrinting.error.noLabelData, 'error');
+            showAlert(locale.pages.general.labelPrinting.error.noLabelData);
             return;
         }
         try {
@@ -323,41 +332,33 @@ const Inspection = ({
                             });
                             if (!template) {
                                 console.error('No template found for printer:', selectedPrinter);
-                                openConfirmationAlert(
-                                    locale.pages.general.labelPrinting.error.noLabelTemplate,
-                                    'error',
-                                );
+                                showAlert(locale.pages.general.labelPrinting.error.noLabelTemplate);
                                 return;
                             }
                             printer
                                 .print(template)
                                 .then(() => {
-                                    openConfirmationAlert(
-                                        locale.pages.general.labelPrinting.printJobSent(selectedPrinter),
-                                    );
+                                    showAlert(locale.pages.general.labelPrinting.printJobSent(selectedPrinter), 'info');
                                 })
                                 .catch(error => {
                                     console.error('Print job error:', error);
-                                    openConfirmationAlert(
-                                        locale.pages.general.labelPrinting.error.printJobError,
-                                        'error',
-                                    );
+                                    showAlert(locale.pages.general.labelPrinting.error.printJobError);
                                 });
                         } else {
                             console.error('Printer is not ready: ' + JSON.stringify(status.errors));
-                            openConfirmationAlert(locale.pages.general.labelPrinting.error.printerNotReady, 'error');
+                            showAlert(locale.pages.general.labelPrinting.error.printerNotReady);
                         }
                     });
                 })
                 .catch(error => {
                     console.error('Printer connection error:', error);
-                    openConfirmationAlert(locale.pages.general.labelPrinting.error.noConnection, 'error');
+                    showAlert(locale.pages.general.labelPrinting.error.noConnection);
                 });
         } catch (error) {
             console.error('Printing error:', error);
-            openConfirmationAlert(locale.pages.general.labelPrinting.error.uncaughtException, 'error');
+            showAlert(locale.pages.general.labelPrinting.error.uncaughtException);
         }
-    }, [openConfirmationAlert, printer, printerPreference, successData]);
+    }, [printer, printerPreference, showAlert, successData]);
 
     return (
         <StandardAuthPage
@@ -375,7 +376,7 @@ const Inspection = ({
                     onClose={hideSuccessMessage}
                     isOpen={isSaveSuccessOpen}
                     locale={successDialogLocale}
-                    noMinContentWidth
+                    noMinContentWidth={isMobileView}
                 />
                 <InspectionSuccessPrintDialog
                     actionButtonColor="secondary"
@@ -390,6 +391,7 @@ const Inspection = ({
                     printerPreference={printerPreference}
                     onPrinterSelectionChange={setPrinterPreference}
                     availablePrinters={availablePrinters}
+                    noMinContentWidth={isMobileView}
                 />
                 <EventPanel
                     id={componentId}

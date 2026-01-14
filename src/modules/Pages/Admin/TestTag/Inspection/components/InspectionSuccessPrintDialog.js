@@ -66,7 +66,7 @@ export const InspectionSuccessPrintDialog = ({
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${inspectionSuccessPrintDialogId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
-            <DialogContent style={{ maxWidth: !noMinContentWidth ? MIN_CONTENT_WIDTH : 'auto' }}>
+            <DialogContent style={{ minWidth: !noMinContentWidth ? MIN_CONTENT_WIDTH : 'auto' }}>
                 <DialogContentText data-testid="message-content" component="div">
                     {locale.confirmationMessage}
                 </DialogContentText>
@@ -92,6 +92,7 @@ export const InspectionSuccessPrintDialog = ({
                         <StyledSecondaryButton
                             variant={'contained'}
                             onClick={_onPrint}
+                            fullWidth
                             id="confirm-alternate-action"
                             data-testid={`confirm-alternate-${inspectionSuccessPrintDialogId}`}
                             disabled={printerError || (disableButtonsWhenBusy && isBusy)}

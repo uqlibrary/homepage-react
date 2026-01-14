@@ -55,7 +55,7 @@ export const savedDialogMessages = {
         </Grid>
     ),
     other: (data, locale) => (
-        <Grid container item xs={12} sm={8} alignItems="center" className={'dialogContainer dialogFailedContaine'}>
+        <Grid container item xs={12} sm={8} alignItems="center" className={'dialogContainer dialogFailedContainer'}>
             <Grid item xs={12} className={'dialogTitle dialogFailedTitle'}>
                 <Typography gutterBottom variant="h4" id="saved-title-label" data-testid="saved-title-label">
                     {locale.outOfService}
