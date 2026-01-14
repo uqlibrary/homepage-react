@@ -1,6 +1,6 @@
 import React from 'react';
 import Inspection from './Inspection';
-import { rtlRender, WithRouter, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
+import { rtlRender, WithRouter, act, fireEvent, WithReduxStore, waitFor, preview } from 'test-utils';
 import Immutable from 'immutable';
 import {
     mockAllIsIntersecting,
@@ -68,7 +68,7 @@ function setup(testProps = {}, renderer = rtlRender) {
         saveInspectionSuccess = null,
         saveInspectionError = null,
         accountLoading = false,
-        user = { ...userData },
+        user = { ...userData, user_department: 'TEST' },
         ...props
     } = testProps;
 
@@ -248,6 +248,7 @@ describe('Inspection component', () => {
                 asset_next_test_due_date: '2023Dec12',
             },
         });
+        preview.debug();
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
         expect(getByText('UQL000705')).toBeInTheDocument();

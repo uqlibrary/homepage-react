@@ -381,10 +381,17 @@ export function saveInspection(request) {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_SAVING });
         return post(TEST_TAG_ASSET_ACTION(), request)
             .then(response => {
-                dispatch({
-                    type: actions.TESTTAG_SAVE_INSPECTION_SUCCESS,
-                    payload: response?.data,
-                });
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_SAVE_INSPECTION_SUCCESS,
+                        payload: response?.data,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_SAVE_INSPECTION_FAILED,
+                        payload: response.message,
+                    });
+                }
                 return Promise.resolve(response?.data);
             })
             .catch(error => {

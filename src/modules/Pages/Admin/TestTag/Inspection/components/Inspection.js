@@ -288,6 +288,22 @@ const Inspection = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inspectionConfigError, floorListError, roomListError, assetsListError, formValues, selectedAsset]);
 
+    useEffect(() => {
+        if (!!successData) {
+            setSuccessDialogLocale(getSuccessDialog(successData, inspectionLocale));
+            successData.asset_status === testStatusEnum.CURRENT.value && printer && deptPrintingEnabled
+                ? showPrinterSaveSuccessDialog()
+                : showSaveSuccessConfirmation();
+        }
+    }, [
+        successData,
+        showSaveSuccessConfirmation,
+        inspectionLocale,
+        printer,
+        deptPrintingEnabled,
+        showPrinterSaveSuccessDialog,
+    ]);
+
     const saveForm = () => {
         /* istanbul ignore else */ if (isValid && !saveInspectionSaving) {
             const transformedData = transformer(
@@ -297,12 +313,13 @@ const Inspection = ({
                     /* istanbul ignore next */ {},
             );
             // save and then show success dialog
-            actions.saveInspection(transformedData).then(response => {
-                setSuccessDialogLocale(getSuccessDialog(response, inspectionLocale));
-                response.asset_status === testStatusEnum.CURRENT.value && printer && deptPrintingEnabled
-                    ? showPrinterSaveSuccessDialog()
-                    : showSaveSuccessConfirmation();
-            });
+            actions.saveInspection(transformedData);
+            // .then(response => {
+            //     setSuccessDialogLocale(getSuccessDialog(response, inspectionLocale));
+            //     response.asset_status === testStatusEnum.CURRENT.value && printer && deptPrintingEnabled
+            //         ? showPrinterSaveSuccessDialog()
+            //         : showSaveSuccessConfirmation();
+            // });
         }
     };
 

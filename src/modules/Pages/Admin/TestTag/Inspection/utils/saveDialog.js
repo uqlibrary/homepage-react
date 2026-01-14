@@ -47,11 +47,6 @@ export const savedDialogMessages = {
                     {data.asset_next_test_due_date ?? locale.notApplicable}
                 </Typography>
             </Grid>
-            <Grid item xs={12} className={'dialogSuccessLineItems'} variant="subtitle1">
-                <Typography gutterBottom id="print" data-testid="saved-asset-id">
-                    {data.asset_next_test_due_date ?? locale.notApplicable}
-                </Typography>
-            </Grid>
         </Grid>
     ),
     other: (data, locale) => (

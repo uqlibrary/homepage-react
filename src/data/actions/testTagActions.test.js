@@ -152,7 +152,9 @@ describe('Test & Tag actions', () => {
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
         it('dispatches expected actions when T&T Save Inspection fails', async () => {
-            mockApi.onPost(repositories.routes.TEST_TAG_ASSET_ACTION()).reply(500);
+            mockApi
+                .onPost(repositories.routes.TEST_TAG_ASSET_ACTION().apiUrl)
+                .reply(200, { status: 'ERROR', data: [] });
 
             const expectedActions = [actions.TESTTAG_SAVE_INSPECTION_SAVING, actions.TESTTAG_SAVE_INSPECTION_FAILED];
 
