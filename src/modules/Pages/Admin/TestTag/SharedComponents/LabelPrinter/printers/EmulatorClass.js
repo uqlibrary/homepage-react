@@ -19,7 +19,7 @@ const printerDescriptor = {
 };
 
 /**
- * An Zebra label printer class to use during localhost testing.
+ * An Emulated label printer class to use during localhost testing.
  * Requires a locally running ZPL Printer emulator
  * built from https://github.com/erikn69/ZplEscPrinter
  *
@@ -27,12 +27,9 @@ const printerDescriptor = {
  * {
  *  code: string - the printer being used e.g. 'zebra',
  *  getAvailablePrinters: Function, returns array of available printers
- *  getDefaultPrinter: Function, returns the default printer object
  *  getConnectionStatus: Function, returns object with shape { ready: boolean, error: boolean, errors: array }
- *  selectDefaultPrinter: Function, selects and sets the default printer, returns the default printer object
  *  setPrinter: Function, sets the selected printer
  *  print: Function, sends data to the printer
- *  debug: Function, returns printer descriptor for debugging
  * }
  *
  */
@@ -41,10 +38,6 @@ export const createPrinter = () => {
 
     const getAvailablePrinters = async () => {
         return await [printerDescriptor, { ...printerDescriptor, name: 'Unregistered Printer' }];
-    };
-
-    const getDefaultPrinter = async () => {
-        return await printerDescriptor;
     };
 
     const getConnectionStatus = async () => {
@@ -56,21 +49,10 @@ export const createPrinter = () => {
     };
 
     const setPrinter = async selectedPrinter => {
-        console.log('Selected printer set to:', selectedPrinter);
         return await selectedPrinter;
     };
 
-    const selectDefaultPrinter = async () => {
-        const defaultPrinter = await getDefaultPrinter();
-        if (defaultPrinter) {
-            await setPrinter(defaultPrinter);
-            return defaultPrinter;
-        }
-        throw new Error('No default printer found');
-    };
-
     const print = async data => {
-        console.log('Sending print data to printer...');
         await fetch(printerAddress, {
             method: 'POST',
             headers: {
@@ -78,24 +60,16 @@ export const createPrinter = () => {
             },
             body: data,
         }).then(response => {
-            console.log('Print response status:', response.status);
             return response;
         });
-    };
-
-    const debug = () => {
-        return printerDescriptor;
     };
 
     return {
         code,
         getAvailablePrinters,
-        getDefaultPrinter,
         getConnectionStatus,
-        selectDefaultPrinter,
         setPrinter,
         print,
-        debug,
     };
 };
 

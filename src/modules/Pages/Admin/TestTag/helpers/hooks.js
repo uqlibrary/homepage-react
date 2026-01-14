@@ -114,7 +114,7 @@ export const useConfirmationAlert = ({ duration, onClose = null, errorMessage = 
     };
     const openConfirmationAlert = (message, type) => {
         setConfirmationAlert({
-            message: !!errorMessageFormatter ? errorMessageFormatter(message) : message,
+            message: !!errorMessageFormatter && type === 'error' ? errorMessageFormatter(message) : message,
             visible: true,
             type: !!type ? type : 'info',
             autoHideDuration: duration,

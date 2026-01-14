@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -40,10 +40,12 @@ export const InspectionSuccessPrintDialog = ({
     printerPreference = null,
     availablePrinters = [],
     shouldDisableUnknownPrinters = false,
-    forcePrinterSelection = false,
 }) => {
-    const [expanded, setExpanded] = React.useState(forcePrinterSelection);
     const inspectionLocale = inspectLocale.pages.inspect;
+    const printerError =
+        !!!printerPreference || availablePrinters.findIndex(printer => printer.name === printerPreference) === -1;
+
+    const [expanded, setExpanded] = useState(false);
 
     const handleExpand = (event, isExpanded) => {
         setExpanded(isExpanded);
@@ -92,20 +94,21 @@ export const InspectionSuccessPrintDialog = ({
                             onClick={_onPrint}
                             id="confirm-alternate-action"
                             data-testid={`confirm-alternate-${inspectionSuccessPrintDialogId}`}
-                            disabled={forcePrinterSelection || (disableButtonsWhenBusy && isBusy)}
+                            disabled={printerError || (disableButtonsWhenBusy && isBusy)}
                         >
                             {inspectionLocale.labelPrinting.printButton}
                         </StyledSecondaryButton>
                     </Grid>
                 </Grid>
             </DialogActions>
-            <Accordion expanded={forcePrinterSelection || expanded} onChange={handleExpand}>
+
+            <Accordion expanded={printerError || expanded} onChange={handleExpand}>
                 <AccordionSummary
                     expandIcon={<ArrowDownwardIcon />}
                     aria-controls="printer-selector-content"
                     id="printerSelectorContainer"
                 >
-                    <Typography sx={{ color: theme => (forcePrinterSelection ? theme.palette.error.main : 'inherit') }}>
+                    <Typography sx={{ color: theme => (printerError ? theme.palette.error.main : 'inherit') }}>
                         {inspectionLocale.labelPrinting.selectPrinter}
                     </Typography>
                 </AccordionSummary>
@@ -117,7 +120,7 @@ export const InspectionSuccessPrintDialog = ({
                         onChange={_onPrinterSelectionChange}
                         disableUnknownPrinters={shouldDisableUnknownPrinters}
                         locale={inspectionLocale.labelPrinting}
-                        error={forcePrinterSelection}
+                        error={printerError}
                     />
                 </AccordionDetails>
             </Accordion>
@@ -127,30 +130,17 @@ export const InspectionSuccessPrintDialog = ({
 
 InspectionSuccessPrintDialog.propTypes = {
     inspectionSuccessPrintDialogId: PropTypes.string.isRequired,
-    hideActionButton: PropTypes.bool,
-    hideCancelButton: PropTypes.bool,
-    InputForm: PropTypes.func,
     isOpen: PropTypes.bool,
     locale: PropTypes.object,
-    inspectionLocale: PropTypes.object,
-    showAlternateActionButton: PropTypes.bool,
-    showInputForm: PropTypes.bool,
-    additionalInformation: PropTypes.string,
-    showAdditionalInformation: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
-    actionProps: PropTypes.object,
-    altActionProps: PropTypes.object,
-    cancelProps: PropTypes.object,
     disableButtonsWhenBusy: PropTypes.bool,
     isBusy: PropTypes.bool,
-    autoFocusPrimaryButton: PropTypes.bool,
-    printerPreference: PropTypes.string,
-    availablePrinters: PropTypes.array,
     onPrint: PropTypes.func,
     onClose: PropTypes.func,
     onPrinterSelectionChange: PropTypes.func,
+    printerPreference: PropTypes.string,
+    availablePrinters: PropTypes.array,
     shouldDisableUnknownPrinters: PropTypes.bool,
-    forcePrinterSelection: PropTypes.bool,
 };
 
 export default React.memo(InspectionSuccessPrintDialog);

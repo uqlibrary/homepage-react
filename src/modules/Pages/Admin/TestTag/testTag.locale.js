@@ -122,6 +122,7 @@ export default {
                     printJobError: 'An error occurred while sending the print job. Please try again.',
                     uncaughtException: 'An unexpected error occurred during the printing process.',
                 },
+                printJobSent: printerName => `Print job sent to ${printerName}.`,
             },
         },
         dashboard: {

@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 
 import { printerRegistry } from './LabelPrinterRegister';
 import labelPrinterTemplate from './LabelPrinterTemplate';
-export const COOKIE_PRINTER_PREFERENCE = 'tnt_label_printer_preference';
+export const COOKIE_PRINTER_PREFERENCE = 'TNT_LABEL_PRINTER_PREFERENCE';
 
 const useLabelPrinter = ({ printerCode = 'zebra', shouldDisableUnknownPrinters = true }) => {
     const [availablePrinters, setAvailablePrinters] = useState([]);

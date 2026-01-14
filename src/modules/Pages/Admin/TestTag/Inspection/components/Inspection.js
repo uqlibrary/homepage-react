@@ -146,7 +146,13 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     '& .buttonWhite': {
         color: 'white',
-        border: '1px solid white',
+        '&:hover': {
+            border: '1px solid white',
+        },
+    },
+    '& .buttonSuccess': {
+        backgroundColor: 'white',
+        color: theme.palette.primary.main,
     },
 }));
 
@@ -248,8 +254,9 @@ const Inspection = ({
     };
 
     const hideSuccessMessage = () => {
+        hidePrinterSaveSuccessDialog();
+        hideSaveSuccessConfirmation();
         setSuccessDialogLocale({});
-        printer && deptPrintingEnabled ? hidePrinterSaveSuccessDialog() : hideSaveSuccessConfirmation();
         resetForm();
     };
 
@@ -283,12 +290,14 @@ const Inspection = ({
             // save and then show success dialog
             actions.saveInspection(transformedData).then(response => {
                 setSuccessDialogLocale(getSuccessDialog(response, inspectionLocale));
-                printer && deptPrintingEnabled ? showPrinterSaveSuccessDialog() : showSaveSuccessConfirmation();
+                response.asset_status === testStatusEnum.CURRENT.value && printer && deptPrintingEnabled
+                    ? showPrinterSaveSuccessDialog()
+                    : showSaveSuccessConfirmation();
             });
         }
     };
 
-    const printTagAction = useCallback(async () => {
+    const handlePrintTag = useCallback(async () => {
         if (!printerPreference) {
             console.error('No printer selected');
             openConfirmationAlert(locale.pages.general.labelPrinting.error.noPrinterSelected, 'error');
@@ -320,23 +329,33 @@ const Inspection = ({
                                 );
                                 return;
                             }
-                            printer.print(template).catch(error => {
-                                openConfirmationAlert(locale.pages.general.labelPrinting.error.printJobError, 'error');
-                                console.error('Print job error:', error);
-                            });
+                            printer
+                                .print(template)
+                                .then(() => {
+                                    openConfirmationAlert(
+                                        locale.pages.general.labelPrinting.printJobSent(selectedPrinter),
+                                    );
+                                })
+                                .catch(error => {
+                                    console.error('Print job error:', error);
+                                    openConfirmationAlert(
+                                        locale.pages.general.labelPrinting.error.printJobError,
+                                        'error',
+                                    );
+                                });
                         } else {
+                            console.error('Printer is not ready: ' + JSON.stringify(status.errors));
                             openConfirmationAlert(locale.pages.general.labelPrinting.error.printerNotReady, 'error');
-                            throw new Error('Printer is not ready: ' + JSON.stringify(status.errors));
                         }
                     });
                 })
                 .catch(error => {
-                    openConfirmationAlert(locale.pages.general.labelPrinting.error.noConnection, 'error');
                     console.error('Printer connection error:', error);
+                    openConfirmationAlert(locale.pages.general.labelPrinting.error.noConnection, 'error');
                 });
         } catch (error) {
-            openConfirmationAlert(locale.pages.general.labelPrinting.error.uncaughtException, 'error');
             console.error('Printing error:', error);
+            openConfirmationAlert(locale.pages.general.labelPrinting.error.uncaughtException, 'error');
         }
     }, [openConfirmationAlert, printer, printerPreference, successData]);
 
@@ -363,7 +382,7 @@ const Inspection = ({
                     actionButtonVariant="contained"
                     inspectionSuccessPrintDialogId={`${componentId}-printer-save-success`}
                     printer={printer}
-                    onPrint={printTagAction}
+                    onPrint={handlePrintTag}
                     onClose={hideSuccessMessage}
                     isOpen={isPrinterSaveSuccessDialogOpen}
                     locale={successDialogLocale}
@@ -371,7 +390,6 @@ const Inspection = ({
                     printerPreference={printerPreference}
                     onPrinterSelectionChange={setPrinterPreference}
                     availablePrinters={availablePrinters}
-                    forcePrinterSelection={!!!printerPreference}
                 />
                 <EventPanel
                     id={componentId}
@@ -431,12 +449,12 @@ const Inspection = ({
 
                             <Button
                                 variant="contained"
-                                color={inView ? 'primary' : 'secondary'}
                                 disabled={!isValid || saveInspectionSaving}
                                 onClick={saveForm}
                                 fullWidth={isMobileView}
                                 id={`${componentId}-save-button`}
                                 data-testid={`${componentId}-save-button`}
+                                className={!inView ? 'buttonSuccess' : ''}
                             >
                                 {saveInspectionSaving ? (
                                     <CircularProgress
