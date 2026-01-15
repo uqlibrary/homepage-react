@@ -13,7 +13,11 @@ export const savedDialogMessages = {
     [testStatusEnum.CURRENT.value]: (data, locale) => (
         <Grid container item xs={12} sm={8} alignItems="center" className={'dialogContainer dialogPassedContainer'}>
             <Grid item xs={12} className={'dialogTitle dialogSuccessTitle'} variant="subtitle1">
-                <Typography gutterBottom id="saved-asset-id" data-testid="saved-licence-number">
+                <Typography
+                    gutterBottom
+                    id="saved-licence-number-container"
+                    data-testid="saved-licence-number-container"
+                >
                     <span id="saved-licence-number-label" data-testid="saved-licence-number-label">
                         {locale.testedBy}
                     </span>{' '}

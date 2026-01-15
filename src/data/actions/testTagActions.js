@@ -375,24 +375,18 @@ export function clearAssetsMineError() {
         dispatch({ type: actions.TESTTAG_ASSETS_MINE_CLEAR_ERROR });
     };
 }
-
+// a
 export function saveInspection(request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_SAVING });
         return post(TEST_TAG_ASSET_ACTION(), request)
             .then(response => {
-                if (response?.status?.toLowerCase() === 'ok') {
-                    dispatch({
-                        type: actions.TESTTAG_SAVE_INSPECTION_SUCCESS,
-                        payload: response?.data,
-                    });
-                } else {
-                    dispatch({
-                        type: actions.TESTTAG_SAVE_INSPECTION_FAILED,
-                        payload: response.message,
-                    });
-                }
-                return Promise.resolve(response?.data);
+                dispatch({
+                    type: actions.TESTTAG_SAVE_INSPECTION_SUCCESS,
+                    payload: response?.data,
+                });
+
+                return Promise.resolve(response.data);
             })
             .catch(error => {
                 dispatch({
