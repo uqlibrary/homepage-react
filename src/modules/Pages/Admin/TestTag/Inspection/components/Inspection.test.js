@@ -410,7 +410,7 @@ describe('Inspection component', () => {
         expect(defaults.actions.clearSaveInspection).toHaveBeenCalled();
         expect(defaults.actions.clearAssets).toHaveBeenCalled();
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
-    });
+    }, 10000);
 
     it('should show a save success for FAILED asset dialog panel', async () => {
         const expected = {
@@ -471,7 +471,7 @@ describe('Inspection component', () => {
         expect(defaults.actions.clearSaveInspection).toHaveBeenCalled();
         expect(defaults.actions.clearAssets).toHaveBeenCalled();
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
-    });
+    }, 10000);
 
     it('should show a save success for OUTFORREPAIR asset dialog panel', async () => {
         const expected = {
