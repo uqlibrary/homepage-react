@@ -165,6 +165,10 @@ export const DLOAdminHomepage = ({
         window.location.href = dlorAdminLink('/add', account);
     };
 
+    const navigateToSchedulePage = () => {
+        window.location.href = dlorAdminLink('/schedule', account);
+    };
+
     const navigateToTeamsListPage = () => {
         window.location.href = dlorAdminLink('/team/manage', account);
     };
@@ -416,6 +420,17 @@ export const DLOAdminHomepage = ({
                             data-testid="admin-dlor-visit-add-button"
                         >
                             Add object
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem
+                            onClick={() => {
+                                navigateToSchedulePage();
+                                /* istanbul ignore next */
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-schedule-featured-button"
+                        >
+                            Manage featured object scheduling
                         </MenuItem>
                         <Divider />
                         <MenuItem

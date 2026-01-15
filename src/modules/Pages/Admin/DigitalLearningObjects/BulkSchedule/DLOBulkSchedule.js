@@ -25,6 +25,7 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import { Visibility } from '@mui/icons-material';
 import { set } from 'js-cookie';
+import DlorAdminBreadcrumbs from '../SharedDlorComponents/DlorAdminBreadcrumbs';
 
 const moment = require('moment-timezone');
 
@@ -430,6 +431,13 @@ export const DLOBulkSchedule = ({
     return (
         <>
             <StandardPage title="Digital Learning Hub - Bulk Scheduling Management">
+                <DlorAdminBreadcrumbs
+                    breadCrumbList={[
+                        {
+                            title: 'Bulk Feature Schedule management',
+                        },
+                    ]}
+                />
                 <Typography variant="h6" component="h2">
                     Create New Bulk Schedule
                 </Typography>

@@ -36,6 +36,13 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await addObjectButton.click();
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
         });
+        test('has a working "Schedule objects" button', async ({ page }) => {
+            await page.getByTestId('admin-dlor-menu-button').click();
+            const scheduleButton = page.getByTestId('admin-dlor-schedule-featured-button');
+            await expect(scheduleButton).toContainText('Manage featured object scheduling');
+            await scheduleButton.click();
+            await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/schedule?user=${DLOR_ADMIN_USER}`);
+        });
         test('has a working "manage teams" button', async ({ page }) => {
             await page.getByTestId('admin-dlor-menu-button').click();
             const manageTeamsButton = page.getByTestId('admin-dlor-visit-manage-teams-button');
@@ -64,6 +71,7 @@ test.describe('Digital Learning Hub admin homepage', () => {
                 `http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`,
             );
         });
+
         test('shows a list of objects to manage', async ({ page }) => {
             const list = page.getByTestId('dlor-homepage-list');
             await expect(list.locator('> div')).toHaveCount(gridFromExpectedRowCount());
