@@ -6,3 +6,4 @@ export const printerRegistry = {
     emulator: useEmulatorPrinter,
     // Future printer APIs can be registered here
 };
+export default printerRegistry;
