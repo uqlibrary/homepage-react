@@ -55,7 +55,7 @@ const StyledH1 = styled('h1')(({ theme }) => ({
     fontWeight: 500,
     lineHeight: '120%',
     letterSpacing: '0.4px',
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
     color: '#fff',
     fontFamily: 'Montserrat, Helvetica, Arial, sans-serif',
     '@media (max-width: 640px)': {
@@ -70,8 +70,8 @@ const StyledHeading = styled(Typography)(() => ({
     marginBottom: '24px',
 }));
 
-const StyledGridWrapper = styled('div')(() => ({
-    backgroundColor: '#f3f3f4',
+const StyledGridWrapper = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.designSystem.panelBackgroundColor,
     '@media (max-width: 1200px)': {
         // marginLeft: '-24px',
     },
@@ -358,6 +358,18 @@ export const HomePage = ({
                                                                 <ReadPublish />
                                                             </StyledGridItemLoggedIn>
                                                         )}
+                                                        <StyledGridItemLoggedIn
+                                                            item
+                                                            xs={12}
+                                                            data-testid="dlor-links-panel"
+                                                        >
+                                                            <DigitalLearningHub
+                                                                dlorStatistics={dlorStatistics}
+                                                                account={account}
+                                                                dlorStatisticsLoading={dlorStatisticsLoading}
+                                                                dlorStatisticsError={dlorStatisticsError}
+                                                            />
+                                                        </StyledGridItemLoggedIn>
                                                     </Grid>
                                                 </Grid>
                                                 <Grid item uqDsDesktop={6} xs={12}>
@@ -375,23 +387,6 @@ export const HomePage = ({
                                                                 />
                                                             </StyledGridItemLoggedIn>
                                                         )}
-                                                    </Grid>
-                                                </Grid>
-                                                {/* DIITAL LEARNING HUB PANEL START*/}
-                                                <Grid item uqDsDesktop={6} xs={12}>
-                                                    <Grid container>
-                                                        <StyledGridItemLoggedIn
-                                                            item
-                                                            xs={12}
-                                                            data-testid="dlor-links-panel"
-                                                        >
-                                                            <DigitalLearningHub
-                                                                dlorStatistics={dlorStatistics}
-                                                                account={account}
-                                                                dlorStatisticsLoading={dlorStatisticsLoading}
-                                                                dlorStatisticsError={dlorStatisticsError}
-                                                            />
-                                                        </StyledGridItemLoggedIn>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
