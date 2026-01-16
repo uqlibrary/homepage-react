@@ -37,7 +37,11 @@ export const createPrinter = () => {
     const code = 'emulator';
 
     const getAvailablePrinters = async () => {
-        return await [printerDescriptor, { ...printerDescriptor, name: 'Unregistered Printer' }];
+        return await [
+            printerDescriptor,
+            { ...printerDescriptor, name: 'New printer' },
+            { ...printerDescriptor, name: null },
+        ];
     };
 
     const getConnectionStatus = async () => {
@@ -74,14 +78,11 @@ export const createPrinter = () => {
 };
 
 export const useCreatePrinter = () => {
-    // const printerInstanceRef = useRef(null);
     // Custom hook that can be leveraged in the
     // future, for any printers that provide
     // a Hook based API
-    // if (printerInstanceRef.current) return printerInstanceRef.current;
 
     const instance = createPrinter();
-    // printerInstanceRef.current = instance;
     return instance;
 };
 export default useCreatePrinter;

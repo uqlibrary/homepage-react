@@ -83,7 +83,6 @@ const LabelPrinterSelector = ({
                 PopperComponent={customPopper}
                 disabled={disabled}
                 disableClearable
-                autoSelect
             />
         </FormControl>
     );

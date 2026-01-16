@@ -405,9 +405,9 @@ export default {
                 },
             },
             labelPrinting: {
-                unknownPrinter: 'Unconfigured',
-                selectPrinter: 'Label Printer Selection',
-                printButton: 'Print Tag',
+                unknownPrinter: 'unconfigured',
+                selectPrinter: 'Label printer selection',
+                printButton: 'Print tag',
             },
         },
         manage: {

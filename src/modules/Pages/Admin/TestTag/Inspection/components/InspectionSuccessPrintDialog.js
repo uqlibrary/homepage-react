@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -21,6 +21,16 @@ import LabelPrinterSelector from '../../SharedComponents/LabelPrinter/LabelPrint
 
 const MIN_CONTENT_WIDTH = 400;
 
+export const hasPrinterError = (printerPreference, availablePrinters = []) => {
+    return (
+        !!!printerPreference ||
+        availablePrinters.length === 0 ||
+        availablePrinters.every(printer => printer?.noconfig === true || !!!printer?.name) ||
+        availablePrinters.findIndex(printer => printer?.name === printerPreference) === -1 ||
+        availablePrinters.findIndex(printer => printer?.name === printerPreference && printer?.noconfig === true) !== -1
+    );
+};
+
 export const InspectionSuccessPrintDialog = ({
     inspectionSuccessPrintDialogId,
     isOpen = false,
@@ -42,8 +52,10 @@ export const InspectionSuccessPrintDialog = ({
     shouldDisableUnknownPrinters = false,
 }) => {
     const inspectionLocale = inspectLocale.pages.inspect;
-    const printerError =
-        !!!printerPreference || availablePrinters.findIndex(printer => printer.name === printerPreference) === -1;
+    const printerError = useMemo(() => hasPrinterError(printerPreference, availablePrinters), [
+        printerPreference,
+        availablePrinters,
+    ]);
 
     const [expanded, setExpanded] = useState(false);
 
@@ -60,7 +72,7 @@ export const InspectionSuccessPrintDialog = ({
     };
 
     const _onPrinterSelectionChange = (event, newValue) => {
-        onPrinterSelectionChange?.(newValue.name);
+        onPrinterSelectionChange?.(newValue?.name);
     };
 
     return (
