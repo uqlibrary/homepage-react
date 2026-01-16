@@ -42,12 +42,12 @@ describe('InspectionSuccessPrintDialog', () => {
         expect(getByTestId('dialogbox-test')).toBeInTheDocument();
         expect(getByTestId('message-title')).toHaveTextContent('Test Title');
         expect(getByTestId('message-content')).toHaveTextContent('Test Message');
-        expect(screen.getByTestId('confirm-test')).toHaveTextContent('Confirm');
-        expect(screen.getByTestId('confirm-alternate-test')).toHaveTextContent(
+        expect(getByTestId('confirm-test')).toHaveTextContent('Confirm');
+        expect(getByTestId('confirm-alternate-test')).toHaveTextContent(
             inspectLocale.pages.inspect.labelPrinting.printButton,
         );
 
-        const dialogContent = screen.getByTestId('message-content').parentElement;
+        const dialogContent = getByTestId('message-content').parentElement;
         expect(dialogContent).toHaveStyle({ minWidth: '400px' });
     });
 
