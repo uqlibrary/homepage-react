@@ -150,17 +150,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-export const getPrintOptions = (printer, data, printTagAction) => {
-    if (printer) {
-        return {
-            showAlternateActionButton: true,
-            onAlternateAction: () => printTagAction(printer, data),
-            alternateActionButtonLabel: 'Print tag',
-        };
-    }
-    return {};
-};
-
 export const getSuccessDialog = (response, locale) => {
     if (!!!response) return {};
     const key = response.asset_status !== testStatusEnum.CURRENT.value ? 'other' : response.asset_status;
