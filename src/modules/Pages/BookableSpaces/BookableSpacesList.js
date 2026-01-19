@@ -1022,6 +1022,11 @@ export const BookableSpacesList = ({
                     bookableSpacesRoomList?.data?.locations?.length === 0
                 ) {
                     // handle errors and empty data here
+                    const generalApiError = !!bookableSpacesRoomListError || !!facilityTypeListError;
+                    const systemEmpty =
+                        !generalApiError &&
+                        (!bookableSpacesRoomList?.data?.locations ||
+                            bookableSpacesRoomList?.data?.locations?.length === 0);
                     return (
                         <StandardPage title="Library spaces" standardPageId="topofcontent">
                             <section aria-live="assertive">
@@ -1030,19 +1035,16 @@ export const BookableSpacesList = ({
                                         <Grid container spacing={3} data-testid="library-spaces">
                                             <StyledBookableSpaceGridItem item xs={12} md={9}>
                                                 <StyledStandardCard fullHeight>
-                                                    !!bookableSpacesRoomListError || !!facilityTypeListError &&
-                                                    {
+                                                    {!!generalApiError && (
                                                         <p data-testid="spaces-error">
                                                             Something went wrong - please try again later.
                                                         </p>
-                                                    }
-                                                    !bookableSpacesRoomList?.data?.locations ||
-                                                    bookableSpacesRoomList?.data?.locations?.length === 0 &&
-                                                    {
+                                                    )}
+                                                    {!!systemEmpty && (
                                                         <p data-testid="no-spaces">
                                                             No locations found yet - please try again soon.
                                                         </p>
-                                                    }
+                                                    )}
                                                 </StyledStandardCard>
                                             </StyledBookableSpaceGridItem>
                                         </Grid>
