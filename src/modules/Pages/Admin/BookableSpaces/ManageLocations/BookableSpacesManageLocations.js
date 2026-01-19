@@ -1030,25 +1030,25 @@ export const BookableSpacesManageLocations = ({
         }
     }
 
-    function getPageLayout(campusList) {
+    function showCampusEntry(campus) {
         return (
             <>
-                {campusList?.map(campus => [
-                    <StyledRow
-                        key={`campus-${campus.campus_id}`}
-                        data-testid={'spaces-campus-entry'}
-                        style={{ paddingLeft: '4rem' }}
+                <StyledRow
+                    key={`campus-${campus.campus_id}`}
+                    data-testid={'spaces-campus-entry'}
+                    style={{ paddingLeft: '4rem' }}
+                >
+                    <StyledEditButton
+                        onClick={() => showEditCampusForm(campus.campus_id)}
+                        aria-label={`Edit ${campus.campus_name} campus details`}
+                        data-testid={`edit-campus-${campus.campus_id}-button`}
                     >
-                        <StyledEditButton
-                            onClick={() => showEditCampusForm(campus.campus_id)}
-                            aria-label={`Edit ${campus.campus_name} campus details`}
-                            data-testid={`edit-campus-${campus.campus_id}-button`}
-                        >
-                            <span id={`campus-${campus.campus_id}`}>{campus.campus_name}</span>
-                            <EditIcon />
-                        </StyledEditButton>
-                    </StyledRow>,
-                    ...campus.libraries.flatMap(library => [
+                        <span id={`campus-${campus.campus_id}`}>{campus.campus_name}</span>
+                        <EditIcon />
+                    </StyledEditButton>
+                </StyledRow>
+                <>
+                    {campus.libraries.flatMap(library => [
                         <StyledRow key={`library-${library.library_id}`} style={{ paddingLeft: '8rem' }}>
                             <StyledEditButton
                                 color="primary"
@@ -1086,8 +1086,8 @@ export const BookableSpacesManageLocations = ({
                                 </StyledEditButton>
                             </StyledRow>
                         )),
-                    ]),
-                ])}
+                    ])}
+                </>
             </>
         );
     }
@@ -1105,7 +1105,9 @@ export const BookableSpacesManageLocations = ({
                     return (
                         <Grid container spacing={3} style={{ position: 'relative' }}>
                             <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
-                                <div data-testid="spaces-location-wrapper">{getPageLayout(campusList)}</div>
+                                <div data-testid="spaces-location-wrapper">
+                                    {campusList?.map(campus => showCampusEntry(campus))}
+                                </div>
                             </Grid>
                             <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
                                 <div style={{ marginLeft: '2rem', marginTop: '2rem', padding: '1rem' }}>
