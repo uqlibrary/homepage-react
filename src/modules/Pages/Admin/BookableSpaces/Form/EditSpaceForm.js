@@ -970,7 +970,7 @@ export const EditSpaceForm = ({
                     </FormControl>
                     <div data-testid="add-space-pretty-location">
                         <Typography component={'h4'} variant={'h6'}>
-                            "Pretty" location
+                            Displayed location text
                         </Typography>
                         {getFriendlyLocationDescription({
                             space_is_ground_floor:

@@ -1755,26 +1755,56 @@ function filterExamPaperListByPattern(data, pattern) {
     return filteredData;
 }
 
-function resetWeeklyHourDatesToBeCurrent(jsonData) {
-    // reset the mock data so it is data for this week, so we can label them "today" and "tomorrow"
-    const today = new Date(new Date().toUTCString());
-    const currentMonday = new Date(new Date().toUTCString());
-    const currentDayIndex = today.getDate();
-    currentMonday.setDate(currentDayIndex - ((currentDayIndex + 6) % 7));
+function resetWeeklyHourDatesToBeCurrent(data) {
+    const timezone = 'Australia/Brisbane';
 
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const now = new Date();
+    const dateString = now.toLocaleString('en-US', { timeZone: timezone });
+    const currentDate = new Date(dateString);
 
-    jsonData?.locations?.forEach(location => {
+    const currentDayOfWeek = currentDate.getDay();
+
+    const startOfWeek = new Date(currentDate);
+    const daysFromMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
+    startOfWeek.setDate(currentDate.getDate() - daysFromMonday);
+
+    const dayOffsets = {
+        Monday: 0,
+        Tuesday: 1,
+        Wednesday: 2,
+        Thursday: 3,
+        Friday: 4,
+        Saturday: 5,
+        Sunday: 6,
+    };
+
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function getDateForDay(dayName, weekOffset = 0) {
+        const date = new Date(startOfWeek);
+        const dayOffset = dayOffsets[dayName];
+        date.setDate(startOfWeek.getDate() + dayOffset + weekOffset * 7);
+        return formatDate(date);
+    }
+
+    const updatedData = JSON.parse(JSON.stringify(data)); // don't mutate original
+
+    updatedData.locations.forEach(location => {
         location.departments?.forEach(department => {
             department.weeks?.forEach((week, weekIndex) => {
-                days.forEach((day, index) => {
-                    const newDate = new Date(currentMonday);
-                    newDate.setDate(currentMonday.getDate() + index + weekIndex * 7);
-                    week[day].date = newDate.toISOString().split('T')[0];
+                Object.keys(week).forEach(dayName => {
+                    if (week[dayName].date) {
+                        week[dayName].date = getDateForDay(dayName, weekIndex);
+                    }
                 });
             });
         });
     });
 
-    return jsonData;
+    return updatedData;
 }

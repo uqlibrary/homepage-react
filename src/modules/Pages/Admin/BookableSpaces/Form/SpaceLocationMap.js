@@ -70,6 +70,8 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
     console.log('SpaceLocationMap campusCoordinateList=', campusCoordinateList);
     console.log('SpaceLocationMap formValues=', formValues);
 
+    const ST_LUCIA_COORDINATES = [-27.49718, 153.01214];
+
     const tabList = campusCoordinateList.map((c, index) => {
         return { id: index, label: c.campus_name, coords: [c.campus_latitude, c.campus_longitude] };
     });
@@ -77,8 +79,8 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
     // a list of locations to help the admin user find the building they want
     const libraryBuildingsLocationGuides1 = [
         // needs better display names? (only shows in popups)
+        { name: 'Law', position: ST_LUCIA_COORDINATES },
         { name: 'Armus', position: [-27.49904, 153.01453] },
-        { name: 'Law', position: [-27.49718, 153.01214] },
         { name: 'Pace', position: [-27.49979, 153.03066] },
         { name: 'BSL', position: [-27.49695, 153.01136] },
         { name: 'Central', position: [-27.49607, 153.01355] },
@@ -88,11 +90,15 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
         // can add more here
     ];
 
-    const preposition =
-        !!formValues.space_latitude && !!formValues.space_longitude
-            ? [formValues.space_latitude, formValues.space_longitude]
-            : tabList.find(t => !!t.space_latitude && !!t.space_longitude).at(0).coords;
-    const [position, setPositionLocal] = useState(preposition);
+    const initialisePosition = () => {
+        if (!!formValues.space_latitude && !!formValues.space_longitude) {
+            return [formValues.space_latitude, formValues.space_longitude];
+        }
+
+        // show some point so the map works
+        return ST_LUCIA_COORDINATES;
+    };
+    const [position, setPositionLocal] = useState(initialisePosition());
     const setPosition = p => {
         setPositionLocal(p);
 
