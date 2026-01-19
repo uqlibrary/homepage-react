@@ -159,6 +159,18 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
     const is404Error = !!examSearchListError && examSearchListError === MESSAGE_EXAMCODE_404;
     const isNon404Error = !!examSearchListError && examSearchListError !== MESSAGE_EXAMCODE_404;
 
+    /* istanbul ignore next */
+    const openPaper = paperUrl => {
+        // try to catch safari crash (possibly caused by google? https://stackoverflow.com/a/79250741/1246313)
+        try {
+            window.open(paperUrl, '_blank');
+        } catch (e) {
+            alert('Oh no! Something went wrong! You can copy and paste this link: ' + paperUrl);
+            throw e;
+        }
+        return null;
+    };
+
     // eslint-disable-next-line react/prop-types
     const SimpleLayout = ({ examList, showMobileView, showFullDetails }) => {
         let formatType = showMobileView ? 'mobile' : 'desktop';
@@ -215,6 +227,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                         >
                                                             <a
                                                                 href={paper.paperUrl}
+                                                                onClick={
+                                                                    /* istanbul ignore next */ () =>
+                                                                        /* istanbul ignore next */
+                                                                        openPaper(paper.paperUrl)
+                                                                }
                                                                 data-testid={`exampaper-${formatType}-link-${courseCode}-semester${ss}-paper${pp}`}
                                                                 target="_blank"
                                                             >
@@ -278,6 +295,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     <a
                         data-testid={`exampaper-desktop-originals-link-${courseCode}-semester${semesterIndex}-paper${examIndex}`}
                         href={exam.paperUrl}
+                        onClick={
+                            /* istanbul ignore next */ () =>
+                                /* istanbul ignore next */
+                                openPaper(exam.paperUrl)
+                        }
                         target="_blank"
                     >
                         {exam.examType && (
