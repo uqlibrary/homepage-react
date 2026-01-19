@@ -63,8 +63,8 @@ export const AlertSplitButton = ({
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
                         <StyledPrimaryButton
                             children={mainButtonLabel}
-                            data-testid={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
-                            id={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
+                            data-testid={`alert-list-item-${mainButtonLabel?.toLowerCase()}-${alertId}`}
+                            id={`alert-list-item-${mainButtonLabel?.toLowerCase()}-${alertId}`}
                             onClick={() =>
                                 mainButtonLabel === 'Edit' ? navigateToEditForm(alertId) : navigateToView(alertId)
                             }
