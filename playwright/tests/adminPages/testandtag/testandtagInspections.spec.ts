@@ -499,27 +499,58 @@ test.describe('Test and Tag Admin Inspection page', () => {
         });
 
         test.describe('saving values', () => {
-            test('should enable save button and show active saved message', async ({ page }) => {
-                await expect(page.getByTestId('inspection-save-button')).toBeDisabled();
-                await expect(page.getByTestId('location_picker-event-panel-site-input')).toHaveValue('St Lucia');
-                await selectLocation(page, { building: 'Forgan Smith Building', floor: '2', room: 'W212' });
-                await selectAssetId(page, 'NEW ASSET');
-                await selectAssetType(page, 'PowerBoard');
-                await selectTestingDevice(page, 'ITS-PAT-06');
-                await page.getByTestId('inspection_panel-inspection-result-passed-button').click();
-                await page.getByTestId('inspection_panel-inspection-notes-input').fill('Test notes');
-                await expect(page.getByTestId('inspection-save-button')).not.toBeDisabled();
-                await page.getByTestId('inspection-save-button').click();
-                await expect(page.getByTestId('message-title').getByText('Asset saved')).toBeVisible();
-                await expect(
-                    page
-                        .getByTestId('saved-asset-id')
-                        .first()
-                        .getByText('UQL000298'),
-                ).toBeVisible();
-                await page.getByTestId('confirm-inspection-save-success').click();
+            test.describe('with label printing enabled (uqtesttag)', () => {
+                test('should enable save button and show active saved message', async ({ page }) => {
+                    await expect(page.getByTestId('inspection-save-button')).toBeDisabled();
+                    await expect(page.getByTestId('location_picker-event-panel-site-input')).toHaveValue('St Lucia');
+                    await selectLocation(page, { building: 'Forgan Smith Building', floor: '2', room: 'W212' });
+                    await selectAssetId(page, 'NEW ASSET');
+                    await selectAssetType(page, 'PowerBoard');
+                    await selectTestingDevice(page, 'ITS-PAT-06');
+                    await page.getByTestId('inspection_panel-inspection-result-passed-button').click();
+                    await page.getByTestId('inspection_panel-inspection-notes-input').fill('Test notes');
+                    await expect(page.getByTestId('inspection-save-button')).not.toBeDisabled();
+                    await page.getByTestId('inspection-save-button').click();
+                    await expect(page.getByTestId('message-title').getByText('Asset saved')).toBeVisible();
+                    await expect(
+                        page
+                            .getByTestId('saved-asset-id')
+                            .first()
+                            .getByText('UQL000298'),
+                    ).toBeVisible();
+                    await expect(page.getByTestId('confirm-alternate-inspection-printer-save-success')).toBeDisabled();
+                    await page.getByTestId('confirm-inspection-printer-save-success').click();
 
-                await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('');
+                    await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('');
+                });
+            });
+            test.describe('without label printing enabled (uqpf)', () => {
+                test.beforeEach(async ({ page }) => {
+                    await page.goto('http://localhost:2020/admin/testntag/inspect?user=uqpf');
+                    await expect.poll(async () => await page.locator(':focus').getAttribute('value')).toBe('St Lucia');
+                });
+                test('should enable save button and show active saved message', async ({ page }) => {
+                    await expect(page.getByTestId('inspection-save-button')).toBeDisabled();
+                    await expect(page.getByTestId('location_picker-event-panel-site-input')).toHaveValue('St Lucia');
+                    await selectLocation(page, { building: 'Forgan Smith Building', floor: '2', room: 'W212' });
+                    await selectAssetId(page, 'NEW ASSET');
+                    await selectAssetType(page, 'PowerBoard');
+                    await selectTestingDevice(page, 'ITS-PAT-06');
+                    await page.getByTestId('inspection_panel-inspection-result-passed-button').click();
+                    await page.getByTestId('inspection_panel-inspection-notes-input').fill('Test notes');
+                    await expect(page.getByTestId('inspection-save-button')).not.toBeDisabled();
+                    await page.getByTestId('inspection-save-button').click();
+                    await expect(page.getByTestId('message-title').getByText('Asset saved')).toBeVisible();
+                    await expect(
+                        page
+                            .getByTestId('saved-asset-id')
+                            .first()
+                            .getByText('UQL000298'),
+                    ).toBeVisible();
+                    await page.getByTestId('confirm-inspection-save-success').click();
+
+                    await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('');
+                });
             });
         });
     };
