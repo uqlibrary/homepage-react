@@ -40,7 +40,7 @@ export const ShortSpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, w
         return overrideMessage(''); // no springshare opening hours
     }
 
-    const todaysHours = openingHoursList.find(o => (o.dayName = 'Today'));
+    const todaysHours = openingHoursList.find(o => o.dayName === 'Today');
 
     return (
         <>

@@ -339,6 +339,8 @@ const StyledMapWrapperDiv = styled('div')(() => ({
     flexGrow: 0,
 }));
 
+const summaryPanelElementId = spaceId => `summary-info-${spaceId}`;
+
 const showHideSpacePanel = bookableSpace => {
     const hidePanel = (panelId, classname = 'hiddenSection') => {
         const openPanel = document.getElementById(panelId);
@@ -350,7 +352,6 @@ const showHideSpacePanel = bookableSpace => {
     };
 
     const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
-    const summaryPanelElementId = spaceId => `summary-info-${spaceId}`;
     const spaceDescriptionElementsId = spaceId => `space-description-${spaceId}`;
     const togglePanelButtonElementId = spaceId => `toggle-panel-button-space-${spaceId}`;
     const expandSpace = (spaceId, spaceName) => {
@@ -650,7 +651,7 @@ export const BookableSpacesList = ({
                 )}
                 <StyledCollapsableSection
                     // loads open
-                    id={`summary-info-${bookableSpace?.space_id}`}
+                    id={summaryPanelElementId(bookableSpace?.space_id)}
                     data-testid={`space-${bookableSpace?.space_id}-summary-info`}
                 >
                     <ShortSpaceOpeningHours
