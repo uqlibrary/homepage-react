@@ -1033,7 +1033,7 @@ mock.onGet('exams/course/FREN1010/summary')
                 ...examSearch_DENT80,
                 papers: [
                     ...examSearch_DENT80.papers.filter(course =>
-                        course.some(s => s.some(p => p.courseCode.toLowerCase() === 'dent1050')),
+                        course.some(s => s.some(p => p?.courseCode?.toUpperCase() === 'DENT1050')),
                     ),
                 ],
             },

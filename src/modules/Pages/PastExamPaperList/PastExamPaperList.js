@@ -81,7 +81,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         !!examSearchList && !!examSearchList.minYear && !!examSearchList.maxYear && !!courseHint
             ? `Past Exam Papers from ${examSearchList.minYear} to ${
                   examSearchList.maxYear
-              } for "${courseHint.toUpperCase()}"`
+              } for "${courseHint?.toUpperCase()}"`
             : /* istanbul ignore next */ 'Past Exam Papers by Subject';
 
     useTitle(`${listTitle} - Library - The University of Queensland`);
@@ -98,6 +98,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         if (result.papers && Array.isArray(result.papers)) {
             result.papers = result.papers
                 .map(courseGroup => {
+                    const isSampleExamPaper = exam => exam?.examType?.toUpperCase() === 'SAMPLE';
                     return courseGroup.filter(examGroup => {
                         // children are always arrays atm, but provide for the alternative
                         /* istanbul ignore else */
@@ -107,9 +108,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                 return false;
                             }
 
-                            const hasSample = examGroup.some(
-                                exam => exam.examType && exam.examType.toUpperCase() === 'SAMPLE',
-                            );
+                            const hasSample = examGroup.some(exam => isSampleExamPaper(exam));
                             return displayType === 'sample' ? hasSample : !hasSample;
                         } else {
                             const hasFile = examGroup.paperUrl && examGroup.paperUrl.trim().length > 0;
@@ -117,7 +116,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                 return false;
                             }
 
-                            const hasSample = examGroup.examType && examGroup.examType.toUpperCase() === 'SAMPLE';
+                            const hasSample = examGroup.some(exam => isSampleExamPaper(exam));
                             return displayType === 'sample' ? hasSample : !hasSample;
                         }
                     });

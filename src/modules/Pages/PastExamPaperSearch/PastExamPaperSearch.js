@@ -118,11 +118,14 @@ export const PastExamPaperSearch = ({
         [actions, searchTerm],
     );
 
-    const addKeywordAsOption = (options, params) => {
-        const filtered = filter(options, params);
+    const getFirstNCharactersUppercase = (string, numChars) => string?.toUpperCase().substring(0, numChars);
 
-        const truncatedSearchTerm = params.inputValue.toUpperCase().substring(0, MAX_LENGTH_COURSE_CODE);
-        if (filtered.length > 0 && params.inputValue !== '' && options[0].name.toUpperCase() !== truncatedSearchTerm) {
+    const addKeywordAsOption = (options, params) => {
+        const truncatedSearchTerm = getFirstNCharactersUppercase(params?.inputValue, MAX_LENGTH_COURSE_CODE);
+        const subjectPrefix = options.length > 0 ? options[0].name?.toUpperCase() : /* istanbul ignore next */ '';
+
+        const filtered = filter(options, params);
+        if (filtered.length > 0 && params.inputValue !== '' && subjectPrefix !== truncatedSearchTerm) {
             filtered.unshift({
                 name: truncatedSearchTerm,
                 course_title: `View all exam papers for ${truncatedSearchTerm}`,
@@ -132,7 +135,7 @@ export const PastExamPaperSearch = ({
     };
 
     const gotoSearchResultPage = (event, value) => {
-        const searchUrl = `/exams/course/${value.name.toUpperCase()}`;
+        const searchUrl = `/exams/course/${value?.name?.toUpperCase()}`;
         navigate(searchUrl);
     };
 
