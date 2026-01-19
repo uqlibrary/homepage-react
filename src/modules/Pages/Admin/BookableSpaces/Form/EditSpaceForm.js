@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { Grid } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
@@ -22,7 +21,14 @@ import Typography from '@mui/material/Typography';
 
 import { useAccountContext } from 'context';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { isValidUrl, slugifyName, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
+import {
+    isValidUrl,
+    scrollToTopOfPage,
+    slugifyName,
+    standardText,
+    StyledPrimaryButton,
+    StyledSecondaryButton,
+} from 'helpers/general';
 
 import {
     displayToastErrorMessage,
@@ -31,7 +37,8 @@ import {
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { ImageUploadDropzone } from './ImageUploadDropzone';
-import SpacesAdminPage from '../SpacesAdminPage';
+import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
+import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Form/SpaceLocationMap';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
@@ -58,6 +65,30 @@ const StyledFilterWrapper = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
+}));
+
+const StyledUqTightLink = styled('a')(({ theme }) => ({
+    color: theme.palette.primary.main,
+    fontWeight: 500,
+    fontSize: '16px',
+    textAlign: 'left',
+    textTransform: 'none',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    lineHeight: 'normal',
+    padding: '0 4px',
+    marginLeft: '1.5rem',
+    '&:hover': {
+        backgroundColor: 'inherit',
+    },
+    '& span': {
+        textDecoration: 'underline',
+        '&:hover': {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+        },
+    },
 }));
 
 const StyledFacilityGroupCheckboxBlock = styled('div')(() => ({
@@ -186,7 +217,6 @@ export const EditSpaceForm = ({
     console.log('TOP EditSpaceForm springshareList', springshareList);
 
     const { account } = useAccountContext();
-    // const [cookies, setCookie] = useCookies();
 
     const [location, setLocation1] = useState({});
     const setLocation = newValues => {
@@ -201,9 +231,13 @@ export const EditSpaceForm = ({
         setErrorMessages2(m);
     };
 
-    const firstStepId = 0;
-    const lastStepId = 3; // the total number of steps / panels
+    const firstTabId = 0;
+    const secondTabId = 1;
+    const thirdTabId = 2;
+    const lastTabId = 3; // the total number of steps / panels
     const [activeStep, setActiveStep] = useState(0);
+
+    const tabLabels = ['About', 'Facility types', 'Location & Hours', 'Imagery'];
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
@@ -316,14 +350,18 @@ export const EditSpaceForm = ({
     };
     const handleNext = () => {
         // setEditorReady(false);
+        document.activeElement.blur(); // defocus the button
         formValid(formValues);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
+        scrollToTopOfPage();
     };
 
     const handleBack = () => {
         // setEditorReady(false);
+        document.activeElement.blur(); // defocus the button
         formValid(formValues);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
+        scrollToTopOfPage();
     };
 
     const handleFieldCompletion = e => {
@@ -520,18 +558,6 @@ export const EditSpaceForm = ({
         </>
     );
 
-    // const getFacilityTypes = data => {
-    //     const facilityTypes = [];
-    //     data?.facility_type_groups?.forEach(group => {
-    //         group?.facility_type_children?.forEach(facilityType => {
-    //             facilityTypes.push({
-    //                 facility_type_id: facilityType?.facility_type_id,
-    //                 facility_type_name: `${group?.facility_type_group_name}: ${facilityType?.facility_type_name}`,
-    //             });
-    //         });
-    //     });
-    //     return facilityTypes;
-    // };
     const showFilterCheckboxes = () => {
         if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
             return <p>No filter types in system.</p>;
@@ -976,38 +1002,13 @@ export const EditSpaceForm = ({
                         </StyledErrorMessageTypography>
                     </FormControl>
                 </Grid>
-                {/* <Grid item xs={6}>*/}
-                {/*    <FormControl variant="standard" fullWidth>*/}
-                {/*        <InputLabel htmlFor="space_latitude">*/}
-                {/*            Latitude (to be replaced with map picker)*/}
-                {/*        </InputLabel>*/}
-                {/*        <Input*/}
-                {/*            id="space_latitude"*/}
-                {/*            data-testid="space_latitude"*/}
-                {/*            value={formValues?.space_latitude || ''}*/}
-                {/*            onChange={handleChange('space_latitude')}*/}
-                {/*            onBlur={handleFieldCompletion}*/}
-                {/*        />*/}
-                {/*        <StyledErrorMessageTypography component={'div'}>*/}
-                {/*            {reportErrorMessage('space_latitude')}*/}
-                {/*        </StyledErrorMessageTypography>*/}
-                {/*    </FormControl>*/}
-                {/* </Grid>*/}
-                {/* <Grid item xs={6}>*/}
-                {/*    <FormControl variant="standard" fullWidth>*/}
-                {/*        <InputLabel htmlFor="space_longitude">Longitude</InputLabel>*/}
-                {/*        <Input*/}
-                {/*            id="space_longitude"*/}
-                {/*            data-testid="space_longitude"*/}
-                {/*            value={formValues?.space_longitude || ''}*/}
-                {/*            onChange={handleChange('space_longitude')}*/}
-                {/*            onBlur={handleFieldCompletion}*/}
-                {/*        />*/}
-                {/*        <StyledErrorMessageTypography component={'div'}>*/}
-                {/*            {reportErrorMessage('space_longitude')}*/}
-                {/*        </StyledErrorMessageTypography>*/}
-                {/*    </FormControl>*/}
-                {/* </Grid>*/}
+                <Grid item xs={6} style={{ width: '100%' }}>
+                    <SpaceLocationMap
+                        formValues={formValues}
+                        setFormValues={setFormValues}
+                        campusCoordinateList={currentCampusList}
+                    />
+                </Grid>
                 <Grid item xs={12}>
                     <Typography component={'h3'} variant={'h6'}>
                         Opening hours
@@ -1114,12 +1115,12 @@ export const EditSpaceForm = ({
     };
     const cancelButton = () => {
         return (
-            <StyledSecondaryButton
-                children="Cancel"
+            <StyledUqTightLink
+                href={spacesAdminLink('/admin/spaces', account)}
                 data-testid="admin-spaces-form-button-cancel"
-                onClick={() => navigateToPage('/admin/spaces')}
-                variant="contained"
-            />
+            >
+                <span>Cancel</span>
+            </StyledUqTightLink>
         );
     };
     const saveButton = (disabled = false) => {
@@ -1137,8 +1138,8 @@ export const EditSpaceForm = ({
                     <div data-testid="spaces-button-error-list">
                         <h2 data-error-count="${errorMessages?.length}">Errors</h2>
                         <p>These errors occurred:</p>
-                        {errorMessages?.map(m => {
-                            return <p>{m?.message}</p>;
+                        {errorMessages?.map((m, index) => {
+                            return <p key={`error-${index}`}>{m?.message}</p>;
                         })}
                     </div>
                 )}
@@ -1147,11 +1148,11 @@ export const EditSpaceForm = ({
     };
 
     function panelErrorCount(index) {
-        if (index === firstStepId) {
+        if (index === firstTabId) {
             return validatePanelAbout(formValues)?.length;
-        } else if (index === 1) {
+        } else if (index === secondTabId) {
             return validatePanelFacilityTypes(formValues)?.length;
-        } else if (index === 2) {
+        } else if (index === thirdTabId) {
             return validatePanelLocation(formValues)?.length;
         } else {
             // index must = 3
@@ -1181,67 +1182,73 @@ export const EditSpaceForm = ({
                 cancelButtonColor="accent"
             />
 
-            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
+            <SpacesAdminPage
+                systemTitle="Spaces"
+                pageTitle={pageTitle}
+                currentPageSlug={currentPageSlug}
+                standardPageId="StandardPage"
+            >
                 {mode === 'add' && (
                     <>
                         <form id="spaces-addedit-form">
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <Stepper activeStep={activeStep}>
-                                        {['About', 'Facility types', 'Location & Hours', 'Imagery'].map(
-                                            (stepName, index) => {
-                                                const stepProps = { completed: null };
-                                                const labelProps = {
-                                                    optional: null,
-                                                };
-                                                return (
-                                                    <Step key={stepName} {...stepProps} sx={{ paddingRight: '25px' }}>
-                                                        <StepLabel {...labelProps}>
-                                                            {panelErrorCount(index) === 0 ? (
-                                                                <span data-testid={`tab-${slugifyName(stepName)}`}>
-                                                                    {stepName}
-                                                                </span>
-                                                            ) : (
-                                                                <StyledErrorCountBadge
-                                                                    color="error"
-                                                                    badgeContent={panelErrorCount(index)}
-                                                                    data-testid={`tab-${slugifyName(stepName)}`}
-                                                                >
-                                                                    {stepName}
-                                                                </StyledErrorCountBadge>
-                                                            )}
-                                                        </StepLabel>
-                                                    </Step>
-                                                );
-                                            },
-                                        )}
+                                        {tabLabels.map((tabName, index) => {
+                                            const stepProps = { completed: null };
+                                            const labelProps = {
+                                                optional: null,
+                                            };
+                                            return (
+                                                <Step key={tabName} {...stepProps} sx={{ paddingRight: '25px' }}>
+                                                    <StepLabel {...labelProps}>
+                                                        {panelErrorCount(index) === 0 ? (
+                                                            <span data-testid={`tab-${slugifyName(tabName)}`}>
+                                                                {tabName}
+                                                            </span>
+                                                        ) : (
+                                                            <StyledErrorCountBadge
+                                                                color="error"
+                                                                badgeContent={panelErrorCount(index)}
+                                                                data-testid={`tab-${slugifyName(tabName)}`}
+                                                            >
+                                                                {tabName}
+                                                            </StyledErrorCountBadge>
+                                                        )}
+                                                    </StepLabel>
+                                                </Step>
+                                            );
+                                        })}
                                     </Stepper>
                                 </Grid>
-                                {activeStep === firstStepId && aboutPanel()}
-                                {activeStep === 1 && facilityTypePanel()}
-                                {activeStep === 2 && locationPanel()}
-                                {activeStep === lastStepId && imageryPanel()}
+                                {activeStep === firstTabId && aboutPanel()}
+                                {activeStep === secondTabId && facilityTypePanel()}
+                                {activeStep === thirdTabId && locationPanel()}
+                                {activeStep === lastTabId && imageryPanel()}
                                 <Grid item xs={12}>
                                     <Box
                                         id={'button-wrapper'}
                                         sx={{ display: 'flex', flexDirection: 'row', pt: 2, alignItems: 'start' }}
                                     >
-                                        <Button
+                                        <StyledSecondaryButton
                                             color="inherit"
-                                            disabled={activeStep === firstStepId}
+                                            disabled={activeStep === firstTabId}
                                             onClick={handleBack}
                                             sx={{ mr: 1 }}
                                             data-testid="spaces-form-back-button"
                                         >
                                             Back
-                                        </Button>
+                                        </StyledSecondaryButton>
                                         <Box sx={{ flex: '1 1 auto' }} />
-                                        {activeStep === lastStepId ? (
+                                        {activeStep === lastTabId ? (
                                             saveButton(errorMessages.length > 0)
                                         ) : (
-                                            <Button onClick={handleNext} data-testid="spaces-form-next-button">
+                                            <StyledPrimaryButton
+                                                onClick={handleNext}
+                                                data-testid="spaces-form-next-button"
+                                            >
                                                 Next
-                                            </Button>
+                                            </StyledPrimaryButton>
                                         )}
                                     </Box>
                                 </Grid>
@@ -1260,29 +1267,28 @@ export const EditSpaceForm = ({
                             <Box sx={{ width: '100%' }}>
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                     <StyledTabs value={panelId} onChange={handleTabChange} aria-label="Space fields">
-                                        {['About', 'Facility types', 'Location & Hours', 'Imagery'].map(
-                                            (tabName, index) => {
-                                                return (
-                                                    <Tab
-                                                        label={`${tabName}`}
-                                                        {...a11yProps(index)}
-                                                        data-testid={`tab-${slugifyName(tabName)}`}
-                                                    />
-                                                );
-                                            },
-                                        )}
+                                        {tabLabels.map((tabName, index) => {
+                                            return (
+                                                <Tab
+                                                    key={`${tabName}-edit`}
+                                                    label={`${tabName}`}
+                                                    {...a11yProps(index)}
+                                                    data-testid={`tab-${slugifyName(tabName)}`}
+                                                />
+                                            );
+                                        })}
                                     </StyledTabs>
                                 </Box>
-                                <CustomTabPanel value={panelId} index={0}>
+                                <CustomTabPanel value={panelId} index={firstTabId}>
                                     {aboutPanel()}
                                 </CustomTabPanel>
-                                <CustomTabPanel value={panelId} index={1}>
+                                <CustomTabPanel value={panelId} index={secondTabId}>
                                     {facilityTypePanel()}
                                 </CustomTabPanel>
-                                <CustomTabPanel value={panelId} index={2}>
+                                <CustomTabPanel value={panelId} index={thirdTabId}>
                                     {locationPanel()}
                                 </CustomTabPanel>
-                                <CustomTabPanel value={panelId} index={3}>
+                                <CustomTabPanel value={panelId} index={lastTabId}>
                                     {imageryPanel()}
                                 </CustomTabPanel>
                             </Box>

@@ -4,6 +4,9 @@ import { ARMUS_SPRINGSHARE_ID, CENTRAL_SPRINGSHARE_ID } from '../../../../src/co
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 import { assertDialogToastHasMessage, assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
+const LAW_DEFAULT_LATITUDE = '-27.49718';
+const LAW_DEFAULT_LONGITUDE = '153.01214';
+
 async function clickDeleteButton(page: Page) {
     const mainDialog = page.getByTestId('main-dialog');
     await expect(page.getByTestId('confirmation-dialog')).not.toBeVisible();
@@ -76,7 +79,7 @@ test.describe('Spaces Location admin', () => {
             const dialog = page.getByTestId('main-dialog');
 
             await expect(dialog.getByTestId('add-campus-heading')).toContainText('Add campus');
-            await expect(dialog.getByTestId('add-campus-name').locator('label')).toContainText('New campus name');
+            await expect(dialog.getByTestId('add-campus-name').locator('label')).toContainText('Campus name');
             await expect(dialog.getByTestId('add-campus-name').locator('input')).toBeVisible();
             await expect(dialog.getByTestId('add-campus-number').locator('label')).toContainText('Campus number');
             await expect(dialog.getByTestId('add-campus-number').locator('input')).toBeVisible();
@@ -150,6 +153,8 @@ test.describe('Spaces Location admin', () => {
             const expectedValues = {
                 campus_name: 'name of new campus',
                 campus_number: '0076',
+                campus_latitude: LAW_DEFAULT_LATITUDE,
+                campus_longitude: LAW_DEFAULT_LONGITUDE,
             };
             await assertExpectedDataSentToServer(page, expectedValues);
         });
@@ -264,6 +269,8 @@ test.describe('Spaces Location admin', () => {
             const expectedValues = {
                 campus_name: ' appendSt Lucia',
                 campus_number: '901',
+                campus_latitude: LAW_DEFAULT_LATITUDE,
+                campus_longitude: LAW_DEFAULT_LONGITUDE,
             };
             await assertExpectedDataSentToServer(page, expectedValues);
         });
@@ -729,7 +736,7 @@ test.describe('Spaces Location admin', () => {
             await expect(dialog.getByTestId('dialog-save-button')).toBeVisible();
             await expect(dialog.getByTestId('dialog-save-button')).toContainText('Save');
         });
-        test('validates properly for empty floor field', async ({ page, context }) => {
+        test('validates properly for empty floor field', async ({ page }) => {
             await assertCanOpenAddFloorDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 

@@ -3494,7 +3494,7 @@ export default {
                 "lat": "",
                 "long": "",
                 "color": "#000000",
-                "parent_lid": 3833,
+                "parent_lid": 3841,
                 "weeks": [{
                     "Monday": {
                         "date": "2025-08-25",

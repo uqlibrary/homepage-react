@@ -45,7 +45,7 @@ export const ShortSpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, w
     return (
         <>
             <StyledParagraphTypography component={'p'}>
-                <b>{bookableSpace?.space_library_name} opening hours</b> - Today: {todaysHours.rendered}{' '}
+                <b>{bookableSpace?.space_library_name} opening hours</b> Today: {todaysHours.rendered}{' '}
                 {bookableSpace?.space_opening_hours_override && `(${bookableSpace?.space_opening_hours_override})`}
             </StyledParagraphTypography>
         </>

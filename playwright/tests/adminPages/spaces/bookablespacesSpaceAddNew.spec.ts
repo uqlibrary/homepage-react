@@ -7,6 +7,14 @@ import { assertErrorPopupAppears } from '@uq/pw/tests/adminPages/spaces/spacesTe
 
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
 
+const STEP_ABOUT = 'tab-about';
+const STEP_FACILITY_TYPES = 'tab-facility-types';
+const STEP_LOCATION_HOURS = 'tab-location-hours';
+const STEP_IMAGERY = 'tab-imagery';
+
+const PACE_DEFAULT_LATITUDE = '-27.49979';
+const PACE_DEFAULT_LONGITUDE = '153.03066';
+
 test.describe('Spaces Admin - add new space', () => {
     test('can navigate from dashboard to add new', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
@@ -38,15 +46,15 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
     });
     test('add new space appears as expected onload', async ({ page }) => {
-        await expect(page.getByTestId('tab-about')).toBeVisible();
-        await expect(page.getByTestId('tab-about')).toContainText('About');
+        await expect(page.getByTestId(STEP_ABOUT)).toBeVisible();
+        await expect(page.getByTestId(STEP_ABOUT)).toContainText('About');
 
-        await expect(page.getByTestId('tab-facility-types')).toBeVisible();
-        await expect(page.getByTestId('tab-facility-types')).toContainText('Facility types');
-        await expect(page.getByTestId('tab-location-hours')).toBeVisible();
-        await expect(page.getByTestId('tab-location-hours')).toContainText('Location & Hours');
-        await expect(page.getByTestId('tab-imagery')).toBeVisible();
-        await expect(page.getByTestId('tab-imagery')).toContainText('Imagery');
+        await expect(page.getByTestId(STEP_FACILITY_TYPES)).toBeVisible();
+        await expect(page.getByTestId(STEP_FACILITY_TYPES)).toContainText('Facility types');
+        await expect(page.getByTestId(STEP_LOCATION_HOURS)).toBeVisible();
+        await expect(page.getByTestId(STEP_LOCATION_HOURS)).toContainText('Location & Hours');
+        await expect(page.getByTestId(STEP_IMAGERY)).toBeVisible();
+        await expect(page.getByTestId(STEP_IMAGERY)).toContainText('Imagery');
 
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
@@ -59,19 +67,26 @@ test.describe('Spaces Admin - add new space', () => {
         await page.getByTestId('spaces-form-next-button').click(); // to locations
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
+        await expect(page.getByTestId('add-space-select-campus')).toContainText('PACE');
         await expect(page.getByTestId('add-space-select-library').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-library')).toContainText('Walter Harrison Law Library');
+        await expect(page.getByTestId('add-space-select-library')).toContainText(
+            'Pharmacy Australia Centre of Excellence',
+        );
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('Walter Harrison Law Library - 1');
+        await expect(page.getByTestId('add-space-select-floor')).toContainText(
+            'Pharmacy Australia Centre of Excellence - 65',
+        );
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('2nd Floor');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Walter Harrison Law Library');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Forgan Smith Building');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('(Building 0001)');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('St Lucia Campus');
-        await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('6th Floor');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText(
+            'Pharmacy Australia Centre of Excellence',
+        );
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText(
+            'Pharmacy Australia Centre of Excellence (Building 870)',
+        );
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('PACE Campus');
+        await expect(page.getByTestId('add-space-springshare-id')).toContainText('Dutton Park Health Sciences');
 
         const cancelButton = page.getByTestId('admin-spaces-form-button-cancel');
         await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
@@ -122,10 +137,12 @@ test.describe('Spaces Admin - add new space', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             // locationType: 'space',
-            space_floor_id: 1,
+            space_floor_id: 65,
             space_name: 'W12343',
             space_type: 'Computer room',
-            space_opening_hours_id: 3841,
+            space_opening_hours_id: 3967,
+            space_latitude: PACE_DEFAULT_LATITUDE,
+            space_longitude: PACE_DEFAULT_LONGITUDE,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -254,6 +271,8 @@ test.describe('Spaces Admin - add new space', () => {
             space_opening_hours_id: 3825, // dhesl
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
             facility_types: [ASKUS_FILTER_TYPE, MICROWAVE_FILTER_TYPE],
+            space_latitude: PACE_DEFAULT_LATITUDE, // TODO add drag and drop test
+            space_longitude: PACE_DEFAULT_LONGITUDE,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -280,7 +299,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
 
-        await assertAccessibility(page, '[aria-labelledby=":r1:"]');
+        await assertAccessibility(page, '[aria-labelledby=":r7:"]');
     });
     test('add new space - validation - required fields 1', async ({ page }) => {
         // when the user has not entered required fields, they get an error
@@ -400,16 +419,15 @@ test.describe('Spaces Admin - add new space', () => {
 
         // the page loads with the expected campus-building-floor
         await expect(campusSelector.locator('input')).toBeVisible();
-        await expect(campusSelector).toContainText('St Lucia');
+        await expect(campusSelector).toContainText('PACE');
         await expect(librarySelector.locator('input')).toBeVisible();
-        await expect(librarySelector).toContainText('Walter Harrison Law Library');
+        await expect(librarySelector).toContainText('Pharmacy Australia Centre of Excellence');
         await expect(floorSelector.locator('input')).toBeVisible();
-        await expect(floorSelector).toContainText('Walter Harrison Law Library - 1');
-        await expect(floorSelector).not.toContainText('Ground floor');
-        await expect(springshareSelector).toContainText('Walter Harrison Law');
+        await expect(floorSelector).toContainText('Pharmacy Australia Centre of Excellence - 65');
+        await expect(springshareSelector).toContainText('Dutton Park Health Sciences');
 
         await expect(aboutPageInputField).toContainText(
-            'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
+            'https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library',
         );
 
         await page
