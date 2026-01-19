@@ -67,6 +67,30 @@ const StyledFilterWrapper = styled('div')(() => ({
     flexWrap: 'wrap',
 }));
 
+const StyledUqTightLink = styled('a')(({ theme }) => ({
+    color: theme.palette.primary.main,
+    fontWeight: 500,
+    fontSize: '16px',
+    textAlign: 'left',
+    textTransform: 'none',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    lineHeight: 'normal',
+    padding: '0 4px',
+    marginLeft: '1.5rem',
+    '&:hover': {
+        backgroundColor: 'inherit',
+    },
+    '& span': {
+        textDecoration: 'underline',
+        '&:hover': {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+        },
+    },
+}));
+
 const StyledFacilityGroupCheckboxBlock = styled('div')(() => ({
     '& h5': {
         fontWeight: 300,
@@ -1091,12 +1115,12 @@ export const EditSpaceForm = ({
     };
     const cancelButton = () => {
         return (
-            <StyledSecondaryButton
-                children="Cancel"
+            <StyledUqTightLink
+                href={spacesAdminLink('/admin/spaces', account)}
                 data-testid="admin-spaces-form-button-cancel"
-                onClick={() => navigateToPage('/admin/spaces')}
-                variant="contained"
-            />
+            >
+                <span>Cancel</span>
+            </StyledUqTightLink>
         );
     };
     const saveButton = (disabled = false) => {
