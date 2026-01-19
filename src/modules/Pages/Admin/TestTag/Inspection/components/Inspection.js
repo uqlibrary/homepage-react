@@ -289,6 +289,7 @@ const Inspection = ({
                     isOpen={isSaveSuccessOpen}
                     locale={successDialog}
                     noMinContentWidth
+                    autoFocusPrimaryButton
                 />
                 <EventPanel
                     id={componentId}
