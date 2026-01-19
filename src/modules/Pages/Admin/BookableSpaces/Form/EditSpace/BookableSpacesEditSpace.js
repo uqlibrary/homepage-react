@@ -40,7 +40,13 @@ export const BookableSpacesEditSpace = ({
     bookableSpaceGetError,
     bookableSpaceGetResult,
 }) => {
-    console.log('Edit bookableSpaceGet:', bookableSpaceGetting, bookableSpaceGetError, bookableSpaceGetResult);
+    console.log(
+        'Edit bookableSpaceGet:',
+        bookableSpaceGetting,
+        bookableSpaceGetError,
+        bookableSpaceGetResult?.data?.space_name,
+        bookableSpaceGetResult,
+    );
     console.log('Edit campusList:', campusListLoading, campusListError, campusList);
     console.log('Edit weeklyHours:', weeklyHoursLoading, weeklyHoursError, weeklyHours, weeklyHours?.locations);
     console.log('Edit facilityTypeList:', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
@@ -71,14 +77,6 @@ export const BookableSpacesEditSpace = ({
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Add a Space</span></li>',
         ]);
 
-        if (
-            !!spaceUuid &&
-            bookableSpaceGetting === null &&
-            bookableSpaceGetError === null &&
-            bookableSpaceGetResult === null
-        ) {
-            actions.loadABookableSpacesRoom(spaceUuid);
-        }
         if (campusListLoading === null && campusListError === null && campusList === null) {
             actions.loadBookableSpaceCampusChildren(); // get list of campuses, buildings and floors
             actions.loadAllBookableSpacesRooms(); // get list of Spaces
@@ -87,6 +85,12 @@ export const BookableSpacesEditSpace = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (!!spaceUuid) {
+            actions.loadABookableSpacesRoom(spaceUuid);
+        }
+    }, [actions, spaceUuid]);
 
     const [currentCampusList, setCurrentCampusList] = useState({});
     useEffect(() => {

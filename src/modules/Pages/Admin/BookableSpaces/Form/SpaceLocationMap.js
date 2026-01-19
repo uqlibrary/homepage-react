@@ -91,7 +91,7 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
     const preposition =
         !!formValues.space_latitude && !!formValues.space_longitude
             ? [formValues.space_latitude, formValues.space_longitude]
-            : tabList.at(0).coords;
+            : tabList.find(t => !!t.space_latitude && !!t.space_longitude).at(0).coords;
     const [position, setPositionLocal] = useState(preposition);
     const setPosition = p => {
         setPositionLocal(p);
