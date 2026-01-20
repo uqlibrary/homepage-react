@@ -285,6 +285,9 @@ export const EditSpaceForm = ({
         if (!currentValues?.space_floor_id && !currentValues?.floor_id) {
             errorMessages.push({ field: 'space_floor_id', message: 'A location is required.' });
         }
+        if (!currentValues?.space_latitude || !currentValues?.space_longitude) {
+            errorMessages.push({ field: 'space_latitude', message: 'Please locate the space on the map' });
+        }
         if (!!currentValues?.space_services_page && !isValidUrl(currentValues?.space_services_page)) {
             errorMessages.push({
                 field: 'space_services_page',
@@ -619,8 +622,8 @@ export const EditSpaceForm = ({
         valuesToSend.space_opening_hours_id = formValues?.space_opening_hours_id;
         valuesToSend.space_services_page = formValues?.space_services_page;
         valuesToSend.space_opening_hours_override = formValues?.space_opening_hours_override;
-        valuesToSend.space_latitude = formValues?.space_latitude;
-        valuesToSend.space_longitude = formValues?.space_longitude;
+        valuesToSend.space_latitude = formValues?.space_latitude?.toString();
+        valuesToSend.space_longitude = formValues?.space_longitude?.toString();
         valuesToSend.facility_types = formValues?.facility_types?.map(ft => ft?.facility_type_id);
         valuesToSend.space_id = formValues?.space_id;
         valuesToSend.uploadedFile = formValues.uploadedFile;
@@ -643,7 +646,7 @@ export const EditSpaceForm = ({
         }
     };
 
-    const locale = {
+    const confirmationLocale = {
         success: {
             confirmationTitle: mode === 'add' ? 'A Space has been added' : 'The Space has been updated',
             confirmationMessage: '',
@@ -1165,7 +1168,7 @@ export const EditSpaceForm = ({
                 onClose={closeConfirmationBox}
                 onAction={() => returnToDashboard()}
                 //
-                hideCancelButton={!locale.success.cancelButtonLabel}
+                hideCancelButton={!confirmationLocale.success.cancelButtonLabel}
                 onCancelAction={() => {
                     mode === 'edit' ? reEditRecord() : clearForm();
                 }}
@@ -1174,7 +1177,11 @@ export const EditSpaceForm = ({
                 alternateActionButtonLabel="Close"
                 onAlternateAction={closeConfirmationBox}
                 //
-                locale={!!bookableSpacesRoomAddError || !!bookableSpacesRoomUpdateError ? locale.error : locale.success}
+                locale={
+                    !!bookableSpacesRoomAddError || !!bookableSpacesRoomUpdateError
+                        ? confirmationLocale.error
+                        : confirmationLocale.success
+                }
                 cancelButtonColor="accent"
             />
 
