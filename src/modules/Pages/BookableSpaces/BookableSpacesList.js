@@ -192,46 +192,6 @@ export const BookableSpacesList = ({
             },
         };
     };
-    const showMap = filteredSpaceLocations => {
-        return (
-            <MapContainer
-                center={[uqStLuciaDefaultLocation.latitude, uqStLuciaDefaultLocation.longitude]}
-                zoom={18}
-                style={{ width: '100%', height: '100%' }}
-            >
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {filteredSpaceLocations.length > 0 &&
-                    filteredSpaceLocations
-                        ?.filter(m => !!m.space_latitude && !!m.space_longitude)
-                        ?.map(m => {
-                            // show the filtered Spaces on the map
-                            console.log(
-                                'map point:',
-                                m.space_name,
-                                m.space_library_name,
-                                m.space_latitude,
-                                m.space_longitude,
-                            );
-                            const locationKey = `mappoint-space-${m?.space_id}`;
-                            return (
-                                <Marker
-                                    key={locationKey}
-                                    id={locationKey}
-                                    position={[m.space_latitude, m.space_longitude]}
-                                >
-                                    <Popup>
-                                        {m.space_name}
-                                        <p>{m.space_description}</p>
-                                    </Popup>
-                                </Marker>
-                            );
-                        })}
-            </MapContainer>
-        );
-    };
     return (
         <>
             {(() => {
@@ -316,7 +276,44 @@ export const BookableSpacesList = ({
                                 weeklyHoursError={weeklyHoursError}
                                 StyledStandardCard={StyledStandardCard}
                             />
-                            <StyledMapWrapperDiv>{showMap(filteredSpaceLocations)}</StyledMapWrapperDiv>
+                            <StyledMapWrapperDiv>
+                                <MapContainer
+                                    center={[uqStLuciaDefaultLocation.latitude, uqStLuciaDefaultLocation.longitude]}
+                                    zoom={18}
+                                    style={{ width: '100%', height: '100%' }}
+                                >
+                                    <TileLayer
+                                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    />
+                                    {filteredSpaceLocations.length > 0 &&
+                                        filteredSpaceLocations
+                                            ?.filter(m => !!m.space_latitude && !!m.space_longitude)
+                                            ?.map(m => {
+                                                // show the filtered Spaces on the map
+                                                console.log(
+                                                    'map point:',
+                                                    m.space_name,
+                                                    m.space_library_name,
+                                                    m.space_latitude,
+                                                    m.space_longitude,
+                                                );
+                                                const locationKey = `mappoint-space-${m?.space_id}`;
+                                                return (
+                                                    <Marker
+                                                        key={locationKey}
+                                                        id={locationKey}
+                                                        position={[m.space_latitude, m.space_longitude]}
+                                                    >
+                                                        <Popup>
+                                                            {m.space_name}
+                                                            <p>{m.space_description}</p>
+                                                        </Popup>
+                                                    </Marker>
+                                                );
+                                            })}
+                                </MapContainer>
+                            </StyledMapWrapperDiv>
                         </StyledPageWrapperDiv>
                     );
                 }
