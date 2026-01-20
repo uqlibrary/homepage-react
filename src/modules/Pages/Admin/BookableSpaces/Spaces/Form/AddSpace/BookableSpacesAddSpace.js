@@ -14,7 +14,6 @@ import {
     initialisedSpringshareList,
     spacesAdminLink,
     validCampusList,
-    validLibraryList,
     weeklyHoursLoaded,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';

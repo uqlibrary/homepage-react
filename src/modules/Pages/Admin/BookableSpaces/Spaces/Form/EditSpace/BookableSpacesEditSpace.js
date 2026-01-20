@@ -10,7 +10,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
-import { EditSpaceForm } from 'modules/Pages/Admin/BookableSpaces/Form/EditSpaceForm';
+import { EditSpaceForm } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/EditSpaceForm';
 import {
     addBreadcrumbsToSiteHeader,
     initialisedSpringshareList,

@@ -38,9 +38,9 @@ import {
     validLibraryList,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { ImageUploadDropzone } from './ImageUploadDropzone';
+import { ImageUploadDropzone } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/ImageUploadDropzone';
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
-import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Form/SpaceLocationMap';
+import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceLocationMap';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),

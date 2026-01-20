@@ -24,7 +24,7 @@ import {
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
 import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
-import CampusLocationMap from 'modules/Pages/Admin/BookableSpaces/ManageLocations/CampusLocationMap';
+import CampusLocationMap from 'modules/Pages/Admin/BookableSpaces/Locations/CampusLocationMap';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
