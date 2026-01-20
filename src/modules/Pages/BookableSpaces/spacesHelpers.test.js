@@ -1,4 +1,4 @@
-import { getFriendlyFloorName, getOrdinalSuffixFor, isInt } from './spacesHelpers';
+import { getFriendlyFloorName, getOrdinalSuffixFor, isInt } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 describe('spaces helpers', () => {
     it('creates ordinal numbers correctly', () => {

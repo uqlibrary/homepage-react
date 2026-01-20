@@ -14,6 +14,10 @@ const LIVERIS = '43534';
 const ARMUS1 = '1';
 const ARMUS2 = '2';
 const ARMUS3 = '3';
+const ARMUS4 = '4';
+const ARMUS5 = '5';
+const ARMUS6 = '6';
+const ARMUS7 = '7';
 
 test.describe('Spaces Admin - manage locations', () => {
     test('page has correct data', async ({ page }) => {
@@ -851,6 +855,33 @@ test.describe('Spaces Admin - manage locations', () => {
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
         await expect(pageCountDisplay).toContainText('1–5 of 10');
+
+        // go to next page of pagination, 6-10 of 10
+        const paginationBlock = page.getByTestId('pagination-block');
+        const nextPaginationButton = paginationBlock.locator('[aria-label="Go to next page"]');
+        await expect(nextPaginationButton).toBeVisible();
+        await nextPaginationButton.click();
+        await expect(pageCountDisplay).toBeVisible();
+        await expect(pageCountDisplay).toContainText('6–10 of 10');
+        await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
+        await expect(page.getByTestId(`space-${ARMUS3}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS4}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS5}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS6}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS7}`)).toBeVisible();
+
+        // go to back to first page of pagination, 1-5 of 10
+        const previousPaginationButton = paginationBlock.locator('[aria-label="Go to previous page"]');
+        await expect(previousPaginationButton).toBeVisible();
+        await previousPaginationButton.click();
+        await expect(pageCountDisplay).toBeVisible();
+        await expect(pageCountDisplay).toContainText('1–5 of 10');
+        await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
+        await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${PACE}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS2}`)).toBeVisible();
 
         await expect(campusSelector.locator('input')).not.toBeDisabled();
         await campusSelector.click();

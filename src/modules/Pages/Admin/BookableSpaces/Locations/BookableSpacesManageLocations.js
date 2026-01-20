@@ -24,7 +24,7 @@ import {
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
 import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
-import CampusLocationMap from 'modules/Pages/Admin/BookableSpaces/ManageLocations/CampusLocationMap';
+import CampusLocationMap from 'modules/Pages/Admin/BookableSpaces/Locations/CampusLocationMap';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -215,15 +215,8 @@ export const BookableSpacesManageLocations = ({
     });
     const hideConfirmationLocal = () => {
         hideConfirmation(0);
-        // const dialog = document.getElementById('popupDialog');
-        // !!dialog && !!dialog.classList.contains('hidden') && dialog.classList.remove('hidden');
     };
-    // const hideDialog = () => {
-    //     const dialog = document.getElementById('popupDialog');
-    //     !!dialog && !dialog.classList.contains('hidden') && dialog.classList.add('hidden');
-    // };
     const showErrorMessageinPopup = confirmationTitle => {
-        // hideDialog();
         setConfirmationLocale({
             ...confirmationLocale,
             confirmationTitle: confirmationTitle,

@@ -56,30 +56,6 @@ export const getFlatFacilityTypeList = facilityTypes => {
         }) || []
     );
 };
-export const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
-    // get a list of the filters used in spaces
-    const spaceFilters = bookableSpacesRoomList?.data?.locations
-        .flatMap(location => location.facility_types || [])
-        .map(facilityType => facilityType.facility_type_id);
-    const spaceFiltersSet = new Set(spaceFilters);
-
-    // filter facility types so we only show the checkboxes where there is an associated space
-    // (remove the group completely if it has no shown checkboxes)
-    return {
-        ...facilityTypeList,
-        data: {
-            ...facilityTypeList?.data,
-            facility_type_groups: facilityTypeList?.data?.facility_type_groups
-                .map(group => ({
-                    ...group,
-                    facility_type_children: (group.facility_type_children || []).filter(child =>
-                        spaceFiltersSet.has(child.facility_type_id),
-                    ),
-                }))
-                .filter(group => group.facility_type_children.length > 0),
-        },
-    };
-};
 
 function filterNext7Days(departmentData) {
     // Get today's date (start of day)
