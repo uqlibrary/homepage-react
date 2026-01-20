@@ -16,7 +16,7 @@ import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPic
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import config from './config';
+import config, { renderLocation } from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
 import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
@@ -212,11 +212,7 @@ const AssetReportByFilters = ({
                         action: (
                             <DownloadAsCSV
                                 filename={componentIdLower}
-                                contents={() =>
-                                    prepareCSVExportData(columns, assetList, item =>
-                                        config.fields.location.fieldParams.renderCell({ row: item }),
-                                    )
-                                }
+                                contents={() => prepareCSVExportData(columns, assetList, renderLocation)}
                                 disabled={assetListLoading || !assetList?.length}
                             />
                         ),
