@@ -215,15 +215,8 @@ export const BookableSpacesManageLocations = ({
     });
     const hideConfirmationLocal = () => {
         hideConfirmation(0);
-        // const dialog = document.getElementById('popupDialog');
-        // !!dialog && !!dialog.classList.contains('hidden') && dialog.classList.remove('hidden');
     };
-    // const hideDialog = () => {
-    //     const dialog = document.getElementById('popupDialog');
-    //     !!dialog && !dialog.classList.contains('hidden') && dialog.classList.add('hidden');
-    // };
     const showErrorMessageinPopup = confirmationTitle => {
-        // hideDialog();
         setConfirmationLocale({
             ...confirmationLocale,
             confirmationTitle: confirmationTitle,

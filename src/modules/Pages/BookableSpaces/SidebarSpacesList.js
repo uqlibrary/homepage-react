@@ -11,6 +11,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { ShortSpaceOpeningHours } from 'modules/Pages/BookableSpaces/ShortSpaceOpeningHours';
 import { LongSpaceOpeningHours } from 'modules/Pages/BookableSpaces/LongSpaceOpeningHours';
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { addClass, removeClass } from 'helpers/general';
 
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
@@ -77,11 +78,11 @@ const SidebarSpacesList = ({
     const showHideSpacePanel = bookableSpace => {
         const hidePanel = (panelId, classname = 'hiddenSection') => {
             const openPanel = document.getElementById(panelId);
-            !!openPanel && !openPanel.classList.contains(classname) && openPanel.classList.add(classname);
+            addClass(openPanel, classname);
         };
         const showPanel = (panelId, classname = 'hiddenSection') => {
             const closedPanel = document.getElementById(panelId);
-            !!closedPanel && closedPanel.classList.contains(classname) && closedPanel.classList.remove(classname);
+            removeClass(closedPanel, classname);
         };
 
         const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
@@ -92,9 +93,7 @@ const SidebarSpacesList = ({
             showPanel(spaceExtraElementsId(spaceId));
 
             const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
-            !!spaceDescription &&
-                spaceDescription.classList.contains('truncated') &&
-                spaceDescription.classList.remove('truncated');
+            removeClass(spaceDescription, 'truncated');
 
             const toggleButton = document.getElementById(togglePanelButtonElementId(spaceId));
             toggleButton?.setAttribute('aria-expanded', true);
@@ -109,9 +108,7 @@ const SidebarSpacesList = ({
             hidePanel(spaceExtraElementsId(spaceId));
 
             const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
-            !!spaceDescription &&
-                !spaceDescription.classList.contains('truncated') &&
-                spaceDescription.classList.add('truncated');
+            addClass(spaceDescription, 'truncated');
 
             const toggleButton = document.querySelector(`#${togglePanelButtonElementId(spaceId)}`);
             toggleButton?.setAttribute('aria-expanded', false);

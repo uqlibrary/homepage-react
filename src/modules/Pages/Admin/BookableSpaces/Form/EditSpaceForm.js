@@ -22,7 +22,9 @@ import Typography from '@mui/material/Typography';
 import { useAccountContext } from 'context';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import {
+    addClass,
     isValidUrl,
+    removeClass,
     scrollToTopOfPage,
     slugifyName,
     standardText,
@@ -410,9 +412,7 @@ export const EditSpaceForm = ({
             prop = 'space_type';
         } else if (prop === 'space_opening_hours_id') {
             const springshareElement = document.querySelector('.asLoaded');
-            !!springshareElement &&
-                !!springshareElement.classList.contains('asLoaded') &&
-                springshareElement.classList.remove('asLoaded');
+            removeClass(springshareElement, 'asLoaded');
         } else if (_prop === 'campus_id') {
             updatedLocation.currentCampus =
                 !!formValues?.campus_id && !!currentCampusList && currentCampusList.length > 0
@@ -432,9 +432,7 @@ export const EditSpaceForm = ({
                 ...updatedLocation,
             });
             const springshareElement = document.querySelector('.asLoaded');
-            !!springshareElement &&
-                !springshareElement.classList.contains('asLoaded') &&
-                springshareElement.classList.add('asLoaded');
+            addClass(springshareElement, 'asLoaded');
         } else if (_prop === 'library_id') {
             updatedLocation.currentCampus =
                 !!formValues?.campus_id && !!currentCampusList && currentCampusList.length > 0
@@ -456,9 +454,7 @@ export const EditSpaceForm = ({
                 ...updatedLocation,
             });
             const springshareElement = document.querySelector('.asLoaded');
-            !!springshareElement &&
-                !springshareElement.classList.contains('asLoaded') &&
-                springshareElement.classList.add('asLoaded');
+            addClass(springshareElement, 'asLoaded');
         } else if (_prop === 'space_photo_url') {
             const photoDescriptionField = document.getElementById('space_photo_description');
             const photoDescriptionFieldLabel = document.getElementById('space_photo_description-label');

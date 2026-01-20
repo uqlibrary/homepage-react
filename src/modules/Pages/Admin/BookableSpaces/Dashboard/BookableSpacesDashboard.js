@@ -30,7 +30,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 
-import { slugifyName, standardText } from 'helpers/general';
+import { addClass, removeClass, slugifyName, standardText } from 'helpers/general';
 
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import {
@@ -362,13 +362,13 @@ export const BookableSpacesDashboard = ({
             });
             const spaceRow = document.getElementById(`space-${space.space_id}`);
             if (!!showSpaceByFilter && showSpaceByPagination(numRow, suppliedPageNum, suppliedRowsPerPage)) {
-                !!spaceRow && spaceRow.classList.contains('hiddenRow') && spaceRow.classList.remove('hiddenRow');
+                removeClass(spaceRow, 'hiddenRow');
                 useRowsLocal.push({
                     spaceId: space.space_id,
                     showSpace: true,
                 });
             } else {
-                !!spaceRow && !spaceRow.classList.contains('hiddenRow') && spaceRow.classList.add('hiddenRow');
+                addClass(spaceRow, 'hiddenRow');
                 useRowsLocal.push({
                     spaceId: space.space_id,
                     showSpace: false,
@@ -503,7 +503,7 @@ export const BookableSpacesDashboard = ({
         !!otherButton && (otherButton.style.display = 'inline-flex');
 
         const tableEtc = document.getElementById('wrappedTableList');
-        !!tableEtc && !tableEtc.classList.contains('expanded') && tableEtc.classList.add('expanded');
+        addClass(tableEtc, 'expanded');
     };
 
     const collapseTable = e => {
@@ -514,7 +514,7 @@ export const BookableSpacesDashboard = ({
         !!otherButton && (otherButton.style.display = 'inline-flex');
 
         const tableEtc = document.getElementById('wrappedTableList');
-        !!tableEtc && !!tableEtc.classList.contains('expanded') && tableEtc.classList.remove('expanded');
+        removeClass(tableEtc, 'expanded');
     };
 
     const openEditSpacePage = e => {

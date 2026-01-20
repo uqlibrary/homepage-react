@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-import { spaceOpeningHours } from './spacesHelpers';
+import { spaceOpeningHours } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledTable = styled('table')(() => ({
     width: '100%',
