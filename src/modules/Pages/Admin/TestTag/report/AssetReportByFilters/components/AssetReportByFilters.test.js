@@ -2,7 +2,7 @@ import React from 'react';
 import { rtlRender, WithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
 import Immutable from 'immutable';
 
-import AssetReportByFilters from './AssetReportByFilters';
+import AssetReportByFilters, { prepareCSVExportData } from './AssetReportByFilters';
 
 import assetData from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetsReportAssets';
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
@@ -304,6 +304,71 @@ describe('AssetReportByFilters', () => {
             await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
 
             expect(clearAssetReportByFiltersErrorFn).toHaveBeenCalled();
+        });
+    });
+
+    describe('prepareCSVExportData', () => {
+        it('should build headers from column headerName values and appends Inspection Comments', () => {
+            const columns = [
+                { headerName: 'Name', field: 'name' },
+                { headerName: 'Age', field: 'age' },
+            ];
+            const result = prepareCSVExportData(columns, [], jest.fn());
+
+            expect(result.headers).toEqual(['Name', 'Age', 'Inspection Comments']);
+        });
+
+        it('should map data rows according to column field order and appends inspect_comment', () => {
+            const columns = [
+                { headerName: 'Name', field: 'name' },
+                { headerName: 'Age', field: 'age' },
+            ];
+            const renderLocation = jest.fn();
+            const data = [
+                { name: 'Alice', age: 30, inspect_comment: 'OK' },
+                { name: 'Bob', age: 25, inspect_comment: 'Check' },
+            ];
+            const result = prepareCSVExportData(columns, data, renderLocation);
+
+            expect(renderLocation).not.toHaveBeenCalled();
+            expect(result.data).toEqual([
+                ['Alice', 30, 'OK'],
+                ['Bob', 25, 'Check'],
+            ]);
+        });
+
+        it('should use renderLocation when field is location', () => {
+            const columns = [{ headerName: 'Location', field: 'location' }];
+            const renderLocation = jest.fn().mockReturnValue('Rendered Location');
+            const row = { location: 'raw-location', inspect_comment: 'Note' };
+            const result = prepareCSVExportData(columns, [row], renderLocation);
+
+            expect(renderLocation).toHaveBeenCalledTimes(1);
+            expect(renderLocation).toHaveBeenCalledWith(row);
+            expect(result.data).toEqual([['Rendered Location', 'Note']]);
+        });
+
+        it('should work when location is among other fields and preserves ordering', () => {
+            const columns = [
+                { headerName: 'Name', field: 'name' },
+                { headerName: 'Location', field: 'location' },
+                { headerName: 'Status', field: 'status' },
+            ];
+            const renderLocation = jest.fn(r => `LOC:${r.location}`);
+            const data = [{ name: 'Alice', location: 'A1', status: 'Open', inspect_comment: 'OK' }];
+            const result = prepareCSVExportData(columns, data, renderLocation);
+
+            expect(renderLocation).toHaveBeenCalledTimes(1);
+            expect(result.data).toEqual([['Alice', 'LOC:A1', 'Open', 'OK']]);
+        });
+
+        it('should handle empty data array', () => {
+            const columns = [{ headerName: 'Col', field: 'col' }];
+            const renderLocation = jest.fn();
+            const result = prepareCSVExportData(columns, [], renderLocation);
+
+            expect(result.data).toEqual([]);
+            expect(renderLocation).not.toHaveBeenCalled();
         });
     });
 });

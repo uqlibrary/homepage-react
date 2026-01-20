@@ -16,9 +16,10 @@ import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPic
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import config from './config';
+import config, { renderLocation } from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
+import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
 
 const moment = require('moment');
 
@@ -38,6 +39,21 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         marginTop: 0,
     },
 }));
+
+/**
+ * @param {{ headerName: string, field: string }[]} columns
+ * @param {Object[]} data
+ * @param {(row: Object) => string} renderLocation
+ * @returns {{ headers: string[], data: (string | number | null | undefined)[][] }}
+ */
+export const prepareCSVExportData = (columns, data, renderLocation) => {
+    const headers = [...columns.map(i => i.headerName), 'Inspection Comments'];
+    const fields = [...columns.map(i => i.field), 'inspect_comment'];
+    return {
+        headers,
+        data: data.map(i => fields.map(f => (f === 'location' ? renderLocation(i) : i[f]))),
+    };
+};
 
 const AssetReportByFilters = ({
     actions,
@@ -189,7 +205,22 @@ const AssetReportByFilters = ({
             requiredPermissions={[PERMISSIONS.can_see_reports]}
         >
             <StyledWrapper>
-                <StandardCard title={pageLocale.form.title} id={componentId}>
+                <StandardCard
+                    title={pageLocale.form.title}
+                    id={componentId}
+                    headerProps={{
+                        action: (
+                            <DownloadAsCSV
+                                filename={componentIdLower}
+                                contents={
+                                    /* istanbul ignore next */ () =>
+                                        prepareCSVExportData(columns, assetList, renderLocation)
+                                }
+                                disabled={assetListLoading || !assetList?.length}
+                            />
+                        ),
+                    }}
+                >
                     <Grid container spacing={1}>
                         <Grid xs={12} md={6} lg={3}>
                             {/* Status Picker */}

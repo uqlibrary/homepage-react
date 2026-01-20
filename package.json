@@ -169,6 +169,7 @@
         "babel-plugin-add-module-exports": "^1.0.4",
         "copy-webpack-plugin": "^12.0.2",
         "core-js": "^3.36.0",
+        "file-saver": "^2.0.5",
         "fuse.js": "^7.1.0",
         "history": "^4.7.2",
         "html-react-parser": "^3.0.16",
