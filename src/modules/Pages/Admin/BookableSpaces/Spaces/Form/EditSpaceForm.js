@@ -541,13 +541,13 @@ export const EditSpaceForm = ({
     const reportCurrentLibraryAboutPage = location => (
         <>
             {location?.currentLibrary?.library_about_page_default ? (
-                <a
+                <StyledUqTightLink
                     target="_blank"
                     href={location?.currentLibrary?.library_about_page_default}
                     data-testid="add-space-about-page"
                 >
-                    {location?.currentLibrary?.library_about_page_default}
-                </a>
+                    <span>{location?.currentLibrary?.library_about_page_default}</span>
+                </StyledUqTightLink>
             ) : (
                 <span data-testid="add-space-about-page">none</span>
             )}
