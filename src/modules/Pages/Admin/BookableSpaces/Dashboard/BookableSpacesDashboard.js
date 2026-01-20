@@ -345,7 +345,7 @@ export const BookableSpacesDashboard = ({
         console.log('resetDisplayedRows latestUpdate=', latestUpdate);
         // if we have just set data to UseState, they aren't available yet - weird! :(
         const usedFilters = latestUpdate?.location ? latestUpdate.location : selectedFilters;
-        let suppliedPageNum = latestUpdate?.pagination ? latestUpdate.pagination : pageNum;
+        let suppliedPageNum = 'pagination' in latestUpdate ? latestUpdate.pagination : pageNum;
         let suppliedRowsPerPage = rowsPerPage;
         if (latestUpdate?.rowsPerPage) {
             suppliedRowsPerPage = latestUpdate.rowsPerPage;
