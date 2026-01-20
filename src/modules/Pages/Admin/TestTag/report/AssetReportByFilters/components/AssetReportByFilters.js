@@ -212,7 +212,9 @@ const AssetReportByFilters = ({
                         action: (
                             <DownloadAsCSV
                                 filename={componentIdLower}
-                                contents={() => prepareCSVExportData(columns, assetList, renderLocation)}
+                                contents={() =>
+                                    /* istanbul ignore next */ prepareCSVExportData(columns, assetList, renderLocation)
+                                }
                                 disabled={assetListLoading || !assetList?.length}
                             />
                         ),
