@@ -56,7 +56,7 @@ export const DLOOwnTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/A
 
 export const BookableSpacesList = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/BookableSpacesListContainer')));
 
-export const BookableSpacesDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Spaces/BookableSpacesDashboardContainer')));
+export const BookableSpacesManageSpaces = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Spaces/BookableSpacesManageSpacesContainer')));
 export const BookableSpacesAddSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Spaces/Form/AddSpace/BookableSpacesAddSpaceContainer')));
 export const BookableSpacesEditSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Spaces/Form/EditSpace/BookableSpacesEditSpaceContainer')));
 export const BookableSpacesManageLocations = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Locations/BookableSpacesManageLocationsContainer')));

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
 
-import BookableSpacesDashboard from './BookableSpacesDashboard';
+import BookableSpacesManageSpaces from './BookableSpacesManageSpaces';
 
 const mapStateToProps = state => {
     return {
@@ -19,6 +19,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-const BookableSpacesDashboardContainer = connect(mapStateToProps, mapDispatchToProps)(BookableSpacesDashboard);
+const BookableSpacesManageSpacesContainer = connect(mapStateToProps, mapDispatchToProps)(BookableSpacesManageSpaces);
 
-export default BookableSpacesDashboardContainer;
+export default BookableSpacesManageSpacesContainer;

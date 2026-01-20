@@ -181,7 +181,7 @@ const CAMPUS_ID_UNSELECTED = '';
 const LIBRARY_ID_UNSELECTED = '';
 const FLOOR_ID_UNSELECTED = '';
 
-export const BookableSpacesDashboard = ({
+export const BookableSpacesManageSpaces = ({
     actions,
     bookableSpacesRoomList,
     bookableSpacesRoomListLoading,
@@ -923,7 +923,7 @@ export const BookableSpacesDashboard = ({
     );
 };
 
-BookableSpacesDashboard.propTypes = {
+BookableSpacesManageSpaces.propTypes = {
     actions: PropTypes.any,
     bookableSpacesRoomList: PropTypes.any,
     bookableSpacesRoomListLoading: PropTypes.bool,
@@ -939,4 +939,4 @@ BookableSpacesDashboard.propTypes = {
     campusListError: PropTypes.any,
 };
 
-export default React.memo(BookableSpacesDashboard);
+export default React.memo(BookableSpacesManageSpaces);
