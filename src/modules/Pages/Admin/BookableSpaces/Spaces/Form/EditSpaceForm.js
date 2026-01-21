@@ -513,16 +513,19 @@ export const EditSpaceForm = ({
     const returnToDashboard = () => {
         console.log('ConfirmationBox: returnToDashboard');
         hideConfirmation();
+        actions.clearABookableSpace();
         navigateToPage('/admin/spaces');
     };
     const clearForm = () => {
         console.log('ConfirmationBox: clearForm');
         hideConfirmation();
+        actions.clearABookableSpace();
         window.location.reload(false);
     };
     const reEditRecord = () => {
         console.log('ConfirmationBox: reEditRecord');
         clearForm();
+        actions.clearABookableSpace();
         navigateToPage(window.location.href);
     };
 
