@@ -378,15 +378,20 @@ export const DLOView = ({
 
         setFormValues(newValues);
     };
+
     useEffect(() => {
         window.scrollTo(0, 0); // onchange of dlor id, scroll up
+    }, [dlorId]);
+
+    useEffect(() => {
         /* istanbul ignore else */
-        if (!!dlorId && !accountLoading) {
+        if (!accountLoading) {
+            console.log('Loading Dlor for view page', dlorId, 'with account', account.id);
             actions.clearADlor();
             actions.loadADLOR(dlorId, !!account?.id);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dlorId, account, accountLoading]);
+    }, [account.id, accountLoading]);
 
     useEffect(() => {
         // Google Analytics to push pageView for object
