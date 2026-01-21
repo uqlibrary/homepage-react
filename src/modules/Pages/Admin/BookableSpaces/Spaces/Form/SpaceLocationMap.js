@@ -23,8 +23,10 @@ L.Icon.Default.mergeOptions({
     iconUrl: markerIcon,
     shadowUrl: markerShadow,
 });
+
+const iconUrl = require('../../../../../../../public/images/spaces/Pin-2--Streamline-Ultimate-red.png');
 const pinIcon = new Icon({
-    iconUrl: '/images/Pin-2--Streamline-Ultimate-red.png',
+    iconUrl: iconUrl,
     iconSize: [35, 35], // size of the icon
     iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
     popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
