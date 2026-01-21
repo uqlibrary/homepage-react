@@ -508,10 +508,12 @@ export const EditSpaceForm = ({
     }
     const returnToDashboard = () => {
         console.log('returnToDashboard');
+        closeConfirmationBox();
         navigateToPage('/admin/spaces');
     };
     const clearForm = () => {
         console.log('clearForm');
+        closeConfirmationBox();
         window.location.reload(false);
     };
     const reEditRecord = () => {
