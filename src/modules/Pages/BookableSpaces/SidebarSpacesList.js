@@ -22,7 +22,6 @@ const StyledBodyGrid = styled(Grid)(() => ({
     },
 }));
 const StyledSpaceGridWrapperDiv = styled('div')(() => ({
-    maxHeight: '800px',
     backgroundColor: 'white',
     flexDirection: 'row',
     flexGrow: 0,

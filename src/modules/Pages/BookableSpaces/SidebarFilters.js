@@ -134,11 +134,9 @@ const StyledSidebarDiv = styled('div')(() => ({
             },
         },
     },
-    maxHeight: '800px',
     backgroundColor: 'white',
     flexDirection: 'row',
     flexGrow: 0,
-    // padding: '1rem',
     marginTop: '0.25rem',
 }));
 const StyledFacilityGroup = styled('div')(({ theme }) => ({

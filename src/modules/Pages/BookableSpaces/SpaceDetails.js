@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -21,12 +22,18 @@ const StyledFriendlyLocationDiv = styled('div')(() => ({
 const StyledLocationPhoto = styled('img')(() => ({
     maxWidth: '100%',
     marginTop: '1rem',
+    '&.hasMinWidth': {
+        minWidth: '400px',
+    },
 }));
 const StyledDescription = styled('div')(() => ({
     '&.truncated p': {
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
+    },
+    '&.hasMinWidth': {
+        minWidth: '400px',
     },
 }));
 const StyledCollapsableSection = styled('div')(() => ({
@@ -38,7 +45,15 @@ const StyledCollapsableSection = styled('div')(() => ({
     },
 }));
 
-const SpaceDetails = ({ weeklyHours, weeklyHoursLoading, weeklyHoursError, bookableSpace, collapseable = false }) => {
+const SpaceDetails = ({
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
+    bookableSpace,
+    collapseable = false,
+    // collapseable=true: called by sidebar, has open-close icon;
+    // collapseable=false: opens from icon in map, no open-close icon
+}) => {
     const summaryPanelElementId = spaceId => `summary-info-${spaceId}`;
 
     const showHideSpacePanel = bookableSpace => {
@@ -119,6 +134,11 @@ const SpaceDetails = ({ weeklyHours, weeklyHoursLoading, weeklyHoursError, booka
                     {showHideSpacePanel(bookableSpace)}
                 </div>
             )}
+            {!collapseable && (
+                <Typography component={'h2'} variant={'h6'} style={{ fontWeight: 'bold' }}>
+                    {bookableSpace?.space_name} - {bookableSpace?.space_type}
+                </Typography>
+            )}
             <StyledFriendlyLocationDiv data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
                 {getFriendlyLocationDescription(bookableSpace)}
             </StyledFriendlyLocationDiv>
@@ -126,7 +146,7 @@ const SpaceDetails = ({ weeklyHours, weeklyHoursLoading, weeklyHoursError, booka
                 <StyledDescription
                     id={`space-description-${bookableSpace?.space_id}`}
                     data-testid={`space-${bookableSpace?.space_id}-description`}
-                    className={'truncated'}
+                    className={!!collapseable ? 'truncated ' : 'hasMinWidth'}
                 >
                     <p>{bookableSpace?.space_description}</p>
                 </StyledDescription>
@@ -135,6 +155,7 @@ const SpaceDetails = ({ weeklyHours, weeklyHoursLoading, weeklyHoursError, booka
                 // loads open
                 id={summaryPanelElementId(bookableSpace?.space_id)}
                 data-testid={`space-${bookableSpace?.space_id}-summary-info`}
+                style={{ display: !!collapseable ? null : 'none' }}
             >
                 <ShortSpaceOpeningHours
                     weeklyHoursLoading={weeklyHoursLoading}
@@ -148,7 +169,7 @@ const SpaceDetails = ({ weeklyHours, weeklyHoursLoading, weeklyHoursError, booka
                 // loads closed
                 id={`space-more-${bookableSpace?.space_id}`}
                 data-testid={`space-${bookableSpace?.space_id}-full-info`}
-                className={'hiddenSection'}
+                className={!!collapseable ? 'hiddenSection' : null}
             >
                 <LongSpaceOpeningHours
                     weeklyHoursLoading={weeklyHoursLoading}
@@ -160,6 +181,7 @@ const SpaceDetails = ({ weeklyHours, weeklyHoursLoading, weeklyHoursError, booka
                     <StyledLocationPhoto
                         src={bookableSpace?.space_photo_url}
                         alt={bookableSpace?.space_photo_description}
+                        className={!!collapseable ? null : 'hasMinWidth'}
                     />
                 )}
                 {bookableSpace?.facility_types?.length > 0 && (

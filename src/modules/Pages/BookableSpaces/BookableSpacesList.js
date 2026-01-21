@@ -19,6 +19,7 @@ import { standardText } from 'helpers/general';
 
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
+import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -64,7 +65,7 @@ const StyledPageWrapperDiv = styled('div')(() => ({
     display: 'flex',
     marginBottom: '-50px', // bring footer up
 }));
-const StyledMapWrapperDiv = styled('div')(() => ({
+const StyledMapWrapperDiv = styled('div')(({ theme }) => ({
     position: 'absolute',
     left: '28%',
     width: '100%',
@@ -75,6 +76,12 @@ const StyledMapWrapperDiv = styled('div')(() => ({
     backgroundColor: 'white',
     flexDirection: 'row',
     flexGrow: 0,
+    '& .leaflet-popup-content': {
+        ...standardText(theme),
+    },
+    '& .mapPopup': {
+        overflowY: 'auto',
+    },
 }));
 
 export const BookableSpacesList = ({
@@ -118,6 +125,14 @@ export const BookableSpacesList = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    React.useEffect(() => {
+        if (bookableSpacesRoomListError === false && bookableSpacesRoomListLoading === false) {
+            // page is loaded
+            const spacesContent = document.getElementById('spacesContent');
+            !!spacesContent && spacesContent.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
 
     function spaceAppears(spaceFacilityTypes, facilityTypeToGroup, selectedFacilityTypes) {
         // Create a map of facility_type_id to group_id for quick lookup
@@ -257,7 +272,11 @@ export const BookableSpacesList = ({
                     });
 
                     return (
-                        <StyledPageWrapperDiv data-testid="library-spaces">
+                        <StyledPageWrapperDiv
+                            id="spacesContent"
+                            data-testid="library-spaces"
+                            style={{ height: '99vh' }}
+                        >
                             <SidebarFilters
                                 facilityTypeList={facilityTypeList}
                                 facilityTypeListLoading={facilityTypeListLoading}
@@ -305,9 +324,13 @@ export const BookableSpacesList = ({
                                                         id={locationKey}
                                                         position={[m.space_latitude, m.space_longitude]}
                                                     >
-                                                        <Popup>
-                                                            {m.space_name}
-                                                            <p>{m.space_description}</p>
+                                                        <Popup className="mapPopup" maxWidth="400px">
+                                                            <SpaceDetails
+                                                                weeklyHours={weeklyHours}
+                                                                weeklyHoursLoading={weeklyHoursLoading}
+                                                                weeklyHoursError={weeklyHoursError}
+                                                                bookableSpace={m}
+                                                            />
                                                         </Popup>
                                                     </Marker>
                                                 );
