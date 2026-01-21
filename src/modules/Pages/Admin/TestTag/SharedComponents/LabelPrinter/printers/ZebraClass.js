@@ -22,6 +22,10 @@ export const createPrinter = () => {
         return await printer.getAvailablePrinters();
     };
 
+    const getDefaultPrinter = async () => {
+        return await printer.getDefaultPrinter();
+    };
+
     const getConnectionStatus = async () => {
         const status = await printer.checkPrinterStatus();
         return {
@@ -44,6 +48,7 @@ export const createPrinter = () => {
         code,
         getAvailablePrinters,
         getConnectionStatus,
+        getDefaultPrinter,
         setPrinter,
         print,
     };

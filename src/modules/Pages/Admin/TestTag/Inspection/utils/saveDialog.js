@@ -48,7 +48,7 @@ export const savedDialogMessages = {
             </Grid>
             <Grid item xs={12} sm={6} className={'dialogSuccessLineItems'} variant="subtitle1">
                 <Typography gutterBottom id="saved-asset-id" data-testid="saved-asset-id">
-                    {data.asset_next_test_due_date ?? locale.notApplicable}
+                    {data.asset_next_test_due_date}
                 </Typography>
             </Grid>
         </Grid>
@@ -151,6 +151,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export const getSuccessDialog = (response, locale) => {
+    /* istanbul ignore next */
     if (!!!response) return {};
     const key = response.asset_status !== testStatusEnum.CURRENT.value ? 'other' : response.asset_status;
     const messageFragment = <StyledBox>{savedDialogMessages[key](response, locale.form.dialogLabels)}</StyledBox>;

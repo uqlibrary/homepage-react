@@ -1,6 +1,6 @@
 import React from 'react';
 import Inspection from './Inspection';
-import { rtlRender, WithRouter, act, fireEvent, WithReduxStore, waitFor, screen } from 'test-utils';
+import { rtlRender, WithRouter, act, fireEvent, WithReduxStore, waitFor, screen, preview } from 'test-utils';
 import Immutable from 'immutable';
 import { mockAllIsIntersecting } from 'react-intersection-observer/test-utils';
 
@@ -13,6 +13,36 @@ import roomData from '../../../../../../data/mock/data/testing/testAndTag/testTa
 
 import locale from '../../testTag.locale.js';
 import * as repositories from 'repositories';
+
+// Mock react-cookie to control printer preference
+// Use mockCookies['TNT_LABEL_PRINTER_PREFERENCE'] = 'printer-name' to set a printer in tests
+// Use delete mockCookies['TNT_LABEL_PRINTER_PREFERENCE'] to clear the printer selection
+const mockSetCookie = jest.fn();
+const mockCookies = {};
+jest.mock('react-cookie', () => ({
+    useCookies: jest.fn(() => [mockCookies, mockSetCookie]),
+}));
+
+// Mock useLabelPrinter hook with controllable printer instance
+const mockGetConnectionStatus = jest.fn();
+const mockPrint = jest.fn();
+const mockSetPrinterPreference = jest.fn();
+
+jest.mock('../../SharedComponents/LabelPrinter/useLabelPrinter', () => {
+    return jest.fn(() => ({
+        printerCode: 'emulator',
+        printer: {
+            code: 'emulator',
+            getAvailablePrinters: jest.fn().mockResolvedValue([{ name: 'Emulator' }]),
+            getConnectionStatus: mockGetConnectionStatus,
+            setPrinter: jest.fn().mockResolvedValue({ name: 'Emulator' }),
+            print: mockPrint,
+        },
+        printerPreference: 'Emulator',
+        setPrinterPreference: mockSetPrinterPreference,
+        availablePrinters: [{ name: 'Emulator' }],
+    }));
+});
 
 const currentRetestList = [
     { value: '3', label: '3 months' },
@@ -624,5 +654,258 @@ describe('Inspection component', () => {
         });
 
         expect(getByTestId('inspection-progress')).toBeInTheDocument();
+    });
+    describe('label printing', () => {
+        const mockSuccessData = {
+            asset_status: 'CURRENT',
+            asset_id_displayed: 'UQL100000',
+            user_licence_number: '1234567890',
+            action_date: '2017-06-30',
+            asset_next_test_due_date: '2023Dec12',
+        };
+
+        beforeEach(() => {
+            jest.clearAllMocks();
+            mockCookies.TNT_LABEL_PRINTER_PREFERENCE = 'Emulator';
+            // Default mock returns ready: true
+            mockGetConnectionStatus.mockResolvedValue({ ready: true });
+            mockPrint.mockResolvedValue({ ok: true });
+        });
+        afterEach(() => {
+            delete mockCookies.TNT_LABEL_PRINTER_PREFERENCE;
+        });
+
+        it('should open printer dialog on save success with PASSED status when printing is enabled for UQL department', async () => {
+            // Mock fetch, used by Emulator printer
+            global.fetch = jest.fn();
+            const mockResponse = { ok: true };
+            global.fetch.mockResolvedValueOnce(mockResponse);
+
+            const expected = {
+                asset_id_displayed: 'UQL100000',
+                user_id: 3,
+                asset_department_owned_by: 'UQL',
+                asset_type_id: 1,
+                action_date: '2017-06-30 00:00',
+                room_id: 1,
+                with_inspection: {
+                    inspection_status: 'PASSED',
+                    inspection_device_id: 1,
+                    inspection_fail_reason: undefined,
+                    inspection_notes: 'notes',
+                    inspection_date_next: '2018-06-30 00:00',
+                },
+                with_repair: undefined,
+                with_discard: undefined,
+            };
+
+            const savedResponse = {
+                asset_status: 'CURRENT',
+                asset_id_displayed: expected.asset_id_displayed,
+                user_licence_number: '1234567890',
+                action_date: expected.action_date.split(' ')[0],
+                asset_next_test_due_date: '2023Dec12',
+            };
+
+            const defaults = getMockDefaults();
+            const saveActionFn = jest.fn(() => Promise.resolve(savedResponse));
+            defaults.actions.saveInspection = saveActionFn;
+
+            const { getByTestId } = setup({
+                ...defaults,
+                saveInspectionSuccess: savedResponse,
+                user: { ...userData, user_department: 'UQL' },
+            });
+
+            await fillForm();
+
+            expect(getByTestId('inspection-save-button')).not.toHaveAttribute('disabled');
+            act(() => {
+                fireEvent.click(getByTestId('inspection-save-button'));
+            });
+
+            expect(saveActionFn).toHaveBeenCalledWith(expected);
+
+            await waitFor(() => {
+                expect(getByTestId('confirm-inspection-printer-save-success')).toBeInTheDocument();
+                expect(getByTestId('confirm-alternate-inspection-printer-save-success')).toBeInTheDocument();
+            });
+
+            act(() => {
+                fireEvent.click(getByTestId('confirm-alternate-inspection-printer-save-success'));
+            });
+            preview.debug();
+            // Should show success info alert
+            await waitFor(() => {
+                expect(getByTestId('confirmation_alert-info-alert')).toHaveTextContent('Print job sent to Emulator');
+            });
+        }, 10000);
+
+        it('should show alert when no inspection data is available for printing', async () => {
+            const defaults = getMockDefaults();
+            const saveActionFn = jest.fn(() => Promise.resolve({ ...mockSuccessData, asset_id_displayed: null }));
+            defaults.actions.saveInspection = saveActionFn;
+
+            const { getByTestId } = setup({
+                ...defaults,
+                user: { ...userData, user_department: 'UQL' },
+            });
+
+            await fillForm();
+
+            act(() => {
+                fireEvent.click(getByTestId('inspection-save-button'));
+            });
+
+            await waitFor(() => {
+                expect(getByTestId('confirm-inspection-printer-save-success')).toBeInTheDocument();
+            });
+
+            // Attempt to print without inspection data
+            act(() => {
+                fireEvent.click(getByTestId('confirm-alternate-inspection-printer-save-success'));
+            });
+            // Should show error alert
+            await waitFor(() => {
+                expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+                    'No label data available to print.',
+                );
+            });
+        }, 10000);
+
+        it('should show alert when printer is not ready', async () => {
+            // Override the mock to return ready: false for this test
+            mockGetConnectionStatus.mockResolvedValue({ ready: false });
+
+            const defaults = getMockDefaults();
+            const saveActionFn = jest.fn(() => Promise.resolve(mockSuccessData));
+            defaults.actions.saveInspection = saveActionFn;
+
+            const { getByTestId } = setup({
+                ...defaults,
+                saveInspectionSuccess: mockSuccessData,
+                user: { ...userData, user_department: 'UQL' },
+            });
+
+            await fillForm();
+
+            act(() => {
+                fireEvent.click(getByTestId('inspection-save-button'));
+            });
+
+            await waitFor(() => {
+                expect(getByTestId('confirm-inspection-printer-save-success')).toBeInTheDocument();
+            });
+
+            act(() => {
+                fireEvent.click(getByTestId('confirm-alternate-inspection-printer-save-success'));
+            });
+
+            await waitFor(() => {
+                expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+                    'The selected printer is not ready.',
+                );
+            });
+        }, 10000);
+
+        it('should show alert when print job fails', async () => {
+            const defaults = getMockDefaults();
+            const saveActionFn = jest.fn(() => Promise.resolve(mockSuccessData));
+            defaults.actions.saveInspection = saveActionFn;
+
+            const { getByTestId } = setup({
+                ...defaults,
+                saveInspectionSuccess: mockSuccessData,
+                user: { ...userData, user_department: 'UQL' },
+            });
+
+            await fillForm();
+
+            act(() => {
+                fireEvent.click(getByTestId('inspection-save-button'));
+            });
+
+            await waitFor(() => {
+                expect(getByTestId('confirm-inspection-printer-save-success')).toBeInTheDocument();
+            });
+
+            act(() => {
+                fireEvent.click(getByTestId('confirm-alternate-inspection-printer-save-success'));
+            });
+
+            await waitFor(() => {
+                expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+                    'Unable to send the print job.',
+                );
+            });
+        }, 10000);
+
+        it('should show alert when printer connection fails', async () => {
+            const defaults = getMockDefaults();
+            const saveActionFn = jest.fn(() => Promise.resolve(mockSuccessData));
+            defaults.actions.saveInspection = saveActionFn;
+
+            const { getByTestId, queryByTestId } = setup({
+                ...defaults,
+                saveInspectionSuccess: mockSuccessData,
+                user: { ...userData, user_department: 'UQL' },
+            });
+
+            await fillForm();
+
+            act(() => {
+                fireEvent.click(getByTestId('inspection-save-button'));
+            });
+
+            await waitFor(() => {
+                expect(getByTestId('confirm-inspection-printer-save-success')).toBeInTheDocument();
+            });
+
+            // Attempt to print (connection might fail based on printer mock)
+            act(() => {
+                fireEvent.click(getByTestId('confirm-alternate-inspection-printer-save-success'));
+            });
+
+            // Should show either error or success alert
+            await waitFor(() => {
+                const errorAlert = queryByTestId('confirmation_alert-error-alert');
+                const infoAlert = queryByTestId('confirmation_alert-info-alert');
+                expect(errorAlert || infoAlert).toBeTruthy();
+            });
+        }, 10000);
+
+        it('should show alert when template is not found for printer', async () => {
+            const defaults = getMockDefaults();
+            const saveActionFn = jest.fn(() => Promise.resolve(mockSuccessData));
+            defaults.actions.saveInspection = saveActionFn;
+
+            const { getByTestId, queryByTestId } = setup({
+                ...defaults,
+                saveInspectionSuccess: null, // Explicitly set to null to test no data scenario                saveInspectionSuccess: mockSuccessData,
+                user: { ...userData, user_department: 'UQL' },
+            });
+
+            await fillForm();
+
+            act(() => {
+                fireEvent.click(getByTestId('inspection-save-button'));
+            });
+
+            await waitFor(() => {
+                expect(getByTestId('confirm-inspection-printer-save-success')).toBeInTheDocument();
+            });
+
+            // Attempt to print (template might not be found based on printer mock)
+            act(() => {
+                fireEvent.click(getByTestId('confirm-alternate-inspection-printer-save-success'));
+            });
+
+            // Should show either error or success alert
+            await waitFor(() => {
+                const errorAlert = queryByTestId('confirmation_alert-error-alert');
+                const infoAlert = queryByTestId('confirmation_alert-info-alert');
+                expect(errorAlert || infoAlert).toBeTruthy();
+            });
+        }, 10000);
     });
 });

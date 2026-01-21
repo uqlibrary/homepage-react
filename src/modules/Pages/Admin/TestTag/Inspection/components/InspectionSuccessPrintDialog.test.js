@@ -36,6 +36,15 @@ describe('InspectionSuccessPrintDialog', () => {
         jest.clearAllMocks();
     });
 
+    const expandPrinterAccordion = () => {
+        const accordionButton = screen.getByRole('button', { name: /label printer selection/i });
+        expect(accordionButton).toBeInTheDocument();
+
+        // Click to expand - accordion content should become visible
+        fireEvent.click(accordionButton);
+        expect(screen.getByTestId('label_printer_selector-test-input')).toBeVisible();
+    };
+
     it('renders the dialog when open', () => {
         const { getByTestId } = setup();
 
@@ -100,21 +109,6 @@ describe('InspectionSuccessPrintDialog', () => {
         expect(getByTestId('confirm-alternate-test')).not.toBeDisabled();
     });
 
-    it('expands accordion when there is a printer error', () => {
-        const { getByTestId } = setup({ printerPreference: null });
-
-        // Check that the label printer selector is visible (accordion is expanded)
-        expect(getByTestId('label_printer_selector-test-input')).toBeVisible();
-    });
-
-    const expandPrinterAccordion = () => {
-        const accordionButton = screen.getByRole('button', { name: /label printer selection/i });
-        expect(accordionButton).toBeInTheDocument();
-
-        // Click to expand - accordion content should become visible
-        fireEvent.click(accordionButton);
-        expect(screen.getByTestId('label_printer_selector-test-input')).toBeVisible();
-    };
     it('toggles accordion expansion on click', () => {
         setup();
         expandPrinterAccordion();
@@ -188,6 +182,29 @@ describe('InspectionSuccessPrintDialog', () => {
         expect(document.querySelector('#printerSelectorContainer')).toHaveAttribute('aria-expanded', 'true');
 
         expect(getByTestId('label_printer_selector-test-input')).toBeVisible();
+    });
+
+    describe('coverage', () => {
+        it('does not render the dialog when open=false', () => {
+            const { queryByTestId } = setup({ isOpen: false });
+
+            expect(queryByTestId('dialogbox-test')).not.toBeInTheDocument();
+        });
+        it('handles no printer preference', () => {
+            const { getByTestId } = setup({ printerPreference: null });
+
+            // Check that the label printer selector is visible (accordion is expanded)
+            expect(getByTestId('label_printer_selector-test-input')).toBeVisible();
+            expect(getByTestId('label_printer_selector-test-input')).toHaveValue('');
+        });
+        it('handles no available printers', () => {
+            const { getByTestId, queryAllByRole } = setup({ availablePrinters: null });
+
+            // Check that the label printer selector is visible (accordion is expanded)
+            expect(getByTestId('label_printer_selector-test-input')).toBeVisible();
+            fireEvent.click(getByTestId('label_printer_selector-test-input'));
+            expect(queryAllByRole('option')).toHaveLength(0);
+        });
     });
 
     describe('hasPrinterError', () => {

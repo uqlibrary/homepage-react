@@ -17,17 +17,18 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import inspectLocale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
-import LabelPrinterSelector from '../../SharedComponents/LabelPrinter/LabelPrinterSelector';
+import { LabelPrinterSelector } from '../../SharedComponents/LabelPrinter';
 
 const MIN_CONTENT_WIDTH = 400;
 
 export const hasPrinterError = (printerPreference, availablePrinters = []) => {
     return (
         !!!printerPreference ||
-        availablePrinters.length === 0 ||
-        availablePrinters.every(printer => printer?.noconfig === true || !!!printer?.name) ||
-        availablePrinters.findIndex(printer => printer?.name === printerPreference) === -1 ||
-        availablePrinters.findIndex(printer => printer?.name === printerPreference && printer?.noconfig === true) !== -1
+        availablePrinters?.length === 0 ||
+        availablePrinters?.every(printer => printer?.noconfig === true || !!!printer?.name) ||
+        availablePrinters?.findIndex(printer => printer?.name === printerPreference) === -1 ||
+        availablePrinters?.findIndex(printer => printer?.name === printerPreference && printer?.noconfig === true) !==
+            -1
     );
 };
 

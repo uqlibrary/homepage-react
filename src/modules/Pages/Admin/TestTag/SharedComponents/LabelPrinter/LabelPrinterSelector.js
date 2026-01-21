@@ -38,7 +38,7 @@ const LabelPrinterSelector = ({
                 }}
                 className={classNames?.autocomplete}
                 options={list ?? /* istanbul ignore next */ []}
-                value={value ? list.find(option => option.name === value) : null}
+                value={value ? list?.find(option => option.name === value) : null}
                 onChange={onChange}
                 getOptionLabel={option =>
                     option.noconfig ? `${option.name} (${locale?.unknownPrinter})` : option.name

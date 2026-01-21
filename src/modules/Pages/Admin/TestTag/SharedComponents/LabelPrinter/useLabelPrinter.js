@@ -1,13 +1,10 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
-import { useCookies } from 'react-cookie';
+import { useEffect, useState, useMemo } from 'react';
 
 import { printerRegistry } from './LabelPrinterRegister';
-import labelPrinterTemplate from './LabelPrinterTemplate';
-
-export const COOKIE_PRINTER_PREFERENCE = 'TNT_LABEL_PRINTER_PREFERENCE';
+import { hasTemplate } from './LabelPrinterTemplate';
 
 export const isKnownPrinter = (printerName = '') => {
-    return Object.keys(labelPrinterTemplate).includes(printerName);
+    return hasTemplate(printerName);
 };
 
 export const disabledUnknownPrinters = async (printersList = [], shouldDisableUnknownPrinters) => {
@@ -38,8 +35,6 @@ const getAvailablePrinters = async printerInstance => {
  * @returns {object} An object containing:
  *  - printerCode: The code of the selected printer.
  *  - printer: The printer instance.
- *  - printerPreference: The user's preferred printer code from cookies, or null.
- *  - setPrinterPreference: Function to set the user's preferred printer code in cookies.
  *  - availablePrinters: Array of available printers after applying filters.
  */
 const useLabelPrinter = ({
@@ -48,17 +43,6 @@ const useLabelPrinter = ({
     shouldDisableUnknownPrinters = true,
 }) => {
     const [availablePrinters, setAvailablePrinters] = useState([]);
-    const [cookies, setCookie] = useCookies([COOKIE_PRINTER_PREFERENCE]);
-    const setPrinterPreference = useCallback(
-        code => {
-            setCookie(COOKIE_PRINTER_PREFERENCE, code, { path: '/' });
-        },
-        [setCookie],
-    );
-
-    const printerPreference = useMemo(() => {
-        return cookies[COOKIE_PRINTER_PREFERENCE] || null;
-    }, [cookies]);
 
     const printerInstance = useMemo(() => {
         return printerRegistry[printerCode]?.();
@@ -74,8 +58,6 @@ const useLabelPrinter = ({
     return {
         printerCode,
         printer: printerInstance,
-        printerPreference,
-        setPrinterPreference,
         availablePrinters,
     };
 };

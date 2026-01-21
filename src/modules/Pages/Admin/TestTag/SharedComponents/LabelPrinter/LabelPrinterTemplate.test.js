@@ -1,5 +1,5 @@
 import templates from './LabelPrinterTemplate';
-import logo from './LabelLogo';
+import logo from '../../Inspection/components/printerLabelLogo';
 
 describe('LabelPrinterTemplate', () => {
     const printerKeys = Object.keys(templates);
