@@ -255,6 +255,11 @@ export const EditSpaceForm = ({
     // }, [springshareList]);
 
     useEffect(() => {
+        hideConfirmation();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
         // showSavingProgress(false);
 
         !bookableSpacesRoomAdding &&
