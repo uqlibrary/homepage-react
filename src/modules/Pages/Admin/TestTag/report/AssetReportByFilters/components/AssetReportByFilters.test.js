@@ -308,32 +308,32 @@ describe('AssetReportByFilters', () => {
     });
 
     describe('prepareCSVExportData', () => {
-        it('should build headers from column headerName values and appends Inspection Comments', () => {
+        it('should build headers from column headerName values and appends additional headers', () => {
             const columns = [
                 { headerName: 'Name', field: 'name' },
                 { headerName: 'Age', field: 'age' },
             ];
             const result = prepareCSVExportData(columns, [], jest.fn());
 
-            expect(result.headers).toEqual(['Name', 'Age', 'Inspection Comments']);
+            expect(result.headers).toEqual(['Name', 'Age', 'Inspection Comments', 'Fail Reason']);
         });
 
-        it('should map data rows according to column field order and appends inspect_comment', () => {
+        it('should map data rows according to column field order and appends fields', () => {
             const columns = [
                 { headerName: 'Name', field: 'name' },
                 { headerName: 'Age', field: 'age' },
             ];
             const renderLocation = jest.fn();
             const data = [
-                { name: 'Alice', age: 30, inspect_comment: 'OK' },
-                { name: 'Bob', age: 25, inspect_comment: 'Check' },
+                { name: 'Alice', age: 30, inspect_comment: 'OK', inspect_fail_reason: null },
+                { name: 'Bob', age: 25, inspect_comment: null, inspect_fail_reason: 'Fail' },
             ];
             const result = prepareCSVExportData(columns, data, renderLocation);
 
             expect(renderLocation).not.toHaveBeenCalled();
             expect(result.data).toEqual([
-                ['Alice', 30, 'OK'],
-                ['Bob', 25, 'Check'],
+                ['Alice', 30, 'OK', null],
+                ['Bob', 25, null, 'Fail'],
             ]);
         });
 

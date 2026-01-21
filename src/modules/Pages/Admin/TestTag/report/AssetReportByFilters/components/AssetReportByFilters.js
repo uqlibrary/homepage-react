@@ -47,8 +47,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
  * @returns {{ headers: string[], data: (string | number | null | undefined)[][] }}
  */
 export const prepareCSVExportData = (columns, data, renderLocation) => {
-    const headers = [...columns.map(i => i.headerName), 'Inspection Comments'];
-    const fields = [...columns.map(i => i.field), 'inspect_comment'];
+    const headers = [...columns.map(i => i.headerName), 'Inspection Comments', 'Fail Reason'];
+    const fields = [...columns.map(i => i.field), 'inspect_comment', 'inspect_fail_reason'];
     return {
         headers,
         data: data.map(i => fields.map(f => (f === 'location' ? renderLocation(i) : i[f]))),
