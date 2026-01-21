@@ -95,6 +95,9 @@ const handlers = {
         bookableSpacesRoomUpdating: false,
         bookableSpacesRoomUpdateError: action.payload,
     }),
+    [actions.SPACES_LOCATION_CLEAR]: () => ({
+        ...initialState,
+    }),
 };
 
 export default function bookableSpacesRoomListReducer(state = initialState, action) {

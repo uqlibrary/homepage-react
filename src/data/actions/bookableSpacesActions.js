@@ -131,6 +131,12 @@ export function updateBookableSpaceLocation(request, locationType, _locationId =
     };
 }
 
+export function clearABookableSpace() {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_LOCATION_CLEAR });
+    };
+}
+
 function updateBookableSpace(request, dispatch) {
     console.log('updateBookable_Space', request);
     const url = SPACES_MODIFY_LOCATION_API({ type: 'space', id: request.space_id });
