@@ -382,10 +382,10 @@ export const DLOView = ({
         /* istanbul ignore else */
         if (!!dlorId) {
             actions.clearADlor();
-            actions.loadADLOR(dlorId);
+            actions.loadADLOR(dlorId, !!account?.id);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dlorId]);
+    }, [dlorId, account]);
 
     useEffect(() => {
         // Google Analytics to push pageView for object
