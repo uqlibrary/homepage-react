@@ -20,6 +20,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { useAccountContext } from 'context';
+import { useConfirmationState } from 'hooks';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import {
     addClass,
@@ -226,7 +227,8 @@ export const EditSpaceForm = ({
         setLocation1(newValues);
     };
 
-    const [confirmationOpen, setConfirmationOpen] = useState(false);
+    const [isConfirmationOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+
     const [errorMessages, setErrorMessages2] = useState([]);
     const setErrorMessages = m => {
         console.log('setErrorMessages', m);
@@ -254,17 +256,17 @@ export const EditSpaceForm = ({
 
     useEffect(() => {
         // showSavingProgress(false);
-        setConfirmationOpen(
-            !bookableSpacesRoomAdding && (!!bookableSpacesRoomAddError || !!bookableSpacesRoomAddResult),
-        );
-    }, [bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult]);
+
+        !bookableSpacesRoomAdding &&
+            (!!bookableSpacesRoomAddError || !!bookableSpacesRoomAddResult) &&
+            showConfirmation();
+    }, [bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult, showConfirmation]);
 
     useEffect(() => {
-        // showSavingProgress(false);
-        setConfirmationOpen(
-            !bookableSpacesRoomUpdating && (!!bookableSpacesRoomUpdateError || !!bookableSpacesRoomUpdateResult),
-        );
-    }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult]);
+        !bookableSpacesRoomUpdating &&
+            (!!bookableSpacesRoomUpdateError || !!bookableSpacesRoomUpdateResult) &&
+            showConfirmation();
+    }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult, showConfirmation]);
 
     const validatePanelAbout = (currentValues, errorMessages = []) => {
         if (!currentValues?.space_name) {
@@ -502,18 +504,14 @@ export const EditSpaceForm = ({
         });
     }
 
-    function closeConfirmationBox() {
-        console.log('closeConfirmationBox');
-        setConfirmationOpen(false);
-    }
     const returnToDashboard = () => {
         console.log('returnToDashboard');
-        closeConfirmationBox();
+        hideConfirmation();
         navigateToPage('/admin/spaces');
     };
     const clearForm = () => {
         console.log('clearForm');
-        closeConfirmationBox();
+        hideConfirmation();
         window.location.reload(false);
     };
     const reEditRecord = () => {
@@ -1166,8 +1164,8 @@ export const EditSpaceForm = ({
         <>
             <ConfirmationBox
                 confirmationBoxId="spaces-save-outcome"
-                isOpen={confirmationOpen}
-                onClose={closeConfirmationBox}
+                isOpen={isConfirmationOpen}
+                onClose={hideConfirmation}
                 onAction={() => returnToDashboard()}
                 //
                 hideCancelButton={!confirmationLocale.success.cancelButtonLabel}
@@ -1177,7 +1175,7 @@ export const EditSpaceForm = ({
                 //
                 showAlternateActionButton={!!bookableSpacesRoomUpdateError}
                 alternateActionButtonLabel="Close"
-                onAlternateAction={closeConfirmationBox}
+                onAlternateAction={hideConfirmation}
                 //
                 locale={
                     !!bookableSpacesRoomAddError || !!bookableSpacesRoomUpdateError
