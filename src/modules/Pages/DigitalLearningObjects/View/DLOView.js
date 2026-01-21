@@ -249,6 +249,8 @@ export const DLOView = ({
     dlorItem,
     dlorItemLoading,
     dlorItemError,
+    accountLoading,
+    accountError,
     // sending demographics and/or subscribe request
     dlorUpdatedItem,
     dlorItemUpdating,
@@ -376,16 +378,15 @@ export const DLOView = ({
 
         setFormValues(newValues);
     };
-
     useEffect(() => {
         window.scrollTo(0, 0); // onchange of dlor id, scroll up
         /* istanbul ignore else */
-        if (!!dlorId) {
+        if (!!dlorId && !accountLoading) {
             actions.clearADlor();
             actions.loadADLOR(dlorId, !!account?.id);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dlorId, account]);
+    }, [dlorId, account, accountLoading]);
 
     useEffect(() => {
         // Google Analytics to push pageView for object
