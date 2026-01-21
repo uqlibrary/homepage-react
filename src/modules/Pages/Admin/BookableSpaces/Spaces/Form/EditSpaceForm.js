@@ -245,32 +245,33 @@ export const EditSpaceForm = ({
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
-    // useEffect(() => {
-    //     const currentSpringshare =
-    //         (!!springshareList &&
-    //             springshareList.length > 0 &&
-    //             springshareList?.find(s => s?.id === formValues.space_opening_hours_id)) ||
-    //         null;
-    //     console.log('currentSpringshare=', currentSpringshare);
-    // }, [springshareList]);
-
     useEffect(() => {
         hideConfirmation();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        // showSavingProgress(false);
-
-        !bookableSpacesRoomAdding &&
-            (!!bookableSpacesRoomAddError || !!bookableSpacesRoomAddResult) &&
+        if (!bookableSpacesRoomAdding && (!!bookableSpacesRoomAddError || !!bookableSpacesRoomAddResult)) {
+            console.log(
+                'ConfirmationBox: useEffect Adding: showConfirmation',
+                bookableSpacesRoomAdding,
+                bookableSpacesRoomAddError,
+                bookableSpacesRoomAddResult,
+            );
             showConfirmation();
+        }
     }, [bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult, showConfirmation]);
 
     useEffect(() => {
-        !bookableSpacesRoomUpdating &&
-            (!!bookableSpacesRoomUpdateError || !!bookableSpacesRoomUpdateResult) &&
+        if (!bookableSpacesRoomUpdating && (!!bookableSpacesRoomUpdateError || !!bookableSpacesRoomUpdateResult)) {
+            console.log(
+                'ConfirmationBox: useEffect Updating: showConfirmation',
+                bookableSpacesRoomUpdating,
+                bookableSpacesRoomUpdateError,
+                bookableSpacesRoomUpdateResult,
+            );
             showConfirmation();
+        }
     }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult, showConfirmation]);
 
     const validatePanelAbout = (currentValues, errorMessages = []) => {
