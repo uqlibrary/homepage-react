@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { standardText } from 'helpers/general';
-import { spaceOpeningHours } from './spacesHelpers';
+import { spaceOpeningHours } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledParagraphTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),

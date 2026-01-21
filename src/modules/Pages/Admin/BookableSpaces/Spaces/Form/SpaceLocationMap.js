@@ -70,8 +70,6 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
     console.log('SpaceLocationMap campusCoordinateList=', campusCoordinateList);
     console.log('SpaceLocationMap formValues=', formValues);
 
-    const ST_LUCIA_COORDINATES = [-27.49718, 153.01214];
-
     const tabList = campusCoordinateList.map((c, index) => {
         return { id: index, label: c.campus_name, coords: [c.campus_latitude, c.campus_longitude] };
     });
@@ -79,7 +77,7 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
     // a list of locations to help the admin user find the building they want
     const libraryBuildingsLocationGuides1 = [
         // needs better display names? (only shows in popups)
-        { name: 'Law', position: ST_LUCIA_COORDINATES },
+        { name: 'Law', position: locale.locations.greatCourtCoordinates },
         { name: 'Armus', position: [-27.49904, 153.01453] },
         { name: 'Pace', position: [-27.49979, 153.03066] },
         { name: 'BSL', position: [-27.49695, 153.01136] },
@@ -96,7 +94,7 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
         }
 
         // show some point so the map works
-        return ST_LUCIA_COORDINATES;
+        return locale.locations.greatCourtCoordinates;
     };
     const [position, setPositionLocal] = useState(initialisePosition());
     const setPosition = p => {

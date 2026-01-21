@@ -30,7 +30,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 
-import { slugifyName, standardText } from 'helpers/general';
+import { addClass, removeClass, slugifyName, standardText } from 'helpers/general';
 
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import {
@@ -181,7 +181,7 @@ const CAMPUS_ID_UNSELECTED = '';
 const LIBRARY_ID_UNSELECTED = '';
 const FLOOR_ID_UNSELECTED = '';
 
-export const BookableSpacesDashboard = ({
+export const BookableSpacesManageSpaces = ({
     actions,
     bookableSpacesRoomList,
     bookableSpacesRoomListLoading,
@@ -207,10 +207,10 @@ export const BookableSpacesDashboard = ({
 
     const { account } = useAccountContext();
 
-    const [useRows, setUseRows2] = useState([]);
-    const setUseRows = rows => {
-        console.log('setUseRows', rows);
-        setUseRows2(rows);
+    const [displayedRows, setDisplayedRows2] = useState([]);
+    const setDisplayedRows = rows => {
+        console.log('setDisplayedRows', rows);
+        setDisplayedRows2(rows);
     };
 
     const [cookies, setCookie] = useCookies();
@@ -300,7 +300,7 @@ export const BookableSpacesDashboard = ({
                     showSpace: showSpaceByPagination(index, pageNum, rowsPerPage),
                 });
             });
-            setUseRows(usableRows);
+            setDisplayedRows(usableRows);
         }
     }, [
         bookableSpacesRoomListError,
@@ -341,11 +341,11 @@ export const BookableSpacesDashboard = ({
         return showSpaceByFilter;
     };
 
-    const resetUserows = latestUpdate => {
-        console.log('resetUserows latestUpdate=', latestUpdate);
+    const resetDisplayedRows = latestUpdate => {
+        console.log('resetDisplayedRows latestUpdate=', latestUpdate);
         // if we have just set data to UseState, they aren't available yet - weird! :(
         const usedFilters = latestUpdate?.location ? latestUpdate.location : selectedFilters;
-        let suppliedPageNum = latestUpdate?.pagination ? latestUpdate.pagination : pageNum;
+        let suppliedPageNum = 'pagination' in latestUpdate ? latestUpdate.pagination : pageNum;
         let suppliedRowsPerPage = rowsPerPage;
         if (latestUpdate?.rowsPerPage) {
             suppliedRowsPerPage = latestUpdate.rowsPerPage;
@@ -353,23 +353,23 @@ export const BookableSpacesDashboard = ({
         }
 
         let numRow = 0;
-        let useRowsLocal = [...useRows];
+        let displayedRowsLocal = [...displayedRows];
         bookableSpacesRoomList?.data?.locations?.forEach(space => {
             const showSpaceByFilter = doesSpaceShow(space, usedFilters);
 
-            useRowsLocal = useRowsLocal.filter(r => {
+            displayedRowsLocal = displayedRowsLocal.filter(r => {
                 return r.spaceId !== space.space_id;
             });
             const spaceRow = document.getElementById(`space-${space.space_id}`);
             if (!!showSpaceByFilter && showSpaceByPagination(numRow, suppliedPageNum, suppliedRowsPerPage)) {
-                !!spaceRow && spaceRow.classList.contains('hiddenRow') && spaceRow.classList.remove('hiddenRow');
-                useRowsLocal.push({
+                removeClass(spaceRow, 'hiddenRow');
+                displayedRowsLocal.push({
                     spaceId: space.space_id,
                     showSpace: true,
                 });
             } else {
-                !!spaceRow && !spaceRow.classList.contains('hiddenRow') && spaceRow.classList.add('hiddenRow');
-                useRowsLocal.push({
+                addClass(spaceRow, 'hiddenRow');
+                displayedRowsLocal.push({
                     spaceId: space.space_id,
                     showSpace: false,
                 });
@@ -379,7 +379,7 @@ export const BookableSpacesDashboard = ({
             }
         });
 
-        setUseRows(useRowsLocal);
+        setDisplayedRows(displayedRowsLocal);
     };
     const resetSelectedFilters = (filterTypeName, filterTypeValue) => {
         console.log('resetSelectedFilters', filterTypeName, filterTypeValue);
@@ -413,7 +413,7 @@ export const BookableSpacesDashboard = ({
 
         // show-hide Spaces according to selected filters
 
-        resetUserows({ location: newFilterTypes });
+        resetDisplayedRows({ location: newFilterTypes });
     };
     const isCampusSelected =
         selectedFilters?.find(f => f.filterType === 'campus')?.filterValue !== CAMPUS_ID_UNSELECTED;
@@ -430,8 +430,9 @@ export const BookableSpacesDashboard = ({
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : '#fff');
 
     const handleChangePage = (event, newPageNum) => {
+        console.log('handleChangePage', newPageNum, event);
         setPageNum(newPageNum);
-        resetUserows({ pagination: newPageNum });
+        resetDisplayedRows({ pagination: newPageNum });
     };
     const handleChangeRowsPerPage = event => {
         const newRowsPerPage = parseInt(event.target.value, 10);
@@ -443,7 +444,7 @@ export const BookableSpacesDashboard = ({
 
         setRowsPerPage(newRowsPerPage);
         setPageNum(0);
-        resetUserows({ rowsPerPage: newRowsPerPage });
+        resetDisplayedRows({ rowsPerPage: newRowsPerPage });
     };
 
     const expandButtonElementId = spaceId => `expand-button-space-${spaceId}`;
@@ -503,7 +504,7 @@ export const BookableSpacesDashboard = ({
         !!otherButton && (otherButton.style.display = 'inline-flex');
 
         const tableEtc = document.getElementById('wrappedTableList');
-        !!tableEtc && !tableEtc.classList.contains('expanded') && tableEtc.classList.add('expanded');
+        addClass(tableEtc, 'expanded');
     };
 
     const collapseTable = e => {
@@ -514,7 +515,7 @@ export const BookableSpacesDashboard = ({
         !!otherButton && (otherButton.style.display = 'inline-flex');
 
         const tableEtc = document.getElementById('wrappedTableList');
-        !!tableEtc && !!tableEtc.classList.contains('expanded') && tableEtc.classList.remove('expanded');
+        removeClass(tableEtc, 'expanded');
     };
 
     const openEditSpacePage = e => {
@@ -748,10 +749,10 @@ export const BookableSpacesDashboard = ({
                                 </StyledHeaderTableRow>
                             </StyledTableHead>
                             <TableBody>
-                                {useRows?.length > 0 &&
+                                {displayedRows?.length > 0 &&
                                     bookableSpacesRoomList?.data?.locations
                                         ?.filter(space =>
-                                            useRows.find(u => u.spaceId === space.space_id && !!u.showSpace),
+                                            displayedRows.find(u => u.spaceId === space.space_id && !!u.showSpace),
                                         )
                                         ?.map(bookableSpace => {
                                             return (
@@ -853,8 +854,7 @@ export const BookableSpacesDashboard = ({
 
                     <StyledTablePagination
                         data-testid="pagination-block"
-                        // dont use
-                        // { label: 'All', value: rows.length }
+                        // dont use: { label: 'All', value: rows.length }
                         // as it gives a dupe key error when the length happens to match a value
                         // in the list. Nor do we want them loading vast numbers of records - they
                         // can jump to the next page
@@ -923,7 +923,7 @@ export const BookableSpacesDashboard = ({
     );
 };
 
-BookableSpacesDashboard.propTypes = {
+BookableSpacesManageSpaces.propTypes = {
     actions: PropTypes.any,
     bookableSpacesRoomList: PropTypes.any,
     bookableSpacesRoomListLoading: PropTypes.bool,
@@ -939,4 +939,4 @@ BookableSpacesDashboard.propTypes = {
     campusListError: PropTypes.any,
 };
 
-export default React.memo(BookableSpacesDashboard);
+export default React.memo(BookableSpacesManageSpaces);

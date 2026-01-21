@@ -383,7 +383,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     const bookableSpacesAdminPages = [
         {
             path: pathConfig.admin.bookableSpacesDashboard,
-            element: <components.BookableSpacesDashboard />,
+            element: <components.BookableSpacesManageSpaces />,
             exact: true,
             pageTitle: locale.pages.admin.bookablespaces.title,
         },

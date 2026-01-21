@@ -22,7 +22,9 @@ import Typography from '@mui/material/Typography';
 import { useAccountContext } from 'context';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import {
+    addClass,
     isValidUrl,
+    removeClass,
     scrollToTopOfPage,
     slugifyName,
     standardText,
@@ -36,9 +38,9 @@ import {
     validLibraryList,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { ImageUploadDropzone } from './ImageUploadDropzone';
+import { ImageUploadDropzone } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/ImageUploadDropzone';
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
-import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Form/SpaceLocationMap';
+import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceLocationMap';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
@@ -283,6 +285,9 @@ export const EditSpaceForm = ({
         if (!currentValues?.space_floor_id && !currentValues?.floor_id) {
             errorMessages.push({ field: 'space_floor_id', message: 'A location is required.' });
         }
+        if (!currentValues?.space_latitude || !currentValues?.space_longitude) {
+            errorMessages.push({ field: 'space_latitude', message: 'Please locate the space on the map' });
+        }
         if (!!currentValues?.space_services_page && !isValidUrl(currentValues?.space_services_page)) {
             errorMessages.push({
                 field: 'space_services_page',
@@ -410,9 +415,7 @@ export const EditSpaceForm = ({
             prop = 'space_type';
         } else if (prop === 'space_opening_hours_id') {
             const springshareElement = document.querySelector('.asLoaded');
-            !!springshareElement &&
-                !!springshareElement.classList.contains('asLoaded') &&
-                springshareElement.classList.remove('asLoaded');
+            removeClass(springshareElement, 'asLoaded');
         } else if (_prop === 'campus_id') {
             updatedLocation.currentCampus =
                 !!formValues?.campus_id && !!currentCampusList && currentCampusList.length > 0
@@ -432,9 +435,7 @@ export const EditSpaceForm = ({
                 ...updatedLocation,
             });
             const springshareElement = document.querySelector('.asLoaded');
-            !!springshareElement &&
-                !springshareElement.classList.contains('asLoaded') &&
-                springshareElement.classList.add('asLoaded');
+            addClass(springshareElement, 'asLoaded');
         } else if (_prop === 'library_id') {
             updatedLocation.currentCampus =
                 !!formValues?.campus_id && !!currentCampusList && currentCampusList.length > 0
@@ -456,9 +457,7 @@ export const EditSpaceForm = ({
                 ...updatedLocation,
             });
             const springshareElement = document.querySelector('.asLoaded');
-            !!springshareElement &&
-                !springshareElement.classList.contains('asLoaded') &&
-                springshareElement.classList.add('asLoaded');
+            addClass(springshareElement, 'asLoaded');
         } else if (_prop === 'space_photo_url') {
             const photoDescriptionField = document.getElementById('space_photo_description');
             const photoDescriptionFieldLabel = document.getElementById('space_photo_description-label');
@@ -545,13 +544,13 @@ export const EditSpaceForm = ({
     const reportCurrentLibraryAboutPage = location => (
         <>
             {location?.currentLibrary?.library_about_page_default ? (
-                <a
+                <StyledUqTightLink
                     target="_blank"
                     href={location?.currentLibrary?.library_about_page_default}
                     data-testid="add-space-about-page"
                 >
-                    {location?.currentLibrary?.library_about_page_default}
-                </a>
+                    <span>{location?.currentLibrary?.library_about_page_default}</span>
+                </StyledUqTightLink>
             ) : (
                 <span data-testid="add-space-about-page">none</span>
             )}
@@ -623,8 +622,8 @@ export const EditSpaceForm = ({
         valuesToSend.space_opening_hours_id = formValues?.space_opening_hours_id;
         valuesToSend.space_services_page = formValues?.space_services_page;
         valuesToSend.space_opening_hours_override = formValues?.space_opening_hours_override;
-        valuesToSend.space_latitude = formValues?.space_latitude;
-        valuesToSend.space_longitude = formValues?.space_longitude;
+        valuesToSend.space_latitude = formValues?.space_latitude?.toString();
+        valuesToSend.space_longitude = formValues?.space_longitude?.toString();
         valuesToSend.facility_types = formValues?.facility_types?.map(ft => ft?.facility_type_id);
         valuesToSend.space_id = formValues?.space_id;
         valuesToSend.uploadedFile = formValues.uploadedFile;
@@ -647,7 +646,7 @@ export const EditSpaceForm = ({
         }
     };
 
-    const locale = {
+    const confirmationLocale = {
         success: {
             confirmationTitle: mode === 'add' ? 'A Space has been added' : 'The Space has been updated',
             confirmationMessage: '',
@@ -1169,7 +1168,7 @@ export const EditSpaceForm = ({
                 onClose={closeConfirmationBox}
                 onAction={() => returnToDashboard()}
                 //
-                hideCancelButton={!locale.success.cancelButtonLabel}
+                hideCancelButton={!confirmationLocale.success.cancelButtonLabel}
                 onCancelAction={() => {
                     mode === 'edit' ? reEditRecord() : clearForm();
                 }}
@@ -1178,7 +1177,11 @@ export const EditSpaceForm = ({
                 alternateActionButtonLabel="Close"
                 onAlternateAction={closeConfirmationBox}
                 //
-                locale={!!bookableSpacesRoomAddError || !!bookableSpacesRoomUpdateError ? locale.error : locale.success}
+                locale={
+                    !!bookableSpacesRoomAddError || !!bookableSpacesRoomUpdateError
+                        ? confirmationLocale.error
+                        : confirmationLocale.success
+                }
                 cancelButtonColor="accent"
             />
 
