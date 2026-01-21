@@ -4,13 +4,19 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 export const useConfirmationState = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen2] = useState(false);
+    const setIsOpen = x => {
+        console.log('ConfirmationBox: setIsOpen', x);
+        setIsOpen2(x);
+    };
 
     const showConfirmation = useCallback(() => {
+        console.log('ConfirmationBox: showConfirmation');
         setIsOpen(true);
     }, []);
 
     const hideConfirmation = useCallback(() => {
+        console.log('ConfirmationBox: hideConfirmation');
         setIsOpen(false);
     }, []);
 

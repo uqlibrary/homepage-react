@@ -505,17 +505,17 @@ export const EditSpaceForm = ({
     }
 
     const returnToDashboard = () => {
-        console.log('returnToDashboard');
+        console.log('ConfirmationBox: returnToDashboard');
         hideConfirmation();
         navigateToPage('/admin/spaces');
     };
     const clearForm = () => {
-        console.log('clearForm');
+        console.log('ConfirmationBox: clearForm');
         hideConfirmation();
         window.location.reload(false);
     };
     const reEditRecord = () => {
-        console.log('reEditRecord');
+        console.log('ConfirmationBox: reEditRecord');
         clearForm();
         navigateToPage(window.location.href);
     };
@@ -628,11 +628,9 @@ export const EditSpaceForm = ({
         valuesToSend.space_id = formValues?.space_id;
         valuesToSend.uploadedFile = formValues.uploadedFile;
         console.log('handleSaveClick valuesToSend=', valuesToSend);
-        console.log('handleSaveClick valuesToSend.uploadedFile=', valuesToSend.uploadedFile);
 
         const validationResult = formValid(valuesToSend);
         if (validationResult !== true) {
-            console.log('handleSaveClick validation failed');
             setErrorMessages(validationResult);
 
             document.activeElement.blur();
@@ -641,7 +639,6 @@ export const EditSpaceForm = ({
                 `<ul>${validationResult?.map(m => `<li>${m?.message}</li>`)?.join('')}</ul>`;
             displayToastErrorMessage(message);
         } else {
-            console.log('handleSaveClick validation passed');
             saveToDb(valuesToSend);
         }
     };
@@ -663,31 +660,21 @@ export const EditSpaceForm = ({
     };
 
     useEffect(() => {
-        console.log('currentCampusList', currentCampusList);
-        console.log('formValues', formValues);
-        console.log('formValues.campus_id', formValues.campus_id);
         const currentCampus =
             (!!currentCampusList &&
                 currentCampusList.length > 0 &&
                 currentCampusList?.find(c => {
                     const match = c.campus_id === formValues?.campus_id;
-                    console.log('c=', match, c);
                     return match;
                 })) ||
             {};
-        console.log('currentCampus', currentCampus);
         const currentCampusLibraries = validLibraryList(currentCampus?.libraries || []);
-        console.log('currentCampusLibraries', currentCampusLibraries);
-        console.log('formValues.library_id', formValues.library_id);
         const currentLibrary =
             currentCampusLibraries?.find(l => {
                 const match = l.library_id === formValues.library_id;
-                console.log('l=', match, l);
                 return match;
             }) || {};
-        console.log('currentLibrary', currentLibrary);
         const currentLibraryFloors = currentLibrary?.floors || [];
-        console.log('currentLibraryFloors', currentLibraryFloors);
 
         const updatedLocation = {};
         updatedLocation.currentCampus = currentCampus;
@@ -707,7 +694,6 @@ export const EditSpaceForm = ({
     }, [currentCampusList, formValues]);
 
     const handleSuppliedFiles = files => {
-        console.log('handleSuppliedFiles', files);
         setFormValues({ ...formValues, ['uploadedFile']: files, hasImage: true });
     };
 
@@ -1123,7 +1109,6 @@ export const EditSpaceForm = ({
         );
     };
     const saveButton = (disabled = false) => {
-        console.log('saveButton disabled=', disabled);
         return (
             <div>
                 <StyledPrimaryButton
@@ -1159,7 +1144,6 @@ export const EditSpaceForm = ({
         }
     }
 
-    // console.log('RENDER selectedSpringshareOption=', selectedSpringshareOption);
     return (
         <>
             <ConfirmationBox
