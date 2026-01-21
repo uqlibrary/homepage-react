@@ -391,7 +391,7 @@ function getSpecificDlorObject(dlorId) {
     return singleRecord === null ? [404, {}] : [200, { data: singleRecord }];
 }
 
-mock.onGet(/dlor\/public\/find\/.*/)
+mock.onGet(/dlor\/(public|auth)\/find\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const dlorId = urlparts.split('?')[0];

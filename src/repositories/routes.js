@@ -221,6 +221,7 @@ export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id
 export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' }); // is admin in staging
 export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/public/list/current' });
 export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/public/find/${id}` });
+export const DLOR_AUTHENTICATED_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/auth/find/${id}` });
 export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/public/facet/list' });
 export const DLOR_SERIES_LIST_API = () => ({ apiUrl: 'dlor/public/series/list' });
 export const DLOR_SUBSCRIPTION_CONFIRMATION_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/subscribe` });

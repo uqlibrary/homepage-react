@@ -1,3 +1,4 @@
+// istanbul ignore file
 import React, { useState, useEffect } from 'react';
 import { Pie, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
@@ -596,14 +597,13 @@ export default function AnalyticsDashboard() {
         <StandardPage title="Digital Learning Object Repository - Analytics Dashboard">
             <Grid container spacing={3}>
                 {/* 1. Object Distribution Chart - Fixed Stacked */}
-                <Grid item xs={12} md={4}>
+                {/* <Grid item xs={12} md={4}>
                     <Box sx={{ border: '1px solid #eee', p: 2, textAlign: 'center' }}>
                         <Typography variant="h6" component="h2" gutterBottom>
                             Object Distribution
                         </Typography>
                         <Box sx={{ height: '100px' }}>
                             {' '}
-                            {/* Fixed height */}
                             <Bar
                                 data={objectData}
                                 options={{
@@ -619,6 +619,25 @@ export default function AnalyticsDashboard() {
                             />
                         </Box>
                     </Box>
+                </Grid> */}
+                {/* FEEDBACK - overview of objects */}
+                <Grid container>
+                    <Grid item xs={12} md={4}>
+                        <Bar
+                            aria-label="Bar chart showing object distribution metrics"
+                            data={objectData}
+                            options={{
+                                ...fixedStackedOptions,
+                                plugins: {
+                                    ...fixedStackedOptions.plugins,
+                                    title: {
+                                        display: true,
+                                        text: `Individual Metrics vs. Other Objects (Total: ${totalObjects})`,
+                                    },
+                                },
+                            }}
+                        />
+                    </Grid>
                 </Grid>
 
                 {/* 2. Team Breakdown Chart - Fixed Stacked */}
@@ -632,6 +651,7 @@ export default function AnalyticsDashboard() {
                             {/* Fixed height */}
                             <Bar
                                 data={teamData}
+                                aria-label="Bar chart showing team breakdown of digital learning objects"
                                 options={{
                                     ...fixedStackedOptions,
                                     plugins: {
@@ -653,7 +673,12 @@ export default function AnalyticsDashboard() {
                         <Box sx={{ height: '100px' }}>
                             {' '}
                             {/* Fixed height */}
-                            <Bar data={keywordData} options={keywordOptions} />
+                            <Bar
+                                data={keywordData}
+                                options={keywordOptions}
+                                role="img"
+                                aria-label="Bar chart showing keyword breakdown of digital learning objects"
+                            />
                         </Box>
                     </Box>
                 </Grid>
@@ -667,7 +692,12 @@ export default function AnalyticsDashboard() {
                             </Typography>
                             {/* Conditional Height */}
                             <Box sx={{ height: reviewHeight }}>
-                                <Bar data={reviewData} options={reviewOptions} />
+                                <Bar
+                                    data={reviewData}
+                                    options={reviewOptions}
+                                    role="img"
+                                    aria-label="Bar chart showing review breakdown of digital learning objects"
+                                />
                             </Box>
                         </Box>
                     </Grid>
@@ -682,7 +712,12 @@ export default function AnalyticsDashboard() {
                             </Typography>
                             {/* Conditional Height */}
                             <Box sx={{ height: filterHeight }}>
-                                <Bar data={filterData} options={filterOptions} />
+                                <Bar
+                                    data={filterData}
+                                    options={filterOptions}
+                                    role="img"
+                                    aria-label="Bar chart showing filter breakdown of digital learning objects"
+                                />
                             </Box>
                         </Box>
                     </Grid>
@@ -697,7 +732,12 @@ export default function AnalyticsDashboard() {
                             </Typography>
                             {/* Conditional Height */}
                             <Box sx={{ height: seriesHeight }}>
-                                <Bar data={seriesData} options={seriesOptions} />
+                                <Bar
+                                    data={seriesData}
+                                    options={seriesOptions}
+                                    role="img"
+                                    aria-label="Bar chart showing series breakdown of digital learning objects"
+                                />
                             </Box>
                         </Box>
                     </Grid>

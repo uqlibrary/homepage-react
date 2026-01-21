@@ -9,6 +9,7 @@ import {
     DLOR_DESTROY_API,
     DLOR_FILE_TYPE_LIST_API,
     DLOR_GET_BY_ID_API,
+    DLOR_AUTHENTICATED_GET_BY_ID_API,
     DLOR_GET_FILTER_LIST,
     DLOR_SUBSCRIPTION_CONFIRMATION_API,
     DLOR_TEAM_CREATE_API,
@@ -83,10 +84,12 @@ export function loadAllDLORs() {
     };
 }
 
-export function loadADLOR(dlorId) {
+export function loadADLOR(dlorId, isauthenticated = false) {
     return dispatch => {
         dispatch({ type: actions.DLOR_DETAIL_LOADING });
-        return get(DLOR_GET_BY_ID_API({ id: dlorId }))
+        return get(
+            isauthenticated ? DLOR_AUTHENTICATED_GET_BY_ID_API({ id: dlorId }) : DLOR_GET_BY_ID_API({ id: dlorId }),
+        )
             .then(response => {
                 dispatch({
                     type: actions.DLOR_DETAIL_LOADED,
