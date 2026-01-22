@@ -249,6 +249,7 @@ export const BookableSpacesEditSpace = ({
                 bookableSpaceGetError={bookableSpaceGetError}
                 springshareList={springshareList}
                 currentCampusList={currentCampusList}
+                initialCampus={currentCampusList.findIndex(c => c.campus_id === formValues.campus_id)}
                 mode="edit"
             />
         );

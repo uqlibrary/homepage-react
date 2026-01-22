@@ -77,8 +77,16 @@ export const BookableSpacesAddSpace = ({
     }, []);
 
     useEffect(() => {
+        console.log(
+            'useEffect campusList',
+            campusListLoading,
+            campusListError,
+            campusList,
+            'bookableSpacesRoomListReducer',
+        );
         if (campusListLoading === null && campusListError === null && campusList === null) {
             actions.loadBookableSpaceCampusChildren(); // get list of campuses, buildings and floors
+            console.log('should start bookableSpacesRoomListReducer');
             actions.loadAllBookableSpacesRooms(); // get list of Spaces
             actions.loadWeeklyHours(); // get weeklyHours for each library from springshare
             actions.loadAllFacilityTypes(); // get list of facility types
@@ -86,7 +94,12 @@ export const BookableSpacesAddSpace = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const [currentCampusList, setCurrentCampusList] = useState({});
+    const [currentCampusList, setCurrentCampusList2] = useState({});
+    const setCurrentCampusList = x => {
+        console.log(setCurrentCampusList, x);
+        setCurrentCampusList2(x);
+    };
+    const [mostRecentSpace, setMostRecentSpace] = useState(0);
     useEffect(() => {
         if (campusListLoading === false && campusListError === false && campusList?.length > 0) {
             const _currentCampusList = validCampusList(campusList);
@@ -106,7 +119,7 @@ export const BookableSpacesAddSpace = ({
             bookableSpacesRoomListError === false &&
             bookableSpacesRoomList?.data?.locations?.length > 0
         ) {
-            const mostRecentSpace = bookableSpacesRoomList?.data?.locations
+            const _mostRecentSpace = bookableSpacesRoomList?.data?.locations
                 .filter(s => !!s.space_latitude && !!s.space_longitude)
                 .reduce((prev, current) => {
                     if (+current.space_id > +prev.space_id) {
@@ -115,14 +128,15 @@ export const BookableSpacesAddSpace = ({
                         return prev;
                     }
                 });
-            console.log('mostRecentSpace', mostRecentSpace);
+            setMostRecentSpace(_mostRecentSpace);
+            console.log('_mostRecentSpace', _mostRecentSpace);
             const newValues = {
-                ['campus_id']: mostRecentSpace?.space_campus_id,
-                ['library_id']: mostRecentSpace?.space_library_id,
-                ['floor_id']: mostRecentSpace?.space_floor_id,
-                ['space_opening_hours_id']: mostRecentSpace?.space_opening_hours_id,
-                ['space_latitude']: locale?.locations.greatCourtCoordinates[0],
-                ['space_longitude']: locale?.locations.greatCourtCoordinates[1],
+                ['campus_id']: _mostRecentSpace?.space_campus_id,
+                ['library_id']: _mostRecentSpace?.space_library_id,
+                ['floor_id']: _mostRecentSpace?.space_floor_id,
+                ['space_opening_hours_id']: _mostRecentSpace?.space_opening_hours_id,
+                ['space_latitude']: _mostRecentSpace?.space_latitude,
+                ['space_longitude']: _mostRecentSpace?.space_longitude,
             };
             console.log('set form values 0', newValues);
             setFormValues(newValues);
@@ -193,6 +207,7 @@ export const BookableSpacesAddSpace = ({
             </SpacesAdminPage>
         );
     } else {
+        console.log('currentCampusList=', currentCampusList);
         return (
             <>
                 <EditSpaceForm
@@ -217,6 +232,11 @@ export const BookableSpacesAddSpace = ({
                     currentPageSlug={currentPageSlug}
                     springshareList={springshareList}
                     currentCampusList={currentCampusList}
+                    initialCampus={
+                        !!currentCampusList && currentCampusList.length > 0
+                            ? currentCampusList?.findIndex(c => c.campus_id === formValues.campus_id)
+                            : null
+                    }
                     mode="add"
                 />
             </>

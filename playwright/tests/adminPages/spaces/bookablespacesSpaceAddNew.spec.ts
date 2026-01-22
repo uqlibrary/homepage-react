@@ -88,6 +88,12 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('add-space-pretty-location')).toContainText('PACE Campus');
         await expect(page.getByTestId('add-space-springshare-id')).toContainText('Dutton Park Health Sciences');
 
+        const mapTab = (tabId: number) =>
+            page.getByTestId('spaces-campus-maps-tabs').locator(`button:nth-of-type(${tabId})`);
+        await expect(mapTab(1)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
+        await expect(mapTab(2)).toHaveCSS('color', COLOR_UQPURPLE);
+        await expect(mapTab(3)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
+
         const cancelButton = page.getByTestId('admin-spaces-form-button-cancel');
         await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
         await expect(cancelButton).toHaveCSS('border-color', COLOR_UQPURPLE);

@@ -71,6 +71,12 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
 
+        const mapTab = (tabId: number) =>
+            page.getByTestId('spaces-campus-maps-tabs').locator(`button:nth-of-type(${tabId})`);
+        await expect(mapTab(1)).toHaveCSS('color', COLOR_UQPURPLE);
+        await expect(mapTab(2)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
+        await expect(mapTab(3)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
+
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue('');
 
@@ -161,6 +167,12 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-springshare-id')).toContainText('Dutton Park Health Science');
 
+        const mapTab = (tabId: number) =>
+            page.getByTestId('spaces-campus-maps-tabs').locator(`button:nth-of-type(${tabId})`);
+        await expect(mapTab(1)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
+        await expect(mapTab(2)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
+        await expect(mapTab(3)).toHaveCSS('color', COLOR_UQPURPLE);
+
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
             'this space opens at 8am',
@@ -236,6 +248,12 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(page.getByTestId('add-space-springshare-id')).toContainText(
             'No Springshare opening hours will display (click to change)',
         );
+
+        const mapTab = (tabId: number) =>
+            page.getByTestId('spaces-campus-maps-tabs').locator(`button:nth-of-type(${tabId})`);
+        await expect(mapTab(1)).toHaveCSS('color', COLOR_UQPURPLE);
+        await expect(mapTab(2)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
+        await expect(mapTab(3)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
 
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(

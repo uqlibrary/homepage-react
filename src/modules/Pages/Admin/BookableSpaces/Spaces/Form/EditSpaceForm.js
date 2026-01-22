@@ -178,6 +178,7 @@ export const EditSpaceForm = ({
     bookableSpacesRoomAddError,
     bookableSpacesRoomAddResult,
     currentCampusList,
+    initialCampus,
     bookableSpacesRoomList,
     bookableSpacesRoomListLoading,
     bookableSpacesRoomListError,
@@ -1002,6 +1003,7 @@ export const EditSpaceForm = ({
                         setFormValues={setFormValues}
                         campusCoordinateList={currentCampusList}
                         bookableSpacesRoomList={bookableSpacesRoomList}
+                        initialCampus={initialCampus}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -1311,6 +1313,7 @@ EditSpaceForm.propTypes = {
     bookableSpacesRoomAddError: PropTypes.any,
     bookableSpacesRoomAddResult: PropTypes.any,
     currentCampusList: PropTypes.any,
+    initialCampus: PropTypes.number,
     bookableSpacesRoomList: PropTypes.any,
     bookableSpacesRoomListLoading: PropTypes.any,
     bookableSpacesRoomListError: PropTypes.any,
