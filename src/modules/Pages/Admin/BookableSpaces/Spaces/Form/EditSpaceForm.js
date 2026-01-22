@@ -20,6 +20,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { useAccountContext } from 'context';
+import { useConfirmationState } from 'hooks';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import {
     addClass,
@@ -226,7 +227,8 @@ export const EditSpaceForm = ({
         setLocation1(newValues);
     };
 
-    const [confirmationOpen, setConfirmationOpen] = useState(false);
+    const [isConfirmationOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+
     const [errorMessages, setErrorMessages2] = useState([]);
     const setErrorMessages = m => {
         console.log('setErrorMessages', m);
@@ -243,28 +245,34 @@ export const EditSpaceForm = ({
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
-    // useEffect(() => {
-    //     const currentSpringshare =
-    //         (!!springshareList &&
-    //             springshareList.length > 0 &&
-    //             springshareList?.find(s => s?.id === formValues.space_opening_hours_id)) ||
-    //         null;
-    //     console.log('currentSpringshare=', currentSpringshare);
-    // }, [springshareList]);
+    useEffect(() => {
+        hideConfirmation();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
-        // showSavingProgress(false);
-        setConfirmationOpen(
-            !bookableSpacesRoomAdding && (!!bookableSpacesRoomAddError || !!bookableSpacesRoomAddResult),
-        );
-    }, [bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult]);
+        if (!bookableSpacesRoomAdding && (!!bookableSpacesRoomAddError || !!bookableSpacesRoomAddResult)) {
+            console.log(
+                'ConfirmationBox: useEffect Adding: showConfirmation',
+                bookableSpacesRoomAdding,
+                bookableSpacesRoomAddError,
+                bookableSpacesRoomAddResult,
+            );
+            showConfirmation();
+        }
+    }, [bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult, showConfirmation]);
 
     useEffect(() => {
-        // showSavingProgress(false);
-        setConfirmationOpen(
-            !bookableSpacesRoomUpdating && (!!bookableSpacesRoomUpdateError || !!bookableSpacesRoomUpdateResult),
-        );
-    }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult]);
+        if (!bookableSpacesRoomUpdating && (!!bookableSpacesRoomUpdateError || !!bookableSpacesRoomUpdateResult)) {
+            console.log(
+                'ConfirmationBox: useEffect Updating: showConfirmation',
+                bookableSpacesRoomUpdating,
+                bookableSpacesRoomUpdateError,
+                bookableSpacesRoomUpdateResult,
+            );
+            showConfirmation();
+        }
+    }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult, showConfirmation]);
 
     const validatePanelAbout = (currentValues, errorMessages = []) => {
         if (!currentValues?.space_name) {
@@ -502,23 +510,22 @@ export const EditSpaceForm = ({
         });
     }
 
-    function closeConfirmationBox() {
-        console.log('closeConfirmationBox');
-        setConfirmationOpen(false);
-    }
     const returnToDashboard = () => {
-        console.log('returnToDashboard');
-        closeConfirmationBox();
+        console.log('ConfirmationBox: returnToDashboard');
+        hideConfirmation();
+        actions.clearABookableSpace();
         navigateToPage('/admin/spaces');
     };
     const clearForm = () => {
-        console.log('clearForm');
-        closeConfirmationBox();
+        console.log('ConfirmationBox: clearForm');
+        hideConfirmation();
+        actions.clearABookableSpace();
         window.location.reload(false);
     };
     const reEditRecord = () => {
-        console.log('reEditRecord');
+        console.log('ConfirmationBox: reEditRecord');
         clearForm();
+        actions.clearABookableSpace();
         navigateToPage(window.location.href);
     };
 
@@ -630,11 +637,9 @@ export const EditSpaceForm = ({
         valuesToSend.space_id = formValues?.space_id;
         valuesToSend.uploadedFile = formValues.uploadedFile;
         console.log('handleSaveClick valuesToSend=', valuesToSend);
-        console.log('handleSaveClick valuesToSend.uploadedFile=', valuesToSend.uploadedFile);
 
         const validationResult = formValid(valuesToSend);
         if (validationResult !== true) {
-            console.log('handleSaveClick validation failed');
             setErrorMessages(validationResult);
 
             document.activeElement.blur();
@@ -643,7 +648,6 @@ export const EditSpaceForm = ({
                 `<ul>${validationResult?.map(m => `<li>${m?.message}</li>`)?.join('')}</ul>`;
             displayToastErrorMessage(message);
         } else {
-            console.log('handleSaveClick validation passed');
             saveToDb(valuesToSend);
         }
     };
@@ -665,31 +669,21 @@ export const EditSpaceForm = ({
     };
 
     useEffect(() => {
-        console.log('currentCampusList', currentCampusList);
-        console.log('formValues', formValues);
-        console.log('formValues.campus_id', formValues.campus_id);
         const currentCampus =
             (!!currentCampusList &&
                 currentCampusList.length > 0 &&
                 currentCampusList?.find(c => {
                     const match = c.campus_id === formValues?.campus_id;
-                    console.log('c=', match, c);
                     return match;
                 })) ||
             {};
-        console.log('currentCampus', currentCampus);
         const currentCampusLibraries = validLibraryList(currentCampus?.libraries || []);
-        console.log('currentCampusLibraries', currentCampusLibraries);
-        console.log('formValues.library_id', formValues.library_id);
         const currentLibrary =
             currentCampusLibraries?.find(l => {
                 const match = l.library_id === formValues.library_id;
-                console.log('l=', match, l);
                 return match;
             }) || {};
-        console.log('currentLibrary', currentLibrary);
         const currentLibraryFloors = currentLibrary?.floors || [];
-        console.log('currentLibraryFloors', currentLibraryFloors);
 
         const updatedLocation = {};
         updatedLocation.currentCampus = currentCampus;
@@ -709,7 +703,6 @@ export const EditSpaceForm = ({
     }, [currentCampusList, formValues]);
 
     const handleSuppliedFiles = files => {
-        console.log('handleSuppliedFiles', files);
         setFormValues({ ...formValues, ['uploadedFile']: files, hasImage: true });
     };
 
@@ -1125,7 +1118,6 @@ export const EditSpaceForm = ({
         );
     };
     const saveButton = (disabled = false) => {
-        console.log('saveButton disabled=', disabled);
         return (
             <div>
                 <StyledPrimaryButton
@@ -1161,13 +1153,12 @@ export const EditSpaceForm = ({
         }
     }
 
-    // console.log('RENDER selectedSpringshareOption=', selectedSpringshareOption);
     return (
         <>
             <ConfirmationBox
                 confirmationBoxId="spaces-save-outcome"
-                isOpen={confirmationOpen}
-                onClose={closeConfirmationBox}
+                isOpen={isConfirmationOpen}
+                onClose={hideConfirmation}
                 onAction={() => returnToDashboard()}
                 //
                 hideCancelButton={!confirmationLocale.success.cancelButtonLabel}
@@ -1177,7 +1168,7 @@ export const EditSpaceForm = ({
                 //
                 showAlternateActionButton={!!bookableSpacesRoomUpdateError}
                 alternateActionButtonLabel="Close"
-                onAlternateAction={closeConfirmationBox}
+                onAlternateAction={hideConfirmation}
                 //
                 locale={
                     !!bookableSpacesRoomAddError || !!bookableSpacesRoomUpdateError
