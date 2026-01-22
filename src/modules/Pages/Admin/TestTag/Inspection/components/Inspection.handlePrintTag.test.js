@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { rtlRender, act, fireEvent, waitFor, screen } from 'test-utils';
+import { rtlRender } from 'test-utils';
 import Inspection from './Inspection';
 import { WithRouter, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
@@ -12,7 +12,6 @@ import { mockAllIsIntersecting } from 'react-intersection-observer/test-utils';
 
 import configData from '../../../../../../data/mock/data/testing/testAndTag/testTagOnLoadInspection';
 import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
-import locale from '../../testTag.locale.js';
 
 // Mock the label printer hooks
 jest.mock('../../SharedComponents/LabelPrinter/hooks/useLabelPrinter');
