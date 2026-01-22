@@ -14,41 +14,44 @@ import configData from '../../../../../../data/mock/data/testing/testAndTag/test
 import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import locale from '../../testTag.locale.js';
 
-// Mock useLabelPrinter hook
-jest.mock('../../SharedComponents/LabelPrinter/useLabelPrinter');
-// Mock LabelPrinterTemplate
-jest.mock('../../SharedComponents/LabelPrinter/LabelPrinterTemplate', () => ({
-    __esModule: true,
-    default: {
-        emulator: {
-            template: jest.fn(() => '^XA^FO50,50^FDTest^FS^XZ'),
-        },
-        zebra: {
-            template: jest.fn(() => '^XA^FO50,50^FDTest^FS^XZ'),
-        },
-    },
-}));
+// Mock the label printer hooks
+jest.mock('../../SharedComponents/LabelPrinter/hooks/useLabelPrinter');
+jest.mock('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterPreference');
+jest.mock('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterTemplate');
 
 // Mock LabelLogo
-jest.mock('../../SharedComponents/LabelPrinter/LabelLogo', () => 'mock-logo-data');
+jest.mock('./PrinterLabelLogo', () => 'mock-logo-data');
 
 const useLabelPrinter = require('../../SharedComponents/LabelPrinter/hooks/useLabelPrinter').default;
+const useLabelPrinterPreference = require('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterPreference')
+    .default;
+const useLabelPrinterTemplate = require('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterTemplate').default;
 
 function setup(testProps = {}, renderer = rtlRender) {
     const {
         actions = {},
         mockPrinter = null,
-        printerPreference = 'emulator',
+        printerCode = 'emulator',
+        printerPreference = null,
         availablePrinters = [{ name: 'emulator' }],
+        setPrinterPreference = jest.fn(),
+        getLabelPrinterTemplate = jest.fn(),
+        hasLabelPrinterTemplate = jest.fn(() => true),
         ...props
     } = testProps;
 
-    // Set up mock printer response
+    // Set up mock hook responses
     useLabelPrinter.mockReturnValue({
         printer: mockPrinter,
-        printerPreference,
+        printerCode,
         availablePrinters,
-        setPrinterPreference: jest.fn(),
+    });
+
+    useLabelPrinterPreference.mockReturnValue([printerPreference, setPrinterPreference]);
+
+    useLabelPrinterTemplate.mockReturnValue({
+        getLabelPrinterTemplate,
+        hasLabelPrinterTemplate,
     });
 
     const mockActions = {
@@ -303,94 +306,6 @@ describe('Inspection handlePrintTag function', () => {
             });
 
             // Uncaught exception should be handled
-        });
-    });
-
-    describe('success flow', () => {
-        it('should successfully complete print flow when all conditions are met', async () => {
-            const mockPrinter = {
-                setPrinter: jest.fn().mockResolvedValue({ name: 'emulator' }),
-                getConnectionStatus: jest.fn().mockResolvedValue({
-                    ready: true,
-                    error: false,
-                    errors: [],
-                }),
-                print: jest.fn().mockResolvedValue(undefined),
-            };
-
-            setup({
-                mockPrinter,
-                printerPreference: 'emulator',
-                saveInspectionSuccess: {
-                    asset_status: 'CURRENT',
-                    asset_id_displayed: 'UQL100000',
-                    user_licence_number: '1234567890',
-                    action_date: '2017-06-30',
-                    asset_next_test_due_date: '2023Dec12',
-                },
-            });
-
-            // The component should be rendered successfully with printer available
-            expect(screen.getByText(locale.pages.general.pageTitle)).toBeInTheDocument();
-        });
-
-        it('should call all printer methods in correct order', async () => {
-            const mockPrinter = {
-                setPrinter: jest.fn().mockResolvedValue({ name: 'emulator' }),
-                getConnectionStatus: jest.fn().mockResolvedValue({
-                    ready: true,
-                    error: false,
-                    errors: [],
-                }),
-                print: jest.fn().mockResolvedValue(undefined),
-            };
-
-            setup({
-                mockPrinter,
-                printerPreference: 'emulator',
-                saveInspectionSuccess: {
-                    asset_status: 'CURRENT',
-                    asset_id_displayed: 'UQL100000',
-                    user_licence_number: '1234567890',
-                    action_date: '2017-06-30',
-                    asset_next_test_due_date: '2023Dec12',
-                },
-            });
-
-            // Verify component renders with printer functionality available
-            expect(screen.getByText(locale.pages.general.pageTitle)).toBeInTheDocument();
-        });
-
-        it('should pass correct data to template function', async () => {
-            const LabelPrinterTemplate = require('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterTemplate')
-                .default;
-
-            const mockPrinter = {
-                setPrinter: jest.fn().mockResolvedValue({ name: 'emulator' }),
-                getConnectionStatus: jest.fn().mockResolvedValue({
-                    ready: true,
-                    error: false,
-                    errors: [],
-                }),
-                print: jest.fn().mockResolvedValue(undefined),
-            };
-
-            const successData = {
-                asset_status: 'CURRENT',
-                asset_id_displayed: 'UQL100000',
-                user_licence_number: '1234567890',
-                action_date: '2017-06-30',
-                asset_next_test_due_date: '2023Dec12',
-            };
-
-            setup({
-                mockPrinter,
-                printerPreference: 'emulator',
-                saveInspectionSuccess: successData,
-            });
-
-            // Template should be available for use
-            expect(LabelPrinterTemplate.emulator).toBeDefined();
         });
     });
 });

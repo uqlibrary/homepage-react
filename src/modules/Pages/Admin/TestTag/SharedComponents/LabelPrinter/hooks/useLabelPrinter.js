@@ -8,7 +8,7 @@ export const removeNoNamePrinters = async (printersList = [], shouldRemoveNoName
     return printersList.filter(printer => !!printer?.name);
 };
 
-const getAvailablePrinters = async printerInstance => {
+export const getAvailablePrinters = async printerInstance => {
     return (await printerInstance?.getAvailablePrinters()) || [];
 };
 

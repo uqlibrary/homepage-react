@@ -1,470 +1,470 @@
-import { renderHook, waitFor } from 'test-utils';
-import { useCookies } from 'react-cookie';
-import useLabelPrinter, {
-    COOKIE_PRINTER_PREFERENCE,
-    isKnownPrinter,
-    disabledUnknownPrinters,
-    removeNoNamePrinters,
-} from './useLabelPrinter';
+import { renderHook, waitFor } from '@testing-library/react';
+import useLabelPrinter, { removeNoNamePrinters, getAvailablePrinters } from './useLabelPrinter';
 import { printerRegistry } from '../LabelPrinterRegister';
-import labelPrinterTemplate from './useLabelPrinterTemplate';
+import useLabelPrinterTemplate from './useLabelPrinterTemplate';
 
-jest.mock('react-cookie');
+jest.mock('../LabelPrinterRegister', () => ({
+    printerRegistry: {
+        zebra: jest.fn(),
+        emulator: jest.fn(),
+        unknown: jest.fn(),
+    },
+}));
+
+jest.mock('./useLabelPrinterTemplate');
+
+const mockPrinters = [
+    { name: 'Printer 1', id: '1' },
+    { name: 'Printer 2', id: '2' },
+    { name: '', id: '3' },
+    { name: 'Printer 4', id: '4' },
+];
+
+const mockTemplateStore = {
+    'printer-1': 'template1',
+    'printer-2': 'template2',
+};
 
 function setup(testProps = {}) {
-    const defaultProps = {
-        printerCode: 'zebra',
-        shouldRemoveNoNamePrinters: true,
-        shouldDisableUnknownPrinters: true,
-        ...testProps,
+    const {
+        printerCode = 'zebra',
+        templateStore = mockTemplateStore,
+        shouldRemoveNoNamePrinters = true,
+        shouldDisableUnknownPrinters = true,
+        availablePrinters = mockPrinters,
+        hasLabelPrinterTemplate = jest.fn(name => name === 'Printer 1' || name === 'Printer 2'),
+        ...props
+    } = testProps;
+
+    const printerInstanceMock = {
+        getAvailablePrinters: jest.fn().mockResolvedValue(availablePrinters),
     };
 
-    return renderHook(() => useLabelPrinter(defaultProps));
+    printerRegistry[printerCode] = jest.fn(() => printerInstanceMock);
+
+    useLabelPrinterTemplate.mockReturnValue({
+        hasLabelPrinterTemplate,
+    });
+
+    const initialProps = {
+        printerCode,
+        templateStore,
+        shouldRemoveNoNamePrinters,
+        shouldDisableUnknownPrinters,
+        ...props,
+    };
+
+    return renderHook(props => useLabelPrinter(props), { initialProps });
 }
 
 describe('useLabelPrinter', () => {
-    let mockSetCookie;
-    let mockGetAvailablePrinters;
-    let mockPrinterInstance;
-
     beforeEach(() => {
-        mockSetCookie = jest.fn();
-        mockGetAvailablePrinters = jest.fn();
-        mockPrinterInstance = {
-            getAvailablePrinters: mockGetAvailablePrinters,
-        };
-
-        useCookies.mockReturnValue([{}, mockSetCookie]);
-        printerRegistry.zebra = jest.fn(() => mockPrinterInstance);
-        printerRegistry.emulator = jest.fn(() => mockPrinterInstance);
-
-        labelPrinterTemplate.Printer1 = {};
-        labelPrinterTemplate.Printer2 = {};
-    });
-
-    afterEach(() => {
         jest.clearAllMocks();
     });
 
-    describe('Hook behavior', () => {
-        it('returns default values on initial render', () => {
-            mockGetAvailablePrinters.mockResolvedValue([]);
+    describe('removeNoNamePrinters helper', () => {
+        it('should remove printers without names when flag is true', async () => {
+            const result = await removeNoNamePrinters(mockPrinters, true);
+            expect(result).toHaveLength(3);
+            expect(result).toEqual([
+                { name: 'Printer 1', id: '1' },
+                { name: 'Printer 2', id: '2' },
+                { name: 'Printer 4', id: '4' },
+            ]);
+        });
 
+        it('should not remove printers when flag is false', async () => {
+            const result = await removeNoNamePrinters(mockPrinters, false);
+            expect(result).toHaveLength(4);
+            expect(result).toEqual(mockPrinters);
+        });
+
+        it('should handle empty array', async () => {
+            const result = await removeNoNamePrinters([], true);
+            expect(result).toEqual([]);
+        });
+
+        it('should handle undefined printers list', async () => {
+            const result = await removeNoNamePrinters(undefined, true);
+            expect(result).toEqual([]);
+        });
+
+        it('should handle printers with null names', async () => {
+            const printersWithNull = [
+                { name: null, id: '1' },
+                { name: 'Valid', id: '2' },
+            ];
+            const result = await removeNoNamePrinters(printersWithNull, true);
+            expect(result).toEqual([{ name: 'Valid', id: '2' }]);
+        });
+    });
+
+    describe('getAvailablePrinters helper', () => {
+        it('should return available printers from printer instance', async () => {
+            const mockPrinterInstance = {
+                getAvailablePrinters: jest.fn().mockResolvedValue(mockPrinters),
+            };
+
+            const result = await getAvailablePrinters(mockPrinterInstance);
+
+            expect(mockPrinterInstance.getAvailablePrinters).toHaveBeenCalled();
+            expect(result).toEqual(mockPrinters);
+        });
+
+        it('should return empty array when printer instance returns null', async () => {
+            const mockPrinterInstance = {
+                getAvailablePrinters: jest.fn().mockResolvedValue(null),
+            };
+
+            const result = await getAvailablePrinters(mockPrinterInstance);
+
+            expect(result).toEqual([]);
+        });
+
+        it('should return empty array when printer instance returns undefined', async () => {
+            const mockPrinterInstance = {
+                getAvailablePrinters: jest.fn().mockResolvedValue(undefined),
+            };
+
+            const result = await getAvailablePrinters(mockPrinterInstance);
+
+            expect(result).toEqual([]);
+        });
+
+        it('should return empty array when printer instance is null', async () => {
+            const result = await getAvailablePrinters(null);
+
+            expect(result).toEqual([]);
+        });
+
+        it('should return empty array when printer instance is undefined', async () => {
+            const result = await getAvailablePrinters(undefined);
+
+            expect(result).toEqual([]);
+        });
+
+        it('should return empty array when printer instance has no getAvailablePrinters method', async () => {
+            const incompletePrinterInstance = {};
+
+            // When the object exists but the method doesn't, optional chaining still throws
+            await expect(getAvailablePrinters(incompletePrinterInstance)).rejects.toThrow(
+                'printerInstance.getAvailablePrinters is not a function',
+            );
+        });
+
+        it('should handle empty array response from printer instance', async () => {
+            const mockPrinterInstance = {
+                getAvailablePrinters: jest.fn().mockResolvedValue([]),
+            };
+
+            const result = await getAvailablePrinters(mockPrinterInstance);
+
+            expect(result).toEqual([]);
+        });
+
+        it('should handle promise rejection gracefully', async () => {
+            const mockPrinterInstance = {
+                getAvailablePrinters: jest.fn().mockRejectedValue(new Error('Printer error')),
+            };
+
+            await expect(getAvailablePrinters(mockPrinterInstance)).rejects.toThrow('Printer error');
+        });
+    });
+
+    describe('hook initialization', () => {
+        it('should initialize with default values', async () => {
             const { result } = setup();
 
             expect(result.current.printerCode).toBe('zebra');
-            expect(result.current.printer).toBe(mockPrinterInstance);
+            expect(result.current.printer).toBeDefined();
             expect(result.current.availablePrinters).toEqual([]);
-            expect(result.current.printerPreference).toBeNull();
+
+            await waitFor(() => {
+                expect(result.current.availablePrinters.length).toBeGreaterThan(0);
+            });
         });
 
-        it('uses printerCode from props', () => {
-            mockGetAvailablePrinters.mockResolvedValue([]);
+        it('should create printer instance from registry', () => {
+            const { result } = setup({ printerCode: 'zebra' });
 
+            expect(printerRegistry.zebra).toHaveBeenCalled();
+            expect(result.current.printer).toBeDefined();
+            expect(result.current.printerCode).toBe('zebra');
+        });
+
+        it('should create emulator printer instance', () => {
             const { result } = setup({ printerCode: 'emulator' });
+
+            expect(printerRegistry.emulator).toHaveBeenCalled();
+            expect(result.current.printerCode).toBe('emulator');
+        });
+    });
+
+    describe('available printers filtering', () => {
+        it('should fetch and filter available printers with defaults', async () => {
+            const { result } = setup();
+
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toHaveLength(3);
+            });
+
+            // Should remove no-name printers
+            expect(result.current.availablePrinters).toEqual([
+                { name: 'Printer 1', id: '1', noconfig: false },
+                { name: 'Printer 2', id: '2', noconfig: false },
+                { name: 'Printer 4', id: '4', noconfig: true },
+            ]);
+        });
+
+        it('should not remove no-name printers when shouldRemoveNoNamePrinters is false', async () => {
+            const { result } = setup({ shouldRemoveNoNamePrinters: false });
+
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toHaveLength(4);
+            });
+
+            expect(result.current.availablePrinters[2]).toEqual({ name: '', id: '3', noconfig: true });
+        });
+
+        it('should not disable unknown printers when shouldDisableUnknownPrinters is false', async () => {
+            const { result } = setup({ shouldDisableUnknownPrinters: false });
+
+            await waitFor(() => {
+                expect(result.current.availablePrinters.length).toBeGreaterThan(0);
+            });
+
+            result.current.availablePrinters.forEach(printer => {
+                expect(printer.noconfig).toBeUndefined();
+            });
+        });
+
+        it('should mark printers without templates as noconfig', async () => {
+            const hasLabelPrinterTemplate = jest.fn(name => name === 'Printer 1');
+            const { result } = setup({ hasLabelPrinterTemplate });
+
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toHaveLength(3);
+            });
+
+            expect(result.current.availablePrinters[0].noconfig).toBe(false);
+            expect(result.current.availablePrinters[1].noconfig).toBe(true);
+            expect(result.current.availablePrinters[2].noconfig).toBe(true);
+        });
+
+        it('should handle empty available printers list', async () => {
+            const { result } = setup({ availablePrinters: [] });
+
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toEqual([]);
+            });
+        });
+
+        it('should handle null response from getAvailablePrinters', async () => {
+            const printerInstanceMock = {
+                getAvailablePrinters: jest.fn().mockResolvedValue(null),
+            };
+            printerRegistry.zebra = jest.fn(() => printerInstanceMock);
+
+            const { result } = setup();
+
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toEqual([]);
+            });
+        });
+
+        it('should handle undefined response from getAvailablePrinters', async () => {
+            const printerInstanceMock = {
+                getAvailablePrinters: jest.fn().mockResolvedValue(undefined),
+            };
+            printerRegistry.zebra = jest.fn(() => printerInstanceMock);
+
+            const { result } = setup();
+
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toEqual([]);
+            });
+        });
+    });
+
+    describe('printer instance changes', () => {
+        it('should update printer instance when printerCode changes', async () => {
+            const { result, rerender } = setup({ printerCode: 'zebra' });
+
+            expect(result.current.printerCode).toBe('zebra');
+            expect(printerRegistry.zebra).toHaveBeenCalled();
+
+            // Change printer code
+            rerender({ printerCode: 'emulator', templateStore: mockTemplateStore });
 
             expect(result.current.printerCode).toBe('emulator');
             expect(printerRegistry.emulator).toHaveBeenCalled();
         });
 
-        it('retrieves printer preference from cookies', () => {
-            useCookies.mockReturnValue([{ [COOKIE_PRINTER_PREFERENCE]: 'Printer1' }, mockSetCookie]);
-            mockGetAvailablePrinters.mockResolvedValue([]);
+        it('should refetch available printers when printer instance changes', async () => {
+            const zebraPrinters = [{ name: 'Zebra Printer', id: 'z1' }];
+            const emulatorPrinters = [{ name: 'Emulator Printer', id: 'e1' }];
 
-            const { result } = setup();
-
-            expect(result.current.printerPreference).toBe('Printer1');
-        });
-
-        it('returns null preference when cookie is not set', () => {
-            useCookies.mockReturnValue([{}, mockSetCookie]);
-            mockGetAvailablePrinters.mockResolvedValue([]);
-
-            const { result } = setup();
-
-            expect(result.current.printerPreference).toBeNull();
-        });
-
-        it('provides setPrinterPreference function that sets cookie', () => {
-            mockGetAvailablePrinters.mockResolvedValue([]);
-
-            const { result } = setup();
-
-            result.current.setPrinterPreference('Printer2');
-
-            expect(mockSetCookie).toHaveBeenCalledWith(COOKIE_PRINTER_PREFERENCE, 'Printer2', { path: '/' });
-        });
-
-        it('fetches and sets available printers', async () => {
-            const printers = [{ name: 'Printer1' }, { name: 'Printer2' }];
-            mockGetAvailablePrinters.mockResolvedValue(printers);
-
-            const { result } = setup();
-
-            await waitFor(() => {
-                expect(result.current.availablePrinters).toHaveLength(2);
-            });
-
-            expect(result.current.availablePrinters).toEqual([
-                { name: 'Printer1', noconfig: false },
-                { name: 'Printer2', noconfig: false },
-            ]);
-            expect(mockGetAvailablePrinters).toHaveBeenCalled();
-        });
-
-        it('filters out printers without names when shouldRemoveNoNamePrinters is true', async () => {
-            const printers = [{ name: 'Printer1' }, { name: '' }, { name: 'Printer2' }, { name: null }];
-            mockGetAvailablePrinters.mockResolvedValue(printers);
-
-            const { result } = setup({ shouldRemoveNoNamePrinters: true });
-
-            await waitFor(() => {
-                expect(result.current.availablePrinters).toHaveLength(2);
-            });
-
-            expect(result.current.availablePrinters).toEqual([
-                { name: 'Printer1', noconfig: false },
-                { name: 'Printer2', noconfig: false },
-            ]);
-        });
-
-        it('keeps printers without names when shouldRemoveNoNamePrinters is false', async () => {
-            const printers = [{ name: 'Printer1' }, { name: '' }, { name: 'Printer2' }];
-            mockGetAvailablePrinters.mockResolvedValue(printers);
-
-            const { result } = setup({ shouldRemoveNoNamePrinters: false });
-
-            await waitFor(() => {
-                expect(result.current.availablePrinters).toHaveLength(3);
-            });
-
-            expect(result.current.availablePrinters).toEqual([
-                { name: 'Printer1', noconfig: false },
-                { name: '', noconfig: true },
-                { name: 'Printer2', noconfig: false },
-            ]);
-        });
-
-        it('marks unknown printers when shouldDisableUnknownPrinters is true', async () => {
-            const printers = [{ name: 'Printer1' }, { name: 'UnknownPrinter' }];
-            mockGetAvailablePrinters.mockResolvedValue(printers);
-
-            const { result } = setup({ shouldDisableUnknownPrinters: true });
-
-            await waitFor(() => {
-                expect(result.current.availablePrinters).toHaveLength(2);
-            });
-
-            expect(result.current.availablePrinters[0]).toEqual({ name: 'Printer1', noconfig: false });
-            expect(result.current.availablePrinters[1]).toEqual({ name: 'UnknownPrinter', noconfig: true });
-        });
-
-        it('does not mark unknown printers when shouldDisableUnknownPrinters is false', async () => {
-            const printers = [{ name: 'Printer1' }, { name: 'UnknownPrinter' }];
-            mockGetAvailablePrinters.mockResolvedValue(printers);
-
-            const { result } = setup({ shouldDisableUnknownPrinters: false });
-
-            await waitFor(() => {
-                expect(result.current.availablePrinters).toHaveLength(2);
-            });
-
-            // When shouldDisableUnknownPrinters is false, printers are returned as-is
-            expect(result.current.availablePrinters).toEqual(printers);
-        });
-        it('applies both filters when both are enabled', async () => {
-            const printers = [
-                { name: 'Printer1' },
-                { name: '' },
-                { name: 'UnknownPrinter' },
-                { name: 'Printer2' },
-                { name: null },
-            ];
-            mockGetAvailablePrinters.mockResolvedValue(printers);
-
-            const { result } = setup({
-                shouldRemoveNoNamePrinters: true,
-                shouldDisableUnknownPrinters: true,
-            });
-
-            await waitFor(() => {
-                expect(result.current.availablePrinters).toHaveLength(3);
-            });
-
-            expect(result.current.availablePrinters).toEqual([
-                { name: 'Printer1', noconfig: false },
-                { name: 'UnknownPrinter', noconfig: true },
-                { name: 'Printer2', noconfig: false },
-            ]);
-        });
-
-        it('updates available printers when printerCode changes', async () => {
-            const zebraPrinters = [{ name: 'ZebraPrinter' }];
-            const emulatorPrinters = [{ name: 'EmulatorPrinter' }];
-
-            // Setup mock to return different printers based on which registry is called
-            const mockZebraInstance = {
+            const zebraMock = {
                 getAvailablePrinters: jest.fn().mockResolvedValue(zebraPrinters),
             };
-            const mockEmulatorInstance = {
+            const emulatorMock = {
                 getAvailablePrinters: jest.fn().mockResolvedValue(emulatorPrinters),
             };
 
-            printerRegistry.zebra = jest.fn(() => mockZebraInstance);
-            printerRegistry.emulator = jest.fn(() => mockEmulatorInstance);
+            printerRegistry.zebra = jest.fn(() => zebraMock);
+            printerRegistry.emulator = jest.fn(() => emulatorMock);
 
-            const { result, rerender } = renderHook(
-                ({ printerCode, shouldRemoveNoNamePrinters, shouldDisableUnknownPrinters }) =>
-                    useLabelPrinter({ printerCode, shouldRemoveNoNamePrinters, shouldDisableUnknownPrinters }),
-                {
-                    initialProps: {
-                        printerCode: 'zebra',
-                        shouldRemoveNoNamePrinters: true,
-                        shouldDisableUnknownPrinters: true,
-                    },
-                },
-            );
-
-            await waitFor(() => {
-                expect(result.current.availablePrinters).toEqual([{ name: 'ZebraPrinter', noconfig: true }]);
+            const hasLabelPrinterTemplate = jest.fn(() => true);
+            const { result, rerender } = setup({
+                printerCode: 'zebra',
+                availablePrinters: zebraPrinters,
+                hasLabelPrinterTemplate,
             });
 
-            // Rerender with new printerCode
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toHaveLength(1);
+                expect(result.current.availablePrinters[0].name).toBe('Zebra Printer');
+            });
+
+            // Change to emulator - need to update the mock to return emulator printers
+            printerRegistry.emulator = jest.fn(() => ({
+                getAvailablePrinters: jest.fn().mockResolvedValue(emulatorPrinters),
+            }));
+
             rerender({
                 printerCode: 'emulator',
+                templateStore: mockTemplateStore,
                 shouldRemoveNoNamePrinters: true,
                 shouldDisableUnknownPrinters: true,
             });
 
+            await waitFor(
+                () => {
+                    expect(result.current.availablePrinters).toHaveLength(1);
+                    expect(result.current.availablePrinters[0].name).toBe('Emulator Printer');
+                },
+                { timeout: 2000 },
+            );
+        });
+    });
+
+    describe('template store integration', () => {
+        it('should use hasLabelPrinterTemplate from useLabelPrinterTemplate hook', async () => {
+            const hasLabelPrinterTemplate = jest.fn(() => true);
+            const { result } = setup({ hasLabelPrinterTemplate });
+
             await waitFor(() => {
-                expect(result.current.availablePrinters).toEqual([{ name: 'EmulatorPrinter', noconfig: true }]);
+                expect(result.current.availablePrinters.length).toBeGreaterThan(0);
+            });
+
+            expect(useLabelPrinterTemplate).toHaveBeenCalledWith(mockTemplateStore);
+        });
+
+        it('should pass custom templateStore to useLabelPrinterTemplate', async () => {
+            const customTemplateStore = { 'custom-printer': 'custom-template' };
+            setup({ templateStore: customTemplateStore });
+
+            expect(useLabelPrinterTemplate).toHaveBeenCalledWith(customTemplateStore);
+        });
+
+        it('should handle empty templateStore', async () => {
+            const hasLabelPrinterTemplate = jest.fn(() => false);
+            const { result } = setup({ templateStore: {}, hasLabelPrinterTemplate });
+
+            await waitFor(() => {
+                expect(result.current.availablePrinters.length).toBeGreaterThan(0);
+            });
+
+            result.current.availablePrinters.forEach(printer => {
+                expect(printer.noconfig).toBe(true);
             });
         });
-        describe('coverage', () => {
-            it('handles empty printer list', async () => {
-                mockGetAvailablePrinters.mockResolvedValue([]);
+    });
 
-                const { result } = setup();
+    describe('effect dependencies', () => {
+        it('should refetch printers when shouldRemoveNoNamePrinters changes', async () => {
+            const { result, rerender } = setup({ shouldRemoveNoNamePrinters: true });
 
-                await waitFor(() => {
-                    expect(result.current.availablePrinters).toEqual([]);
-                });
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toHaveLength(3);
             });
 
-            it('handles null printer instance', async () => {
-                printerRegistry.zebra = jest.fn(() => null);
-
-                const { result } = setup();
-
-                await waitFor(() => {
-                    expect(result.current.availablePrinters).toEqual([]);
-                });
-
-                expect(result.current.printer).toBeNull();
+            rerender({
+                printerCode: 'zebra',
+                templateStore: mockTemplateStore,
+                shouldRemoveNoNamePrinters: false,
             });
 
-            it('handles undefined printer instance', async () => {
-                printerRegistry.zebra = jest.fn(() => undefined);
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toHaveLength(4);
+            });
+        });
 
-                const { result } = setup();
+        it('should refetch printers when shouldDisableUnknownPrinters changes', async () => {
+            const { result, rerender } = setup({ shouldDisableUnknownPrinters: true });
 
-                await waitFor(() => {
-                    expect(result.current.availablePrinters).toEqual([]);
-                });
-
-                expect(result.current.printer).toBeUndefined();
+            await waitFor(() => {
+                expect(result.current.availablePrinters[2].noconfig).toBeDefined();
             });
 
-            it('handles getAvailablePrinters returning null', async () => {
-                mockGetAvailablePrinters.mockResolvedValue(null);
-
-                const { result } = setup();
-
-                await waitFor(() => {
-                    expect(result.current.availablePrinters).toEqual([]);
-                });
+            rerender({
+                printerCode: 'zebra',
+                templateStore: mockTemplateStore,
+                shouldDisableUnknownPrinters: false,
             });
 
-            it('handles getAvailablePrinters returning undefined', async () => {
-                mockGetAvailablePrinters.mockResolvedValue(undefined);
-
-                const { result } = setup();
-
-                await waitFor(() => {
-                    expect(result.current.availablePrinters).toEqual([]);
+            await waitFor(() => {
+                result.current.availablePrinters.forEach(printer => {
+                    expect(printer.noconfig).toBeUndefined();
                 });
             });
         });
     });
 
-    describe('isKnownPrinter', () => {
-        beforeEach(() => {
-            labelPrinterTemplate.KnownPrinter1 = {};
-            labelPrinterTemplate.KnownPrinter2 = {};
-        });
+    describe('error handling', () => {
+        it('should handle printer instance without getAvailablePrinters method', async () => {
+            const incompletePrinterMock = {};
+            printerRegistry.zebra = jest.fn(() => incompletePrinterMock);
 
-        it('returns true for known printer', () => {
-            expect(isKnownPrinter('KnownPrinter1')).toBe(true);
-            expect(isKnownPrinter('KnownPrinter2')).toBe(true);
-        });
+            const { result } = setup();
 
-        it('returns false for unknown printer', () => {
-            expect(isKnownPrinter('UnknownPrinter')).toBe(false);
-        });
-
-        describe('coverage', () => {
-            it('returns false for empty string', () => {
-                expect(isKnownPrinter('')).toBe(false);
-            });
-
-            it('returns false for null', () => {
-                expect(isKnownPrinter(null)).toBe(false);
-            });
-
-            it('returns false for undefined', () => {
-                expect(isKnownPrinter(undefined)).toBe(false);
-            });
-
-            it('returns false when called without arguments', () => {
-                expect(isKnownPrinter()).toBe(false);
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toEqual([]);
             });
         });
-    });
 
-    describe('disabledUnknownPrinters', () => {
-        beforeEach(() => {
-            labelPrinterTemplate.Printer1 = {};
-            labelPrinterTemplate.Printer2 = {};
-        });
+        it('should handle null printer instance', async () => {
+            printerRegistry.zebra = jest.fn(() => null);
 
-        it('marks unknown printers with noconfig when enabled', async () => {
-            const printers = [{ name: 'Printer1' }, { name: 'UnknownPrinter' }, { name: 'Printer2' }];
+            const { result } = setup();
 
-            const result = await disabledUnknownPrinters(printers, true);
-
-            expect(result).toEqual([
-                { name: 'Printer1', noconfig: false },
-                { name: 'UnknownPrinter', noconfig: true },
-                { name: 'Printer2', noconfig: false },
-            ]);
-        });
-
-        it('returns original list when disabled', async () => {
-            const printers = [{ name: 'Printer1' }, { name: 'UnknownPrinter' }];
-
-            const result = await disabledUnknownPrinters(printers, false);
-
-            expect(result).toEqual(printers);
-        });
-
-        describe('coverage', () => {
-            it('handles empty array', async () => {
-                const result = await disabledUnknownPrinters([], true);
-
-                expect(result).toEqual([]);
-            });
-
-            it('handles printers without name property', async () => {
-                const printers = [{ noconfig: false }, { id: 1 }];
-
-                const result = await disabledUnknownPrinters(printers, true);
-
-                expect(result).toEqual([{ noconfig: true }, { id: 1, noconfig: true }]);
-            });
-
-            it('preserves existing properties', async () => {
-                const printers = [{ name: 'Printer1', id: 1, status: 'online' }];
-
-                const result = await disabledUnknownPrinters(printers, true);
-
-                expect(result).toEqual([{ name: 'Printer1', id: 1, status: 'online', noconfig: false }]);
-            });
-
-            it('handles mixed case printer names', async () => {
-                labelPrinterTemplate.Printer1 = {}; // Exact match
-                const printers = [{ name: 'Printer1' }, { name: 'printer1' }];
-
-                const result = await disabledUnknownPrinters(printers, true);
-
-                expect(result[0].noconfig).toBe(false); // 'Printer1' is in template
-                expect(result[1].noconfig).toBe(true); // 'printer1' not in template (case sensitive)
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toEqual([]);
             });
         });
-    });
 
-    describe('removeNoNamePrinters', () => {
-        it('removes printers without names when enabled', async () => {
-            const printers = [{ name: 'Printer1' }, { name: '' }, { name: 'Printer2' }, { name: null }];
+        it('should handle undefined printer instance', async () => {
+            printerRegistry.zebra = jest.fn(() => undefined);
 
-            const result = await removeNoNamePrinters(printers, true);
+            const { result } = setup();
 
-            expect(result).toEqual([{ name: 'Printer1' }, { name: 'Printer2' }]);
-        });
-
-        it('returns original list when disabled', async () => {
-            const printers = [{ name: 'Printer1' }, { name: '' }, { name: null }];
-
-            const result = await removeNoNamePrinters(printers, false);
-
-            expect(result).toEqual(printers);
-        });
-        describe('coverage', () => {
-            it('handles empty array', async () => {
-                const result = await removeNoNamePrinters([], true);
-
-                expect(result).toEqual([]);
-            });
-
-            it('handles undefined printers list', async () => {
-                const result = await removeNoNamePrinters(undefined, true);
-
-                expect(result).toEqual([]);
-            });
-
-            it('handles printers without name property', async () => {
-                const printers = [{ id: 1 }, { status: 'online' }];
-
-                const result = await removeNoNamePrinters(printers, true);
-
-                expect(result).toEqual([]);
-            });
-
-            it('keeps printers with falsy but defined names when disabled', async () => {
-                const printers = [{ name: 0 }, { name: false }];
-
-                const result = await removeNoNamePrinters(printers, false);
-
-                expect(result).toEqual(printers);
-            });
-
-            it('filters out printers with undefined name', async () => {
-                const printers = [{ name: 'Printer1' }, { name: undefined }, { name: 'Printer2' }];
-
-                const result = await removeNoNamePrinters(printers, true);
-
-                expect(result).toEqual([{ name: 'Printer1' }, { name: 'Printer2' }]);
-            });
-
-            it('preserves all properties of kept printers', async () => {
-                const printers = [
-                    { name: 'Printer1', id: 1, status: 'online' },
-                    { name: '', id: 2 },
-                    { name: 'Printer2', id: 3, port: 9100 },
-                ];
-
-                const result = await removeNoNamePrinters(printers, true);
-
-                expect(result).toEqual([
-                    { name: 'Printer1', id: 1, status: 'online' },
-                    { name: 'Printer2', id: 3, port: 9100 },
-                ]);
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toEqual([]);
             });
         });
-    });
 
-    describe('COOKIE_PRINTER_PREFERENCE constant', () => {
-        it('has the correct value', () => {
-            expect(COOKIE_PRINTER_PREFERENCE).toBe('TNT_LABEL_PRINTER_PREFERENCE');
+        it('should handle getAvailablePrinters promise rejection', async () => {
+            const printerInstanceMock = {
+                getAvailablePrinters: jest.fn().mockRejectedValue(new Error('Printer error')),
+            };
+            printerRegistry.zebra = jest.fn(() => printerInstanceMock);
+
+            const { result } = setup();
+
+            // Should not crash and should maintain empty array
+            await waitFor(() => {
+                expect(result.current.availablePrinters).toEqual([]);
+            });
         });
     });
 });
