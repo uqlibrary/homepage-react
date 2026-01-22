@@ -19,29 +19,57 @@ export const createPrinter = () => {
     const printer = new ZebraBrowserPrintWrapper();
 
     const getAvailablePrinters = async () => {
-        return await printer.getAvailablePrinters();
+        try {
+            return await printer.getAvailablePrinters();
+        } catch (error) {
+            console.warn('Zebra Browser Print not available:', error.message);
+            return [];
+        }
     };
 
     const getDefaultPrinter = async () => {
-        return await printer.getDefaultPrinter();
+        try {
+            return await printer.getDefaultPrinter();
+        } catch (error) {
+            console.warn('Zebra Browser Print not available:', error.message);
+            return null;
+        }
     };
 
     const getConnectionStatus = async () => {
-        const status = await printer.checkPrinterStatus();
-        return {
-            ready: status.isReadyToPrint || false,
-            error: status.isError || false,
-            errors: status.errors,
-        };
+        try {
+            const status = await printer.checkPrinterStatus();
+            return {
+                ready: status.isReadyToPrint || false,
+                error: status.isError || false,
+                errors: status.errors,
+            };
+        } catch (error) {
+            console.warn('Zebra Browser Print not available:', error.message);
+            return {
+                ready: false,
+                error: true,
+                errors: ['Zebra Browser Print application is not running'],
+            };
+        }
     };
 
     const setPrinter = async selectedPrinter => {
-        await printer.setPrinter(selectedPrinter);
+        try {
+            await printer.setPrinter(selectedPrinter);
+        } catch (error) {
+            console.warn('Failed to set printer:', error.message);
+        }
     };
 
     const print = async data => {
-        console.log('Sending print data to printer...');
-        await printer.print(data);
+        try {
+            console.log('Sending print data to printer...');
+            await printer.print(data);
+        } catch (error) {
+            console.error('Failed to print:', error.message);
+            throw new Error('Unable to print. Please ensure Zebra Browser Print is running.');
+        }
     };
 
     return {
