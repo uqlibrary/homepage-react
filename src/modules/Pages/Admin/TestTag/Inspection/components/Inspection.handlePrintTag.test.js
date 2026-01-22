@@ -19,7 +19,7 @@ jest.mock('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterPreference')
 jest.mock('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterTemplate');
 
 // Mock LabelLogo
-jest.mock('./PrinterLabelLogo', () => 'mock-logo-data');
+jest.mock('./LabelLogo', () => 'mock-logo-data');
 
 const useLabelPrinter = require('../../SharedComponents/LabelPrinter/hooks/useLabelPrinter').default;
 const useLabelPrinterPreference = require('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterPreference')
