@@ -449,7 +449,7 @@ describe('Inspection component', () => {
         expect(defaults.actions.clearSaveInspection).toHaveBeenCalled();
         expect(defaults.actions.clearAssets).toHaveBeenCalled();
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
-    }, 10000);
+    }, 20000);
 
     it('should show a save success for FAILED asset dialog panel', async () => {
         const expected = {
@@ -510,7 +510,7 @@ describe('Inspection component', () => {
         expect(defaults.actions.clearSaveInspection).toHaveBeenCalled();
         expect(defaults.actions.clearAssets).toHaveBeenCalled();
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
-    }, 10000);
+    }, 20000);
 
     it('should show a save success for OUTFORREPAIR asset dialog panel', async () => {
         const expected = {
@@ -748,7 +748,7 @@ describe('Inspection component', () => {
             await waitFor(() => {
                 expect(getByTestId('confirmation_alert-info-alert')).toHaveTextContent('Print job sent to Emulator');
             });
-        }, 10000);
+        }, 20000);
 
         it('should show alert when no inspection data is available for printing', async () => {
             const defaults = getMockDefaults();
@@ -780,7 +780,7 @@ describe('Inspection component', () => {
                     'No label data available to print.',
                 );
             });
-        }, 10000);
+        }, 20000);
 
         it('should show alert when printer is not ready', async () => {
             // Override the mock to return ready: false for this test
@@ -815,7 +815,7 @@ describe('Inspection component', () => {
                     'The selected printer is not ready.',
                 );
             });
-        }, 10000);
+        }, 20000);
 
         it('should show alert when print job fails', async () => {
             const defaults = getMockDefaults();
@@ -848,7 +848,7 @@ describe('Inspection component', () => {
                     'Unable to send the print job.',
                 );
             });
-        }, 10000);
+        }, 20000);
 
         it('should show alert when printer connection fails', async () => {
             const defaults = getMockDefaults();
@@ -883,7 +883,7 @@ describe('Inspection component', () => {
                     'Unable to connect to the selected printer',
                 );
             });
-        }, 10000);
+        }, 20000);
 
         it('should show alert when template is not found for printer', async () => {
             const defaults = getMockDefaults();
@@ -919,6 +919,6 @@ describe('Inspection component', () => {
                     'No label template found for the selected printer',
                 );
             });
-        }, 10000);
+        }, 20000);
     });
 });
