@@ -121,8 +121,8 @@ export const BookableSpacesAddSpace = ({
                 ['library_id']: mostRecentSpace?.space_library_id,
                 ['floor_id']: mostRecentSpace?.space_floor_id,
                 ['space_opening_hours_id']: mostRecentSpace?.space_opening_hours_id,
-                ['space_latitude']: mostRecentSpace?.space_latitude,
-                ['space_longitude']: mostRecentSpace?.space_longitude,
+                ['space_latitude']: locale?.locations.greatCourtCoordinates[0],
+                ['space_longitude']: locale?.locations.greatCourtCoordinates[1],
             };
             console.log('set form values 0', newValues);
             setFormValues(newValues);

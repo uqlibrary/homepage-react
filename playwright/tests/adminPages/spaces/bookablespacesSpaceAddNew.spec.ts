@@ -12,8 +12,8 @@ const STEP_FACILITY_TYPES = 'tab-facility-types';
 const STEP_LOCATION_HOURS = 'tab-location-hours';
 const STEP_IMAGERY = 'tab-imagery';
 
-const PACE_DEFAULT_LATITUDE = '-27.49979';
-const PACE_DEFAULT_LONGITUDE = '153.03066';
+const ST_LUCIA_DEFAULT_LATITUDE = '-27.49751';
+const ST_LUCIA_DEFAULT_LONGITUDE = '153.01329';
 
 test.describe('Spaces Admin - add new space', () => {
     test('can navigate from dashboard to add new', async ({ page }) => {
@@ -141,8 +141,8 @@ test.describe('Spaces Admin - add new space', () => {
             space_name: 'W12343',
             space_type: 'Computer room',
             space_opening_hours_id: 3967,
-            space_latitude: PACE_DEFAULT_LATITUDE,
-            space_longitude: PACE_DEFAULT_LONGITUDE,
+            space_latitude: ST_LUCIA_DEFAULT_LATITUDE,
+            space_longitude: ST_LUCIA_DEFAULT_LONGITUDE,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -271,8 +271,8 @@ test.describe('Spaces Admin - add new space', () => {
             space_opening_hours_id: 3825, // dhesl
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
             facility_types: [ASKUS_FILTER_TYPE, MICROWAVE_FILTER_TYPE],
-            space_latitude: PACE_DEFAULT_LATITUDE, // TODO add drag and drop test
-            space_longitude: PACE_DEFAULT_LONGITUDE,
+            space_latitude: ST_LUCIA_DEFAULT_LATITUDE, // TODO add drag and drop test
+            space_longitude: ST_LUCIA_DEFAULT_LONGITUDE,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });

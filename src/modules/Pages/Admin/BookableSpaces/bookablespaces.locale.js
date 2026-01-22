@@ -1,5 +1,5 @@
 const noSpringshareHoursLabel = 'No Springshare opening hours will display (click to change)';
-const ST_LUCIA_COORDINATES = [-27.49718, 153.01214];
+const ST_LUCIA_COORDINATES = [-27.49751, 153.01329];
 
 export const locale = {
     noSpringshareHoursLabel: noSpringshareHoursLabel,
