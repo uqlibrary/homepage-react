@@ -1001,6 +1001,7 @@ export const EditSpaceForm = ({
                         formValues={formValues}
                         setFormValues={setFormValues}
                         campusCoordinateList={currentCampusList}
+                        bookableSpacesRoomList={bookableSpacesRoomList}
                     />
                 </Grid>
                 <Grid item xs={12}>
