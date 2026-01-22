@@ -32,7 +32,7 @@ jest.mock('../../SharedComponents/LabelPrinter/LabelPrinterTemplate', () => ({
 // Mock LabelLogo
 jest.mock('../../SharedComponents/LabelPrinter/LabelLogo', () => 'mock-logo-data');
 
-const useLabelPrinter = require('../../SharedComponents/LabelPrinter/useLabelPrinter').default;
+const useLabelPrinter = require('../../SharedComponents/LabelPrinter/hooks/useLabelPrinter').default;
 
 function setup(testProps = {}, renderer = rtlRender) {
     const {
@@ -362,7 +362,8 @@ describe('Inspection handlePrintTag function', () => {
         });
 
         it('should pass correct data to template function', async () => {
-            const LabelPrinterTemplate = require('../../SharedComponents/LabelPrinter/LabelPrinterTemplate').default;
+            const LabelPrinterTemplate = require('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterTemplate')
+                .default;
 
             const mockPrinter = {
                 setPrinter: jest.fn().mockResolvedValue({ name: 'emulator' }),

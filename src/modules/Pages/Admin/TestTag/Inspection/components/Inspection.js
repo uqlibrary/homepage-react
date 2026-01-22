@@ -35,10 +35,11 @@ import { isDevEnv, isTest } from 'helpers/general';
 import labelLogo from './printerLabelLogo';
 import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
 import {
-    getLabelPrinterTemplate,
     useLabelPrinter,
     useLabelPrinterPreference,
+    useLabelPrinterTemplate,
 } from '../../SharedComponents/LabelPrinter';
+import * as labelPrintertemplates from './labelPrinterTemplates';
 import { getDeptLabelPrintingEnabled, getDefaultDeptPrinter } from '../../helpers/labelPrinting';
 import { COOKIE_PRINTER_PREFERENCE } from './config';
 
@@ -186,9 +187,10 @@ const Inspection = ({
     const deptPrintingEnabled = getDeptLabelPrintingEnabled(user?.user_department);
     const { printer, availablePrinters } = useLabelPrinter({
         printerCode: shouldUsePrinterEmulator ? 'emulator' : deptPrinterDefault,
+        templateStore: labelPrintertemplates,
     });
-
     const [printerPreference, setPrinterPreference] = useLabelPrinterPreference(COOKIE_PRINTER_PREFERENCE);
+    const { getLabelPrinterTemplate } = useLabelPrinterTemplate(labelPrintertemplates);
 
     const inspectionLocale = locale.pages.inspect;
 
@@ -375,7 +377,7 @@ const Inspection = ({
             console.error('Printing error:', error);
             showAlert(locale.pages.general.labelPrinting.error.uncaughtException);
         }
-    }, [availablePrinters, printer, printerPreference, showAlert, successData]);
+    }, [availablePrinters, getLabelPrinterTemplate, printer, printerPreference, showAlert, successData]);
 
     return (
         <StandardAuthPage

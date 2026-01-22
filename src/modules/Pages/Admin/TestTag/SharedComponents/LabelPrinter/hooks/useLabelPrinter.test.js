@@ -6,8 +6,8 @@ import useLabelPrinter, {
     disabledUnknownPrinters,
     removeNoNamePrinters,
 } from './useLabelPrinter';
-import { printerRegistry } from './LabelPrinterRegister';
-import labelPrinterTemplate from './LabelPrinterTemplate';
+import { printerRegistry } from '../LabelPrinterRegister';
+import labelPrinterTemplate from './useLabelPrinterTemplate';
 
 jest.mock('react-cookie');
 

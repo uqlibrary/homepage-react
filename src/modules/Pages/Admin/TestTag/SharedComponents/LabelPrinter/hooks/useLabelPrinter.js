@@ -1,19 +1,7 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 
-import { printerRegistry } from './LabelPrinterRegister';
-import { hasTemplate } from './LabelPrinterTemplate';
-
-export const isKnownPrinter = (printerName = '') => {
-    return hasTemplate(printerName);
-};
-
-export const disabledUnknownPrinters = async (printersList = [], shouldDisableUnknownPrinters) => {
-    if (!shouldDisableUnknownPrinters) return printersList;
-    return printersList.map(printer => ({
-        ...printer,
-        noconfig: !isKnownPrinter(printer.name),
-    }));
-};
+import { printerRegistry } from '../LabelPrinterRegister';
+import useLabelPrinterTemplate from './useLabelPrinterTemplate';
 
 export const removeNoNamePrinters = async (printersList = [], shouldRemoveNoNamePrinters) => {
     if (!shouldRemoveNoNamePrinters) return printersList;
@@ -39,11 +27,23 @@ const getAvailablePrinters = async printerInstance => {
  */
 const useLabelPrinter = ({
     printerCode = 'zebra',
+    templateStore = {},
     shouldRemoveNoNamePrinters = true,
     shouldDisableUnknownPrinters = true,
 }) => {
     const [availablePrinters, setAvailablePrinters] = useState([]);
+    const { hasLabelPrinterTemplate } = useLabelPrinterTemplate(templateStore);
 
+    const disabledUnknownPrinters = useCallback(
+        (printersList = [], shouldDisableUnknownPrinters) => {
+            if (!shouldDisableUnknownPrinters) return printersList;
+            return printersList.map(printer => ({
+                ...printer,
+                noconfig: !hasLabelPrinterTemplate(printer.name),
+            }));
+        },
+        [hasLabelPrinterTemplate],
+    );
     const printerInstance = useMemo(() => {
         return printerRegistry[printerCode]?.();
     }, [printerCode]);
@@ -53,7 +53,7 @@ const useLabelPrinter = ({
             .then(printers => removeNoNamePrinters(printers, shouldRemoveNoNamePrinters))
             .then(printers => disabledUnknownPrinters(printers, shouldDisableUnknownPrinters))
             .then(setAvailablePrinters);
-    }, [printerInstance, shouldDisableUnknownPrinters, shouldRemoveNoNamePrinters]);
+    }, [disabledUnknownPrinters, printerInstance, shouldDisableUnknownPrinters, shouldRemoveNoNamePrinters]);
 
     return {
         printerCode,
