@@ -32,7 +32,7 @@ import { breadcrumbs } from 'config/routes';
 
 import { isDevEnv, isTest } from 'helpers/general';
 
-import LabelLogo from './PrinterLabelLogo';
+import LabelLogo from './LabelLogo';
 import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
 import {
     useLabelPrinter,
