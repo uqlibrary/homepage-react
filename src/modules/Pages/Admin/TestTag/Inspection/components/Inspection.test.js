@@ -27,20 +27,29 @@ jest.mock('react-cookie', () => ({
 const mockGetConnectionStatus = jest.fn();
 const mockPrint = jest.fn();
 const mockSetPrinterPreference = jest.fn();
+const mockSetPrinter = jest.fn().mockResolvedValue({ name: 'Emulator' });
 
-jest.mock('../../SharedComponents/LabelPrinter/useLabelPrinter', () => {
+jest.mock('../../SharedComponents/LabelPrinter/hooks/useLabelPrinter', () => {
     return jest.fn(() => ({
         printerCode: 'emulator',
         printer: {
             code: 'emulator',
             getAvailablePrinters: jest.fn().mockResolvedValue([{ name: 'Emulator' }]),
             getConnectionStatus: mockGetConnectionStatus,
-            setPrinter: jest.fn().mockResolvedValue({ name: 'Emulator' }),
+            setPrinter: mockSetPrinter,
             print: mockPrint,
         },
         printerPreference: 'Emulator',
         setPrinterPreference: mockSetPrinterPreference,
         availablePrinters: [{ name: 'Emulator' }],
+    }));
+});
+
+const mockGetLabelPrinterTemplate = jest.fn().mockReturnValue({ name: 'emulator', formattedTemplate: 'mock-template' });
+jest.mock('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterTemplate', () => {
+    return jest.fn(() => ({
+        ...jest.requireActual('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterTemplate'),
+        getLabelPrinterTemplate: mockGetLabelPrinterTemplate,
     }));
 });
 
@@ -666,7 +675,7 @@ describe('Inspection component', () => {
 
         beforeEach(() => {
             jest.clearAllMocks();
-            mockCookies.TNT_LABEL_PRINTER_PREFERENCE = 'Emulator';
+            mockCookies.TNT_LABEL_PRINTER_PREFERENCE = { name: 'Emulator', shortName: 'Emulator' };
             // Default mock returns ready: true
             mockGetConnectionStatus.mockResolvedValue({ ready: true });
             mockPrint.mockResolvedValue({ ok: true });
@@ -746,7 +755,7 @@ describe('Inspection component', () => {
             const saveActionFn = jest.fn(() => Promise.resolve({ ...mockSuccessData, asset_id_displayed: null }));
             defaults.actions.saveInspection = saveActionFn;
 
-            const { getByTestId } = setup({
+            const { getByTestId, queryByTestId } = setup({
                 ...defaults,
                 user: { ...userData, user_department: 'UQL' },
             });
@@ -767,7 +776,7 @@ describe('Inspection component', () => {
             });
             // Should show error alert
             await waitFor(() => {
-                expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+                expect(queryByTestId('confirmation_alert-error-alert')).toHaveTextContent(
                     'No label data available to print.',
                 );
             });
@@ -781,7 +790,7 @@ describe('Inspection component', () => {
             const saveActionFn = jest.fn(() => Promise.resolve(mockSuccessData));
             defaults.actions.saveInspection = saveActionFn;
 
-            const { getByTestId } = setup({
+            const { getByTestId, queryByTestId } = setup({
                 ...defaults,
                 saveInspectionSuccess: mockSuccessData,
                 user: { ...userData, user_department: 'UQL' },
@@ -802,7 +811,7 @@ describe('Inspection component', () => {
             });
 
             await waitFor(() => {
-                expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+                expect(queryByTestId('confirmation_alert-error-alert')).toHaveTextContent(
                     'The selected printer is not ready.',
                 );
             });
@@ -812,8 +821,9 @@ describe('Inspection component', () => {
             const defaults = getMockDefaults();
             const saveActionFn = jest.fn(() => Promise.resolve(mockSuccessData));
             defaults.actions.saveInspection = saveActionFn;
+            mockPrint.mockRejectedValueOnce({ ok: false });
 
-            const { getByTestId } = setup({
+            const { getByTestId, queryByTestId } = setup({
                 ...defaults,
                 saveInspectionSuccess: mockSuccessData,
                 user: { ...userData, user_department: 'UQL' },
@@ -834,7 +844,7 @@ describe('Inspection component', () => {
             });
 
             await waitFor(() => {
-                expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+                expect(queryByTestId('confirmation_alert-error-alert')).toHaveTextContent(
                     'Unable to send the print job.',
                 );
             });
@@ -844,6 +854,7 @@ describe('Inspection component', () => {
             const defaults = getMockDefaults();
             const saveActionFn = jest.fn(() => Promise.resolve(mockSuccessData));
             defaults.actions.saveInspection = saveActionFn;
+            mockSetPrinter.mockRejectedValueOnce({ ok: false });
 
             const { getByTestId, queryByTestId } = setup({
                 ...defaults,
@@ -868,9 +879,9 @@ describe('Inspection component', () => {
 
             // Should show either error or success alert
             await waitFor(() => {
-                const errorAlert = queryByTestId('confirmation_alert-error-alert');
-                const infoAlert = queryByTestId('confirmation_alert-info-alert');
-                expect(errorAlert || infoAlert).toBeTruthy();
+                expect(queryByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+                    'Unable to connect to the selected printer',
+                );
             });
         }, 10000);
 
@@ -878,10 +889,12 @@ describe('Inspection component', () => {
             const defaults = getMockDefaults();
             const saveActionFn = jest.fn(() => Promise.resolve(mockSuccessData));
             defaults.actions.saveInspection = saveActionFn;
+            mockPrint.mockRejectedValueOnce({ ok: false });
+            mockGetLabelPrinterTemplate.mockReturnValueOnce({});
 
             const { getByTestId, queryByTestId } = setup({
                 ...defaults,
-                saveInspectionSuccess: null, // Explicitly set to null to test no data scenario                saveInspectionSuccess: mockSuccessData,
+                saveInspectionSuccess: mockSuccessData,
                 user: { ...userData, user_department: 'UQL' },
             });
 
@@ -902,9 +915,9 @@ describe('Inspection component', () => {
 
             // Should show either error or success alert
             await waitFor(() => {
-                const errorAlert = queryByTestId('confirmation_alert-error-alert');
-                const infoAlert = queryByTestId('confirmation_alert-info-alert');
-                expect(errorAlert || infoAlert).toBeTruthy();
+                expect(queryByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+                    'No label template found for the selected printer',
+                );
             });
         }, 10000);
     });
