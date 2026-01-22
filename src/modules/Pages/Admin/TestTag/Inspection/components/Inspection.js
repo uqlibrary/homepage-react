@@ -32,7 +32,7 @@ import { breadcrumbs } from 'config/routes';
 
 import { isDevEnv, isTest } from 'helpers/general';
 
-import labelLogo from './PrinterLabelLogo';
+import LabelLogo from './PrinterLabelLogo';
 import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
 import {
     useLabelPrinter,
@@ -340,7 +340,7 @@ const Inspection = ({
                     printer.getConnectionStatus().then(status => {
                         if (status.ready) {
                             const template = getLabelPrinterTemplate(printerPreference.shortName, {
-                                logo: labelLogo,
+                                logo: LabelLogo,
                                 userId: successData.user_licence_number,
                                 assetId: successData.asset_id_displayed,
                                 testDate: successData.action_date,
