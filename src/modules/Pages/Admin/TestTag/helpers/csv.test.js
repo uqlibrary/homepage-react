@@ -44,18 +44,7 @@ describe('csv', () => {
     });
 
     describe('dataTableDataToRows', () => {
-        it('should build headers from column headerName values', () => {
-            const columns = [
-                { headerName: 'Name', field: 'name' },
-                { headerName: 'Age', field: 'age' },
-            ];
-
-            const result = dataTableDataToRows(columns, []);
-
-            expect(result.headers).toEqual(['Name', 'Age']);
-        });
-
-        it('should map data rows according to column field order', () => {
+        it('should map header and data rows according to column field order', () => {
             const columns = [
                 { headerName: 'Name', field: 'name' },
                 { headerName: 'Age', field: 'age' },
@@ -66,10 +55,28 @@ describe('csv', () => {
             ];
 
             const result = dataTableDataToRows(columns, data);
-
+            expect(result.headers).toEqual(['Name', 'Age']);
             expect(result.data).toEqual([
                 ['Alice', 30],
                 ['Bob', 25],
+            ]);
+        });
+
+        it('should allow data transformation', () => {
+            const columns = [
+                { headerName: 'Name', field: 'name' },
+                { headerName: 'Age', field: 'age' },
+            ];
+            const data = [
+                { name: 'Alice', age: 30 },
+                { name: 'Bob', age: 25 },
+            ];
+
+            const result = dataTableDataToRows(columns, data, (i, f) => String(i[f]));
+            expect(result.headers).toEqual(['Name', 'Age']);
+            expect(result.data).toEqual([
+                ['Alice', '30'],
+                ['Bob', '25'],
             ]);
         });
 
@@ -77,7 +84,6 @@ describe('csv', () => {
             const columns = [{ headerName: 'Col', field: 'col' }];
 
             const result = dataTableDataToRows(columns, []);
-
             expect(result.data).toEqual([]);
         });
     });

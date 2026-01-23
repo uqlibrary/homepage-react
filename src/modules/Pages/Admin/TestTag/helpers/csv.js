@@ -26,10 +26,10 @@ export const sanitizeValue = value => {
 /**
  * @param {Object} obj
  * @param {string[]} selectedAttributes
- * @param {(obj: Object, attribute: string) => *} [transformer=null]
+ * @param {(obj: Object, attribute: string) => *} [transformer]
  * @returns {Array<*>}
  */
-export const objectToArray = (obj, selectedAttributes, transformer = null) =>
+export const objectToArray = (obj, selectedAttributes, transformer) =>
     selectedAttributes.map(attribute => (transformer && transformer(obj, attribute)) || obj[attribute]);
 
 /**
