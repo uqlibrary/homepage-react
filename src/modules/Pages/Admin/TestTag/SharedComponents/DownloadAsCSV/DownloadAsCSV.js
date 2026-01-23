@@ -4,15 +4,18 @@ import moment from 'moment/moment';
 import IconButton from '@mui/material/IconButton';
 import { Download } from '@mui/icons-material';
 import PropTypes from 'prop-types';
+import { tryCatch } from '../../../../../../helpers/general';
 
 /**
  * @param {string[]} headers
  * @param {(string | number | null | undefined)[][]} data
  * @param {string} filename
- * @returns {void}
+ * @returns {*}
  */
 const handleClick = (headers, data, filename) =>
-    downloadCSVFile(rowsToCSVString([headers, ...data]), `${filename}-${moment().format('YYYYMMDDHHmmss')}`);
+    tryCatch(() =>
+        downloadCSVFile(rowsToCSVString([headers, ...data]), `${filename}-${moment().format('YYYYMMDDHHmmss')}`),
+    );
 
 const DownloadAsCSV = ({ filename, contents, disabled }) => {
     return (
