@@ -1,5 +1,5 @@
 import FileSaver from 'file-saver';
-import { dataTableDataToRows, downloadCSVFile, rowsToCSVString, sanitizeValue, locationTransformer } from './csv';
+import { dataTableDataToRows, downloadCSVFile, rowsToCSVString, sanitizeValue } from './csv';
 
 jest.mock('file-saver', () => ({
     saveAs: jest.fn(),
@@ -73,52 +73,12 @@ describe('csv', () => {
             ]);
         });
 
-        it('should use locationTransformer for location field', () => {
-            const columns = [{ headerName: 'Location', field: 'location' }];
-            const renderLocation = jest.fn().mockReturnValue('Rendered Location');
-            const row = { location: 'raw-location' };
-
-            const result = dataTableDataToRows(columns, [row], locationTransformer('location', renderLocation));
-
-            expect(renderLocation).toHaveBeenCalledTimes(1);
-            expect(renderLocation).toHaveBeenCalledWith(row);
-            expect(result.data).toEqual([['Rendered Location']]);
-        });
-
-        it('should work when location is among other fields and preserve ordering', () => {
-            const columns = [
-                { headerName: 'Name', field: 'name' },
-                { headerName: 'Location', field: 'location' },
-                { headerName: 'Status', field: 'status' },
-            ];
-            const renderLocation = jest.fn(r => `LOC:${r.location}`);
-            const data = [{ name: 'Alice', location: 'A1', status: 'Open' }];
-
-            const result = dataTableDataToRows(columns, data, locationTransformer('location', renderLocation));
-
-            expect(renderLocation).toHaveBeenCalledTimes(1);
-            expect(result.data).toEqual([['Alice', 'LOC:A1', 'Open']]);
-        });
-
-        it('should fall back to raw location when locationTransformer returns a falsy value', () => {
-            const columns = [{ headerName: 'Location', field: 'location' }];
-            const renderLocation = jest.fn().mockReturnValue('');
-            const row = { location: 'raw-location' };
-
-            const result = dataTableDataToRows(columns, [row], locationTransformer('location', renderLocation));
-
-            expect(renderLocation).toHaveBeenCalledTimes(1);
-            expect(result.data).toEqual([['raw-location']]);
-        });
-
         it('should handle empty data array', () => {
             const columns = [{ headerName: 'Col', field: 'col' }];
-            const renderLocation = jest.fn();
 
-            const result = dataTableDataToRows(columns, [], locationTransformer('location', renderLocation));
+            const result = dataTableDataToRows(columns, []);
 
             expect(result.data).toEqual([]);
-            expect(renderLocation).not.toHaveBeenCalled();
         });
     });
 

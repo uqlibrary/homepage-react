@@ -16,11 +16,11 @@ import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPic
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import config, { renderLocation } from './config';
+import config, { transformRow } from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
 import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
-import { dataTableDataToRows, locationTransformer } from '../../../helpers/csv';
+import { dataTableDataToRows } from '../../../helpers/csv';
 const moment = require('moment');
 
 const componentId = 'assets-inspected';
@@ -94,7 +94,7 @@ const AssetReportByFilters = ({
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
-    const { rows } = useDataTableRows(assetList);
+    const { rows } = useDataTableRows(assetList, transformRow);
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -197,15 +197,8 @@ const AssetReportByFilters = ({
                         action: (
                             <DownloadAsCSV
                                 filename={componentIdLower}
-                                contents={
-                                    /* istanbul ignore next */ () =>
-                                        dataTableDataToRows(
-                                            columns,
-                                            assetList,
-                                            locationTransformer('location', renderLocation),
-                                        )
-                                }
-                                disabled={assetListLoading || !assetList?.length}
+                                contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, rows)}
+                                disabled={assetListLoading || !rows?.length}
                             />
                         ),
                     }}

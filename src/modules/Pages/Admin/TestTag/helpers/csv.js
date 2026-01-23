@@ -24,14 +24,6 @@ export const sanitizeValue = value => {
 };
 
 /**
- * @param {string} locationField
- * @param {(obj: Object) => *} transformer
- * @returns {(obj: Object, attribute: string) => *}
- */
-export const locationTransformer = (locationField, transformer) => (obj, attribute) =>
-    attribute === locationField ? transformer(obj) : undefined;
-
-/**
  * @param {Object} obj
  * @param {string[]} selectedAttributes
  * @param {(obj: Object, attribute: string) => *} [transformer=null]
