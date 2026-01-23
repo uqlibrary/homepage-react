@@ -122,7 +122,7 @@ describe('LocationPickerHooks', () => {
                         siteList,
                     },
                     location: defaultLocation,
-                    setRow: mockSetRowFn,
+                    setRows: mockSetRowFn,
                     setLocation: mockSetLocationFn,
                 },
             });
@@ -145,7 +145,7 @@ describe('LocationPickerHooks', () => {
                         siteList,
                     },
                     location: { ...defaultLocation, site: 1 },
-                    setRow: mockSetRowFn,
+                    setRows: mockSetRowFn,
                     setLocation: mockSetLocationFn,
                 },
             });
@@ -171,7 +171,7 @@ describe('LocationPickerHooks', () => {
                         siteList,
                     },
                     location: { ...defaultLocation, site: 1 },
-                    setRow: mockSetRowFn,
+                    setRows: mockSetRowFn,
                     setLocation: mockSetLocationFn,
                 },
             });
@@ -200,7 +200,7 @@ describe('LocationPickerHooks', () => {
                         floorList: { floors: floorList },
                     },
                     location: { ...defaultLocation, site: 1, building: 1 },
-                    setRow: mockSetRowFn,
+                    setRows: mockSetRowFn,
                     setLocation: mockSetLocationFn,
                 },
             });
@@ -243,7 +243,7 @@ describe('LocationPickerHooks', () => {
                         roomList: { rooms: roomList },
                     },
                     location: { ...defaultLocation, site: 1, building: 1, floor: 1 },
-                    setRow: mockSetRowFn,
+                    setRows: mockSetRowFn,
                     setLocation: mockSetLocationFn,
                 },
             });

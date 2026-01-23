@@ -12,7 +12,7 @@ import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/Standar
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
@@ -171,7 +171,7 @@ const InspectionDevices = ({
         actionTooltips: pageLocale.form.actionTooltips,
     });
 
-    const { row } = useDataTableRow(inspectionDevices, transformRow);
+    const { rows } = useDataTableRows(inspectionDevices, transformRow);
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -270,7 +270,7 @@ const InspectionDevices = ({
                         <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
-                                rows={row}
+                                rows={rows}
                                 columns={columns}
                                 rowId={'device_id'}
                                 components={{ ...(canManage ? { Toolbar: AddToolbar } : {}) }}

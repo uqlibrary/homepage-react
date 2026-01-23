@@ -13,7 +13,7 @@ import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
 import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
-import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
@@ -98,7 +98,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         actionTooltips: pageLocale.form.actionTooltips,
     });
 
-    const { row } = useDataTableRow(assetsList, transformRow);
+    const { rows } = useDataTableRows(assetsList, transformRow);
 
     return (
         <StandardAuthPage
@@ -147,7 +147,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                     >
                         <Grid style={{ flex: 1 }}>
                             <DataTable
-                                rows={row}
+                                rows={rows}
                                 columns={columns}
                                 id={componentId}
                                 rowId={'asset_id_displayed'}

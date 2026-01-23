@@ -16,7 +16,7 @@ import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/Confi
 import ActionDialogue from './ActionDialogue';
 
 import { useConfirmationAlert } from '../../../helpers/hooks';
-import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
@@ -68,7 +68,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         actionDataFieldKeys: { valueKey: 'asset_type_name' },
     });
 
-    const { row } = useDataTableRow(assetTypesList);
+    const { rows } = useDataTableRows(assetTypesList);
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -272,7 +272,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         <Grid style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
-                                rows={row}
+                                rows={rows}
                                 density="standard"
                                 columns={columns}
                                 rowId="asset_type_id"

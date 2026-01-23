@@ -13,7 +13,7 @@ import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
-import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableRows, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
@@ -73,14 +73,14 @@ const ManageLocations = ({ actions }) => {
 
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
-    const { row, setRow } = useDataTableRow([]);
+    const { rows, setRows } = useDataTableRows([]);
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
     const { selectedLocation } = useSelectLocation({
         location,
         setLocation,
-        setRow,
+        setRows,
         actions,
         store,
     });
@@ -249,8 +249,8 @@ const ManageLocations = ({ actions }) => {
                         action: (
                             <DownloadAsCSV
                                 filename={componentId}
-                                contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, row)}
-                                disabled={isLoading || !row?.length}
+                                contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, rows)}
+                                disabled={isLoading || !rows?.length}
                             />
                         ),
                     }}
@@ -329,7 +329,7 @@ const ManageLocations = ({ actions }) => {
                         <Grid style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
-                                rows={row}
+                                rows={rows}
                                 columns={columns}
                                 rowId={`${selectedLocation}_id`}
                                 components={{ Toolbar: AddToolbar }}

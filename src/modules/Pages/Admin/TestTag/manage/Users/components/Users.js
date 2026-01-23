@@ -12,7 +12,7 @@ import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
@@ -138,7 +138,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         });
     };
 
-    const { row } = useDataTableRow(userList, transformRow);
+    const { rows } = useDataTableRows(userList, transformRow);
     const shouldDisableDelete = row => (row?.actions_count ?? 0) > 0 || userUID === row?.user_uid;
     // const shouldDisableEdit = row => userUID === row?.user_uid;
     const { columns } = useDataTableColumns({
@@ -178,7 +178,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                         <DownloadAsCSV
                             filename={componentId}
                             contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, row)}
-                            disabled={userListLoading || !row?.length}
+                            disabled={userListLoading || !rows?.length}
                         />
                     ),
                 }}
@@ -245,7 +245,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                     <Grid sx={{ flex: 1 }}>
                         <DataTable
                             id={componentId}
-                            rows={row}
+                            rows={rows}
                             columns={columns}
                             rowId="user_id"
                             loading={userListLoading}

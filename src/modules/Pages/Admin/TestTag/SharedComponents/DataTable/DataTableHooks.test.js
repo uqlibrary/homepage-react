@@ -1,23 +1,23 @@
 import React from 'react';
 import { act, renderHook } from '@testing-library/react';
 import { rtlRender } from 'test-utils';
-import { useDataTableRow, useDataTableColumns } from './DataTableHooks';
+import { useDataTableRows, useDataTableColumns } from './DataTableHooks';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 
 describe('DataTableHooks', () => {
-    describe('useDataTableRow', () => {
+    describe('useDataTableRows', () => {
         it('without transformer', () => {
             const data = [{ field: 'test 1A' }, { field: 'test 2A' }, { field: 'test 3A' }];
             const dataUpdate = [{ field: 'test 1A Updated' }];
-            const { result, rerender } = renderHook(() => useDataTableRow(data));
-            const { row, setRow } = result.current;
-            expect(row).toEqual(data);
+            const { result, rerender } = renderHook(() => useDataTableRows(data));
+            const { rows, setRows } = result.current;
+            expect(rows).toEqual(data);
             act(() => {
-                setRow(dataUpdate);
+                setRows(dataUpdate);
             });
             rerender();
-            expect(result.current.row).toEqual(dataUpdate);
+            expect(result.current.rows).toEqual(dataUpdate);
         });
 
         it('with transformer', () => {
@@ -30,14 +30,14 @@ describe('DataTableHooks', () => {
             ];
             const dataUpdate = [{ field: 'test 1A Updated' }];
             const dataUpdateTransformed = [{ field: 'test 1A Updated transformed' }];
-            const { result, rerender } = renderHook(() => useDataTableRow(data, transformer));
-            const { row, setRow } = result.current;
-            expect(row).toEqual(dataTransformed);
+            const { result, rerender } = renderHook(() => useDataTableRows(data, transformer));
+            const { rows, setRows } = result.current;
+            expect(rows).toEqual(dataTransformed);
             act(() => {
-                setRow(dataUpdate);
+                setRows(dataUpdate);
             });
             rerender();
-            expect(result.current.row).toEqual(dataUpdateTransformed);
+            expect(result.current.rows).toEqual(dataUpdateTransformed);
         });
     });
 

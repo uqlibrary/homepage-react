@@ -12,7 +12,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Clear from '@mui/icons-material/Clear';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
-import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableRows, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
@@ -42,7 +42,7 @@ const FilterDialog = ({
     onAction,
 }) => {
     const componentId = `${rootIdLower}-${id}`;
-    const { row, setRow } = useDataTableRow([], transformFilterRow);
+    const { rows, setRows } = useDataTableRows([], transformFilterRow);
     const [assetTypeId, setAssetTypeId] = useState('');
     const [searchNotes, setSearchNotes] = useState('');
     const [selectedAssets, setSelectedAssets] = useState([]);
@@ -75,7 +75,7 @@ const FilterDialog = ({
     useEffect(() => {
         /* istanbul ignore else */
         if (!assetsMineListLoading && isOpen) {
-            setRow(assetsMineList);
+            setRows(assetsMineList);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsMineList, assetsMineListLoading, isOpen]);
@@ -111,7 +111,7 @@ const FilterDialog = ({
         setAssetTypeId(row?.asset_type_id ?? '');
     };
     const handleAssetSelectionChange = selectedRowIds => {
-        const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_barcode));
+        const assets = rows.filter(aRow => selectedRowIds.includes(aRow.asset_barcode));
         setSelectedAssets(assets);
     };
 
@@ -198,7 +198,7 @@ const FilterDialog = ({
                         <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={rootId}
-                                rows={row}
+                                rows={rows}
                                 columns={columns}
                                 rowId={'asset_id_displayed'}
                                 loading={!!assetsMineListLoading}
@@ -229,7 +229,7 @@ const FilterDialog = ({
                                 onClick={handleAddAction}
                                 id={`${componentId}-action-button`}
                                 data-testid={`${componentId}-action-button`}
-                                disabled={row.length === 0}
+                                disabled={rows.length === 0}
                                 fullWidth={isMobileView}
                             >
                                 {locale.button.submit}

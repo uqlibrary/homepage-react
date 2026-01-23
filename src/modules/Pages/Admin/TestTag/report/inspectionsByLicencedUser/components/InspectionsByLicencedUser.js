@@ -21,7 +21,7 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { getNameStyles, transformRow } from './utils';
-import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import FooterRow from './FooterRow';
 import { breadcrumbs } from 'config/routes';
@@ -80,7 +80,7 @@ const InspectionsByLicencedUser = ({
         locale: pageLocale.form.columns,
         withActions: false,
     });
-    const { row } = useDataTableRow(userInspections, transformRow);
+    const { rows } = useDataTableRows(userInspections, transformRow);
 
     const clearDateErrors = () => {
         setStartDateError({
@@ -185,10 +185,8 @@ const InspectionsByLicencedUser = ({
                         action: (
                             <DownloadAsCSV
                                 filename={componentIdLower}
-                                contents={
-                                    /* istanbul ignore next */ () => dataTableDataToRows(columns, userInspections)
-                                }
-                                disabled={userInspectionsLoading || !userInspections?.length}
+                                contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, row)}
+                                disabled={userInspectionsLoading || !rows?.length}
                             />
                         ),
                     }}
@@ -328,7 +326,7 @@ const InspectionsByLicencedUser = ({
                         <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
-                                rows={row}
+                                rows={rows}
                                 columns={columns}
                                 rowId={'user_uid'}
                                 loading={userInspectionsLoading}

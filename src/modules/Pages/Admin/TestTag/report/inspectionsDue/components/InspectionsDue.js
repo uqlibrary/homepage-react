@@ -12,7 +12,7 @@ import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/Standar
 import DataTable from '../../../SharedComponents/DataTable/DataTable';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelector';
-import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useConfirmationAlert } from '../../../helpers/hooks';
@@ -23,8 +23,7 @@ import { PERMISSIONS } from '../../../config/auth';
 import { transformRow } from './utils';
 import { breadcrumbs } from 'config/routes';
 import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
-import { dataTableDataToRows, locationTransformer } from '../../../helpers/csv';
-import { createLocationString } from '../../../helpers/helpers';
+import { dataTableDataToRows } from '../../../helpers/csv';
 const moment = require('moment');
 
 const componentId = 'inspections-due';
@@ -64,7 +63,7 @@ const InspectionsDue = ({
         locale: pageLocale.form.columns,
         withActions: false,
     });
-    const { row } = useDataTableRow(inspectionsDue, transformRow);
+    const { rows } = useDataTableRows(inspectionsDue, transformRow);
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
 
@@ -113,22 +112,8 @@ const InspectionsDue = ({
                         action: (
                             <DownloadAsCSV
                                 filename={componentIdLower}
-                                contents={
-                                    /* istanbul ignore next */ () =>
-                                        dataTableDataToRows(
-                                            columns,
-                                            inspectionsDue,
-                                            locationTransformer('asset_location', row =>
-                                                createLocationString({
-                                                    site: row.site_name,
-                                                    building: row.building_name,
-                                                    floor: row.floor_id_displayed,
-                                                    room: row.room_id_displayed,
-                                                }),
-                                            ),
-                                        )
-                                }
-                                disabled={inspectionsDueLoading || !inspectionsDue?.length}
+                                contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, row)}
+                                disabled={inspectionsDueLoading || !rows?.length}
                             />
                         ),
                     }}
@@ -163,7 +148,7 @@ const InspectionsDue = ({
                         <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
-                                rows={row}
+                                rows={rows}
                                 columns={columns}
                                 rowId={'asset_barcode'}
                                 loading={inspectionsDueLoading}
