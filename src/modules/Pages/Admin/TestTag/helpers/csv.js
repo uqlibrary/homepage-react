@@ -9,10 +9,15 @@ export const sanitizeValue = value => {
     if (value === null || value === undefined) return '';
     if (typeof value !== 'string') return value;
 
+    // remove non-printable chars
     let string = value.replace(/[^\x09\x0A\x0D\x20-\x7E]/g, '');
+    // standardize breaks
     string = string.replace(/\r\n|\r/g, '\n');
+    // prevent CSV injection
     if (/^[=+\-@]/.test(string)) string = `'${string}`;
+    // escape double quotes
     string = string.replace(/"/g, '""');
+    // wrap value with quotes if required
     if (/[",\n]/.test(string)) string = `"${string}"`;
 
     return string;
