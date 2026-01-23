@@ -18,6 +18,8 @@ import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 import { breadcrumbs } from 'config/routes';
+import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
+import { dataTableDataToRows } from '../../../helpers/csv';
 
 const moment = require('moment');
 
@@ -191,7 +193,19 @@ const InspectionDevices = ({
             inclusive={false}
         >
             <StyledWrapper>
-                <StandardCard noHeader>
+                <StandardCard
+                    headerProps={{
+                        action: (
+                            <DownloadAsCSV
+                                filename={componentIdLower}
+                                contents={
+                                    /* istanbul ignore next */ () => dataTableDataToRows(columns, inspectionDevices)
+                                }
+                                disabled={inspectionDevicesLoading || !inspectionDevices?.length}
+                            />
+                        ),
+                    }}
+                >
                     {canManage && (
                         <>
                             <UpdateDialog

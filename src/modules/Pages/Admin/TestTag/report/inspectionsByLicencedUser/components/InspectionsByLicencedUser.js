@@ -25,6 +25,8 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 
 import FooterRow from './FooterRow';
 import { breadcrumbs } from 'config/routes';
+import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
+import { dataTableDataToRows } from '../../../helpers/csv';
 const moment = require('moment');
 
 const componentId = 'user-inspections';
@@ -177,7 +179,20 @@ const InspectionsByLicencedUser = ({
             requiredPermissions={[PERMISSIONS.can_see_reports]}
         >
             <StyledWrapper>
-                <StandardCard title={pageLocale.form.title}>
+                <StandardCard
+                    title={pageLocale.form.title}
+                    headerProps={{
+                        action: (
+                            <DownloadAsCSV
+                                filename={componentIdLower}
+                                contents={
+                                    /* istanbul ignore next */ () => dataTableDataToRows(columns, userInspections)
+                                }
+                                disabled={userInspectionsLoading || !userInspections?.length}
+                            />
+                        ),
+                    }}
+                >
                     <Grid container spacing={3}>
                         <Grid xs={12} md={4}>
                             {/* Date Pickers go here */}

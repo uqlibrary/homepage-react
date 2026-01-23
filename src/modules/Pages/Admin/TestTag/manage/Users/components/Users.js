@@ -20,6 +20,8 @@ import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionS
 import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import config from './configure';
 import { breadcrumbs } from 'config/routes';
+import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
+import { dataTableDataToRows } from '../../../helpers/csv';
 
 const componentId = 'user-management';
 
@@ -170,7 +172,17 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
             locale={pageLocale}
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
-            <StandardCard noHeader>
+            <StandardCard
+                headerProps={{
+                    action: (
+                        <DownloadAsCSV
+                            filename={componentId}
+                            contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, row)}
+                            disabled={userListLoading || !row?.length}
+                        />
+                    ),
+                }}
+            >
                 <UpdateDialog
                     id={componentId}
                     title={actionState.title}

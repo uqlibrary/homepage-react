@@ -1,10 +1,10 @@
 import React from 'react';
 import { rtlRender, fireEvent, waitFor } from 'test-utils';
 import DownloadAsCSV from './DownloadAsCSV';
-import * as helpers from '../../helpers/helpers';
+import * as helpers from '../../helpers/csv';
 
-jest.mock('../../helpers/helpers', () => ({
-    buildCSVString: jest.fn(),
+jest.mock('../../helpers/csv', () => ({
+    rowsToCSVString: jest.fn(),
     downloadCSVFile: jest.fn(),
 }));
 
@@ -55,14 +55,14 @@ describe('DownloadAsCSV', () => {
             { h1: 'c', h2: 'd' },
         ];
         const contents = jest.fn().mockReturnValue({ headers, data });
-        helpers.buildCSVString.mockReturnValue('csv-content');
+        helpers.rowsToCSVString.mockReturnValue('csv-content');
         const { getByTestId } = setup({ filename: 'myfile', contents });
 
         fireEvent.click(getByTestId('download-as-csv'));
         await waitFor(() => {
             expect(contents).toHaveBeenCalledTimes(1);
-            expect(helpers.buildCSVString).toHaveBeenCalledTimes(1);
-            expect(helpers.buildCSVString).toHaveBeenCalledWith(headers, data);
+            expect(helpers.rowsToCSVString).toHaveBeenCalledTimes(1);
+            expect(helpers.rowsToCSVString).toHaveBeenCalledWith([headers, ...data]);
 
             expect(helpers.downloadCSVFile).toHaveBeenCalledTimes(1);
             expect(helpers.downloadCSVFile).toHaveBeenCalledWith('csv-content', 'myfile-20260120010203');
@@ -73,12 +73,12 @@ describe('DownloadAsCSV', () => {
         const headers = ['col'];
         const data = [['row1'], ['row2']];
         const contents = jest.fn().mockReturnValue({ headers, data });
-        helpers.buildCSVString.mockReturnValue('csv-2');
+        helpers.rowsToCSVString.mockReturnValue('csv-2');
         const { getByTestId } = setup({ filename: 'export', contents });
 
         fireEvent.click(getByTestId('download-as-csv'));
         await waitFor(() => {
-            expect(helpers.buildCSVString).toHaveBeenCalledWith(headers, data);
+            expect(helpers.rowsToCSVString).toHaveBeenCalledWith([headers, ...data]);
             expect(helpers.downloadCSVFile).toHaveBeenCalledWith('csv-2', 'export-20260120010203');
         });
     });

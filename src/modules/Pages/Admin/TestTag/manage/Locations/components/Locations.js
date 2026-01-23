@@ -25,6 +25,8 @@ import config from './config';
 import { emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
 import { locationType } from '../../../SharedComponents/LocationPicker/utils';
 import { breadcrumbs } from 'config/routes';
+import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
+import { dataTableDataToRows } from '../../../helpers/csv';
 
 const componentId = 'locations';
 
@@ -82,6 +84,7 @@ const ManageLocations = ({ actions }) => {
         actions,
         store,
     });
+    const isLoading = store.siteListLoading || store.floorListLoading || store.roomListLoading;
 
     const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
         duration: locale.config.alerts.timeout,
@@ -240,7 +243,18 @@ const ManageLocations = ({ actions }) => {
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
             <StyledWrapper>
-                <StandardCard title={pageLocale.form.title}>
+                <StandardCard
+                    title={pageLocale.form.title}
+                    headerProps={{
+                        action: (
+                            <DownloadAsCSV
+                                filename={componentId}
+                                contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, row)}
+                                disabled={isLoading || !row?.length}
+                            />
+                        ),
+                    }}
+                >
                     <UpdateDialog
                         title={actionState.title}
                         action="add"
@@ -326,7 +340,7 @@ const ManageLocations = ({ actions }) => {
                                         onClick: handleAddClick,
                                     },
                                 }}
-                                loading={store.siteListLoading || store.floorListLoading || store.roomListLoading}
+                                loading={isLoading}
                                 key={selectedLocation}
                                 {...(config[selectedLocation].sort ?? /* istanbul ignore next */ {})}
                             />

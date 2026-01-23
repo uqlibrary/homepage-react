@@ -1,5 +1,5 @@
 import React from 'react';
-import { buildCSVString, downloadCSVFile } from '../../helpers/helpers';
+import { rowsToCSVString, downloadCSVFile } from '../../helpers/csv';
 import moment from 'moment/moment';
 import IconButton from '@mui/material/IconButton';
 import { Download } from '@mui/icons-material';
@@ -11,9 +11,8 @@ import PropTypes from 'prop-types';
  * @param {string} filename
  * @returns {void}
  */
-const handleClick = (headers, data, filename) => {
-    downloadCSVFile(buildCSVString(headers, data), `${filename}-${moment().format('YYYYMMDDHHmmss')}`);
-};
+const handleClick = (headers, data, filename) =>
+    downloadCSVFile(rowsToCSVString([headers, ...data]), `${filename}-${moment().format('YYYYMMDDHHmmss')}`);
 
 const DownloadAsCSV = ({ filename, contents, disabled }) => {
     return (

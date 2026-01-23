@@ -20,7 +20,7 @@ import config, { renderLocation } from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
 import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
-
+import { dataTableDataToRows, locationTransformer } from '../../../helpers/csv';
 const moment = require('moment');
 
 const componentId = 'assets-inspected';
@@ -39,21 +39,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         marginTop: 0,
     },
 }));
-
-/**
- * @param {{ headerName: string, field: string }[]} columns
- * @param {Object[]} data
- * @param {(row: Object) => string} renderLocation
- * @returns {{ headers: string[], data: (string | number | null | undefined)[][] }}
- */
-export const prepareCSVExportData = (columns, data, renderLocation) => {
-    const headers = [...columns.map(i => i.headerName), 'Inspection Comments', 'Fail Reason'];
-    const fields = [...columns.map(i => i.field), 'inspect_comment', 'inspect_fail_reason'];
-    return {
-        headers,
-        data: data.map(i => fields.map(f => (f === 'location' ? renderLocation(i) : i[f]))),
-    };
-};
 
 const AssetReportByFilters = ({
     actions,
@@ -214,7 +199,11 @@ const AssetReportByFilters = ({
                                 filename={componentIdLower}
                                 contents={
                                     /* istanbul ignore next */ () =>
-                                        prepareCSVExportData(columns, assetList, renderLocation)
+                                        dataTableDataToRows(
+                                            columns,
+                                            assetList,
+                                            locationTransformer('location', renderLocation),
+                                        )
                                 }
                                 disabled={assetListLoading || !assetList?.length}
                             />

@@ -22,9 +22,13 @@ import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow } from './utils';
 import { breadcrumbs } from 'config/routes';
+import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
+import { dataTableDataToRows, locationTransformer } from '../../../helpers/csv';
+import { createLocationString } from '../../../helpers/helpers';
 const moment = require('moment');
 
 const componentId = 'inspections-due';
+const componentIdLower = 'inspections_due';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     flexGrow: 1,
@@ -103,7 +107,32 @@ const InspectionsDue = ({
             requiredPermissions={[PERMISSIONS.can_see_reports]}
         >
             <StyledWrapper>
-                <StandardCard title={pageLocale.form.title}>
+                <StandardCard
+                    title={pageLocale.form.title}
+                    headerProps={{
+                        action: (
+                            <DownloadAsCSV
+                                filename={componentIdLower}
+                                contents={
+                                    /* istanbul ignore next */ () =>
+                                        dataTableDataToRows(
+                                            columns,
+                                            inspectionsDue,
+                                            locationTransformer('asset_location', row =>
+                                                createLocationString({
+                                                    site: row.site_name,
+                                                    building: row.building_name,
+                                                    floor: row.floor_id_displayed,
+                                                    room: row.room_id_displayed,
+                                                }),
+                                            ),
+                                        )
+                                }
+                                disabled={inspectionsDueLoading || !inspectionsDue?.length}
+                            />
+                        ),
+                    }}
+                >
                     <Grid container spacing={3}>
                         <AutoLocationPicker
                             id={componentId}
