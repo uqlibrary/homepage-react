@@ -176,9 +176,9 @@ const Inspection = ({
     saveAssetTypeError,
     saveInspectionSuccess: successData,
 }) => {
-    const isDevEnvironment = isDevEnv();
+    // const isDevEnvironment = isDevEnv();
     const isTestEnvironment = isTest();
-    const shouldUsePrinterEmulator = isDevEnvironment || isTestEnvironment;
+    const shouldUsePrinterEmulator = /* isDevEnvironment ||*/ isTestEnvironment;
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
