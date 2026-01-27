@@ -9,7 +9,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
@@ -25,6 +24,8 @@ import config from './config';
 import { emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
 import { locationType } from '../../../SharedComponents/LocationPicker/utils';
 import { breadcrumbs } from 'config/routes';
+import AddButton from '../../../SharedComponents/DataTable/Toolbar/AddButton';
+import WithExportMenu from '../../../SharedComponents/DataTable/Toolbar/WithExportMenu';
 
 const componentId = 'locations';
 
@@ -233,6 +234,7 @@ const ManageLocations = ({ actions }) => {
         [location, selectedLocation],
     );
 
+    const addButtonLabel = pageLocale.form.addLocationButton(selectedLocation);
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -318,18 +320,16 @@ const ManageLocations = ({ actions }) => {
                                 rows={row}
                                 columns={columns}
                                 rowId={`${selectedLocation}_id`}
-                                components={{ Toolbar: AddToolbar }}
-                                componentsProps={{
-                                    toolbar: {
-                                        id: componentId,
-                                        label: pageLocale.form.addLocationButton(selectedLocation),
-                                        onClick: handleAddClick,
-                                    },
+                                components={{
+                                    Toolbar: () => (
+                                        <WithExportMenu id={componentId}>
+                                            <AddButton label={addButtonLabel} onClick={handleAddClick} />
+                                        </WithExportMenu>
+                                    ),
                                 }}
                                 loading={store.siteListLoading || store.floorListLoading || store.roomListLoading}
                                 key={selectedLocation}
                                 {...(config[selectedLocation].sort ?? /* istanbul ignore next */ {})}
-                                exportable
                             />
                         </Grid>
                     </Grid>

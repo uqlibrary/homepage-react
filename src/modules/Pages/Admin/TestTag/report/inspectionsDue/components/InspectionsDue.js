@@ -22,6 +22,7 @@ import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow } from './utils';
 import { breadcrumbs } from 'config/routes';
+import WithExportMenu from '../../../SharedComponents/DataTable/Toolbar/WithExportMenu';
 const moment = require('moment');
 
 const componentId = 'inspections-due';
@@ -144,7 +145,9 @@ const InspectionsDue = ({
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
-                                exportable
+                                components={{
+                                    Toolbar: () => <WithExportMenu id={componentId} />,
+                                }}
                             />
                         </Grid>
                     </Grid>

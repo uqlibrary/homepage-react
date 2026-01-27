@@ -8,7 +8,6 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -20,6 +19,8 @@ import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionS
 import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import config from './configure';
 import { breadcrumbs } from 'config/routes';
+import AddButton from '../../../SharedComponents/DataTable/Toolbar/AddButton';
+import WithExportMenu from '../../../SharedComponents/DataTable/Toolbar/WithExportMenu';
 
 const componentId = 'user-management';
 
@@ -237,16 +238,14 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                             columns={columns}
                             rowId="user_id"
                             loading={userListLoading}
-                            components={{ Toolbar: AddToolbar }}
-                            componentsProps={{
-                                toolbar: {
-                                    label: pageLocale.form.addButtonLabel,
-                                    onClick: handleAddClick,
-                                    id: componentId,
-                                },
+                            components={{
+                                Toolbar: () => (
+                                    <WithExportMenu id={componentId}>
+                                        <AddButton label={pageLocale.form.addButtonLabel} onClick={handleAddClick} />
+                                    </WithExportMenu>
+                                ),
                             }}
                             {...(config.sort ?? /* istanbul ignore next */ {})}
-                            exportable
                         />
                     </Grid>
                 </Grid>

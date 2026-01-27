@@ -19,6 +19,7 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config, { transformRow } from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
+import WithExportMenu from '../../../SharedComponents/DataTable/Toolbar/WithExportMenu';
 
 const moment = require('moment');
 
@@ -314,7 +315,9 @@ const AssetReportByFilters = ({
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
-                                exportable
+                                components={{
+                                    Toolbar: () => <WithExportMenu id={componentId} />,
+                                }}
                             />
                         </Grid>
                     </Grid>

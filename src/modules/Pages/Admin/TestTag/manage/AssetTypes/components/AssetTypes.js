@@ -10,7 +10,6 @@ import { useConfirmationState } from 'hooks';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import ActionDialogue from './ActionDialogue';
@@ -22,6 +21,8 @@ import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { actionReducer, emptyActionState } from './utils';
 import { breadcrumbs } from 'config/routes';
+import AddButton from '../../../SharedComponents/DataTable/Toolbar/AddButton';
+import WithExportMenu from '../../../SharedComponents/DataTable/Toolbar/WithExportMenu';
 
 const componentId = 'asset-types';
 
@@ -277,17 +278,18 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                 columns={columns}
                                 rowId="asset_type_id"
                                 loading={assetTypesListLoading}
-                                components={{ Toolbar: AddToolbar }}
-                                disableVirtualization
-                                componentsProps={{
-                                    toolbar: {
-                                        id: componentId,
-                                        label: pageLocale.header.addButtonLabel,
-                                        onClick: handleAddClick,
-                                    },
+                                components={{
+                                    Toolbar: () => (
+                                        <WithExportMenu id={componentId}>
+                                            <AddButton
+                                                label={pageLocale.header.addButtonLabel}
+                                                onClick={handleAddClick}
+                                            />
+                                        </WithExportMenu>
+                                    ),
                                 }}
+                                disableVirtualization
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
-                                exportable
                             />
                         </Grid>
                     </Grid>
