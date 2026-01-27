@@ -30,7 +30,7 @@ import { PERMISSIONS } from '../../config/auth';
 import { useConfirmationState } from 'hooks';
 import { breadcrumbs } from 'config/routes';
 
-import { isDevEnv, isTest } from 'helpers/general';
+import { /* isDevEnv, */ isTest } from 'helpers/general';
 
 import LabelLogo from './LabelLogo';
 import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
@@ -178,7 +178,7 @@ const Inspection = ({
 }) => {
     // const isDevEnvironment = isDevEnv();
     const isTestEnvironment = isTest();
-    const shouldUsePrinterEmulator = /* isDevEnvironment ||*/ isTestEnvironment;
+    const shouldUsePrinterEmulator = /* isDevEnvironment || */ isTestEnvironment;
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
@@ -395,7 +395,8 @@ const Inspection = ({
                     onClose={hideSuccessMessage}
                     isOpen={isSaveSuccessOpen}
                     locale={successDialogLocale}
-                    noMinContentWidth={isMobileView}
+                    noMinContentWidth
+                    autoFocusPrimaryButton
                 />
                 <InspectionSuccessPrintDialog
                     actionButtonColor="secondary"
@@ -436,6 +437,7 @@ const Inspection = ({
                     saveAssetTypeSaving={saveAssetTypeSaving}
                     isMobileView={isMobileView}
                     canAddAssetType
+                    confirmationAlert={confirmationAlert}
                     openConfirmationAlert={openConfirmationAlert}
                     closeConfirmationAlert={closeConfirmationAlert}
                 />

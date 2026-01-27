@@ -44,3 +44,4 @@ export { default as dlorFavouritesReducer } from './dlorFavouritesReducer';
 export { default as dlorAdminNotesReducer } from './dlorAdminNotesReducer';
 export { default as dlorKeywordsReducer } from './dlorKeywordsReducer';
 export { default as dlorStatisticsReducer } from './dlorStatisticsReducer';
+export { default as dlorScheduleReducer } from './dlorScheduleReducer';
