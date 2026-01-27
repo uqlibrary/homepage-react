@@ -1,6 +1,6 @@
 import React from 'react';
 import Inspection from './Inspection';
-import { rtlRender, WithRouter, act, fireEvent, WithReduxStore, waitFor, screen, preview } from 'test-utils';
+import { rtlRender, WithRouter, act, fireEvent, WithReduxStore, waitFor, screen, userEvent, preview } from 'test-utils';
 import Immutable from 'immutable';
 import { mockAllIsIntersecting } from 'react-intersection-observer/test-utils';
 
@@ -450,6 +450,32 @@ describe('Inspection component', () => {
         expect(defaults.actions.clearAssets).toHaveBeenCalled();
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
     }, 20000);
+
+    it('should dismiss dialog on `enter` keypress', async () => {
+        const mockFn = jest.fn();
+        const loadConfigFn = jest.fn();
+        const clearSaveInspectionFn = jest.fn();
+        const clearAssetsFn = jest.fn();
+
+        const { getByRole, queryByRole } = setup({
+            actions: {
+                loadAssetTypes: mockFn,
+                loadInspectionConfig: loadConfigFn,
+                clearSaveInspection: clearSaveInspectionFn,
+                clearAssets: clearAssetsFn,
+            },
+            saveInspectionSuccess: {
+                asset_status: 'CURRENT',
+                asset_id_displayed: 'UQL000705',
+                user_licence_number: 'NOT LICENCED',
+                action_date: '2022-12-12',
+                asset_next_test_due_date: '2023Dec12',
+            },
+        });
+        await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
+    });
 
     it('should show a save success for FAILED asset dialog panel', async () => {
         const expected = {

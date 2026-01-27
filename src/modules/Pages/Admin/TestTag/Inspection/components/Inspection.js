@@ -217,7 +217,7 @@ const Inspection = ({
         onClose: onCloseConfirmationAlert,
         errorMessage:
             inspectionConfigError || saveInspectionError || saveAssetTypeError || floorListError || roomListError,
-        errorMessageFormatter,
+        errorMessageFormatter: locale.config.alerts.error,
     });
     const { isValid, validateValues } = useValidation({ testStatusEnum, user });
     const assignAssetDefaults = React.useCallback(
@@ -395,7 +395,8 @@ const Inspection = ({
                     onClose={hideSuccessMessage}
                     isOpen={isSaveSuccessOpen}
                     locale={successDialogLocale}
-                    noMinContentWidth={isMobileView}
+                    noMinContentWidth
+                    autoFocusPrimaryButton
                 />
                 <InspectionSuccessPrintDialog
                     actionButtonColor="secondary"
@@ -436,6 +437,7 @@ const Inspection = ({
                     saveAssetTypeSaving={saveAssetTypeSaving}
                     isMobileView={isMobileView}
                     canAddAssetType
+                    confirmationAlert={confirmationAlert}
                     openConfirmationAlert={openConfirmationAlert}
                     closeConfirmationAlert={closeConfirmationAlert}
                 />
