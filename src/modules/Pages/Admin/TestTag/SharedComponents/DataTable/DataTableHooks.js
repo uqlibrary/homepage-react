@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import ActionCell from './ActionCell';
 
-export const useDataTableRows = (data, transform) => {
-    const [rows, _setRows] = useState(!!transform ? transform(data) : data);
-    const setRows = data => _setRows(!!transform ? transform(data) : data);
+export const useDataTableRow = (data, transform) => {
+    const [row, _setRow] = useState(!!transform ? transform(data) : data);
+    const setRow = data => _setRow(!!transform ? transform(data) : data);
     useEffect(() => {
-        setRows(data);
+        setRow(data);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [JSON.stringify(data)]);
 
-    return { rows, setRows };
+    return { row, setRow };
 };
 
 export const useDataTableColumns = ({

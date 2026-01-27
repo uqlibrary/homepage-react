@@ -13,7 +13,7 @@ import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
-import { useDataTableRows, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
@@ -25,8 +25,6 @@ import config from './config';
 import { emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
 import { locationType } from '../../../SharedComponents/LocationPicker/utils';
 import { breadcrumbs } from 'config/routes';
-import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
-import { dataTableDataToRows } from '../../../helpers/csv';
 
 const componentId = 'locations';
 
@@ -73,18 +71,17 @@ const ManageLocations = ({ actions }) => {
 
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
-    const { rows, setRows } = useDataTableRows([]);
+    const { row, setRow } = useDataTableRow([]);
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
     const { selectedLocation } = useSelectLocation({
         location,
         setLocation,
-        setRows,
+        setRow,
         actions,
         store,
     });
-    const isLoading = store.siteListLoading || store.floorListLoading || store.roomListLoading;
 
     const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
         duration: locale.config.alerts.timeout,
@@ -243,18 +240,7 @@ const ManageLocations = ({ actions }) => {
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
             <StyledWrapper>
-                <StandardCard
-                    title={pageLocale.form.title}
-                    headerProps={{
-                        action: (
-                            <DownloadAsCSV
-                                filename={componentId}
-                                contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, rows)}
-                                disabled={isLoading || !rows?.length}
-                            />
-                        ),
-                    }}
-                >
+                <StandardCard title={pageLocale.form.title}>
                     <UpdateDialog
                         title={actionState.title}
                         action="add"
@@ -329,7 +315,7 @@ const ManageLocations = ({ actions }) => {
                         <Grid style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
-                                rows={rows}
+                                rows={row}
                                 columns={columns}
                                 rowId={`${selectedLocation}_id`}
                                 components={{ Toolbar: AddToolbar }}
@@ -340,9 +326,10 @@ const ManageLocations = ({ actions }) => {
                                         onClick: handleAddClick,
                                     },
                                 }}
-                                loading={isLoading}
+                                loading={store.siteListLoading || store.floorListLoading || store.roomListLoading}
                                 key={selectedLocation}
                                 {...(config[selectedLocation].sort ?? /* istanbul ignore next */ {})}
+                                exportable
                             />
                         </Grid>
                     </Grid>

@@ -8,12 +8,9 @@ import {
     unescapeString,
     standardText,
     standardisedExtension,
-    tryCatch,
 } from './general';
 
 describe('general helpers', () => {
-    afterEach(() => jest.resetAllMocks());
-
     it('leftJoin', () => {
         const objArrA = [
             { nameA: 'test1', testA: 'testA1' },
@@ -119,23 +116,5 @@ describe('general helpers', () => {
         expect(standardisedExtension(null)).toEqual(''); // invalid url
         expect(standardisedExtension(1)).toEqual(''); // invalid url
         expect(standardisedExtension(false)).toEqual(''); // invalid url
-    });
-
-    describe('tryCatch', () => {
-        it("should return given callback's return value", () => {
-            expect(tryCatch(() => 123)).toEqual(123);
-        });
-
-        it('should return given default value in case of exception and log error to console', () => {
-            const mock = jest.spyOn(console, 'error').mockImplementation(() => {});
-            const error = new Error('my error');
-
-            expect(
-                tryCatch(() => {
-                    throw error;
-                }, 123),
-            ).toEqual(123);
-            expect(mock).toHaveBeenCalledWith(error);
-        });
     });
 });

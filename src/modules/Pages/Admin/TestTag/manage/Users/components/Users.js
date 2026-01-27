@@ -12,7 +12,7 @@ import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
@@ -20,8 +20,6 @@ import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionS
 import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import config from './configure';
 import { breadcrumbs } from 'config/routes';
-import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
-import { dataTableDataToRows } from '../../../helpers/csv';
 
 const componentId = 'user-management';
 
@@ -138,7 +136,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         });
     };
 
-    const { rows } = useDataTableRows(userList, transformRow);
+    const { row } = useDataTableRow(userList, transformRow);
     const shouldDisableDelete = row => (row?.actions_count ?? 0) > 0 || userUID === row?.user_uid;
     // const shouldDisableEdit = row => userUID === row?.user_uid;
     const { columns } = useDataTableColumns({
@@ -172,17 +170,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
             locale={pageLocale}
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
-            <StandardCard
-                headerProps={{
-                    action: (
-                        <DownloadAsCSV
-                            filename={componentId}
-                            contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, row)}
-                            disabled={userListLoading || !rows?.length}
-                        />
-                    ),
-                }}
-            >
+            <StandardCard noHeader>
                 <UpdateDialog
                     id={componentId}
                     title={actionState.title}
@@ -245,7 +233,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                     <Grid sx={{ flex: 1 }}>
                         <DataTable
                             id={componentId}
-                            rows={rows}
+                            rows={row}
                             columns={columns}
                             rowId="user_id"
                             loading={userListLoading}
@@ -258,6 +246,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                                 },
                             }}
                             {...(config.sort ?? /* istanbul ignore next */ {})}
+                            exportable
                         />
                     </Grid>
                 </Grid>

@@ -21,12 +21,10 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { getNameStyles, transformRow } from './utils';
-import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import FooterRow from './FooterRow';
 import { breadcrumbs } from 'config/routes';
-import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
-import { dataTableDataToRows } from '../../../helpers/csv';
 const moment = require('moment');
 
 const componentId = 'user-inspections';
@@ -80,7 +78,7 @@ const InspectionsByLicencedUser = ({
         locale: pageLocale.form.columns,
         withActions: false,
     });
-    const { rows } = useDataTableRows(userInspections, transformRow);
+    const { row } = useDataTableRow(userInspections, transformRow);
 
     const clearDateErrors = () => {
         setStartDateError({
@@ -179,18 +177,7 @@ const InspectionsByLicencedUser = ({
             requiredPermissions={[PERMISSIONS.can_see_reports]}
         >
             <StyledWrapper>
-                <StandardCard
-                    title={pageLocale.form.title}
-                    headerProps={{
-                        action: (
-                            <DownloadAsCSV
-                                filename={componentIdLower}
-                                contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, row)}
-                                disabled={userInspectionsLoading || !rows?.length}
-                            />
-                        ),
-                    }}
-                >
+                <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
                         <Grid xs={12} md={4}>
                             {/* Date Pickers go here */}
@@ -326,7 +313,7 @@ const InspectionsByLicencedUser = ({
                         <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
-                                rows={rows}
+                                rows={row}
                                 columns={columns}
                                 rowId={'user_uid'}
                                 loading={userInspectionsLoading}
@@ -338,6 +325,7 @@ const InspectionsByLicencedUser = ({
                                     ),
                                 }}
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
+                                exportable
                             />
                         </Grid>
                     </Grid>

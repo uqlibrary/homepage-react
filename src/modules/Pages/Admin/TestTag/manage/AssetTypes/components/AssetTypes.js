@@ -16,7 +16,7 @@ import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/Confi
 import ActionDialogue from './ActionDialogue';
 
 import { useConfirmationAlert } from '../../../helpers/hooks';
-import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
@@ -68,7 +68,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         actionDataFieldKeys: { valueKey: 'asset_type_name' },
     });
 
-    const { rows } = useDataTableRows(assetTypesList);
+    const { row } = useDataTableRow(assetTypesList);
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -272,7 +272,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         <Grid style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
-                                rows={rows}
+                                rows={row}
                                 density="standard"
                                 columns={columns}
                                 rowId="asset_type_id"
@@ -287,6 +287,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                     },
                                 }}
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
+                                exportable
                             />
                         </Grid>
                     </Grid>

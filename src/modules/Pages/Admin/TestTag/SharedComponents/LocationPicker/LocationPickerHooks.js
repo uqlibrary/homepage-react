@@ -31,7 +31,7 @@ export const useSelectLocation = ({
     location = {},
     setLocation,
     actions,
-    setRows,
+    setRow,
     store = {},
     condition,
 } = {}) => {
@@ -61,7 +61,7 @@ export const useSelectLocation = ({
                     setLastSelectedLocation(locationType.room);
                 } else {
                     if (location.floor !== -1) {
-                        setRows?.(roomList.rooms);
+                        setRow?.(roomList.rooms);
                         setLastSelectedLocation(locationType.floor);
                     } else {
                         setLocation?.({ room: -1 });
@@ -72,9 +72,9 @@ export const useSelectLocation = ({
                 setSelectedLocation(locationType.room);
             } else if (floorListLoaded) {
                 if (location.building !== -1) {
-                    setRows?.(floorList.floors);
+                    setRow?.(floorList.floors);
                 } else {
-                    setRows?.(
+                    setRow?.(
                         siteList
                             ?.find(site => site.site_id === location.site)
                             ?.buildings?.find(building => building.building_id === location.building)?.floors ?? [],
@@ -86,11 +86,11 @@ export const useSelectLocation = ({
                 setLastSelectedLocation(locationType.building);
             } else if (siteListLoaded) {
                 if (location.site !== -1) {
-                    setRows?.(siteList.find(site => site.site_id === location.site).buildings);
+                    setRow?.(siteList.find(site => site.site_id === location.site).buildings);
                     setSelectedLocation(locationType.building);
                     setLastSelectedLocation(locationType.site);
                 } else {
-                    setRows?.(siteList);
+                    setRow?.(siteList);
                     setLocation?.({ building: -1, floor: -1, room: -1 });
                     setSelectedLocation(locationType.site);
                 }

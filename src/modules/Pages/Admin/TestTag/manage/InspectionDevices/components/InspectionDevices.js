@@ -12,14 +12,12 @@ import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/Standar
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 import { breadcrumbs } from 'config/routes';
-import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
-import { dataTableDataToRows } from '../../../helpers/csv';
 
 const moment = require('moment');
 
@@ -171,7 +169,7 @@ const InspectionDevices = ({
         actionTooltips: pageLocale.form.actionTooltips,
     });
 
-    const { rows } = useDataTableRows(inspectionDevices, transformRow);
+    const { row } = useDataTableRow(inspectionDevices, transformRow);
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -193,19 +191,7 @@ const InspectionDevices = ({
             inclusive={false}
         >
             <StyledWrapper>
-                <StandardCard
-                    headerProps={{
-                        action: (
-                            <DownloadAsCSV
-                                filename={componentIdLower}
-                                contents={
-                                    /* istanbul ignore next */ () => dataTableDataToRows(columns, inspectionDevices)
-                                }
-                                disabled={inspectionDevicesLoading || !inspectionDevices?.length}
-                            />
-                        ),
-                    }}
-                >
+                <StandardCard noHeader>
                     {canManage && (
                         <>
                             <UpdateDialog
@@ -270,7 +256,7 @@ const InspectionDevices = ({
                         <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
-                                rows={rows}
+                                rows={row}
                                 columns={columns}
                                 rowId={'device_id'}
                                 components={{ ...(canManage ? { Toolbar: AddToolbar } : {}) }}
@@ -292,6 +278,7 @@ const InspectionDevices = ({
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
+                                exportable
                             />
                         </Grid>
                     </Grid>

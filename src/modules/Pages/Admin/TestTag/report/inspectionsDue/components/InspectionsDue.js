@@ -12,7 +12,7 @@ import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/Standar
 import DataTable from '../../../SharedComponents/DataTable/DataTable';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelector';
-import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useConfirmationAlert } from '../../../helpers/hooks';
@@ -22,12 +22,9 @@ import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow } from './utils';
 import { breadcrumbs } from 'config/routes';
-import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
-import { dataTableDataToRows } from '../../../helpers/csv';
 const moment = require('moment');
 
 const componentId = 'inspections-due';
-const componentIdLower = 'inspections_due';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     flexGrow: 1,
@@ -63,7 +60,7 @@ const InspectionsDue = ({
         locale: pageLocale.form.columns,
         withActions: false,
     });
-    const { rows } = useDataTableRows(inspectionsDue, transformRow);
+    const { row } = useDataTableRow(inspectionsDue, transformRow);
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
 
@@ -106,18 +103,7 @@ const InspectionsDue = ({
             requiredPermissions={[PERMISSIONS.can_see_reports]}
         >
             <StyledWrapper>
-                <StandardCard
-                    title={pageLocale.form.title}
-                    headerProps={{
-                        action: (
-                            <DownloadAsCSV
-                                filename={componentIdLower}
-                                contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, row)}
-                                disabled={inspectionsDueLoading || !rows?.length}
-                            />
-                        ),
-                    }}
-                >
+                <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
                         <AutoLocationPicker
                             id={componentId}
@@ -148,7 +134,7 @@ const InspectionsDue = ({
                         <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
-                                rows={rows}
+                                rows={row}
                                 columns={columns}
                                 rowId={'asset_barcode'}
                                 loading={inspectionsDueLoading}
@@ -158,6 +144,7 @@ const InspectionsDue = ({
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
+                                exportable
                             />
                         </Grid>
                     </Grid>

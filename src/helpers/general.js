@@ -2,16 +2,11 @@ import global from 'locale/global';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
-/**
- * @param {Function} callback
- * @param {*} _default
- * @return {*}
- */
-export const tryCatch = (callback, _default = undefined) => {
+/* istanbul ignore next */
+const tryCatch = (callback, _default = undefined) => {
     try {
         return callback();
     } catch (e) {
-        console.error(e);
         return _default;
     }
 };

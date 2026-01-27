@@ -14,7 +14,7 @@ import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/A
 import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
 
 import { useConfirmationAlert } from '../../../helpers/hooks';
-import { useDataTableColumns, useDataTableRows } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config, { transformRow } from './config';
 import { PERMISSIONS } from '../../../config/auth';
@@ -93,7 +93,7 @@ const AssetReportByFilters = ({
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
-    const { rows } = useDataTableRows(assetList, transformRow);
+    const { row } = useDataTableRow(assetList, transformRow);
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -303,7 +303,7 @@ const AssetReportByFilters = ({
                         <Grid style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
-                                rows={rows}
+                                rows={row}
                                 columns={columns}
                                 rowId={'asset_id'}
                                 rowKey={'asset_id'}
