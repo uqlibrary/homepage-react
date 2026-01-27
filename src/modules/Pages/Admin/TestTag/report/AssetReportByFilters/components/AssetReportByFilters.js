@@ -19,8 +19,7 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config, { transformRow } from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
-import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
-import { dataTableDataToRows } from '../../../helpers/csv';
+
 const moment = require('moment');
 
 const componentId = 'assets-inspected';
@@ -190,19 +189,7 @@ const AssetReportByFilters = ({
             requiredPermissions={[PERMISSIONS.can_see_reports]}
         >
             <StyledWrapper>
-                <StandardCard
-                    title={pageLocale.form.title}
-                    id={componentId}
-                    headerProps={{
-                        action: (
-                            <DownloadAsCSV
-                                filename={componentIdLower}
-                                contents={/* istanbul ignore next */ () => dataTableDataToRows(columns, rows)}
-                                disabled={assetListLoading || !rows?.length}
-                            />
-                        ),
-                    }}
-                >
+                <StandardCard title={pageLocale.form.title} id={componentId}>
                     <Grid container spacing={1}>
                         <Grid xs={12} md={6} lg={3}>
                             {/* Status Picker */}
@@ -327,6 +314,7 @@ const AssetReportByFilters = ({
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
+                                exportable
                             />
                         </Grid>
                     </Grid>

@@ -1,20 +1,11 @@
 import { capitaliseLeadingChar, isEmptyStr, isEmptyObject, createLocationString, isInvalidUUID } from './helpers';
-
-jest.mock('file-saver', () => ({
-    saveAs: jest.fn(),
-}));
 describe('helpers', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
     it('capitaliseLeadingChar operates correctly', () => {
         expect(capitaliseLeadingChar('test')).toEqual('Test');
         expect(capitaliseLeadingChar('Test')).toEqual('Test');
         expect(capitaliseLeadingChar('TesT')).toEqual('Test');
         expect(capitaliseLeadingChar('TEST')).toEqual('Test');
     });
-
     it('isEmptyStr operates correctly', () => {
         expect(isEmptyStr('test')).toEqual(false);
         expect(isEmptyStr('')).toEqual(true);
@@ -25,7 +16,6 @@ describe('helpers', () => {
         expect(isEmptyStr(['a'])).toEqual(true);
         expect(isEmptyStr({ a: 'a' })).toEqual(true);
     });
-
     it('isEmptyObject operates correctly', () => {
         expect(isEmptyObject('test')).toEqual(true);
         expect(isEmptyObject('')).toEqual(true);
@@ -36,13 +26,11 @@ describe('helpers', () => {
         expect(isEmptyObject(['a'])).toEqual(true);
         expect(isEmptyObject({ a: 'a' })).toEqual(false);
     });
-
     it('createLocationString operates correctly', () => {
         expect(createLocationString({ site: 'test1', building: 'test2', floor: 'test3', room: 'test4' })).toEqual(
             'test3-test4 test2, test1',
         );
     });
-
     it('isInvalidUUID operates correctly', () => {
         expect(isInvalidUUID('A')).toEqual(true);
         expect(isInvalidUUID('a')).toEqual(false);

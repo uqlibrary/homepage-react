@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarExport, GridToolbarContainer } from '@mui/x-data-grid';
 
 const rootId = 'data_table';
 
@@ -55,6 +55,32 @@ const StyledWrapper = styled(Box)(() => ({
         visibility: 'hidden',
     },
 }));
+
+/**
+ * @param {string} id
+ * @return {string}
+ */
+const generateExportFilename = id => `${id.toLowerCase().replace('-', '_')}`;
+
+/**
+ * @param {string} csvFilename
+ * @return {function(): *}
+ */
+const exportToolbar = csvFilename => () => {
+    return (
+        <GridToolbarContainer style={{ justifyContent: 'flex-end' }}>
+            <GridToolbarExport
+                style={{ justifyContent: 'flex-end' }}
+                csvOptions={{
+                    fileName: csvFilename,
+                    utf8WithBom: true,
+                    allColumns: true,
+                }}
+            />
+        </GridToolbarContainer>
+    );
+};
+
 const DataTable = ({
     rows = [],
     columns = [],
@@ -65,6 +91,7 @@ const DataTable = ({
     defaultSortColumn,
     defaultSortDirection = 'asc',
     classes = {},
+    exportable = false,
     ...rest
 }) => {
     const componentId = `${rootId}-${id}`;
@@ -112,6 +139,7 @@ const DataTable = ({
                           }
                         : {})}
                     {...rest}
+                    {...(exportable ? { components: { Toolbar: exportToolbar(generateExportFilename(id)) } } : {})}
                 />
             </Box>
         </StyledWrapper>
@@ -129,6 +157,7 @@ DataTable.propTypes = {
     classes: PropTypes.object,
     autoHeight: PropTypes.bool,
     height: PropTypes.number,
+    exportable: PropTypes.bool,
 };
 
 export default React.memo(DataTable);

@@ -78,5 +78,15 @@ export default {
             },
         },
         asset_status: { fieldParams: { width: 140 } },
+        inspect_comment: {
+            fieldParams: {
+                hide: true,
+            },
+        },
+        inspect_fail_reason: {
+            fieldParams: {
+                hide: true,
+            },
+        },
     },
 };
