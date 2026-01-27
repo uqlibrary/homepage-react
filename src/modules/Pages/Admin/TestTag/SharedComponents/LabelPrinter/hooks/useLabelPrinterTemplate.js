@@ -30,7 +30,11 @@ const useLabelPrinterTemplate = templates => {
     const hasLabelPrinterTemplate = useCallback(
         key => {
             const normalisedKey = normalisePrinterNameKey(key);
-            return Object.keys(templateStore).includes(normalisedKey);
+            return Object.keys(templateStore).some(storeKey => {
+                const regex = new RegExp(storeKey, 'i');
+                console.log('Checking template key:', normalisedKey, 'against storeKey:', storeKey);
+                return regex.test(normalisedKey);
+            });
         },
         [templateStore],
     );

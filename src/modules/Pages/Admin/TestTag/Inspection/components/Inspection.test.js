@@ -1,6 +1,6 @@
 import React from 'react';
 import Inspection from './Inspection';
-import { rtlRender, WithRouter, act, fireEvent, WithReduxStore, waitFor, screen, userEvent, preview } from 'test-utils';
+import { rtlRender, WithRouter, act, fireEvent, WithReduxStore, waitFor, screen, userEvent } from 'test-utils';
 import Immutable from 'immutable';
 import { mockAllIsIntersecting } from 'react-intersection-observer/test-utils';
 
@@ -452,27 +452,30 @@ describe('Inspection component', () => {
     }, 20000);
 
     it('should dismiss dialog on `enter` keypress', async () => {
-        const mockFn = jest.fn();
-        const loadConfigFn = jest.fn();
-        const clearSaveInspectionFn = jest.fn();
-        const clearAssetsFn = jest.fn();
-
-        const { getByRole, queryByRole } = setup({
-            actions: {
-                loadAssetTypes: mockFn,
-                loadInspectionConfig: loadConfigFn,
-                clearSaveInspection: clearSaveInspectionFn,
-                clearAssets: clearAssetsFn,
-            },
-            saveInspectionSuccess: {
-                asset_status: 'CURRENT',
-                asset_id_displayed: 'UQL000705',
-                user_licence_number: 'NOT LICENCED',
-                action_date: '2022-12-12',
-                asset_next_test_due_date: '2023Dec12',
-            },
+        const savedResponse = {
+            asset_status: 'CURRENT',
+            asset_id_displayed: 'UQL100000',
+            user_licence_number: '1234567890',
+            action_date: '2017-06-30',
+            asset_next_test_due_date: '2023Dec12',
+        };
+        const saveActionFn = jest.fn(() => Promise.resolve(savedResponse));
+        const defaults = getMockDefaults();
+        defaults.actions.saveInspection = saveActionFn;
+        const { getByTestId, findByRole, queryByRole } = setup({
+            ...defaults,
         });
-        await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
+        await fillForm();
+
+        expect(getByTestId('inspection-save-button')).not.toHaveAttribute('disabled');
+        act(() => {
+            fireEvent.click(getByTestId('inspection-save-button'));
+        });
+
+        expect(saveActionFn).toHaveBeenCalled();
+
+        await findByRole('dialog');
+
         await userEvent.keyboard('{Enter}');
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
     });
@@ -769,7 +772,7 @@ describe('Inspection component', () => {
             act(() => {
                 fireEvent.click(getByTestId('confirm-alternate-inspection-printer-save-success'));
             });
-            preview.debug();
+
             // Should show success info alert
             await waitFor(() => {
                 expect(getByTestId('confirmation_alert-info-alert')).toHaveTextContent('Print job sent to Emulator');
