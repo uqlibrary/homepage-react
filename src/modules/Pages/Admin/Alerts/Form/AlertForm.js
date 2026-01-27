@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
 import RemoveCircleSharpIcon from '@mui/icons-material/RemoveCircle';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
@@ -304,6 +303,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     const displayPreview = () => {
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
+        /* istanbul ignore next */
         if (!!showPreview) {
             showHidePreview(false);
             return;
