@@ -123,7 +123,7 @@ describe('Locations', () => {
             });
 
             expect(getByTestId('locations-data-table-toolbar-add-button')).toHaveTextContent('Add room');
-
+            expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
             expect(getByTestId('location_picker-locations-floor-input')).toHaveAttribute('value', '1');
 
             const grid = getByTestId('data_table-locations');
@@ -177,6 +177,7 @@ describe('Locations', () => {
                 await userEvent.selectOptions(getByRole('listbox'), '1');
             });
 
+            expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
             userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');

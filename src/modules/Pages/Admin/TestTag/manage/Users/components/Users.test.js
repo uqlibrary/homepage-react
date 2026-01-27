@@ -138,7 +138,7 @@ describe('Manage Users', () => {
 
         expect(getByText(locale.pages.manage.users.header.pageSubtitle('Library'))).toBeInTheDocument();
         expect(getByText('uqjsmit')).toBeInTheDocument();
-        expect(getByTestId('user-management-data-table-toolbar-add-button')).toBeInTheDocument();
+        expect(getByTestId('user-management-data-table-toolbar-export-menu')).toBeInTheDocument();
         await act(async () => {
             await fireEvent.click(getByTestId('user-management-data-table-toolbar-add-button'));
         });

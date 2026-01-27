@@ -84,7 +84,7 @@ describe('InspectionDevices', () => {
         const { getByText, getByTestId } = setup({ actions: actions });
 
         expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
-        expect(getByTestId('test-data-table-toolbar-add-button')).toBeInTheDocument();
+        expect(getByTestId('test-data-table-toolbar-export-menu')).toBeInTheDocument();
         await act(async () => {
             await fireEvent.click(getByTestId('test-data-table-toolbar-add-button'));
         });

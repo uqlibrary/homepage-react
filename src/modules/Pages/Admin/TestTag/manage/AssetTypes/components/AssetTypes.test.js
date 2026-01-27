@@ -84,7 +84,7 @@ describe('AssetTypes', () => {
 
         expect(getByText(locale.pages.manage.assetTypes.header.pageSubtitle('Library'))).toBeInTheDocument();
         expect(getByText('Power Tower')).toBeInTheDocument();
-        expect(getByTestId('asset-types-data-table-toolbar-add-button')).toBeInTheDocument();
+        expect(getByTestId('asset-types-data-table-toolbar-export-menu')).toBeInTheDocument();
         await act(async () => {
             await fireEvent.click(getByTestId('asset-types-data-table-toolbar-add-button'));
         });

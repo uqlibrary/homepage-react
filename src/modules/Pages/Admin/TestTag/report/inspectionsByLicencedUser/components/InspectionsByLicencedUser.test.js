@@ -79,6 +79,7 @@ describe('InspectionsByLicencedUser', () => {
         expect(getByTestId('data_table-user-inspections')).toBeInTheDocument();
         expect(getByTestId('data_table_total-user-inspections')).toHaveTextContent('Total tests: 253');
         await waitFor(() => expect(getByText('JTest User')).toBeInTheDocument());
+        expect(getByTestId('user-inspections-data-table-toolbar-export-menu')).toBeInTheDocument();
     });
 
     describe('API', () => {

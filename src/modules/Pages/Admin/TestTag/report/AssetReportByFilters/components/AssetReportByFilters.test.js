@@ -93,6 +93,7 @@ describe('AssetReportByFilters', () => {
 
         // check pagination counter shows expected number of rows
         expect(getByText('1–6 of 6')).toBeInTheDocument();
+        expect(getByTestId('assets-inspected-data-table-toolbar-export-menu')).toBeInTheDocument();
     });
 
     it('fires action when status is changed', async () => {
