@@ -1,11 +1,24 @@
 // istanbul ignore file
 import React, { useState, useEffect } from 'react';
-import { Pie, Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import { Grid, Box, Typography } from '@mui/material';
 import { StandardPage } from '../../../App/components/pages';
 
-ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+import { Pie, Bar } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    ArcElement,
+    BarElement,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2'; // You likely have react-chartjs-2 if using React
+
+ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Title);
 
 // =========================================================
 //                  CHART CONFIGURATION TOGGLES
@@ -115,6 +128,228 @@ const REVIEW_STATUS_COLORS = {
 const MAX_CHART_ITEMS = 15;
 const KEYWORD_LIMIT = 10;
 
+const MOCK_SITE_USAGE_DATA = [
+    {
+        activity_date: '2026-01-22',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-21',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-20',
+        total_views: 3,
+        unique_viewers: 2,
+    },
+    {
+        activity_date: '2026-01-19',
+        total_views: 9,
+        unique_viewers: 8,
+    },
+    {
+        activity_date: '2026-01-18',
+        total_views: 10,
+        unique_viewers: 10,
+    },
+    {
+        activity_date: '2026-01-17',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-16',
+        total_views: 7,
+        unique_viewers: 4,
+    },
+    {
+        activity_date: '2026-01-15',
+        total_views: 6,
+        unique_viewers: 6,
+    },
+    {
+        activity_date: '2026-01-14',
+        total_views: 6,
+        unique_viewers: 4,
+    },
+    {
+        activity_date: '2026-01-13',
+        total_views: 20,
+        unique_viewers: 20,
+    },
+    {
+        activity_date: '2026-01-12',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-11',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-10',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-09',
+        total_views: 7,
+        unique_viewers: 1,
+    },
+    {
+        activity_date: '2026-01-08',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-07',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-06',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-05',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-04',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-03',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-02',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2026-01-01',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2025-12-31',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2025-12-30',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2025-12-29',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2025-12-28',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2025-12-27',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+    {
+        activity_date: '2025-12-26',
+        total_views: 0,
+        unique_viewers: 0,
+    },
+];
+
+const chartData = [...MOCK_SITE_USAGE_DATA].reverse();
+
+const UsageData = {
+    labels: chartData.map(d => d.activity_date), // Your X-axis dates
+    datasets: [
+        {
+            label: 'Total Views',
+            data: chartData.map(d => d.total_views),
+            borderColor: '#3b82f6',
+            backgroundColor: '#3b82f6',
+            tension: 0.3, // Makes the line smooth
+        },
+        {
+            label: 'Unique Viewers',
+            data: chartData.map(d => d.unique_viewers),
+            borderColor: '#10b981',
+            backgroundColor: '#10b981',
+            tension: 0.3,
+        },
+    ],
+};
+
+const UsageOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            display: true,
+            position: 'top',
+            labels: {
+                // High-contrast deep navy for white background
+                color: '#1e293b',
+                font: {
+                    size: 14,
+                    weight: '700', // Bold for better visibility
+                    family: 'Inter, system-ui, sans-serif',
+                },
+                padding: 30, // Extra breathing room
+                usePointStyle: true,
+                pointStyle: 'circle',
+                pointStyleWidth: 10, // Larger legend indicators
+            },
+        },
+        tooltip: {
+            enabled: true,
+            backgroundColor: '#1e293b', // Matches legend text color
+            padding: 12,
+            titleFont: { size: 14, weight: 'bold' },
+            bodyFont: { size: 13 },
+            cornerRadius: 8,
+            displayColors: true,
+            boxPadding: 6,
+        },
+    },
+    scales: {
+        x: {
+            ticks: {
+                color: '#64748b', // Clearer grey for dates
+                maxRotation: 45,
+                minRotation: 45,
+                font: { size: 11 },
+            },
+            grid: {
+                display: false, // Keeps the focus on the lines
+            },
+        },
+        y: {
+            beginAtZero: true,
+            ticks: {
+                color: '#64748b',
+                font: { size: 11 },
+            },
+            grid: {
+                color: '#f1f5f9', // Very subtle horizontal lines
+                drawBorder: false,
+            },
+        },
+    },
+};
 // =========================================================
 //                  DYNAMIC HEIGHT CALCULATION
 // =========================================================
@@ -742,6 +977,11 @@ export default function AnalyticsDashboard() {
                         </Box>
                     </Grid>
                 )}
+                <Grid item xs={12} md={12}>
+                    <Box sx={{ border: '1px solid #eee', p: 2, textAlign: 'center', height: '400px' }}>
+                        <Line data={UsageData} options={UsageOptions} />
+                    </Box>
+                </Grid>
             </Grid>
         </StandardPage>
     );
