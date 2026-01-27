@@ -16,10 +16,9 @@ import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPic
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import config, { renderLocation } from './config';
+import config, { transformRow } from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
-import DownloadAsCSV from '../../../SharedComponents/DownloadAsCSV/DownloadAsCSV';
 
 const moment = require('moment');
 
@@ -39,21 +38,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         marginTop: 0,
     },
 }));
-
-/**
- * @param {{ headerName: string, field: string }[]} columns
- * @param {Object[]} data
- * @param {(row: Object) => string} renderLocation
- * @returns {{ headers: string[], data: (string | number | null | undefined)[][] }}
- */
-export const prepareCSVExportData = (columns, data, renderLocation) => {
-    const headers = [...columns.map(i => i.headerName), 'Inspection Comments', 'Fail Reason'];
-    const fields = [...columns.map(i => i.field), 'inspect_comment', 'inspect_fail_reason'];
-    return {
-        headers,
-        data: data.map(i => fields.map(f => (f === 'location' ? renderLocation(i) : i[f]))),
-    };
-};
 
 const AssetReportByFilters = ({
     actions,
@@ -109,7 +93,7 @@ const AssetReportByFilters = ({
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
-    const { row } = useDataTableRow(assetList);
+    const { row } = useDataTableRow(assetList, transformRow);
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -205,22 +189,7 @@ const AssetReportByFilters = ({
             requiredPermissions={[PERMISSIONS.can_see_reports]}
         >
             <StyledWrapper>
-                <StandardCard
-                    title={pageLocale.form.title}
-                    id={componentId}
-                    headerProps={{
-                        action: (
-                            <DownloadAsCSV
-                                filename={componentIdLower}
-                                contents={
-                                    /* istanbul ignore next */ () =>
-                                        prepareCSVExportData(columns, assetList, renderLocation)
-                                }
-                                disabled={assetListLoading || !assetList?.length}
-                            />
-                        ),
-                    }}
-                >
+                <StandardCard title={pageLocale.form.title} id={componentId}>
                     <Grid container spacing={1}>
                         <Grid xs={12} md={6} lg={3}>
                             {/* Status Picker */}
@@ -345,6 +314,7 @@ const AssetReportByFilters = ({
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
+                                exportable
                             />
                         </Grid>
                     </Grid>

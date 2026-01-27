@@ -17,6 +17,17 @@ export const renderLocation = row => {
     return locale.pages.report.assetReportByFilters.form.formattedLocation(siteName, buildingNum, floorNum, roomNum);
 };
 
+/**
+ *
+ * @param {Object[]} row
+ * @return {*}
+ */
+export const transformRow = row =>
+    row.map(line => ({
+        ...line,
+        location: renderLocation(line),
+    }));
+
 export default {
     defaults: {
         assetStatus: null,
@@ -32,7 +43,6 @@ export default {
         asset_barcode: { fieldParams: { minWidth: 120 } },
         location: {
             fieldParams: {
-                renderCell: params => renderLocation(params?.row),
                 minWidth: 200,
                 flex: 1,
             },
@@ -68,5 +78,15 @@ export default {
             },
         },
         asset_status: { fieldParams: { width: 140 } },
+        inspect_comment: {
+            fieldParams: {
+                hide: true,
+            },
+        },
+        inspect_fail_reason: {
+            fieldParams: {
+                hide: true,
+            },
+        },
     },
 };
