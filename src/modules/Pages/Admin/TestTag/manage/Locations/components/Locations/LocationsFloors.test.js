@@ -115,7 +115,7 @@ describe('Locations', () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
 
-            expect(getByTestId('add_toolbar-locations-add-button')).toHaveTextContent('Add floor');
+            expect(getByTestId('locations-data-table-toolbar-add-button')).toHaveTextContent('Add floor');
 
             expect(getByTestId('location_picker-locations-building-input')).toHaveAttribute(
                 'value',
@@ -167,7 +167,7 @@ describe('Locations', () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
 
-            userEvent.click(getByTestId('add_toolbar-locations-add-button'));
+            userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
 

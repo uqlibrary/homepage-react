@@ -84,9 +84,9 @@ describe('AssetTypes', () => {
 
         expect(getByText(locale.pages.manage.assetTypes.header.pageSubtitle('Library'))).toBeInTheDocument();
         expect(getByText('Power Tower')).toBeInTheDocument();
-        expect(getByTestId('add_toolbar-asset-types-add-button')).toBeInTheDocument();
+        expect(getByTestId('asset-types-data-table-toolbar-add-button')).toBeInTheDocument();
         await act(async () => {
-            await fireEvent.click(getByTestId('add_toolbar-asset-types-add-button'));
+            await fireEvent.click(getByTestId('asset-types-data-table-toolbar-add-button'));
         });
 
         await waitFor(() => {
@@ -114,7 +114,7 @@ describe('AssetTypes', () => {
         // Check error condition for add
         actions.addAssetType = jest.fn(() => Promise.reject('AAT TESTING'));
         await act(async () => {
-            await fireEvent.click(getByTestId('add_toolbar-asset-types-add-button'));
+            await fireEvent.click(getByTestId('asset-types-data-table-toolbar-add-button'));
         });
 
         await waitFor(() => {
@@ -130,7 +130,7 @@ describe('AssetTypes', () => {
         actions.loadAssetTypes = jest.fn(() => Promise.reject('LAA TESTING'));
         actions.addAssetType = jest.fn(() => Promise.resolve());
         await act(async () => {
-            await fireEvent.click(getByTestId('add_toolbar-asset-types-add-button'));
+            await fireEvent.click(getByTestId('asset-types-data-table-toolbar-add-button'));
         });
 
         await waitFor(() => {

@@ -8,7 +8,7 @@ const WithExportMenu = ({ id, children }) => (
     <Toolbar id={id}>
         {children}
         <div style={{ flex: 1 }} />
-        <ExportMenu />
+        <ExportMenu id={id} />
     </Toolbar>
 );
 

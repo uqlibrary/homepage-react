@@ -138,9 +138,9 @@ describe('Manage Users', () => {
 
         expect(getByText(locale.pages.manage.users.header.pageSubtitle('Library'))).toBeInTheDocument();
         expect(getByText('uqjsmit')).toBeInTheDocument();
-        expect(getByTestId('add_toolbar-user-management-add-button')).toBeInTheDocument();
+        expect(getByTestId('user-management-data-table-toolbar-add-button')).toBeInTheDocument();
         await act(async () => {
-            await fireEvent.click(getByTestId('add_toolbar-user-management-add-button'));
+            await fireEvent.click(getByTestId('user-management-data-table-toolbar-add-button'));
         });
 
         await waitFor(() => {
@@ -179,7 +179,7 @@ describe('Manage Users', () => {
         // Check error condition for add
         actions.addUser = jest.fn(() => Promise.reject('Test Error'));
         await act(async () => {
-            await fireEvent.click(getByTestId('add_toolbar-user-management-add-button'));
+            await fireEvent.click(getByTestId('user-management-data-table-toolbar-add-button'));
         });
 
         await waitFor(() => {

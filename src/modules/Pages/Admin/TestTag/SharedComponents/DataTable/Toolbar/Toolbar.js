@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
 import { GridToolbarContainer } from '@mui/x-data-grid';
-import _ from 'lodash';
 
 const Toolbar = ({ id, children }) => {
-    const componentId = `add_toolbar-${id}`;
+    const componentId = `${id}-data-table-toolbar`;
     return (
         <GridToolbarContainer id={componentId} data-testid={componentId}>
             {React.Children.map(children, child => {
                 if (!React.isValidElement(child)) return child;
-                return React.cloneElement(child, { id: componentId });
+                return React.cloneElement(child, { id: child.props?.id || componentId });
             })}
         </GridToolbarContainer>
     );

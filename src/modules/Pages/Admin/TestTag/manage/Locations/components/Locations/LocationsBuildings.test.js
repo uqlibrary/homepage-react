@@ -104,7 +104,7 @@ describe('Locations', () => {
             expect(getByTestId('location_picker-locations-site-input')).toHaveAttribute('value', 'Gatton');
             expect(getByTestId('location_picker-locations-building-input')).not.toHaveAttribute('disabled');
 
-            expect(getByTestId('add_toolbar-locations-add-button')).toHaveTextContent('Add building');
+            expect(getByTestId('locations-data-table-toolbar-add-button')).toHaveTextContent('Add building');
 
             const grid = getByTestId('data_table-locations');
             assertHeader(grid, ['Building ID', 'Building name', 'No. assets']);
@@ -137,7 +137,7 @@ describe('Locations', () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
 
-            userEvent.click(getByTestId('add_toolbar-locations-add-button'));
+            userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
 
