@@ -1,6 +1,5 @@
 // istanbul ignore file
 import React, { useState, useEffect } from 'react';
-import { TextField, Stack, Button, Checkbox, FormControlLabel } from '@mui/material';
 import { Grid, Box, Typography } from '@mui/material';
 import { StandardPage } from '../../../App/components/pages';
 
@@ -17,7 +16,9 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2'; // You likely have react-chartjs-2 if using React
+
+// Import the new UsageAnalytics component
+import UsageAnalytics from './UsageAnalytics';
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Title);
 
@@ -145,7 +146,7 @@ const MOCK_USER_GROUPS = [
     'HOSP',
     'COMMU',
     'FRYVISITOR',
-    'GUEST / NOT LOGGED IN',
+    'NOT LOGGED IN',
 ];
 
 function getRandomInt(min, max) {
@@ -589,18 +590,6 @@ export default function AnalyticsDashboard() {
     const [seriesData, setSeriesData] = useState(null);
     const [totalObjects, setTotalObjects] = useState(0);
 
-    // Date range state for usage chart
-    const allDates = chartData.map(d => d.activity_date);
-    const minDate = allDates[0];
-    const maxDate = allDates[allDates.length - 1];
-    // Default to last 7 days (or all if less than 7)
-    const defaultStartDate = allDates.length > 6 ? allDates[allDates.length - 7] : minDate;
-    const [startDate, setStartDate] = useState(defaultStartDate);
-    const [endDate, setEndDate] = useState(maxDate);
-
-    // Filter chartData by date range
-    const filteredUsageData = chartData.filter(d => d.activity_date >= startDate && d.activity_date <= endDate);
-
     useEffect(() => {
         // --- Mock API Data ---
         const apiResponse = {
@@ -776,22 +765,6 @@ export default function AnalyticsDashboard() {
             plugins: { ...baseChartOptions.plugins, title: { display: true, text: title } },
         };
     };
-
-    // User group visibility state (all hidden by default)
-    const allUserGroups = getAllUserGroups(chartData);
-    const [visibleGroups, setVisibleGroups] = useState({});
-    useEffect(() => {
-        setVisibleGroups(prev => {
-            // Preserve previous checked state if possible, otherwise default to false
-            const newState = {};
-            allUserGroups.forEach(g => {
-                newState[g] = prev[g] ?? false;
-            });
-            return newState;
-        });
-        // eslint-disable-next-line
-    }, [allUserGroups.join(',')]);
-
     // Generate specific options
     const reviewOptions = getDynamicBarOptions('Objects by Review Status', STACK_REVIEW_CHART);
     const filterOptions = getDynamicBarOptions(`Top ${MAX_CHART_ITEMS} Filters`, STACK_FILTER_CHART);
@@ -805,14 +778,6 @@ export default function AnalyticsDashboard() {
     const reviewHeight = STACK_REVIEW_CHART ? '100px' : getDynamicChartHeight(reviewData.labels.length);
     const filterHeight = STACK_FILTER_CHART ? '100px' : getDynamicChartHeight(filterData.labels.length);
     const seriesHeight = STACK_SERIES_CHART ? '100px' : getDynamicChartHeight(seriesData.labels.length);
-
-    // Handler for toggling group visibility
-    const handleGroupToggle = group => {
-        setVisibleGroups(prev => ({ ...prev, [group]: !prev[group] }));
-    };
-
-    // Usage chart data (filtered)
-    const usageData = getUsageData(filteredUsageData)(visibleGroups);
 
     return (
         <StandardPage title="Digital Learning Object Repository - Analytics Dashboard">
@@ -963,160 +928,8 @@ export default function AnalyticsDashboard() {
                         </Box>
                     </Grid>
                 )}
-                <Grid item xs={12} md={8}>
-                    <Box
-                        sx={{
-                            border: '1px solid #eee',
-                            p: 2,
-                            textAlign: 'center',
-                            height: '440px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',
-                        }}
-                    >
-                        <Stack
-                            direction={{ xs: 'column', sm: 'row' }}
-                            spacing={2}
-                            alignItems="center"
-                            sx={{ mb: 1, justifyContent: 'flex-start', width: '100%' }}
-                        >
-                            <Typography variant="subtitle1" sx={{ minWidth: 120 }}>
-                                Usage Date Range:
-                            </Typography>
-                            <TextField
-                                label="Start Date"
-                                type="date"
-                                size="small"
-                                value={startDate}
-                                onChange={e => setStartDate(e.target.value)}
-                                inputProps={{ min: minDate, max: endDate }}
-                                sx={{ minWidth: 160 }}
-                            />
-                            <TextField
-                                label="End Date"
-                                type="date"
-                                size="small"
-                                value={endDate}
-                                onChange={e => setEndDate(e.target.value)}
-                                inputProps={{ min: startDate, max: maxDate }}
-                                sx={{ minWidth: 160 }}
-                            />
-                            <Button
-                                variant="outlined"
-                                onClick={() => {
-                                    setStartDate(defaultStartDate);
-                                    setEndDate(maxDate);
-                                }}
-                                sx={{ ml: 2 }}
-                            >
-                                Reset
-                            </Button>
-                        </Stack>
-                        <Box sx={{ flex: 1, minHeight: 0 }}>
-                            <Line data={usageData} options={UsageOptions} />
-                        </Box>
-                    </Box>
-                </Grid>
-                <Grid item xs={12} md={4}>
-                    <Box
-                        sx={{
-                            border: '1px solid #eee',
-                            p: 2,
-                            height: '440px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',
-                            bgcolor: '#f9fafb',
-                        }}
-                    >
-                        <Typography variant="h6" sx={{ mb: 0.5, textAlign: 'center' }}>
-                            Usage Summary
-                        </Typography>
-                        {/* Show selected date range in Brisbane format */}
-                        <Typography variant="body2" sx={{ mb: 1, textAlign: 'center', color: '#64748b' }}>
-                            Date Range: {formatDateBrisbane(startDate)} to {formatDateBrisbane(endDate)}
-                        </Typography>
-                        {/* Calculate totals for the selected range */}
-                        {(() => {
-                            // Unique users by group (sum for each group)
-                            const groupTotals = {};
-                            let total = 0;
-                            filteredUsageData.forEach(day => {
-                                day.viewers_by_group.forEach(g => {
-                                    groupTotals[g.user_group] = (groupTotals[g.user_group] || 0) + g.total;
-                                    total += g.total;
-                                });
-                            });
-                            // Use the same group order as the chart
-                            const filteredUserGroups = getAllUserGroups(filteredUsageData);
-                            return (
-                                <>
-                                    <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.25 }}>
-                                        Total Users: {total}
-                                    </Typography>
-                                    <Box component="ul" sx={{ pl: 2, mt: 0.25, mb: 0, listStyle: 'none', p: 0 }}>
-                                        {filteredUserGroups.map((group, idx) => {
-                                            const count = groupTotals[group] || 0;
-                                            const color = groupColors[(idx + 1) % groupColors.length];
-                                            return (
-                                                <li
-                                                    key={group}
-                                                    style={{
-                                                        marginBottom: 0,
-                                                        padding: 0,
-                                                        lineHeight: 1,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        minHeight: 20,
-                                                    }}
-                                                >
-                                                    <FormControlLabel
-                                                        control={
-                                                            <Checkbox
-                                                                size="small"
-                                                                checked={!!visibleGroups[group]}
-                                                                onChange={() => handleGroupToggle(group)}
-                                                                sx={{ p: 0.1, mr: 0.25 }}
-                                                            />
-                                                        }
-                                                        label={
-                                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                                <Box
-                                                                    sx={{
-                                                                        width: 10,
-                                                                        height: 10,
-                                                                        borderRadius: 1,
-                                                                        bgcolor: color,
-                                                                        mr: 0.5,
-                                                                        border: '1px solid #cbd5e1',
-                                                                    }}
-                                                                />
-                                                                <Typography
-                                                                    variant="body2"
-                                                                    sx={{
-                                                                        color: '#334155',
-                                                                        fontSize: 11,
-                                                                        lineHeight: 1,
-                                                                        p: 0,
-                                                                        m: 0,
-                                                                    }}
-                                                                >
-                                                                    {group}: <b>{count}</b>
-                                                                </Typography>
-                                                            </Box>
-                                                        }
-                                                        sx={{ m: 0, p: 0 }}
-                                                    />
-                                                </li>
-                                            );
-                                        })}
-                                    </Box>
-                                </>
-                            );
-                        })()}
-                    </Box>
-                </Grid>
+
+                <UsageAnalytics usageData={chartData} />
             </Grid>
         </StandardPage>
     );
