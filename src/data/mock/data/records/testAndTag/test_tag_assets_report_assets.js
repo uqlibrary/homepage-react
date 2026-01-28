@@ -167,7 +167,9 @@ export default {
             "building_id_displayed": "0001",
             "site_id": 1,
             "site_name": "St Lucia",
-            "site_id_displayed": "01"
+            "site_id_displayed": "01",
+            "inspect_comment": "not good",
+            "inspect_fail_reason": "broken"
         },
     ]
 }

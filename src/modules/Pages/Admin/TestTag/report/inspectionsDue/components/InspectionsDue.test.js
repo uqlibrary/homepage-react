@@ -111,6 +111,7 @@ describe('InspectionsDue', () => {
 
         // check pagination counter shows expected number of rows
         expect(getByText('1–10 of 10')).toBeInTheDocument();
+        expect(getByTestId('inspections-due-data-table-toolbar-export-menu')).toBeInTheDocument();
     });
 
     it('fires action when filter site and date range change', async () => {

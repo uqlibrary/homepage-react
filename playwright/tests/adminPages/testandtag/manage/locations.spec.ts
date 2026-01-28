@@ -25,7 +25,7 @@ test.describe('Test and Tag Manage Locations', () => {
         await expect((await getFieldValue(page, 'site_name', 0)).getByText('St Lucia')).toBeVisible();
 
         // Adding a site
-        await page.getByTestId('add_toolbar-locations-add-button').click();
+        await page.getByTestId('locations-data-table-toolbar-add-button').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
         await expect(page.getByTestId('site_id_displayed-input')).toHaveAttribute('required');
         await expect(page.getByTestId('site_name-input')).toHaveAttribute('required');
@@ -40,7 +40,7 @@ test.describe('Test and Tag Manage Locations', () => {
         await page.getByTestId('location_picker-locations-site-input').click();
         await page.locator('#location_picker-locations-site-option-1').click();
         await expect((await getFieldValue(page, 'building_id_displayed', 0)).getByText('0001')).toBeVisible();
-        await page.getByTestId('add_toolbar-locations-add-button').click();
+        await page.getByTestId('locations-data-table-toolbar-add-button').click();
         await expect(page.getByTestId('building_id_displayed-input')).toHaveAttribute('required');
         await expect(page.getByTestId('building_name-input')).toHaveAttribute('required');
         await expect(page.getByTestId('update_dialog-locations-content').getByText('St Lucia')).toBeVisible();
@@ -57,7 +57,7 @@ test.describe('Test and Tag Manage Locations', () => {
         await page.getByTestId('location_picker-locations-building-input').click();
         await page.locator('#location_picker-locations-building-option-1').click();
         await expect((await getFieldValue(page, 'floor_id_displayed', 0)).getByText('2')).toBeVisible();
-        await page.getByTestId('add_toolbar-locations-add-button').click();
+        await page.getByTestId('locations-data-table-toolbar-add-button').click();
         await expect(page.getByTestId('floor_id_displayed-input')).toHaveAttribute('required');
         await expect(
             page.getByTestId('update_dialog-locations-content').getByText('Forgan Smith Building, St Lucia'),
@@ -76,7 +76,7 @@ test.describe('Test and Tag Manage Locations', () => {
         await page.getByTestId('location_picker-locations-floor-input').click();
         await page.locator('#location_picker-locations-floor-option-1').click();
         await expect((await getFieldValue(page, 'room_id_displayed', 0)).getByText('W212')).toBeVisible();
-        await page.getByTestId('add_toolbar-locations-add-button').click();
+        await page.getByTestId('locations-data-table-toolbar-add-button').click();
         await expect(page.getByTestId('room_id_displayed-input')).toHaveAttribute('required');
         // description not required
         await expect(page.getByTestId('room_description-input')).not.toHaveAttribute('required');
