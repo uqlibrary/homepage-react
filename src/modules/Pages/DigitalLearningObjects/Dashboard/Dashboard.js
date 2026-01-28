@@ -1,9 +1,10 @@
 // istanbul ignore file
 import React, { useState, useEffect } from 'react';
+import { TextField, Stack, Button, Checkbox, FormControlLabel } from '@mui/material';
 import { Grid, Box, Typography } from '@mui/material';
 import { StandardPage } from '../../../App/components/pages';
 
-import { Pie, Bar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -44,9 +45,9 @@ const generateRandomColors = (count, opacity = 0.7) => {
     const colors = [];
     const hueStep = 360 / (count > 0 ? count : 1);
 
-    const hslToRgb = (h, s, l, alpha) => {
-        s /= 100;
-        l /= 100;
+    const hslToRgb = (h, sIn, lIn, alpha) => {
+        const s = sIn / 100;
+        const l = lIn / 100;
         const c = (1 - Math.abs(2 * l - 1)) * s;
         const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
         const m = l - c / 2;
@@ -128,191 +129,128 @@ const REVIEW_STATUS_COLORS = {
 const MAX_CHART_ITEMS = 15;
 const KEYWORD_LIMIT = 10;
 
-const MOCK_SITE_USAGE_DATA = [
-    {
-        activity_date: '2026-01-22',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-21',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-20',
-        total_views: 3,
-        unique_viewers: 2,
-    },
-    {
-        activity_date: '2026-01-19',
-        total_views: 9,
-        unique_viewers: 8,
-    },
-    {
-        activity_date: '2026-01-18',
-        total_views: 10,
-        unique_viewers: 10,
-    },
-    {
-        activity_date: '2026-01-17',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-16',
-        total_views: 7,
-        unique_viewers: 4,
-    },
-    {
-        activity_date: '2026-01-15',
-        total_views: 6,
-        unique_viewers: 6,
-    },
-    {
-        activity_date: '2026-01-14',
-        total_views: 6,
-        unique_viewers: 4,
-    },
-    {
-        activity_date: '2026-01-13',
-        total_views: 20,
-        unique_viewers: 20,
-    },
-    {
-        activity_date: '2026-01-12',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-11',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-10',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-09',
-        total_views: 7,
-        unique_viewers: 1,
-    },
-    {
-        activity_date: '2026-01-08',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-07',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-06',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-05',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-04',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-03',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-02',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2026-01-01',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2025-12-31',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2025-12-30',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2025-12-29',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2025-12-28',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2025-12-27',
-        total_views: 0,
-        unique_viewers: 0,
-    },
-    {
-        activity_date: '2025-12-26',
-        total_views: 0,
-        unique_viewers: 0,
-    },
+// Mock data generator for 28 days and 15 user groups
+const MOCK_USER_GROUPS = [
+    'STAFF',
+    'UG',
+    'LIBRARYSTAFFB',
+    'RHD',
+    'CWPG',
+    'HON',
+    'ATH',
+    'REMUG',
+    'ICTE',
+    'REMRHD',
+    'ALUMNI',
+    'HOSP',
+    'COMMU',
+    'FRYVISITOR',
+    'GUEST / NOT LOGGED IN',
 ];
 
-const chartData = [...MOCK_SITE_USAGE_DATA].reverse();
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-const UsageData = {
-    labels: chartData.map(d => d.activity_date), // Your X-axis dates
-    datasets: [
-        {
-            label: 'Total Views',
-            data: chartData.map(d => d.total_views),
-            borderColor: '#3b82f6',
-            backgroundColor: '#3b82f6',
-            tension: 0.3, // Makes the line smooth
-        },
-        {
-            label: 'Unique Viewers',
-            data: chartData.map(d => d.unique_viewers),
-            borderColor: '#10b981',
-            backgroundColor: '#10b981',
-            tension: 0.3,
-        },
-    ],
-};
+const MOCK_SITE_USAGE_DATA = Array.from({ length: 28 }, (_, i) => {
+    const date = new Date(2026, 0, 28 - i); // Jan 28, 2026 backwards
+    // Each day, randomly select 3-7 groups to have activity
+    const groupsToday = [...MOCK_USER_GROUPS].sort(() => 0.5 - Math.random()).slice(0, getRandomInt(3, 7));
+    const viewers_by_group = groupsToday.map(group => ({
+        user_group: group,
+        total: getRandomInt(1, 8),
+    }));
+    const total_views = viewers_by_group.reduce((sum, g) => sum + g.total, 0) + getRandomInt(0, 3);
+    const unique_viewers = viewers_by_group.length + getRandomInt(0, 2);
+    return {
+        activity_date: date.toISOString().slice(0, 10),
+        total_views,
+        unique_viewers,
+        viewers_by_group,
+    };
+}).reverse();
+
+const chartData = [...MOCK_SITE_USAGE_DATA];
+
+// Collect all unique user groups across all days
+// Helper to get all user groups from a data array
+const getAllUserGroups = data => Array.from(new Set(data.flatMap(d => d.viewers_by_group.map(g => g.user_group))));
+
+const groupColors = [
+    '#3b82f6', // blue
+    '#10b981', // green
+    '#f59e42', // orange
+    '#ef4444', // red
+    '#a855f7', // purple
+    '#fbbf24', // yellow
+    '#6366f1', // indigo
+    '#14b8a6', // teal
+    '#eab308', // gold
+    '#64748b', // gray
+];
+
+// Helper to format date as DD/MM/YYYY in Australia/Brisbane timezone
+function formatDateBrisbane(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr + 'T00:00:00+10:00');
+    // Use Intl.DateTimeFormat for 'en-AU' and 'Australia/Brisbane'
+    return new Intl.DateTimeFormat('en-AU', {
+        timeZone: 'Australia/Brisbane',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    }).format(date);
+}
+
+function getUsageData(filteredData) {
+    const allUserGroups = getAllUserGroups(filteredData);
+
+    return visibleGroupsArg => ({
+        labels: filteredData.map(d => formatDateBrisbane(d.activity_date)),
+        datasets: [
+            {
+                label: 'Total Views',
+                data: filteredData.map(d => d.total_views),
+                borderColor: '#3b82f6',
+                backgroundColor: '#3b82f6',
+                tension: 0.2,
+                borderWidth: 3,
+                pointRadius: 4,
+                order: 0, // Draw on top
+                hidden: false, // Always visible
+            },
+            ...allUserGroups.map((group, idx) => ({
+                label: group,
+                data: filteredData.map(d => {
+                    const found = d.viewers_by_group.find(g => g.user_group === group);
+                    return found ? found.total : 0;
+                }),
+                borderColor: groupColors[(idx + 1) % groupColors.length],
+                backgroundColor: groupColors[(idx + 1) % groupColors.length],
+                tension: 0.15,
+                borderDash: [4, 2],
+                borderWidth: 2,
+                pointRadius: 3,
+                order: 1,
+                hidden: visibleGroupsArg ? !visibleGroupsArg[group] : true,
+            })),
+        ],
+    });
+}
 
 const UsageOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
         legend: {
+            display: false,
+        },
+        title: {
             display: true,
-            position: 'top',
-            labels: {
-                // High-contrast deep navy for white background
-                color: '#1e293b',
-                font: {
-                    size: 14,
-                    weight: '700', // Bold for better visibility
-                    family: 'Inter, system-ui, sans-serif',
-                },
-                padding: 30, // Extra breathing room
-                usePointStyle: true,
-                pointStyle: 'circle',
-                pointStyleWidth: 10, // Larger legend indicators
-            },
+            text: 'Digital Object Usage by User Group',
+            font: { size: 14, weight: 'bold', family: 'Inter, system-ui, sans-serif' }, // Smaller title
+            color: '#1e293b',
+            padding: { top: 4, bottom: 10 },
         },
         tooltip: {
             enabled: true,
@@ -630,6 +568,19 @@ function formatSeriesBreakdownData(apiData) {
 // =========================================================
 
 export default function AnalyticsDashboard() {
+    // Helper to format date as DD/MM/YYYY in Australia/Brisbane timezone
+    function formatDateBrisbane(dateStr) {
+        if (!dateStr) return '';
+        const date = new Date(dateStr + 'T00:00:00+10:00');
+        // Use Intl.DateTimeFormat for 'en-AU' and 'Australia/Brisbane'
+        return new Intl.DateTimeFormat('en-AU', {
+            timeZone: 'Australia/Brisbane',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        }).format(date);
+    }
+
     const [objectData, setObjectData] = useState(null);
     const [teamData, setTeamData] = useState(null);
     const [keywordData, setKeywordData] = useState(null);
@@ -637,6 +588,18 @@ export default function AnalyticsDashboard() {
     const [filterData, setFilterData] = useState(null);
     const [seriesData, setSeriesData] = useState(null);
     const [totalObjects, setTotalObjects] = useState(0);
+
+    // Date range state for usage chart
+    const allDates = chartData.map(d => d.activity_date);
+    const minDate = allDates[0];
+    const maxDate = allDates[allDates.length - 1];
+    // Default to last 7 days (or all if less than 7)
+    const defaultStartDate = allDates.length > 6 ? allDates[allDates.length - 7] : minDate;
+    const [startDate, setStartDate] = useState(defaultStartDate);
+    const [endDate, setEndDate] = useState(maxDate);
+
+    // Filter chartData by date range
+    const filteredUsageData = chartData.filter(d => d.activity_date >= startDate && d.activity_date <= endDate);
 
     useEffect(() => {
         // --- Mock API Data ---
@@ -814,6 +777,21 @@ export default function AnalyticsDashboard() {
         };
     };
 
+    // User group visibility state (all hidden by default)
+    const allUserGroups = getAllUserGroups(chartData);
+    const [visibleGroups, setVisibleGroups] = useState({});
+    useEffect(() => {
+        setVisibleGroups(prev => {
+            // Preserve previous checked state if possible, otherwise default to false
+            const newState = {};
+            allUserGroups.forEach(g => {
+                newState[g] = prev[g] ?? false;
+            });
+            return newState;
+        });
+        // eslint-disable-next-line
+    }, [allUserGroups.join(',')]);
+
     // Generate specific options
     const reviewOptions = getDynamicBarOptions('Objects by Review Status', STACK_REVIEW_CHART);
     const filterOptions = getDynamicBarOptions(`Top ${MAX_CHART_ITEMS} Filters`, STACK_FILTER_CHART);
@@ -827,6 +805,14 @@ export default function AnalyticsDashboard() {
     const reviewHeight = STACK_REVIEW_CHART ? '100px' : getDynamicChartHeight(reviewData.labels.length);
     const filterHeight = STACK_FILTER_CHART ? '100px' : getDynamicChartHeight(filterData.labels.length);
     const seriesHeight = STACK_SERIES_CHART ? '100px' : getDynamicChartHeight(seriesData.labels.length);
+
+    // Handler for toggling group visibility
+    const handleGroupToggle = group => {
+        setVisibleGroups(prev => ({ ...prev, [group]: !prev[group] }));
+    };
+
+    // Usage chart data (filtered)
+    const usageData = getUsageData(filteredUsageData)(visibleGroups);
 
     return (
         <StandardPage title="Digital Learning Object Repository - Analytics Dashboard">
@@ -977,9 +963,158 @@ export default function AnalyticsDashboard() {
                         </Box>
                     </Grid>
                 )}
-                <Grid item xs={12} md={12}>
-                    <Box sx={{ border: '1px solid #eee', p: 2, textAlign: 'center', height: '400px' }}>
-                        <Line data={UsageData} options={UsageOptions} />
+                <Grid item xs={12} md={8}>
+                    <Box
+                        sx={{
+                            border: '1px solid #eee',
+                            p: 2,
+                            textAlign: 'center',
+                            height: '440px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                        }}
+                    >
+                        <Stack
+                            direction={{ xs: 'column', sm: 'row' }}
+                            spacing={2}
+                            alignItems="center"
+                            sx={{ mb: 1, justifyContent: 'flex-start', width: '100%' }}
+                        >
+                            <Typography variant="subtitle1" sx={{ minWidth: 120 }}>
+                                Usage Date Range:
+                            </Typography>
+                            <TextField
+                                label="Start Date"
+                                type="date"
+                                size="small"
+                                value={startDate}
+                                onChange={e => setStartDate(e.target.value)}
+                                inputProps={{ min: minDate, max: endDate }}
+                                sx={{ minWidth: 160 }}
+                            />
+                            <TextField
+                                label="End Date"
+                                type="date"
+                                size="small"
+                                value={endDate}
+                                onChange={e => setEndDate(e.target.value)}
+                                inputProps={{ min: startDate, max: maxDate }}
+                                sx={{ minWidth: 160 }}
+                            />
+                            <Button
+                                variant="outlined"
+                                onClick={() => {
+                                    setStartDate(defaultStartDate);
+                                    setEndDate(maxDate);
+                                }}
+                                sx={{ ml: 2 }}
+                            >
+                                Reset
+                            </Button>
+                        </Stack>
+                        <Box sx={{ flex: 1, minHeight: 0 }}>
+                            <Line data={usageData} options={UsageOptions} />
+                        </Box>
+                    </Box>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <Box
+                        sx={{
+                            border: '1px solid #eee',
+                            p: 2,
+                            height: '440px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            bgcolor: '#f9fafb',
+                        }}
+                    >
+                        <Typography variant="h6" sx={{ mb: 0.5, textAlign: 'center' }}>
+                            Usage Summary
+                        </Typography>
+                        {/* Show selected date range in Brisbane format */}
+                        <Typography variant="body2" sx={{ mb: 1, textAlign: 'center', color: '#64748b' }}>
+                            Date Range: {formatDateBrisbane(startDate)} to {formatDateBrisbane(endDate)}
+                        </Typography>
+                        {/* Calculate totals for the selected range */}
+                        {(() => {
+                            // Unique users by group (sum for each group)
+                            const groupTotals = {};
+                            let total = 0;
+                            filteredUsageData.forEach(day => {
+                                day.viewers_by_group.forEach(g => {
+                                    groupTotals[g.user_group] = (groupTotals[g.user_group] || 0) + g.total;
+                                    total += g.total;
+                                });
+                            });
+                            // Use the same group order as the chart
+                            const filteredUserGroups = getAllUserGroups(filteredUsageData);
+                            return (
+                                <>
+                                    <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.25 }}>
+                                        Total Users: {total}
+                                    </Typography>
+                                    <Box component="ul" sx={{ pl: 2, mt: 0.25, mb: 0, listStyle: 'none', p: 0 }}>
+                                        {filteredUserGroups.map((group, idx) => {
+                                            const count = groupTotals[group] || 0;
+                                            const color = groupColors[(idx + 1) % groupColors.length];
+                                            return (
+                                                <li
+                                                    key={group}
+                                                    style={{
+                                                        marginBottom: 0,
+                                                        padding: 0,
+                                                        lineHeight: 1,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        minHeight: 20,
+                                                    }}
+                                                >
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                size="small"
+                                                                checked={!!visibleGroups[group]}
+                                                                onChange={() => handleGroupToggle(group)}
+                                                                sx={{ p: 0.1, mr: 0.25 }}
+                                                            />
+                                                        }
+                                                        label={
+                                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                                <Box
+                                                                    sx={{
+                                                                        width: 10,
+                                                                        height: 10,
+                                                                        borderRadius: 1,
+                                                                        bgcolor: color,
+                                                                        mr: 0.5,
+                                                                        border: '1px solid #cbd5e1',
+                                                                    }}
+                                                                />
+                                                                <Typography
+                                                                    variant="body2"
+                                                                    sx={{
+                                                                        color: '#334155',
+                                                                        fontSize: 11,
+                                                                        lineHeight: 1,
+                                                                        p: 0,
+                                                                        m: 0,
+                                                                    }}
+                                                                >
+                                                                    {group}: <b>{count}</b>
+                                                                </Typography>
+                                                            </Box>
+                                                        }
+                                                        sx={{ m: 0, p: 0 }}
+                                                    />
+                                                </li>
+                                            );
+                                        })}
+                                    </Box>
+                                </>
+                            );
+                        })()}
                     </Box>
                 </Grid>
             </Grid>
