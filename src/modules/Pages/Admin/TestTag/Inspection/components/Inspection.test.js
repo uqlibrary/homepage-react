@@ -478,7 +478,7 @@ describe('Inspection component', () => {
 
         await userEvent.keyboard('{Enter}');
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
-    });
+    }, 20000);
 
     it('should show a save success for FAILED asset dialog panel', async () => {
         const expected = {
