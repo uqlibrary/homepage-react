@@ -5,6 +5,7 @@ const mockTemplateStore = {
     gk420t: 'Printer: {{NAME}}\nAsset: {{ASSET_ID}}\nLocation: {{LOCATION}}',
     'zebra-printer': 'Asset ID: {{ASSET_ID}}\nInspection Date: {{DATE}}',
     'test-printer': 'Simple template with {{VALUE}}',
+    _19j153101586: 'Printer: {{NAME}}\nAsset: {{ASSET_ID}}\nLocation: {{LOCATION}}',
 };
 
 function setup(testProps = {}) {
@@ -150,6 +151,14 @@ describe('useLabelPrinterTemplate', () => {
             const { result } = setup();
 
             const hasTemplate = result.current.hasLabelPrinterTemplate('gk420t');
+
+            expect(hasTemplate).toBe(true);
+        });
+
+        it('should return true for existing printer template that starts with a number', () => {
+            const { result } = setup();
+
+            const hasTemplate = result.current.hasLabelPrinterTemplate('19j153101586');
 
             expect(hasTemplate).toBe(true);
         });

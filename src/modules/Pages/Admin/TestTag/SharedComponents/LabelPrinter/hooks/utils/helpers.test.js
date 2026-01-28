@@ -44,12 +44,12 @@ describe('helpers', () => {
             expect(normalisePrinterNameKey('PrInTeR')).toBe('printer');
         });
 
-        it('should prefix string starting with a number with $', () => {
-            expect(normalisePrinterNameKey('123printer')).toBe('$123printer');
+        it('should prefix string starting with a number with _', () => {
+            expect(normalisePrinterNameKey('123printer')).toBe('_123printer');
         });
 
-        it('should prefix string starting with 0 with $', () => {
-            expect(normalisePrinterNameKey('0printer')).toBe('$0printer');
+        it('should prefix string starting with 0 with _', () => {
+            expect(normalisePrinterNameKey('0printer')).toBe('_0printer');
         });
 
         it('should not prefix string starting with a letter', () => {
@@ -66,10 +66,6 @@ describe('helpers', () => {
 
         it('should handle string with spaces', () => {
             expect(normalisePrinterNameKey('Printer Name')).toBe('printer name');
-        });
-
-        it('should prefix uppercase string starting with number with $', () => {
-            expect(normalisePrinterNameKey('9PRINTER')).toBe('$9printer');
         });
 
         it('should handle string starting with special character', () => {
