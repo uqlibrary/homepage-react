@@ -95,7 +95,8 @@ describe('Locations', () => {
             expect(getByTestId('location_picker-locations-floor-input')).toHaveAttribute('disabled');
             const grid = getByTestId('data_table-locations');
             expect(grid).toBeInTheDocument();
-            expect(getByTestId('add_toolbar-locations-add-button')).toHaveTextContent('Add site');
+            expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
+            expect(getByTestId('locations-data-table-toolbar-add-button')).toHaveTextContent('Add site');
 
             // check header row is as expected
             assertHeader(grid, ['Site ID', 'Site name', 'No. assets']);
@@ -126,7 +127,8 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            userEvent.click(getByTestId('add_toolbar-locations-add-button'));
+            expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
+            userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
 

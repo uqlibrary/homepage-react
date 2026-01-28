@@ -93,6 +93,44 @@ describe('AssetReportByFilters', () => {
 
         // check pagination counter shows expected number of rows
         expect(getByText('1–6 of 6')).toBeInTheDocument();
+        expect(getByTestId('assets-inspected-data-table-toolbar-export-menu')).toBeInTheDocument();
+    });
+
+    describe('csv export', () => {
+        beforeAll(() => {
+            global.URL.createObjectURL = jest.fn(() => 'blob:mock');
+            global.URL.revokeObjectURL = jest.fn();
+        });
+
+        it('should include hidden columns', async () => {
+            const user = userEvent.setup();
+            const RealBlob = global.Blob;
+            const blobParts = [];
+            jest.spyOn(global, 'Blob').mockImplementation((parts, opts) => {
+                blobParts.push({ parts, opts });
+                return new RealBlob(parts, opts);
+            });
+            const { getByText } = setup({
+                actions: {
+                    loadAssetReportByFilters: jest.fn(),
+                    loadTaggedBuildingList: jest.fn(),
+                },
+            });
+
+            await user.click(getByText('Export'));
+            await user.click(getByText('Download as CSV'));
+
+            expect(global.URL.createObjectURL).toHaveBeenCalled();
+            expect(blobParts.length).toBeGreaterThan(0);
+            const csvText = blobParts[0].parts[1];
+            expect(csvText).toContain(
+                'Barcode,Location (Site/Bld/Flr/Rm),Asset type,Last test,Last tested by,Test due,Status,Comments,Fail Reason',
+            );
+            // should include hidden fields
+            expect(csvText).toContain(
+                'UQL000608,St Lucia / 0001 / 4 / W437,Power Cord - C5,2023-07-05,,,FAILED,not good,broken',
+            );
+        });
     });
 
     it('fires action when status is changed', async () => {
