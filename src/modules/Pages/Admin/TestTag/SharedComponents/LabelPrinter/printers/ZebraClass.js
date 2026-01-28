@@ -1,4 +1,4 @@
-import ZebraBrowserPrintWrapper from 'zebra-browser-print-wrapper';
+import ZebraBrowserPrintWrapper from 'zebra-browser-print-wrapper-https';
 
 /**
  * A Zebra label printer class to use with Zebra Browser Print wrapper.
