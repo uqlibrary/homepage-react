@@ -21,8 +21,7 @@ import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { actionReducer, emptyActionState } from './utils';
 import { breadcrumbs } from 'config/routes';
-import AddButton from '../../../SharedComponents/DataTable/Toolbar/AddButton';
-import WithExportMenu from '../../../SharedComponents/DataTable/Toolbar/WithExportMenu';
+import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 
 const componentId = 'asset-types';
 

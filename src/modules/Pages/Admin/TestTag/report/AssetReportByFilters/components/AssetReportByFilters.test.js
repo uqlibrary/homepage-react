@@ -104,15 +104,12 @@ describe('AssetReportByFilters', () => {
 
         it('should include hidden columns', async () => {
             const user = userEvent.setup();
-
-            const RealBlob = global.Blob; // capture before mocking
+            const RealBlob = global.Blob;
             const blobParts = [];
-
             jest.spyOn(global, 'Blob').mockImplementation((parts, opts) => {
                 blobParts.push({ parts, opts });
-                return new RealBlob(parts, opts); // use real Blob, not mocked
+                return new RealBlob(parts, opts);
             });
-
             const { getByText } = setup({
                 actions: {
                     loadAssetReportByFilters: jest.fn(),
@@ -125,12 +122,11 @@ describe('AssetReportByFilters', () => {
 
             expect(global.URL.createObjectURL).toHaveBeenCalled();
             expect(blobParts.length).toBeGreaterThan(0);
-
             const csvText = blobParts[0].parts[1];
             expect(csvText).toContain(
                 'Barcode,Location (Site/Bld/Flr/Rm),Asset type,Last test,Last tested by,Test due,Status,Comments,Fail Reason',
             );
-            // should include hide fields comments and fail reason
+            // should include hidden fields
             expect(csvText).toContain(
                 'UQL000608,St Lucia / 0001 / 4 / W437,Power Cord - C5,2023-07-05,,,FAILED,not good,broken',
             );

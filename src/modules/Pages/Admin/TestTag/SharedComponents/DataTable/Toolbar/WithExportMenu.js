@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import ExportMenu from './ExportMenu';
 import Toolbar from './Toolbar';
 
-// eslint-disable-next-line react/prop-types
 const WithExportMenu = ({ id, children }) => (
     <Toolbar id={id}>
         {children}
@@ -14,6 +13,7 @@ const WithExportMenu = ({ id, children }) => (
 
 WithExportMenu.propTypes = {
     id: PropTypes.string.isRequired,
+    children: PropTypes.node,
 };
 
 export default React.memo(WithExportMenu);

@@ -19,7 +19,7 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config, { transformRow } from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
-import WithExportMenu from '../../../SharedComponents/DataTable/Toolbar/WithExportMenu';
+import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 
 const moment = require('moment');
 

@@ -25,7 +25,7 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 
 import FooterRow from './FooterRow';
 import { breadcrumbs } from 'config/routes';
-import WithExportMenu from '../../../SharedComponents/DataTable/Toolbar/WithExportMenu';
+import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 const moment = require('moment');
 
 const componentId = 'user-inspections';

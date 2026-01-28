@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
-import { DataGrid, GridToolbarExport, GridToolbarContainer } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 const rootId = 'data_table';
 
@@ -55,7 +55,6 @@ const StyledWrapper = styled(Box)(() => ({
         visibility: 'hidden',
     },
 }));
-
 const DataTable = ({
     rows = [],
     columns = [],

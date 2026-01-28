@@ -17,8 +17,7 @@ import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 import { breadcrumbs } from 'config/routes';
-import AddButton from '../../../SharedComponents/DataTable/Toolbar/AddButton';
-import WithExportMenu from '../../../SharedComponents/DataTable/Toolbar/WithExportMenu';
+import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 
 const moment = require('moment');
 
