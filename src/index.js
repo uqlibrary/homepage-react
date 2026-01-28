@@ -26,6 +26,15 @@ if (process.env.BRANCH !== 'production' && process.env.USE_MOCK) {
 
 const render = () => {
     const root = createRoot(document.getElementById('react-root'));
+
+    // for TnT Label Printing
+    window.BrowserPrint = {
+        Configuration: {
+            protocol: 'https',
+            port: 9101,
+        },
+    };
+
     root.render(
         <StrictMode>
             <AppErrorBoundary>
