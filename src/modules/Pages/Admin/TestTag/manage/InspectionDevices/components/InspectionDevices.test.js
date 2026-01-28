@@ -84,9 +84,9 @@ describe('InspectionDevices', () => {
         const { getByText, getByTestId } = setup({ actions: actions });
 
         expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
-        expect(getByTestId('add_toolbar-test-add-button')).toBeInTheDocument();
+        expect(getByTestId('test-data-table-toolbar-export-menu')).toBeInTheDocument();
         await act(async () => {
-            await fireEvent.click(getByTestId('add_toolbar-test-add-button'));
+            await fireEvent.click(getByTestId('test-data-table-toolbar-add-button'));
         });
 
         await waitFor(() => {
@@ -121,7 +121,7 @@ describe('InspectionDevices', () => {
         actions.addInspectionDevice = jest.fn(() => Promise.reject('Testing 2'));
 
         await act(async () => {
-            await fireEvent.click(getByTestId('add_toolbar-test-add-button'));
+            await fireEvent.click(getByTestId('test-data-table-toolbar-add-button'));
         });
 
         await waitFor(() => {

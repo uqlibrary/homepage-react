@@ -1229,6 +1229,12 @@ export default {
                         user_name: {
                             label: 'Last tested by',
                         },
+                        inspect_comment: {
+                            label: 'Comments',
+                        },
+                        inspect_fail_reason: {
+                            label: 'Fail Reason',
+                        },
                     },
                     filterStatusLabel: 'With status',
                     filterBuildingLabel: 'Tagged building',

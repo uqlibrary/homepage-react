@@ -16,9 +16,10 @@ import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPic
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import config from './config';
+import config, { transformRow } from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
+import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 
 const moment = require('moment');
 
@@ -93,7 +94,7 @@ const AssetReportByFilters = ({
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
-    const { row } = useDataTableRow(assetList);
+    const { row } = useDataTableRow(assetList, transformRow);
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -314,6 +315,9 @@ const AssetReportByFilters = ({
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
+                                components={{
+                                    Toolbar: () => <WithExportMenu id={componentId} />,
+                                }}
                             />
                         </Grid>
                     </Grid>
