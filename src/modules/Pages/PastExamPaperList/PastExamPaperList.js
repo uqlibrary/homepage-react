@@ -168,7 +168,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             alert('Oh no! Something went wrong! You can copy and paste this link: ' + paperUrl);
             throw e;
         }
-        return null;
+        return false;
     };
 
     // eslint-disable-next-line react/prop-types
