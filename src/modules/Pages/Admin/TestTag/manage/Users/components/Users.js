@@ -19,8 +19,7 @@ import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionS
 import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import config from './configure';
 import { breadcrumbs } from 'config/routes';
-import AddButton from '../../../SharedComponents/DataTable/Toolbar/AddButton';
-import WithExportMenu from '../../../SharedComponents/DataTable/Toolbar/WithExportMenu';
+import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 
 const componentId = 'user-management';
 

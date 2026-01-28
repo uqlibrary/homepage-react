@@ -24,8 +24,7 @@ import config from './config';
 import { emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
 import { locationType } from '../../../SharedComponents/LocationPicker/utils';
 import { breadcrumbs } from 'config/routes';
-import AddButton from '../../../SharedComponents/DataTable/Toolbar/AddButton';
-import WithExportMenu from '../../../SharedComponents/DataTable/Toolbar/WithExportMenu';
+import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 
 const componentId = 'locations';
 
