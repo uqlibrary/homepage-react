@@ -42,7 +42,7 @@ const useLabelPrinter = ({
     const { hasLabelPrinterTemplate } = useLabelPrinterTemplate(templateStore);
 
     const disabledUnknownPrinters = useCallback(
-        (printersList = [], shouldDisableUnknownPrinters) => {
+        (printersList, shouldDisableUnknownPrinters) => {
             if (!shouldDisableUnknownPrinters) return printersList;
             return printersList.map(printer => ({
                 ...printer,
@@ -61,9 +61,16 @@ const useLabelPrinter = ({
 
     useEffect(() => {
         getAvailablePrinters(printerInstance)
-            .then(printers => removeNoNamePrinters(printers, shouldRemoveNoNamePrinters))
+            .then(printers => {
+                if (!Array.isArray(printers)) return Promise.reject('Printer list is not an array');
+                return removeNoNamePrinters(printers, shouldRemoveNoNamePrinters);
+            })
             .then(printers => disabledUnknownPrinters(printers, shouldDisableUnknownPrinters))
-            .then(setAvailablePrinters);
+            .then(setAvailablePrinters)
+            .catch(error => {
+                console.error('Error fetching available printers:', error);
+                setAvailablePrinters([]);
+            });
     }, [disabledUnknownPrinters, printerInstance, shouldDisableUnknownPrinters, shouldRemoveNoNamePrinters]);
 
     return {
