@@ -102,10 +102,40 @@ const chartOptions = {
     },
 };
 
+/**
+ * Fills missing dates in a usage data array with zero-usage entries.
+ * @param {Array} data - Array of usage objects with activity_date.
+ * @param {string} startDate - Inclusive start date (YYYY-MM-DD).
+ * @param {string} endDate - Inclusive end date (YYYY-MM-DD).
+ * @returns {Array} New array with all dates in range, missing dates filled with zero usage.
+ */
+function fillMissingDates(data, startDate, endDate) {
+    const dateSet = new Set(data.map(d => d.activity_date));
+    const result = [];
+    const current = new Date(startDate);
+    const end = new Date(endDate);
+    while (current <= end) {
+        const dateStr = current.toISOString().slice(0, 10);
+        const found = data.find(d => d.activity_date === dateStr);
+        if (found) {
+            result.push(found);
+        } else {
+            result.push({
+                activity_date: dateStr,
+                total_views: 0,
+                viewers_by_group: [],
+            });
+        }
+        current.setDate(current.getDate() + 1);
+    }
+    return result;
+}
+
 export default function UsageAnalytics({ usageData }) {
     const allGroupsStable = getAllUserGroups(usageData);
     const groupColorMap = getGroupColorMap(allGroupsStable);
 
+    // Date range state
     const allDates = usageData.map(d => d.activity_date);
     const minDate = allDates[0];
     const maxDate = allDates[allDates.length - 1];
@@ -113,7 +143,16 @@ export default function UsageAnalytics({ usageData }) {
     const [startDate, setStartDate] = useState(defaultStartDate);
     const [endDate, setEndDate] = useState(maxDate);
 
-    const dateToIndex = Object.fromEntries(allDates.map((d, i) => [d, i]));
+    // Fill missing dates for the entire dataset range, not just the selected range
+    const globalMinDate = usageData[0]?.activity_date;
+    const globalMaxDate = usageData[usageData.length - 1]?.activity_date;
+    const filledUsageData = fillMissingDates(usageData, globalMinDate, globalMaxDate);
+
+    // Now filter for the selected range
+    const filteredUsageData = filledUsageData.filter(d => d.activity_date >= startDate && d.activity_date <= endDate);
+
+    // Calculate previous period range using the full filledUsageData
+    const dateToIndex = Object.fromEntries(filledUsageData.map((d, i) => [d.activity_date, i]));
     const startIdx = dateToIndex[startDate];
     const endIdx = dateToIndex[endDate];
     const periodLength = endIdx - startIdx + 1;
@@ -121,17 +160,22 @@ export default function UsageAnalytics({ usageData }) {
     const prevEndIdx = startIdx - 1;
     let prevPeriodData = [];
     if (prevStartIdx >= 0 && prevEndIdx >= 0) {
-        prevPeriodData = usageData.slice(prevStartIdx, prevEndIdx + 1);
+        prevPeriodData = filledUsageData.slice(prevStartIdx, prevEndIdx + 1);
     }
-
+    // Per-group totals for previous period
     const prevGroupTotals = {};
+    // Ensure all groups are initialized to 0
+    allGroupsStable.forEach(group => {
+        prevGroupTotals[group] = 0;
+    });
     prevPeriodData.forEach(day => {
         day.viewers_by_group.forEach(g => {
-            prevGroupTotals[g.user_group] = (prevGroupTotals[g.user_group] || 0) + g.total;
+            prevGroupTotals[g.user_group] += g.total;
         });
     });
 
-    const filteredUsageData = usageData.filter(d => d.activity_date >= startDate && d.activity_date <= endDate);
+    // Filter usage data by date range (already declared above)
+    // const filteredUsageData = filledUsageData.filter(d => d.activity_date >= startDate && d.activity_date <= endDate);
     const allUserGroups = getAllUserGroups(filteredUsageData);
     const [visibleGroups, setVisibleGroups] = useState(() => {
         const initial = {};
@@ -251,17 +295,31 @@ export default function UsageAnalytics({ usageData }) {
                     <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.25, textAlign: 'center' }}>
                         Total Users ({total}), Total Selected ({totalSelected})
                     </Typography>
+                    <Typography variant="subtitle2" sx={{ color: '#ef4444', fontSize: 11, mb: 1 }}>
+                        {/* DEBUG PANEL: Remove after diagnosis */}
+                        Debug: prevPeriodData.length={prevPeriodData.length}, periodLength={periodLength}
+                        <br />
+                        prevGroupTotals: {JSON.stringify(prevGroupTotals)}
+                    </Typography>
                     <Box component="ul" sx={{ pl: 2, mt: 0.25, mb: 0, listStyle: 'none', p: 0 }}>
                         {allUserGroupsForSummary.map(group => {
                             const count = groupTotals[group] || 0;
                             const prevCount = prevGroupTotals[group] || 0;
-                            let groupPercent = null;
-                            if (prevPeriodData.length === periodLength && prevCount > 0) {
-                                groupPercent = ((count - prevCount) / prevCount) * 100;
-                            } else if (prevPeriodData.length === periodLength && prevCount === 0 && count > 0) {
-                                groupPercent = 100;
-                            } else if (prevPeriodData.length === periodLength && prevCount === 0 && count === 0) {
-                                groupPercent = 0;
+                            let groupPercent = 0;
+                            // Always show trend, even if no previous period
+                            if (prevPeriodData.length === periodLength) {
+                                if (prevCount > 0) {
+                                    groupPercent = ((count - prevCount) / prevCount) * 100;
+                                } else if (prevCount === 0 && count > 0) {
+                                    groupPercent = 100;
+                                } else if (prevCount > 0 && count === 0) {
+                                    groupPercent = -100;
+                                } else {
+                                    groupPercent = 0;
+                                }
+                            } else {
+                                // Not enough previous data: show N/A or 0%
+                                groupPercent = null;
                             }
                             const color = groupColorMap[group] || '#64748b';
                             const peakDay = groupPeakDay[group];
@@ -309,26 +367,27 @@ export default function UsageAnalytics({ usageData }) {
                                                     }}
                                                 >
                                                     {group}: <b>{count}</b>
-                                                    {typeof groupPercent === 'number' &&
-                                                        prevPeriodData.length === periodLength &&
-                                                        (() => {
-                                                            let percentColor = '#64748b';
-                                                            if (groupPercent < 0) percentColor = '#ef4444';
-                                                            else if (groupPercent > 0) percentColor = '#10b981';
-                                                            return (
-                                                                <span
-                                                                    style={{
-                                                                        color: percentColor,
-                                                                        fontWeight: 600,
-                                                                        marginLeft: 6,
-                                                                        fontSize: 11,
-                                                                    }}
-                                                                >
-                                                                    ({groupPercent > 0 ? '+' : ''}
-                                                                    {groupPercent.toFixed(1)}%)
-                                                                </span>
-                                                            );
-                                                        })()}
+                                                    <span
+                                                        style={{
+                                                            color:
+                                                                groupPercent === null
+                                                                    ? '#64748b'
+                                                                    : groupPercent < 0
+                                                                    ? '#ef4444'
+                                                                    : groupPercent > 0
+                                                                    ? '#10b981'
+                                                                    : '#64748b',
+                                                            fontWeight: 600,
+                                                            marginLeft: 6,
+                                                            fontSize: 11,
+                                                        }}
+                                                    >
+                                                        {groupPercent === null
+                                                            ? '(N/A)'
+                                                            : `(${groupPercent > 0 ? '+' : ''}${groupPercent.toFixed(
+                                                                  1,
+                                                              )}%)`}
+                                                    </span>
                                                     {peakDay && (
                                                         <span
                                                             style={{
