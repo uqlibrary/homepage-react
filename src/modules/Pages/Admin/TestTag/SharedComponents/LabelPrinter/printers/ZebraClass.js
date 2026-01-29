@@ -8,6 +8,7 @@ import ZebraBrowserPrintWrapper from 'zebra-browser-print-wrapper-https';
  *  code: string - the printer being used e.g. 'zebra',
  *  getAvailablePrinters: Function, returns array of available printers
  *  getConnectionStatus: Function, returns object with shape { ready: boolean, error: boolean, errors: array }
+ *  getDefaultPrinter: Function, returns the default printer
  *  setPrinter: Function, sets the selected printer
  *  print: Function, sends data to the printer
  * }

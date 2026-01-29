@@ -30,8 +30,6 @@ import { PERMISSIONS } from '../../config/auth';
 import { useConfirmationState } from 'hooks';
 import { breadcrumbs } from 'config/routes';
 
-import { isLocal, isTest } from 'helpers/general';
-
 import LabelLogo from './LabelLogo';
 import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
 import {
@@ -176,9 +174,6 @@ const Inspection = ({
     saveAssetTypeError,
     saveInspectionSuccess: successData,
 }) => {
-    const isLocalEnvironment = isLocal();
-    const isTestEnvironment = isTest();
-    const shouldUsePrinterEmulator = isLocalEnvironment || isTestEnvironment;
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
@@ -186,8 +181,9 @@ const Inspection = ({
     const deptPrinterDefault = getDefaultDeptPrinter(user?.user_department);
     const deptPrintingEnabled = getDeptLabelPrintingEnabled(user?.user_department);
     const { printer, availablePrinters } = useLabelPrinter({
-        printerCode: shouldUsePrinterEmulator ? 'emulator' : deptPrinterDefault,
+        printerCode: deptPrinterDefault,
         templateStore: labelPrintertemplates,
+        shouldOverridePrinterDevEnv: true,
     });
     const [printerPreference, setPrinterPreference] = useLabelPrinterPreference(COOKIE_PRINTER_PREFERENCE);
     const { getLabelPrinterTemplate } = useLabelPrinterTemplate(labelPrintertemplates);

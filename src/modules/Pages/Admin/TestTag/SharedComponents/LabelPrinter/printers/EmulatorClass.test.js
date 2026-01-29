@@ -16,6 +16,7 @@ describe('EmulatorClass', () => {
             expect(result.current).toHaveProperty('code');
             expect(result.current).toHaveProperty('getAvailablePrinters');
             expect(result.current).toHaveProperty('getConnectionStatus');
+            expect(result.current).toHaveProperty('getDefaultPrinter');
             expect(result.current).toHaveProperty('setPrinter');
             expect(result.current).toHaveProperty('print');
         });
@@ -36,6 +37,12 @@ describe('EmulatorClass', () => {
             const { result } = renderHook(() => useCreatePrinter());
 
             expect(typeof result.current.getConnectionStatus).toBe('function');
+        });
+
+        it('should return getDefaultPrinter as a function', () => {
+            const { result } = renderHook(() => useCreatePrinter());
+
+            expect(typeof result.current.getDefaultPrinter).toBe('function');
         });
 
         it('should return setPrinter as a function', () => {

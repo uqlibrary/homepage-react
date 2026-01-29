@@ -1,9 +1,9 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import useLabelPrinter, { removeNoNamePrinters, getAvailablePrinters } from './useLabelPrinter';
-import { printerRegistry } from '../LabelPrinterRegister';
+import printerRegistry from '../printers';
 import useLabelPrinterTemplate from './useLabelPrinterTemplate';
 
-jest.mock('../LabelPrinterRegister', () => ({
+jest.mock('../printers', () => ({
     printerRegistry: {
         zebra: jest.fn(),
         emulator: jest.fn(),

@@ -1,5 +1,5 @@
-import { default as useZebraPrinter } from './printers/ZebraClass';
-import { default as useEmulatorPrinter } from './printers/EmulatorClass';
+import { default as useZebraPrinter } from './ZebraClass';
+import { default as useEmulatorPrinter } from './EmulatorClass';
 
 export const printerRegistry = {
     zebra: useZebraPrinter,
