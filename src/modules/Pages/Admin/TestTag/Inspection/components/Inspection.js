@@ -30,7 +30,7 @@ import { PERMISSIONS } from '../../config/auth';
 import { useConfirmationState } from 'hooks';
 import { breadcrumbs } from 'config/routes';
 
-import { /* isDevEnv, */ isTest } from 'helpers/general';
+import { isLocal, isTest } from 'helpers/general';
 
 import LabelLogo from './LabelLogo';
 import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
@@ -176,9 +176,9 @@ const Inspection = ({
     saveAssetTypeError,
     saveInspectionSuccess: successData,
 }) => {
-    // const isDevEnvironment = isDevEnv();
+    const isLocalEnvironment = isLocal();
     const isTestEnvironment = isTest();
-    const shouldUsePrinterEmulator = /* isDevEnvironment || */ isTestEnvironment;
+    const shouldUsePrinterEmulator = isLocalEnvironment || isTestEnvironment;
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
