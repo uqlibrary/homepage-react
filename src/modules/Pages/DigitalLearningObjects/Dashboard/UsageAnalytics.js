@@ -1,3 +1,16 @@
+// Helper to get trend color and text for a group
+function getTrendDisplay(groupPercent) {
+    let trendColor = '#64748b';
+    if (groupPercent === null) {
+        trendColor = '#64748b';
+    } else if (groupPercent < 0) {
+        trendColor = '#ef4444';
+    } else if (groupPercent > 0) {
+        trendColor = '#10b981';
+    }
+    const trendText = groupPercent === null ? '(N/A)' : `(${groupPercent > 0 ? '+' : ''}${groupPercent.toFixed(1)}%)`;
+    return { trendColor, trendText };
+}
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Checkbox, FormControlLabel, TextField, Stack, Button, Grid } from '@mui/material';
@@ -15,6 +28,7 @@ function formatDateBrisbane(dateStr) {
     }).format(date);
 }
 
+// 15 visually distinct, colorblind-friendly colors
 const groupColors = [
     '#3b82f6', // blue
     '#10b981', // green
@@ -25,6 +39,11 @@ const groupColors = [
     '#6366f1', // indigo
     '#14b8a6', // teal
     '#eab308', // gold
+    '#ff6f91', // pink
+    '#00bcd4', // cyan
+    '#8bc34a', // light green
+    '#ff9800', // deep orange
+    '#795548', // brown
     '#64748b', // gray
 ];
 
@@ -60,6 +79,7 @@ function getUsageData(filteredData, visibleGroups, groupColorMap) {
                 pointRadius: 4,
                 order: 0,
                 hidden: false,
+                borderDash: [4, 2], // Dashed line for total
             },
             ...allUserGroups.map(group => ({
                 label: group,
@@ -70,7 +90,7 @@ function getUsageData(filteredData, visibleGroups, groupColorMap) {
                 borderColor: groupColorMap[group] || '#64748b',
                 backgroundColor: groupColorMap[group] || '#64748b',
                 tension: 0.15,
-                borderDash: [4, 2],
+                borderDash: [], // Solid line for groups
                 borderWidth: 2,
                 pointRadius: 3,
                 hidden: !visibleGroups[group],
@@ -110,7 +130,6 @@ const chartOptions = {
  * @returns {Array} New array with all dates in range, missing dates filled with zero usage.
  */
 function fillMissingDates(data, startDate, endDate) {
-    const dateSet = new Set(data.map(d => d.activity_date));
     const result = [];
     const current = new Date(startDate);
     const end = new Date(endDate);
@@ -202,7 +221,11 @@ export default function UsageAnalytics({ usageData }) {
     const totalSelected = Object.entries(groupTotals)
         .filter(([group]) => visibleGroups[group])
         .reduce((sum, [, count]) => sum + count, 0);
-    const allUserGroupsForSummary = allGroupsStable;
+    // Ensure 'public' group is always last in the summary
+    let allUserGroupsForSummary = allGroupsStable;
+    if (allUserGroupsForSummary.includes('public')) {
+        allUserGroupsForSummary = allUserGroupsForSummary.filter(g => g !== 'public').concat('public');
+    }
 
     const groupPeakDay = {};
     allUserGroupsForSummary.forEach(group => {
@@ -237,7 +260,7 @@ export default function UsageAnalytics({ usageData }) {
                         alignItems="center"
                         sx={{ mb: 1, justifyContent: 'flex-start', width: '100%' }}
                     >
-                        <Typography variant="subtitle1" sx={{ minWidth: 120 }}>
+                        <Typography variant="subtitle1" sx={{ minWidth: 120, pl: 3 }}>
                             Usage Date Range:
                         </Typography>
                         <TextField
@@ -295,18 +318,13 @@ export default function UsageAnalytics({ usageData }) {
                     <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.25, textAlign: 'center' }}>
                         Total Users ({total}), Total Selected ({totalSelected})
                     </Typography>
-                    <Typography variant="subtitle2" sx={{ color: '#ef4444', fontSize: 11, mb: 1 }}>
-                        {/* DEBUG PANEL: Remove after diagnosis */}
-                        Debug: prevPeriodData.length={prevPeriodData.length}, periodLength={periodLength}
-                        <br />
-                        prevGroupTotals: {JSON.stringify(prevGroupTotals)}
-                    </Typography>
+                    {/* Debug panel removed for production/demo */}
                     <Box component="ul" sx={{ pl: 2, mt: 0.25, mb: 0, listStyle: 'none', p: 0 }}>
                         {allUserGroupsForSummary.map(group => {
                             const count = groupTotals[group] || 0;
                             const prevCount = prevGroupTotals[group] || 0;
                             let groupPercent = 0;
-                            // Always show trend, even if no previous period
+                            // Only show (N/A) if not enough previous data; otherwise always calculate trend
                             if (prevPeriodData.length === periodLength) {
                                 if (prevCount > 0) {
                                     groupPercent = ((count - prevCount) / prevCount) * 100;
@@ -318,11 +336,12 @@ export default function UsageAnalytics({ usageData }) {
                                     groupPercent = 0;
                                 }
                             } else {
-                                // Not enough previous data: show N/A or 0%
+                                // Not enough previous data: show N/A
                                 groupPercent = null;
                             }
                             const color = groupColorMap[group] || '#64748b';
                             const peakDay = groupPeakDay[group];
+                            const { trendColor, trendText } = getTrendDisplay(groupPercent);
                             return (
                                 <li
                                     key={group}
@@ -369,24 +388,13 @@ export default function UsageAnalytics({ usageData }) {
                                                     {group}: <b>{count}</b>
                                                     <span
                                                         style={{
-                                                            color:
-                                                                groupPercent === null
-                                                                    ? '#64748b'
-                                                                    : groupPercent < 0
-                                                                    ? '#ef4444'
-                                                                    : groupPercent > 0
-                                                                    ? '#10b981'
-                                                                    : '#64748b',
+                                                            color: trendColor,
                                                             fontWeight: 600,
                                                             marginLeft: 6,
                                                             fontSize: 11,
                                                         }}
                                                     >
-                                                        {groupPercent === null
-                                                            ? '(N/A)'
-                                                            : `(${groupPercent > 0 ? '+' : ''}${groupPercent.toFixed(
-                                                                  1,
-                                                              )}%)`}
+                                                        {trendText}
                                                     </span>
                                                     {peakDay && (
                                                         <span
