@@ -17,6 +17,9 @@ import {
     Legend,
 } from 'chart.js';
 
+// Mocking data for chart.
+import { dashboardSiteUsage } from '../../../../data/mock/data/dlor/dashboardSiteUsage';
+
 // Import the new UsageAnalytics component
 import UsageAnalytics from './UsageAnalytics';
 
@@ -146,32 +149,30 @@ const MOCK_USER_GROUPS = [
     'HOSP',
     'COMMU',
     'FRYVISITOR',
-    'NOT LOGGED IN',
 ];
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+// function getRandomInt(min, max) {
+//     return Math.floor(Math.random() * (max - min + 1)) + min;
+// }
 
-const MOCK_SITE_USAGE_DATA = Array.from({ length: 28 }, (_, i) => {
-    const date = new Date(2026, 0, 28 - i); // Jan 28, 2026 backwards
-    // Each day, randomly select 3-7 groups to have activity
-    const groupsToday = [...MOCK_USER_GROUPS].sort(() => 0.5 - Math.random()).slice(0, getRandomInt(3, 7));
-    const viewers_by_group = groupsToday.map(group => ({
-        user_group: group,
-        total: getRandomInt(1, 8),
-    }));
-    const total_views = viewers_by_group.reduce((sum, g) => sum + g.total, 0) + getRandomInt(0, 3);
-    const unique_viewers = viewers_by_group.length + getRandomInt(0, 2);
-    return {
-        activity_date: date.toISOString().slice(0, 10),
-        total_views,
-        unique_viewers,
-        viewers_by_group,
-    };
-}).reverse();
+// const MOCK_SITE_USAGE_DATA = Array.from({ length: 28 }, (_, i) => {
+//     const date = new Date(2026, 0, 28 - i);
 
-const chartData = [...MOCK_SITE_USAGE_DATA];
+//     const groupsToday = [...MOCK_USER_GROUPS].sort(() => 0.5 - Math.random()).slice(0, getRandomInt(5, 7));
+//     const viewers_by_group = groupsToday.map(group => ({
+//         user_group: group,
+//         total: getRandomInt(1, 8),
+//     }));
+
+//     const total_views = viewers_by_group.reduce((sum, g) => sum + g.total, 0);
+//     return {
+//         activity_date: date.toISOString().slice(0, 10),
+//         total_views,
+//         viewers_by_group,
+//     };
+// }).reverse();
+
+const chartData = [...dashboardSiteUsage];
 
 // Collect all unique user groups across all days
 // Helper to get all user groups from a data array
