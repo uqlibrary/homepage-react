@@ -20,7 +20,7 @@ import AssetPanel from './AssetPanel';
 
 import { statusEnum } from '../utils/helpers';
 import { scrollToTopOfPage } from 'helpers/general';
-import { useValidation } from '../utils/hooks';
+import { useValidation, useLabelPrinterPreference } from '../utils/hooks';
 import { useLocation, useForm, useConfirmationAlert, useAccountUser } from '../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { transformer } from '../utils/transformers';
@@ -32,11 +32,7 @@ import { breadcrumbs } from 'config/routes';
 
 import LabelLogo from './LabelLogo';
 import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
-import {
-    useLabelPrinter,
-    useLabelPrinterPreference,
-    useLabelPrinterTemplate,
-} from '../../SharedComponents/LabelPrinter';
+import { useLabelPrinter, useLabelPrinterTemplate } from '../../SharedComponents/LabelPrinter';
 import * as labelPrintertemplates from './labelPrinterTemplates';
 import { getDeptLabelPrintingEnabled, getDefaultDeptPrinter } from '../../helpers/labelPrinting';
 import { COOKIE_PRINTER_PREFERENCE } from './config';

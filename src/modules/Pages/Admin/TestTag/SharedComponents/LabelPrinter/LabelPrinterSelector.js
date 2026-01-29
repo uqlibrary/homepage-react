@@ -27,7 +27,7 @@ const LabelPrinterSelector = ({
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
     );
     const hint = React.useRef('');
-
+    console.log(value, list);
     return (
         <FormControl variant="standard" className={classNames?.formControl} fullWidth={fullWidth}>
             <Autocomplete
