@@ -82,7 +82,7 @@ function getUsageData(filteredData, visibleGroups, groupColorMap) {
                 borderDash: [4, 2], // Dashed line for total
             },
             ...allUserGroups.map(group => ({
-                label: group,
+                label: group === 'public' ? 'Not logged in' : group,
                 data: filteredData.map(d => {
                     const found = d.viewers_by_group.find(g => g.user_group === group);
                     return found ? found.total : 0;
@@ -385,7 +385,7 @@ export default function UsageAnalytics({ usageData }) {
                                                         m: 0,
                                                     }}
                                                 >
-                                                    {group}: <b>{count}</b>
+                                                    {group === 'public' ? 'Not logged in' : group}: <b>{count}</b>
                                                     <span
                                                         style={{
                                                             color: trendColor,
