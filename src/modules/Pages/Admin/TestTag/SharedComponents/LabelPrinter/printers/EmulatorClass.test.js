@@ -93,7 +93,7 @@ describe('EmulatorClass', () => {
 
             await result.current.print(printData);
 
-            expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:9101', {
+            expect(global.fetch).toHaveBeenCalledWith('http://127.0.0.1:9102', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/zpl',

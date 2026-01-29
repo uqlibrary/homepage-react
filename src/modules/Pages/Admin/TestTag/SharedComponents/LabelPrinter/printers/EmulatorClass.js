@@ -1,12 +1,4 @@
-// Tested working settings:
-// Print density: 8dpmm (203dpi)
-// Label width: 100mm
-// Label height: 50mm
-// Host: 127.0.0.1
-// Port: 9101
-// Buffer size: 1024 and TCP socket kept alive
-
-const printerAddress = 'http://127.0.0.1:9101';
+const printerAddress = 'http://127.0.0.1:9102';
 
 const printerDescriptor = {
     name: 'Emulator',
@@ -22,6 +14,14 @@ const printerDescriptor = {
  * An Emulated label printer class to use during localhost testing.
  * Requires a locally running ZPL Printer emulator
  * built from https://github.com/erikn69/ZplEscPrinter
+ *
+ * Tested working settings:
+ * Print density: 8dpmm (203dpi)
+ * Label width: 100mm
+ * Label height: 50mm
+ * Host: 127.0.0.1
+ * Port: 9102
+ * Buffer size: 1024 and TCP socket kept alive
  *
  * @returns object with the shape:
  * {
