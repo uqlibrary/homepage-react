@@ -1,104 +1,11 @@
-// Helper to get trend color and text for a group
-function getTrendDisplay(groupPercent) {
-    let trendColor = '#64748b';
-    if (groupPercent === null) {
-        trendColor = '#64748b';
-    } else if (groupPercent < 0) {
-        trendColor = '#ef4444';
-    } else if (groupPercent > 0) {
-        trendColor = '#10b981';
-    }
-    const trendText = groupPercent === null ? '(N/A)' : `(${groupPercent > 0 ? '+' : ''}${groupPercent.toFixed(1)}%)`;
-    return { trendColor, trendText };
-}
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Checkbox, FormControlLabel, TextField, Stack, Button, Grid } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 
-// Helper to format date as DD/MM/YYYY in Australia/Brisbane timezone
-function formatDateBrisbane(dateStr) {
-    if (!dateStr) return '';
-    const date = new Date(dateStr + 'T00:00:00+10:00');
-    return new Intl.DateTimeFormat('en-AU', {
-        timeZone: 'Australia/Brisbane',
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-    }).format(date);
-}
+// This component is dedicated to Jack. Farewell, buddy. Good Boy. I love you - Grandpa.
 
-// 15 visually distinct, colorblind-friendly colors
-const groupColors = [
-    '#3b82f6', // blue
-    '#10b981', // green
-    '#f59e42', // orange
-    '#ef4444', // red
-    '#a855f7', // purple
-    '#fbbf24', // yellow
-    '#6366f1', // indigo
-    '#14b8a6', // teal
-    '#eab308', // gold
-    '#ff6f91', // pink
-    '#00bcd4', // cyan
-    '#8bc34a', // light green
-    '#ff9800', // deep orange
-    '#795548', // brown
-    '#64748b', // gray
-];
-
-// Returns a map: group name -> color (stable across date ranges)
-function getGroupColorMap(allGroups) {
-    const map = {};
-    allGroups.forEach((group, idx) => {
-        map[group] = groupColors[(idx + 1) % groupColors.length];
-    });
-    return map;
-}
-
-function getAllUserGroups(data) {
-    const groups = Array.from(new Set(data.flatMap(d => d.viewers_by_group.map(g => g.user_group))));
-    const guestLabel = 'NOT LOGGED IN';
-    const sorted = groups.filter(g => g !== guestLabel).sort((a, b) => a.localeCompare(b));
-    if (groups.includes(guestLabel)) sorted.push(guestLabel);
-    return sorted;
-}
-
-function getUsageData(filteredData, visibleGroups, groupColorMap) {
-    const allUserGroups = getAllUserGroups(filteredData);
-    return {
-        labels: filteredData.map(d => formatDateBrisbane(d.activity_date)),
-        datasets: [
-            {
-                label: 'Total Views',
-                data: filteredData.map(d => d.total_views),
-                borderColor: '#3b82f6',
-                backgroundColor: '#3b82f6',
-                tension: 0.2,
-                borderWidth: 3,
-                pointRadius: 4,
-                order: 0,
-                hidden: false,
-                borderDash: [4, 2], // Dashed line for total
-            },
-            ...allUserGroups.map(group => ({
-                label: group === 'public' ? 'Not logged in' : group,
-                data: filteredData.map(d => {
-                    const found = d.viewers_by_group.find(g => g.user_group === group);
-                    return found ? found.total : 0;
-                }),
-                borderColor: groupColorMap[group] || '#64748b',
-                backgroundColor: groupColorMap[group] || '#64748b',
-                tension: 0.15,
-                borderDash: [], // Solid line for groups
-                borderWidth: 2,
-                pointRadius: 3,
-                hidden: !visibleGroups[group],
-            })),
-        ],
-    };
-}
-
+// ## CHART CONFIGURATIONS ##
 const chartOptions = {
     responsive: true,
     plugins: {
@@ -120,15 +27,104 @@ const chartOptions = {
             ticks: { color: '#64748b', font: { size: 11 } },
         },
     },
+    elements: {
+        line: {
+            fill: true,
+        },
+    },
 };
 
-/**
- * Fills missing dates in a usage data array with zero-usage entries.
- * @param {Array} data - Array of usage objects with activity_date.
- * @param {string} startDate - Inclusive start date (YYYY-MM-DD).
- * @param {string} endDate - Inclusive end date (YYYY-MM-DD).
- * @returns {Array} New array with all dates in range, missing dates filled with zero usage.
- */
+const groupColors = [
+    '#3b82f6', // blue
+    '#10b981', // green
+    '#f59e42', // orange
+    '#ef4444', // red
+    '#a855f7', // purple
+    '#fbbf24', // yellow
+    '#6366f1', // indigo
+    '#14b8a6', // teal
+    '#eab308', // gold
+    '#ff6f91', // pink
+    '#00bcd4', // cyan
+    '#8bc34a', // light green
+    '#ff9800', // deep orange
+    '#795548', // brown
+    '#64748b', // gray
+];
+
+// ## HELPER FUNCTIONS ##
+function getTrendDisplay(groupPercent) {
+    let trendColor = '#64748b';
+    if (groupPercent === null) {
+        trendColor = '#64748b';
+    } else if (groupPercent < 0) {
+        trendColor = '#ef4444';
+    } else if (groupPercent > 0) {
+        trendColor = '#10b981';
+    }
+    const trendText = groupPercent === null ? '(N/A)' : `(${groupPercent > 0 ? '+' : ''}${groupPercent.toFixed(1)}%)`;
+    return { trendColor, trendText };
+}
+
+function formatDateBrisbane(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr + 'T00:00:00+10:00');
+    return new Intl.DateTimeFormat('en-AU', {
+        timeZone: 'Australia/Brisbane',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    }).format(date);
+}
+
+function getGroupColorMap(allGroups) {
+    const map = {};
+    allGroups.forEach((group, idx) => {
+        map[group] = groupColors[(idx + 1) % groupColors.length];
+    });
+    return map;
+}
+
+function getAllUserGroups(data) {
+    const groups = Array.from(new Set(data.flatMap(d => d.viewers_by_group.map(g => g.user_group))));
+    const guestLabel = 'NOT LOGGED IN';
+    const sorted = groups.filter(g => g !== guestLabel).sort((a, b) => a.localeCompare(b));
+    if (groups.includes(guestLabel)) sorted.push(guestLabel);
+    return sorted;
+}
+
+function getUsageData(filteredData, visibleGroups, groupColorMap) {
+    return {
+        labels: filteredData.map(d => formatDateBrisbane(d.activity_date)),
+        datasets: [
+            {
+                label: 'Total Views',
+                data: filteredData.map(d => d.total_views),
+                borderColor: '#e0e7ef',
+                fillColor: 'rgba(59,130,246,0.25)',
+                fill: true,
+                pointRadius: 0,
+                borderWidth: 3,
+                hidden: false,
+            },
+            ...arguments[3].map(group => ({
+                label: group === 'public' ? 'Not logged in' : group,
+                data: filteredData.map(d => {
+                    const found = d.viewers_by_group.find(g => g.user_group === group);
+                    return found ? found.total : 0;
+                }),
+                borderColor: groupColorMap[group] || '#64748b',
+                backgroundColor: groupColorMap[group] || '#64748b',
+                tension: 0.15,
+                borderDash: [],
+                borderWidth: 2,
+                pointRadius: 0,
+                hidden: !visibleGroups[group],
+            })),
+        ],
+    };
+}
+
 function fillMissingDates(data, startDate, endDate) {
     const result = [];
     const current = new Date(startDate);
@@ -150,27 +146,102 @@ function fillMissingDates(data, startDate, endDate) {
     return result;
 }
 
+// ## COMPONENT START ##
+// Toggle to enable/disable generated mock data for stress testing
+const USE_MOCK_DATA = true;
+
+// Mock data generator for 4 years of daily data - This is ONLY for local testing purposes.
+function generateMockUsageData() {
+    const startDate = new Date();
+    startDate.setFullYear(startDate.getFullYear() - 4);
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date();
+    endDate.setHours(0, 0, 0, 0);
+    const groups = [
+        'ALUMNI',
+        'ATH',
+        'COMMU',
+        'CWPG',
+        'FRYVISITOR',
+        'HON',
+        'HOSP',
+        'ICTE',
+        'LIBRARYSTAFFB',
+        'REMRHD',
+        'REMUG',
+        'RHD',
+        'STAFF',
+        'UG',
+        'public',
+    ];
+    const nonPublicGroups = groups.filter(g => g !== 'public');
+    const data = [];
+    const current = new Date(startDate);
+    while (current <= endDate) {
+        const dateStr = current.toISOString().slice(0, 10);
+
+        let viewersByGroup = nonPublicGroups.map(g => ({
+            user_group: g,
+            total: Math.floor(Math.random() * 10), // 0-9 random views per group
+        }));
+
+        viewersByGroup = viewersByGroup.map(groupObj => {
+            if (Math.random() < 0.015) {
+                // 200%+ spike
+                return { ...groupObj, total: groupObj.total * 3 + 10 };
+            }
+            return groupObj;
+        });
+
+        const usedNonPublic = viewersByGroup.filter(g => g.total > 0);
+        if (usedNonPublic.length < 4) {
+            const shuffled = [...nonPublicGroups].sort(() => Math.random() - 0.5);
+            for (let i = 0; i < 4; i++) {
+                const idx = viewersByGroup.findIndex(g => g.user_group === shuffled[i]);
+                viewersByGroup[idx].total = Math.max(viewersByGroup[idx].total, 1);
+            }
+        }
+
+        let publicUsage = Math.floor(Math.random() * 10);
+        if (Math.random() < 0.015) {
+            publicUsage = publicUsage * 3 + 10;
+        }
+        viewersByGroup.push({ user_group: 'public', total: publicUsage });
+
+        viewersByGroup = viewersByGroup.filter(g => g.total > 0 || g.user_group === 'public');
+        const totalViews = viewersByGroup.reduce((sum, g) => sum + g.total, 0);
+        data.push({
+            activity_date: dateStr,
+            total_views: totalViews,
+            viewers_by_group: viewersByGroup,
+        });
+        current.setDate(current.getDate() + 1);
+    }
+    return data;
+}
 export default function UsageAnalytics({ usageData }) {
-    const allGroupsStable = getAllUserGroups(usageData);
+    const actualUsageData = React.useMemo(() => (USE_MOCK_DATA ? generateMockUsageData() : usageData), [usageData]);
+    console.log(actualUsageData);
+    const allGroupsStable = getAllUserGroups(actualUsageData);
     const groupColorMap = getGroupColorMap(allGroupsStable);
 
-    // Date range state
-    const allDates = usageData.map(d => d.activity_date);
+    const allUserGroupsForSummary = allGroupsStable.includes('public')
+        ? allGroupsStable.filter(g => g !== 'public').concat('public')
+        : allGroupsStable;
+
+    const allDates = actualUsageData.map(d => d.activity_date);
     const minDate = allDates[0];
     const maxDate = allDates[allDates.length - 1];
     const defaultStartDate = allDates.length > 6 ? allDates[allDates.length - 7] : minDate;
     const [startDate, setStartDate] = useState(defaultStartDate);
     const [endDate, setEndDate] = useState(maxDate);
 
-    // Fill missing dates for the entire dataset range, not just the selected range
-    const globalMinDate = usageData[0]?.activity_date;
-    const globalMaxDate = usageData[usageData.length - 1]?.activity_date;
-    const filledUsageData = fillMissingDates(usageData, globalMinDate, globalMaxDate);
+    const globalMinDate = actualUsageData[0]?.activity_date;
+    const globalMaxDate = actualUsageData[actualUsageData.length - 1]?.activity_date;
+    const filledUsageData = fillMissingDates(actualUsageData, globalMinDate, globalMaxDate);
 
-    // Now filter for the selected range
     const filteredUsageData = filledUsageData.filter(d => d.activity_date >= startDate && d.activity_date <= endDate);
 
-    // Calculate previous period range using the full filledUsageData
     const dateToIndex = Object.fromEntries(filledUsageData.map((d, i) => [d.activity_date, i]));
     const startIdx = dateToIndex[startDate];
     const endIdx = dateToIndex[endDate];
@@ -181,9 +252,8 @@ export default function UsageAnalytics({ usageData }) {
     if (prevStartIdx >= 0 && prevEndIdx >= 0) {
         prevPeriodData = filledUsageData.slice(prevStartIdx, prevEndIdx + 1);
     }
-    // Per-group totals for previous period
+
     const prevGroupTotals = {};
-    // Ensure all groups are initialized to 0
     allGroupsStable.forEach(group => {
         prevGroupTotals[group] = 0;
     });
@@ -193,21 +263,32 @@ export default function UsageAnalytics({ usageData }) {
         });
     });
 
-    // Filter usage data by date range (already declared above)
-    // const filteredUsageData = filledUsageData.filter(d => d.activity_date >= startDate && d.activity_date <= endDate);
-    const allUserGroups = getAllUserGroups(filteredUsageData);
     const [visibleGroups, setVisibleGroups] = useState(() => {
         const initial = {};
-        allUserGroups.forEach(g => {
+        allGroupsStable.forEach(g => {
             initial[g] = false;
         });
         return initial;
     });
+
+    React.useEffect(() => {
+        setVisibleGroups(prev => {
+            const updated = { ...prev };
+            let changed = false;
+            allGroupsStable.forEach(g => {
+                if (!(g in updated)) {
+                    updated[g] = false;
+                    changed = true;
+                }
+            });
+            return changed ? updated : prev;
+        });
+    }, [allGroupsStable]);
     const handleGroupToggle = group => {
         setVisibleGroups(prev => ({ ...prev, [group]: !prev[group] }));
     };
 
-    const chartData = getUsageData(filteredUsageData, visibleGroups, groupColorMap);
+    const chartData = getUsageData(filteredUsageData, visibleGroups, groupColorMap, allGroupsStable);
 
     const groupTotals = {};
     let total = 0;
@@ -221,12 +302,6 @@ export default function UsageAnalytics({ usageData }) {
     const totalSelected = Object.entries(groupTotals)
         .filter(([group]) => visibleGroups[group])
         .reduce((sum, [, count]) => sum + count, 0);
-    // Ensure 'public' group is always last in the summary
-    let allUserGroupsForSummary = allGroupsStable;
-    if (allUserGroupsForSummary.includes('public')) {
-        allUserGroupsForSummary = allUserGroupsForSummary.filter(g => g !== 'public').concat('public');
-    }
-
     const groupPeakDay = {};
     allUserGroupsForSummary.forEach(group => {
         let max = 0;
@@ -309,34 +384,97 @@ export default function UsageAnalytics({ usageData }) {
                         bgcolor: '#f9fafb',
                     }}
                 >
-                    <Typography variant="h6" sx={{ mb: 0.5, textAlign: 'center' }}>
+                    <Typography variant="h6" sx={{ mb: 0.2, textAlign: 'center' }}>
                         Usage Summary
                     </Typography>
-                    <Typography variant="body2" sx={{ mb: 1, textAlign: 'center', color: '#64748b' }}>
+                    <Typography variant="body2" sx={{ mb: 0.2, mt: 0, textAlign: 'center', color: '#64748b' }}>
                         Date Range: {formatDateBrisbane(startDate)} to {formatDateBrisbane(endDate)}
                     </Typography>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.25, textAlign: 'center' }}>
-                        Total Users ({total}), Total Selected ({totalSelected})
-                    </Typography>
-                    {/* Debug panel removed for production/demo */}
+                    {(() => {
+                        let peakTotal = 0;
+                        let peakDate = '';
+                        let totalCurrentPeriod = 0;
+                        let totalPrevPeriod = 0;
+                        filteredUsageData.forEach(day => {
+                            totalCurrentPeriod += day.total_views;
+                            if (day.total_views > peakTotal) {
+                                peakTotal = day.total_views;
+                                peakDate = day.activity_date;
+                            }
+                        });
+                        prevPeriodData.forEach(day => {
+                            totalPrevPeriod += day.total_views;
+                        });
+                        let totalTrend = null;
+                        if (prevPeriodData.length === periodLength) {
+                            if (totalPrevPeriod > 0) {
+                                totalTrend = ((totalCurrentPeriod - totalPrevPeriod) / totalPrevPeriod) * 100;
+                            } else if (totalPrevPeriod === 0 && totalCurrentPeriod > 0) {
+                                totalTrend = totalCurrentPeriod * 100;
+                            } else if (totalPrevPeriod > 0 && totalCurrentPeriod === 0) {
+                                totalTrend = -100;
+                            } else {
+                                totalTrend = 0;
+                            }
+                        }
+                        const { trendColor, trendText } = getTrendDisplay(totalTrend);
+                        return (
+                            <>
+                                <Typography
+                                    variant="subtitle2"
+                                    sx={{ fontWeight: 700, mb: 0, textAlign: 'center', fontSize: 13 }}
+                                >
+                                    Total: {total}
+                                    {totalTrend !== null && (
+                                        <span
+                                            style={{
+                                                color: trendColor,
+                                                fontWeight: 600,
+                                                marginLeft: 4,
+                                                fontSize: '0.9em',
+                                                verticalAlign: 'middle',
+                                            }}
+                                        >
+                                            {trendText}
+                                        </span>
+                                    )}
+                                    <span style={{ fontSize: 13, marginLeft: 6 }}> Selected: {totalSelected}</span>
+                                </Typography>
+                                {peakTotal > 0 && (
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            mt: -0.5,
+                                            mb: 0.25,
+                                            textAlign: 'center',
+                                            color: '#64748b',
+                                            display: 'block',
+                                            fontSize: 10,
+                                        }}
+                                    >
+                                        Peak - {formatDateBrisbane(peakDate)} ({peakTotal} views)
+                                    </Typography>
+                                )}
+                                <Box sx={{ borderBottom: '1px solid #e0e0e0', width: '100%', my: 0.5 }} />
+                            </>
+                        );
+                    })()}
                     <Box component="ul" sx={{ pl: 2, mt: 0.25, mb: 0, listStyle: 'none', p: 0 }}>
                         {allUserGroupsForSummary.map(group => {
                             const count = groupTotals[group] || 0;
                             const prevCount = prevGroupTotals[group] || 0;
                             let groupPercent = 0;
-                            // Only show (N/A) if not enough previous data; otherwise always calculate trend
                             if (prevPeriodData.length === periodLength) {
                                 if (prevCount > 0) {
                                     groupPercent = ((count - prevCount) / prevCount) * 100;
                                 } else if (prevCount === 0 && count > 0) {
-                                    groupPercent = 100;
+                                    groupPercent = count * 100;
                                 } else if (prevCount > 0 && count === 0) {
                                     groupPercent = -100;
                                 } else {
                                     groupPercent = 0;
                                 }
                             } else {
-                                // Not enough previous data: show N/A
                                 groupPercent = null;
                             }
                             const color = groupColorMap[group] || '#64748b';

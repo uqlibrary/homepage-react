@@ -20,7 +20,6 @@ import {
 // Mocking data for chart.
 import { dashboardSiteUsage } from '../../../../data/mock/data/dlor/dashboardSiteUsage';
 
-// Import the new UsageAnalytics component
 import UsageAnalytics from './UsageAnalytics';
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Title);
@@ -42,10 +41,9 @@ const STACK_SERIES_CHART = true;
  * Generates a specified number of highly saturated, distinct RGBA colors
  * with alternating lightness for guaranteed contrast between adjacent slices.
  * @param {number} count - The number of colors to generate.
- * @param {number} opacity - The alpha value for the RGBA string (e.g., 0.6 or 0.7).
  * @returns {string[]} An array of RGBA color strings.
  */
-const generateRandomColors = (count, opacity = 0.7) => {
+const generateRandomColors = count => {
     const colors = [];
     const hueStep = 360 / (count > 0 ? count : 1);
 
@@ -133,163 +131,10 @@ const REVIEW_STATUS_COLORS = {
 const MAX_CHART_ITEMS = 15;
 const KEYWORD_LIMIT = 10;
 
-// Mock data generator for 28 days and 15 user groups
-const MOCK_USER_GROUPS = [
-    'STAFF',
-    'UG',
-    'LIBRARYSTAFFB',
-    'RHD',
-    'CWPG',
-    'HON',
-    'ATH',
-    'REMUG',
-    'ICTE',
-    'REMRHD',
-    'ALUMNI',
-    'HOSP',
-    'COMMU',
-    'FRYVISITOR',
-];
-
-// function getRandomInt(min, max) {
-//     return Math.floor(Math.random() * (max - min + 1)) + min;
-// }
-
-// const MOCK_SITE_USAGE_DATA = Array.from({ length: 28 }, (_, i) => {
-//     const date = new Date(2026, 0, 28 - i);
-
-//     const groupsToday = [...MOCK_USER_GROUPS].sort(() => 0.5 - Math.random()).slice(0, getRandomInt(5, 7));
-//     const viewers_by_group = groupsToday.map(group => ({
-//         user_group: group,
-//         total: getRandomInt(1, 8),
-//     }));
-
-//     const total_views = viewers_by_group.reduce((sum, g) => sum + g.total, 0);
-//     return {
-//         activity_date: date.toISOString().slice(0, 10),
-//         total_views,
-//         viewers_by_group,
-//     };
-// }).reverse();
-
 const chartData = [...dashboardSiteUsage];
 
 // Collect all unique user groups across all days
-// Helper to get all user groups from a data array
-const getAllUserGroups = data => Array.from(new Set(data.flatMap(d => d.viewers_by_group.map(g => g.user_group))));
 
-const groupColors = [
-    '#3b82f6', // blue
-    '#10b981', // green
-    '#f59e42', // orange
-    '#ef4444', // red
-    '#a855f7', // purple
-    '#fbbf24', // yellow
-    '#6366f1', // indigo
-    '#14b8a6', // teal
-    '#eab308', // gold
-    '#64748b', // gray
-];
-
-// Helper to format date as DD/MM/YYYY in Australia/Brisbane timezone
-function formatDateBrisbane(dateStr) {
-    if (!dateStr) return '';
-    const date = new Date(dateStr + 'T00:00:00+10:00');
-    // Use Intl.DateTimeFormat for 'en-AU' and 'Australia/Brisbane'
-    return new Intl.DateTimeFormat('en-AU', {
-        timeZone: 'Australia/Brisbane',
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-    }).format(date);
-}
-
-function getUsageData(filteredData) {
-    const allUserGroups = getAllUserGroups(filteredData);
-
-    return visibleGroupsArg => ({
-        labels: filteredData.map(d => formatDateBrisbane(d.activity_date)),
-        datasets: [
-            {
-                label: 'Total Views',
-                data: filteredData.map(d => d.total_views),
-                borderColor: '#3b82f6',
-                backgroundColor: '#3b82f6',
-                tension: 0.2,
-                borderWidth: 3,
-                pointRadius: 4,
-                order: 0, // Draw on top
-                hidden: false, // Always visible
-            },
-            ...allUserGroups.map((group, idx) => ({
-                label: group,
-                data: filteredData.map(d => {
-                    const found = d.viewers_by_group.find(g => g.user_group === group);
-                    return found ? found.total : 0;
-                }),
-                borderColor: groupColors[(idx + 1) % groupColors.length],
-                backgroundColor: groupColors[(idx + 1) % groupColors.length],
-                tension: 0.15,
-                borderDash: [4, 2],
-                borderWidth: 2,
-                pointRadius: 3,
-                order: 1,
-                hidden: visibleGroupsArg ? !visibleGroupsArg[group] : true,
-            })),
-        ],
-    });
-}
-
-const UsageOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-        legend: {
-            display: false,
-        },
-        title: {
-            display: true,
-            text: 'Digital Object Usage by User Group',
-            font: { size: 14, weight: 'bold', family: 'Inter, system-ui, sans-serif' }, // Smaller title
-            color: '#1e293b',
-            padding: { top: 4, bottom: 10 },
-        },
-        tooltip: {
-            enabled: true,
-            backgroundColor: '#1e293b', // Matches legend text color
-            padding: 12,
-            titleFont: { size: 14, weight: 'bold' },
-            bodyFont: { size: 13 },
-            cornerRadius: 8,
-            displayColors: true,
-            boxPadding: 6,
-        },
-    },
-    scales: {
-        x: {
-            ticks: {
-                color: '#64748b', // Clearer grey for dates
-                maxRotation: 45,
-                minRotation: 45,
-                font: { size: 11 },
-            },
-            grid: {
-                display: false, // Keeps the focus on the lines
-            },
-        },
-        y: {
-            beginAtZero: true,
-            ticks: {
-                color: '#64748b',
-                font: { size: 11 },
-            },
-            grid: {
-                color: '#f1f5f9', // Very subtle horizontal lines
-                drawBorder: false,
-            },
-        },
-    },
-};
 // =========================================================
 //                  DYNAMIC HEIGHT CALCULATION
 // =========================================================
@@ -330,7 +175,7 @@ function formatObjectDistributionData(apiData) {
         chartValues.push(otherObjectsValue);
     }
 
-    const finalColors = generateRandomColors(labels.length, 0.6);
+    const finalColors = generateRandomColors(labels.length);
 
     if (otherObjectsValue > 0) {
         finalColors[finalColors.length - 1] = CONSISTENT_OTHER_COLOR;
@@ -362,7 +207,7 @@ function formatTeamBreakdownData(apiData) {
 
     const otherTeamsValue = grandTotal - sumOfTeamObjects;
 
-    const finalColors = generateRandomColors(labels.length, 0.7);
+    const finalColors = generateRandomColors(labels.length);
 
     if (otherTeamsValue > 0) {
         labels.push('Not Assigned');
@@ -569,20 +414,7 @@ function formatSeriesBreakdownData(apiData) {
 //                     REACT COMPONENT
 // =========================================================
 
-export default function AnalyticsDashboard() {
-    // Helper to format date as DD/MM/YYYY in Australia/Brisbane timezone
-    function formatDateBrisbane(dateStr) {
-        if (!dateStr) return '';
-        const date = new Date(dateStr + 'T00:00:00+10:00');
-        // Use Intl.DateTimeFormat for 'en-AU' and 'Australia/Brisbane'
-        return new Intl.DateTimeFormat('en-AU', {
-            timeZone: 'Australia/Brisbane',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        }).format(date);
-    }
-
+export default function Dashboard() {
     const [objectData, setObjectData] = useState(null);
     const [teamData, setTeamData] = useState(null);
     const [keywordData, setKeywordData] = useState(null);
