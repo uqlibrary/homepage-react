@@ -23,6 +23,9 @@ import { PERMISSIONS } from '../../../config/auth';
 import { transformRow } from './utils';
 import { breadcrumbs } from 'config/routes';
 import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
+import * as _ from 'lodash';
+import { GridWrapper } from '../../../SharedComponents/LocationPicker/LocationPicker';
+import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
 const moment = require('moment');
 
 const componentId = 'inspections-due';
@@ -38,13 +41,20 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
 }));
 
-const InspectionsDue = ({
-    actions,
-    inspectionsDue,
-    inspectionsDueLoading,
+/**
+ * @param {Object} data
+ * @return {{id:*, label:*}}
+ */
+const extractAssetTypeData = data =>
+    _.sortBy(
+        _.uniqBy(
+            data.map(i => ({ id: i.asset_type_id, label: i.asset_type_name })),
+            i => i.id,
+        ),
+        i => i.id,
+    );
 
-    inspectionsDueError,
-}) => {
+const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspectionsDueError }) => {
     const pageLocale = locale.pages.report.inspectionsDue;
     const monthsOptions = locale.config.monthsOptions;
 
@@ -64,6 +74,8 @@ const InspectionsDue = ({
     const { row } = useDataTableRow(inspectionsDue, transformRow);
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
+    const [filterModel, setFilterModel] = useState({ items: [] });
+    const uniqueAssetTypeList = React.useMemo(() => extractAssetTypeData(inspectionsDue), [inspectionsDue]);
 
     const onCloseConfirmationAlert = () => actions.clearInspectionsDueError();
     const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
@@ -97,6 +109,7 @@ const InspectionsDue = ({
         setMonthRange(value);
     };
 
+    console.log(inspectionsDue, uniqueAssetTypeList);
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -114,7 +127,9 @@ const InspectionsDue = ({
                             hasAllOption
                             locale={locale.pages.general.locationPicker}
                         />
-                        <Grid>
+                    </Grid>
+                    <Grid container spacing={3}>
+                        <GridWrapper withGrid divisor={2}>
                             <MonthsSelector
                                 id={componentId}
                                 label={pageLocale.form.filterToDateLabel}
@@ -129,11 +144,23 @@ const InspectionsDue = ({
                                 dateDisplayFormat={locale.pages.report.config.dateFormatDisplay}
                                 classNames={{ formControl: 'formControl', select: 'formSelect' }}
                             />
-                        </Grid>
+                        </GridWrapper>
+                        <GridWrapper withGrid divisor={2}>
+                            <SelectField
+                                field="asset_type_id"
+                                options={uniqueAssetTypeList}
+                                locale={{ all: 'All asset types', label: 'Asset Type' }}
+                                filterModel={filterModel}
+                                setFilterModel={setFilterModel}
+                                multiple
+                            />
+                        </GridWrapper>
                     </Grid>
                     <Grid container spacing={3} className={'tableMarginTop'}>
                         <Grid sx={{ flex: 1 }}>
                             <DataTable
+                                filterModel={filterModel}
+                                onFilterModelChange={setFilterModel}
                                 id={componentId}
                                 rows={row}
                                 columns={columns}
