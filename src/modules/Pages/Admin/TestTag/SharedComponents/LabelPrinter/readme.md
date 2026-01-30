@@ -4,7 +4,7 @@
 
 ## Introduction
 
-The Label Printer suite of components and hooks allow a website to print directly to a connected printer. There are some important configuration steps that must be followed in order for the complete print functionality to operate correctly, both when the website is running locally (localhost) has been published.
+The Label Printer suite of components and hooks allow a website to print directly to a connected printer. There are some important configuration steps that must be followed in order for the complete print functionality to operate correctly, both when the website is running locally (localhost) and has been published.
 
 ### Configuration
 
@@ -37,13 +37,13 @@ In order to leverage the features of the Label Printing component locally via lo
 
  > Note: the following information assumes you are using a Zebra label printer. Different printers will require different testing approaches.
  >
- > You do not need both the local and remove applications running at the same time. Choose the one appropriate to your situation.
+ > You do not need both the local and remote applications running at the same time. Choose the one appropriate to your situation.
 
  1. Download and install the [Browser Print](https://www.zebra.com/ap/en/support-downloads/software/printer-software/browser-print.html) app from the Zebra website.
 
  1. Run the app. It will place a small icon in the system tray. 
 
-> The next steps are optional, but serve as a useful communication test between the app and your printer, and will be required if you intend to use the Label Printer code with a "default" printer only.
+> The next steps are optional, but serve as a useful communication test between the app and your printer, and will be required if you intend to use the Label Printer code with a "default" printer.
 
  1. Click the tray icon and select "Settings".
  1. Ensure you have connected your label printer to your computer and it is turned on
@@ -76,7 +76,12 @@ For the MVP first version of this component, it was not expected that there woul
 
 Printers, in the coding sense, are defined as functions. Each printer must return an expected set of properties and functions in order to be useable to the calling code base. See the definition of printers/ZebraClass for more information. They are enumerated in to a collection of known printers called a "printer registry", which also defines which method exported from the printer class to instantiate. 
 
-For Zebra printers, a 3rd party wrapper import "zebra-browser-print-wrapper-https" has been used to simplify communication to an underlying series of printer protocols. While this wrapper returns functions after instantiation, the Printer Registry has been designed to also allow hook-based 3rd party libraries to be used. At the time of writing, this custom hook has been declared as "useCreatePrinter" and defined within each printer class, but the printer functionality could also be used directly without this hook if desired.
+For Zebra printers, a 3rd party wrapper package [zebra-browser-print-wrapper-https](https://github.com/PavelKaraivanov/zebra-browser-print-wrapper-https) has been used to simplify communication to an underlying series of printer protocols.
+
+> Note: the use of `zebra-browser-print-wrapper-https` is to enable communication between a website running under https, as in this scenario all communications to the Browser Print app will also be made over https.
+If your site is not running under https, you may need to use an alternative package [zebra-browser-print-wrapper-https](https://github.com/lhilario/zebra-browser-print-wrapper), which will require some changes to this component.
+
+ While this wrapper returns functions after instantiation, the Printer Registry has been designed to also allow hook-based 3rd party libraries to be used. At the time of writing, this custom hook has been declared as "useCreatePrinter" and defined within each printer class, but the printer functionality could also be used directly without this hook if desired.
 
 In addition to Zebra, a bare-bones "Emulator" printer class has also been included. This exists purely for localhost testing, and requires the ZPLEscPrinter app to be running to act as a physical printer. See above for more information on ZplEscPrinter. The Emulator class will automatically be used by the useLabelPrinter hook, if the appropriate flag is set and the current environment is determined to be local.
 
