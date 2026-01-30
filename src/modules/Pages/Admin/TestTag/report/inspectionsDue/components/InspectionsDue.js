@@ -109,7 +109,6 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
         setMonthRange(value);
     };
 
-    console.log(inspectionsDue, uniqueAssetTypeList);
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}

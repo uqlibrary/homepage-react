@@ -67,11 +67,12 @@ const SelectField = ({ field, options, locale, filterModel, setFilterModel, ...r
     return (
         <FormControl variant="standard" fullWidth>
             <InputLabel id={`${id}-label`} shrink>
-                Asset Type
+                {locale.label}
             </InputLabel>
             <Select
                 id={`${id}-select-filter`}
                 data-testid={`${id}-select-filter`}
+                labelId={`${id}-label`}
                 label={locale.label}
                 MenuProps={MenuProps}
                 onChange={handleChange}
