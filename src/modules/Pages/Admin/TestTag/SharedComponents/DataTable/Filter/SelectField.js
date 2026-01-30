@@ -8,6 +8,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import ClearIcon from '@mui/icons-material/Clear';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -48,10 +49,27 @@ const updateFilter = (field, setFilterModel, ids) =>
 const SelectField = ({ field, options, locale, filterModel, setFilterModel, ...rest }) => {
     const id = _.kebabCase(field);
     const labelById = React.useMemo(() => new Map(options.map(o => [o.id, o.label])), [options]);
-    const selected = React.useMemo(() => {
-        const item = filterModel?.items?.find?.(i => i?.columnField === field);
-        return (Array.isArray(item?.value) ? item.value : []).map(v => parseInt(v, 10));
-    }, [filterModel, field]);
+    const activeFilterValues = React.useMemo(
+        () => filterModel?.items?.find?.(i => i?.columnField === field)?.value.map(i => Number(i)) || [],
+        [field, filterModel],
+    );
+    const selected = React.useMemo(
+        () =>
+            (options &&
+                activeFilterValues?.filter(
+                    // filter out no longer available options
+                    v => options.find(o => parseInt(o.id, 10) === v),
+                )) ||
+            /* istanbul ignore next */ [],
+        [activeFilterValues, options],
+    );
+
+    // handles filter values that were once active but are no longer available within the current options
+    /* istanbul ignore next */
+    useEffect(() => {
+        if (selected.join(',') === activeFilterValues.join(',')) return;
+        updateFilter(field, setFilterModel, selected);
+    }, [activeFilterValues, selected]);
 
     const handleChange = e => {
         const ids = e?.target?.value || /* istanbul ignore next */ [];
