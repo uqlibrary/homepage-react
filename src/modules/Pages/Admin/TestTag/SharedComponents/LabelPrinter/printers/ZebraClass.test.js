@@ -3,6 +3,7 @@ import { useCreatePrinter } from './ZebraClass';
 
 // Mock zebra-browser-print-wrapper
 const mockGetAvailablePrinters = jest.fn();
+const mockGetDefaultPrinter = jest.fn();
 const mockCheckPrinterStatus = jest.fn();
 const mockSetPrinter = jest.fn();
 const mockPrint = jest.fn();
@@ -10,6 +11,7 @@ const mockPrint = jest.fn();
 jest.mock('zebra-browser-print-wrapper-https', () => {
     return jest.fn().mockImplementation(() => ({
         getAvailablePrinters: mockGetAvailablePrinters,
+        getDefaultPrinter: mockGetDefaultPrinter,
         checkPrinterStatus: mockCheckPrinterStatus,
         setPrinter: mockSetPrinter,
         print: mockPrint,
@@ -44,6 +46,12 @@ describe('ZebraClass', () => {
             expect(typeof result.current.getAvailablePrinters).toBe('function');
         });
 
+        it('should return getDefaultPrinter as a function', () => {
+            const { result } = renderHook(() => useCreatePrinter());
+
+            expect(typeof result.current.getDefaultPrinter).toBe('function');
+        });
+
         it('should return getConnectionStatus as a function', () => {
             const { result } = renderHook(() => useCreatePrinter());
 
@@ -73,6 +81,16 @@ describe('ZebraClass', () => {
 
             expect(mockGetAvailablePrinters).toHaveBeenCalled();
             expect(printers).toEqual(mockPrinters);
+        });
+
+        it('should call getDefaultPrinter from wrapper', async () => {
+            const mockPrinter = { name: 'Zebra Printer 1' };
+            mockGetDefaultPrinter.mockResolvedValueOnce(mockPrinter);
+
+            const { result } = renderHook(() => useCreatePrinter());
+            const printer = await result.current.getDefaultPrinter();
+            expect(mockGetDefaultPrinter).toHaveBeenCalled();
+            expect(printer).toEqual(mockPrinter);
         });
 
         it('should return connection status when printer is ready', async () => {
@@ -155,6 +173,29 @@ describe('ZebraClass', () => {
                 const printers = await result.current.getAvailablePrinters();
 
                 expect(printers).toEqual([]);
+            });
+        });
+
+        describe('getDefaultPrinter error handling', () => {
+            it('should return empty array when getDefaultPrinter throws error', async () => {
+                const error = new Error('Zebra Browser Print not running');
+                mockGetDefaultPrinter.mockRejectedValueOnce(error);
+
+                const { result } = renderHook(() => useCreatePrinter());
+                const printers = await result.current.getDefaultPrinter();
+
+                expect(mockGetDefaultPrinter).toHaveBeenCalled();
+                expect(printers).toBe(null);
+            });
+
+            it('should handle network errors when getting default printer', async () => {
+                const networkError = new Error('Network request failed');
+                mockGetDefaultPrinter.mockRejectedValueOnce(networkError);
+
+                const { result } = renderHook(() => useCreatePrinter());
+                const printers = await result.current.getDefaultPrinter();
+
+                expect(printers).toBe(null);
             });
         });
 

@@ -71,6 +71,12 @@ describe('EmulatorClass', () => {
             expect(printers[2]).toHaveProperty('name', null);
         });
 
+        it('should return default printer', async () => {
+            const { result } = renderHook(() => useCreatePrinter());
+            const printer = await result.current.getDefaultPrinter();
+            expect(printer).toHaveProperty('name', 'Emulator');
+        });
+
         it('should return connection status as ready', async () => {
             const { result } = renderHook(() => useCreatePrinter());
 
