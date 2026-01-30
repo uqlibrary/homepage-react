@@ -541,137 +541,137 @@ describe('Inspection component', () => {
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
     }, 20000);
 
-    // it('should show a save success for OUTFORREPAIR asset dialog panel', async () => {
-    //     const expected = {
-    //         asset_id_displayed: 'UQL100000',
-    //         user_id: 3,
-    //         asset_department_owned_by: 'UQL',
-    //         asset_type_id: 1,
-    //         action_date: '2017-06-30 00:00',
-    //         room_id: 1,
-    //         with_inspection: {
-    //             inspection_status: 'FAILED',
-    //             inspection_device_id: 1,
-    //             inspection_date_next: undefined,
-    //             inspection_fail_reason: 'reason',
-    //             inspection_notes: 'notes',
-    //         },
-    //         with_discard: undefined,
-    //         with_repair: {
-    //             repairer_contact_details: 'reason',
-    //         },
-    //     };
+    it('should show a save success for OUTFORREPAIR asset dialog panel', async () => {
+        const expected = {
+            asset_id_displayed: 'UQL100000',
+            user_id: 3,
+            asset_department_owned_by: 'UQL',
+            asset_type_id: 1,
+            action_date: '2017-06-30 00:00',
+            room_id: 1,
+            with_inspection: {
+                inspection_status: 'FAILED',
+                inspection_device_id: 1,
+                inspection_date_next: undefined,
+                inspection_fail_reason: 'reason',
+                inspection_notes: 'notes',
+            },
+            with_discard: undefined,
+            with_repair: {
+                repairer_contact_details: 'reason',
+            },
+        };
 
-    //     const savedResponse = {
-    //         asset_status: expected.with_inspection.inspection_status,
-    //         asset_id_displayed: expected.asset_id_displayed,
-    //         user_licence_number: '1234567890',
-    //         action_date: expected.action_date,
-    //         asset_next_test_due_date: '2023Dec12',
-    //     };
-    //     mockApi.onPost(repositories.routes.TEST_TAG_ASSET_ACTION().apiUrl).reply(200, { data: savedResponse });
+        const savedResponse = {
+            asset_status: expected.with_inspection.inspection_status,
+            asset_id_displayed: expected.asset_id_displayed,
+            user_licence_number: '1234567890',
+            action_date: expected.action_date,
+            asset_next_test_due_date: '2023Dec12',
+        };
+        mockApi.onPost(repositories.routes.TEST_TAG_ASSET_ACTION().apiUrl).reply(200, { data: savedResponse });
 
-    //     const defaults = getMockDefaults();
-    //     const saveActionFn = jest.fn(() => Promise.resolve(savedResponse));
-    //     defaults.actions.saveInspection = saveActionFn;
+        const defaults = getMockDefaults();
+        const saveActionFn = jest.fn(() => Promise.resolve(savedResponse));
+        defaults.actions.saveInspection = saveActionFn;
 
-    //     const { getByTestId, getByText, findByRole, queryByRole, queryByText } = setup({
-    //         ...defaults,
-    //     });
+        const { getByTestId, getByText, findByRole, queryByRole, queryByText } = setup({
+            ...defaults,
+        });
 
-    //     await fillForm('failed', false, true);
+        await fillForm('failed', false, true);
 
-    //     expect(getByTestId('inspection_panel-inspection-result-failed-button')).toHaveClass('Mui-selected');
+        expect(getByTestId('inspection_panel-inspection-result-failed-button')).toHaveClass('Mui-selected');
 
-    //     expect(getByTestId('inspection-save-button')).not.toHaveAttribute('disabled');
-    //     act(() => {
-    //         fireEvent.click(getByTestId('inspection-save-button'));
-    //     });
+        expect(getByTestId('inspection-save-button')).not.toHaveAttribute('disabled');
+        act(() => {
+            fireEvent.click(getByTestId('inspection-save-button'));
+        });
 
-    //     expect(saveActionFn).toHaveBeenCalledWith(expected);
+        expect(saveActionFn).toHaveBeenCalledWith(expected);
 
-    //     await findByRole('dialog');
+        await findByRole('dialog');
 
-    //     expect(getByText('OUT OF SERVICE')).toBeInTheDocument();
-    //     expect(getByText(savedResponse.asset_id_displayed)).toBeInTheDocument();
-    //     expect(getByText('TAG PLACED BY:')).toBeInTheDocument();
-    //     expect(getByTestId('saved-licence-number').textContent).toBe(savedResponse.user_licence_number);
-    //     expect(queryByText('2022-12-12')).not.toBeInTheDocument();
-    //     expect(queryByText('2023Dec12')).not.toBeInTheDocument();
+        expect(getByText('OUT OF SERVICE')).toBeInTheDocument();
+        expect(getByText(savedResponse.asset_id_displayed)).toBeInTheDocument();
+        expect(getByText('TAG PLACED BY:')).toBeInTheDocument();
+        expect(getByTestId('saved-licence-number').textContent).toBe(savedResponse.user_licence_number);
+        expect(queryByText('2022-12-12')).not.toBeInTheDocument();
+        expect(queryByText('2023Dec12')).not.toBeInTheDocument();
 
-    //     act(() => {
-    //         fireEvent.click(getByTestId('confirm-inspection-save-success'));
-    //     });
-    //     expect(defaults.actions.clearSaveInspection).toHaveBeenCalled();
-    //     expect(defaults.actions.clearAssets).toHaveBeenCalled();
-    //     await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
-    // },20000);
+        act(() => {
+            fireEvent.click(getByTestId('confirm-inspection-save-success'));
+        });
+        expect(defaults.actions.clearSaveInspection).toHaveBeenCalled();
+        expect(defaults.actions.clearAssets).toHaveBeenCalled();
+        await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
+    }, 20000);
 
-    // it('should show a save success for DISCARDED asset dialog panel', async () => {
-    //     const expected = {
-    //         asset_id_displayed: 'UQL100000',
-    //         user_id: 3,
-    //         asset_department_owned_by: 'UQL',
-    //         asset_type_id: 1,
-    //         action_date: '2017-06-30 00:00',
-    //         room_id: 1,
-    //         with_inspection: {
-    //             inspection_status: 'PASSED',
-    //             inspection_device_id: 1,
-    //             inspection_date_next: '2018-06-30 00:00',
-    //             inspection_fail_reason: undefined,
-    //             inspection_notes: 'notes',
-    //         },
-    //         with_repair: undefined,
-    //         with_discard: {
-    //             discard_reason: 'reason',
-    //         },
-    //     };
+    it('should show a save success for DISCARDED asset dialog panel', async () => {
+        const expected = {
+            asset_id_displayed: 'UQL100000',
+            user_id: 3,
+            asset_department_owned_by: 'UQL',
+            asset_type_id: 1,
+            action_date: '2017-06-30 00:00',
+            room_id: 1,
+            with_inspection: {
+                inspection_status: 'PASSED',
+                inspection_device_id: 1,
+                inspection_date_next: '2018-06-30 00:00',
+                inspection_fail_reason: undefined,
+                inspection_notes: 'notes',
+            },
+            with_repair: undefined,
+            with_discard: {
+                discard_reason: 'reason',
+            },
+        };
 
-    //     const savedResponse = {
-    //         asset_status: expected.with_inspection.inspection_status,
-    //         asset_id_displayed: expected.asset_id_displayed,
-    //         user_licence_number: '1234567890',
-    //         action_date: expected.action_date,
-    //         asset_next_test_due_date: '2023Dec12',
-    //     };
-    //     mockApi.onPost(repositories.routes.TEST_TAG_ASSET_ACTION().apiUrl).reply(200, { data: savedResponse });
+        const savedResponse = {
+            asset_status: expected.with_inspection.inspection_status,
+            asset_id_displayed: expected.asset_id_displayed,
+            user_licence_number: '1234567890',
+            action_date: expected.action_date,
+            asset_next_test_due_date: '2023Dec12',
+        };
+        mockApi.onPost(repositories.routes.TEST_TAG_ASSET_ACTION().apiUrl).reply(200, { data: savedResponse });
 
-    //     const defaults = getMockDefaults();
-    //     const saveActionFn = jest.fn(() => Promise.resolve(savedResponse));
-    //     defaults.actions.saveInspection = saveActionFn;
+        const defaults = getMockDefaults();
+        const saveActionFn = jest.fn(() => Promise.resolve(savedResponse));
+        defaults.actions.saveInspection = saveActionFn;
 
-    //     const { getByTestId, getByText, findByRole, queryByRole, queryByText } = setup({
-    //         ...defaults,
-    //     });
+        const { getByTestId, getByText, findByRole, queryByRole, queryByText } = setup({
+            ...defaults,
+        });
 
-    //     await fillForm('passed', true);
+        await fillForm('passed', true);
 
-    //     expect(getByTestId('inspection_panel-inspection-result-passed-button')).toHaveClass('Mui-selected');
+        expect(getByTestId('inspection_panel-inspection-result-passed-button')).toHaveClass('Mui-selected');
 
-    //     expect(getByTestId('inspection-save-button')).not.toHaveAttribute('disabled');
-    //     act(() => {
-    //         fireEvent.click(getByTestId('inspection-save-button'));
-    //     });
+        expect(getByTestId('inspection-save-button')).not.toHaveAttribute('disabled');
+        act(() => {
+            fireEvent.click(getByTestId('inspection-save-button'));
+        });
 
-    //     expect(saveActionFn).toHaveBeenCalledWith(expected);
+        expect(saveActionFn).toHaveBeenCalledWith(expected);
 
-    //     await findByRole('dialog');
+        await findByRole('dialog');
 
-    //     expect(getByText('OUT OF SERVICE')).toBeInTheDocument();
-    //     expect(getByText(savedResponse.asset_id_displayed)).toBeInTheDocument();
-    //     expect(getByText('TAG PLACED BY:')).toBeInTheDocument();
-    //     expect(getByTestId('saved-licence-number').textContent).toBe(savedResponse.user_licence_number);
-    //     expect(queryByText('2022-12-12')).not.toBeInTheDocument();
-    //     expect(queryByText('2023Dec12')).not.toBeInTheDocument();
+        expect(getByText('OUT OF SERVICE')).toBeInTheDocument();
+        expect(getByText(savedResponse.asset_id_displayed)).toBeInTheDocument();
+        expect(getByText('TAG PLACED BY:')).toBeInTheDocument();
+        expect(getByTestId('saved-licence-number').textContent).toBe(savedResponse.user_licence_number);
+        expect(queryByText('2022-12-12')).not.toBeInTheDocument();
+        expect(queryByText('2023Dec12')).not.toBeInTheDocument();
 
-    //     act(() => {
-    //         fireEvent.click(getByTestId('confirm-inspection-save-success'));
-    //     });
-    //     expect(defaults.actions.clearSaveInspection).toHaveBeenCalled();
-    //     expect(defaults.actions.clearAssets).toHaveBeenCalled();
-    //     await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
-    // });
+        act(() => {
+            fireEvent.click(getByTestId('confirm-inspection-save-success'));
+        });
+        expect(defaults.actions.clearSaveInspection).toHaveBeenCalled();
+        expect(defaults.actions.clearAssets).toHaveBeenCalled();
+        await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
+    }, 20000);
 
     it('renders saving spinner', () => {
         const resetForm = jest.fn();

@@ -365,7 +365,7 @@ const Inspection = ({
                     console.error('Printer connection error:', error);
                     showAlert(locale.pages.general.labelPrinting.error.noConnection);
                 });
-        } catch (error) {
+        } catch (error) /* istanbul ignore next */ {
             console.error('Printing error:', error);
             showAlert(locale.pages.general.labelPrinting.error.uncaughtException);
         }

@@ -190,15 +190,20 @@ describe('InspectionSuccessPrintDialog', () => {
 
             expect(queryByTestId('dialogbox-test')).not.toBeInTheDocument();
         });
+        it('does not render the dialog when open=undefined', () => {
+            const { queryByTestId } = setup({ isOpen: undefined });
+
+            expect(queryByTestId('dialogbox-test')).not.toBeInTheDocument();
+        });
         it('handles no printer preference', () => {
-            const { getByTestId } = setup({ printerPreference: null });
+            const { getByTestId } = setup({ printerPreference: undefined });
 
             // Check that the label printer selector is visible (accordion is expanded)
             expect(getByTestId('label_printer_selector-test-input')).toBeVisible();
             expect(getByTestId('label_printer_selector-test-input')).toHaveValue('');
         });
         it('handles no available printers', () => {
-            const { getByTestId, queryAllByRole } = setup({ availablePrinters: null });
+            const { getByTestId, queryAllByRole } = setup({ availablePrinters: undefined });
 
             // Check that the label printer selector is visible (accordion is expanded)
             expect(getByTestId('label_printer_selector-test-input')).toBeVisible();
