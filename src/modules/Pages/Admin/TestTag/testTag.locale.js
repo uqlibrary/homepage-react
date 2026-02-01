@@ -1102,6 +1102,7 @@ export default {
                         asset_barcode: {
                             label: 'Barcode',
                         },
+                        asset_type_id: { label: 'Asset ID' },
                         asset_type_name: {
                             label: 'Asset type',
                         },
