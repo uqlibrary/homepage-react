@@ -71,7 +71,7 @@ test.describe('Digital Learning Hub', () => {
             // Use a robust selector for the day button within the MUI picker.
             // It targets an element with the class MuiPickersDay-root that contains the day number as text.
             //
-            const tomorrowButton = page.locator(`.MuiPickersDay-root:has-text("${dayOfMonth}")`);
+            const tomorrowButton = page.locator(`.MuiPickersDay-root >> text=\"${dayOfMonth}\"`);
 
             // Wait for the calendar to be visible and click the calculated day
             await tomorrowButton.waitFor({ state: 'visible' });
