@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi } from 'config';
+import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
@@ -356,6 +357,7 @@ mock.onGet(/alert\/.*/).reply(config => {
 });
 
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
+fetchMock.config.fallbackToNetwork = true;
 fetchMock.mock(
     'begin:https://api.library.uq.edu.au/staging/learning_resources/suggestions?hint=',
     subjectSearchSuggestions,
