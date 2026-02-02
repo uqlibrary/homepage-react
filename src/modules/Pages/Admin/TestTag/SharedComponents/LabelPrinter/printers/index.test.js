@@ -1,6 +1,6 @@
-import registry from './LabelPrinterRegister';
+import registry from './index';
 
-describe('LabelPrinterRegister', () => {
+describe('Printer Registry', () => {
     it('should have zebra and emulator printers registered', () => {
         expect(Object.keys(registry)).toHaveLength(2);
         expect(registry).toHaveProperty('zebra');
@@ -12,6 +12,7 @@ describe('LabelPrinterRegister', () => {
         const zebraFn = registry.zebra();
         expect(zebraFn).toHaveProperty('code', 'zebra');
         expect(zebraFn).toHaveProperty('getAvailablePrinters');
+        expect(zebraFn).toHaveProperty('getDefaultPrinter');
         expect(zebraFn).toHaveProperty('getConnectionStatus');
         expect(zebraFn).toHaveProperty('setPrinter');
         expect(zebraFn).toHaveProperty('print');
@@ -19,6 +20,7 @@ describe('LabelPrinterRegister', () => {
         const emulatorFn = registry.emulator();
         expect(emulatorFn).toHaveProperty('code', 'emulator');
         expect(emulatorFn).toHaveProperty('getAvailablePrinters');
+        expect(emulatorFn).toHaveProperty('getDefaultPrinter');
         expect(emulatorFn).toHaveProperty('getConnectionStatus');
         expect(emulatorFn).toHaveProperty('setPrinter');
         expect(emulatorFn).toHaveProperty('print');

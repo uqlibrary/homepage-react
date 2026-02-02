@@ -32,7 +32,6 @@ const useLabelPrinterTemplate = templates => {
             const normalisedKey = normalisePrinterNameKey(key);
             return Object.keys(templateStore).some(storeKey => {
                 const regex = new RegExp(storeKey, 'i');
-                console.log('Checking template key:', normalisedKey, 'against storeKey:', storeKey);
                 return regex.test(normalisedKey);
             });
         },

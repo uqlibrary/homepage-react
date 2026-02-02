@@ -16,6 +16,7 @@ describe('EmulatorClass', () => {
             expect(result.current).toHaveProperty('code');
             expect(result.current).toHaveProperty('getAvailablePrinters');
             expect(result.current).toHaveProperty('getConnectionStatus');
+            expect(result.current).toHaveProperty('getDefaultPrinter');
             expect(result.current).toHaveProperty('setPrinter');
             expect(result.current).toHaveProperty('print');
         });
@@ -36,6 +37,12 @@ describe('EmulatorClass', () => {
             const { result } = renderHook(() => useCreatePrinter());
 
             expect(typeof result.current.getConnectionStatus).toBe('function');
+        });
+
+        it('should return getDefaultPrinter as a function', () => {
+            const { result } = renderHook(() => useCreatePrinter());
+
+            expect(typeof result.current.getDefaultPrinter).toBe('function');
         });
 
         it('should return setPrinter as a function', () => {
@@ -62,6 +69,12 @@ describe('EmulatorClass', () => {
             expect(printers[0]).toHaveProperty('name', 'Emulator');
             expect(printers[1]).toHaveProperty('name', 'New printer');
             expect(printers[2]).toHaveProperty('name', null);
+        });
+
+        it('should return default printer', async () => {
+            const { result } = renderHook(() => useCreatePrinter());
+            const printer = await result.current.getDefaultPrinter();
+            expect(printer).toHaveProperty('name', 'Emulator');
         });
 
         it('should return connection status as ready', async () => {

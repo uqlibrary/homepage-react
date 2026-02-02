@@ -20,7 +20,7 @@ import AssetPanel from './AssetPanel';
 
 import { statusEnum } from '../utils/helpers';
 import { scrollToTopOfPage } from 'helpers/general';
-import { useValidation } from '../utils/hooks';
+import { useValidation, useLabelPrinterPreference } from '../utils/hooks';
 import { useLocation, useForm, useConfirmationAlert, useAccountUser } from '../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { transformer } from '../utils/transformers';
@@ -30,15 +30,9 @@ import { PERMISSIONS } from '../../config/auth';
 import { useConfirmationState } from 'hooks';
 import { breadcrumbs } from 'config/routes';
 
-import { isLocal, isTest } from 'helpers/general';
-
 import LabelLogo from './LabelLogo';
 import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
-import {
-    useLabelPrinter,
-    useLabelPrinterPreference,
-    useLabelPrinterTemplate,
-} from '../../SharedComponents/LabelPrinter';
+import { useLabelPrinter, useLabelPrinterTemplate } from '../../SharedComponents/LabelPrinter';
 import * as labelPrintertemplates from './labelPrinterTemplates';
 import { getDeptLabelPrintingEnabled, getDefaultDeptPrinter } from '../../helpers/labelPrinting';
 import { COOKIE_PRINTER_PREFERENCE } from './config';
@@ -176,9 +170,6 @@ const Inspection = ({
     saveAssetTypeError,
     saveInspectionSuccess: successData,
 }) => {
-    const isLocalEnvironment = isLocal();
-    const isTestEnvironment = isTest();
-    const shouldUsePrinterEmulator = isLocalEnvironment || isTestEnvironment;
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
@@ -186,8 +177,9 @@ const Inspection = ({
     const deptPrinterDefault = getDefaultDeptPrinter(user?.user_department);
     const deptPrintingEnabled = getDeptLabelPrintingEnabled(user?.user_department);
     const { printer, availablePrinters } = useLabelPrinter({
-        printerCode: shouldUsePrinterEmulator ? 'emulator' : deptPrinterDefault,
+        printerCode: deptPrinterDefault,
         templateStore: labelPrintertemplates,
+        shouldOverridePrinterDevEnv: true,
     });
     const [printerPreference, setPrinterPreference] = useLabelPrinterPreference(COOKIE_PRINTER_PREFERENCE);
     const { getLabelPrinterTemplate } = useLabelPrinterTemplate(labelPrintertemplates);
@@ -373,7 +365,7 @@ const Inspection = ({
                     console.error('Printer connection error:', error);
                     showAlert(locale.pages.general.labelPrinting.error.noConnection);
                 });
-        } catch (error) {
+        } catch (error) /* istanbul ignore next */ {
             console.error('Printing error:', error);
             showAlert(locale.pages.general.labelPrinting.error.uncaughtException);
         }
