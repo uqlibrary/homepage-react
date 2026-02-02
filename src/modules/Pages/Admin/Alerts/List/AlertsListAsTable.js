@@ -139,7 +139,7 @@ export const AlertsListAsTable = ({
         setPage(0);
     };
 
-    const tableType = headertag.replace(' alerts', '').toLowerCase();
+    const tableType = headertag?.replace(' alerts', '').toLowerCase();
 
     const headerCountIndicator = '[N] alert[s]'.replace('[N]', rows.length).replace('[s]', rows.length > 1 ? 's' : '');
 

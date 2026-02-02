@@ -16,7 +16,7 @@ possiblePanels.set('library-services', { title: 'Library services', content: 'Se
 possiblePanels.set('past-exam-papers', { title: 'Past exam papers', content: 'Search by' });
 possiblePanels.set('training', { title: 'Training', content: 'See all training' });
 possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Update the following items' });
-possiblePanels.set('readpublish', { title: 'Read and publish', content: 'Publish in the right journal' });
+possiblePanels.set('readpublish', { title: 'Open access publishing', content: 'Publish in the right journal' });
 possiblePanels.set('catalogue', { title: 'Your library account', content: 'Search history' });
 possiblePanels.set('referencing', { title: 'Referencing', content: 'Referencing style guides' });
 
@@ -132,6 +132,34 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('Personalised Homepage', () => {
+    test('Renders an RHD who is only enrolled in a research subject home page correctly', async ({ page }) => {
+        await expectUserToDisplayCorrectFirstName(page, 's2222222', 'Jane');
+
+        // CY to PW conversion note:
+        // added 'espace', which refers to div[data-testid=espace-panel] h3 (present during cy testing)
+        await hasPanels(page, ['catalogue', 'referencing', 'training', 'readpublish', 'espace']);
+        await seesEndNoteInReferencing(page);
+
+        await hasAccountPanelOptions(page, [
+            'searchhistory',
+            'savedsearches',
+            'requests',
+            'loans',
+            'papercut',
+            'fines',
+        ]);
+
+        // the fine has a special value
+        await expect(
+            page
+                .getByTestId('show-fines')
+                .getByText(/65\.97/)
+                .first(),
+        ).toBeVisible();
+
+        await hasEspaceEntries(page, ['espace-possible', 'espace-ntro']);
+    });
+
     test("Renders an on-campus undergraduate student's home page correctly", async ({ page }) => {
         await expectUserToDisplayCorrectFirstName(page, 's1111111', 'Michael');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -181,34 +209,6 @@ test.describe('Personalised Homepage', () => {
                 .nth(0)
                 .locator('h2'),
         ).toBeVisible();
-    });
-
-    test('Renders an RHD who is only enrolled in a research subject home page correctly', async ({ page }) => {
-        await expectUserToDisplayCorrectFirstName(page, 's2222222', 'Jane');
-
-        // CY to PW conversion note:
-        // added 'espace', which refers to div[data-testid=espace-panel] h3 (present during cy testing)
-        await hasPanels(page, ['catalogue', 'referencing', 'training', 'readpublish', 'espace']);
-        await seesEndNoteInReferencing(page);
-
-        await hasAccountPanelOptions(page, [
-            'searchhistory',
-            'savedsearches',
-            'requests',
-            'loans',
-            'papercut',
-            'fines',
-        ]);
-
-        // the fine has a special value
-        await expect(
-            page
-                .getByTestId('show-fines')
-                .getByText(/65\.97/)
-                .first(),
-        ).toBeVisible();
-
-        await hasEspaceEntries(page, ['espace-possible', 'espace-ntro']);
     });
 
     test('Renders an RHD who has a non reserarch subject home page correctly', async ({ page }) => {

@@ -40,6 +40,8 @@ import {
     DLOR_KEYWORDS_UPDATE_API,
     DLOR_KEYWORDS_DESTROY_API,
     DLOR_STATISTICS_API,
+    DLOR_SCHEDULE_API,
+    DLOR_SCHEDULE_UPDATE_API,
     DLOR_REQUEST_KEYWORD_API,
 } from 'repositories/routes';
 import { checkExpireSession } from './actionhelpers';
@@ -861,6 +863,98 @@ export function loadDlorStatistics() {
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDLORSchedules() {
+    console.log('loadDLORSchedules action creator called');
+    return dispatch => {
+        dispatch({ type: actions.DLOR_SCHEDULE_LOADING });
+        return get(DLOR_SCHEDULE_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+export function addDLORSchedule(request) {
+    console.log('addDLORSchedule action creator called', request);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_SCHEDULE_LOADING });
+        return post(DLOR_SCHEDULE_API(), request)
+            .then(response => {
+                console.log('addDLORSchedule response', response);
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_LOADED,
+                    payload: response.data,
+                });
+                // dispatch(loadDLORSchedules());
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function editDLORSchedule(id, request) {
+    console.log('editDLORSchedule action creator called', request);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_SCHEDULE_LOADING });
+        return put(DLOR_SCHEDULE_UPDATE_API(id), request)
+            .then(response => {
+                console.log('editDLORSchedule response', response);
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_LOADED,
+                    payload: response.data,
+                });
+                // dispatch(loadDLORSchedules());
+            })
+            .catch(error => {
+                console.log('editDLORSchedule error', error);
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                throw error;
+            });
+    };
+}
+
+export function deleteDlorSchedule(id) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_SCHEDULE_LOADING });
+        return destroy(DLOR_SCHEDULE_UPDATE_API(id))
+            .then(response => {
+                console.log('deleteDLORSchedule response', response);
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_LOADED,
+                    payload: response.data,
+                });
+                // dispatch(loadDLORSchedules());
+            })
+            .catch(error => {
+                console.log('editDLORSchedule error', error);
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                throw error;
             });
     };
 }

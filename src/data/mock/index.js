@@ -61,9 +61,10 @@ import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
 import dlor_series_all from './data/records/dlor/dlor_series_all';
 import dlor_series_view from './data/records/dlor/dlor_series_view';
 import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
+import { dlorSchedules } from './data/dlorSchedules';
 import { dlor_demographics_report } from './data/dlorDemographics';
 import { dlor_favourites_report } from './data/dlorFavourites';
-import  dlor_statistics  from './data/records/dlor/dlor_statistics';
+import dlor_statistics from './data/records/dlor/dlor_statistics';
 import { drupalArticles } from './data/drupalArticles';
 import {
     journalSearchFavourites,
@@ -846,6 +847,30 @@ mock.onGet(/dlor\/(public|auth)\/find\/.*/)
     .reply(() => {
         return [200, dlor_keywords];
     })
+    .onPost(/dlor\/admin\/schedule/)
+    .reply(() => {
+        return [200, dlorSchedules];
+    })
+    .onPut(/dlor\/admin\/schedule\/3/)
+    .reply(() => {
+        return [500, {'message': 'Simulated server error on schedule ID 3'}];
+    })
+    .onPut(/dlor\/admin\/schedule\/\d+/)
+    .reply(() => {
+        return [200, dlorSchedules];
+    })
+    .onDelete(/dlor\/admin\/schedule\/3/)
+    .reply(() => {
+        return [500, {'message': 'Simulated server error on schedule ID 3'}];
+    })
+    .onDelete(/dlor\/admin\/schedule\/\d+/)
+    .reply(() => {
+        return [200, dlorSchedules];
+    })
+    .onGet(/dlor\/admin\/schedule/)
+    .reply(() => {
+        return [200, dlorSchedules];
+    })
     .onGet(routes.DLOR_STATISTICS_API().apiUrl)
     .reply(() => {
         return [200, dlor_statistics];
@@ -1031,7 +1056,7 @@ mock.onGet('exams/course/FREN1010/summary')
                 ...examSearch_DENT80,
                 papers: [
                     ...examSearch_DENT80.papers.filter(course =>
-                        course.some(s => s.some(p => p.courseCode.toLowerCase() === 'dent1050')),
+                        course.some(s => s.some(p => p?.courseCode?.toUpperCase() === 'DENT1050')),
                     ),
                 ],
             },

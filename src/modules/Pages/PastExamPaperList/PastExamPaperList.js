@@ -81,7 +81,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         !!examSearchList && !!examSearchList.minYear && !!examSearchList.maxYear && !!courseHint
             ? `Past Exam Papers from ${examSearchList.minYear} to ${
                   examSearchList.maxYear
-              } for "${courseHint.toUpperCase()}"`
+              } for "${courseHint?.toUpperCase()}"`
             : /* istanbul ignore next */ 'Past Exam Papers by Subject';
 
     useTitle(`${listTitle} - Library - The University of Queensland`);
@@ -98,6 +98,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         if (result.papers && Array.isArray(result.papers)) {
             result.papers = result.papers
                 .map(courseGroup => {
+                    const isSampleExamPaper = exam => exam?.examType?.toUpperCase() === 'SAMPLE';
                     return courseGroup.filter(examGroup => {
                         // children are always arrays atm, but provide for the alternative
                         /* istanbul ignore else */
@@ -107,9 +108,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                 return false;
                             }
 
-                            const hasSample = examGroup.some(
-                                exam => exam.examType && exam.examType.toUpperCase() === 'SAMPLE',
-                            );
+                            const hasSample = examGroup.some(exam => isSampleExamPaper(exam));
                             return displayType === 'sample' ? hasSample : !hasSample;
                         } else {
                             const hasFile = examGroup.paperUrl && examGroup.paperUrl.trim().length > 0;
@@ -117,7 +116,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                 return false;
                             }
 
-                            const hasSample = examGroup.examType && examGroup.examType.toUpperCase() === 'SAMPLE';
+                            const hasSample = examGroup.some(exam => isSampleExamPaper(exam));
                             return displayType === 'sample' ? hasSample : !hasSample;
                         }
                     });
@@ -159,6 +158,18 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
 
     const is404Error = !!examSearchListError && examSearchListError === MESSAGE_EXAMCODE_404;
     const isNon404Error = !!examSearchListError && examSearchListError !== MESSAGE_EXAMCODE_404;
+
+    /* istanbul ignore next */
+    const openPaper = paperUrl => {
+        // try to catch safari crash (possibly caused by google? https://stackoverflow.com/a/79250741/1246313)
+        try {
+            window.open(paperUrl, '_blank');
+        } catch (e) {
+            alert('Oh no! Something went wrong! You can copy and paste this link: ' + paperUrl);
+            throw e;
+        }
+        return null;
+    };
 
     // eslint-disable-next-line react/prop-types
     const SimpleLayout = ({ examList, showMobileView, showFullDetails }) => {
@@ -216,6 +227,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                         >
                                                             <a
                                                                 href={paper.paperUrl}
+                                                                onClick={
+                                                                    /* istanbul ignore next */ () =>
+                                                                        /* istanbul ignore next */
+                                                                        openPaper(paper.paperUrl)
+                                                                }
                                                                 data-testid={`exampaper-${formatType}-link-${courseCode}-semester${ss}-paper${pp}`}
                                                                 target="_blank"
                                                             >
@@ -279,6 +295,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     <a
                         data-testid={`exampaper-desktop-originals-link-${courseCode}-semester${semesterIndex}-paper${examIndex}`}
                         href={exam.paperUrl}
+                        onClick={
+                            /* istanbul ignore next */ () =>
+                                /* istanbul ignore next */
+                                openPaper(exam.paperUrl)
+                        }
                         target="_blank"
                     >
                         {exam.examType && (
