@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { render } from '@testing-library/react';
+import { render, act, fireEvent, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { mui1theme } from 'config/theme';
 import { Provider } from 'react-redux';
@@ -50,6 +50,15 @@ const enableJestPreviewOnTestFailure = (options = {}) =>
         ...options,
     });
 
+const selectOptionFromListByIndex = index => {
+    expect(screen.getByRole('listbox')).not.toEqual(null);
+    act(() => {
+        const options = screen.getAllByRole('option');
+        fireEvent.mouseDown(options[index]);
+        options[index].click();
+    });
+};
+
 module.exports = {
     ...domTestingLib,
     ...reactTestingLib,
@@ -59,4 +68,5 @@ module.exports = {
     userEvent,
     preview,
     enableJestPreviewOnTestFailure,
+    selectOptionFromListByIndex,
 };
