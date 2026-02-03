@@ -196,7 +196,6 @@ AssetPanel.propTypes = {
     saveAssetTypeSaving: PropTypes.bool,
     isMobileView: PropTypes.bool,
     canAddAssetType: PropTypes.bool,
-    confirmationAlert: PropTypes.object,
     openConfirmationAlert: PropTypes.func,
     closeConfirmationAlert: PropTypes.func,
 };
