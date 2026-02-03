@@ -119,14 +119,14 @@ export const accounts = {
             "department_display_name": "Properties and Facilities",
             "department_visual_inspection_device_id": 3,
             "user_current_flag": 1,
-            "user_department": "UQL",
+            "user_department": "UQPF",
             "user_id": 1,
             "user_licence_number": "LICENCE12345",
             "user_name": "TnT uqpf",
             "user_uid": "uqpf",
             "privileges": {
                 "can_admin": 0,
-                "can_inspect": 0,
+                "can_inspect": 1,
                 "can_alter": 1,
                 "can_see_reports": 0
             },
