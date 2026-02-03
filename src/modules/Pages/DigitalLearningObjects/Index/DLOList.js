@@ -399,7 +399,14 @@ export const DLOList = ({
 
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
-            actions.loadCurrentDLORs();
+            const url = new URL(document.URL);
+            const rawsearchparams = !!url && url.searchParams;
+            const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
+            if (params.has('type')) {
+                actions.loadAllDLORs();
+            } else {
+                actions.loadCurrentDLORs();
+            }
         }
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
@@ -1020,9 +1027,12 @@ export const DLOList = ({
         function isFavoritedFiltered(item) {
             return dlorFavouritesList?.some(fav => fav.object_public_uuid === item.object_public_uuid);
         }
+
+        function isUserSubmitted(item) {
+            return item?.owner?.team_id !== 1;
+        }
         // Helper function to check if the current user is the owner/publisher
         function isMine(item, userEmail, userid) {
-            console.log('isMine check for item:', item);
             return item.object_publishing_user_email === userEmail || item.owner?.publishing_user_username === userid;
         }
 
@@ -1035,6 +1045,15 @@ export const DLOList = ({
                 case 'favourite':
                 case 'followed':
                     theSearch = theSearch.filter(item => isFavoritedFiltered(item));
+                    break;
+                case 'submitted':
+                case 'new':
+                case 'rejected':
+                case 'deprecated':
+                    theSearch = theSearch.filter(item => item?.object_status === params.get('type'));
+                    break;
+                case 'usersubmitted':
+                    theSearch = theSearch.filter(item => isUserSubmitted(item));
                     break;
                 case 'mine':
                     console.log('theSearch before mine filter:', theSearch);
