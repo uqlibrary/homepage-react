@@ -14,6 +14,11 @@ export default {
     },
     fields: {
         asset_barcode: { fieldParams: { minWidth: 130 } },
+        asset_type_id: {
+            fieldParams: {
+                hide: true,
+            },
+        },
         asset_type_name: { fieldParams: { minWidth: 250 } },
         asset_next_test_due_date: {
             fieldParams: {
