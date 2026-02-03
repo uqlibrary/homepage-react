@@ -81,15 +81,18 @@ const InspectionsDue = ({
 
     useEffect(() => {
         const locationId = location[lastSelectedLocation];
-
+        console.log('InspectionsDue useEffect fetching data', {
+            location,
+            locationId,
+            lastSelectedLocation,
+            monthRange,
+        });
         actions.getInspectionsDue({
             period: monthRange,
             periodType: 'month',
             ...(!!locationId && locationId !== -1 ? { locationId, locationType: lastSelectedLocation } : {}),
         });
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lastSelectedLocation, location, monthRange]);
+    }, [actions, lastSelectedLocation, location, monthRange]);
 
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
