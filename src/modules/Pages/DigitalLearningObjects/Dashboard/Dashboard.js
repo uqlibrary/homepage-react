@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Box, Typography } from '@mui/material';
 import { StandardPage } from '../../../App/components/pages';
 
-import { Bar } from 'react-chartjs-2';
+import { Bar, Doughnut } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -21,6 +21,7 @@ import {
 import { dashboardSiteUsage } from '../../../../data/mock/data/dlor/dashboardSiteUsage';
 
 import UsageAnalytics from './UsageAnalytics';
+import DLOStatusSummary from './DLOStatusSummary';
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Title);
 
@@ -207,7 +208,7 @@ function formatTeamBreakdownData(apiData) {
 
     const otherTeamsValue = grandTotal - sumOfTeamObjects;
 
-    const finalColors = generateRandomColors(labels.length);
+    const finalColors = generateRandomColors(labels.length + (otherTeamsValue > 0 ? 1 : 0));
 
     if (otherTeamsValue > 0) {
         labels.push('Not Assigned');
@@ -216,14 +217,16 @@ function formatTeamBreakdownData(apiData) {
     }
 
     return {
-        labels: ['Total Objects'],
-        datasets: labels.map((label, index) => ({
-            label: label,
-            data: [chartValues[index]],
-            backgroundColor: finalColors[index],
-            borderColor: finalColors[index].replace(', 0.7)', ', 1)').replace(', 0.6)', ', 1)'),
-            borderWidth: 1,
-        })),
+        labels: labels,
+        datasets: [
+            {
+                label: 'Objects by Team',
+                data: chartValues,
+                backgroundColor: finalColors,
+                borderColor: finalColors.map(c => c.replace(', 0.7)', ', 1)').replace(', 0.6)', ', 1)')),
+                borderWidth: 1,
+            },
+        ],
     };
 }
 
@@ -415,13 +418,14 @@ function formatSeriesBreakdownData(apiData) {
 // =========================================================
 
 export default function Dashboard() {
+    // Legend visibility state for Team Breakdown
+    const [showTeamLegend, setShowTeamLegend] = useState(false);
     const [objectData, setObjectData] = useState(null);
     const [teamData, setTeamData] = useState(null);
     const [keywordData, setKeywordData] = useState(null);
     const [reviewData, setReviewData] = useState(null);
     const [filterData, setFilterData] = useState(null);
     const [seriesData, setSeriesData] = useState(null);
-    const [totalObjects, setTotalObjects] = useState(0);
 
     useEffect(() => {
         // --- Mock API Data ---
@@ -526,7 +530,6 @@ export default function Dashboard() {
             },
         };
 
-        setTotalObjects(apiResponse.total_objects);
         setObjectData(formatObjectDistributionData(apiResponse));
         setTeamData(formatTeamBreakdownData(apiResponse));
         setKeywordData(formatKeywordBreakdownData(apiResponse));
@@ -640,7 +643,7 @@ export default function Dashboard() {
                     </Box>
                 </Grid> */}
                 {/* FEEDBACK - overview of objects */}
-                <Grid container>
+                {/* <Grid container>
                     <Grid item xs={12} md={4}>
                         <Bar
                             aria-label="Bar chart showing object distribution metrics"
@@ -657,7 +660,7 @@ export default function Dashboard() {
                             }}
                         />
                     </Grid>
-                </Grid>
+                </Grid> */}
 
                 {/* 2. Team Breakdown Chart - Fixed Stacked */}
                 <Grid item xs={12} md={4}>
@@ -665,21 +668,96 @@ export default function Dashboard() {
                         <Typography variant="h6" component="h2" gutterBottom>
                             Team Breakdown
                         </Typography>
-                        <Box sx={{ height: '100px' }}>
-                            {' '}
-                            {/* Fixed height */}
-                            <Bar
+                        <Box
+                            sx={{
+                                height: '220px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                position: 'relative',
+                            }}
+                        >
+                            <Doughnut
                                 data={teamData}
-                                aria-label="Bar chart showing team breakdown of digital learning objects"
+                                aria-label="Doughnut chart showing team breakdown of digital learning objects"
                                 options={{
-                                    ...fixedStackedOptions,
                                     plugins: {
-                                        ...fixedStackedOptions.plugins,
-                                        title: { display: true, text: 'Objects by Team (Including Not Assigned)' },
+                                        legend: { display: false },
+                                        title: { display: false, text: 'Objects by Team (Including Not Assigned)' },
                                     },
+                                    cutout: '70%',
+                                    maintainAspectRatio: false,
                                 }}
                             />
                         </Box>
+                        <Box sx={{ mt: 1, textAlign: 'right' }}>
+                            <button
+                                style={{
+                                    fontSize: '0.8rem',
+                                    background: 'none',
+                                    border: 'none',
+                                    color: '#1976d2',
+                                    cursor: 'pointer',
+                                    padding: 0,
+                                    marginBottom: '2px',
+                                }}
+                                onClick={() => setShowTeamLegend(v => !v)}
+                                aria-label={showTeamLegend ? 'Hide team legend' : 'Show team legend'}
+                            >
+                                {showTeamLegend ? 'Hide Legend' : 'Show Legend'}
+                            </button>
+                        </Box>
+                        {showTeamLegend && (
+                            <Box
+                                sx={{
+                                    mt: 0.5,
+                                    mb: 0.5,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-start',
+                                    fontSize: '0.78em',
+                                    color: '#444',
+                                    background: 'rgba(255,255,255,0.97)',
+                                    borderRadius: '8px',
+                                    boxShadow: 1,
+                                    p: 1,
+                                    maxHeight: '120px',
+                                    overflowY: 'auto',
+                                }}
+                            >
+                                {teamData.labels.map((label, idx) => (
+                                    <Box
+                                        key={label}
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'flex-start',
+                                            mb: 0.5,
+                                            gap: 0.5,
+                                            width: '100%',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                width: 10,
+                                                height: 10,
+                                                backgroundColor: teamData.datasets[0].backgroundColor[idx],
+                                                borderRadius: '2px',
+                                                display: 'inline-block',
+                                                mr: 0.5,
+                                                flexShrink: 0,
+                                            }}
+                                        />
+                                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            {label} ({teamData.datasets[0].data[idx]})
+                                        </span>
+                                    </Box>
+                                ))}
+                            </Box>
+                        )}
                     </Box>
                 </Grid>
 
@@ -763,6 +841,15 @@ export default function Dashboard() {
                 )}
 
                 <UsageAnalytics usageData={chartData} />
+                <DLOStatusSummary
+                    data={{
+                        new_objects: 168,
+                        published_objects: 165,
+                        rejected_objects: 2,
+                        deprecated_objects: 1,
+                        user_submitted_objects: 26,
+                    }}
+                />
             </Grid>
         </StandardPage>
     );

@@ -322,7 +322,6 @@ export const DLOList = ({
     const keyWordSearchRef = useRef('');
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const [fuzzyMatchSearch, setFuzzyMatchSearch] = useState([]);
     const [viewType, setViewType] = useState('');
 
     React.useEffect(() => {
@@ -448,7 +447,7 @@ export const DLOList = ({
         window.history.pushState({}, '', newPathSearch);
     };
 
-    const clearKeywordField = e => {
+    const clearKeywordField = () => {
         setKeywordSearch('');
         keyWordSearchRef.current.value = '';
         setPaginationPage(1); // set pagination back to page 1
@@ -1784,8 +1783,6 @@ DLOList.propTypes = {
     dlorFavouritesLoading: PropTypes.bool,
     dlorFavouritesError: PropTypes.any,
     account: PropTypes.object,
-    dlorTeamList: PropTypes.array,
-    dlorTeamListLoading: PropTypes.bool,
     dlorTeamListError: PropTypes.any,
 };
 

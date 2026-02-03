@@ -35,7 +35,6 @@ import {
     DLOR_CREATE_TEAM_ADMIN_API,
     DLOR_EDIT_TEAM_ADMIN_API,
     DLOR_DELETE_TEAM_ADMIN_API,
-    DLOR_TEAM_MEMBER_SINGLE_GET_API,
     DLOR_KEYWORDS_API,
     DLOR_KEYWORDS_UPDATE_API,
     DLOR_KEYWORDS_DESTROY_API,
@@ -761,7 +760,7 @@ export function editDlorTeamMember(id, request) {
     };
 }
 
-export function deleteDlorTeamMember(id, team_id) {
+export function deleteDlorTeamMember(id, teamId) {
     return dispatch => {
         dispatch({ type: actions.DLOR_TEAM_LOADING });
         return destroy(DLOR_DELETE_TEAM_ADMIN_API(id))
@@ -771,7 +770,7 @@ export function deleteDlorTeamMember(id, team_id) {
                     payload: response.data,
                 });
                 // refresh the team after change
-                dispatch(loadADLORTeam(team_id));
+                dispatch(loadADLORTeam(teamId));
             })
             .catch(error => {
                 dispatch({
