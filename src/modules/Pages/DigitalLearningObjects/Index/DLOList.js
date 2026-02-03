@@ -555,8 +555,6 @@ export const DLOList = ({
 
     function showHidePanel(facetTypeId) {
         const facetPanel = document.getElementById(panelId(facetTypeId));
-        const upArrowIcon = document.getElementById(UpArrowId(facetTypeId));
-        const downArrowIcon = document.getElementById(DownArrowId(facetTypeId));
 
         /* istanbul ignore else */
         if (

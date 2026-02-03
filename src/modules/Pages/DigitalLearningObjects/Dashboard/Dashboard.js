@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Box, Typography } from '@mui/material';
 import { StandardPage } from '../../../App/components/pages';
 
-import { Bar, Doughnut } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -22,6 +22,7 @@ import { dashboardSiteUsage } from '../../../../data/mock/data/dlor/dashboardSit
 
 import UsageAnalytics from './UsageAnalytics';
 import DLOStatusSummary from './DLOStatusSummary';
+import TeamBreakdown from './TeamBreakdown';
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Title);
 
@@ -419,7 +420,6 @@ function formatSeriesBreakdownData(apiData) {
 
 export default function Dashboard() {
     // Legend visibility state for Team Breakdown
-    const [showTeamLegend, setShowTeamLegend] = useState(false);
     const [objectData, setObjectData] = useState(null);
     const [teamData, setTeamData] = useState(null);
     const [keywordData, setKeywordData] = useState(null);
@@ -663,102 +663,16 @@ export default function Dashboard() {
                 </Grid> */}
 
                 {/* 2. Team Breakdown Chart - Fixed Stacked */}
+
                 <Grid item xs={12} md={4}>
-                    <Box sx={{ border: '1px solid #eee', p: 2, textAlign: 'center' }}>
-                        <Typography variant="h6" component="h2" gutterBottom>
-                            Team Breakdown
-                        </Typography>
-                        <Box
-                            sx={{
-                                height: '220px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                position: 'relative',
-                            }}
-                        >
-                            <Doughnut
-                                data={teamData}
-                                aria-label="Doughnut chart showing team breakdown of digital learning objects"
-                                options={{
-                                    plugins: {
-                                        legend: { display: false },
-                                        title: { display: false, text: 'Objects by Team (Including Not Assigned)' },
-                                    },
-                                    cutout: '70%',
-                                    maintainAspectRatio: false,
-                                }}
-                            />
-                        </Box>
-                        <Box sx={{ mt: 1, textAlign: 'right' }}>
-                            <button
-                                style={{
-                                    fontSize: '0.8rem',
-                                    background: 'none',
-                                    border: 'none',
-                                    color: '#1976d2',
-                                    cursor: 'pointer',
-                                    padding: 0,
-                                    marginBottom: '2px',
-                                }}
-                                onClick={() => setShowTeamLegend(v => !v)}
-                                aria-label={showTeamLegend ? 'Hide team legend' : 'Show team legend'}
-                            >
-                                {showTeamLegend ? 'Hide Legend' : 'Show Legend'}
-                            </button>
-                        </Box>
-                        {showTeamLegend && (
-                            <Box
-                                sx={{
-                                    mt: 0.5,
-                                    mb: 0.5,
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'flex-start',
-                                    fontSize: '0.78em',
-                                    color: '#444',
-                                    background: 'rgba(255,255,255,0.97)',
-                                    borderRadius: '8px',
-                                    boxShadow: 1,
-                                    p: 1,
-                                    maxHeight: '120px',
-                                    overflowY: 'auto',
-                                }}
-                            >
-                                {teamData.labels.map((label, idx) => (
-                                    <Box
-                                        key={label}
-                                        sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'flex-start',
-                                            mb: 0.5,
-                                            gap: 0.5,
-                                            width: '100%',
-                                            whiteSpace: 'nowrap',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                        }}
-                                    >
-                                        <Box
-                                            sx={{
-                                                width: 10,
-                                                height: 10,
-                                                backgroundColor: teamData.datasets[0].backgroundColor[idx],
-                                                borderRadius: '2px',
-                                                display: 'inline-block',
-                                                mr: 0.5,
-                                                flexShrink: 0,
-                                            }}
-                                        />
-                                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                            {label} ({teamData.datasets[0].data[idx]})
-                                        </span>
-                                    </Box>
-                                ))}
-                            </Box>
-                        )}
-                    </Box>
+                    <TeamBreakdown
+                        chartData={teamData}
+                        teamBreakdown={teamData.labels.map((label, idx) => ({
+                            team_name: label,
+                            total_objects: teamData.datasets[0].data[idx],
+                        }))}
+                        colors={teamData.datasets[0].backgroundColor}
+                    />
                 </Grid>
 
                 {/* 3. Keyword Breakdown Chart - Fixed Stacked */}
