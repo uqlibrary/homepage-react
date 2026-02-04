@@ -23,6 +23,7 @@ import { dashboardSiteUsage } from '../../../../data/mock/data/dlor/dashboardSit
 import UsageAnalytics from './UsageAnalytics';
 import DLOStatusSummary from './DLOStatusSummary';
 import GenericBreakdownChart from './GenericBreakdownChart';
+import EngagementSummary from './EngagementSummary';
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Title);
 
@@ -62,6 +63,9 @@ export default function Dashboard() {
                         </AccordionSummary>
                         <AccordionDetails>
                             <Grid container spacing={3}>
+                                <Grid item xs={12}>
+                                    <EngagementSummary data={dashboardSiteUsage} />
+                                </Grid>
                                 <Grid item xs={12} md={3}>
                                     <GenericBreakdownChart
                                         chartData={dashboardSiteUsage}

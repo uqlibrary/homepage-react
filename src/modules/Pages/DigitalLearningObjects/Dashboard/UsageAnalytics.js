@@ -572,16 +572,32 @@ export default function UsageAnalytics({ usageData }) {
     );
 }
 UsageAnalytics.propTypes = {
-    usageData: PropTypes.arrayOf(
+    usageData: PropTypes.oneOfType([
+        PropTypes.arrayOf(
+            PropTypes.shape({
+                activity_date: PropTypes.string.isRequired,
+                total_views: PropTypes.number.isRequired,
+                viewers_by_group: PropTypes.arrayOf(
+                    PropTypes.shape({
+                        user_group: PropTypes.string.isRequired,
+                        total: PropTypes.number.isRequired,
+                    }),
+                ),
+            }),
+        ),
         PropTypes.shape({
-            activity_date: PropTypes.string.isRequired,
-            total_views: PropTypes.number.isRequired,
-            viewers_by_group: PropTypes.arrayOf(
+            site_usage: PropTypes.arrayOf(
                 PropTypes.shape({
-                    user_group: PropTypes.string.isRequired,
-                    total: PropTypes.number.isRequired,
+                    activity_date: PropTypes.string.isRequired,
+                    total_views: PropTypes.number.isRequired,
+                    viewers_by_group: PropTypes.arrayOf(
+                        PropTypes.shape({
+                            user_group: PropTypes.string.isRequired,
+                            total: PropTypes.number.isRequired,
+                        }),
+                    ),
                 }),
             ),
         }),
-    ).isRequired,
+    ]).isRequired,
 };

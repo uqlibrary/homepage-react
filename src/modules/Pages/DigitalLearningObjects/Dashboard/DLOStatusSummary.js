@@ -52,7 +52,7 @@ const DLOStatusSummary = ({ data }) => (
                                 sx={{
                                     color: status.color,
                                     fontWeight: 600,
-                                    fontSize: '0.8rem',
+                                    fontSize: '1.5rem',
                                     lineHeight: 1,
                                     m: 0,
                                     p: 0,

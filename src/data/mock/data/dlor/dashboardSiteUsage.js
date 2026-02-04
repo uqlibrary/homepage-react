@@ -9,6 +9,7 @@ export const dashboardSiteUsage = {
         "user_submitted_objects": 10,
         "my_objects": 0,
         "my_favourites": 1,
+        "total_favourites": 3,
         "total_subscriptions": 0,
         "my_alerts": 0,
         "team_breakdown": [
@@ -91,5 +92,6 @@ export const dashboardSiteUsage = {
                     }
                 ]
             }
-        ]
+        ],
+        "popular_objects": 2
     }

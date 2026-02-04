@@ -348,6 +348,10 @@ export const DLOList = ({
 
     const [paginationPage, setPaginationPage] = React.useState(1);
 
+    function filterFacetsWithShowHelp(data) {
+        return data.flatMap(facetType => facetType.facet_list.filter(item => !!item.facet_show_help));
+    }
+
     const FilterGraduateAttributes = (filterList, filterId, mode) => {
         if (mode === 'push') {
             const ga = filterList
@@ -364,10 +368,6 @@ export const DLOList = ({
             setSelectedGradAttributes(filteredGraduateAttributes);
         }
     };
-
-    function filterFacetsWithShowHelp(data) {
-        return data.flatMap(facetType => facetType.facet_list.filter(item => !!item.facet_show_help));
-    }
 
     /* istanbul ignore next */
     function skipToElement() {
@@ -1043,11 +1043,20 @@ export const DLOList = ({
                 case 'followed':
                     theSearch = theSearch.filter(item => isFavoritedFiltered(item));
                     break;
+                case 'isafavourite':
+                    theSearch = theSearch.filter(item => !!item.is_favourited);
+                    break;
                 case 'submitted':
                 case 'new':
                 case 'rejected':
                 case 'deprecated':
                     theSearch = theSearch.filter(item => item?.object_status === params.get('type'));
+                    break;
+                case 'culturaladvice':
+                    theSearch = theSearch.filter(item => !!item.object_cultural_advice);
+                    break;
+                case 'subscribed':
+                    theSearch = theSearch.filter(item => !!item.is_subscribed);
                     break;
                 case 'usersubmitted':
                     theSearch = theSearch.filter(item => isUserSubmitted(item));
