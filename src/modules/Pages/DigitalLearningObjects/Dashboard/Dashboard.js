@@ -1,6 +1,8 @@
 // istanbul ignore file
 import React, { useState, useEffect } from 'react';
 import { Grid, Box, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { StandardPage } from '../../../App/components/pages';
 
 import { Bar } from 'react-chartjs-2';
@@ -23,6 +25,10 @@ import { dashboardSiteUsage } from '../../../../data/mock/data/dlor/dashboardSit
 import UsageAnalytics from './UsageAnalytics';
 import DLOStatusSummary from './DLOStatusSummary';
 import TeamBreakdown from './TeamBreakdown';
+import ObjectTypeBreakdown from './ObjectTypeBreakdown';
+import KeywordBreakdown from './KeywordBreakdown';
+import ReviewStatusBreakdown from './ReviewStatusBreakdown';
+// ...existing code...
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Title);
 
@@ -46,6 +52,8 @@ const STACK_SERIES_CHART = true;
  * @returns {string[]} An array of RGBA color strings.
  */
 const generateRandomColors = count => {
+    // Mock object type breakdown data
+    // ...existing code...
     const colors = [];
     const hueStep = 360 / (count > 0 ? count : 1);
 
@@ -419,6 +427,26 @@ function formatSeriesBreakdownData(apiData) {
 // =========================================================
 
 export default function Dashboard() {
+    // Object Type Breakdown data and chart config (mock)
+    const objectTypeBreakdownData = [
+        { object_type_name: 'HP5', object_count: 2 },
+        { object_type_name: 'Unallocated Facet', object_count: 0 },
+        { object_type_name: 'Video', object_count: 5 },
+        { object_type_name: 'PDF', object_count: 3 },
+    ];
+
+    const objectTypeChartData = {
+        labels: objectTypeBreakdownData.map(item => item.object_type_name),
+        datasets: [
+            {
+                label: 'Objects by Type',
+                data: objectTypeBreakdownData.map(item => item.object_count),
+                backgroundColor: generateRandomColors(objectTypeBreakdownData.length),
+                borderColor: generateRandomColors(objectTypeBreakdownData.length).map(c => c.replace(', 0.7)', ', 1)')),
+                borderWidth: 1,
+            },
+        ],
+    };
     // Legend visibility state for Team Breakdown
     const [objectData, setObjectData] = useState(null);
     const [teamData, setTeamData] = useState(null);
@@ -618,6 +646,31 @@ export default function Dashboard() {
     return (
         <StandardPage title="Digital Learning Object Repository - Analytics Dashboard">
             <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Accordion defaultExpanded sx={{ background: 'rgba(120, 90, 200, 0.08)', borderRadius: 2 }}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="site-stats-content"
+                            id="site-stats-header"
+                        >
+                            <Typography variant="h6">Site Statistics</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <DLOStatusSummary
+                                data={{
+                                    new_objects: 168,
+                                    published_objects: 165,
+                                    rejected_objects: 2,
+                                    deprecated_objects: 1,
+                                    user_submitted_objects: 26,
+                                }}
+                            />
+                            <Box sx={{ mt: 2 }}>
+                                <UsageAnalytics usageData={chartData} />
+                            </Box>
+                        </AccordionDetails>
+                    </Accordion>
+                </Grid>
                 {/* 1. Object Distribution Chart - Fixed Stacked */}
                 {/* <Grid item xs={12} md={4}>
                     <Box sx={{ border: '1px solid #eee', p: 2, textAlign: 'center' }}>
@@ -664,55 +717,77 @@ export default function Dashboard() {
 
                 {/* 2. Team Breakdown Chart - Fixed Stacked */}
 
-                <Grid item xs={12} md={4}>
-                    <TeamBreakdown
-                        chartData={teamData}
-                        teamBreakdown={teamData.labels.map((label, idx) => ({
-                            team_name: label,
-                            total_objects: teamData.datasets[0].data[idx],
-                        }))}
-                        colors={teamData.datasets[0].backgroundColor}
-                    />
+                <Grid item xs={12}>
+                    <Accordion defaultExpanded sx={{ background: 'rgba(120, 90, 200, 0.08)', borderRadius: 2 }}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="object-analytics-content"
+                            id="object-analytics-header"
+                        >
+                            <Typography variant="h6">Object Breakdown</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} md={3}>
+                                    <TeamBreakdown chartData={teamData} />
+                                </Grid>
+                                <Grid item xs={12} md={3}>
+                                    <ObjectTypeBreakdown
+                                        chartData={objectTypeChartData}
+                                        objectTypeBreakdown={objectTypeBreakdownData}
+                                        colors={objectTypeChartData.datasets[0].backgroundColor}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={3}>
+                                    <KeywordBreakdown
+                                        chartData={{
+                                            labels: keywordData.datasets.map(ds => ds.label),
+                                            datasets: [
+                                                {
+                                                    data: keywordData.datasets.map(ds => ds.data[0]),
+                                                    backgroundColor: keywordData.datasets.map(ds => ds.backgroundColor),
+                                                    borderColor: keywordData.datasets.map(ds => ds.borderColor),
+                                                    borderWidth: 1,
+                                                },
+                                            ],
+                                        }}
+                                        keywordBreakdown={keywordData.datasets.map(ds => ({
+                                            keyword: ds.label,
+                                            object_count: ds.data[0],
+                                        }))}
+                                        colors={keywordData.datasets.map(ds => ds.backgroundColor)}
+                                    />
+                                </Grid>
+                                {reviewData && (
+                                    <Grid item xs={12} md={3}>
+                                        <ReviewStatusBreakdown
+                                            chartData={{
+                                                labels: reviewData.datasets.map(ds => ds.label),
+                                                datasets: [
+                                                    {
+                                                        data: reviewData.datasets.map(ds => ds.data[0]),
+                                                        backgroundColor: reviewData.datasets.map(
+                                                            ds => ds.backgroundColor,
+                                                        ),
+                                                        borderColor: reviewData.datasets.map(ds => ds.borderColor),
+                                                        borderWidth: 1,
+                                                    },
+                                                ],
+                                            }}
+                                            reviewStatusBreakdown={reviewData.datasets.map(ds => ({
+                                                label: ds.label,
+                                                value: ds.data[0],
+                                            }))}
+                                            colors={reviewData.datasets.map(ds => ds.backgroundColor)}
+                                            options={reviewOptions}
+                                            height={reviewHeight}
+                                        />
+                                    </Grid>
+                                )}
+                            </Grid>
+                        </AccordionDetails>
+                    </Accordion>
                 </Grid>
-
-                {/* 3. Keyword Breakdown Chart - Fixed Stacked */}
-                <Grid item xs={12} md={4}>
-                    <Box sx={{ border: '1px solid #eee', p: 2, textAlign: 'center' }}>
-                        <Typography variant="h6" component="h2" gutterBottom>
-                            Keywords
-                        </Typography>
-                        <Box sx={{ height: '100px' }}>
-                            {' '}
-                            {/* Fixed height */}
-                            <Bar
-                                data={keywordData}
-                                options={keywordOptions}
-                                role="img"
-                                aria-label="Bar chart showing keyword breakdown of digital learning objects"
-                            />
-                        </Box>
-                    </Box>
-                </Grid>
-
-                {/* 4. Review Status Chart - Dynamic Height */}
-                {reviewData && (
-                    <Grid item xs={12} md={4}>
-                        <Box sx={{ border: '1px solid #eee', p: 2, textAlign: 'center' }}>
-                            <Typography variant="h6" component="h2" gutterBottom>
-                                Review Status
-                            </Typography>
-                            {/* Conditional Height */}
-                            <Box sx={{ height: reviewHeight }}>
-                                <Bar
-                                    data={reviewData}
-                                    options={reviewOptions}
-                                    role="img"
-                                    aria-label="Bar chart showing review breakdown of digital learning objects"
-                                />
-                            </Box>
-                        </Box>
-                    </Grid>
-                )}
 
                 {/* 5. Filter Breakdown Chart - Dynamic Height */}
                 {filterData && (
@@ -753,17 +828,6 @@ export default function Dashboard() {
                         </Box>
                     </Grid>
                 )}
-
-                <UsageAnalytics usageData={chartData} />
-                <DLOStatusSummary
-                    data={{
-                        new_objects: 168,
-                        published_objects: 165,
-                        rejected_objects: 2,
-                        deprecated_objects: 1,
-                        user_submitted_objects: 26,
-                    }}
-                />
             </Grid>
         </StandardPage>
     );

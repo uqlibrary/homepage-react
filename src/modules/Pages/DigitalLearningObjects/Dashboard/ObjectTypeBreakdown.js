@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 import { Doughnut } from 'react-chartjs-2';
-import PropTypes from 'prop-types';
 
-export default function TeamBreakdown({ chartData }) {
+/**
+ * ObjectTypeBreakdown component
+ * Props:
+ *   chartData: Chart.js data object for Doughnut chart
+ *   objectTypeBreakdown: Array<{ object_type_name: string, object_count: number }>
+ *   colors: Array<string> (optional, for legend color indicators)
+ */
+export default function ObjectTypeBreakdown({ chartData, objectTypeBreakdown, colors }) {
     const [showLegend, setShowLegend] = useState(false);
-
-    // Extract legend data from chartData
-    const labels = chartData.labels || [];
-    const dataArr = (chartData.datasets && chartData.datasets[0]?.data) || [];
-    const colors = (chartData.datasets && chartData.datasets[0]?.backgroundColor) || [];
 
     return (
         <Box
@@ -22,7 +24,7 @@ export default function TeamBreakdown({ chartData }) {
             }}
         >
             <Typography variant="h6" component="h2" gutterBottom={false} sx={{ mb: 1 }}>
-                Team Breakdown
+                Object Types
             </Typography>
             <Box
                 sx={{
@@ -35,11 +37,11 @@ export default function TeamBreakdown({ chartData }) {
             >
                 <Doughnut
                     data={chartData}
-                    aria-label="Doughnut chart showing team breakdown of digital learning objects"
+                    aria-label="Doughnut chart showing object type breakdown of digital learning objects"
                     options={{
                         plugins: {
                             legend: { display: false },
-                            title: { display: false, text: 'Objects by Team (Including Not Assigned)' },
+                            title: { display: false, text: 'Objects by Type' },
                         },
                         cutout: '70%',
                         maintainAspectRatio: false,
@@ -58,7 +60,7 @@ export default function TeamBreakdown({ chartData }) {
                         marginBottom: '0px',
                     }}
                     onClick={() => setShowLegend(v => !v)}
-                    aria-label={showLegend ? 'Hide team legend' : 'Show team legend'}
+                    aria-label={showLegend ? 'Hide object type legend' : 'Show object type legend'}
                 >
                     {showLegend ? 'Hide Legend' : 'Show Legend'}
                 </button>
@@ -66,8 +68,8 @@ export default function TeamBreakdown({ chartData }) {
             {showLegend && (
                 <Box
                     sx={{
-                        mt: 0.25,
-                        mb: 0.25,
+                        mt: 0.5,
+                        mb: 0.5,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'flex-start',
@@ -77,18 +79,18 @@ export default function TeamBreakdown({ chartData }) {
                         borderRadius: '8px',
                         boxShadow: 1,
                         p: 1,
-                        maxHeight: '100px',
+                        maxHeight: '120px',
                         overflowY: 'auto',
                     }}
                 >
-                    {labels.map((label, idx) => (
+                    {objectTypeBreakdown.map((type, idx) => (
                         <Box
-                            key={label}
+                            key={type.object_type_name}
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'flex-start',
-                                mb: 0.25,
+                                mb: 0.5,
                                 gap: 0.5,
                                 width: '100%',
                                 whiteSpace: 'nowrap',
@@ -110,7 +112,7 @@ export default function TeamBreakdown({ chartData }) {
                                 />
                             )}
                             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                {label} ({dataArr[idx]})
+                                {type.object_type_name} ({type.object_count})
                             </span>
                         </Box>
                     ))}
@@ -120,6 +122,13 @@ export default function TeamBreakdown({ chartData }) {
     );
 }
 
-TeamBreakdown.propTypes = {
+ObjectTypeBreakdown.propTypes = {
     chartData: PropTypes.object.isRequired,
+    objectTypeBreakdown: PropTypes.arrayOf(
+        PropTypes.shape({
+            object_type_name: PropTypes.string.isRequired,
+            object_count: PropTypes.number.isRequired,
+        }),
+    ).isRequired,
+    colors: PropTypes.arrayOf(PropTypes.string),
 };

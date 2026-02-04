@@ -29,52 +29,60 @@ function buildDLOStatusUrl(param) {
 }
 
 const DLOStatusSummary = ({ data }) => (
-    <Grid item xs={12} md={6}>
-        <Box sx={{ mt: 1, pt: 0.5, mb: 0, pb: 0, px: 0, border: '1px solid #eee', borderRadius: 1 }}>
-            <Grid container spacing={0.5} alignItems="center" justifyContent="center" wrap="nowrap">
-                {statusConfig.map((status, idx) => (
-                    <React.Fragment key={status.key}>
-                        <Grid item xs zeroMinWidth sx={{ p: 0, m: 0 }}>
-                            <Box sx={{ textAlign: 'center', p: 0, m: 0 }}>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        color: status.color,
-                                        fontWeight: 600,
-                                        fontSize: '0.8rem',
-                                        lineHeight: 1,
-                                        m: 0,
-                                        p: 0,
-                                    }}
-                                    data-testid={`count-${status.key}`}
+    <Box
+        sx={{
+            mt: 1,
+            pt: 0.5,
+            mb: 0,
+            pb: 0,
+            px: 0,
+            border: '1px solid #eee',
+            backgroundColor: '#fafafa',
+            borderRadius: 1,
+            boxShadow: '0 2px 8px 0 rgba(120, 90, 200, 0.30)',
+        }}
+    >
+        <Grid container spacing={0.5} alignItems="center" justifyContent="center" wrap="nowrap">
+            {statusConfig.map((status, idx) => (
+                <React.Fragment key={status.key}>
+                    <Grid item xs zeroMinWidth sx={{ p: 0, m: 0 }}>
+                        <Box sx={{ textAlign: 'center', p: 0, m: 0 }}>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    color: status.color,
+                                    fontWeight: 600,
+                                    fontSize: '0.8rem',
+                                    lineHeight: 1,
+                                    m: 0,
+                                    p: 0,
+                                }}
+                                data-testid={`count-${status.key}`}
+                            >
+                                <a
+                                    href={buildDLOStatusUrl(status.param)}
+                                    style={{ textDecoration: 'none', color: status.color }}
+                                    aria-label={`View ${status.label} objects`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                 >
-                                    <a
-                                        href={buildDLOStatusUrl(status.param)}
-                                        style={{ textDecoration: 'none', color: status.color }}
-                                        aria-label={`View ${status.label} objects`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {data?.[status.key] ?? 0}
-                                    </a>
-                                </Typography>
-                                <Typography
-                                    variant="caption"
-                                    color="textSecondary"
-                                    sx={{ fontSize: '0.4rem', lineHeight: 1, m: 0, p: 0 }}
-                                >
-                                    {status.label}
-                                </Typography>
-                            </Box>
-                        </Grid>
-                        {idx < statusConfig.length - 1 && (
-                            <Divider orientation="vertical" flexItem sx={{ mx: 0, my: 0 }} />
-                        )}
-                    </React.Fragment>
-                ))}
-            </Grid>
-        </Box>
-    </Grid>
+                                    {data?.[status.key] ?? 0}
+                                </a>
+                            </Typography>
+                            <Typography
+                                variant="caption"
+                                color="textSecondary"
+                                sx={{ fontSize: '0.8rem', lineHeight: 1, m: 0, p: 0 }}
+                            >
+                                {status.label}
+                            </Typography>
+                        </Box>
+                    </Grid>
+                    {idx < statusConfig.length - 1 && <Divider orientation="vertical" flexItem sx={{ mx: 0, my: 0 }} />}
+                </React.Fragment>
+            ))}
+        </Grid>
+    </Box>
 );
 
 DLOStatusSummary.propTypes = {

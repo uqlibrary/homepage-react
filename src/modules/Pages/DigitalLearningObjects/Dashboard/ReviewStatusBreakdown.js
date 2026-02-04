@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { Doughnut } from 'react-chartjs-2';
-import PropTypes from 'prop-types';
 
-export default function TeamBreakdown({ chartData }) {
+/**
+ * ReviewStatusBreakdown - Donut/Bar chart for review status breakdown with show/hideable legend and consistent styling.
+ * @param {Object} props
+ * @param {Object} props.chartData - Chart.js data object
+ * @param {Object[]} props.reviewStatusBreakdown - Array of { label, value }
+ * @param {string[]} props.colors - Array of color strings for chart slices
+ * @param {Object} props.options - Chart.js options object
+ * @param {string|number} props.height - Height for the chart container
+ */
+export default function ReviewStatusBreakdown({ chartData, reviewStatusBreakdown, colors, options, height }) {
     const [showLegend, setShowLegend] = useState(false);
-
-    // Extract legend data from chartData
-    const labels = chartData.labels || [];
-    const dataArr = (chartData.datasets && chartData.datasets[0]?.data) || [];
-    const colors = (chartData.datasets && chartData.datasets[0]?.backgroundColor) || [];
 
     return (
         <Box
@@ -17,12 +20,13 @@ export default function TeamBreakdown({ chartData }) {
                 border: '1px solid #eee',
                 p: 1.25,
                 textAlign: 'center',
-                backgroundColor: '#fafafa',
+                background: '#fafaff',
+                borderRadius: 2,
                 boxShadow: '0 2px 8px 0 rgba(120, 90, 200, 0.10)',
             }}
         >
             <Typography variant="h6" component="h2" gutterBottom={false} sx={{ mb: 1 }}>
-                Team Breakdown
+                Review Status
             </Typography>
             <Box
                 sx={{
@@ -35,15 +39,17 @@ export default function TeamBreakdown({ chartData }) {
             >
                 <Doughnut
                     data={chartData}
-                    aria-label="Doughnut chart showing team breakdown of digital learning objects"
                     options={{
                         plugins: {
                             legend: { display: false },
-                            title: { display: false, text: 'Objects by Team (Including Not Assigned)' },
+                            title: { display: false },
                         },
                         cutout: '70%',
                         maintainAspectRatio: false,
+                        // Remove all axes for a pure donut
+                        scales: undefined,
                     }}
+                    aria-label="Doughnut chart showing review status breakdown of digital learning objects"
                 />
             </Box>
             <Box sx={{ mt: 0.5, textAlign: 'right' }}>
@@ -58,7 +64,7 @@ export default function TeamBreakdown({ chartData }) {
                         marginBottom: '0px',
                     }}
                     onClick={() => setShowLegend(v => !v)}
-                    aria-label={showLegend ? 'Hide team legend' : 'Show team legend'}
+                    aria-label={showLegend ? 'Hide review status legend' : 'Show review status legend'}
                 >
                     {showLegend ? 'Hide Legend' : 'Show Legend'}
                 </button>
@@ -81,9 +87,9 @@ export default function TeamBreakdown({ chartData }) {
                         overflowY: 'auto',
                     }}
                 >
-                    {labels.map((label, idx) => (
+                    {reviewStatusBreakdown.map((item, idx) => (
                         <Box
-                            key={label}
+                            key={item.label}
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -110,7 +116,7 @@ export default function TeamBreakdown({ chartData }) {
                                 />
                             )}
                             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                {label} ({dataArr[idx]})
+                                {item.label} ({item.value})
                             </span>
                         </Box>
                     ))}
@@ -119,7 +125,3 @@ export default function TeamBreakdown({ chartData }) {
         </Box>
     );
 }
-
-TeamBreakdown.propTypes = {
-    chartData: PropTypes.object.isRequired,
-};

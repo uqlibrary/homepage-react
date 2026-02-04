@@ -317,245 +317,248 @@ export default function UsageAnalytics({ usageData }) {
     });
     return (
         <>
-            <Grid item xs={12} md={8}>
-                <Box
-                    sx={{
-                        border: '1px solid #eee',
-                        p: 2,
-                        textAlign: 'center',
-                        height: '440px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                    }}
-                >
-                    <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        spacing={2}
-                        alignItems="center"
-                        sx={{ mb: 1, justifyContent: 'flex-start', width: '100%' }}
+            <Grid container sx={{ boxShadow: '0 2px 8px 0 rgba(120, 90, 200, 0.30)' }}>
+                <Grid item xs={12} md={8}>
+                    <Box
+                        sx={{
+                            border: '1px solid #eee',
+                            p: 2,
+                            textAlign: 'center',
+                            height: '440px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            backgroundColor: '#fafafa',
+                        }}
                     >
-                        <Typography variant="subtitle1" sx={{ minWidth: 120, pl: 3 }}>
-                            Usage Date Range:
-                        </Typography>
-                        <TextField
-                            label="Start Date"
-                            type="date"
-                            size="small"
-                            value={startDate}
-                            onChange={e => setStartDate(e.target.value)}
-                            inputProps={{ min: minDate, max: endDate }}
-                            sx={{ minWidth: 160 }}
-                        />
-                        <TextField
-                            label="End Date"
-                            type="date"
-                            size="small"
-                            value={endDate}
-                            onChange={e => setEndDate(e.target.value)}
-                            inputProps={{ min: startDate, max: maxDate }}
-                            sx={{ minWidth: 160 }}
-                        />
-                        <Button
-                            variant="outlined"
-                            onClick={() => {
-                                setStartDate(defaultStartDate);
-                                setEndDate(maxDate);
-                            }}
-                            sx={{ ml: 2 }}
+                        <Stack
+                            direction={{ xs: 'column', sm: 'row' }}
+                            spacing={2}
+                            alignItems="center"
+                            sx={{ mb: 1, justifyContent: 'flex-start', width: '100%' }}
                         >
-                            Reset
-                        </Button>
-                    </Stack>
-                    <Box sx={{ flex: 1, minHeight: 0 }}>
-                        <Line data={chartData} options={chartOptions} />
+                            <Typography variant="subtitle1" sx={{ minWidth: 120, pl: 3 }}>
+                                Usage Date Range:
+                            </Typography>
+                            <TextField
+                                label="Start Date"
+                                type="date"
+                                size="small"
+                                value={startDate}
+                                onChange={e => setStartDate(e.target.value)}
+                                inputProps={{ min: minDate, max: endDate }}
+                                sx={{ minWidth: 160 }}
+                            />
+                            <TextField
+                                label="End Date"
+                                type="date"
+                                size="small"
+                                value={endDate}
+                                onChange={e => setEndDate(e.target.value)}
+                                inputProps={{ min: startDate, max: maxDate }}
+                                sx={{ minWidth: 160 }}
+                            />
+                            <Button
+                                variant="outlined"
+                                onClick={() => {
+                                    setStartDate(defaultStartDate);
+                                    setEndDate(maxDate);
+                                }}
+                                sx={{ ml: 2 }}
+                            >
+                                Reset
+                            </Button>
+                        </Stack>
+                        <Box sx={{ flex: 1, minHeight: 0 }}>
+                            <Line data={chartData} options={chartOptions} />
+                        </Box>
                     </Box>
-                </Box>
-            </Grid>
-            <Grid item xs={12} md={4}>
-                <Box
-                    sx={{
-                        border: '1px solid #eee',
-                        p: 2,
-                        height: '440px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                        bgcolor: '#f9fafb',
-                    }}
-                >
-                    <Typography variant="h6" sx={{ mb: 0.2, textAlign: 'center' }}>
-                        Usage Summary
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 0.2, mt: 0, textAlign: 'center', color: '#64748b' }}>
-                        Date Range: {formatDateBrisbane(startDate)} to {formatDateBrisbane(endDate)}
-                    </Typography>
-                    {(() => {
-                        let peakTotal = 0;
-                        let peakDate = '';
-                        let totalCurrentPeriod = 0;
-                        let totalPrevPeriod = 0;
-                        filteredUsageData.forEach(day => {
-                            totalCurrentPeriod += day.total_views;
-                            if (day.total_views > peakTotal) {
-                                peakTotal = day.total_views;
-                                peakDate = day.activity_date;
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <Box
+                        sx={{
+                            border: '1px solid #eee',
+                            p: 2,
+                            height: '440px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            bgcolor: '#f9fafb',
+                        }}
+                    >
+                        <Typography variant="h6" sx={{ mb: 0.2, textAlign: 'center' }}>
+                            Usage Summary
+                        </Typography>
+                        <Typography variant="body2" sx={{ mb: 0.2, mt: 0, textAlign: 'center', color: '#64748b' }}>
+                            Date Range: {formatDateBrisbane(startDate)} to {formatDateBrisbane(endDate)}
+                        </Typography>
+                        {(() => {
+                            let peakTotal = 0;
+                            let peakDate = '';
+                            let totalCurrentPeriod = 0;
+                            let totalPrevPeriod = 0;
+                            filteredUsageData.forEach(day => {
+                                totalCurrentPeriod += day.total_views;
+                                if (day.total_views > peakTotal) {
+                                    peakTotal = day.total_views;
+                                    peakDate = day.activity_date;
+                                }
+                            });
+                            prevPeriodData.forEach(day => {
+                                totalPrevPeriod += day.total_views;
+                            });
+                            let totalTrend = null;
+                            if (prevPeriodData.length === periodLength) {
+                                if (totalPrevPeriod > 0) {
+                                    totalTrend = ((totalCurrentPeriod - totalPrevPeriod) / totalPrevPeriod) * 100;
+                                } else if (totalPrevPeriod === 0 && totalCurrentPeriod > 0) {
+                                    totalTrend = totalCurrentPeriod * 100;
+                                } else if (totalPrevPeriod > 0 && totalCurrentPeriod === 0) {
+                                    totalTrend = -100;
+                                } else {
+                                    totalTrend = 0;
+                                }
                             }
-                        });
-                        prevPeriodData.forEach(day => {
-                            totalPrevPeriod += day.total_views;
-                        });
-                        let totalTrend = null;
-                        if (prevPeriodData.length === periodLength) {
-                            if (totalPrevPeriod > 0) {
-                                totalTrend = ((totalCurrentPeriod - totalPrevPeriod) / totalPrevPeriod) * 100;
-                            } else if (totalPrevPeriod === 0 && totalCurrentPeriod > 0) {
-                                totalTrend = totalCurrentPeriod * 100;
-                            } else if (totalPrevPeriod > 0 && totalCurrentPeriod === 0) {
-                                totalTrend = -100;
-                            } else {
-                                totalTrend = 0;
-                            }
-                        }
-                        const { trendColor, trendText } = getTrendDisplay(totalTrend);
-                        return (
-                            <>
-                                <Typography
-                                    variant="subtitle2"
-                                    sx={{ fontWeight: 700, mb: 0, textAlign: 'center', fontSize: 13 }}
-                                >
-                                    Total: {total}
-                                    {totalTrend !== null && (
-                                        <span
-                                            style={{
-                                                color: trendColor,
-                                                fontWeight: 600,
-                                                marginLeft: 4,
-                                                fontSize: '0.9em',
-                                                verticalAlign: 'middle',
+                            const { trendColor, trendText } = getTrendDisplay(totalTrend);
+                            return (
+                                <>
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{ fontWeight: 700, mb: 0, textAlign: 'center', fontSize: 13 }}
+                                    >
+                                        Total: {total}
+                                        {totalTrend !== null && (
+                                            <span
+                                                style={{
+                                                    color: trendColor,
+                                                    fontWeight: 600,
+                                                    marginLeft: 4,
+                                                    fontSize: '0.9em',
+                                                    verticalAlign: 'middle',
+                                                }}
+                                            >
+                                                {trendText}
+                                            </span>
+                                        )}
+                                        <span style={{ fontSize: 13, marginLeft: 6 }}> Selected: {totalSelected}</span>
+                                    </Typography>
+                                    {peakTotal > 0 && (
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                mt: -0.5,
+                                                mb: 0.25,
+                                                textAlign: 'center',
+                                                color: '#64748b',
+                                                display: 'block',
+                                                fontSize: 10,
                                             }}
                                         >
-                                            {trendText}
-                                        </span>
+                                            Peak - {formatDateBrisbane(peakDate)} ({peakTotal} views)
+                                        </Typography>
                                     )}
-                                    <span style={{ fontSize: 13, marginLeft: 6 }}> Selected: {totalSelected}</span>
-                                </Typography>
-                                {peakTotal > 0 && (
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            mt: -0.5,
-                                            mb: 0.25,
-                                            textAlign: 'center',
-                                            color: '#64748b',
-                                            display: 'block',
-                                            fontSize: 10,
+                                    <Box sx={{ borderBottom: '1px solid #e0e0e0', width: '100%', my: 0.5 }} />
+                                </>
+                            );
+                        })()}
+                        <Box component="ul" sx={{ pl: 2, mt: 0.25, mb: 0, listStyle: 'none', p: 0 }}>
+                            {allUserGroupsForSummary.map(group => {
+                                const count = groupTotals[group] || 0;
+                                const prevCount = prevGroupTotals[group] || 0;
+                                let groupPercent = 0;
+                                if (prevPeriodData.length === periodLength) {
+                                    if (prevCount > 0) {
+                                        groupPercent = ((count - prevCount) / prevCount) * 100;
+                                    } else if (prevCount === 0 && count > 0) {
+                                        groupPercent = count * 100;
+                                    } else if (prevCount > 0 && count === 0) {
+                                        groupPercent = -100;
+                                    } else {
+                                        groupPercent = 0;
+                                    }
+                                } else {
+                                    groupPercent = null;
+                                }
+                                const color = groupColorMap[group] || '#64748b';
+                                const peakDay = groupPeakDay[group];
+                                const { trendColor, trendText } = getTrendDisplay(groupPercent);
+                                return (
+                                    <li
+                                        key={group}
+                                        style={{
+                                            marginBottom: 0,
+                                            padding: 0,
+                                            lineHeight: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            minHeight: 20,
                                         }}
                                     >
-                                        Peak - {formatDateBrisbane(peakDate)} ({peakTotal} views)
-                                    </Typography>
-                                )}
-                                <Box sx={{ borderBottom: '1px solid #e0e0e0', width: '100%', my: 0.5 }} />
-                            </>
-                        );
-                    })()}
-                    <Box component="ul" sx={{ pl: 2, mt: 0.25, mb: 0, listStyle: 'none', p: 0 }}>
-                        {allUserGroupsForSummary.map(group => {
-                            const count = groupTotals[group] || 0;
-                            const prevCount = prevGroupTotals[group] || 0;
-                            let groupPercent = 0;
-                            if (prevPeriodData.length === periodLength) {
-                                if (prevCount > 0) {
-                                    groupPercent = ((count - prevCount) / prevCount) * 100;
-                                } else if (prevCount === 0 && count > 0) {
-                                    groupPercent = count * 100;
-                                } else if (prevCount > 0 && count === 0) {
-                                    groupPercent = -100;
-                                } else {
-                                    groupPercent = 0;
-                                }
-                            } else {
-                                groupPercent = null;
-                            }
-                            const color = groupColorMap[group] || '#64748b';
-                            const peakDay = groupPeakDay[group];
-                            const { trendColor, trendText } = getTrendDisplay(groupPercent);
-                            return (
-                                <li
-                                    key={group}
-                                    style={{
-                                        marginBottom: 0,
-                                        padding: 0,
-                                        lineHeight: 1,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        minHeight: 20,
-                                    }}
-                                >
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                size="small"
-                                                checked={!!visibleGroups[group]}
-                                                onChange={() => handleGroupToggle(group)}
-                                                sx={{ p: 0.1, mr: 0.25 }}
-                                            />
-                                        }
-                                        label={
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <Box
-                                                    sx={{
-                                                        width: 10,
-                                                        height: 10,
-                                                        borderRadius: 1,
-                                                        bgcolor: color,
-                                                        mr: 0.5,
-                                                        border: '1px solid #cbd5e1',
-                                                    }}
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    size="small"
+                                                    checked={!!visibleGroups[group]}
+                                                    onChange={() => handleGroupToggle(group)}
+                                                    sx={{ p: 0.1, mr: 0.25 }}
                                                 />
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{
-                                                        color: '#334155',
-                                                        fontSize: 11,
-                                                        lineHeight: 1,
-                                                        p: 0,
-                                                        m: 0,
-                                                    }}
-                                                >
-                                                    {group === 'public' ? 'Not logged in' : group}: <b>{count}</b>
-                                                    <span
-                                                        style={{
-                                                            color: trendColor,
-                                                            fontWeight: 600,
-                                                            marginLeft: 6,
+                                            }
+                                            label={
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    <Box
+                                                        sx={{
+                                                            width: 10,
+                                                            height: 10,
+                                                            borderRadius: 1,
+                                                            bgcolor: color,
+                                                            mr: 0.5,
+                                                            border: '1px solid #cbd5e1',
+                                                        }}
+                                                    />
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{
+                                                            color: '#334155',
                                                             fontSize: 11,
+                                                            lineHeight: 1,
+                                                            p: 0,
+                                                            m: 0,
                                                         }}
                                                     >
-                                                        {trendText}
-                                                    </span>
-                                                    {peakDay && (
+                                                        {group === 'public' ? 'Not logged in' : group}: <b>{count}</b>
                                                         <span
                                                             style={{
-                                                                color: '#64748b',
-                                                                fontWeight: 400,
+                                                                color: trendColor,
+                                                                fontWeight: 600,
                                                                 marginLeft: 6,
-                                                                fontSize: 10,
+                                                                fontSize: 11,
                                                             }}
                                                         >
-                                                            (Peak: {peakDay})
+                                                            {trendText}
                                                         </span>
-                                                    )}
-                                                </Typography>
-                                            </Box>
-                                        }
-                                        sx={{ m: 0, p: 0 }}
-                                    />
-                                </li>
-                            );
-                        })}
+                                                        {peakDay && (
+                                                            <span
+                                                                style={{
+                                                                    color: '#64748b',
+                                                                    fontWeight: 400,
+                                                                    marginLeft: 6,
+                                                                    fontSize: 10,
+                                                                }}
+                                                            >
+                                                                (Peak: {peakDay})
+                                                            </span>
+                                                        )}
+                                                    </Typography>
+                                                </Box>
+                                            }
+                                            sx={{ m: 0, p: 0 }}
+                                        />
+                                    </li>
+                                );
+                            })}
+                        </Box>
                     </Box>
-                </Box>
+                </Grid>
             </Grid>
         </>
     );
