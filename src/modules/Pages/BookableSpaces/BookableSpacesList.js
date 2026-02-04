@@ -64,6 +64,7 @@ const StyledPageWrapperDiv = styled('div')(() => ({
     marginTop: '1px',
     display: 'flex',
     marginBottom: '-50px', // bring footer up
+    marginInline: '2rem',
 }));
 const StyledMapWrapperDiv = styled('div')(({ theme }) => ({
     position: 'absolute',
