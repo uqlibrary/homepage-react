@@ -42,6 +42,7 @@ import {
     DLOR_SCHEDULE_API,
     DLOR_SCHEDULE_UPDATE_API,
     DLOR_REQUEST_KEYWORD_API,
+    DLOR_DASHBOARD_API,
 } from 'repositories/routes';
 import { checkExpireSession } from './actionhelpers';
 
@@ -957,7 +958,7 @@ export function deleteDlorSchedule(id) {
             });
     };
 }
-// request for new keyword email action
+
 export function requestNewKeyword(request) {
     console.log('request new keyword called', request);
     return dispatch => {
@@ -971,9 +972,29 @@ export function requestNewKeyword(request) {
                 });
             })
             .catch(error => {
-                console.log('TESTING');
                 dispatch({
                     type: actions.DLOR_KEYWORDS_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                throw error;
+            });
+    };
+}
+
+export function loadDLORDashboard() {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_DASHBOARD_LOADING });
+        return get(DLOR_DASHBOARD_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_DASHBOARD_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_DASHBOARD_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

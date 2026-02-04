@@ -1,4 +1,17 @@
-export const dashboardSiteUsage = {
+const today = new Date();
+
+function formatDate(d) {
+    const pad = n => n.toString().padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+const siteUsageDates = [1, 2, 3].map(daysAgo => {
+    const d = new Date(today);
+    d.setDate(today.getDate() - daysAgo);
+    return formatDate(d);
+});
+
+export const dlorDashboardSiteUsage = {
+    data: {
         "total_objects": 11,
         "published_objects": 8,
         "rejected_objects": 0,
@@ -59,7 +72,7 @@ export const dashboardSiteUsage = {
         ],
         "site_usage": [
             {
-                "activity_date": "2026-02-01",
+                "activity_date": siteUsageDates[2],
                 "total_views": 1,
                 "viewers_by_group": [
                     {
@@ -69,7 +82,7 @@ export const dashboardSiteUsage = {
                 ]
             },
             {
-                "activity_date": "2026-02-02",
+                "activity_date": siteUsageDates[1],
                 "total_views": 2,
                 "viewers_by_group": [
                     {
@@ -83,7 +96,7 @@ export const dashboardSiteUsage = {
                 ]
             },
             {
-                "activity_date": "2026-02-03",
+                "activity_date": siteUsageDates[0],
                 "total_views": 1,
                 "viewers_by_group": [
                     {
@@ -94,4 +107,5 @@ export const dashboardSiteUsage = {
             }
         ],
         "popular_objects": 2
-    }
+    },
+};
