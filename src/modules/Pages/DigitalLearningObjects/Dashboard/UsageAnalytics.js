@@ -227,26 +227,23 @@ export default function UsageAnalytics({ usageData }) {
         return Array.isArray(arr) ? arr : [];
     }, [usageData]);
 
-    const actualUsageData = React.useMemo(() => (USE_MOCK_DATA ? generateMockUsageData() : analyticsArray), [
-        analyticsArray,
-    ]);
-    const allGroupsStable = getAllUserGroups(actualUsageData);
+    const allGroupsStable = getAllUserGroups(analyticsArray);
     const groupColorMap = getGroupColorMap(allGroupsStable);
 
     const allUserGroupsForSummary = allGroupsStable.includes('public')
         ? allGroupsStable.filter(g => g !== 'public').concat('public')
         : allGroupsStable;
 
-    const allDates = actualUsageData.map(d => d.activity_date);
+    const allDates = analyticsArray.map(d => d.activity_date);
     const minDate = allDates[0];
     const maxDate = allDates[allDates.length - 1];
     const defaultStartDate = allDates.length > 6 ? allDates[allDates.length - 7] : minDate;
     const [startDate, setStartDate] = useState(defaultStartDate);
     const [endDate, setEndDate] = useState(maxDate);
 
-    const globalMinDate = actualUsageData[0]?.activity_date;
-    const globalMaxDate = actualUsageData[actualUsageData.length - 1]?.activity_date;
-    const filledUsageData = fillMissingDates(actualUsageData, globalMinDate, globalMaxDate);
+    const globalMinDate = analyticsArray[0]?.activity_date;
+    const globalMaxDate = analyticsArray[analyticsArray.length - 1]?.activity_date;
+    const filledUsageData = fillMissingDates(analyticsArray, globalMinDate, globalMaxDate);
 
     const filteredUsageData = filledUsageData.filter(d => d.activity_date >= startDate && d.activity_date <= endDate);
 
