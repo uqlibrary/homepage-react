@@ -10,7 +10,7 @@ export const dashboardSiteUsage = {
         "my_objects": 0,
         "my_favourites": 1,
         "total_favourites": 3,
-        "total_subscriptions": 0,
+        "total_subscriptions": 1,
         "my_alerts": 0,
         "team_breakdown": [
             {
