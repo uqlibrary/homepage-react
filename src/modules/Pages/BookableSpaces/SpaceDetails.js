@@ -186,7 +186,7 @@ const SpaceDetails = ({
                 )}
                 {bookableSpace?.facility_types?.length > 0 && (
                     <>
-                        <h3>Facilities</h3>
+                        <h4>Facilities</h4>
                         <ul data-testid={`space-${bookableSpace?.space_id}-facility`}>
                             {bookableSpace?.facility_types?.map(facility => {
                                 return (

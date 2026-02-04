@@ -60,7 +60,7 @@ export const LongSpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, we
 
     return (
         <>
-            <Typography component={'h3'} variant={'h6'}>
+            <Typography component={'h4'} variant={'h6'}>
                 {bookableSpace?.space_library_name} opening hours
             </Typography>
             <div style={{ overflowX: 'scroll' }} tabIndex="0">

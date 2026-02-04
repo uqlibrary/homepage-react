@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
@@ -51,6 +51,9 @@ const SidebarSpacesList = ({
                         <p>No Spaces match these filters - change your selection in the sidebar to show some spaces.</p>
                     </Grid>
                 )}
+                <Typography variant={'h2'} className="showsOnlyOnFocus">
+                    Available Spaces
+                </Typography>
                 {filteredSpaceLocations.length > 0 &&
                     filteredSpaceLocations?.map(bookableSpace => {
                         return (
@@ -66,6 +69,8 @@ const SidebarSpacesList = ({
                                     fullHeight
                                     title={`${bookableSpace?.space_name} - ${bookableSpace?.space_type}`}
                                     style={{ marginRight: '0.5rem' }}
+                                    squareTop
+                                    subCard
                                 >
                                     <SpaceDetails
                                         weeklyHours={weeklyHours}
