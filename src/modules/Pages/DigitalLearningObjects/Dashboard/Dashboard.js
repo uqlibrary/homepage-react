@@ -141,7 +141,7 @@ const REVIEW_STATUS_COLORS = {
 const MAX_CHART_ITEMS = 15;
 const KEYWORD_LIMIT = 10;
 
-const chartData = [...dashboardSiteUsage];
+// const chartData = [...dashboardSiteUsage];
 
 // Collect all unique user groups across all days
 
@@ -428,25 +428,7 @@ function formatSeriesBreakdownData(apiData) {
 
 export default function Dashboard() {
     // Object Type Breakdown data and chart config (mock)
-    const objectTypeBreakdownData = [
-        { object_type_name: 'HP5', object_count: 2 },
-        { object_type_name: 'Unallocated Facet', object_count: 0 },
-        { object_type_name: 'Video', object_count: 5 },
-        { object_type_name: 'PDF', object_count: 3 },
-    ];
 
-    const objectTypeChartData = {
-        labels: objectTypeBreakdownData.map(item => item.object_type_name),
-        datasets: [
-            {
-                label: 'Objects by Type',
-                data: objectTypeBreakdownData.map(item => item.object_count),
-                backgroundColor: generateRandomColors(objectTypeBreakdownData.length),
-                borderColor: generateRandomColors(objectTypeBreakdownData.length).map(c => c.replace(', 0.7)', ', 1)')),
-                borderWidth: 1,
-            },
-        ],
-    };
     // Legend visibility state for Team Breakdown
     const [objectData, setObjectData] = useState(null);
     const [teamData, setTeamData] = useState(null);
@@ -573,32 +555,6 @@ export default function Dashboard() {
         indexAxis: 'y',
         plugins: { legend: { position: 'bottom', display: false }, title: { display: true } },
     };
-
-    // Fixed scale options for charts tied to total_objects (Object, Team, Keyword)
-    const fixedStackedOptions = {
-        ...baseChartOptions,
-        datasets: { bar: { barPercentage: 1.0, categoryPercentage: 1.0 } },
-        scales: {
-            x: { stacked: true, grid: { display: true }, padding: 0, max: 200 },
-            y: {
-                stacked: true,
-                grid: { display: false },
-                ticks: { display: false },
-                offset: false,
-                min: -0.5,
-                max: 0.5,
-            },
-        },
-        layout: { padding: { top: 10, bottom: 10, left: 0 } },
-    };
-
-    // Fixed scale options for Keywords (max: 100)
-    const keywordOptions = {
-        ...fixedStackedOptions,
-        scales: { ...fixedStackedOptions.scales, x: { ...fixedStackedOptions.scales.x, max: 100 } },
-        plugins: { ...baseChartOptions.plugins, title: { display: true, text: `Top ${KEYWORD_LIMIT} Keywords` } },
-    };
-
     // Function to dynamically generate options based on stacking preference
     const getDynamicBarOptions = (title, isStacked) => {
         return {
@@ -656,17 +612,9 @@ export default function Dashboard() {
                             <Typography variant="h6">Site Statistics</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <DLOStatusSummary
-                                data={{
-                                    new_objects: 168,
-                                    published_objects: 165,
-                                    rejected_objects: 2,
-                                    deprecated_objects: 1,
-                                    user_submitted_objects: 26,
-                                }}
-                            />
+                            <DLOStatusSummary data={dashboardSiteUsage} />
                             <Box sx={{ mt: 2 }}>
-                                <UsageAnalytics usageData={chartData} />
+                                <UsageAnalytics usageData={dashboardSiteUsage} />
                             </Box>
                         </AccordionDetails>
                     </Accordion>
@@ -729,59 +677,17 @@ export default function Dashboard() {
                         <AccordionDetails>
                             <Grid container spacing={3}>
                                 <Grid item xs={12} md={3}>
-                                    <TeamBreakdown chartData={teamData} />
+                                    <TeamBreakdown chartData={dashboardSiteUsage} />
                                 </Grid>
                                 <Grid item xs={12} md={3}>
-                                    <ObjectTypeBreakdown
-                                        chartData={objectTypeChartData}
-                                        objectTypeBreakdown={objectTypeBreakdownData}
-                                        colors={objectTypeChartData.datasets[0].backgroundColor}
-                                    />
+                                    <ObjectTypeBreakdown chartData={dashboardSiteUsage} />
                                 </Grid>
                                 <Grid item xs={12} md={3}>
-                                    <KeywordBreakdown
-                                        chartData={{
-                                            labels: keywordData.datasets.map(ds => ds.label),
-                                            datasets: [
-                                                {
-                                                    data: keywordData.datasets.map(ds => ds.data[0]),
-                                                    backgroundColor: keywordData.datasets.map(ds => ds.backgroundColor),
-                                                    borderColor: keywordData.datasets.map(ds => ds.borderColor),
-                                                    borderWidth: 1,
-                                                },
-                                            ],
-                                        }}
-                                        keywordBreakdown={keywordData.datasets.map(ds => ({
-                                            keyword: ds.label,
-                                            object_count: ds.data[0],
-                                        }))}
-                                        colors={keywordData.datasets.map(ds => ds.backgroundColor)}
-                                    />
+                                    <KeywordBreakdown chartData={dashboardSiteUsage} />
                                 </Grid>
                                 {reviewData && (
                                     <Grid item xs={12} md={3}>
-                                        <ReviewStatusBreakdown
-                                            chartData={{
-                                                labels: reviewData.datasets.map(ds => ds.label),
-                                                datasets: [
-                                                    {
-                                                        data: reviewData.datasets.map(ds => ds.data[0]),
-                                                        backgroundColor: reviewData.datasets.map(
-                                                            ds => ds.backgroundColor,
-                                                        ),
-                                                        borderColor: reviewData.datasets.map(ds => ds.borderColor),
-                                                        borderWidth: 1,
-                                                    },
-                                                ],
-                                            }}
-                                            reviewStatusBreakdown={reviewData.datasets.map(ds => ({
-                                                label: ds.label,
-                                                value: ds.data[0],
-                                            }))}
-                                            colors={reviewData.datasets.map(ds => ds.backgroundColor)}
-                                            options={reviewOptions}
-                                            height={reviewHeight}
-                                        />
+                                        <ReviewStatusBreakdown chartData={dashboardSiteUsage} />
                                     </Grid>
                                 )}
                             </Grid>

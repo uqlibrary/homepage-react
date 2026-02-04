@@ -1,18 +1,43 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 import { Doughnut } from 'react-chartjs-2';
 
-/**
- * ReviewStatusBreakdown - Donut/Bar chart for review status breakdown with show/hideable legend and consistent styling.
- * @param {Object} props
- * @param {Object} props.chartData - Chart.js data object
- * @param {Object[]} props.reviewStatusBreakdown - Array of { label, value }
- * @param {string[]} props.colors - Array of color strings for chart slices
- * @param {Object} props.options - Chart.js options object
- * @param {string|number} props.height - Height for the chart container
- */
-export default function ReviewStatusBreakdown({ chartData, reviewStatusBreakdown, colors, options, height }) {
+// Utility to generate distinct colors
+function generateRandomColors(count) {
+    const colors = [];
+    const hueStep = 360 / (count > 0 ? count : 1);
+    const startingHue = Math.floor(Math.random() * 360);
+    for (let i = 0; i < count; i++) {
+        const hue = (startingHue + i * hueStep) % 360;
+        const saturation = 90 + Math.random() * 10;
+        const lightness = i % 2 === 0 ? 40 + Math.random() * 15 : 65 + Math.random() * 15;
+        colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    }
+    return colors;
+}
+
+export default function ReviewStatusBreakdown({ chartData }) {
     const [showLegend, setShowLegend] = useState(false);
+
+    // Extract review status breakdown from raw API data
+    const reviewStatus = chartData.review_status || {};
+    const labels = ['Upcoming', 'Due', 'Overdue'];
+    const dataArr = [reviewStatus.upcoming || 0, reviewStatus.due || 0, reviewStatus.overdue || 0];
+    const colors = generateRandomColors(labels.length);
+
+    const doughnutData = {
+        labels,
+        datasets: [
+            {
+                label: 'Objects by Review Status',
+                data: dataArr,
+                backgroundColor: colors,
+                borderColor: colors.map(c => c.replace(')', ', 1)')),
+                borderWidth: 1,
+            },
+        ],
+    };
 
     return (
         <Box
@@ -38,18 +63,16 @@ export default function ReviewStatusBreakdown({ chartData, reviewStatusBreakdown
                 }}
             >
                 <Doughnut
-                    data={chartData}
+                    data={doughnutData}
+                    aria-label="Doughnut chart showing review status breakdown of digital learning objects"
                     options={{
                         plugins: {
                             legend: { display: false },
-                            title: { display: false },
+                            title: { display: false, text: 'Objects by Review Status' },
                         },
                         cutout: '70%',
                         maintainAspectRatio: false,
-                        // Remove all axes for a pure donut
-                        scales: undefined,
                     }}
-                    aria-label="Doughnut chart showing review status breakdown of digital learning objects"
                 />
             </Box>
             <Box sx={{ mt: 0.5, textAlign: 'right' }}>
@@ -87,9 +110,9 @@ export default function ReviewStatusBreakdown({ chartData, reviewStatusBreakdown
                         overflowY: 'auto',
                     }}
                 >
-                    {reviewStatusBreakdown.map((item, idx) => (
+                    {labels.map((label, idx) => (
                         <Box
-                            key={item.label}
+                            key={label}
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -116,7 +139,7 @@ export default function ReviewStatusBreakdown({ chartData, reviewStatusBreakdown
                                 />
                             )}
                             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                {item.label} ({item.value})
+                                {label} ({dataArr[idx]})
                             </span>
                         </Box>
                     ))}
@@ -125,3 +148,7 @@ export default function ReviewStatusBreakdown({ chartData, reviewStatusBreakdown
         </Box>
     );
 }
+
+ReviewStatusBreakdown.propTypes = {
+    chartData: PropTypes.object.isRequired,
+};

@@ -1,166 +1,95 @@
-export const dashboardSiteUsage = [
+export const dashboardSiteUsage = {
+        "total_objects": 11,
+        "published_objects": 8,
+        "rejected_objects": 0,
+        "deprecated_objects": 1,
+        "featured_objects": 6,
+        "new_objects": 8,
+        "cultural_advice_objects": 8,
+        "user_submitted_objects": 10,
+        "my_objects": 0,
+        "my_favourites": 1,
+        "total_subscriptions": 0,
+        "my_alerts": 0,
+        "team_breakdown": [
             {
-                "activity_date": "2026-01-02",
-                "total_views": 0,
-                "viewers_by_group": []
+                "team_name": "Team Two",
+                "total_objects": 9
             },
             {
-                "activity_date": "2026-01-03",
-                "total_views": 0,
-                "viewers_by_group": []
+                "team_name": "Team One",
+                "total_objects": 2
+            }
+        ],
+        "keyword_breakdown": [
+            {
+                "keyword": "research",
+                "object_count": 1
             },
             {
-                "activity_date": "2026-01-04",
-                "total_views": 0,
-                "viewers_by_group": []
+                "keyword": "other",
+                "object_count": 1
+            }
+        ],
+        "review_status": {
+            "upcoming": 3,
+            "due": 2,
+            "overdue": 0
+        },
+        "filter_breakdown": {
+            "Research (Topic)": 1,
+            "Assignments (Topic)": 1,
+            "HP5 (Media Format)": 2
+        },
+        "series_breakdown": {
+            "Series 1": 1,
+            "Series 2": 1,
+            "No Series": 8
+        },
+        "object_type_breakdown": [
+            {
+                "object_type_name": "HP5",
+                "object_count": 2
             },
             {
-                "activity_date": "2026-01-05",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
+                "object_type_name": "Unallocated Facet",
+                "object_count": 0
+            }
+        ],
+        "site_usage": [
             {
-                "activity_date": "2026-01-06",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-07",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-08",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-09",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-10",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-11",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-12",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-13",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-14",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-15",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-16",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-17",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-18",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-19",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-20",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-21",
-                "total_views": 12,
+                "activity_date": "2026-02-01",
+                "total_views": 1,
                 "viewers_by_group": [
                     {
-                        "user_group": "public",
-                        "total": 12
+                        "user_group": "STAFF",
+                        "total": 1
                     }
                 ]
             },
             {
-                "activity_date": "2026-01-22",
-                "total_views": 4,
-                "viewers_by_group": [
-                    {
-                        "user_group": "public",
-                        "total": 4
-                    }
-                ]
-            },
-            {
-                "activity_date": "2026-01-23",
+                "activity_date": "2026-02-02",
                 "total_views": 2,
                 "viewers_by_group": [
                     {
+                        "user_group": "STAFF",
+                        "total": 1
+                    },
+                    {
                         "user_group": "LIBRARYSTAFFB",
-                        "total": 2
+                        "total": 1
                     }
                 ]
             },
             {
-                "activity_date": "2026-01-24",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-25",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-26",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-27",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-28",
-                "total_views": 0,
-                "viewers_by_group": []
-            },
-            {
-                "activity_date": "2026-01-29",
-                "total_views": 11,
+                "activity_date": "2026-02-03",
+                "total_views": 1,
                 "viewers_by_group": [
                     {
-                        "user_group": "public",
-                        "total": 8
-                    },
-                    {
                         "user_group": "LIBRARYSTAFFB",
-                        "total": 3
+                        "total": 1
                     }
                 ]
             }
         ]
+    }

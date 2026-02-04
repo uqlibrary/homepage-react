@@ -10,8 +10,42 @@ import { Doughnut } from 'react-chartjs-2';
  *   objectTypeBreakdown: Array<{ object_type_name: string, object_count: number }>
  *   colors: Array<string> (optional, for legend color indicators)
  */
-export default function ObjectTypeBreakdown({ chartData, objectTypeBreakdown, colors }) {
+
+// Utility to generate distinct colors
+function generateRandomColors(count) {
+    const colors = [];
+    const hueStep = 360 / (count > 0 ? count : 1);
+    const startingHue = Math.floor(Math.random() * 360);
+    for (let i = 0; i < count; i++) {
+        const hue = (startingHue + i * hueStep) % 360;
+        const saturation = 90 + Math.random() * 10;
+        const lightness = i % 2 === 0 ? 40 + Math.random() * 15 : 65 + Math.random() * 15;
+        colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    }
+    return colors;
+}
+
+export default function ObjectTypeBreakdown({ chartData }) {
     const [showLegend, setShowLegend] = useState(false);
+
+    // Extract object type breakdown from raw API data
+    const objectTypeBreakdown = chartData.object_type_breakdown || [];
+    const labels = objectTypeBreakdown.map(item => item.object_type_name);
+    const dataArr = objectTypeBreakdown.map(item => item.object_count);
+    const colors = generateRandomColors(labels.length);
+
+    const doughnutData = {
+        labels,
+        datasets: [
+            {
+                label: 'Objects by Type',
+                data: dataArr,
+                backgroundColor: colors,
+                borderColor: colors.map(c => c.replace('0.7)', '1)')),
+                borderWidth: 1,
+            },
+        ],
+    };
 
     return (
         <Box
@@ -36,7 +70,7 @@ export default function ObjectTypeBreakdown({ chartData, objectTypeBreakdown, co
                 }}
             >
                 <Doughnut
-                    data={chartData}
+                    data={doughnutData}
                     aria-label="Doughnut chart showing object type breakdown of digital learning objects"
                     options={{
                         plugins: {
@@ -124,11 +158,4 @@ export default function ObjectTypeBreakdown({ chartData, objectTypeBreakdown, co
 
 ObjectTypeBreakdown.propTypes = {
     chartData: PropTypes.object.isRequired,
-    objectTypeBreakdown: PropTypes.arrayOf(
-        PropTypes.shape({
-            object_type_name: PropTypes.string.isRequired,
-            object_count: PropTypes.number.isRequired,
-        }),
-    ).isRequired,
-    colors: PropTypes.arrayOf(PropTypes.string),
 };

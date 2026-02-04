@@ -3,15 +3,49 @@ import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 import { Doughnut } from 'react-chartjs-2';
 
+// Utility to generate random colors for chart segments
+
+// Utility to generate distinct colors
+function generateRandomColors(count) {
+    const colors = [];
+    const hueStep = 360 / (count > 0 ? count : 1);
+    const startingHue = Math.floor(Math.random() * 360);
+    for (let i = 0; i < count; i++) {
+        const hue = (startingHue + i * hueStep) % 360;
+        const saturation = 90 + Math.random() * 10;
+        const lightness = i % 2 === 0 ? 40 + Math.random() * 15 : 65 + Math.random() * 15;
+        colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    }
+    return colors;
+}
+
 /**
  * KeywordBreakdown component
  * Props:
- *   chartData: Chart.js data object for Doughnut chart
- *   keywordBreakdown: Array<{ keyword: string, object_count: number }>
- *   colors: Array<string> (optional, for legend color indicators)
+ *   dashboardSiteUsage: Raw API data object containing keyword breakdown
  */
-export default function KeywordBreakdown({ chartData, keywordBreakdown, colors }) {
+
+export default function KeywordBreakdown({ chartData }) {
     const [showLegend, setShowLegend] = useState(false);
+
+    // Extract keyword breakdown from raw API data
+    const keywordBreakdown = chartData.keyword_breakdown || [];
+    const labels = keywordBreakdown.map(item => item.keyword);
+    const dataArr = keywordBreakdown.map(item => item.object_count);
+    const colors = generateRandomColors(labels.length);
+
+    const doughnutData = {
+        labels,
+        datasets: [
+            {
+                label: 'Objects by Keyword',
+                data: dataArr,
+                backgroundColor: colors,
+                borderColor: colors.map(c => c.replace(')', ', 1)')),
+                borderWidth: 1,
+            },
+        ],
+    };
 
     return (
         <Box
@@ -37,7 +71,7 @@ export default function KeywordBreakdown({ chartData, keywordBreakdown, colors }
                 }}
             >
                 <Doughnut
-                    data={chartData}
+                    data={doughnutData}
                     aria-label="Doughnut chart showing keyword breakdown of digital learning objects"
                     options={{
                         plugins: {
@@ -125,11 +159,4 @@ export default function KeywordBreakdown({ chartData, keywordBreakdown, colors }
 
 KeywordBreakdown.propTypes = {
     chartData: PropTypes.object.isRequired,
-    keywordBreakdown: PropTypes.arrayOf(
-        PropTypes.shape({
-            keyword: PropTypes.string.isRequired,
-            object_count: PropTypes.number.isRequired,
-        }),
-    ).isRequired,
-    colors: PropTypes.arrayOf(PropTypes.string),
 };

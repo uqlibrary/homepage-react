@@ -3,13 +3,55 @@ import { Box, Typography } from '@mui/material';
 import { Doughnut } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
 
+// Utility to generate distinct colors
+function generateRandomColors(count) {
+    const colors = [];
+    const hueStep = 360 / (count > 0 ? count : 1);
+    const startingHue = Math.floor(Math.random() * 360);
+    for (let i = 0; i < count; i++) {
+        const hue = (startingHue + i * hueStep) % 360;
+        const saturation = 90 + Math.random() * 10;
+        const lightness = i % 2 === 0 ? 40 + Math.random() * 15 : 65 + Math.random() * 15;
+        colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    }
+    return colors;
+}
+
 export default function TeamBreakdown({ chartData }) {
     const [showLegend, setShowLegend] = useState(false);
 
-    // Extract legend data from chartData
-    const labels = chartData.labels || [];
-    const dataArr = (chartData.datasets && chartData.datasets[0]?.data) || [];
-    const colors = (chartData.datasets && chartData.datasets[0]?.backgroundColor) || [];
+    // Extract team breakdown from raw API data
+    const teamBreakdown = chartData.team_breakdown || [];
+    const totalObjects = chartData.total_objects || 0;
+
+    const labels = teamBreakdown.map(item => item.team_name);
+    const dataArr = teamBreakdown.map(item => item.total_objects);
+    const sumOfTeamObjects = dataArr.reduce((sum, val) => sum + val, 0);
+    const otherTeamsValue = totalObjects - sumOfTeamObjects;
+
+    const finalLabels = [...labels];
+    const finalDataArr = [...dataArr];
+    if (otherTeamsValue > 0) {
+        finalLabels.push('Not Assigned');
+        finalDataArr.push(otherTeamsValue);
+    }
+    const colors = generateRandomColors(finalLabels.length);
+    if (otherTeamsValue > 0) {
+        colors[colors.length - 1] = 'rgba(128,128,128,0.7)';
+    }
+
+    const doughnutData = {
+        labels: finalLabels,
+        datasets: [
+            {
+                label: 'Objects by Team',
+                data: finalDataArr,
+                backgroundColor: colors,
+                borderColor: colors.map(c => c.replace('0.7)', '1)')),
+                borderWidth: 1,
+            },
+        ],
+    };
 
     return (
         <Box
@@ -34,7 +76,7 @@ export default function TeamBreakdown({ chartData }) {
                 }}
             >
                 <Doughnut
-                    data={chartData}
+                    data={doughnutData}
                     aria-label="Doughnut chart showing team breakdown of digital learning objects"
                     options={{
                         plugins: {
@@ -81,7 +123,7 @@ export default function TeamBreakdown({ chartData }) {
                         overflowY: 'auto',
                     }}
                 >
-                    {labels.map((label, idx) => (
+                    {finalLabels.map((label, idx) => (
                         <Box
                             key={label}
                             sx={{
@@ -110,7 +152,7 @@ export default function TeamBreakdown({ chartData }) {
                                 />
                             )}
                             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                {label} ({dataArr[idx]})
+                                {label} ({finalDataArr[idx]})
                             </span>
                         </Box>
                     ))}

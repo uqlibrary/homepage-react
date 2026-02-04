@@ -148,7 +148,7 @@ function fillMissingDates(data, startDate, endDate) {
 
 // ## COMPONENT START ##
 // Toggle to enable/disable generated mock data for stress testing
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 
 // Mock data generator for 4 years of daily data - This is ONLY for local testing purposes.
 function generateMockUsageData() {
@@ -220,8 +220,16 @@ function generateMockUsageData() {
     return data;
 }
 export default function UsageAnalytics({ usageData }) {
-    const actualUsageData = React.useMemo(() => (USE_MOCK_DATA ? generateMockUsageData() : usageData), [usageData]);
-    console.log(actualUsageData);
+    // Extract usage analytics array from the API data (handle array or object)
+    // Only use site_usage from the API data
+    const analyticsArray = React.useMemo(() => {
+        const arr = Array.isArray(usageData) ? usageData : usageData.site_usage || [];
+        return Array.isArray(arr) ? arr : [];
+    }, [usageData]);
+
+    const actualUsageData = React.useMemo(() => (USE_MOCK_DATA ? generateMockUsageData() : analyticsArray), [
+        analyticsArray,
+    ]);
     const allGroupsStable = getAllUserGroups(actualUsageData);
     const groupColorMap = getGroupColorMap(allGroupsStable);
 
