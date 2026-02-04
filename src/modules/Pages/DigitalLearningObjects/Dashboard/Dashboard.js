@@ -73,28 +73,28 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                     <Grid item xs={12}>
                                         <EngagementSummary data={dlorDashboardData} />
                                     </Grid>
-                                    <Grid item xs={12} md={3}>
+                                    <Grid item xs={6} md={3}>
                                         <GenericBreakdownChart
                                             chartData={dlorDashboardData}
                                             dataKey="team_breakdown"
                                             title="Team Breakdown"
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={3}>
+                                    <Grid item xs={6} md={3}>
                                         <GenericBreakdownChart
                                             chartData={dlorDashboardData}
                                             dataKey="object_type_breakdown"
                                             title="Object Types"
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={3}>
+                                    <Grid item xs={6} md={3}>
                                         <GenericBreakdownChart
                                             chartData={dlorDashboardData}
                                             dataKey="keyword_breakdown"
                                             title="Keywords"
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={3}>
+                                    <Grid item xs={6} md={3}>
                                         <GenericBreakdownChart
                                             chartData={dlorDashboardData}
                                             dataKey="review_status"
