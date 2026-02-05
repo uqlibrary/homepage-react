@@ -1033,12 +1033,26 @@ export const DLOList = ({
             return item.object_publishing_user_email === userEmail || item.owner?.publishing_user_username === userid;
         }
 
-        const url = new URL(document.URL);
-        const rawsearchparams = !!url && url.searchParams;
-        const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
-        if (params.has('type') && params.get('type').length > 0) {
+        // Helper to get 'type' param from both search and hash
+        function getTypeParam() {
+            // 1. Try window.location.search (before #)
+            const searchParams = new URLSearchParams(window.location.search);
+            if (searchParams.has('type')) return searchParams.get('type');
+
+            // 2. Try window.location.hash (after #)
+            const hash = window.location.hash || '';
+            const hashQuery = hash.includes('?') ? hash.split('?')[1] : '';
+            if (hashQuery) {
+                const hashParams = new URLSearchParams(hashQuery);
+                if (hashParams.has('type')) return hashParams.get('type');
+            }
+            return null;
+        }
+
+        const typeParam = getTypeParam();
+        if (typeParam && typeParam.length > 0) {
             // not implemented yet
-            switch (params.get('type')) {
+            switch (typeParam) {
                 case 'favourite':
                 case 'followed':
                     theSearch = theSearch.filter(item => isFavoritedFiltered(item));
@@ -1050,7 +1064,7 @@ export const DLOList = ({
                 case 'new':
                 case 'rejected':
                 case 'deprecated':
-                    theSearch = theSearch.filter(item => item?.object_status === params.get('type'));
+                    theSearch = theSearch.filter(item => item?.object_status === typeParam);
                     break;
                 case 'lastupdated28days':
                     theSearch = theSearch.filter(item => {
@@ -1086,8 +1100,8 @@ export const DLOList = ({
                     theSearch = theSearch.filter(item => !!item.object_is_featured);
                     break;
                 default:
-                    // not a valid type so remove it
-                    params.delete('type');
+                    // not a valid type so ignore
+                    break;
             }
         }
 
