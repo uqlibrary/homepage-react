@@ -37,12 +37,44 @@ export const dlorDashboardSiteUsage = {
         ],
         "keyword_breakdown": [
             {
-                "keyword": "research",
-                "object_count": 1
+                "keyword": "data",
+                "object_count": 14
             },
             {
-                "keyword": "other",
-                "object_count": 1
+                "keyword": "Search skills",
+                "object_count": 12
+            },
+            {
+                "keyword": "Reference, cite and acknowledge",
+                "object_count": 12
+            },
+            {
+                "keyword": "Subject resources",
+                "object_count": 10
+            },
+            {
+                "keyword": "data analysis",
+                "object_count": 9
+            },
+            {
+                "keyword": "Digital tools and skills",
+                "object_count": 9
+            },
+            {
+                "keyword": "search strategy",
+                "object_count": 9
+            },
+            {
+                "keyword": "R language",
+                "object_count": 8
+            },
+            {
+                "keyword": "RStudio",
+                "object_count": 8
+            },
+            {
+                "keyword": "systematic review",
+                "object_count": 8
             }
         ],
         "review_status": {
