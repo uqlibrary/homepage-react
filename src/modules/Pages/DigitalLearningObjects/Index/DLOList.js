@@ -396,12 +396,23 @@ export const DLOList = ({
         actions.loadDlorFavourites();
     }, [actions]);
 
+    // Helper to get 'type' param from both search and hash
+    function getTypeParam() {
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.has('type')) return searchParams.get('type');
+        const hash = window.location.hash || '';
+        const hashQuery = hash.includes('?') ? hash.split('?')[1] : '';
+        if (hashQuery) {
+            const hashParams = new URLSearchParams(hashQuery);
+            if (hashParams.has('type')) return hashParams.get('type');
+        }
+        return null;
+    }
+
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
-            const url = new URL(document.URL);
-            const rawsearchparams = !!url && url.searchParams;
-            const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
-            if (params.has('type')) {
+            const typeParam = getTypeParam();
+            if (typeParam) {
                 actions.loadAllDLORs();
             } else {
                 actions.loadCurrentDLORs();
@@ -1031,22 +1042,6 @@ export const DLOList = ({
         // Helper function to check if the current user is the owner/publisher
         function isMine(item, userEmail, userid) {
             return item.object_publishing_user_email === userEmail || item.owner?.publishing_user_username === userid;
-        }
-
-        // Helper to get 'type' param from both search and hash
-        function getTypeParam() {
-            // 1. Try window.location.search (before #)
-            const searchParams = new URLSearchParams(window.location.search);
-            if (searchParams.has('type')) return searchParams.get('type');
-
-            // 2. Try window.location.hash (after #)
-            const hash = window.location.hash || '';
-            const hashQuery = hash.includes('?') ? hash.split('?')[1] : '';
-            if (hashQuery) {
-                const hashParams = new URLSearchParams(hashQuery);
-                if (hashParams.has('type')) return hashParams.get('type');
-            }
-            return null;
         }
 
         const typeParam = getTypeParam();
