@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import { styled } from '@mui/material/styles';
@@ -20,7 +20,7 @@ import AssetPanel from './AssetPanel';
 
 import { statusEnum } from '../utils/helpers';
 import { scrollToTopOfPage } from 'helpers/general';
-import { useValidation } from '../utils/hooks';
+import { useValidation, useLabelPrinterPreference } from '../utils/hooks';
 import { useLocation, useForm, useConfirmationAlert, useAccountUser } from '../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { transformer } from '../utils/transformers';
@@ -29,6 +29,13 @@ import { getSuccessDialog } from '../utils/saveDialog';
 import { PERMISSIONS } from '../../config/auth';
 import { useConfirmationState } from 'hooks';
 import { breadcrumbs } from 'config/routes';
+
+import LabelLogo from './LabelLogo';
+import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
+import { useLabelPrinter, useLabelPrinterTemplate } from '../../SharedComponents/LabelPrinter';
+import * as labelPrintertemplates from './labelPrinterTemplates';
+import { getDeptLabelPrintingEnabled, getDefaultDeptPrinter } from '../../helpers/labelPrinting';
+import { COOKIE_PRINTER_PREFERENCE } from './config';
 
 const componentId = 'inspection';
 
@@ -138,7 +145,13 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     '& .buttonWhite': {
         color: 'white',
-        border: '1px solid white',
+        '&:hover': {
+            border: '1px solid white',
+        },
+    },
+    '& .buttonSuccess': {
+        backgroundColor: 'white',
+        color: theme.palette.primary.main,
     },
 }));
 
@@ -152,20 +165,37 @@ const Inspection = ({
     floorListError,
     roomListError,
     saveInspectionSaving,
-    saveInspectionSuccess,
     saveInspectionError,
     saveAssetTypeSaving,
     saveAssetTypeError,
+    saveInspectionSuccess: successData,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
     const { user } = useAccountUser();
+    const deptPrinterDefault = getDefaultDeptPrinter(user?.user_department);
+    const deptPrintingEnabled = getDeptLabelPrintingEnabled(user?.user_department);
+    const { printer, availablePrinters } = useLabelPrinter({
+        printerCode: deptPrinterDefault,
+        templateStore: labelPrintertemplates,
+        shouldOverridePrinterDevEnv: true,
+    });
+    const [printerPreference, setPrinterPreference] = useLabelPrinterPreference(COOKIE_PRINTER_PREFERENCE);
+    const { getLabelPrinterTemplate } = useLabelPrinterTemplate(labelPrintertemplates);
 
     const inspectionLocale = locale.pages.inspect;
 
     const [selectedAsset, setSelectedAsset] = useState({});
     const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
+    const [
+        isPrinterSaveSuccessDialogOpen,
+        showPrinterSaveSuccessDialog,
+        hidePrinterSaveSuccessDialog,
+    ] = useConfirmationState();
+    const [successDialogLocale, setSuccessDialogLocale] = useState({});
+
+    const errorMessageFormatter = useMemo(() => locale.config.alerts.error, []);
 
     const onCloseConfirmationAlert = () => {
         !!inspectionConfigError && actions.clearInspectionConfigError();
@@ -179,7 +209,7 @@ const Inspection = ({
         onClose: onCloseConfirmationAlert,
         errorMessage:
             inspectionConfigError || saveInspectionError || saveAssetTypeError || floorListError || roomListError,
-        errorMessageFormatter: locale.config.alerts.error,
+        errorMessageFormatter,
     });
     const { isValid, validateValues } = useValidation({ testStatusEnum, user });
     const assignAssetDefaults = React.useCallback(
@@ -209,13 +239,14 @@ const Inspection = ({
 
     const { location, setLocation } = useLocation();
 
-    useEffect(() => {
-        if (!!saveInspectionSuccess) {
-            showSaveSuccessConfirmation();
-        }
-    }, [saveInspectionSuccess, showSaveSuccessConfirmation]);
-
     const [inView, setInView] = React.useState(false);
+
+    const showAlert = useCallback(
+        (alert, type = 'error') => {
+            openConfirmationAlert(type === 'error' ? errorMessageFormatter(alert) : alert, type);
+        },
+        [openConfirmationAlert, errorMessageFormatter],
+    );
 
     const assignCurrentAsset = asset => {
         const newFormValues = assignAssetDefaults(asset, formValues, location);
@@ -232,7 +263,9 @@ const Inspection = ({
     };
 
     const hideSuccessMessage = () => {
+        hidePrinterSaveSuccessDialog();
         hideSaveSuccessConfirmation();
+        setSuccessDialogLocale({});
         resetForm();
     };
 
@@ -263,14 +296,80 @@ const Inspection = ({
                 { lastInspection: selectedAsset?.last_inspection, dateFormat: inspectionLocale.config.dateFormat } ??
                     /* istanbul ignore next */ {},
             );
-            actions.saveInspection(transformedData);
+            // save and then show success dialog
+            actions.saveInspection(transformedData).then(response => {
+                setSuccessDialogLocale(getSuccessDialog(response, inspectionLocale));
+                response.asset_status === testStatusEnum.CURRENT.value && printer && deptPrintingEnabled
+                    ? showPrinterSaveSuccessDialog()
+                    : showSaveSuccessConfirmation();
+            });
         }
     };
 
-    const successDialog = React.useMemo(() => getSuccessDialog(saveInspectionSuccess, inspectionLocale), [
-        inspectionLocale,
-        saveInspectionSuccess,
-    ]);
+    const handlePrintTag = useCallback(async () => {
+        /* istanbul ignore next */
+        if (!printerPreference?.name) {
+            console.error('No printer selected');
+            showAlert(locale.pages.general.labelPrinting.error.noPrinterSelected);
+            return;
+        }
+        if (!successData) {
+            console.error('No inspection data available for printing');
+            showAlert(locale.pages.general.labelPrinting.error.noLabelData);
+            return;
+        }
+        try {
+            const selectedPrinter = availablePrinters.find(printer => printer.name === printerPreference.name);
+            /* istanbul ignore next */
+            if (!selectedPrinter) {
+                console.error('Selected printer not found in available printers', selectedPrinter, availablePrinters);
+                showAlert(locale.pages.general.labelPrinting.error.noPrinterSelected);
+                return;
+            }
+            printer
+                ?.setPrinter(selectedPrinter)
+                .then(() => {
+                    printer.getConnectionStatus().then(status => {
+                        if (status.ready) {
+                            const template = getLabelPrinterTemplate(printerPreference.shortName, {
+                                logo: LabelLogo,
+                                userId: successData.user_licence_number,
+                                assetId: successData.asset_id_displayed,
+                                testDate: successData.action_date,
+                                dueDate: successData.asset_next_test_due_date,
+                            });
+                            if (!template?.formattedTemplate) {
+                                console.error('No template found for printer:', printerPreference.shortName);
+                                showAlert(locale.pages.general.labelPrinting.error.noLabelTemplate);
+                                return;
+                            }
+                            printer
+                                .print(template.formattedTemplate)
+                                .then(() => {
+                                    showAlert(
+                                        locale.pages.general.labelPrinting.printJobSent(printerPreference.name),
+                                        'info',
+                                    );
+                                })
+                                .catch(error => {
+                                    console.error('Print job error:', error);
+                                    showAlert(locale.pages.general.labelPrinting.error.printJobError);
+                                });
+                        } else {
+                            console.error('Printer is not ready: ' + JSON.stringify(status.errors));
+                            showAlert(locale.pages.general.labelPrinting.error.printerNotReady);
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Printer connection error:', error);
+                    showAlert(locale.pages.general.labelPrinting.error.noConnection);
+                });
+        } catch (error) /* istanbul ignore next */ {
+            console.error('Printing error:', error);
+            showAlert(locale.pages.general.labelPrinting.error.uncaughtException);
+        }
+    }, [availablePrinters, getLabelPrinterTemplate, printer, printerPreference, showAlert, successData]);
 
     return (
         <StandardAuthPage
@@ -287,9 +386,24 @@ const Inspection = ({
                     onAction={hideSuccessMessage}
                     onClose={hideSuccessMessage}
                     isOpen={isSaveSuccessOpen}
-                    locale={successDialog}
+                    locale={successDialogLocale}
                     noMinContentWidth
                     autoFocusPrimaryButton
+                />
+                <InspectionSuccessPrintDialog
+                    actionButtonColor="secondary"
+                    actionButtonVariant="contained"
+                    inspectionSuccessPrintDialogId={`${componentId}-printer-save-success`}
+                    printer={printer}
+                    onPrint={handlePrintTag}
+                    onClose={hideSuccessMessage}
+                    isOpen={isPrinterSaveSuccessDialogOpen}
+                    locale={successDialogLocale}
+                    shouldDisableUnknownPrinters
+                    printerPreference={printerPreference?.name}
+                    onPrinterSelectionChange={setPrinterPreference}
+                    availablePrinters={availablePrinters}
+                    noMinContentWidth={isMobileView}
                 />
                 <EventPanel
                     id={componentId}
@@ -350,12 +464,12 @@ const Inspection = ({
 
                             <Button
                                 variant="contained"
-                                color={inView ? 'primary' : 'secondary'}
                                 disabled={!isValid || saveInspectionSaving}
                                 onClick={saveForm}
                                 fullWidth={isMobileView}
                                 id={`${componentId}-save-button`}
                                 data-testid={`${componentId}-save-button`}
+                                className={!inView ? 'buttonSuccess' : ''}
                             >
                                 {saveInspectionSaving ? (
                                     <CircularProgress
