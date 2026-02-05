@@ -10,7 +10,6 @@ export const useDataTableRow = (data, transform) => {
         const datStr = JSON.stringify(data);
         if (prevDataRef.current === datStr) return;
         prevDataRef.current = datStr;
-        console.log('DataTableHooks useDataTableRow data changed', data);
         setRow(data);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
