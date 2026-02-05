@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material';
 
 import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
 
@@ -26,11 +28,17 @@ const StyledSpaceGridWrapperDiv = styled('div')(() => ({
     flexDirection: 'row',
     flexGrow: 0,
     marginLeft: '1rem',
-
-    maxWidth: '16.6667%',
     overflowY: 'scroll',
     marginTop: '2px',
-    flexBasis: '16.6667%',
+    maxWidth: '25%',
+    flexBasis: '25%',
+    '& .narrow': {
+        maxWidth: '16.6667%',
+        flexBasis: '16.6667%',
+    },
+    '& .wide': {
+        //
+    },
 }));
 
 const SidebarSpacesList = ({
@@ -39,9 +47,16 @@ const SidebarSpacesList = ({
     weeklyHoursLoading,
     weeklyHoursError,
     StyledStandardCard,
+    className,
 }) => {
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
+    const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
+    const isTabletView = isMobileView ? false : _isTabletViewJust;
+    const isDesktopView = !isTabletView && !isMobileView;
+
     return (
-        <StyledSpaceGridWrapperDiv id="panelList">
+        <StyledSpaceGridWrapperDiv id="panelList" className={className}>
             <StyledBodyGrid container id="space-wrapper" data-testid="space-wrapper">
                 <a className="showsOnlyOnFocus" href="#topOfSidebar">
                     Skip back to list of filters
@@ -68,7 +83,10 @@ const SidebarSpacesList = ({
                                 <StyledStandardCard
                                     fullHeight
                                     title={`${bookableSpace?.space_name} - ${bookableSpace?.space_type}`}
-                                    style={{ marginRight: '0.5rem' }}
+                                    style={{
+                                        marginRight: '0.5rem',
+                                        marginBottom: !isDesktopView ? '-2rem' : null,
+                                    }}
                                     squareTop
                                     subCard
                                 >
@@ -78,6 +96,8 @@ const SidebarSpacesList = ({
                                         weeklyHoursError={weeklyHoursError}
                                         bookableSpace={bookableSpace}
                                         collapseable
+                                        minimalDetails={isTabletView || isMobileView}
+                                        // minimalDetails
                                     />
                                 </StyledStandardCard>
                             </StyledBookableSpaceGridItem>
@@ -94,6 +114,7 @@ SidebarSpacesList.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     StyledStandardCard: PropTypes.any,
+    className: PropTypes.string,
 };
 
 export default React.memo(SidebarSpacesList);

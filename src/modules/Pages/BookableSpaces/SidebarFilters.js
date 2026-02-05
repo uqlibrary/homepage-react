@@ -84,6 +84,9 @@ const StyledSidebarDiv = styled('div')(() => ({
     direction: 'rtl', // put the scroll bar on the left
     flexBasis: '10%',
     maxWidth: '16.6667%',
+    '&.hide': {
+        display: 'none',
+    },
 
     '& .showsOnlyOnFocus': {
         position: 'absolute',
@@ -220,6 +223,7 @@ export const SidebarFilters = ({
     selectedFacilityTypes,
     setSelectedFacilityTypes,
     filteredFacilityTypeList,
+    className,
 }) => {
     const [facilityTypeFilterGroupOpenNess, setFacilityTypeFilterGroupOpenNess] = React.useState([]);
 
@@ -495,7 +499,7 @@ export const SidebarFilters = ({
                     return null;
                 } else {
                     return (
-                        <StyledSidebarDiv>
+                        <StyledSidebarDiv className={className}>
                             {!!hasActiveFilters && (
                                 <>
                                     <Typography component={'h3'} variant={'h6'}>
@@ -588,6 +592,7 @@ SidebarFilters.propTypes = {
     filteredFacilityTypeList: PropTypes.any,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
+    className: PropTypes.string,
 };
 
 export default React.memo(SidebarFilters);
