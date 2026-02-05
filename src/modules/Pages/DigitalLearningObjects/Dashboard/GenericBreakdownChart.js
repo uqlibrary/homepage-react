@@ -137,7 +137,6 @@ export default function GenericBreakdownChart({ chartData, dataKey, title }) {
                         borderRadius: '8px',
                         boxShadow: 1,
                         p: 1,
-                        maxHeight: '100px',
                         overflowY: 'auto',
                     }}
                 >
