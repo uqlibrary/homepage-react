@@ -106,6 +106,11 @@ export const dlorDashboardSiteUsage = {
                 ]
             }
         ],
-        "popular_objects": 2
+        "popular_objects": 2,
+        "object_management_stats": {
+            "last_updated_28_days": 11,
+            "due_review_28_days": 2,
+            "due_unpublish": 0
+        }
     },
 };

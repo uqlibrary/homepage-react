@@ -22,6 +22,7 @@ import UsageAnalytics from './UsageAnalytics';
 import DLOStatusSummary from './DLOStatusSummary';
 import GenericBreakdownChart from './GenericBreakdownChart';
 import EngagementSummary from './EngagementSummary';
+import ObjectManagement from './ObjectManagement';
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Title);
 
@@ -72,6 +73,9 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                 <Grid container spacing={3}>
                                     <Grid item xs={12}>
                                         <EngagementSummary data={dlorDashboardData} />
+                                        <Box sx={{ mt: 2 }}>
+                                            <ObjectManagement data={dlorDashboardData} />
+                                        </Box>
                                     </Grid>
                                     <Grid item xs={6} md={3}>
                                         <GenericBreakdownChart
