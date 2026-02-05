@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import parse from 'html-react-parser';
 
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
@@ -53,7 +54,6 @@ const SpaceDetails = ({
     collapseable = false,
     // collapseable=true: called by sidebar, has open-close icon;
     // collapseable=false: opens from icon in map, no open-close icon
-    minimalDetails = false, // when true, the description is the only field that shows
 }) => {
     const summaryPanelElementId = spaceId => `summary-info-${spaceId}`;
 
@@ -130,7 +130,7 @@ const SpaceDetails = ({
 
     return (
         <>
-            {!!collapseable && !minimalDetails && (
+            {!!collapseable && (
                 <div style={{ float: 'right', marginTop: '-40px', marginRight: '-10px' }}>
                     {showHideSpacePanel(bookableSpace)}
                 </div>
@@ -140,18 +140,16 @@ const SpaceDetails = ({
                     {bookableSpace?.space_name} - {bookableSpace?.space_type}
                 </Typography>
             )}
-            {!minimalDetails && (
-                <StyledFriendlyLocationDiv data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
-                    {getFriendlyLocationDescription(bookableSpace)}
-                </StyledFriendlyLocationDiv>
-            )}
+            <StyledFriendlyLocationDiv data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
+                {getFriendlyLocationDescription(bookableSpace)}
+            </StyledFriendlyLocationDiv>
             {bookableSpace?.space_description?.length > 0 && (
                 <StyledDescription
                     id={`space-description-${bookableSpace?.space_id}`}
                     data-testid={`space-${bookableSpace?.space_id}-description`}
                     className={!!collapseable ? 'truncated ' : 'hasMinWidth'}
                 >
-                    <p>{bookableSpace?.space_description}</p>
+                    {parse(bookableSpace?.space_description)}
                 </StyledDescription>
             )}
             <StyledCollapsableSection
@@ -160,21 +158,19 @@ const SpaceDetails = ({
                 data-testid={`space-${bookableSpace?.space_id}-summary-info`}
                 style={{ display: !!collapseable ? null : 'none' }}
             >
-                {!minimalDetails && (
-                    <ShortSpaceOpeningHours
-                        weeklyHoursLoading={weeklyHoursLoading}
-                        weeklyHoursError={weeklyHoursError}
-                        weeklyHours={weeklyHours}
-                        bookableSpace={bookableSpace}
-                    />
-                )}
+                <ShortSpaceOpeningHours
+                    weeklyHoursLoading={weeklyHoursLoading}
+                    weeklyHoursError={weeklyHoursError}
+                    weeklyHours={weeklyHours}
+                    bookableSpace={bookableSpace}
+                />
             </StyledCollapsableSection>
 
             <StyledCollapsableSection
                 // loads closed
                 id={`space-more-${bookableSpace?.space_id}`}
                 data-testid={`space-${bookableSpace?.space_id}-full-info`}
-                className={!!collapseable || !!minimalDetails ? 'hiddenSection' : null}
+                className={!!collapseable ? 'hiddenSection' : null}
             >
                 <LongSpaceOpeningHours
                     weeklyHoursLoading={weeklyHoursLoading}
@@ -186,7 +182,7 @@ const SpaceDetails = ({
                     <StyledLocationPhoto
                         src={bookableSpace?.space_photo_url}
                         alt={bookableSpace?.space_photo_description}
-                        className={!!collapseable || !!minimalDetails ? null : 'hasMinWidth'}
+                        className={!!collapseable ? null : 'hasMinWidth'}
                     />
                 )}
                 {bookableSpace?.facility_types?.length > 0 && (
@@ -217,7 +213,6 @@ SpaceDetails.propTypes = {
     weeklyHoursError: PropTypes.any,
     bookableSpace: PropTypes.any,
     collapseable: PropTypes.bool,
-    minimalDetails: PropTypes.bool,
 };
 
 export default React.memo(SpaceDetails);

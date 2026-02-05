@@ -74,8 +74,9 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
 const StyledSidebarDiv = styled('div')(() => ({
     position: 'sticky',
     top: 0,
-    // maxHeight: 'calc(100%-340px)', // 340 is height of headers above page content
+    height: '100%',
     overflowY: 'auto',
+
     paddingLeft: '1em',
     paddingRight: 0,
     marginBlock: '1em',
@@ -84,9 +85,9 @@ const StyledSidebarDiv = styled('div')(() => ({
     direction: 'rtl', // put the scroll bar on the left
     flexBasis: '10%',
     maxWidth: '16.6667%',
-    '&.hide': {
-        display: 'none',
-    },
+    // '&.hide': {
+    //     display: 'none',
+    // },
 
     '& .showsOnlyOnFocus': {
         position: 'absolute',
@@ -492,96 +493,72 @@ export const SidebarFilters = ({
     const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
     const checkFiltersList = selectedFacilityTypes?.filter(f => !!f.selected || !!f.unselected);
 
+    if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
+        return null;
+    }
+
     return (
-        <>
-            {(() => {
-                if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
-                    return null;
-                } else {
+        <StyledSidebarDiv id="StyledSidebarDivTemp" className={className}>
+            {!!hasActiveFilters && (
+                <>
+                    <Typography component={'h3'} variant={'h6'}>
+                        Active filters
+                    </Typography>
+                    <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
+                        {showCartoucheList(flatFacilityTypeList)}
+                    </StyledCartoucheList>
+                    {checkFiltersList?.length > 0 && (
+                        <Button
+                            id={'button-deselect-all-filters'}
+                            data-testid={'button-deselect-all-filters'}
+                            onClick={deSelectAll}
+                            style={{ direction: 'ltr' }}
+                        >
+                            <ReplayIcon style={{ fontSize: '16px' }} />
+                            <span>Remove all filters</span>
+                        </Button>
+                    )}
+                </>
+            )}
+            <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
+                <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
+                    Skip to list of Spaces
+                </a>
+                <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
+                    Filter Spaces
+                </Typography>
+                {sortedUsedGroups?.map(group => {
+                    const filterGroupId = group.facility_type_group_id;
+                    const isGroupOpen = !!facilityTypeFilterGroupOpenNess.find(o => o.groupId === filterGroupId)
+                        ?.isGroupOpen;
+                    const groupLength = selectedFacilityTypes.filter(
+                        ftf => ftf.facility_type_group_id === filterGroupId,
+                    ).length;
+                    const numberChecked = selectedFacilityTypes.filter(
+                        ftf => ftf.facility_type_group_id === filterGroupId && (ftf.selected || ftf.unselected),
+                    ).length;
                     return (
-                        <StyledSidebarDiv className={className}>
-                            {!!hasActiveFilters && (
-                                <>
-                                    <Typography component={'h3'} variant={'h6'}>
-                                        Active filters
-                                    </Typography>
-                                    <StyledCartoucheList
-                                        id={'button-deselect-list'}
-                                        data-testid={'button-deselect-list'}
-                                    >
-                                        {showCartoucheList(flatFacilityTypeList)}
-                                    </StyledCartoucheList>
-                                    {checkFiltersList?.length > 0 && (
-                                        <Button
-                                            id={'button-deselect-all-filters'}
-                                            data-testid={'button-deselect-all-filters'}
-                                            onClick={deSelectAll}
-                                            style={{ direction: 'ltr' }}
-                                        >
-                                            <ReplayIcon style={{ fontSize: '16px' }} />
-                                            <span>Remove all filters</span>
-                                        </Button>
+                        <StyledFacilityGroup
+                            key={`facility-group-${filterGroupId}`}
+                            data-testid={`filter-group-block-${filterGroupId}`}
+                        >
+                            {showFilterGroupHeading(group, isGroupOpen, numberChecked, filterGroupId, groupLength)}
+                            {!!isGroupOpen && (
+                                <StyledFilterSpaceList id={`filter-group-list-${filterGroupId}`}>
+                                    {group.facility_type_children && group.facility_type_children.length > 0 ? (
+                                        group.facility_type_children?.map(facilityType =>
+                                            getStyledInputListItem(facilityType),
+                                        )
+                                    ) : (
+                                        <li className="no-items">No facility types available</li>
                                     )}
-                                </>
+                                </StyledFilterSpaceList>
                             )}
-                            <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
-                                <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
-                                    Skip to list of Spaces
-                                </a>
-                                <Typography
-                                    component={'h2'}
-                                    variant={'h6'}
-                                    id="topOfSidebar"
-                                    data-testid="topOfSidebar"
-                                >
-                                    Filter Spaces
-                                </Typography>
-                                {sortedUsedGroups?.map(group => {
-                                    const filterGroupId = group.facility_type_group_id;
-                                    const isGroupOpen = !!facilityTypeFilterGroupOpenNess.find(
-                                        o => o.groupId === filterGroupId,
-                                    )?.isGroupOpen;
-                                    const groupLength = selectedFacilityTypes.filter(
-                                        ftf => ftf.facility_type_group_id === filterGroupId,
-                                    ).length;
-                                    const numberChecked = selectedFacilityTypes.filter(
-                                        ftf =>
-                                            ftf.facility_type_group_id === filterGroupId &&
-                                            (ftf.selected || ftf.unselected),
-                                    ).length;
-                                    return (
-                                        <StyledFacilityGroup
-                                            key={`facility-group-${filterGroupId}`}
-                                            data-testid={`filter-group-block-${filterGroupId}`}
-                                        >
-                                            {showFilterGroupHeading(
-                                                group,
-                                                isGroupOpen,
-                                                numberChecked,
-                                                filterGroupId,
-                                                groupLength,
-                                            )}
-                                            {!!isGroupOpen && (
-                                                <StyledFilterSpaceList id={`filter-group-list-${filterGroupId}`}>
-                                                    {group.facility_type_children &&
-                                                    group.facility_type_children.length > 0 ? (
-                                                        group.facility_type_children?.map(facilityType =>
-                                                            getStyledInputListItem(facilityType),
-                                                        )
-                                                    ) : (
-                                                        <li className="no-items">No facility types available</li>
-                                                    )}
-                                                </StyledFilterSpaceList>
-                                            )}
-                                        </StyledFacilityGroup>
-                                    );
-                                })}
-                            </StyledSidebarSubDiv>
-                        </StyledSidebarDiv>
+                        </StyledFacilityGroup>
                     );
-                }
-            })()}
-        </>
+                })}
+            </StyledSidebarSubDiv>
+        </StyledSidebarDiv>
     );
 };
 
