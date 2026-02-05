@@ -125,6 +125,12 @@ export const BookableSpacesList = ({
         facilityTypeList,
     );
     console.log('BookableSpacesList load weeklyHours:', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+    console.log(
+        'BookableSpacesList load bookableSpacesRoomList:',
+        bookableSpacesRoomListLoading,
+        bookableSpacesRoomListError,
+        bookableSpacesRoomList,
+    );
 
     const [selectedFacilityTypes, setSelectedFacilityTypes] = React.useState([]);
     const [filtersForceShown, setFiltersForceShown] = React.useState(false);
@@ -164,7 +170,7 @@ export const BookableSpacesList = ({
         }
     }, [bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
 
-    const displayError = message => {
+    const displayError = (message, testId) => {
         return (
             <StandardPage title="Library spaces" standardPageId="topofcontent">
                 <section aria-live="assertive">
@@ -173,7 +179,7 @@ export const BookableSpacesList = ({
                             <Grid container spacing={3} data-testid="library-spaces">
                                 <StyledBookableSpaceGridItem item xs={12} md={9}>
                                     <StyledStandardCard fullHeight>
-                                        <p data-testid="spaces-error">{message}</p>
+                                        <p data-testid={`${testId}`}>{message}</p>
                                     </StyledStandardCard>
                                 </StyledBookableSpaceGridItem>
                             </Grid>
@@ -273,12 +279,12 @@ export const BookableSpacesList = ({
                         </Grid>
                     );
                 } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
-                    displayError('Something went wrong - please try again later.');
+                    return displayError('Something went wrong - please try again later.', 'spaces-error');
                 } else if (
                     !bookableSpacesRoomList?.data?.locations ||
                     bookableSpacesRoomList?.data?.locations?.length === 0
                 ) {
-                    displayError('No locations found yet - please try again soon.');
+                    return displayError('No locations found yet - please try again soon.', 'no-spaces');
                 } else {
                     const facilityTypeToGroup = {};
                     getFilteredFacilityTypeList(
@@ -348,7 +354,7 @@ export const BookableSpacesList = ({
                                     weeklyHoursLoading={weeklyHoursLoading}
                                     weeklyHoursError={weeklyHoursError}
                                     StyledStandardCard={StyledStandardCard}
-                                    className={isDesktopView || filtersForceShown ? 'narrow' : 'wide'}
+                                    sentClassName={isDesktopView || filtersForceShown ? 'narrow' : 'wide'}
                                 />
                                 <StyledMapWrapperDiv>
                                     <MapContainer

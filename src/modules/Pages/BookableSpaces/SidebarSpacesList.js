@@ -32,11 +32,11 @@ const StyledSpaceGridWrapperDiv = styled('div')(() => ({
     marginTop: '2px',
     maxWidth: '25%',
     flexBasis: '25%',
-    '& .narrow': {
+    '&.narrow': {
         maxWidth: '16.6667%',
         flexBasis: '16.6667%',
     },
-    '& .wide': {
+    '&.wide': {
         //
     },
 }));
@@ -47,7 +47,7 @@ const SidebarSpacesList = ({
     weeklyHoursLoading,
     weeklyHoursError,
     StyledStandardCard,
-    className,
+    sentClassName,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -56,7 +56,7 @@ const SidebarSpacesList = ({
     const isDesktopView = !isTabletView && !isMobileView;
 
     return (
-        <StyledSpaceGridWrapperDiv id="panelList" className={className}>
+        <StyledSpaceGridWrapperDiv id="panelList" className={sentClassName}>
             <StyledBodyGrid container id="space-wrapper" data-testid="space-wrapper">
                 <a className="showsOnlyOnFocus" href="#topOfSidebar">
                     Skip back to list of filters
@@ -83,10 +83,7 @@ const SidebarSpacesList = ({
                                 <StyledStandardCard
                                     fullHeight
                                     title={`${bookableSpace?.space_name} - ${bookableSpace?.space_type}`}
-                                    style={{
-                                        marginRight: '0.5rem',
-                                        marginBottom: !isDesktopView ? '-2rem' : null,
-                                    }}
+                                    style={{ marginRight: '0.5rem' }}
                                     squareTop
                                     subCard
                                 >
@@ -114,7 +111,7 @@ SidebarSpacesList.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     StyledStandardCard: PropTypes.any,
-    className: PropTypes.string,
+    sentClassName: PropTypes.string,
 };
 
 export default React.memo(SidebarSpacesList);
