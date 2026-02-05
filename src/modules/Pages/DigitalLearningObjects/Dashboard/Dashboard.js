@@ -73,9 +73,6 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                 <Grid container spacing={3}>
                                     <Grid item xs={12}>
                                         <EngagementSummary data={dlorDashboardData} />
-                                        <Box sx={{ mt: 2 }}>
-                                            <ObjectManagement data={dlorDashboardData} />
-                                        </Box>
                                     </Grid>
                                     <Grid item xs={6} md={3}>
                                         <GenericBreakdownChart
@@ -104,6 +101,9 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                             dataKey="review_status"
                                             title="Review Status"
                                         />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <ObjectManagement data={dlorDashboardData} />
                                     </Grid>
                                 </Grid>
                             </AccordionDetails>

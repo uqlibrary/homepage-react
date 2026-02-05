@@ -1052,6 +1052,20 @@ export const DLOList = ({
                 case 'deprecated':
                     theSearch = theSearch.filter(item => item?.object_status === params.get('type'));
                     break;
+                case 'lastupdated28days':
+                    theSearch = theSearch.filter(item => {
+                        const lastUpdatedDate = new Date(item.updated_at);
+                        const currentDate = new Date();
+                        const daysDifference = (currentDate - lastUpdatedDate) / (1000 * 60 * 60 * 24);
+                        return daysDifference <= 28;
+                    });
+                    break;
+                case 'duereview28days':
+                    theSearch = theSearch.filter(item => !!item.due_for_review);
+                    break;
+                case 'dueunpublish':
+                    theSearch = theSearch.filter(item => !!item.due_for_unpublish);
+                    break;
                 case 'culturaladvice':
                     theSearch = theSearch.filter(item => !!item.object_cultural_advice);
                     break;
