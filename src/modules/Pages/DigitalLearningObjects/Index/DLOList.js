@@ -324,11 +324,23 @@ export const DLOList = ({
 
     const [viewType, setViewType] = useState('');
 
+    function getTypeParam() {
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.has('type')) return searchParams.get('type');
+        const hash = window.location.hash || '';
+        const hashQuery = hash.includes('?') ? hash.split('?')[1] : '';
+        if (hashQuery) {
+            const hashParams = new URLSearchParams(hashQuery);
+            if (hashParams.has('type')) return hashParams.get('type');
+        }
+        return null;
+    }
+
     React.useEffect(() => {
-        const url = new URL(document.URL);
-        const rawsearchparams = !!url && url.searchParams;
-        const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
-        params.has('type') && setViewType(params.get('type'));
+        const typeParam = getTypeParam();
+        if (typeParam) {
+            setViewType(typeParam);
+        }
     }, []);
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -397,17 +409,6 @@ export const DLOList = ({
     }, [actions]);
 
     // Helper to get 'type' param from both search and hash
-    function getTypeParam() {
-        const searchParams = new URLSearchParams(window.location.search);
-        if (searchParams.has('type')) return searchParams.get('type');
-        const hash = window.location.hash || '';
-        const hashQuery = hash.includes('?') ? hash.split('?')[1] : '';
-        if (hashQuery) {
-            const hashParams = new URLSearchParams(hashQuery);
-            if (hashParams.has('type')) return hashParams.get('type');
-        }
-        return null;
-    }
 
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
