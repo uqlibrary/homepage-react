@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 import { Doughnut } from 'react-chartjs-2';
 
-function generatePurpleShades(dataArr) {
-    const minLightness = 30;
-    const maxLightness = 85;
-    const hue = 270;
+// Utility to generate varying shades of purple or blue based on data values
+// Utility to generate alternating purple and blue shades for better distinction
+function generateColorShades(dataArr) {
+    const minLightness = 20;
+    const maxLightness = 95;
+    const purpleHue = 270;
+    const blueHue = 220;
     const saturation = 80;
     const n = dataArr.length;
     if (n === 0) return [];
@@ -22,6 +25,8 @@ function generatePurpleShades(dataArr) {
     for (let rank = 0; rank < n; rank++) {
         const idx = sortedIndices[rank];
         const lightness = lightnessSteps[rank];
+        // Alternate between purple and blue for better distinction
+        const hue = rank % 2 === 0 ? purpleHue : blueHue;
         colors[idx] = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     }
     return colors;
@@ -62,7 +67,8 @@ export default function GenericBreakdownChart({ chartData, dataKey, title }) {
         return { labels, dataArr };
     }, [chartData, dataKey]);
 
-    const colors = useMemo(() => generatePurpleShades(dataArr), [dataArr]);
+    // Alternate purple and blue for better distinction
+    const colors = useMemo(() => generateColorShades(dataArr), [dataArr]);
 
     const doughnutData = useMemo(
         () => ({
@@ -72,8 +78,9 @@ export default function GenericBreakdownChart({ chartData, dataKey, title }) {
                     label: title,
                     data: dataArr,
                     backgroundColor: colors,
-                    borderColor: colors.map(c => c.replace(')', ', 1)')),
-                    borderWidth: 1,
+                    // Use a light border (#fefefe) for better separation
+                    borderColor: Array(colors.length).fill('#fefefe'),
+                    borderWidth: 2,
                 },
             ],
         }),
