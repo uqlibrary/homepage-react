@@ -3,16 +3,26 @@ import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 import { Doughnut } from 'react-chartjs-2';
 
-// Utility to generate distinct colors
-function generateRandomColors(count) {
+function generatePurpleShades(dataArr) {
+    const minLightness = 30;
+    const maxLightness = 85;
+    const hue = 270;
+    const saturation = 80;
+    const n = dataArr.length;
+    if (n === 0) return [];
+    const sortedIndices = dataArr
+        .map((v, i) => ({ v, i }))
+        .sort((a, b) => b.v - a.v)
+        .map(obj => obj.i);
+    const lightnessSteps =
+        n === 1
+            ? [minLightness]
+            : Array.from({ length: n }, (_, idx) => minLightness + ((maxLightness - minLightness) * idx) / (n - 1));
     const colors = [];
-    const hueStep = 360 / (count > 0 ? count : 1);
-    const startingHue = Math.floor(Math.random() * 360);
-    for (let i = 0; i < count; i++) {
-        const hue = (startingHue + i * hueStep) % 360;
-        const saturation = 90 + Math.random() * 10;
-        const lightness = i % 2 === 0 ? 40 + Math.random() * 15 : 65 + Math.random() * 15;
-        colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    for (let rank = 0; rank < n; rank++) {
+        const idx = sortedIndices[rank];
+        const lightness = lightnessSteps[rank];
+        colors[idx] = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     }
     return colors;
 }
@@ -52,7 +62,7 @@ export default function GenericBreakdownChart({ chartData, dataKey, title }) {
         return { labels, dataArr };
     }, [chartData, dataKey]);
 
-    const colors = useMemo(() => generateRandomColors(labels.length), [labels.length]);
+    const colors = useMemo(() => generatePurpleShades(dataArr), [dataArr]);
 
     const doughnutData = useMemo(
         () => ({
