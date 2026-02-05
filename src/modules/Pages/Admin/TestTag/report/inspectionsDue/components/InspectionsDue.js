@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
@@ -54,13 +54,23 @@ const extractAssetTypeData = data =>
         i => i.id,
     );
 
+export const getLastLocationWithId = location => {
+    const newLocation = Object.keys(location).reduce((acc, key) => {
+        if (location[key] && location[key] !== -1) {
+            return { locationType: key, locationId: location[key] };
+        }
+        return acc;
+    }, {});
+    return newLocation;
+};
+
 const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspectionsDueError }) => {
     const pageLocale = locale.pages.report.inspectionsDue;
     const monthsOptions = locale.config.monthsOptions;
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
-    const { lastSelectedLocation } = useSelectLocation({
+    const { lastSelectedLocation, selectedLocation } = useSelectLocation({
         location,
         setLocation,
         actions,
@@ -74,6 +84,9 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     const { row } = useDataTableRow(inspectionsDue, transformRow);
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
+
+    const prevSearchRef = useRef({ locationStr: '', monthRange });
+
     const [filterModel, setFilterModel] = useState({ items: [] });
     const uniqueAssetTypeList = React.useMemo(() => extractAssetTypeData(inspectionsDue), [inspectionsDue]);
 
@@ -92,16 +105,20 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     }, []);
 
     useEffect(() => {
-        const locationId = location[lastSelectedLocation];
+        const locationStr = JSON.stringify(location);
+        if (prevSearchRef.current.locationStr === locationStr && prevSearchRef.current.monthRange === monthRange) {
+            return;
+        }
+        prevSearchRef.current = { locationStr, monthRange };
 
+        // const locationId = location[selectedLocation];
+        const newLocation = getLastLocationWithId(location);
         actions.getInspectionsDue({
             period: monthRange,
             periodType: 'month',
-            ...(!!locationId && locationId !== -1 ? { locationId, locationType: lastSelectedLocation } : {}),
+            ...newLocation,
         });
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lastSelectedLocation, location, monthRange]);
+    }, [actions, lastSelectedLocation, location, monthRange, selectedLocation]);
 
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
