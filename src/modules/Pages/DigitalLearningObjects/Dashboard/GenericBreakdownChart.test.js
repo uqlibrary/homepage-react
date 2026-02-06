@@ -172,4 +172,57 @@ describe('GenericBreakdownChart', () => {
         render(<GenericBreakdownChart chartData={baseProps.chartData} dataKey="review_status" title="Review Status" />);
         expect(screen.getByTestId('generic-breakdown-chart-title')).toHaveTextContent('Review Status');
     });
+
+    it('generateColorShades covers n === 1 branch', () => {
+        // Rendering with a single data point triggers n === 1 branch
+        render(
+            <GenericBreakdownChart
+                chartData={{ custom_breakdown: [{ label: 'Only', count: 7 }] }}
+                dataKey="custom_breakdown"
+                title="Custom Breakdown"
+            />,
+        );
+        fireEvent.click(screen.getByRole('button', { name: /show custom breakdown legend/i }));
+        expect(screen.getByText('Only (7)')).toBeInTheDocument();
+    });
+
+    it('covers review_status branch and 0 fallback', () => {
+        render(
+            <GenericBreakdownChart
+                chartData={{ review_status: { upcoming: 0, due: 0, overdue: 0 } }}
+                dataKey="review_status"
+                title="Review Status"
+            />,
+        );
+        fireEvent.click(screen.getByRole('button', { name: /show review status legend/i }));
+        expect(screen.getByText('Upcoming (0)')).toBeInTheDocument();
+        expect(screen.getByText('Due (0)')).toBeInTheDocument();
+        expect(screen.getByText('Overdue (0)')).toBeInTheDocument();
+    });
+
+    it('covers review_status branch when review_status is missing', () => {
+        render(
+            <GenericBreakdownChart
+                chartData={{}} // no review_status property
+                dataKey="review_status"
+                title="Review Status"
+            />,
+        );
+        fireEvent.click(screen.getByRole('button', { name: /show review status legend/i }));
+        expect(screen.getByText('Upcoming (0)')).toBeInTheDocument();
+        expect(screen.getByText('Due (0)')).toBeInTheDocument();
+        expect(screen.getByText('Overdue (0)')).toBeInTheDocument();
+    });
+
+    it('covers item.count || 0 fallback', () => {
+        render(
+            <GenericBreakdownChart
+                chartData={{ custom_breakdown: [{ label: 'NoCount' }] }}
+                dataKey="custom_breakdown"
+                title="Custom Breakdown"
+            />,
+        );
+        fireEvent.click(screen.getByRole('button', { name: /show custom breakdown legend/i }));
+        expect(screen.getByText('NoCount (0)')).toBeInTheDocument();
+    });
 });
