@@ -143,6 +143,184 @@ export const dlorDashboardSiteUsage = {
             "last_updated_28_days": 11,
             "due_review_28_days": 2,
             "due_unpublish": 0
-        }
+        },
+        "objects_by_facet": {         
+            "objects_by_topic": [
+                {
+                    "name": "Research",
+                    "count": 37,
+                    "id": 1
+                },
+                {
+                    "name": "Assignments",
+                    "count": 92,
+                    "id": 2
+                },
+                {
+                    "name": "Aboriginal and Torres Strait Islander",
+                    "count": 5,
+                    "id": 10
+                },
+                {
+                    "name": "Digital skills",
+                    "count": 22,
+                    "id": 11
+                },
+                {
+                    "name": "Employability",
+                    "count": 0,
+                    "id": 12
+                },
+                {
+                    "name": "Referencing",
+                    "count": 17,
+                    "id": 14
+                },
+                {
+                    "name": "Software",
+                    "count": 20,
+                    "id": 16
+                }
+            ],
+            "objects_by_audience": [
+                {
+                    "name": "Influential communicators",
+                    "count": 68,
+                    "id": 4
+                },
+                {
+                    "name": "Accomplished scholars",
+                    "count": 76,
+                    "id": 5
+                },
+                {
+                    "name": "Courageous thinkers",
+                    "count": 9,
+                    "id": 6
+                },
+                {
+                    "name": "Connected citizens",
+                    "count": 7,
+                    "id": 7
+                },
+                {
+                    "name": "Respectful leaders",
+                    "count": 5,
+                    "id": 8
+                },
+                {
+                    "name": "Culturally capable",
+                    "count": 2,
+                    "id": 9
+                }
+            ],
+            "objects_by_type": [
+                {
+                    "name": "Module",
+                    "count": 29,
+                    "id": 17
+                },
+                {
+                    "name": "Interactive",
+                    "count": 18,
+                    "id": 40
+                },
+                {
+                    "name": "Training recording",
+                    "count": 4,
+                    "id": 41
+                },
+                {
+                    "name": "Guide",
+                    "count": 93,
+                    "id": 42
+                },
+                {
+                    "name": "Presentation",
+                    "count": 0,
+                    "id": 43
+                },
+                {
+                    "name": "Other",
+                    "count": 2,
+                    "id": 44
+                },
+                {
+                    "name": "Video guide",
+                    "count": 9,
+                    "id": 53
+                },
+                {
+                    "name": "Instructional object",
+                    "count": 1,
+                    "id": 54
+                }
+            ],
+            "objects_by_format": [
+                {
+                    "name": "H5P",
+                    "count": 8,
+                    "id": 3
+                },
+                {
+                    "name": "Dataset",
+                    "count": 0,
+                    "id": 18
+                },
+                {
+                    "name": "Powerpoint",
+                    "count": 0,
+                    "id": 19
+                },
+                {
+                    "name": "Audio",
+                    "count": 2,
+                    "id": 20
+                },
+                {
+                    "name": "Image",
+                    "count": 0,
+                    "id": 21
+                },
+                {
+                    "name": "Other",
+                    "count": 2,
+                    "id": 22
+                },
+                {
+                    "name": "Pressbook",
+                    "count": 22,
+                    "id": 45
+                },
+                {
+                    "name": "Video",
+                    "count": 14,
+                    "id": 46
+                },
+                {
+                    "name": "Webpage",
+                    "count": 90,
+                    "id": 47
+                },
+                {
+                    "name": "PDF",
+                    "count": 1,
+                    "id": 49
+                },
+                {
+                    "name": "Spreadsheet",
+                    "count": 1,
+                    "id": 50
+                },
+                {
+                    "name": "Word document",
+                    "count": 0,
+                    "id": 51
+                }
+            ],
+            "objects_with_cultural_advice": 3
+
+        },
     },
 };
+
