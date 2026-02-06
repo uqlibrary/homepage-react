@@ -98,7 +98,13 @@ export default function GenericBreakdownChart({ chartData, dataKey, title }) {
                 boxShadow: '0 2px 8px 0 rgba(120, 90, 200, 0.10)',
             }}
         >
-            <Typography variant="h6" component="h2" gutterBottom={false} sx={{ mb: 1 }}>
+            <Typography
+                variant="h6"
+                component="h2"
+                gutterBottom={false}
+                sx={{ mb: 1 }}
+                data-testid="generic-breakdown-chart-title"
+            >
                 {title}
             </Typography>
             <Box
@@ -136,6 +142,7 @@ export default function GenericBreakdownChart({ chartData, dataKey, title }) {
                     }}
                     onClick={() => setShowLegend(v => !v)}
                     aria-label={showLegend ? `Hide ${title} legend` : `Show ${title} legend`}
+                    data-testid="generic-breakdown-chart-legend-toggle"
                 >
                     {showLegend ? 'Hide Legend' : 'Show Legend'}
                 </button>
@@ -159,7 +166,7 @@ export default function GenericBreakdownChart({ chartData, dataKey, title }) {
                 >
                     {labels.map((label, idx) => (
                         <Box
-                            key={label}
+                            key={label + idx}
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -185,7 +192,10 @@ export default function GenericBreakdownChart({ chartData, dataKey, title }) {
                                     }}
                                 />
                             )}
-                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <span
+                                style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                                data-testid={`generic-breakdown-chart-label-${idx}`}
+                            >
                                 {label} ({dataArr[idx]})
                             </span>
                         </Box>

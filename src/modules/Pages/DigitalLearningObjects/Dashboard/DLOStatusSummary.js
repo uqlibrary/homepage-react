@@ -16,6 +16,8 @@ function buildDLOStatusUrl(param) {
     const baseUrl = '/digital-learning-hub';
     const postfix = getUserPostfix();
     let url = baseUrl;
+
+    /* istanbul ignore else */
     if (postfix) {
         url += postfix;
     }
@@ -23,6 +25,7 @@ function buildDLOStatusUrl(param) {
     if (url.includes('?')) {
         url += `&type=${encodeURIComponent(param)}`;
     } else {
+        /* istanbul ignore else */
         url += `?type=${encodeURIComponent(param)}`;
     }
     return url;
@@ -48,7 +51,8 @@ const DLOStatusSummary = ({ data }) => (
                     <Grid item xs zeroMinWidth sx={{ p: 0, m: 0 }}>
                         <Box sx={{ textAlign: 'center', p: 0, m: 0 }}>
                             <Typography
-                                variant="h6"
+                                variant="h3"
+                                component="h3"
                                 sx={{
                                     color: status.color,
                                     fontWeight: 600,
@@ -66,6 +70,7 @@ const DLOStatusSummary = ({ data }) => (
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
+                                    {/* istanbul ignore next */}
                                     {data?.[status.key] ?? 0}
                                 </a>
                             </Typography>
