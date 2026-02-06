@@ -3,6 +3,21 @@ import PropTypes from 'prop-types';
 import { Box, Typography, Grid, Divider } from '@mui/material';
 import { getUserPostfix } from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
 
+export function buildObjectManagementUrl(param) {
+    const baseUrl = '/digital-learning-hub';
+    const postfix = getUserPostfix();
+    let url = baseUrl;
+    if (postfix) {
+        url += postfix;
+    }
+    if (url.includes('?')) {
+        url += `&type=${encodeURIComponent(param)}`;
+    } else {
+        url += `?type=${encodeURIComponent(param)}`;
+    }
+    return url;
+}
+
 export default function ObjectManagement({ data }) {
     const stats = data?.object_management_stats || {};
     const metrics = [
@@ -25,21 +40,6 @@ export default function ObjectManagement({ data }) {
             param: 'dueunpublish',
         },
     ];
-
-    function buildObjectManagementUrl(param) {
-        const baseUrl = '/digital-learning-hub';
-        const postfix = getUserPostfix();
-        let url = baseUrl;
-        if (postfix) {
-            url += postfix;
-        }
-        if (url.includes('?')) {
-            url += `&type=${encodeURIComponent(param)}`;
-        } else {
-            url += `?type=${encodeURIComponent(param)}`;
-        }
-        return url;
-    }
 
     return (
         <Box

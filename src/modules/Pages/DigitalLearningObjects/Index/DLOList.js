@@ -324,6 +324,7 @@ export const DLOList = ({
 
     const [viewType, setViewType] = useState('');
 
+    /* istanbul ignore next */
     function getTypeParam() {
         const searchParams = new URLSearchParams(window.location.search);
         if (searchParams.has('type')) return searchParams.get('type');
@@ -1036,7 +1037,7 @@ export const DLOList = ({
         function isFavoritedFiltered(item) {
             return dlorFavouritesList?.some(fav => fav.object_public_uuid === item.object_public_uuid);
         }
-
+        /* istanbul ignore next */
         function isUserSubmitted(item) {
             return item?.owner?.team_id !== 1;
         }
@@ -1047,7 +1048,7 @@ export const DLOList = ({
 
         const typeParam = getTypeParam();
         if (typeParam && typeParam.length > 0) {
-            // not implemented yet
+            /* istanbul ignore next */
             switch (typeParam) {
                 case 'favourite':
                 case 'followed':

@@ -1,4 +1,3 @@
-// istanbul ignore file
 import React, { useEffect } from 'react';
 import { Grid, Box, Typography } from '@mui/material';
 import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
@@ -51,7 +50,9 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                 aria-controls="site-stats-content"
                                 id="site-stats-header"
                             >
-                                <Typography variant="h6">Site Statistics</Typography>
+                                <Typography variant="h3" sx={{ fontSize: '1.25rem', fontWeight: 600 }}>
+                                    Site Statistics
+                                </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <DLOStatusSummary data={dlorDashboardData} />
@@ -68,7 +69,9 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                 aria-controls="object-analytics-content"
                                 id="object-analytics-header"
                             >
-                                <Typography variant="h6">Object Breakdown</Typography>
+                                <Typography variant="h3" sx={{ fontSize: '1.25rem', fontWeight: 600 }}>
+                                    Object Breakdown
+                                </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Grid container spacing={3}>

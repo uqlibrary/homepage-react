@@ -67,7 +67,8 @@ export default function EngagementSummary({ data }) {
                         <Grid item xs zeroMinWidth sx={{ p: 0, m: 0 }}>
                             <Box sx={{ textAlign: 'center', p: 0, m: 0 }}>
                                 <Typography
-                                    variant="h6"
+                                    variant="h3"
+                                    component="h3"
                                     sx={{
                                         color: m.color,
                                         fontWeight: 600,
