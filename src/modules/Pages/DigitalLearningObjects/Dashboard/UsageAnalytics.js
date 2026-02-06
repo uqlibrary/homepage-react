@@ -263,12 +263,12 @@ export default function UsageAnalytics({ usageData }) {
                     >
                         <Stack
                             direction={{ xs: 'column', sm: 'row' }}
-                            spacing={2}
-                            alignItems="center"
+                            spacing={1}
+                            alignItems="flex-start"
                             sx={{ mb: 1, justifyContent: 'flex-start', width: '100%' }}
                         >
-                            <Typography variant="subtitle1" sx={{ minWidth: 120, pl: 3 }}>
-                                Usage Date Range:
+                            <Typography variant="subtitle1" sx={{ minWidth: 70, pl: 0.5, mr: 0.5 }}>
+                                Range:
                             </Typography>
                             <TextField
                                 label="Start Date"
