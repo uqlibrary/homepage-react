@@ -146,10 +146,10 @@ export default function FacetSummary({ objectsByFacet }) {
 
 FacetSummary.propTypes = {
     objectsByFacet: PropTypes.shape({
-        objects_by_topic: PropTypes.object,
-        objects_by_audience: PropTypes.object,
-        objects_by_type: PropTypes.object,
-        objects_by_format: PropTypes.object,
+        objects_by_topic: PropTypes.array,
+        objects_by_audience: PropTypes.array,
+        objects_by_type: PropTypes.array,
+        objects_by_format: PropTypes.array,
         objects_with_cultural_advice: PropTypes.number,
-    }).isRequired,
+    }),
 };
