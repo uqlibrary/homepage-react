@@ -23,6 +23,7 @@ import DLOStatusSummary from './DLOStatusSummary';
 import GenericBreakdownChart from './GenericBreakdownChart';
 import EngagementSummary from './EngagementSummary';
 import ObjectManagement from './ObjectManagement';
+import FacetSummary from './FacetSummary';
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Title);
 
@@ -104,6 +105,11 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                     </Grid>
                                     <Grid item xs={12}>
                                         <ObjectManagement data={dlorDashboardData} />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        {dlorDashboardData?.objects_by_facet && (
+                                            <FacetSummary objectsByFacet={dlorDashboardData.objects_by_facet} />
+                                        )}
                                     </Grid>
                                 </Grid>
                             </AccordionDetails>
