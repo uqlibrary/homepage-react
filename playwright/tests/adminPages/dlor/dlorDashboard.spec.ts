@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@uq/pw/test';
+import { test, expect } from '@uq/pw/test';
 import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
 
 test.describe('Digital Learning Hub admin homepage', () => {
