@@ -29,13 +29,18 @@ function getTopEntries(arr, topN = 5) {
 }
 
 export default function FacetSummary({ objectsByFacet }) {
-    const { objectsByTopic = [], objectsByAudience = [], objectsByType = [], objectsByFormat = [] } =
-        objectsByFacet || {};
+    const {
+        objects_by_topic = [],
+        objects_by_audience = [],
+        objects_by_type = [],
+        objects_by_format = [],
+        objects_with_cultural_advice = 0,
+    } = objectsByFacet || {};
 
-    const topTopics = getTopEntries(objectsByTopic);
-    const topAudiences = getTopEntries(objectsByAudience);
-    const topTypes = getTopEntries(objectsByType);
-    const topFormats = getTopEntries(objectsByFormat);
+    const topTopics = getTopEntries(objects_by_topic);
+    const topAudiences = getTopEntries(objects_by_audience);
+    const topTypes = getTopEntries(objects_by_type);
+    const topFormats = getTopEntries(objects_by_format);
 
     return (
         <Box sx={{ mt: 2, mb: 2 }}>
@@ -46,7 +51,8 @@ export default function FacetSummary({ objectsByFacet }) {
                             Top Topics
                         </Typography>
                         <Typography variant="body2" sx={{ mb: 0.8, textAlign: 'center', mt: 0 }}>
-                            Total: {objectsByTopic.reduce((a, b) => a + (typeof b.count === 'number' ? b.count : 0), 0)}
+                            Total:{' '}
+                            {objects_by_topic.reduce((a, b) => a + (typeof b.count === 'number' ? b.count : 0), 0)}
                         </Typography>
                         <Divider sx={{ my: 0.5, background: '#f5f5f5' }} />
                         {topTopics.map(item => (
@@ -70,7 +76,7 @@ export default function FacetSummary({ objectsByFacet }) {
                         </Typography>
                         <Typography variant="body2" sx={{ mb: 0.8, textAlign: 'center', mt: 0 }}>
                             Total:{' '}
-                            {objectsByAudience.reduce(
+                            {objects_by_audience.reduce(
                                 (a, b) => a + (typeof b.count === 'number' ? b.count : /* istanbul ignore next */ 0),
                                 0,
                             )}
@@ -97,7 +103,7 @@ export default function FacetSummary({ objectsByFacet }) {
                         </Typography>
                         <Typography variant="body2" sx={{ mb: 0.8, textAlign: 'center', mt: 0 }}>
                             Total:{' '}
-                            {objectsByType.reduce(
+                            {objects_by_type.reduce(
                                 (a, b) => a + (typeof b.count === 'number' ? b.count : /* istanbul ignore next */ 0),
                                 0,
                             )}
@@ -124,7 +130,7 @@ export default function FacetSummary({ objectsByFacet }) {
                         </Typography>
                         <Typography variant="body2" sx={{ mb: 0.8, textAlign: 'center', mt: 0 }}>
                             Total:{' '}
-                            {objectsByFormat.reduce(
+                            {objects_by_format.reduce(
                                 (a, b) => a + (typeof b.count === 'number' ? b.count : /* istanbul ignore next */ 0),
                                 0,
                             )}
@@ -151,10 +157,10 @@ export default function FacetSummary({ objectsByFacet }) {
 
 FacetSummary.propTypes = {
     objectsByFacet: PropTypes.shape({
-        objectsByTopic: PropTypes.array,
-        objectsByAudience: PropTypes.array,
-        objectsByType: PropTypes.array,
-        objectsByFormat: PropTypes.array,
-        objectsWithCulturalAdvice: PropTypes.number,
+        objects_by_topic: PropTypes.array,
+        objects_by_audience: PropTypes.array,
+        objects_by_type: PropTypes.array,
+        objects_by_format: PropTypes.array,
+        objects_with_cultural_advice: PropTypes.number,
     }),
 };
