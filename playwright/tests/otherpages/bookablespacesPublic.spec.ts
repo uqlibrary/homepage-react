@@ -17,8 +17,9 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
     });
     test('Shows a basic page for Spaces', async ({ page }) => {
+        await page.goto('');
+        await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         // initially all spaces are visible
@@ -157,15 +158,17 @@ test.describe('Spaces', () => {
     });
     test.describe('accessibility', () => {
         test('homepage is accessible', async ({ page }) => {
+            await page.goto('');
+            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
             await assertAccessibility(page, '[data-testid="library-spaces"]');
         });
         test('homepage with content panel open is accessible', async ({ page }) => {
+            await page.goto('');
+            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
             const panelOpenerButton = `${FORGEN}-toggle-panel-button`;
@@ -184,8 +187,9 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId('no-spaces')).toContainText('No locations found yet - please try again soon.');
     });
     test('can expand-collapse sub-panels', async ({ page }) => {
+        await page.goto('');
+        await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         await expect(page.getByTestId(`${FORGEN}`).locator('h3')).toBeVisible();
@@ -252,21 +256,21 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId(`${FORGEN}-collapse-button`)).not.toBeVisible();
     });
     test('can filter with sidebar checkboxes', async ({ page }) => {
+        await page.goto('');
+        await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
+        // setup Ids
         const bookableId = 19;
         const bookableCheckbox = page.getByTestId(`facility-type-listitem-${bookableId}`);
         const bookableExcludeCheckboxlabel = page.getByTestId(`reject-filtertype-label-${bookableId}`);
         const adjustableDeskCheckbox = page.getByTestId('facility-type-listitem-39');
         const avEquipmentCheckbox = page.getByTestId('facility-type-listitem-8');
         const byodStationCheckbox = page.getByTestId('facility-type-listitem-32');
-
-        // const forganSmithCollaborativeSpace = page.getByTestId(`${FORGEN}`).locator('h3');
-        const forganSmithCollaborativeSpace = page.getByTestId('space-123456').locator('h3');
-        const duttonParkGroupStudyRoom = page.getByTestId(`${PACE}`).locator('h3');
-        const andrewLiverisComputerRoom = page.getByTestId(`${LIVERIS}`).locator('h3');
+        const forganSmithCollaborativeSpace = page.getByTestId(FORGEN).locator('h3');
+        const duttonParkGroupStudyRoom = page.getByTestId(PACE).locator('h3');
+        const andrewLiverisComputerRoom = page.getByTestId(LIVERIS).locator('h3');
 
         // initially all Spaces are visible on the page
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
@@ -298,7 +302,7 @@ test.describe('Spaces', () => {
 
         // selecting "Adjustable desks" & "Bookable" means none are visible, and the user is notified
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-            1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+            NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
         ); // "no spaces" message
         await expect(page.getByTestId('no-spaces-visible')).toBeVisible();
         await expect(forganSmithCollaborativeSpace).not.toBeVisible();
@@ -368,8 +372,9 @@ test.describe('Spaces', () => {
         await expect(andrewLiverisComputerRoom).not.toBeVisible();
     });
     test('can unfilter by cartouche', async ({ page }) => {
+        await page.goto('');
+        await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         const bookableId = 19;
@@ -380,9 +385,9 @@ test.describe('Spaces', () => {
         const avEquipmentCheckbox = page.getByTestId(`facility-type-listitem-${avEquipmentId}`);
         const avEquipmentUnsetCartouche = page.getByTestId(`button-deselect-selected-${avEquipmentId}`);
 
-        const forganSmithCollaborativeSpace = page.getByTestId(`${FORGEN}`).locator('h3');
-        const duttonParkGroupStudyRoom = page.getByTestId(`${PACE}`).locator('h3');
-        const andrewLiverisComputerRoom = page.getByTestId(`${LIVERIS}`).locator('h3');
+        const forganSmithCollaborativeSpace = page.getByTestId(FORGEN).locator('h3');
+        const duttonParkGroupStudyRoom = page.getByTestId(PACE).locator('h3');
+        const andrewLiverisComputerRoom = page.getByTestId(LIVERIS).locator('h3');
 
         // there are initially all Spaces visible on the page
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
@@ -908,8 +913,9 @@ test.describe('Spaces errors', () => {
         await expect(page.getByTestId('spaces-error')).toContainText('Something went wrong - please try again later.');
     });
     test('weekly hours list load error', async ({ page }) => {
+        await page.goto('');
+        await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces?responseType=weeklyHoursError');
-        await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         page.getByTestId(`${FORGEN}-toggle-panel-button`).click();

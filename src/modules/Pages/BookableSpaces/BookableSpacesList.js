@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Button, Grid, useTheme } from '@mui/material';
@@ -191,9 +191,9 @@ export const BookableSpacesList = ({
     const isDesktopView = !isTabletView && !isMobileView;
     console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
 
-    const [selectedFacilityTypes, setSelectedFacilityTypes] = React.useState([]);
-    const [filtersForceShown, setFiltersForceShown] = React.useState(isDesktopView);
-    const [spacesListForceShown, setSpacesListForceShown] = React.useState(true);
+    const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
+    const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(true);
+    const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -296,15 +296,13 @@ export const BookableSpacesList = ({
             },
         };
     };
-    const openCloseFilterBlock = e => {
-        console.log('openCloseFilterBlock');
-        setFiltersForceShown(!filtersForceShown);
+    const toggleFilterPopupVisibility = e => {
+        setShowFilterSelectorPopup(!showFilterSelectorPopup);
     };
-    const openCloseSpacesListBlock = e => {
-        console.log('openCloseSpacesListBlock');
-        setSpacesListForceShown(!spacesListForceShown);
+    const toggleSpacesListPopupVisibility = e => {
+        setShowSpacesSelectorPopup(!showSpacesSelectorPopup);
     };
-    const filterOpenCloseButtonIcon = (
+    const filterToggleButtonIcon = (
         // https://www.streamlinehq.com/icons/ultimate-regular-free?search=filter&icon=ico_lPqwMEdpHFHOBRpU
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -391,13 +389,13 @@ export const BookableSpacesList = ({
                             ?.filter(m => !!m.space_latitude && !!m.space_longitude)
                             ?.map(m => {
                                 // show the filtered Spaces on the map
-                                console.log(
-                                    'map point:',
-                                    m.space_name,
-                                    m.space_library_name,
-                                    m.space_latitude,
-                                    m.space_longitude,
-                                );
+                                // console.log(
+                                //     'map point:',
+                                //     m.space_name,
+                                //     m.space_library_name,
+                                //     m.space_latitude,
+                                //     m.space_longitude,
+                                // );
                                 const locationKey = `mappoint-space-${m?.space_id}`;
                                 return (
                                     <Marker
@@ -480,16 +478,16 @@ export const BookableSpacesList = ({
                 } else {
                     // mobile and tablet
                     return (
-                        <StyledMobileWrapper id="StyledMobileWrapperTemp">
+                        <StyledMobileWrapper data-testid="library-spaces">
                             <StyledFilterOpenButton
-                                id="openCloseFilterButton"
+                                id="toggleFilterButton"
                                 // className="controlFilterButton"
                                 data-testid="spaces-open-filter-button"
-                                onClick={() => openCloseFilterBlock()}
+                                onClick={() => toggleFilterPopupVisibility()}
                                 title="Open and close the filter popup"
                             >
-                                {filterOpenCloseButtonIcon}{' '}
-                                <span>{!!filtersForceShown ? 'Hide Filters' : 'Show Filters'}</span>
+                                {filterToggleButtonIcon}{' '}
+                                <span>{!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}</span>
                             </StyledFilterOpenButton>
                             <div className="sidebarFilters">
                                 <SidebarFilters
@@ -502,21 +500,23 @@ export const BookableSpacesList = ({
                                         bookableSpacesRoomList,
                                         facilityTypeList,
                                     )}
-                                    className={filtersForceShown ? 'popupFilterList' : 'hide'}
+                                    className={showFilterSelectorPopup ? 'popupFilterList' : 'hide'}
                                 />
                             </div>
                             {isDesktopView && (
                                 <>
                                     <StyledSpaceListOpenButton
-                                        id="openCloseSpacesListButton"
+                                        id="toggleSpacesListButton"
                                         // className="controlSpacesListButton"
                                         data-testid="spaces-open-spaces-list-button"
-                                        onClick={() => openCloseSpacesListBlock()}
+                                        onClick={() => toggleSpacesListPopupVisibility()}
                                         title="Open and close the filter popup"
                                     >
-                                        <span>{!!spacesListForceShown ? 'Hide Spaces list' : 'Show Spaces list'}</span>
+                                        <span>
+                                            {!!showSpacesSelectorPopup ? 'Hide Spaces list' : 'Show Spaces list'}
+                                        </span>
                                     </StyledSpaceListOpenButton>
-                                    <div className={spacesListForceShown ? 'spacesList' : 'hide'}>
+                                    <div className={showSpacesSelectorPopup ? 'spacesList' : 'hide'}>
                                         <SidebarSpacesList
                                             filteredSpaceLocations={filteredSpaceLocations}
                                             weeklyHours={weeklyHours}
@@ -524,7 +524,7 @@ export const BookableSpacesList = ({
                                             weeklyHoursError={weeklyHoursError}
                                             StyledStandardCard={StyledStandardCard}
                                             showAllData={!isMobileView}
-                                            className={filtersForceShown ? 'popupSpacesList' : 'hide'}
+                                            className={showFilterSelectorPopup ? 'popupSpacesList' : 'hide'}
                                         />
                                     </div>
                                 </>
