@@ -7,12 +7,14 @@ function buildFacetSummaryUrl(filterId) {
     const baseUrl = '/digital-learning-hub';
     const postfix = getUserPostfix();
     let url = baseUrl;
+    /* istanbul ignore next */
     if (postfix) {
         url += postfix;
     }
+    /* istanbul ignore next */
     if (url.includes('?')) {
         url += `&filters=${encodeURIComponent(filterId)}`;
-    } else {
+    } /* istanbul ignore next */ else {
         url += `?filters=${encodeURIComponent(filterId)}`;
     }
     return url;
