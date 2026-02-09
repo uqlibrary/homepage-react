@@ -1,13 +1,18 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import ActionCell from './ActionCell';
 
 export const useDataTableRow = (data, transform) => {
     const [row, _setRow] = useState(!!transform ? transform(data) : data);
     const setRow = data => _setRow(!!transform ? transform(data) : data);
+    const prevDataRef = useRef('');
+
     useEffect(() => {
+        const datStr = JSON.stringify(data);
+        if (prevDataRef.current === datStr) return;
+        prevDataRef.current = datStr;
         setRow(data);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [JSON.stringify(data)]);
+    }, [data]);
 
     return { row, setRow };
 };
