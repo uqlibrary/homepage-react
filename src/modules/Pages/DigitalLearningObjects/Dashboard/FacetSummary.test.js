@@ -9,7 +9,7 @@ jest.mock('../../Admin/DigitalLearningObjects/dlorAdminHelpers', () => ({
 
 describe('FacetSummary', () => {
     const baseData = {
-        objectsByTopic: [
+        objects_by_topic: [
             { id: 't1', name: 'Topic 1', count: 10 },
             { id: 't2', name: 'Topic 2', count: 5 },
             { id: 't3', name: 'Topic 3', count: 3 },
@@ -17,13 +17,13 @@ describe('FacetSummary', () => {
             { id: 't5', name: 'Topic 5', count: 1 },
             { id: 't6', name: 'Topic 6', count: 0 }, // should be filtered out
         ],
-        objectsByAudience: [
+        objects_by_audience: [
             { id: 'a1', name: 'Audience 1', count: 8 },
             { id: 'a2', name: 'Audience 2', count: 4 },
         ],
-        objectsByType: [{ id: 'ty1', name: 'Type 1', count: 7 }],
-        objectsByFormat: [{ id: 'f1', name: 'Format 1', count: 6 }],
-        objectsWithCulturalAdvice: 2,
+        objects_by_type: [{ id: 'ty1', name: 'Type 1', count: 7 }],
+        objects_by_format: [{ id: 'f1', name: 'Format 1', count: 6 }],
+        objects_with_cultural_advice: 2,
     };
 
     it('renders all top facets and totals', () => {
@@ -48,11 +48,11 @@ describe('FacetSummary', () => {
         render(
             <FacetSummary
                 objectsByFacet={{
-                    objectsByTopic: [],
-                    objectsByAudience: [],
-                    objectsByType: [],
-                    objectsByFormat: [],
-                    objectsWithCulturalAdvice: 0,
+                    objects_by_topic: [],
+                    objects_by_audience: [],
+                    objects_by_type: [],
+                    objects_by_format: [],
+                    objects_with_cultural_advice: 0,
                 }}
             />,
             { wrapper: MemoryRouter },
@@ -64,14 +64,14 @@ describe('FacetSummary', () => {
         render(
             <FacetSummary
                 objectsByFacet={{
-                    objectsByTopic: [
+                    objects_by_topic: [
                         { id: 't1', name: 'Topic 1', count: 0 },
                         { id: 't2', name: 'Topic 2' },
                         { id: 't3', name: 'Topic 3', count: 2 },
                     ],
-                    objectsByAudience: [],
-                    objectsByType: [],
-                    objectsByFormat: [],
+                    objects_by_audience: [],
+                    objects_by_type: [],
+                    objects_by_format: [],
                 }}
             />,
             { wrapper: MemoryRouter },
