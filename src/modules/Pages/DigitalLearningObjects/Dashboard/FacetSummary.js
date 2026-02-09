@@ -30,6 +30,8 @@ export default function FacetSummary({ objectsByFacet }) {
     const { objectsByTopic = [], objectsByAudience = [], objectsByType = [], objectsByFormat = [] } =
         objectsByFacet || {};
 
+    console.log('Objects by facet:', objectsByFacet); // Debug log to check data structure
+
     const topTopics = getTopEntries(objectsByTopic);
     const topAudiences = getTopEntries(objectsByAudience);
     const topTypes = getTopEntries(objectsByType);
