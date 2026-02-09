@@ -60,7 +60,6 @@ const SidebarSpacesList = ({
     weeklyHoursLoading,
     weeklyHoursError,
     StyledStandardCard,
-    sentClassName,
     showAllData = false,
 }) => {
     const theme = useTheme();
@@ -78,11 +77,7 @@ const SidebarSpacesList = ({
     // };
 
     return (
-        <StyledSpaceGridWrapperDiv
-            id="StyledSpaceGridWrapperDivTemp"
-            className={sentClassName}
-            style={{ paddingTop: '4.2rem' }}
-        >
+        <StyledSpaceGridWrapperDiv id="StyledSpaceGridWrapperDivTemp" style={{ paddingTop: '4.2rem' }}>
             <StyledBodyGrid container id="space-wrapper" data-testid="space-wrapper">
                 <a className="showsOnlyOnFocus" href="#topOfSidebar">
                     Skip back to list of filters
@@ -159,7 +154,6 @@ SidebarSpacesList.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     StyledStandardCard: PropTypes.any,
-    sentClassName: PropTypes.string,
     showAllData: PropTypes.bool,
 };
 

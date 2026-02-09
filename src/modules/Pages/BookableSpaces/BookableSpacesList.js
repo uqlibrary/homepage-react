@@ -64,7 +64,15 @@ const StyledMobileWrapper = styled('div')(({ theme }) => ({
     '& .narrowFilterList': {
         //
     },
-    '& .popupFilterList': {
+    '& .mapHolder': {
+        [theme.breakpoints.up('lg')]: {
+            '& .leaflet-control-container': {
+                position: 'absolute',
+                left: '310px',
+            },
+        },
+    },
+    '& .popupSpacesList, .popupFilterList': {
         position: 'absolute',
         top: 0,
         right: 0,
@@ -105,7 +113,6 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
     '&:hover, :focus': {
         backgroundColor: '#fff',
     },
-    marginLeft: '40px', // space for map +- button
     marginTop: '10px',
 
     backgroundImage: schoolBuildingBackgroundimage,
@@ -464,7 +471,6 @@ export const BookableSpacesList = ({
                     //                     weeklyHoursLoading={weeklyHoursLoading}
                     //                     weeklyHoursError={weeklyHoursError}
                     //                     StyledStandardCard={StyledStandardCard}
-                    //                     sentClassName="desktop"
                     //                     showAllData
                     //                 />
                     //                 {showMap()}
@@ -499,26 +505,31 @@ export const BookableSpacesList = ({
                                     className={filtersForceShown ? 'popupFilterList' : 'hide'}
                                 />
                             </div>
-                            <StyledSpaceListOpenButton
-                                id="openCloseSpacesListButton"
-                                // className="controlSpacesListButton"
-                                data-testid="spaces-open-spaces-list-button"
-                                onClick={() => openCloseSpacesListBlock()}
-                                title="Open and close the filter popup"
-                            >
-                                <span>{!!spacesListForceShown ? 'Hide Spaces list' : 'Show Spaces list'}</span>
-                            </StyledSpaceListOpenButton>
-                            <div className={spacesListForceShown ? 'spacesList' : 'hide'}>
-                                <SidebarSpacesList
-                                    filteredSpaceLocations={filteredSpaceLocations}
-                                    weeklyHours={weeklyHours}
-                                    weeklyHoursLoading={weeklyHoursLoading}
-                                    weeklyHoursError={weeklyHoursError}
-                                    StyledStandardCard={StyledStandardCard}
-                                    sentClassName={'mobile'} // needed??
-                                    showAllData={!isMobileView}
-                                />
-                            </div>
+                            {isDesktopView && (
+                                <>
+                                    <StyledSpaceListOpenButton
+                                        id="openCloseSpacesListButton"
+                                        // className="controlSpacesListButton"
+                                        data-testid="spaces-open-spaces-list-button"
+                                        onClick={() => openCloseSpacesListBlock()}
+                                        title="Open and close the filter popup"
+                                    >
+                                        <span>{!!spacesListForceShown ? 'Hide Spaces list' : 'Show Spaces list'}</span>
+                                    </StyledSpaceListOpenButton>
+                                    <div className={spacesListForceShown ? 'spacesList' : 'hide'}>
+                                        <SidebarSpacesList
+                                            filteredSpaceLocations={filteredSpaceLocations}
+                                            weeklyHours={weeklyHours}
+                                            weeklyHoursLoading={weeklyHoursLoading}
+                                            weeklyHoursError={weeklyHoursError}
+                                            StyledStandardCard={StyledStandardCard}
+                                            showAllData={!isMobileView}
+                                            className={filtersForceShown ? 'popupSpacesList' : 'hide'}
+                                        />
+                                    </div>
+                                </>
+                            )}
+
                             <div id="mapWrapper" className="mapHolder">
                                 {showMap()}
                             </div>
