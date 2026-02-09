@@ -290,8 +290,6 @@ export const DLOList = ({
     dlorFilterListError,
     account,
     dlorFavouritesList,
-    dlorFavouritesLoading,
-    dlorFavouritesError,
     dlorTeamList,
     dlorTeamListLoading,
     dlorTeamListError,
@@ -324,14 +322,26 @@ export const DLOList = ({
     const keyWordSearchRef = useRef('');
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const [fuzzyMatchSearch, setFuzzyMatchSearch] = useState([]);
     const [viewType, setViewType] = useState('');
 
+    /* istanbul ignore next */
+    function getTypeParam() {
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.has('type')) return searchParams.get('type');
+        const hash = window.location.hash || '';
+        const hashQuery = hash.includes('?') ? hash.split('?')[1] : '';
+        if (hashQuery) {
+            const hashParams = new URLSearchParams(hashQuery);
+            if (hashParams.has('type')) return hashParams.get('type');
+        }
+        return null;
+    }
+
     React.useEffect(() => {
-        const url = new URL(document.URL);
-        const rawsearchparams = !!url && url.searchParams;
-        const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
-        params.has('type') && setViewType(params.get('type'));
+        const typeParam = getTypeParam();
+        if (typeParam) {
+            setViewType(typeParam);
+        }
     }, []);
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -351,6 +361,10 @@ export const DLOList = ({
 
     const [paginationPage, setPaginationPage] = React.useState(1);
 
+    function filterFacetsWithShowHelp(data) {
+        return data.flatMap(facetType => facetType.facet_list.filter(item => !!item.facet_show_help));
+    }
+
     const FilterGraduateAttributes = (filterList, filterId, mode) => {
         if (mode === 'push') {
             const ga = filterList
@@ -367,10 +381,6 @@ export const DLOList = ({
             setSelectedGradAttributes(filteredGraduateAttributes);
         }
     };
-
-    function filterFacetsWithShowHelp(data) {
-        return data.flatMap(facetType => facetType.facet_list.filter(item => !!item.facet_show_help));
-    }
 
     /* istanbul ignore next */
     function skipToElement() {
@@ -399,9 +409,16 @@ export const DLOList = ({
         actions.loadDlorFavourites();
     }, [actions]);
 
+    // Helper to get 'type' param from both search and hash
+
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
-            actions.loadCurrentDLORs();
+            const typeParam = getTypeParam();
+            if (typeParam) {
+                actions.loadAllDLORs();
+            } else {
+                actions.loadCurrentDLORs();
+            }
         }
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
@@ -443,7 +460,7 @@ export const DLOList = ({
         window.history.pushState({}, '', newPathSearch);
     };
 
-    const clearKeywordField = e => {
+    const clearKeywordField = () => {
         setKeywordSearch('');
         keyWordSearchRef.current.value = '';
         setPaginationPage(1); // set pagination back to page 1
@@ -551,8 +568,6 @@ export const DLOList = ({
 
     function showHidePanel(facetTypeId) {
         const facetPanel = document.getElementById(panelId(facetTypeId));
-        const upArrowIcon = document.getElementById(UpArrowId(facetTypeId));
-        const downArrowIcon = document.getElementById(DownArrowId(facetTypeId));
 
         /* istanbul ignore else */
         if (
@@ -1022,21 +1037,54 @@ export const DLOList = ({
         function isFavoritedFiltered(item) {
             return dlorFavouritesList?.some(fav => fav.object_public_uuid === item.object_public_uuid);
         }
+        /* istanbul ignore next */
+        function isUserSubmitted(item) {
+            return item?.owner?.team_id !== 1;
+        }
         // Helper function to check if the current user is the owner/publisher
         function isMine(item, userEmail, userid) {
-            console.log('isMine check for item:', item);
             return item.object_publishing_user_email === userEmail || item.owner?.publishing_user_username === userid;
         }
 
-        const url = new URL(document.URL);
-        const rawsearchparams = !!url && url.searchParams;
-        const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
-        if (params.has('type') && params.get('type').length > 0) {
-            // not implemented yet
-            switch (params.get('type')) {
+        const typeParam = getTypeParam();
+        if (typeParam && typeParam.length > 0) {
+            /* istanbul ignore next */
+            switch (typeParam) {
                 case 'favourite':
                 case 'followed':
                     theSearch = theSearch.filter(item => isFavoritedFiltered(item));
+                    break;
+                case 'isafavourite':
+                    theSearch = theSearch.filter(item => !!item.is_favourited);
+                    break;
+                case 'submitted':
+                case 'new':
+                case 'rejected':
+                case 'deprecated':
+                    theSearch = theSearch.filter(item => item?.object_status === typeParam);
+                    break;
+                case 'lastupdated28days':
+                    theSearch = theSearch.filter(item => {
+                        const lastUpdatedDate = new Date(item.updated_at);
+                        const currentDate = new Date();
+                        const daysDifference = (currentDate - lastUpdatedDate) / (1000 * 60 * 60 * 24);
+                        return daysDifference <= 28;
+                    });
+                    break;
+                case 'duereview28days':
+                    theSearch = theSearch.filter(item => !!item.due_for_review);
+                    break;
+                case 'dueunpublish':
+                    theSearch = theSearch.filter(item => !!item.due_for_unpublish);
+                    break;
+                case 'culturaladvice':
+                    theSearch = theSearch.filter(item => !!item.object_cultural_advice);
+                    break;
+                case 'subscribed':
+                    theSearch = theSearch.filter(item => !!item.is_subscribed);
+                    break;
+                case 'usersubmitted':
+                    theSearch = theSearch.filter(item => isUserSubmitted(item));
                     break;
                 case 'mine':
                     console.log('theSearch before mine filter:', theSearch);
@@ -1049,8 +1097,8 @@ export const DLOList = ({
                     theSearch = theSearch.filter(item => !!item.object_is_featured);
                     break;
                 default:
-                    // not a valid type so remove it
-                    params.delete('type');
+                    // not a valid type so ignore
+                    break;
             }
         }
 
@@ -1761,12 +1809,12 @@ DLOList.propTypes = {
     dlorFilterList: PropTypes.array,
     dlorFilterListLoading: PropTypes.bool,
     dlorFilterListError: PropTypes.any,
+    dlorTeamList: PropTypes.array,
     dlorFavouritesList: PropTypes.array,
+    dlorTeamListLoading: PropTypes.bool,
     dlorFavouritesLoading: PropTypes.bool,
     dlorFavouritesError: PropTypes.any,
     account: PropTypes.object,
-    dlorTeamList: PropTypes.array,
-    dlorTeamListLoading: PropTypes.bool,
     dlorTeamListError: PropTypes.any,
 };
 

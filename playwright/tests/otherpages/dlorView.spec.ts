@@ -240,6 +240,14 @@ test.describe('Digital Learning Hub View page', () => {
             );
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
+        test('is accessiblefor a logged in user', async ({ page }) => {
+            await page.goto('digital-learning-hub/view/98s0_dy5k3_98h4?user=s2222222');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.locator('[data-testid="dlor-detailpage"] h1')).toHaveText(
+                /Advanced literature searching/,
+            );
+            await assertAccessibility(page, '[data-testid="StandardPage"]');
+        });
         test('a view page without keywords has a sensible sidebar', async ({ page }) => {
             await page.goto('digital-learning-hub/view/9k45_hgr4_876h');
 
