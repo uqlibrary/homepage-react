@@ -12,7 +12,6 @@ const statusConfig = [
 ];
 
 function buildDLOStatusUrl(param) {
-    // helper function to preserve dloradmn context between pages. Local only - not used on stage or prod.
     const baseUrl = '/digital-learning-hub';
     const postfix = getUserPostfix();
     let url = baseUrl;
@@ -21,7 +20,6 @@ function buildDLOStatusUrl(param) {
     if (postfix) {
         url += postfix;
     }
-    // Check if there is already a query string
     if (url.includes('?')) {
         url += `&type=${encodeURIComponent(param)}`;
     } else {

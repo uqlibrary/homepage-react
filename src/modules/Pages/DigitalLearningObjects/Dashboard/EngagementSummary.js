@@ -39,7 +39,6 @@ export default function EngagementSummary({ data }) {
             url += postfix;
         }
 
-        // Check if there is already a query string
         if (url.includes('?')) {
             url += `&type=${encodeURIComponent(param)}`;
         } else {

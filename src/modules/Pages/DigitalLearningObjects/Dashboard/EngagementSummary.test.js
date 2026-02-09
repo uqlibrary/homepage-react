@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import EngagementSummary from './EngagementSummary';
 
-// Mock getUserPostfix to control URL output
 jest.mock('../../Admin/DigitalLearningObjects/dlorAdminHelpers', () => ({
     getUserPostfix: jest.fn(() => ''),
 }));
@@ -20,11 +19,8 @@ describe('EngagementSummary', () => {
         expect(screen.getByText('Favourited objects')).toBeInTheDocument();
         expect(screen.getByText('5')).toBeInTheDocument();
         expect(screen.getByText('Subscribed objects')).toBeInTheDocument();
-        // There are two '3's: one for Subscribed objects, one for Popular objects
         const threes = screen.getAllByText('3');
-        // Subscribed objects
         expect(threes[0].closest('a')).toHaveAttribute('aria-label', 'View Subscribed objects');
-        // Popular objects
         expect(threes[1].closest('a')).toHaveAttribute('aria-label', 'View Popular objects');
         expect(screen.getByText('Cultural Advice items')).toBeInTheDocument();
         expect(screen.getByText('2')).toBeInTheDocument();

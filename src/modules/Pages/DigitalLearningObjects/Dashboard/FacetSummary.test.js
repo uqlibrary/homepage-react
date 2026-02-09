@@ -15,7 +15,7 @@ describe('FacetSummary', () => {
             { id: 't3', name: 'Topic 3', count: 3 },
             { id: 't4', name: 'Topic 4', count: 2 },
             { id: 't5', name: 'Topic 5', count: 1 },
-            { id: 't6', name: 'Topic 6', count: 0 }, // should be filtered out
+            { id: 't6', name: 'Topic 6', count: 0 },
         ],
         objects_by_audience: [
             { id: 'a1', name: 'Audience 1', count: 8 },
@@ -32,12 +32,12 @@ describe('FacetSummary', () => {
         expect(screen.getByText('Top Audiences')).toBeInTheDocument();
         expect(screen.getByText('Top Types')).toBeInTheDocument();
         expect(screen.getByText('Top Formats')).toBeInTheDocument();
-        // Totals
-        expect(screen.getByText('Total: 21')).toBeInTheDocument(); // topics
-        expect(screen.getByText('Total: 12')).toBeInTheDocument(); // audiences
-        expect(screen.getByText('Total: 7')).toBeInTheDocument(); // types
-        expect(screen.getByText('Total: 6')).toBeInTheDocument(); // formats
-        // Top entries
+
+        expect(screen.getByText('Total: 21')).toBeInTheDocument();
+        expect(screen.getByText('Total: 12')).toBeInTheDocument();
+        expect(screen.getByText('Total: 7')).toBeInTheDocument();
+        expect(screen.getByText('Total: 6')).toBeInTheDocument();
+
         expect(screen.getByText('Topic 1: 10')).toBeInTheDocument();
         expect(screen.getByText('Audience 1: 8')).toBeInTheDocument();
         expect(screen.getByText('Type 1: 7')).toBeInTheDocument();
