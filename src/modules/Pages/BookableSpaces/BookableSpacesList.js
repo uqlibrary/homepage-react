@@ -43,6 +43,27 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
         paddingBlock: 0,
     },
 }));
+const BookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
+    backgroundColor: 'rgb(243, 243, 244)',
+    [theme.breakpoints.up('lg')]: {
+        '&:has(.spacesListHolder.hide)': {
+            '& .mapHolder': {
+                '& .leaflet-control-container': {
+                    position: 'absolute',
+                    left: '185px',
+                },
+            },
+        },
+        '&:has(.spacesListHolder.spacesList)': {
+            '& .mapHolder': {
+                '& .leaflet-control-container': {
+                    position: 'absolute',
+                    left: '310px',
+                },
+            },
+        },
+    },
+}));
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
 }));
@@ -63,14 +84,6 @@ const StyledMobileWrapper = styled('div')(({ theme }) => ({
     marginInline: '2rem',
     '& .narrowFilterList': {
         //
-    },
-    '& .mapHolder': {
-        [theme.breakpoints.up('lg')]: {
-            '& .leaflet-control-container': {
-                position: 'absolute',
-                left: '310px',
-            },
-        },
     },
     '& .popupSpacesList, .popupFilterList': {
         position: 'absolute',
@@ -419,7 +432,7 @@ export const BookableSpacesList = ({
         );
     };
     return (
-        <div style={{ backgroundColor: 'rgb(243, 243, 244)' }}>
+        <BookableSpacesListWrapperDiv>
             {(() => {
                 if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading) {
                     return (
@@ -516,7 +529,13 @@ export const BookableSpacesList = ({
                                             {!!showSpacesSelectorPopup ? 'Hide Spaces list' : 'Show Spaces list'}
                                         </span>
                                     </StyledSpaceListOpenButton>
-                                    <div className={showSpacesSelectorPopup ? 'spacesList' : 'hide'}>
+                                    <div
+                                        className={
+                                            showSpacesSelectorPopup
+                                                ? 'spacesListHolder spacesList'
+                                                : 'spacesListHolder hide'
+                                        }
+                                    >
                                         <SidebarSpacesList
                                             filteredSpaceLocations={filteredSpaceLocations}
                                             weeklyHours={weeklyHours}
@@ -537,7 +556,7 @@ export const BookableSpacesList = ({
                     );
                 }
             })()}
-        </div>
+        </BookableSpacesListWrapperDiv>
     );
 };
 
