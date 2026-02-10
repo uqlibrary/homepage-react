@@ -499,27 +499,6 @@ export const SidebarFilters = ({
 
     return (
         <StyledSidebarDiv id="StyledSidebarDivTemp" className={className}>
-            {!!hasActiveFilters && (
-                <>
-                    <Typography component={'h3'} variant={'h6'}>
-                        Active filters
-                    </Typography>
-                    <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
-                        {showCartoucheList(flatFacilityTypeList)}
-                    </StyledCartoucheList>
-                    {checkFiltersList?.length > 0 && (
-                        <Button
-                            id={'button-deselect-all-filters'}
-                            data-testid={'button-deselect-all-filters'}
-                            onClick={deSelectAll}
-                            style={{ direction: 'ltr' }}
-                        >
-                            <ReplayIcon style={{ fontSize: '16px' }} />
-                            <span>Remove all filters</span>
-                        </Button>
-                    )}
-                </>
-            )}
             <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
                 <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
                     Skip to list of Spaces
@@ -527,6 +506,28 @@ export const SidebarFilters = ({
                 <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
                     Filter Spaces
                 </Typography>
+                {!!hasActiveFilters && (
+                    <>
+                        <Typography component={'h3'} variant={'h6'}>
+                            Active filters
+                        </Typography>
+                        <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
+                            {showCartoucheList(flatFacilityTypeList)}
+                        </StyledCartoucheList>
+                        {checkFiltersList?.length > 0 && (
+                            <Button
+                                id={'button-deselect-all-filters'}
+                                data-testid={'button-deselect-all-filters'}
+                                onClick={deSelectAll}
+                                style={{ direction: 'ltr' }}
+                            >
+                                <ReplayIcon style={{ fontSize: '16px' }} />
+                                <span>Remove all filters</span>
+                            </Button>
+                        )}
+                    </>
+                )}
+
                 {sortedUsedGroups?.map(group => {
                     const filterGroupId = group.facility_type_group_id;
                     const isGroupOpen = !!facilityTypeFilterGroupOpenNess.find(o => o.groupId === filterGroupId)
