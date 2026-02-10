@@ -94,7 +94,6 @@ export default function ObjectManagement({ data }) {
                     </React.Fragment>
                 ))}
             </Grid>
-            {/* FacetSummary removed; now only used in Dashboard.js */}
         </Box>
     );
 }

@@ -1,11 +1,10 @@
-// Mock Chart.js to prevent real rendering in tests
 jest.mock('react-chartjs-2', () => ({
     Bar: () => <div data-testid="mock-bar-chart">Bar Chart</div>,
     Pie: () => <div data-testid="mock-pie-chart">Pie Chart</div>,
     Doughnut: () => <div data-testid="mock-doughnut-chart">Doughnut Chart</div>,
     defaults: {},
 }));
-// Mock canvas for Chart.js in Jest/jsdom
+
 beforeAll(() => {
     Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
         value: () => ({
@@ -51,7 +50,7 @@ describe('GenericBreakdownChart', () => {
         };
         render(<GenericBreakdownChart chartData={chartData} dataKey="custom_breakdown" title="Custom Breakdown" />);
         fireEvent.click(screen.getByRole('button', { name: /show custom breakdown legend/i }));
-        // Should render an item with just the count in parentheses for the empty label
+
         expect(
             screen.getByText((content, element) => {
                 return element.tagName.toLowerCase() === 'span' && element.textContent.trim() === '(5)';
@@ -113,10 +112,8 @@ describe('GenericBreakdownChart', () => {
         fireEvent.click(screen.getByRole('button', { name: /show custom breakdown legend/i }));
         expect(screen.getByText('Custom1 (1)')).toBeInTheDocument();
         expect(screen.getByText('Custom2 (2)')).toBeInTheDocument();
-        // Use a function matcher to find the label for the item with no label or name
         expect(
             screen.getByText((content, element) => {
-                // Find a span whose textContent is exactly ' (3)'
                 return element.tagName.toLowerCase() === 'span' && element.textContent.trim() === '(3)';
             }),
         ).toBeInTheDocument();
@@ -158,7 +155,6 @@ describe('GenericBreakdownChart', () => {
         expect(screen.getByText('Team A (10)')).toBeInTheDocument();
         expect(screen.getByText('Team B (5)')).toBeInTheDocument();
         fireEvent.click(screen.getByRole('button', { name: /hide team breakdown legend/i }));
-        // legend should now be hidden, so these should not be found
         expect(screen.queryByText('Team A (10)')).toBeNull();
         expect(screen.queryByText('Team B (5)')).toBeNull();
     });
@@ -174,7 +170,6 @@ describe('GenericBreakdownChart', () => {
     });
 
     it('generateColorShades covers n === 1 branch', () => {
-        // Rendering with a single data point triggers n === 1 branch
         render(
             <GenericBreakdownChart
                 chartData={{ custom_breakdown: [{ label: 'Only', count: 7 }] }}
@@ -201,13 +196,7 @@ describe('GenericBreakdownChart', () => {
     });
 
     it('covers review_status branch when review_status is missing', () => {
-        render(
-            <GenericBreakdownChart
-                chartData={{}} // no review_status property
-                dataKey="review_status"
-                title="Review Status"
-            />,
-        );
+        render(<GenericBreakdownChart chartData={{}} dataKey="review_status" title="Review Status" />);
         fireEvent.click(screen.getByRole('button', { name: /show review status legend/i }));
         expect(screen.getByText('Upcoming (0)')).toBeInTheDocument();
         expect(screen.getByText('Due (0)')).toBeInTheDocument();

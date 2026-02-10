@@ -1,13 +1,10 @@
-// Directly import getTrendDisplay for unit testing
 import { getTrendDisplay } from './UsageAnalytics';
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-// Mock react-chartjs-2 Line chart to avoid canvas/context errors in Jest
 jest.mock('react-chartjs-2', () => ({
     Line: () => <div data-testid="mock-line-chart" />,
 }));
 
-// Helper to generate mock usage data
 export default function getMockUsageData() {
     const today = new Date();
     const format = d => d.toISOString().slice(0, 10);
@@ -84,7 +81,6 @@ describe('Analysis', () => {
         it('shows correct date range in summary', () => {
             const mockData = getMockUsageData();
             render(<UsageAnalytics usageData={mockData} />);
-            // Use the min and max activity_date from the mock data for the expected value
             const minDateStr = mockData[0].activity_date;
             const maxDateStr = mockData[mockData.length - 1].activity_date;
             const format = d => {
@@ -92,7 +88,6 @@ describe('Analysis', () => {
                 return date.toLocaleDateString('en-AU');
             };
             const expected = `Date Range: ${format(minDateStr)} to ${format(maxDateStr)}`;
-            // Query the summary element by text and check its textContent
             const summary = screen.queryByText(content => content.includes('Date Range:'));
             expect(summary).toBeTruthy();
             expect(summary.textContent).toContain(expected);
@@ -100,12 +95,10 @@ describe('Analysis', () => {
 
         it('toggles group visibility', () => {
             render(<UsageAnalytics usageData={getMockUsageData()} />);
-            // Find all group checkboxes by data-testid
             const studentsCheckboxWrapper = screen.getByTestId('group-checkbox-students');
             const staffCheckboxWrapper = screen.getByTestId('group-checkbox-staff');
             expect(studentsCheckboxWrapper).toBeInTheDocument();
             expect(staffCheckboxWrapper).toBeInTheDocument();
-            // The actual input is inside the wrapper
             const studentsCheckbox = studentsCheckboxWrapper.querySelector('input[type="checkbox"]');
             fireEvent.click(studentsCheckbox);
             expect(studentsCheckbox).toBeChecked();
@@ -113,7 +106,6 @@ describe('Analysis', () => {
 
         it('resets date range when Reset is clicked', () => {
             render(<UsageAnalytics usageData={getMockUsageData()} />);
-            // MUI TextField renders an input inside the wrapper
             const startDateWrapper = screen.getByTestId('start-date');
             const endDateWrapper = screen.getByTestId('end-date');
             const startDateInput = startDateWrapper.querySelector('input');
@@ -121,7 +113,6 @@ describe('Analysis', () => {
             fireEvent.change(startDateInput, { target: { value: '2000-01-01' } });
             fireEvent.change(endDateInput, { target: { value: '2000-01-02' } });
             fireEvent.click(screen.getByTestId('reset-button'));
-            // Should reset to default range (latest 7 days or available)
             expect(startDateInput.value).not.toBe('2000-01-01');
             expect(endDateInput.value).not.toBe('2000-01-02');
         });
@@ -197,8 +188,6 @@ describe('Analysis', () => {
         });
 
         it('calculates summary trend logic for all cases', () => {
-            // prevPeriodData.length === periodLength, totalPrevPeriod > 0,
-            // totalCurrentPeriod > 0, totalCurrentPeriod === 0
             const mockData = [
                 { activity_date: '2026-02-04', total_views: 10, viewers_by_group: [] },
                 { activity_date: '2026-02-05', total_views: 0, viewers_by_group: [] },
@@ -237,19 +226,8 @@ describe('Analysis', () => {
                 { activity_date: '2026-02-07', total_views: 2, viewers_by_group: [] },
             ];
             render(<UsageAnalytics usageData={mockData} />);
-            // Should use minDate as defaultStartDate
             expect(screen.getByTestId('start-date')).toBeInTheDocument();
         });
-
-        it('handles empty prevPeriodData', () => {
-            const mockData = [
-                { activity_date: '2026-02-06', total_views: 1, viewers_by_group: [] },
-                { activity_date: '2026-02-07', total_views: 2, viewers_by_group: [] },
-            ];
-            render(<UsageAnalytics usageData={mockData} />);
-            // No assertion needed, just triggers the branch
-        });
-
         it('updates prevGroupTotals', () => {
             const mockData = [
                 {
@@ -273,7 +251,6 @@ describe('Analysis', () => {
         });
 
         it('covers summary trend branches', () => {
-            // totalPrevPeriod > 0, totalCurrentPeriod > 0, totalCurrentPeriod === 0, totalPrevPeriod === 0
             const mockData = [
                 { activity_date: '2026-02-04', total_views: 0, viewers_by_group: [] },
                 { activity_date: '2026-02-05', total_views: 0, viewers_by_group: [] },
@@ -313,15 +290,6 @@ describe('Analysis', () => {
             ];
             render(<UsageAnalytics usageData={mockData} />);
             expect(screen.getByTestId('start-date')).toBeInTheDocument();
-        });
-
-        it('covers empty prevPeriodData', () => {
-            const mockData = [
-                { activity_date: '2026-02-06', total_views: 1, viewers_by_group: [] },
-                { activity_date: '2026-02-07', total_views: 2, viewers_by_group: [] },
-            ];
-            render(<UsageAnalytics usageData={mockData} />);
-            // No assertion needed, triggers branch
         });
 
         it('covers prevGroupTotals update', () => {
@@ -390,15 +358,6 @@ describe('Analysis', () => {
             ];
             render(<UsageAnalytics usageData={mockData} />);
             expect(screen.getByTestId('start-date')).toBeInTheDocument();
-        });
-
-        it('prevPeriodData is empty when prevStartIdx < 0', () => {
-            const mockData = [
-                { activity_date: '2026-02-01', total_views: 1, viewers_by_group: [] },
-                { activity_date: '2026-02-02', total_views: 2, viewers_by_group: [] },
-            ];
-            render(<UsageAnalytics usageData={mockData} />);
-            // Branch triggers, no assertion needed
         });
 
         it('prevGroupTotals stays zero when prevPeriodData empty', () => {
@@ -652,7 +611,6 @@ describe('Analysis', () => {
         });
     });
     it('explicitly covers prevPeriodData.forEach for group totals', () => {
-        // Create mock data with enough days for prevPeriodData to be non-empty
         const mockData = [
             {
                 activity_date: '2026-02-01',
@@ -712,7 +670,6 @@ describe('Analysis', () => {
             },
         ];
         render(<UsageAnalytics usageData={mockData} />);
-        // If the component renders without error, the block is executed
         expect(screen.getByText(/Usage Summary/)).toBeInTheDocument();
     });
 });
