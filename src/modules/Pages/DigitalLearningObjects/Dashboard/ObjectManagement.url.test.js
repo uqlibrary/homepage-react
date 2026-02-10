@@ -1,12 +1,6 @@
 import { getUserPostfix } from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { buildObjectManagementUrl } from './ObjectManagement';
 
-describe('ObjectManagement buildObjectManagementUrl', () => {
-    beforeEach(() => {
-        jest.resetModules();
-    });
-});
-
 jest.mock('../../Admin/DigitalLearningObjects/dlorAdminHelpers', () => ({
     getUserPostfix: jest.fn(() => ''),
 }));

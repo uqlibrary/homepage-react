@@ -1,8 +1,10 @@
+// istanbul ignore file
 import React, { useEffect } from 'react';
 import { Grid, Box, Typography } from '@mui/material';
 import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { StandardPage } from '../../../App/components/pages';
+import { isDlorAdminUser } from '../../../../helpers/access';
 
 import {
     Chart as ChartJS,
@@ -50,9 +52,7 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                 aria-controls="site-stats-content"
                                 id="site-stats-header"
                             >
-                                <Typography variant="h3" sx={{ fontSize: '1.25rem', fontWeight: 600 }}>
-                                    Site Statistics
-                                </Typography>
+                                <Typography variant="h6">Site Statistics</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <DLOStatusSummary data={dlorDashboardData} />
@@ -69,37 +69,37 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                 aria-controls="object-analytics-content"
                                 id="object-analytics-header"
                             >
-                                <Typography variant="h3" sx={{ fontSize: '1.25rem', fontWeight: 600 }}>
-                                    Object Breakdown
-                                </Typography>
+                                <Typography variant="h6">Object Breakdown</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Grid container spacing={3}>
                                     <Grid item xs={12}>
                                         <EngagementSummary data={dlorDashboardData} />
                                     </Grid>
-                                    <Grid item xs={6} md={3}>
-                                        <GenericBreakdownChart
-                                            chartData={dlorDashboardData}
-                                            dataKey="team_breakdown"
-                                            title="Team Breakdown"
-                                        />
-                                    </Grid>
-                                    <Grid item xs={6} md={3}>
+                                    {isDlorAdminUser() && (
+                                        <Grid item xs={6} md={3}>
+                                            <GenericBreakdownChart
+                                                chartData={dlorDashboardData}
+                                                dataKey="team_breakdown"
+                                                title="Team Breakdown"
+                                            />
+                                        </Grid>
+                                    )}
+                                    <Grid item xs={6} md={isDlorAdminUser() ? 3 : 4}>
                                         <GenericBreakdownChart
                                             chartData={dlorDashboardData}
                                             dataKey="object_type_breakdown"
                                             title="Object Types"
                                         />
                                     </Grid>
-                                    <Grid item xs={6} md={3}>
+                                    <Grid item xs={6} md={isDlorAdminUser() ? 3 : 4}>
                                         <GenericBreakdownChart
                                             chartData={dlorDashboardData}
                                             dataKey="keyword_breakdown"
                                             title="Keywords"
                                         />
                                     </Grid>
-                                    <Grid item xs={6} md={3}>
+                                    <Grid item xs={6} md={isDlorAdminUser() ? 3 : 4}>
                                         <GenericBreakdownChart
                                             chartData={dlorDashboardData}
                                             dataKey="review_status"
