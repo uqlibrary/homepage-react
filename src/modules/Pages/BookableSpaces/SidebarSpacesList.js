@@ -61,6 +61,7 @@ const SidebarSpacesList = ({
     weeklyHoursError,
     StyledStandardCard,
     showAllData = false,
+    suppliedClassName = null,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -77,7 +78,11 @@ const SidebarSpacesList = ({
     // };
 
     return (
-        <StyledSpaceGridWrapperDiv id="StyledSpaceGridWrapperDivTemp" style={{ paddingTop: '4.2rem' }}>
+        <StyledSpaceGridWrapperDiv
+            id="StyledSpaceGridWrapperDivTemp"
+            style={{ paddingTop: '4.2rem' }}
+            className={suppliedClassName}
+        >
             <StyledBodyGrid container id="space-wrapper" data-testid="space-wrapper">
                 <a className="showsOnlyOnFocus" href="#topOfSidebar">
                     Skip back to list of filters
@@ -155,6 +160,7 @@ SidebarSpacesList.propTypes = {
     weeklyHoursError: PropTypes.any,
     StyledStandardCard: PropTypes.any,
     showAllData: PropTypes.bool,
+    suppliedClassName: PropTypes.string,
 };
 
 export default React.memo(SidebarSpacesList);

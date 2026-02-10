@@ -45,12 +45,13 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
 }));
 const BookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
     backgroundColor: 'rgb(243, 243, 244)',
+    marginBottom: '-50px',
     [theme.breakpoints.up('lg')]: {
         '&:has(.spacesListHolder.hide)': {
             '& .mapHolder': {
                 '& .leaflet-control-container': {
                     position: 'absolute',
-                    left: '185px',
+                    left: '195px',
                 },
             },
         },
@@ -58,7 +59,7 @@ const BookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
             '& .mapHolder': {
                 '& .leaflet-control-container': {
                     position: 'absolute',
-                    left: '310px',
+                    left: '330px',
                 },
             },
         },
@@ -85,23 +86,22 @@ const StyledMobileWrapper = styled('div')(({ theme }) => ({
     '& .narrowFilterList': {
         //
     },
+    '& .popupSpacesList': {
+        left: 0,
+        height: 'calc(100% - 70px)',
+    },
+    '& .popupFilterList': {
+        right: 0,
+        height: 'calc(100% - 32px)',
+    },
     '& .popupSpacesList, .popupFilterList': {
         position: 'absolute',
         top: 0,
-        right: 0,
-        height: '100%',
         width: '20rem',
         maxWidth: '50%',
         zIndex: 2000,
         paddingTop: '2rem',
         marginTop: 0,
-    },
-    '& .spacesList': {
-        position: 'absolute',
-        width: '20rem',
-        maxWidth: '50%',
-        zIndex: 2000,
-        marginTop: '-2px', // small gap, fix
     },
     '& .hide': {
         display: 'none',
@@ -112,7 +112,7 @@ const schoolBuildingBackgroundimage =
 const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
     position: 'absolute',
     top: '0.25rem',
-    left: '0.25rem',
+    left: '1rem',
     zIndex: 2001,
     display: 'flex',
     alignItems: 'center',
@@ -205,7 +205,7 @@ export const BookableSpacesList = ({
     console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
 
     const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
-    const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(true);
+    const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
 
     React.useEffect(() => {
@@ -502,7 +502,7 @@ export const BookableSpacesList = ({
                                 {filterToggleButtonIcon}{' '}
                                 <span>{!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}</span>
                             </StyledFilterOpenButton>
-                            <div className="sidebarFilters">
+                            <div>
                                 <SidebarFilters
                                     facilityTypeList={facilityTypeList}
                                     facilityTypeListLoading={facilityTypeListLoading}
@@ -513,7 +513,7 @@ export const BookableSpacesList = ({
                                         bookableSpacesRoomList,
                                         facilityTypeList,
                                     )}
-                                    className={showFilterSelectorPopup ? 'popupFilterList' : 'hide'}
+                                    suppliedClassName={showFilterSelectorPopup ? 'popupFilterList' : 'hide'}
                                 />
                             </div>
                             {isDesktopView && (
@@ -532,7 +532,7 @@ export const BookableSpacesList = ({
                                     <div
                                         className={
                                             showSpacesSelectorPopup
-                                                ? 'spacesListHolder spacesList'
+                                                ? 'spacesListHolder spacesList' // only controls placement of +/- on map
                                                 : 'spacesListHolder hide'
                                         }
                                     >
@@ -543,7 +543,7 @@ export const BookableSpacesList = ({
                                             weeklyHoursError={weeklyHoursError}
                                             StyledStandardCard={StyledStandardCard}
                                             showAllData={!isMobileView}
-                                            className={showFilterSelectorPopup ? 'popupSpacesList' : 'hide'}
+                                            suppliedClassName={showSpacesSelectorPopup ? 'popupSpacesList' : 'hide'}
                                         />
                                     </div>
                                 </>

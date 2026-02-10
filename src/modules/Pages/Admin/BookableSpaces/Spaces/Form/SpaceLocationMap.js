@@ -212,6 +212,7 @@ const SpaceLocationMap = ({
             <Typography component={'p'}>
                 Drag the blue icon to the location for this Space as precisely as you can!
             </Typography>
+            <Typography component={'p'}>Small red dots indicate existing Space locations.</Typography>
         </>
     );
 };

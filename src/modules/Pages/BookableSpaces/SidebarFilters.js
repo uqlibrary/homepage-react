@@ -117,8 +117,6 @@ const StyledSidebarDiv = styled('div')(() => ({
         },
     },
     // Firefox scrollbar styling
-    scrollbarWidth: 'thin',
-    scrollbarColor: '#c1c1c1 #f1f1f1',
     '& > button': {
         margin: '0 0.5rem 0.5rem 0',
         display: 'inline-flex',
@@ -143,6 +141,15 @@ const StyledSidebarDiv = styled('div')(() => ({
     flexGrow: 0,
     marginTop: '0.25rem',
 }));
+const StyledSidebarSubDiv = styled('div')(({ theme }) => ({
+    '& > div:first-of-type': {
+        borderTop: theme.palette.designSystem.border,
+        marginTop: '16px',
+    },
+    '& .hiddenFilters': {
+        display: 'none',
+    },
+}));
 const StyledFacilityGroup = styled('div')(({ theme }) => ({
     borderBottom: theme.palette.designSystem.border,
     paddingBlock: '16px',
@@ -165,15 +172,6 @@ const StyledFilterSpaceListTypographyHeading = styled('h3')(() => ({
         fontStyle: 'italic',
     },
 }));
-const StyledSidebarSubDiv = styled('div')(({ theme }) => ({
-    '& > div:first-of-type': {
-        borderTop: theme.palette.designSystem.border,
-        marginTop: '16px',
-    },
-    '& .hiddenFilters': {
-        display: 'none',
-    },
-}));
 const StyledFilterSpaceList = styled('ul')(() => ({
     marginTop: 0,
     paddingLeft: 0,
@@ -181,7 +179,7 @@ const StyledFilterSpaceList = styled('ul')(() => ({
 }));
 const StyledCartoucheList = styled('ul')(({ theme }) => ({
     listStyle: 'none',
-    display: 'inline',
+    display: 'block',
     margin: 0,
     padding: 0,
     '& li': {
@@ -224,7 +222,7 @@ export const SidebarFilters = ({
     selectedFacilityTypes,
     setSelectedFacilityTypes,
     filteredFacilityTypeList,
-    className,
+    suppliedClassName,
 }) => {
     const [facilityTypeFilterGroupOpenNess, setFacilityTypeFilterGroupOpenNess] = React.useState([]);
 
@@ -498,7 +496,7 @@ export const SidebarFilters = ({
     }
 
     return (
-        <StyledSidebarDiv id="StyledSidebarDivTemp" className={className}>
+        <StyledSidebarDiv id="StyledSidebarDivTemp" className={suppliedClassName}>
             <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
                 <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
                     Skip to list of Spaces
@@ -570,7 +568,7 @@ SidebarFilters.propTypes = {
     filteredFacilityTypeList: PropTypes.any,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
-    className: PropTypes.string,
+    suppliedClassName: PropTypes.string,
 };
 
 export default React.memo(SidebarFilters);
