@@ -30,7 +30,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearS
 
 import PropTypes from 'prop-types';
 
-export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlorDashboardError, actions }) {
+export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlorDashboardError, account, actions }) {
     useEffect(() => {
         actions.loadDLORDashboard();
     }, [actions]);
@@ -73,11 +73,13 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Grid container spacing={3}>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={12} data-testid="engagement-summary-section">
                                         <EngagementSummary data={dlorDashboardData} />
                                     </Grid>
-                                    {isDlorAdminUser() && (
-                                        <Grid item xs={6} md={3}>
+
+                                    {/* Only show Team Breakdown chart for DLOR admin */}
+                                    {isDlorAdminUser(account) && (
+                                        <Grid item xs={6} md={3} data-testid="team-breakdown-chart-section">
                                             <GenericBreakdownChart
                                                 chartData={dlorDashboardData}
                                                 dataKey="team_breakdown"
@@ -85,31 +87,32 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                             />
                                         </Grid>
                                     )}
-                                    <Grid item xs={6} md={isDlorAdminUser() ? 3 : 4}>
+
+                                    <Grid item xs={6} md={3} data-testid="object-types-chart-section">
                                         <GenericBreakdownChart
                                             chartData={dlorDashboardData}
                                             dataKey="object_type_breakdown"
                                             title="Object Types"
                                         />
                                     </Grid>
-                                    <Grid item xs={6} md={isDlorAdminUser() ? 3 : 4}>
+                                    <Grid item xs={6} md={3} data-testid="keywords-chart-section">
                                         <GenericBreakdownChart
                                             chartData={dlorDashboardData}
                                             dataKey="keyword_breakdown"
                                             title="Keywords"
                                         />
                                     </Grid>
-                                    <Grid item xs={6} md={isDlorAdminUser() ? 3 : 4}>
+                                    <Grid item xs={6} md={3} data-testid="review-status-chart-section">
                                         <GenericBreakdownChart
                                             chartData={dlorDashboardData}
                                             dataKey="review_status"
                                             title="Review Status"
                                         />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={12} data-testid="object-management-section">
                                         <ObjectManagement data={dlorDashboardData} />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={12} data-testid="facet-summary-section">
                                         {dlorDashboardData?.objects_by_facet && (
                                             <FacetSummary objectsByFacet={dlorDashboardData.objects_by_facet} />
                                         )}
@@ -128,6 +131,7 @@ Dashboard.propTypes = {
     dlorDashboardData: PropTypes.object,
     dlorDashboardLoading: PropTypes.bool,
     dlorDashboardError: PropTypes.any,
+    account: PropTypes.object,
     actions: PropTypes.shape({
         loadDLORDashboard: PropTypes.func.isRequired,
     }).isRequired,
