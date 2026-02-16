@@ -60,6 +60,8 @@ import { exportDLORDataToCSV } from 'modules/Pages/Admin/DigitalLearningObjects/
 
 import Fuse from 'fuse.js';
 
+import moment from 'moment';
+
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
     position: 'absolute',
@@ -1038,12 +1040,30 @@ export const DLOList = ({
             return dlorFavouritesList?.some(fav => fav.object_public_uuid === item.object_public_uuid);
         }
         /* istanbul ignore next */
+        function isNewObject(item) {
+            const createdDate = moment(item.created_at);
+            const twentyEightDaysAgo = moment().subtract(28, 'days');
+
+            return (
+                (item.object_status === 'new' || item.object_status === 'current') &&
+                createdDate.isValid() &&
+                createdDate.isSameOrAfter(twentyEightDaysAgo)
+            );
+        }
+        /* istanbul ignore next */
         function isUserSubmitted(item) {
             return item?.owner?.team_id !== 1;
         }
         // Helper function to check if the current user is the owner/publisher
         function isMine(item, userEmail, userid) {
             return item.object_publishing_user_email === userEmail || item.owner?.publishing_user_username === userid;
+        }
+
+        /* istanbul ignore next */
+        function isLastUpdated28Days(item) {
+            const lastUpdatedDate = moment(item.updated_at);
+            const twentyEightDaysAgo = moment().subtract(28, 'days');
+            return lastUpdatedDate.isValid() && lastUpdatedDate.isSameOrAfter(twentyEightDaysAgo);
         }
 
         const typeParam = getTypeParam();
@@ -1059,17 +1079,16 @@ export const DLOList = ({
                     break;
                 case 'submitted':
                 case 'new':
+                    theSearch = theSearch.filter(item => {
+                        return isNewObject(item);
+                    });
+                    break;
                 case 'rejected':
                 case 'deprecated':
                     theSearch = theSearch.filter(item => item?.object_status === typeParam);
                     break;
                 case 'lastupdated28days':
-                    theSearch = theSearch.filter(item => {
-                        const lastUpdatedDate = new Date(item.updated_at);
-                        const currentDate = new Date();
-                        const daysDifference = (currentDate - lastUpdatedDate) / (1000 * 60 * 60 * 24);
-                        return daysDifference <= 28;
-                    });
+                    theSearch = theSearch.filter(item => isLastUpdated28Days(item));
                     break;
                 case 'duereview28days':
                     theSearch = theSearch.filter(item => !!item.due_for_review);
