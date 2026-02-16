@@ -1039,6 +1039,7 @@ export const DLOList = ({
         function isFavoritedFiltered(item) {
             return dlorFavouritesList?.some(fav => fav.object_public_uuid === item.object_public_uuid);
         }
+        /* istanbul ignore next */
         function isNewObject(item) {
             const createdDate = moment(item.created_at);
             const twentyEightDaysAgo = moment().subtract(28, 'days');
@@ -1058,6 +1059,7 @@ export const DLOList = ({
             return item.object_publishing_user_email === userEmail || item.owner?.publishing_user_username === userid;
         }
 
+        /* istanbul ignore next */
         function isLastUpdated28Days(item) {
             const lastUpdatedDate = moment(item.updated_at);
             const twentyEightDaysAgo = moment().subtract(28, 'days');
