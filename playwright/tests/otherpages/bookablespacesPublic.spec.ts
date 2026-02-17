@@ -271,6 +271,7 @@ test.describe('Spaces', () => {
         const forganSmithCollaborativeSpace = page.getByTestId(FORGEN).locator('h3');
         const duttonParkGroupStudyRoom = page.getByTestId(PACE).locator('h3');
         const andrewLiverisComputerRoom = page.getByTestId(LIVERIS).locator('h3');
+        const filterCount = page.getByTestId('space-filter-count').locator('span');
 
         // initially all Spaces are visible on the page
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
@@ -280,6 +281,7 @@ test.describe('Spaces', () => {
         await expect(forganSmithCollaborativeSpace).toBeVisible();
         await expect(duttonParkGroupStudyRoom).toBeVisible();
         await expect(andrewLiverisComputerRoom).toBeVisible();
+        await expect(filterCount).not.toBeVisible(); // no filters selected
 
         // filter to show "Bookable" only
         await expect(bookableCheckbox.locator('label:first-of-type')).toBeVisible();
@@ -294,6 +296,8 @@ test.describe('Spaces', () => {
         await expect(forganSmithCollaborativeSpace).not.toBeVisible();
         await expect(duttonParkGroupStudyRoom).not.toBeVisible();
         await expect(andrewLiverisComputerRoom).toBeVisible();
+        await expect(filterCount).toBeVisible();
+        await expect(filterCount).toContainText('1');
 
         // add 'Adjustable desks'
         await expect(adjustableDeskCheckbox.locator('label:first-of-type')).toBeVisible();
@@ -308,6 +312,8 @@ test.describe('Spaces', () => {
         await expect(forganSmithCollaborativeSpace).not.toBeVisible();
         await expect(duttonParkGroupStudyRoom).not.toBeVisible();
         await expect(andrewLiverisComputerRoom).not.toBeVisible();
+        await expect(filterCount).toBeVisible();
+        await expect(filterCount).toContainText('2');
 
         // uncheck "Bookable" makes Forgan smith (#1) appear
         await bookableCheckbox.locator('span input').uncheck();
@@ -318,6 +324,8 @@ test.describe('Spaces', () => {
         await expect(forganSmithCollaborativeSpace).toBeVisible();
         await expect(duttonParkGroupStudyRoom).not.toBeVisible();
         await expect(andrewLiverisComputerRoom).not.toBeVisible();
+        await expect(filterCount).toBeVisible();
+        await expect(filterCount).toContainText('1');
 
         // uncheck other filter and all the Spaces appear
         await adjustableDeskCheckbox.locator('span input').uncheck();
@@ -329,6 +337,7 @@ test.describe('Spaces', () => {
         await expect(forganSmithCollaborativeSpace).toBeVisible();
         await expect(duttonParkGroupStudyRoom).toBeVisible();
         await expect(andrewLiverisComputerRoom).toBeVisible();
+        await expect(filterCount).not.toBeVisible();
 
         // show checkboxes do an 'OR' within groups
         // choose AV equipment, 1 Space disappears
@@ -343,6 +352,8 @@ test.describe('Spaces', () => {
         await expect(forganSmithCollaborativeSpace).toBeVisible();
         await expect(duttonParkGroupStudyRoom).not.toBeVisible();
         await expect(andrewLiverisComputerRoom).toBeVisible();
+        await expect(filterCount).toBeVisible();
+        await expect(filterCount).toContainText('1');
 
         // add byod station, which is in the same group, and MORE appear (because it is an OR)
         await expect(byodStationCheckbox.locator('label:first-of-type')).toBeVisible();
@@ -356,6 +367,8 @@ test.describe('Spaces', () => {
         await expect(forganSmithCollaborativeSpace).toBeVisible();
         await expect(duttonParkGroupStudyRoom).toBeVisible();
         await expect(andrewLiverisComputerRoom).toBeVisible();
+        await expect(filterCount).toBeVisible();
+        await expect(filterCount).toContainText('2');
 
         // select "EXCLUDE bookable" filter
         await bookableCheckbox.locator('span.fortestfocus').click(); // a hack of the page so playwright can tap on the exclude filter
@@ -370,6 +383,8 @@ test.describe('Spaces', () => {
         await expect(forganSmithCollaborativeSpace).toBeVisible();
         await expect(duttonParkGroupStudyRoom).toBeVisible();
         await expect(andrewLiverisComputerRoom).not.toBeVisible();
+        await expect(filterCount).toBeVisible();
+        await expect(filterCount).toContainText('3');
     });
     test('can unfilter by cartouche', async ({ page }) => {
         await page.goto('');

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Grid, useTheme } from '@mui/material';
+import { Button, Grid, useTheme, Badge } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -431,6 +431,18 @@ export const BookableSpacesList = ({
             </StyledMapWrapperDiv>
         );
     };
+    const activeFilterCount = selectedFacilityTypes.filter(ft => !!ft.selected || !!ft.unselected).length;
+    const countIcon = () => {
+        return activeFilterCount === 0 ? null : (
+            <Badge
+                badgeContent={activeFilterCount}
+                max={selectedFacilityTypes.length}
+                color="primary"
+                style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
+                data-testid="space-filter-count"
+            />
+        );
+    };
     return (
         <BookableSpacesListWrapperDiv>
             {(() => {
@@ -500,7 +512,12 @@ export const BookableSpacesList = ({
                                 title="Open and close the filter popup"
                             >
                                 {filterToggleButtonIcon}{' '}
-                                <span>{!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}</span>
+                                <span>
+                                    <span style={{ paddingRight: activeFilterCount < 10 ? '0.8rem' : '1.1rem' }}>
+                                        {!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}
+                                    </span>
+                                    {countIcon()}
+                                </span>
                             </StyledFilterOpenButton>
                             <div>
                                 <SidebarFilters
