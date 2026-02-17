@@ -100,7 +100,7 @@ const StyledSidebarDiv = styled('div')(() => ({
         },
     },
     '& > div': {
-        direction: 'ltr',
+        direction: 'ltr', // override the direction above so the content isn't affected
     },
     '&::-webkit-scrollbar': {
         width: '8px',

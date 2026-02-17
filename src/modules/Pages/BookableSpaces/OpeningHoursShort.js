@@ -11,7 +11,7 @@ const StyledParagraphTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
 }));
 
-export const ShortSpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, weeklyHours, bookableSpace }) => {
+export const OpeningHoursShort = ({ weeklyHoursLoading, weeklyHoursError, weeklyHours, bookableSpace }) => {
     const spaceId = bookableSpace?.space_id;
 
     const overrideMessage = (prefix = 'Note: ') =>
@@ -52,11 +52,11 @@ export const ShortSpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, w
     );
 };
 
-ShortSpaceOpeningHours.propTypes = {
+OpeningHoursShort.propTypes = {
     weeklyHoursLoading: PropTypes.any,
     weeklyHoursError: PropTypes.any,
     weeklyHours: PropTypes.any,
     bookableSpace: PropTypes.any,
 };
 
-export default React.memo(ShortSpaceOpeningHours);
+export default React.memo(OpeningHoursShort);

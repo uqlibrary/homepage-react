@@ -416,7 +416,7 @@ export const BookableSpacesList = ({
                                         id={locationKey}
                                         position={[m.space_latitude, m.space_longitude]}
                                     >
-                                        <Popup className="mapPopup" maxWidth="400px">
+                                        <Popup className="mapPopup">
                                             <SpaceDetails
                                                 weeklyHours={weeklyHours}
                                                 weeklyHoursLoading={weeklyHoursLoading}

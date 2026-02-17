@@ -23,7 +23,7 @@ const StyledTable = styled('table')(() => ({
     },
 }));
 
-export const LongSpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, weeklyHours, bookableSpace }) => {
+export const OpeningHoursTable = ({ weeklyHoursLoading, weeklyHoursError, weeklyHours, bookableSpace }) => {
     const spaceId = bookableSpace?.space_id;
 
     const overrideMessage = !!bookableSpace?.space_opening_hours_override ? (
@@ -96,11 +96,11 @@ export const LongSpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, we
         </>
     );
 };
-LongSpaceOpeningHours.propTypes = {
+OpeningHoursTable.propTypes = {
     weeklyHoursLoading: PropTypes.any,
     weeklyHoursError: PropTypes.any,
     weeklyHours: PropTypes.any,
     bookableSpace: PropTypes.any,
 };
 
-export default React.memo(LongSpaceOpeningHours);
+export default React.memo(OpeningHoursTable);
