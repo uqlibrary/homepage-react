@@ -46,30 +46,37 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     },
 }));
 
-function CustomTabPanel(props) {
-    const { children, value, index, ...other } = props;
+// function CustomTabPanel(props) {
+//     const { children, value, index, ...other } = props;
+//
+//     return (
+//         <div
+//             role="tabpanel"
+//             hidden={value !== index}
+//             id={`campus-tabpanel-${index}`}
+//             aria-labelledby={`campus-tab-${index}`}
+//             {...other}
+//         >
+//             {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+//         </div>
+//     );
+// }
+// CustomTabPanel.propTypes = {
+//     children: PropTypes.any,
+//     value: PropTypes.number,
+//     index: PropTypes.number,
+// };
 
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`campus-tabpanel-${index}`}
-            aria-labelledby={`campus-tab-${index}`}
-            {...other}
-        >
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-        </div>
-    );
-}
-CustomTabPanel.propTypes = {
-    children: PropTypes.any,
-    value: PropTypes.number,
-    index: PropTypes.number,
-};
-
-const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList, bookableSpacesRoomList }) => {
+const SpaceLocationMap = ({
+    formValues,
+    setFormValues,
+    campusCoordinateList,
+    bookableSpacesRoomList,
+    initialCampus = 0,
+}) => {
     console.log('SpaceLocationMap campusCoordinateList=', campusCoordinateList);
-    console.log('SpaceLocationMap formValues=', formValues);
+    console.log('SpaceLocationMap campusCoordinateList=', campusCoordinateList);
+    console.log('SpaceLocationMap initialCampus=', initialCampus);
 
     const tabList = campusCoordinateList.map((c, index) => {
         return { id: index, label: c.campus_name, coords: [c.campus_latitude, c.campus_longitude] };
@@ -119,7 +126,7 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList, boo
                 ref={markerRef}
                 icon={draggableIcon}
             >
-                <Popup minWidth={90}>Drag the market to the closest location to the space</Popup>
+                <Popup minWidth={90}>Drag the marker to the closest location to the space</Popup>
             </Marker>
         );
     }
@@ -143,11 +150,19 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList, boo
             setFormValues(newValues);
         }
     };
+    React.useEffect(() => {
+        setMapCampusPanel(initialCampus);
+    }, [initialCampus]);
     return (
         <>
             <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <StyledTabs value={mapCampusId} onChange={handleMapCampusChange} aria-label="Campus maps">
+                    <StyledTabs
+                        value={mapCampusId}
+                        onChange={handleMapCampusChange}
+                        aria-label="Campus maps"
+                        data-testid="spaces-campus-maps-tabs"
+                    >
                         {campusCoordinateList.map((tab, index) => {
                             return (
                                 <Tab
@@ -195,8 +210,9 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList, boo
                     })}
             </MapContainer>
             <Typography component={'p'}>
-                Drag the blue icon to the location for this Space as precisely as you can!
+                Drag the marker to the location for this Space as precisely as you can!
             </Typography>
+            <Typography component={'p'}>Small red dots indicate existing Space locations.</Typography>
         </>
     );
 };
@@ -205,6 +221,7 @@ SpaceLocationMap.propTypes = {
     setFormValues: PropTypes.func,
     campusCoordinateList: PropTypes.any,
     bookableSpacesRoomList: PropTypes.object,
+    initialCampus: PropTypes.number,
 };
 
 export default React.memo(SpaceLocationMap);
