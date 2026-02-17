@@ -12,6 +12,8 @@ const STEP_FACILITY_TYPES = 'tab-facility-types';
 const STEP_LOCATION_HOURS = 'tab-location-hours';
 const STEP_IMAGERY = 'tab-imagery';
 
+// const ST_LUCIA_DEFAULT_LATITUDE = '-27.49751';
+// const ST_LUCIA_DEFAULT_LONGITUDE = '153.01329';
 const PACE_DEFAULT_LATITUDE = '-27.49979';
 const PACE_DEFAULT_LONGITUDE = '153.03066';
 
@@ -88,6 +90,12 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('add-space-pretty-location')).toContainText('PACE Campus');
         await expect(page.getByTestId('add-space-springshare-id')).toContainText('Dutton Park Health Sciences');
 
+        const mapTab = (tabId: number) =>
+            page.getByTestId('spaces-campus-maps-tabs').locator(`button:nth-of-type(${tabId})`);
+        await expect(mapTab(1)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
+        await expect(mapTab(2)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
+        await expect(mapTab(3)).toHaveCSS('color', COLOR_UQPURPLE);
+
         const cancelButton = page.getByTestId('admin-spaces-form-button-cancel');
         await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
         await expect(cancelButton).toHaveCSS('border-color', COLOR_UQPURPLE);
@@ -104,16 +112,14 @@ test.describe('Spaces Admin - add new space', () => {
     test('can add new space, with only required fields', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
-        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-name')
-            .locator('input')
-            .fill('W12343');
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-type')
-            .locator('input')
-            .fill('Computer room');
+        const nameField = page.getByTestId('space-name').locator('input');
+        const typeField = page.getByTestId('space-type').locator('input');
+
+        await expect(nameField).toBeVisible();
+        await nameField.fill('W12343');
+
+        await expect(typeField).toBeVisible();
+        await typeField.fill('Computer room');
 
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
@@ -152,15 +158,23 @@ test.describe('Spaces Admin - add new space', () => {
         const ASKUS_FILTER_TYPE = 54;
         const MICROWAVE_FILTER_TYPE = 4;
 
-        await expect(inputField('space-name', page)).toBeVisible();
-        await inputField('space-name', page).fill('W12343');
-        await expect(inputField('space-type', page)).toBeVisible();
-        await inputField('space-type', page).fill('Computer room');
+        const nameField = page.getByTestId('space-name').locator('input');
+        const typeField = page.getByTestId('space-type').locator('input');
 
-        await expect(page.getByTestId('add-space-description')).toBeVisible();
-        await page
-            .getByTestId('add-space-description')
-            .fill('This is a sunny corner in the Law library where you blah blah blah');
+        await expect(nameField).toBeVisible();
+        await nameField.fill('W12343');
+
+        await expect(typeField).toBeVisible();
+        await typeField.fill('Computer room');
+        await typeField.press('Tab');
+
+        const descriptionField = page.getByRole('textbox', { name: 'Editor editing area: main' });
+        await descriptionField.fill('This is a sunny corner in the Law library where you blah blah blah');
+
+        // await expect(page.getByTestId('add-space-description')).toBeVisible();
+        // await page
+        //     .getByTestId('add-space-description')
+        //     .fill('This is a sunny corner in the Law library where you blah blah blah');
 
         // blur the form
         await page.getByTestId('SpacesAdminPage-systemTitle').click();
@@ -266,7 +280,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_photo_description: 'a table and chairs in a stark white room',
             // space_photo_url: 'https://example.com/image.jpg', // TODO, drag image
             space_precise: 'Northwest corner',
-            space_description: 'This is a sunny corner in the Law library where you blah blah blah',
+            space_description: '<p>This is a sunny corner in the Law library where you blah blah blah</p>',
             space_type: 'Computer room',
             space_opening_hours_id: 3825, // dhesl
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
@@ -278,16 +292,14 @@ test.describe('Spaces Admin - add new space', () => {
     });
 
     test('add spaces page save dialog is accessible', async ({ page }) => {
-        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-name')
-            .locator('input')
-            .fill('W12343');
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-type')
-            .locator('input')
-            .fill('Computer room');
+        const nameField = page.getByTestId('space-name').locator('input');
+        const typeField = page.getByTestId('space-type').locator('input');
+
+        await expect(nameField).toBeVisible();
+        await nameField.fill('W12343');
+
+        await expect(typeField).toBeVisible();
+        await typeField.fill('Computer room');
 
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
@@ -299,7 +311,8 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
 
-        await assertAccessibility(page, '[aria-labelledby=":r7:"]');
+        // check the popup
+        await assertAccessibility(page, '.MuiDialog-container[role="presentation"]');
     });
     test('add new space - validation - required fields 1', async ({ page }) => {
         // when the user has not entered required fields, they get an error

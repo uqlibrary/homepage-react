@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
-import L, { Icon } from 'leaflet';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import Box from '@mui/material/Box';
@@ -17,17 +14,21 @@ import Typography from '@mui/material/Typography';
 import { slugifyName } from 'helpers/general';
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: markerIcon2x,
-    iconUrl: markerIcon,
-    shadowUrl: markerShadow,
+const otherSpacesIcon = new L.divIcon({
+    html:
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 149 178"><circle fill="#F00" cx="74" cy="75" r="48"/></svg>',
+    className: 'other-space-icon',
 });
-const pinIcon = new Icon({
-    iconUrl: '/images/Pin-2--Streamline-Ultimate-red.png',
-    iconSize: [35, 35], // size of the icon
-    iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-    popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+
+const draggableIcon = new L.divIcon({
+    html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 149 178">
+            <path fill="#cc756b'" stroke="#FFF" stroke-width="6" stroke-miterlimit="10" d="M126 23l-6-6A69 69 0 0 0 74 1a69 69 0 0 0-51 22A70 70 0 0 0 1 74c0 21 7 38 22 52l43 47c6 6 11 6 16 0l48-51c12-13 18-29 18-48 0-20-8-37-22-51z"/>
+            <circle fill="#fff" cx="74" cy="75" r="61"/>
+            <circle fill="#FFF" cx="74" cy="75" r="48"/>
+            </svg>`,
+    className: 'draggable-icon',
+    iconSize: [24, 40],
+    iconAnchor: [12, 40],
 });
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -45,48 +46,41 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     },
 }));
 
-function CustomTabPanel(props) {
-    const { children, value, index, ...other } = props;
+// function CustomTabPanel(props) {
+//     const { children, value, index, ...other } = props;
+//
+//     return (
+//         <div
+//             role="tabpanel"
+//             hidden={value !== index}
+//             id={`campus-tabpanel-${index}`}
+//             aria-labelledby={`campus-tab-${index}`}
+//             {...other}
+//         >
+//             {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+//         </div>
+//     );
+// }
+// CustomTabPanel.propTypes = {
+//     children: PropTypes.any,
+//     value: PropTypes.number,
+//     index: PropTypes.number,
+// };
 
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`campus-tabpanel-${index}`}
-            aria-labelledby={`campus-tab-${index}`}
-            {...other}
-        >
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-        </div>
-    );
-}
-CustomTabPanel.propTypes = {
-    children: PropTypes.any,
-    value: PropTypes.number,
-    index: PropTypes.number,
-};
-
-const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) => {
+const SpaceLocationMap = ({
+    formValues,
+    setFormValues,
+    campusCoordinateList,
+    bookableSpacesRoomList,
+    initialCampus = 0,
+}) => {
     console.log('SpaceLocationMap campusCoordinateList=', campusCoordinateList);
-    console.log('SpaceLocationMap formValues=', formValues);
+    console.log('SpaceLocationMap campusCoordinateList=', campusCoordinateList);
+    console.log('SpaceLocationMap initialCampus=', initialCampus);
 
     const tabList = campusCoordinateList.map((c, index) => {
         return { id: index, label: c.campus_name, coords: [c.campus_latitude, c.campus_longitude] };
     });
-
-    // a list of locations to help the admin user find the building they want
-    const libraryBuildingsLocationGuides1 = [
-        // needs better display names? (only shows in popups)
-        { name: 'Law', position: locale.locations.greatCourtCoordinates },
-        { name: 'Armus', position: [-27.49904, 153.01453] },
-        { name: 'Pace', position: [-27.49979, 153.03066] },
-        { name: 'BSL', position: [-27.49695, 153.01136] },
-        { name: 'Central', position: [-27.49607, 153.01355] },
-        { name: 'DHESL', position: [-27.5, 153.01322] },
-        { name: 'Duhig Tower', position: [-27.49645, 153.01431] },
-        { name: 'JK Murray', position: [-27.55383, 152.33584] },
-        // can add more here
-    ];
 
     const initialisePosition = () => {
         if (!!formValues.space_latitude && !!formValues.space_longitude) {
@@ -125,8 +119,14 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
         );
 
         return (
-            <Marker draggable={draggable} eventHandlers={eventHandlers} position={position} ref={markerRef}>
-                <Popup minWidth={90}>Drag the market to the closest location to the space</Popup>
+            <Marker
+                draggable={draggable}
+                eventHandlers={eventHandlers}
+                position={position}
+                ref={markerRef}
+                icon={draggableIcon}
+            >
+                <Popup minWidth={90}>Drag the marker to the closest location to the space</Popup>
             </Marker>
         );
     }
@@ -150,11 +150,19 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
             setFormValues(newValues);
         }
     };
+    React.useEffect(() => {
+        setMapCampusPanel(initialCampus);
+    }, [initialCampus]);
     return (
         <>
             <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <StyledTabs value={mapCampusId} onChange={handleMapCampusChange} aria-label="Campus maps">
+                    <StyledTabs
+                        value={mapCampusId}
+                        onChange={handleMapCampusChange}
+                        aria-label="Campus maps"
+                        data-testid="spaces-campus-maps-tabs"
+                    >
                         {campusCoordinateList.map((tab, index) => {
                             return (
                                 <Tab
@@ -180,20 +188,31 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
                 <DraggableMarker position={locale.locations.greatCourtCoordinates}>
                     <Popup>Space position</Popup>
                 </DraggableMarker>
-                {libraryBuildingsLocationGuides1.length > 0 &&
-                    libraryBuildingsLocationGuides1?.map((m, index) => {
-                        // show the major Libraries on the map, to help the admin locate the Space
-                        const locationKey = `mappoint-space-${index}`;
+                {bookableSpacesRoomList?.data?.locations?.length > 0 &&
+                    bookableSpacesRoomList.data.locations.map((m, index) => {
+                        // skip the current space, and any entries without a lat-long
+                        if (formValues.space_id === m.space_id || !m.space_latitude || !m.space_longitude) {
+                            return null;
+                        }
+
+                        // small marker for other spaces on the map
                         return (
-                            <Marker key={locationKey} position={[m.position[0], m.position[1]]} icon={pinIcon}>
-                                <Popup>{m.name}</Popup>
+                            <Marker
+                                key={`mappoint-${index}`}
+                                position={[m.space_latitude, m.space_longitude]}
+                                icon={otherSpacesIcon}
+                            >
+                                <Popup>
+                                    {m.space_name} - {m.space_type}
+                                </Popup>
                             </Marker>
                         );
                     })}
             </MapContainer>
             <Typography component={'p'}>
-                Drag the blue icon to the location for this Space as precisely as you can!
+                Drag the marker to the location for this Space as precisely as you can!
             </Typography>
+            <Typography component={'p'}>Small red dots indicate existing Space locations.</Typography>
         </>
     );
 };
@@ -201,6 +220,8 @@ SpaceLocationMap.propTypes = {
     formValues: PropTypes.any,
     setFormValues: PropTypes.func,
     campusCoordinateList: PropTypes.any,
+    bookableSpacesRoomList: PropTypes.object,
+    initialCampus: PropTypes.number,
 };
 
 export default React.memo(SpaceLocationMap);
