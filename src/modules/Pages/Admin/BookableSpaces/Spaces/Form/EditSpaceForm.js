@@ -19,6 +19,9 @@ import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 import { useAccountContext } from 'context';
 import { useConfirmationState } from 'hooks';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -246,6 +249,28 @@ export const EditSpaceForm = ({
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
+    const editorConfig = {
+        removePlugins: [
+            'Image',
+            'ImageCaption',
+            'ImageStyle',
+            'ImageToolbar',
+            'ImageUpload',
+            'EasyImage',
+            'CKFinder',
+            'BlockQuote',
+            'Table',
+            'MediaEmbed',
+        ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+            ],
+        },
+    };
+
     useEffect(() => {
         hideConfirmation();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -380,7 +405,7 @@ export const EditSpaceForm = ({
 
     const handleFieldCompletion = e => {
         // clear what they entered in the new space type field - its already in the dropdown and selected there
-        if (e.target.id === 'add-space-type-new') {
+        if (e?.target?.id === 'add-space-type-new') {
             e.target.value = '';
         }
 
@@ -800,19 +825,33 @@ export const EditSpaceForm = ({
                         </StyledErrorMessageTypography>
                     </FormControl>
                 </Grid>
-                <Grid item xs={12}>
-                    {/* will upgrade this to ckeditor (or replacement) eventually*/}
-                    <TextField
+                <Grid item xs={12} data-testid="add-space-description">
+                    <label htmlFor="space_description">
+                        Space description
+                        <br />
+                        (Provide a succinct paragraph or two, not something very long)
+                    </label>
+                    <CKEditor
                         id="space_description"
                         label="Space description"
-                        variant="standard"
-                        fullWidth
-                        multiline
-                        rows={4}
-                        value={formValues?.space_description || ''}
-                        onChange={handleChange('space_description')}
-                        inputProps={{
-                            'data-testid': 'add-space-description',
+                        editor={ClassicEditor}
+                        config={editorConfig}
+                        data={formValues?.space_description || ''}
+                        onReady={editor => {
+                            console.log('space_description onready fired');
+                            editor.editing.view.change(writer => {
+                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                            });
+                        }}
+                        onChange={(event, editor) => {
+                            const htmlData = editor.getData();
+                            console.log('space_description onchange fired', htmlData, formValues?.space_description);
+                            // handleChange simply doesn't fire here?!?
+                            const newValues = {
+                                ...formValues,
+                                space_description: htmlData,
+                            };
+                            setFormValues(newValues);
                         }}
                         onBlur={handleFieldCompletion}
                     />

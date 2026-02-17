@@ -328,8 +328,10 @@ test.describe('Spaces Admin - edit space', () => {
 
         // clear as many of the non-required fields as is possible and confirm will submit
 
-        await expect(page.getByTestId('add-space-description')).toBeVisible();
-        await page.getByTestId('add-space-description').fill('');
+        // clear description field manually!
+        await page.getByRole('textbox', { name: 'Enter new Space type' }).click();
+        await page.getByRole('textbox', { name: 'Editor editing area: main' }).press('ControlOrMeta+a');
+        await page.getByRole('textbox', { name: 'Editor editing area: main' }).press('ControlOrMeta+x');
 
         // change to facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -611,28 +613,28 @@ test.describe('Spaces Admin - edit space', () => {
     test('can change all fields in edit', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
-        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-name')
-            .locator('input')
-            .fill('New space name');
+        // await page.getByRole('textbox', { name: 'Space name *' }).click();
+        const nameField = page.getByTestId('space-name').locator('input');
+        await expect(nameField).toBeVisible();
+        await nameField.press('ControlOrMeta+a');
+        await nameField.fill('New space name');
+        await nameField.press('Tab');
 
-        // mucking around wiuth controls to show the typed in "Enter new space type" transfers to the dropdown onn blur
-        await expect(page.getByTestId('add-space-type-new').locator('input')).toBeVisible();
-        await page
-            .getByTestId('add-space-type-new')
-            .locator('input')
-            .fill('New space type');
-        await page.keyboard.press('Tab');
-        await page.getByTestId('add-space-description').click(); // the Tab doesn't always seem to work - but clicking away is another valid way to blue the previous field
-        await expect(page.getByTestId('add-space-description')).toBeFocused();
+        await page.getByRole('combobox', { name: 'Choose an existing Space type' }).press('Tab');
+        const typeField = page.getByRole('textbox', { name: 'Enter new Space type' });
+        await typeField.fill('New space type');
+        await typeField.press('Tab');
 
-        // the "new space type" field auto clears on blur, and the select preloads
+        await page.getByText('Ut enim ad minim veniam, quis').click();
+        const descriptionField = page.getByRole('textbox', { name: 'Editor editing area: main' });
+        await descriptionField.press('ControlOrMeta+a');
+        await descriptionField.fill('a long description that has a number of words');
+
+        // check the typed in "Enter new space type" has transferred to the dropdown
+        // (the "new space type" field auto clears on blur, and the select preloads)
+        await nameField.click();
         await expect(page.getByTestId('add-space-type-new').locator('input')).toBeEmpty();
         await expect(page.getByTestId('space-type').locator('input')).toHaveValue('New space type');
-
-        await expect(page.getByTestId('add-space-description')).toBeVisible();
-        await page.getByTestId('add-space-description').fill('a long description that has a number of words');
 
         // change to Facility types tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -766,7 +768,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_type: 'New space type', // required field
             facility_types: finalFilters,
             space_precise: 'somewhere deep in the bowels of the warehouse',
-            space_description: 'a long description that has a number of words',
+            space_description: '<p>a long description that has a number of words</p>',
             space_photo_url: 'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
             // space_photo_url: 'http://example.com/x.png',
             space_photo_description: 'words about the photo',

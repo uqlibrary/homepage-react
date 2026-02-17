@@ -126,7 +126,7 @@ const SpaceLocationMap = ({
                 ref={markerRef}
                 icon={draggableIcon}
             >
-                <Popup minWidth={90}>Drag the market to the closest location to the space</Popup>
+                <Popup minWidth={90}>Drag the marker to the closest location to the space</Popup>
             </Marker>
         );
     }
@@ -210,7 +210,7 @@ const SpaceLocationMap = ({
                     })}
             </MapContainer>
             <Typography component={'p'}>
-                Drag the blue icon to the location for this Space as precisely as you can!
+                Drag the marker to the location for this Space as precisely as you can!
             </Typography>
             <Typography component={'p'}>Small red dots indicate existing Space locations.</Typography>
         </>
