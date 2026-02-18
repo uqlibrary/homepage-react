@@ -104,7 +104,9 @@ function setup(testProps = {}, renderer = rtlRender) {
 describe('InspectionDetails', () => {
     it('renders component standard', () => {
         const { getByText } = setup({ actions: tntActions });
-        expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
     });
     it('loads an asset by value', async () => {
         mockApi = setupMockAdapter();
@@ -116,7 +118,9 @@ describe('InspectionDetails', () => {
         await waitFor(() => {
             expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
         });
-        expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
 
         await userEvent.type(getByTestId('asset_selector-inspection-details-input'), '123');
         await mockActionsStore.dispatch(tntActions.loadAssets('UQL000123'));
@@ -133,7 +137,9 @@ describe('InspectionDetails', () => {
         await waitFor(() => {
             expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
         });
-        expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
 
         await userEvent.type(getByTestId('asset_selector-inspection-details-input'), '123');
         await waitFor(() => {
@@ -149,7 +155,9 @@ describe('InspectionDetails', () => {
         await waitFor(() => {
             expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
         });
-        expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
         expect(getByText('Power Cord - C5')).toBeInTheDocument();
 
         await userEvent.click(getByTestId('action_cell-UQL000123-edit-button'));
@@ -176,7 +184,9 @@ describe('InspectionDetails', () => {
         await waitFor(() => {
             expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
         });
-        expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
         expect(getByText('Power Cord - C5')).toBeInTheDocument();
         await userEvent.click(getByTestId('action_cell-UQL000123-edit-button'));
 

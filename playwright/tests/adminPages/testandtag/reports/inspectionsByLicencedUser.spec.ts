@@ -12,7 +12,10 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqtest1')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]', {
@@ -31,7 +34,10 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         };
 
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqtest1')).toBeVisible();
         await showDropdown('user_inspections-user-name');
@@ -74,7 +80,10 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         const currentYear = new Date().getFullYear();
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqtest1')).toBeVisible();
         // Add a start date

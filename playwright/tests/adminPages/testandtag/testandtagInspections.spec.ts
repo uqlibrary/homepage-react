@@ -82,7 +82,9 @@ test.describe('Test and Tag Admin Inspection page', () => {
     const runAllTests = () => {
         test('page is accessible', async ({ page }) => {
             await expect(page.locator('h1').getByText('UQ Asset Test and Tag')).toBeVisible();
-            await expect(page.locator('h2').getByText('Testing assets for Library')).toBeVisible();
+            await expect(
+                page.locator('h2').getByText('Testing assets for Work Station Support (Library)'),
+            ).toBeVisible();
             await expect(page.getByTestId('location_picker-event-panel-site-input')).toHaveValue('St Lucia');
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });

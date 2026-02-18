@@ -59,7 +59,7 @@ describe('Dashboard component', () => {
             actions: { loadDashboard: loadDashboardFn },
         });
 
-        expect(getByText('Dashboard for Library')).toBeInTheDocument();
+        expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
         // skeletons replace panels when loading
         expect(queryByTestId('dashboard-new-inspection-panel')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-reporting-panel-header')).not.toBeInTheDocument();
@@ -82,7 +82,7 @@ describe('Dashboard component', () => {
             actions: { loadDashboard: loadDashboardFn, clearDashboardError: clearDashboardErrorFn },
         });
 
-        expect(getByText('Dashboard for Library')).toBeInTheDocument();
+        expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
         expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('test error message');
         act(() => {
             fireEvent.click(getByTitle('Close'));
@@ -96,7 +96,7 @@ describe('Dashboard component', () => {
         const loadDashboardFn = jest.fn();
         const { getByTestId, queryByTestId, getByText } = setup({ actions: { loadDashboard: loadDashboardFn } });
 
-        expect(getByText('Dashboard for Library')).toBeInTheDocument();
+        expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
         // default test user has all perms except admin
         expect(getByTestId('dashboard-new-inspection-panel')).toBeInTheDocument();
         expect(getByTestId('dashboard-reporting-panel-header')).toBeInTheDocument();
@@ -129,7 +129,7 @@ describe('Dashboard component', () => {
             },
         });
 
-        expect(getByText('Dashboard for Library')).toBeInTheDocument();
+        expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
         expect(getByTestId('dashboard-assets-due-inspection-overdue-amount')).toHaveStyle(`color: ${redHex}`);
         expect(getByTestId('dashboard-assets-due-inspection-overdue-text')).toHaveStyle(`color: ${redHex}`);
         expect(getByTestId('dashboard-devices-due-recalibration-overdue-amount')).toHaveStyle(`color: ${redHex}`);
@@ -151,7 +151,7 @@ describe('Dashboard component', () => {
             },
         });
 
-        expect(getByText('Dashboard for Library')).toBeInTheDocument();
+        expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
 
         expect(getByTestId('dashboard-management-panel-header')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-locations-link')).toBeInTheDocument();
@@ -181,7 +181,7 @@ describe('Dashboard component', () => {
             },
         });
 
-        expect(getByText('Dashboard for Library')).toBeInTheDocument();
+        expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
 
         expect(getByTestId('dashboard-new-inspection-panel')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-panel-header')).toBeInTheDocument();
@@ -211,7 +211,7 @@ describe('Dashboard component', () => {
             },
         });
 
-        expect(getByText('Dashboard for Library')).toBeInTheDocument();
+        expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
 
         expect(getByTestId('dashboard-management-panel-header')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-bulk-asset-update-link')).toBeInTheDocument();
@@ -241,7 +241,7 @@ describe('Dashboard component', () => {
             },
         });
 
-        expect(getByText('Dashboard for Library')).toBeInTheDocument();
+        expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
 
         expect(getByTestId('dashboard-reporting-panel-header')).toBeInTheDocument();
         expect(getByTestId('dashboard-assets-due-inspection-link')).toBeInTheDocument();
@@ -279,7 +279,7 @@ describe('Dashboard component', () => {
             },
         });
 
-        expect(getByText('Dashboard for Library')).toBeInTheDocument();
+        expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
 
         // link should be visible as no permissions are needed other than to see the panel itself
         expect(getByTestId('dashboard-management-asset-types-link')).toBeInTheDocument();

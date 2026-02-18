@@ -17,7 +17,8 @@ const userList = [
     {
         department_display_name: 'Library',
         user_current_flag: 1,
-        user_department: 'UQL',
+        user_team: 'WSS',
+        team_display_name: 'Work Station Support',
         user_id: 1,
         user_licence_number: 'NOT LICENSED',
         user_name: 'WSS Staff who can eg change locations but not inspect',
@@ -32,7 +33,8 @@ const userList = [
     {
         department_display_name: 'Library',
         user_current_flag: 1,
-        user_department: 'UQL',
+        user_team: 'WSS',
+        team_display_name: 'Work Station Support',
         user_id: 2,
         user_licence_number: '234567',
         user_name: 'JTest user',
@@ -48,7 +50,8 @@ const userList = [
     {
         department_display_name: 'Library',
         user_current_flag: 1,
-        user_department: 'UQL',
+        user_team: 'WSS',
+        team_display_name: 'Work Station Support',
         user_id: 4,
         user_licence_number: 'NOT LICENSED',
         user_name: 'Reporting User',
@@ -64,7 +67,8 @@ const userList = [
     {
         department_display_name: 'Library',
         user_current_flag: 1,
-        user_department: 'UQL',
+        user_team: 'WSS',
+        team_display_name: 'Work Station Support',
         user_id: 5,
         user_licence_number: '45678',
         user_name: 'SecondTesting user',
@@ -115,7 +119,9 @@ describe('Manage Users', () => {
     });
     it('renders component standard', () => {
         const { getByText } = setup({ actions: actions });
-        expect(getByText(locale.pages.manage.users.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
         expect(getByText('uqjsmit')).toBeInTheDocument();
     });
     it('catches error on LoadUserList', async () => {
@@ -125,7 +131,9 @@ describe('Manage Users', () => {
 
         const { getByText } = setup({ actions: actions });
         await waitFor(() => {
-            expect(getByText(locale.pages.manage.users.header.pageSubtitle('Library'))).toBeInTheDocument();
+            expect(
+                getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
+            ).toBeInTheDocument();
         });
         expect(actions.loadUserList).rejects.toEqual('Testing Error');
     });
@@ -136,7 +144,9 @@ describe('Manage Users', () => {
         });
         const { getByText, getByTestId } = setup({ actions: actions });
 
-        expect(getByText(locale.pages.manage.users.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
         expect(getByText('uqjsmit')).toBeInTheDocument();
         expect(getByTestId('user-management-data-table-toolbar-export-menu')).toBeInTheDocument();
         await act(async () => {
@@ -166,7 +176,7 @@ describe('Manage Users', () => {
                 can_see_reports: 0,
             },
             user_current_flag: 1,
-            user_department: 'UQL',
+            user_team: 'WSS',
             user_licence_number: 'TEST LIC',
             user_name: 'TEST USER',
             user_uid: 'uqtestuser',
@@ -197,7 +207,9 @@ describe('Manage Users', () => {
     });
     it('Edit User functions correctly', async () => {
         const { getByText, getByTestId } = setup({ actions: actions });
-        expect(getByText(locale.pages.manage.users.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
         expect(getByText('uqjsmit')).toBeInTheDocument();
         await act(async () => {
             await fireEvent.click(getByTestId('action_cell-1-edit-button'));
@@ -222,7 +234,7 @@ describe('Manage Users', () => {
                 can_see_reports: 0,
             },
             user_current_flag: 1,
-            user_department: 'UQL',
+            user_team: 'WSS',
             user_id: 1,
             user_licence_number: 'NOT LICENSED',
             user_name: 'TEST USER',
@@ -246,7 +258,9 @@ describe('Manage Users', () => {
 
     it('Delete or Reassign User functions correctly', async () => {
         const { getByText, getByTestId } = setup({ actions: actions });
-        expect(getByText(locale.pages.manage.users.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
         expect(getByText('uqjsmit')).toBeInTheDocument();
 
         await act(async () => {
