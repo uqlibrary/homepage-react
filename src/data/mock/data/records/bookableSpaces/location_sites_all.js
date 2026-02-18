@@ -135,13 +135,13 @@ export default {
         {
             "campus_id": 3,
             "campus_number": "45",
-            "campus_name": "PACE",
+            "campus_name": "Dutton Park",
             "campus_latitude": "-27.49979",
             "campus_longitude": "153.03066",
             "libraries": [
                 {
                     "library_id": 10,
-                    "library_name": "Pharmacy Australia Centre of Excellence",
+                    "library_name": "Dutton Park Health Sciences",
                     "building_name": "Pharmacy Australia Centre of Excellence",
                     "building_number": "870",
                     "ground_floor_id": 29,

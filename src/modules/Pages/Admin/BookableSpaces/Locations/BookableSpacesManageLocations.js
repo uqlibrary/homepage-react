@@ -25,6 +25,7 @@ import {
 
 import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import CampusLocationMap from 'modules/Pages/Admin/BookableSpaces/Locations/CampusLocationMap';
+import { getPrefixedFloorName } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -403,13 +404,18 @@ export const BookableSpacesManageLocations = ({
      * FLOOR FUNCTIONS
      */
     const floorCoreForm = (floorDetails = {}) => {
-        const floorNameFieldLabel = Object.keys(floorDetails).length === 0 ? 'New floor name' : 'Floor name';
+        const floorNameFieldLabel = Object.keys(floorDetails).length === 0 ? 'New level name' : 'Level name';
         return `<input name="locationType" type="hidden" value="floor" />
         <div class="dialogRow" data-testid="floor-name">
             <label for="displayedFloorId">${floorNameFieldLabel}</label>
             <input id="displayedFloorId" name="floor_name" type="text" required value="${floorDetails?.floor_name ??
                 ''}"  maxlength="10" />
-        </div>`;
+        </div>
+        <ul>
+            <li>Just the number - avoid prefixing with 'Level'</li>
+            <li>Ground floor is controlled on the Library manager - you should put the floor number (or actual name in rare cases) here</li>
+        </ul>
+`;
     };
 
     const saveNewFloor = e => {
@@ -455,7 +461,7 @@ export const BookableSpacesManageLocations = ({
                     }
                 })
                 .then(() => {
-                    displayToastMessage('Floor added');
+                    displayToastMessage('Level added');
 
                     actions.loadBookableSpaceCampusChildren();
                 })
@@ -473,7 +479,7 @@ export const BookableSpacesManageLocations = ({
 
     function showAddFloorForm(e, libraryDetails, currentGroundFloorDetails) {
         const groundFloorDescription = !!currentGroundFloorDetails
-            ? `Current ground floor is Floor ${currentGroundFloorDetails.floor_name}`
+            ? `Current ground floor is Level ${currentGroundFloorDetails.floor_name}`
             : 'No floor is currently marked as the ground floor';
         const formBody = `<h2>Add a floor to ${displayedLibraryName(libraryDetails)}</h2>
             <input name="libraryId" type="hidden" value="${libraryDetails?.library_id}" />
@@ -560,7 +566,7 @@ export const BookableSpacesManageLocations = ({
     function deleteFloor(e, floorDetails) {
         const locationType = 'floor';
         const locationId = floorDetails?.floor_id;
-        const successMessage = `Floor ${floorDetails?.floor_name} in ${displayedLibraryName(floorDetails)} deleted`;
+        const successMessage = `Level ${floorDetails?.floor_name} in ${displayedLibraryName(floorDetails)} deleted`;
         const failureMessage = `catch: deleting floor ${floorDetails.floor_id} failed:`;
         deleteGenericLocation(locationType, locationId, successMessage, failureMessage);
     }
@@ -598,7 +604,7 @@ export const BookableSpacesManageLocations = ({
         }
 
         const formBody = `
-            <h2>Edit floor details</h2>
+            <h2>Edit level details</h2>
             <input name="floorId" type="hidden" value="${floorDetails?.floor_id}" />${floorCoreForm(floorDetails)}`;
 
         const dialogBodyElement = document.getElementById('dialogBody');
@@ -780,7 +786,7 @@ export const BookableSpacesManageLocations = ({
             <input name="libraryId" type="hidden" value="${libraryDetails?.library_id}" />
             <input name="ground_floor_id_old" type="hidden" value="${libraryDetails?.ground_floor_id ??
                 ''}" />${libraryCoreForm(libraryDetails)}<div class="dialogRow" data-testid="library-floor-list">
-                <h3>Floors - Choose ground floor:</h3>
+                <h3>Levels - Choose ground floor:</h3>
                 ${
                     libraryDetails?.floors?.length > 0
                         ? '<ul class="radioList">' +
@@ -788,8 +794,12 @@ export const BookableSpacesManageLocations = ({
                               ?.map(floor => {
                                   const checked = floor.floor_id === libraryDetails.ground_floor_id ? ' checked' : '';
                                   return `<li>
-                                            <input type="radio" id="groundFloor-${floor.floor_id}" name="ground_floor_id" ${checked} value="${floor.floor_id}" />
-                                            <label for="groundFloor-${floor.floor_id}">Floor ${floor.floor_name}</label> 
+                                            <input type="radio" id="groundFloor-${
+                                                floor.floor_id
+                                            }" name="ground_floor_id" ${checked} value="${floor.floor_id}" />
+                                            <label for="groundFloor-${floor.floor_id}">${getPrefixedFloorName(
+                                      floor.floor_name,
+                                  )}</label> 
                                         </li>`;
                               })
                               .join('') +
@@ -807,7 +817,10 @@ export const BookableSpacesManageLocations = ({
                 </div>
                 
                 <div class="dialogRow" data-testid="library-campus-list">
-                    <h3>Change Campus</h3>
+                    <div style="display: flex; justify-content: flex-start; align-items: center; column-gap: 1rem">
+                        <h3>Change Campus</h3>
+                        <p style="margin-top: 0.5rem; margin-bottom: 0;">(New campus? Create it first)</p>
+                    </div>
                     <ul class="radioList" data-testid="change-campus">
                     ${campusList
                         ?.map(campus => {
@@ -1051,7 +1064,7 @@ export const BookableSpacesManageLocations = ({
                             >
                                 <span id={`library-${library.library_id}`}>{`${displayedLibraryName(library)}`}</span>
                                 <span style={{ paddingLeft: '0.5rem' }}>{`(${library.floors.length} ${pluralise(
-                                    'Floor',
+                                    'Level',
                                     library.floors.length,
                                 )})`}</span>
                                 <EditIcon />
@@ -1063,7 +1076,7 @@ export const BookableSpacesManageLocations = ({
                                     color="primary"
                                     // onClick={() => showEditCampusForm(campus.campus_id)}
                                     onClick={() => showEditFloorForm(floor.floor_id)}
-                                    aria-label={`Edit Floor ${floor.floor_name}`}
+                                    aria-label={`Edit Level ${floor.floor_name}`}
                                     data-testid={`edit-floor-${floor.floor_id}-button`}
                                 >
                                     <span id={`floor-${floor.floor_id}`}>{floor.floor_name}</span>

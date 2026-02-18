@@ -139,26 +139,10 @@ describe('spaces helpers', () => {
     });
 
     it('has a friendly floor name', () => {
-        // missing attributes default to false
-        expect(getFriendlyFloorName({ space_precise: 'Westernmost corner', space_floor_name: '3' })).toEqual(
-            'Westernmost corner, 3rd Floor',
-        );
-        expect(
-            getFriendlyFloorName({
-                space_precise: 'Westernmost corner',
-                space_floor_name: '3',
-                space_is_ground_floor: false,
-            }),
-        ).toEqual('Westernmost corner, 3rd Floor');
-        expect(getFriendlyFloorName({ space_precise: 'Eastern corner', space_floor_name: '2A' })).toEqual(
-            'Eastern corner, 2A',
-        );
-        expect(getFriendlyFloorName({ space_precise: '', space_floor_name: '1' })).toEqual('1st Floor');
-        expect(getFriendlyFloorName({ space_floor_name: '3A' })).toEqual('3A');
-        expect(getFriendlyFloorName({ space_precise: '', space_floor_name: '3A' })).toEqual('3A');
+        expect(getFriendlyFloorName({ space_floor_name: '3' })).toEqual('Level 3');
+        expect(getFriendlyFloorName({ space_floor_name: '2A' })).toEqual('Level 2A');
+        expect(getFriendlyFloorName({ space_floor_name: '3', space_is_ground_floor: false })).toEqual('Level 3');
         expect(getFriendlyFloorName({ space_is_ground_floor: true })).toEqual('Ground floor');
-        expect(getFriendlyFloorName({ space_is_ground_floor: true, space_precise: 'Eastern corner' })).toEqual(
-            'Eastern corner, Ground floor',
-        );
+        expect(getFriendlyFloorName({ space_floor_name: '3A', space_is_ground_floor: true })).toEqual('Ground floor');
     });
 });

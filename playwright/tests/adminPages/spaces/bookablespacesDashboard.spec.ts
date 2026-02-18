@@ -575,12 +575,12 @@ test.describe('Spaces Admin - manage locations', () => {
 
             // open campus selector
             await campusSelector.click();
-            await expect(campusOptionLabel(CAMPUS_PACE_OPTION)).toContainText('PACE');
+            await expect(campusOptionLabel(CAMPUS_PACE_OPTION)).toContainText('Dutton Park');
 
             // choose PACE
             await campusOptionLabel(CAMPUS_PACE_OPTION).click(); // select PACE campus option
             await expect(campusSelector.locator('input')).toHaveValue(PACE_RECORD_ID);
-            await expect(campusSelector.locator('div')).toContainText('PACE');
+            await expect(campusSelector.locator('div')).toContainText('Dutton Park');
             await expect(librarySelector.locator('input')).not.toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
 
@@ -642,12 +642,12 @@ test.describe('Spaces Admin - manage locations', () => {
 
             // open campus selector
             await campusSelector.click();
-            await expect(campusOptionLabel(CAMPUS_PACE_OPTION)).toContainText('PACE');
+            await expect(campusOptionLabel(CAMPUS_PACE_OPTION)).toContainText('Dutton Park');
 
             // choose PACE
             await campusOptionLabel(CAMPUS_PACE_OPTION).click();
             await expect(campusSelector.locator('input')).toHaveValue(PACE_RECORD_ID);
-            await expect(campusSelector.locator('div')).toContainText('PACE');
+            await expect(campusSelector.locator('div')).toContainText('Dutton Park');
             await expect(librarySelector.locator('input')).not.toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
             await expect(visibleSpaces).toHaveCount(1); // only PACE spaces display

@@ -52,6 +52,16 @@ const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     marginTop: 4,
 }));
 
+const StyledPrettyLocationDiv = styled('div')(() => ({
+    '& .location-space': {
+        lineHeight: 1.25,
+    },
+    '& .location-floor': {
+        fontWeight: 500,
+        whiteSpace: 'nowrap',
+    },
+}));
+
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     '& > div > div': {
         columnGap: '0.25rem',
@@ -945,7 +955,7 @@ export const EditSpaceForm = ({
                 <Grid item xs={4}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel id="add-space-select-floor-label" htmlFor="add-space-select-floor-input">
-                            Floor *
+                            Level *
                         </InputLabel>
                         <Select
                             id="add-space-select-floor"
@@ -1002,7 +1012,7 @@ export const EditSpaceForm = ({
                             {reportErrorMessage('space_precise')}
                         </StyledErrorMessageTypography>
                     </FormControl>
-                    <div data-testid="add-space-pretty-location">
+                    <StyledPrettyLocationDiv data-testid="add-space-pretty-location">
                         <Typography component={'h4'} variant={'h6'}>
                             Displayed location text
                         </Typography>
@@ -1016,7 +1026,7 @@ export const EditSpaceForm = ({
                             space_building_number: location?.currentLibrary?.building_number,
                             space_campus_name: location?.currentCampus?.campus_name,
                         })}
-                    </div>
+                    </StyledPrettyLocationDiv>
                 </Grid>
                 <Grid item xs={12}>
                     <Typography component={'p'}>

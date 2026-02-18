@@ -18,8 +18,12 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 const StyledFriendlyLocationDiv = styled('div')(() => ({
     marginTop: '5px',
-    '& > div': {
-        marginTop: '-5px',
+    '& .location-space': {
+        lineHeight: 1.25,
+    },
+    '& .location-floor': {
+        fontWeight: 'bold',
+        whiteSpace: 'nowrap',
     },
 }));
 const StyledSpaceDiv = styled('div')(({ theme }) => ({
