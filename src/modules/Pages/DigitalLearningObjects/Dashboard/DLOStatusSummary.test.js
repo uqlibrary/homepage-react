@@ -28,7 +28,7 @@ describe('DLOStatusSummary', () => {
         expect(screen.getByText('New / Draft')).toBeInTheDocument();
         expect(screen.getByText('Published')).toBeInTheDocument();
         expect(screen.getByText('Rejected')).toBeInTheDocument();
-        expect(screen.getByText('Deprecated')).toBeInTheDocument();
+        expect(screen.getByText('Unpublished')).toBeInTheDocument();
         expect(screen.getByText('User Submitted')).toBeInTheDocument();
     });
 
