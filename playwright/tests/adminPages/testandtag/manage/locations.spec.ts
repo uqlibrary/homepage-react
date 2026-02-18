@@ -10,7 +10,7 @@ test.describe('Test and Tag Manage Locations', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'site_id_displayed', 0)).getByText('01')).toBeVisible();
         await expect((await getFieldValue(page, 'site_name', 0)).getByText('St Lucia')).toBeVisible();
@@ -19,7 +19,7 @@ test.describe('Test and Tag Manage Locations', () => {
 
     test('Add location functions correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'site_id_displayed', 0)).getByText('01')).toBeVisible();
         await expect((await getFieldValue(page, 'site_name', 0)).getByText('St Lucia')).toBeVisible();
@@ -93,7 +93,7 @@ test.describe('Test and Tag Manage Locations', () => {
 
     test('Edit location functions correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'site_id_displayed', 0)).getByText('01')).toBeVisible();
         await expect((await getFieldValue(page, 'site_name', 0)).getByText('St Lucia')).toBeVisible();
@@ -155,7 +155,7 @@ test.describe('Test and Tag Manage Locations', () => {
 
     test('Delete location functions correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'site_id_displayed', 0)).getByText('01')).toBeVisible();
         await expect((await getFieldValue(page, 'site_name', 0)).getByText('St Lucia')).toBeVisible();

@@ -63,7 +63,7 @@ describe('AssetReportByFilters', () => {
         });
         expect(loadAssetReportByFiltersFn).toHaveBeenCalled();
         expect(loadTaggedBuildingListFn).toHaveBeenCalled();
-        expect(getByText('Asset tests report for Library')).toBeInTheDocument();
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
         expect(getByTestId('asset_status_selector-assets-inspected')).toBeInTheDocument();
         expect(getByTestId('asset_status_selector-assets-inspected-input')).toHaveAttribute('value', 'All');
         expect(getByTestId('location_picker-assets_inspected-building')).toBeInTheDocument();
@@ -144,7 +144,7 @@ describe('AssetReportByFilters', () => {
             },
         });
 
-        expect(getByText('Asset tests report for Library')).toBeInTheDocument();
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
 
         // select Out for Repair status
         await userEvent.click(getByTestId('asset_status_selector-assets-inspected-input'));
@@ -199,7 +199,7 @@ describe('AssetReportByFilters', () => {
             },
         });
 
-        expect(getByText('Asset tests report for Library')).toBeInTheDocument();
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-assets_inspected-building-input'));
@@ -226,7 +226,7 @@ describe('AssetReportByFilters', () => {
                 loadTaggedBuildingList: jest.fn(),
             },
         });
-        expect(getByText('Asset tests report for Library')).toBeInTheDocument();
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
 
         await userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20220101'); // input formats as date is typed
         await userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '20230101'); // input formats as date is typed
@@ -252,7 +252,7 @@ describe('AssetReportByFilters', () => {
                 loadTaggedBuildingList: jest.fn(),
             },
         });
-        expect(getByText('Asset tests report for Library')).toBeInTheDocument();
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
 
         await userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20210101');
         await userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '20200101');
