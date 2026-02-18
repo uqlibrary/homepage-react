@@ -7,7 +7,7 @@ const statusConfig = [
     { label: 'New / Draft', key: 'new_objects', color: '#1976d2', param: 'new' },
     { label: 'Published', key: 'published_objects', color: '#388e3c', param: 'current' },
     { label: 'Rejected', key: 'rejected_objects', color: '#d32f2f', param: 'rejected' },
-    { label: 'Deprecated', key: 'deprecated_objects', color: '#ca930a', param: 'deprecated' },
+    { label: 'Unpublished', key: 'deprecated_objects', color: '#ca930a', param: 'deprecated' },
     { label: 'User Submitted', key: 'user_submitted_objects', color: '#7b1fa2', param: 'usersubmitted' },
 ];
 
