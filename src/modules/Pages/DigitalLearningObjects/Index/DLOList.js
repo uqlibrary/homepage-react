@@ -1052,7 +1052,7 @@ export const DLOList = ({
         }
         /* istanbul ignore next */
         function isUserSubmitted(item) {
-            return item?.owner?.team_id !== 1;
+            return item?.object_status === 'current' && item?.owner?.team_id !== 1;
         }
         // Helper function to check if the current user is the owner/publisher
         function isMine(item, userEmail, userid) {
