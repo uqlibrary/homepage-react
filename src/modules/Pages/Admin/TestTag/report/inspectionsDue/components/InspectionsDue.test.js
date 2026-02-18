@@ -10,7 +10,7 @@ import {
 } from 'test-utils';
 import Immutable from 'immutable';
 
-import InspectionsDue from './InspectionsDue';
+import InspectionsDue, { getLastLocationWithId } from './InspectionsDue';
 import config from './config';
 
 import inspectionData from '../../../../../../../data/mock/data/testing/testAndTag/testTagPendingInspections';
@@ -295,6 +295,49 @@ describe('InspectionsDue', () => {
             await waitForElementToBeRemoved(getByTestId('confirmation_alert-error-alert'));
 
             expect(clearInspectionsDueErrorFn).toHaveBeenCalled();
+        });
+    });
+});
+
+describe('getLastLocationWithId', () => {
+    it('returns empty object when all location values are -1', () => {
+        const location = { site: -1, building: -1, floor: -1, room: -1 };
+        expect(getLastLocationWithId(location)).toEqual({});
+    });
+
+    it('returns the only valid location', () => {
+        const location = { site: 1, building: -1, floor: -1, room: -1 };
+        expect(getLastLocationWithId(location)).toEqual({ locationType: 'site', locationId: 1 });
+    });
+
+    it('returns the last valid location when multiple are set', () => {
+        const location = { site: 1, building: 2, floor: -1, room: -1 };
+        expect(getLastLocationWithId(location)).toEqual({ locationType: 'building', locationId: 2 });
+    });
+
+    it('returns the deepest valid location (floor)', () => {
+        const location = { site: 1, building: 2, floor: 3, room: -1 };
+        expect(getLastLocationWithId(location)).toEqual({ locationType: 'floor', locationId: 3 });
+    });
+
+    it('returns the deepest valid location (room)', () => {
+        const location = { site: 1, building: 2, floor: 3, room: 4 };
+        expect(getLastLocationWithId(location)).toEqual({ locationType: 'room', locationId: 4 });
+    });
+
+    describe('coverage', () => {
+        it('returns empty object when all location values are falsy', () => {
+            const location = { site: null, building: undefined, floor: 0, room: '' };
+            expect(getLastLocationWithId(location)).toEqual({});
+        });
+
+        it('handles mixed valid and invalid values', () => {
+            const location = { site: 1, building: null, floor: 3, room: -1 };
+            expect(getLastLocationWithId(location)).toEqual({ locationType: 'floor', locationId: 3 });
+        });
+
+        it('returns empty object for empty location object', () => {
+            expect(getLastLocationWithId({})).toEqual({});
         });
     });
 });

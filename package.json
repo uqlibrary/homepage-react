@@ -14,7 +14,7 @@
         "codestyles:files": "cross-env prettier-eslint './*.js' --list-different -l silent",
         "codestyles:fix": "cross-env prettier-eslint --write",
         "codestyles:fix:all": "cross-env prettier-eslint '**/*.js' --write",
-        "codestyles:fix:staged": "cross-env FILES=$(git diff --cached --name-only --diff-filter=ACM | grep \".jsx\\{0,1\\}$\"); npx prettier-eslint $FILES --write",
+        "codestyles:fix:staged": "git diff --cached --name-only --diff-filter=ACM | grep \".jsx\\{0,1\\}$\" | xargs -n 1 npx prettier-eslint --write",
         "eslint": "eslint '**/*.js' --quiet",
         "eslint:fix": "eslint '**/*.js' --quiet --fix",
         "start": "webpack-dev-server",
@@ -165,7 +165,7 @@
         "@types/lodash": "^4.17.20",
         "@webcomponents/webcomponentsjs": "^2.8.0",
         "apexcharts": "^5.3.6",
-        "axios": "^1.13.1",
+        "axios": "^1.13.5",
         "axios-cache-interceptor": "^1.11.1",
         "babel-plugin-add-module-exports": "^1.0.4",
         "chart.js": "^4.5.1",
@@ -203,7 +203,9 @@
         "redux-thunk": "^2.4.2",
         "regenerator-runtime": "^0.13.11",
         "throttle-debounce": "^5.0.0",
-        "vendor-copy": "^2.0.1"
+        "vendor-copy": "^2.0.1",
+        "zebra-browser-print-wrapper": "^0.1.4",
+        "zebra-browser-print-wrapper-https": "^0.1.6"
     },
     "overrides": {
         "istanbul-lib-instrument": "6.0.3",

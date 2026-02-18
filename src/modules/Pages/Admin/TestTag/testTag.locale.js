@@ -111,6 +111,19 @@ export default {
                     {count > 1 ? 's' : ''}
                 </>
             ),
+            labelPrinting: {
+                error: {
+                    noPrinterSelected: 'No printer selected to print label.',
+                    noLabelData: 'No label data available to print.',
+                    noLabelTemplate: 'No label template found for the selected printer.',
+                    noConnection:
+                        'Unable to connect to the selected printer. Please check the printer connection and try again.',
+                    printerNotReady: 'The selected printer is not ready. Please check the printer and try again.',
+                    printJobError: 'Unable to send the print job. Please try again.',
+                    uncaughtException: 'An unhandled error occurred during the printing process.',
+                },
+                printJobSent: printerName => `Print job sent to ${printerName}.`,
+            },
         },
         dashboard: {
             header: {
@@ -390,6 +403,11 @@ export default {
                     outOfService: 'OUT OF SERVICE',
                     tagPlacedBy: 'TAG PLACED BY:',
                 },
+            },
+            labelPrinting: {
+                unknownPrinter: 'unconfigured',
+                selectPrinter: 'Label printer selection',
+                printButton: 'Print tag',
             },
         },
         manage: {
@@ -1102,6 +1120,7 @@ export default {
                         asset_barcode: {
                             label: 'Barcode',
                         },
+                        asset_type_id: { label: 'Asset ID' },
                         asset_type_name: {
                             label: 'Asset type',
                         },
