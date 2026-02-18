@@ -42,6 +42,7 @@ const StyledSpaceGridWrapperDiv = styled('div')(() => ({
     backgroundColor: 'white',
     flexDirection: 'row',
     flexGrow: 0,
+    paddingTop: '3.5rem',
     paddingLeft: '1rem',
     marginTop: '2px',
     flexBasis: '25%',
@@ -78,11 +79,7 @@ const SidebarSpacesList = ({
     // };
 
     return (
-        <StyledSpaceGridWrapperDiv
-            id="StyledSpaceGridWrapperDivTemp"
-            style={{ paddingTop: '4.2rem' }}
-            className={suppliedClassName}
-        >
+        <StyledSpaceGridWrapperDiv id="StyledSpaceGridWrapperDivTemp" className={suppliedClassName}>
             <StyledBodyGrid container id="space-wrapper" data-testid="space-wrapper">
                 <a className="showsOnlyOnFocus" href="#topOfSidebar">
                     Skip back to list of filters

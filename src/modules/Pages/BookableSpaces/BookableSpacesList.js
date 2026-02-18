@@ -87,7 +87,7 @@ const StyledMobileWrapper = styled('div')(({ theme }) => ({
         //
     },
     '& .popupSpacesList': {
-        left: 0,
+        right: 0,
         height: 'calc(100% - 70px)',
     },
     '& .popupFilterList': {
@@ -100,7 +100,7 @@ const StyledMobileWrapper = styled('div')(({ theme }) => ({
         width: '20rem',
         maxWidth: '50%',
         zIndex: 2000,
-        paddingTop: '2rem',
+        paddingLeft: '0.5rem',
         marginTop: 0,
     },
     '& .hide': {
@@ -112,7 +112,7 @@ const schoolBuildingBackgroundimage =
 const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
     position: 'absolute',
     top: '0.25rem',
-    left: '1rem',
+    right: '1rem',
     zIndex: 2001,
     display: 'flex',
     alignItems: 'center',
@@ -126,7 +126,6 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
     '&:hover, :focus': {
         backgroundColor: '#fff',
     },
-    marginTop: '10px',
 
     backgroundImage: schoolBuildingBackgroundimage,
     paddingLeft: '40px',
@@ -138,12 +137,14 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
 const StyledFilterOpenButton = styled(Button)(({ theme }) => ({
     position: 'absolute',
     top: '0.25rem',
-    right: '0.25rem',
+    left: '1rem',
     zIndex: 2001,
     backgroundColor: '#fff',
     display: 'flex',
     alignItems: 'center',
     columnGap: '0.25rem',
+    paddingLeft: 0,
+    marginLeft: '-0.5rem',
     '&:hover, :focus': {
         backgroundColor: '#fff',
     },
@@ -228,13 +229,13 @@ export const BookableSpacesList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    React.useEffect(() => {
-        if (bookableSpacesRoomListError === false && bookableSpacesRoomListLoading === false) {
-            // page is loaded
-            const spacesContent = document.getElementById('spacesContent');
-            !!spacesContent && spacesContent.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
+    // React.useEffect(() => {
+    //     if (bookableSpacesRoomListError === false && bookableSpacesRoomListLoading === false) {
+    //         // page is loaded
+    //         const spacesContent = document.getElementById('spacesContent');
+    //         !!spacesContent && spacesContent.scrollIntoView({ behavior: 'smooth' });
+    //     }
+    // }, [bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
 
     function spaceAppears(spaceFacilityTypes, facilityTypeToGroup, selectedFacilityTypes) {
         // Create a map of facility_type_id to group_id for quick lookup
@@ -509,7 +510,7 @@ export const BookableSpacesList = ({
                                 // className="controlFilterButton"
                                 data-testid="spaces-open-filter-button"
                                 onClick={() => toggleFilterPopupVisibility()}
-                                title="Open and close the filter popup"
+                                title="Open and close the filter sidebar"
                             >
                                 {filterToggleButtonIcon}{' '}
                                 <span>
@@ -540,7 +541,7 @@ export const BookableSpacesList = ({
                                         // className="controlSpacesListButton"
                                         data-testid="spaces-open-spaces-list-button"
                                         onClick={() => toggleSpacesListPopupVisibility()}
-                                        title="Open and close the filter popup"
+                                        title="Open and close the spaces sidebar"
                                     >
                                         <span>
                                             {!!showSpacesSelectorPopup ? 'Hide Spaces list' : 'Show Spaces list'}

@@ -76,18 +76,15 @@ const StyledSidebarDiv = styled('div')(() => ({
     top: 0,
     height: '100%',
     overflowY: 'auto',
+    left: 0,
 
-    paddingLeft: '1em',
+    paddingTop: '3.5rem',
     paddingRight: 0,
     marginBlock: '1em',
     marginRight: 0,
-    marginLeft: '1rem',
-    direction: 'rtl', // put the scroll bar on the left
+    marginLeft: 0,
     flexBasis: '10%',
     maxWidth: '16.6667%',
-    // '&.hide': {
-    //     display: 'none',
-    // },
 
     '& .showsOnlyOnFocus': {
         position: 'absolute',
@@ -98,9 +95,6 @@ const StyledSidebarDiv = styled('div')(() => ({
             top: 'inherit',
             left: 'inherit',
         },
-    },
-    '& > div': {
-        direction: 'ltr', // override the direction above so the content isn't affected
     },
     '&::-webkit-scrollbar': {
         width: '8px',
@@ -294,8 +288,8 @@ export const SidebarFilters = ({
     };
 
     const scrollToTopOfContent = () => {
-        const topOfPage = document.getElementById('topofcontent');
-        !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
+        // const topOfPage = document.getElementById('topofcontent');
+        // !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
 
         const topOfSidebar = document.getElementById('topOfSidebar');
         !!topOfSidebar &&
@@ -517,7 +511,6 @@ export const SidebarFilters = ({
                                 id={'button-deselect-all-filters'}
                                 data-testid={'button-deselect-all-filters'}
                                 onClick={deSelectAll}
-                                style={{ direction: 'ltr' }}
                             >
                                 <ReplayIcon style={{ fontSize: '16px' }} />
                                 <span>Remove all filters</span>
