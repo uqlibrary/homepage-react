@@ -1074,6 +1074,10 @@ export const DLOList = ({
                 case 'followed':
                     theSearch = theSearch.filter(item => isFavoritedFiltered(item));
                     break;
+                case 'current':
+                case 'published':
+                    theSearch = theSearch.filter(item => item?.object_status === 'current');
+                    break;
                 case 'isafavourite':
                     theSearch = theSearch.filter(item => !!item.is_favourited);
                     break;
