@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Grid, useTheme, Badge } from '@mui/material';
+import { Badge, Button, Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -20,7 +20,6 @@ import { standardText } from 'helpers/general';
 
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
-import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -41,6 +40,15 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     },
     '& .MuiCardContent-root': {
         paddingBlock: 0,
+    },
+    '&.mobileHighlightPanel': {
+        // do clever things here for mobile
+    },
+    transition: 'background-color 1s linear, border 1s linear',
+    '&.highlightPanel': {
+        border: `1px solid ${theme.palette.primary.main}`,
+        backgroundColor: '#eee9f2', // purple-50
+        transition: 'background-color 1s linear, border 1s linear',
     },
 }));
 const BookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
@@ -203,7 +211,7 @@ export const BookableSpacesList = ({
     const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
     const isTabletView = isMobileView ? false : _isTabletViewJust;
     const isDesktopView = !isTabletView && !isMobileView;
-    console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
+    // console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
 
     const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
@@ -384,6 +392,44 @@ export const BookableSpacesList = ({
         const spaceFacilityTypes = s?.facility_types?.map(item => item.facility_type_id);
         return spaceAppears(spaceFacilityTypes, facilityTypeToGroup, selectedFacilityTypes);
     });
+
+    const handleMarkerClick = (e, space) => {
+        // Stop the click from opening the popup
+        e.originalEvent.stopPropagation();
+
+        // scroll the spaces sidebar to the relevant space
+        const spaceElement = document.getElementById(`space-${space.space_id}`);
+        !!spaceElement &&
+            typeof spaceElement.scrollIntoView === 'function' &&
+            spaceElement.scrollIntoView({
+                behavior: 'smooth',
+            });
+
+        // highlight it
+        const spacePanel = document.querySelector(`#space-${space.space_id} > div:first-of-type`);
+        !!spacePanel && !spacePanel.classList.contains('highlightPanel') && spacePanel.classList.add('highlightPanel');
+        !!spacePanel &&
+            !spacePanel.classList.contains('mobileHighlightPanel') &&
+            spacePanel.classList.add('mobileHighlightPanel');
+
+        setTimeout(() => {
+            !!spacePanel &&
+                !!spacePanel.classList.contains('highlightPanel') &&
+                spacePanel.classList.remove('highlightPanel');
+        }, 3000);
+
+        !!spaceElement && spaceElement.focus();
+
+        // expand it, if not already open
+        const toggleSpaceButton = document.getElementById(`toggle-panel-button-space-${space.space_id}`);
+        if (
+            !!toggleSpaceButton &&
+            toggleSpaceButton.hasAttribute('aria-expanded') &&
+            toggleSpaceButton.getAttribute('aria-expanded') === 'false'
+        ) {
+            toggleSpaceButton.click();
+        }
+    };
     const showMap = () => {
         return (
             <StyledMapWrapperDiv>
@@ -401,31 +447,28 @@ export const BookableSpacesList = ({
                     {filteredSpaceLocations.length > 0 &&
                         filteredSpaceLocations
                             ?.filter(m => !!m.space_latitude && !!m.space_longitude)
-                            ?.map(m => {
+                            ?.map(mapPoint => {
                                 // show the filtered Spaces on the map
                                 // console.log(
                                 //     'map point:',
-                                //     m.space_name,
-                                //     m.space_library_name,
-                                //     m.space_latitude,
-                                //     m.space_longitude,
+                                //     mapPoint.space_name,
+                                //     mapPoint.space_library_name,
+                                //     mapPoint.space_latitude,
+                                //     mapPoint.space_longitude,
                                 // );
-                                const locationKey = `mappoint-space-${m?.space_id}`;
+                                const locationKey = `mappoint-space-${mapPoint?.space_id}`;
                                 return (
                                     <Marker
                                         key={locationKey}
                                         id={locationKey}
-                                        position={[m.space_latitude, m.space_longitude]}
-                                    >
-                                        <Popup className="mapPopup">
-                                            <SpaceDetails
-                                                weeklyHours={weeklyHours}
-                                                weeklyHoursLoading={weeklyHoursLoading}
-                                                weeklyHoursError={weeklyHoursError}
-                                                bookableSpace={m}
-                                            />
-                                        </Popup>
-                                    </Marker>
+                                        position={[mapPoint.space_latitude, mapPoint.space_longitude]}
+                                        eventHandlers={{
+                                            click(e) {
+                                                handleMarkerClick(e, mapPoint); // mapPoint is captured via closure
+                                            },
+                                        }}
+                                        // eventHandlers: react-leaflet v3+ way to attach Leaflet event listeners
+                                    />
                                 );
                             })}
                 </MapContainer>

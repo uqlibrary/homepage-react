@@ -88,10 +88,10 @@ const SpaceDetails = ({
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
-    const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
-    const isTabletView = isMobileView ? false : _isTabletViewJust;
-    const isDesktopView = !isTabletView && !isMobileView;
-    console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
+    // const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
+    // const isTabletView = isMobileView ? false : _isTabletViewJust;
+    // const isDesktopView = !isTabletView && !isMobileView;
+    // console.log('BookableSpacesList window width (m, t, d):', isMobileView, isTabletView, isDesktopView);
 
     const summaryPanelElementId = spaceId => `summary-info-${spaceId}`;
 
