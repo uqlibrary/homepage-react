@@ -1,10 +1,13 @@
 // istanbul ignore file
 import React, { useEffect } from 'react';
 import { Grid, Box, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import { StandardPage } from '../../../App/components/pages';
 import { isDlorAdminUser } from '../../../../helpers/access';
+import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 import {
     Chart as ChartJS,
@@ -30,6 +33,62 @@ ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearS
 
 import PropTypes from 'prop-types';
 
+const StyledTitleBlockDiv = styled('div')(() => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '16px',
+    '& p:first-child': {
+        padding: 0,
+        fontSize: 16,
+        '& a': {
+            color: 'rgba(0, 0, 0, 0.87)',
+        },
+    },
+    '& svg': {
+        width: 10,
+        marginInline: '6px',
+    },
+    '& > p:nth-child(2)': {
+        padding: 0,
+    },
+}));
+
+const StyledDashboardTitleWrapper = styled('div')(({ theme }) => ({
+    marginLeft: -58,
+    marginBottom: 24,
+    [theme.breakpoints.down('md')]: {
+        marginLeft: -20,
+        marginBottom: 8,
+    },
+}));
+
+const StyledDashboardTitle = styled(Typography)(({ theme }) => ({
+    color: '#51247A',
+    overflowWrap: 'break-word !important',
+    maxWidth: 1200,
+    width: '90%',
+    marginTop: 12,
+    marginBottom: 0,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    padding: 0,
+    [theme.breakpoints.down('md')]: {
+        margin: '0 auto 12px auto',
+    },
+}));
+
+function getTitleBlock(detailTitle = 'Analytics dashboard') {
+    return (
+        <StyledTitleBlockDiv>
+            <Typography component={'p'} variant={'h6'} data-testid="dlor-dashboard-sitelabel">
+                <a href={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</a>
+            </Typography>
+            <ArrowForwardIcon />
+            <Typography>{detailTitle}</Typography>
+        </StyledTitleBlockDiv>
+    );
+}
+
 export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlorDashboardError, actions, account }) {
     useEffect(() => {
         actions.loadDLORDashboard();
@@ -37,13 +96,25 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
     console.log('DLOR DASHBOARD DATA', dlorDashboardData, dlorDashboardLoading, dlorDashboardError);
     if (dlorDashboardLoading || !dlorDashboardData) {
         return (
-            <StandardPage title="Digital Learning Object Repository - Analytics Dashboard">
+            <StandardPage>
+                {getTitleBlock()}
+                <StyledDashboardTitleWrapper>
+                    <StyledDashboardTitle component={'h1'} variant={'h4'} data-testid="dlor-dashboard-title">
+                        Digital Learning Object Repository - Analytics Dashboard
+                    </StyledDashboardTitle>
+                </StyledDashboardTitleWrapper>
                 <Box sx={{ p: 3 }}>Loading Analytics Charts...</Box>
             </StandardPage>
         );
     } else {
         return (
-            <StandardPage title="Digital Learning Object Repository - Analytics Dashboard">
+            <StandardPage>
+                {getTitleBlock()}
+                <StyledDashboardTitleWrapper>
+                    <StyledDashboardTitle component={'h1'} variant={'h4'} data-testid="dlor-dashboard-title">
+                        Digital Learning Object Repository - Analytics Dashboard
+                    </StyledDashboardTitle>
+                </StyledDashboardTitleWrapper>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <Accordion defaultExpanded sx={{ background: 'rgba(120, 90, 200, 0.08)', borderRadius: 2 }}>
