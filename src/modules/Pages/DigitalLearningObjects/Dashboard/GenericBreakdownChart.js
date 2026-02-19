@@ -66,6 +66,11 @@ export default function GenericBreakdownChart({ chartData, dataKey, title }) {
 
     const colors = useMemo(() => generateColorShades(dataArr), [dataArr]);
 
+    const hasData = useMemo(() => {
+        if (!Array.isArray(dataArr) || dataArr.length === 0) return false;
+        return dataArr.some(value => Number(value) > 0);
+    }, [dataArr]);
+
     const doughnutData = useMemo(
         () => ({
             labels,
@@ -111,38 +116,46 @@ export default function GenericBreakdownChart({ chartData, dataKey, title }) {
                     position: 'relative',
                 }}
             >
-                <Doughnut
-                    data={doughnutData}
-                    aria-label={`Doughnut chart showing ${title.toLowerCase()} of digital learning objects`}
-                    options={{
-                        plugins: {
-                            legend: { display: false },
-                            title: { display: false, text: title },
-                        },
-                        cutout: '70%',
-                        maintainAspectRatio: false,
-                    }}
-                />
+                {hasData ? (
+                    <Doughnut
+                        data={doughnutData}
+                        aria-label={`Doughnut chart showing ${title.toLowerCase()} of digital learning objects`}
+                        options={{
+                            plugins: {
+                                legend: { display: false },
+                                title: { display: false, text: title },
+                            },
+                            cutout: '70%',
+                            maintainAspectRatio: false,
+                        }}
+                    />
+                ) : (
+                    <Typography variant="body2" color="text.secondary" data-testid="generic-breakdown-chart-no-data">
+                        No Data available
+                    </Typography>
+                )}
             </Box>
-            <Box sx={{ mt: 0.5, textAlign: 'right' }}>
-                <button
-                    style={{
-                        fontSize: '0.8rem',
-                        background: 'none',
-                        border: 'none',
-                        color: '#1976d2',
-                        cursor: 'pointer',
-                        padding: 0,
-                        marginBottom: '0px',
-                    }}
-                    onClick={() => setShowLegend(v => !v)}
-                    aria-label={showLegend ? `Hide ${title} legend` : `Show ${title} legend`}
-                    data-testid="generic-breakdown-chart-legend-toggle"
-                >
-                    {showLegend ? 'Hide Legend' : 'Show Legend'}
-                </button>
-            </Box>
-            {showLegend && (
+            {hasData && (
+                <Box sx={{ mt: 0.5, textAlign: 'right' }}>
+                    <button
+                        style={{
+                            fontSize: '0.8rem',
+                            background: 'none',
+                            border: 'none',
+                            color: '#1976d2',
+                            cursor: 'pointer',
+                            padding: 0,
+                            marginBottom: '0px',
+                        }}
+                        onClick={() => setShowLegend(v => !v)}
+                        aria-label={showLegend ? `Hide ${title} legend` : `Show ${title} legend`}
+                        data-testid="generic-breakdown-chart-legend-toggle"
+                    >
+                        {showLegend ? 'Hide Legend' : 'Show Legend'}
+                    </button>
+                </Box>
+            )}
+            {hasData && showLegend && (
                 <Box
                     sx={{
                         mt: 0.25,

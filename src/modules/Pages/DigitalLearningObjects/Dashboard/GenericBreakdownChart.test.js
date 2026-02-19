@@ -162,6 +162,8 @@ describe('GenericBreakdownChart', () => {
     it('renders with empty data', () => {
         render(<GenericBreakdownChart chartData={{}} dataKey="team_breakdown" title="Team Breakdown" />);
         expect(screen.getByTestId('generic-breakdown-chart-title')).toBeInTheDocument();
+        expect(screen.getByTestId('generic-breakdown-chart-no-data')).toHaveTextContent('No Data available');
+        expect(screen.queryByTestId('generic-breakdown-chart-legend-toggle')).toBeNull();
     });
 
     it('renders review status breakdown', () => {
@@ -189,18 +191,14 @@ describe('GenericBreakdownChart', () => {
                 title="Review Status"
             />,
         );
-        fireEvent.click(screen.getByRole('button', { name: /show review status legend/i }));
-        expect(screen.getByText('Upcoming (0)')).toBeInTheDocument();
-        expect(screen.getByText('Due (0)')).toBeInTheDocument();
-        expect(screen.getByText('Overdue (0)')).toBeInTheDocument();
+        expect(screen.getByTestId('generic-breakdown-chart-no-data')).toHaveTextContent('No Data available');
+        expect(screen.queryByRole('button', { name: /show review status legend/i })).toBeNull();
     });
 
     it('covers review_status branch when review_status is missing', () => {
         render(<GenericBreakdownChart chartData={{}} dataKey="review_status" title="Review Status" />);
-        fireEvent.click(screen.getByRole('button', { name: /show review status legend/i }));
-        expect(screen.getByText('Upcoming (0)')).toBeInTheDocument();
-        expect(screen.getByText('Due (0)')).toBeInTheDocument();
-        expect(screen.getByText('Overdue (0)')).toBeInTheDocument();
+        expect(screen.getByTestId('generic-breakdown-chart-no-data')).toHaveTextContent('No Data available');
+        expect(screen.queryByRole('button', { name: /show review status legend/i })).toBeNull();
     });
 
     it('covers item.count || 0 fallback', () => {
@@ -211,7 +209,7 @@ describe('GenericBreakdownChart', () => {
                 title="Custom Breakdown"
             />,
         );
-        fireEvent.click(screen.getByRole('button', { name: /show custom breakdown legend/i }));
-        expect(screen.getByText('NoCount (0)')).toBeInTheDocument();
+        expect(screen.getByTestId('generic-breakdown-chart-no-data')).toHaveTextContent('No Data available');
+        expect(screen.queryByRole('button', { name: /show custom breakdown legend/i })).toBeNull();
     });
 });
