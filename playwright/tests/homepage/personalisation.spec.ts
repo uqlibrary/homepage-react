@@ -126,8 +126,8 @@ test.beforeEach(async ({ page }) => {
                 (element as HTMLElement).style.display = 'none';
             }
         }, OBJECT_TO_HIDE_SELECTOR);
-    } catch (e) {
-        console.log(`Optional object ${OBJECT_TO_HIDE_SELECTOR} is being skipped in this test intentionally.`);
+    } catch {
+        // intentionally ignore when optional element is not present
     }
 });
 
