@@ -216,6 +216,7 @@ export const BookableSpacesList = ({
     const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
+    const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -420,6 +421,11 @@ export const BookableSpacesList = ({
 
         !!spaceElement && spaceElement.focus();
 
+        // if we opened one earlier, close it now (so they don't have masses of them open)
+        if (!!previousToggledSpaceButton) {
+            previousToggledSpaceButton.click();
+        }
+
         // expand it, if not already open
         const toggleSpaceButton = document.getElementById(`toggle-panel-button-space-${space.space_id}`);
         if (
@@ -428,6 +434,7 @@ export const BookableSpacesList = ({
             toggleSpaceButton.getAttribute('aria-expanded') === 'false'
         ) {
             toggleSpaceButton.click();
+            setPreviousToggledSpaceButton(toggleSpaceButton);
         }
     };
     const showMap = () => {
