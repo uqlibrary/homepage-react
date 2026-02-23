@@ -74,11 +74,22 @@ function extendAccountDetails(accountResponse) {
         ...accountResponse,
         current_classes:
             !!accountResponse.current_classes && accountResponse.current_classes.length > 0
-                ? accountResponse.current_classes.map(subject => {
-                      subject.classnumber = getClassNumberFromPieces(subject);
-                      subject.semester = getSemesterStringByTermNumber(subject.STRM);
-                      return subject;
-                  })
+                ? Object.values(
+                      accountResponse.current_classes
+                          .map(subject => {
+                              subject.classnumber = getClassNumberFromPieces(subject);
+                              subject.semester = getSemesterStringByTermNumber(subject.STRM);
+                              return subject;
+                          })
+                          // current classes can have a repeating ACAD_CAREER value,
+                          // eg NAWD, PGCW and UGRD - but all are for the same course when other details match!
+                          .reduce((acc, current) => {
+                              const { ACAD_CAREER, ...rest } = current;
+                              const key = JSON.stringify(rest);
+                              acc[key] = rest;
+                              return acc;
+                          }, {}),
+                  )
                 : accountResponse.current_classes,
         trainingfilterId: isHospitalUser(accountResponse) ? TRAINING_FILTER_HOSPITAL : TRAINING_FILTER_GENERAL,
     };

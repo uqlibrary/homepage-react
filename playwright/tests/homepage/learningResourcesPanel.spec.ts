@@ -152,7 +152,7 @@ test.describe('The Homepage Learning Resource Panel', () => {
         const thirdDescriptor = liItems.locator('.descriptor').nth(3);
         await expect(thirdDescriptor).toContainText('Animals');
 
-        const { top, left, height } = await thirdDescriptor.evaluate(el => {
+        const { left, height } = await thirdDescriptor.evaluate(el => {
             const rect = el.getBoundingClientRect();
             return { top: rect.top, left: rect.left, height: rect.height };
         });
@@ -231,5 +231,64 @@ test.describe('The Homepage Learning Resource Panel', () => {
                 .getByText(/FREN1010/)
                 .first(),
         ).toBeVisible();
+    });
+});
+test.describe('Users see the correct number of courses', () => {
+    test('An academic teaching a course to multiple classes of user (NAWD, PGCW, etc) doesnt see duplicates of their subjects', async ({
+        page,
+    }) => {
+        await page.goto('/?user=uqacad1');
+        await expect(
+            page
+                .getByTestId('your-courses')
+                .locator('ul')
+                .locator(':scope > *'),
+        ).toHaveCount(4); // 8 courses with dupes is reduced to 4 without
+    });
+
+    // may as well check all of them are right!
+    test('UG student sees correct number of courses', async ({ page }) => {
+        await page.goto('/?user=s1111111');
+        await expect(
+            page
+                .getByTestId('your-courses')
+                .locator('ul')
+                .locator(':scope > *'),
+        ).toHaveCount(3);
+    });
+
+    test('Remote RHD Student sees correct number of courses', async ({ page }) => {
+        await page.goto('/?user=s5555555');
+        await expect(
+            page
+                .getByTestId('your-courses')
+                .locator('ul')
+                .locator(':scope > *'),
+        ).toHaveCount(5);
+    });
+
+    test('Local RHD Student sees correct number of courses', async ({ page }) => {
+        await page.goto('/?user=s6666666');
+        await expect(
+            page
+                .getByTestId('your-courses')
+                .locator('ul')
+                .locator(':scope > *'),
+        ).toHaveCount(2);
+    });
+
+    test('Other local RHD student sees correct number of courses', async ({ page }) => {
+        await page.goto('/?user=s2222222');
+        await expect(page.getByTestId('your-courses')).not.toBeVisible();
+    });
+
+    test('Remote UG student sees correct number of courses', async ({ page }) => {
+        await page.goto('/?user=s3333333');
+        await expect(page.getByTestId('your-courses')).not.toBeVisible();
+    });
+
+    test('P&F staff see correct number of courses', async ({ page }) => {
+        await page.goto('/?user=uqpf');
+        await expect(page.getByTestId('your-courses')).not.toBeVisible();
     });
 });
