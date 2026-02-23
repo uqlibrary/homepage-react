@@ -1,4 +1,4 @@
-import { test, expect } from '@uq/pw/test';
+import { expect, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { accounts } from '../../../src/data/mock/data';
 import { default as locale } from '../../../src/modules/Pages/LearningResources/shared/learningResources.locale';
@@ -244,6 +244,35 @@ test.describe('Users see the correct number of courses', () => {
                 .locator('ul')
                 .locator(':scope > *'),
         ).toHaveCount(4); // 8 courses with dupes is reduced to 4 without
+    });
+
+    test('An academic teaching a course to multiple classes of user (NAWD, PGCW, etc) sees the correct tabs', async ({
+        page,
+    }) => {
+        await page.goto('/?user=uqacad1');
+        await expect(
+            page
+                .getByTestId('your-courses')
+                .locator('ul')
+                .locator(':scope > *'),
+        ).toHaveCount(4); // 8 courses with dupes is reduced to 4 without
+
+        // click on one of the subjects to go to /learning-resources
+        await expect(page.getByTestId('learning-resource-panel-course-link-0')).toBeVisible();
+        await page.getByTestId('learning-resource-panel-course-link-0').click();
+
+        const subjectTabList = page
+            .getByTestId('learning-resources')
+            .locator('[role="tablist"]')
+            .filter({ hasText: 'ENGL1500' });
+
+        // wait for page to load
+        await subjectTabList.first().scrollIntoViewIfNeeded();
+        // await page.waitForTimeout(10000);
+        await expect(subjectTabList.first()).toBeVisible();
+
+        // the correct number of tabs is visible
+        await expect(subjectTabList.locator(':scope > button')).toHaveCount(4);
     });
 
     // may as well check all of them are right!
