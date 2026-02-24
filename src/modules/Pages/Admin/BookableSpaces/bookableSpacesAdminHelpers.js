@@ -256,11 +256,14 @@ export function closeDialog(e = null) {
     const addNewButton = document.getElementById('addNewButton');
     !!addNewButton && (addNewButton.innerText = 'Add new');
     !!addNewButton && (addNewButton.style.display = 'inline');
-    removeAnyListeners(addNewButton);
+    !!addNewButton && removeAnyListeners(addNewButton);
 
     const deleteButton = document.getElementById('deleteButton');
     !!deleteButton && (deleteButton.style.display = 'inline');
-    removeAnyListeners(deleteButton);
+    !!deleteButton && removeAnyListeners(deleteButton);
+
+    const cancelButton = document.getElementById('cancelButton');
+    !!cancelButton && removeAnyListeners(cancelButton);
 
     const saveButton = document.getElementById('saveButton');
     removeAnyListeners(saveButton);

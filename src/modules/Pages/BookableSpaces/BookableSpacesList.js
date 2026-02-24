@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Grid, useTheme } from '@mui/material';
+import { Badge, Button, Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -20,7 +20,6 @@ import { standardText } from 'helpers/general';
 
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
-import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -41,6 +40,15 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     },
     '& .MuiCardContent-root': {
         paddingBlock: 0,
+    },
+    '&.mobileHighlightPanel': {
+        // do clever things here for mobile
+    },
+    transition: 'background-color 1s linear, border 1s linear',
+    '&.highlightPanel': {
+        border: `1px solid ${theme.palette.primary.main}`,
+        backgroundColor: '#eee9f2', // purple-50
+        transition: 'background-color 1s linear, border 1s linear',
     },
 }));
 const BookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
@@ -87,7 +95,7 @@ const StyledMobileWrapper = styled('div')(({ theme }) => ({
         //
     },
     '& .popupSpacesList': {
-        left: 0,
+        right: 0,
         height: 'calc(100% - 70px)',
     },
     '& .popupFilterList': {
@@ -100,7 +108,7 @@ const StyledMobileWrapper = styled('div')(({ theme }) => ({
         width: '20rem',
         maxWidth: '50%',
         zIndex: 2000,
-        paddingTop: '2rem',
+        paddingLeft: '0.5rem',
         marginTop: 0,
     },
     '& .hide': {
@@ -112,7 +120,7 @@ const schoolBuildingBackgroundimage =
 const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
     position: 'absolute',
     top: '0.25rem',
-    left: '1rem',
+    right: '1rem',
     zIndex: 2001,
     display: 'flex',
     alignItems: 'center',
@@ -126,7 +134,6 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
     '&:hover, :focus': {
         backgroundColor: '#fff',
     },
-    marginTop: '10px',
 
     backgroundImage: schoolBuildingBackgroundimage,
     paddingLeft: '40px',
@@ -138,12 +145,14 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
 const StyledFilterOpenButton = styled(Button)(({ theme }) => ({
     position: 'absolute',
     top: '0.25rem',
-    right: '0.25rem',
+    left: '1rem',
     zIndex: 2001,
     backgroundColor: '#fff',
     display: 'flex',
     alignItems: 'center',
     columnGap: '0.25rem',
+    paddingLeft: 0,
+    marginLeft: '-0.5rem',
     '&:hover, :focus': {
         backgroundColor: '#fff',
     },
@@ -202,11 +211,12 @@ export const BookableSpacesList = ({
     const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
     const isTabletView = isMobileView ? false : _isTabletViewJust;
     const isDesktopView = !isTabletView && !isMobileView;
-    console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
+    // console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
 
     const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
+    const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -228,13 +238,13 @@ export const BookableSpacesList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    React.useEffect(() => {
-        if (bookableSpacesRoomListError === false && bookableSpacesRoomListLoading === false) {
-            // page is loaded
-            const spacesContent = document.getElementById('spacesContent');
-            !!spacesContent && spacesContent.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
+    // React.useEffect(() => {
+    //     if (bookableSpacesRoomListError === false && bookableSpacesRoomListLoading === false) {
+    //         // page is loaded
+    //         const spacesContent = document.getElementById('spacesContent');
+    //         !!spacesContent && spacesContent.scrollIntoView({ behavior: 'smooth' });
+    //     }
+    // }, [bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
 
     function spaceAppears(spaceFacilityTypes, facilityTypeToGroup, selectedFacilityTypes) {
         // Create a map of facility_type_id to group_id for quick lookup
@@ -383,6 +393,50 @@ export const BookableSpacesList = ({
         const spaceFacilityTypes = s?.facility_types?.map(item => item.facility_type_id);
         return spaceAppears(spaceFacilityTypes, facilityTypeToGroup, selectedFacilityTypes);
     });
+
+    const handleMarkerClick = (e, space) => {
+        // Stop the click from opening the popup
+        e.originalEvent.stopPropagation();
+
+        // scroll the spaces sidebar to the relevant space
+        const spaceElement = document.getElementById(`space-${space.space_id}`);
+        !!spaceElement &&
+            typeof spaceElement.scrollIntoView === 'function' &&
+            spaceElement.scrollIntoView({
+                behavior: 'smooth',
+            });
+
+        // highlight it
+        const spacePanel = document.querySelector(`#space-${space.space_id} > div:first-of-type`);
+        !!spacePanel && !spacePanel.classList.contains('highlightPanel') && spacePanel.classList.add('highlightPanel');
+        !!spacePanel &&
+            !spacePanel.classList.contains('mobileHighlightPanel') &&
+            spacePanel.classList.add('mobileHighlightPanel');
+
+        setTimeout(() => {
+            !!spacePanel &&
+                !!spacePanel.classList.contains('highlightPanel') &&
+                spacePanel.classList.remove('highlightPanel');
+        }, 3000);
+
+        !!spaceElement && spaceElement.focus();
+
+        // if we opened one earlier, close it now (so they don't have masses of them open)
+        if (!!previousToggledSpaceButton) {
+            previousToggledSpaceButton.click();
+        }
+
+        // expand it, if not already open
+        const toggleSpaceButton = document.getElementById(`toggle-panel-button-space-${space.space_id}`);
+        if (
+            !!toggleSpaceButton &&
+            toggleSpaceButton.hasAttribute('aria-expanded') &&
+            toggleSpaceButton.getAttribute('aria-expanded') === 'false'
+        ) {
+            toggleSpaceButton.click();
+            setPreviousToggledSpaceButton(toggleSpaceButton);
+        }
+    };
     const showMap = () => {
         return (
             <StyledMapWrapperDiv>
@@ -400,35 +454,44 @@ export const BookableSpacesList = ({
                     {filteredSpaceLocations.length > 0 &&
                         filteredSpaceLocations
                             ?.filter(m => !!m.space_latitude && !!m.space_longitude)
-                            ?.map(m => {
+                            ?.map(mapPoint => {
                                 // show the filtered Spaces on the map
                                 // console.log(
                                 //     'map point:',
-                                //     m.space_name,
-                                //     m.space_library_name,
-                                //     m.space_latitude,
-                                //     m.space_longitude,
+                                //     mapPoint.space_name,
+                                //     mapPoint.space_library_name,
+                                //     mapPoint.space_latitude,
+                                //     mapPoint.space_longitude,
                                 // );
-                                const locationKey = `mappoint-space-${m?.space_id}`;
+                                const locationKey = `mappoint-space-${mapPoint?.space_id}`;
                                 return (
                                     <Marker
                                         key={locationKey}
                                         id={locationKey}
-                                        position={[m.space_latitude, m.space_longitude]}
-                                    >
-                                        <Popup className="mapPopup">
-                                            <SpaceDetails
-                                                weeklyHours={weeklyHours}
-                                                weeklyHoursLoading={weeklyHoursLoading}
-                                                weeklyHoursError={weeklyHoursError}
-                                                bookableSpace={m}
-                                            />
-                                        </Popup>
-                                    </Marker>
+                                        position={[mapPoint.space_latitude, mapPoint.space_longitude]}
+                                        eventHandlers={{
+                                            click(e) {
+                                                handleMarkerClick(e, mapPoint); // mapPoint is captured via closure
+                                            },
+                                        }}
+                                        // eventHandlers: react-leaflet v3+ way to attach Leaflet event listeners
+                                    />
                                 );
                             })}
                 </MapContainer>
             </StyledMapWrapperDiv>
+        );
+    };
+    const activeFilterCount = selectedFacilityTypes.filter(ft => !!ft.selected || !!ft.unselected).length;
+    const countIcon = () => {
+        return activeFilterCount === 0 ? null : (
+            <Badge
+                badgeContent={activeFilterCount}
+                max={selectedFacilityTypes.length}
+                color="primary"
+                style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
+                data-testid="space-filter-count"
+            />
         );
     };
     return (
@@ -497,10 +560,15 @@ export const BookableSpacesList = ({
                                 // className="controlFilterButton"
                                 data-testid="spaces-open-filter-button"
                                 onClick={() => toggleFilterPopupVisibility()}
-                                title="Open and close the filter popup"
+                                title="Open and close the filter sidebar"
                             >
                                 {filterToggleButtonIcon}{' '}
-                                <span>{!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}</span>
+                                <span>
+                                    <span style={{ paddingRight: activeFilterCount < 10 ? '0.8rem' : '1.1rem' }}>
+                                        {!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}
+                                    </span>
+                                    {countIcon()}
+                                </span>
                             </StyledFilterOpenButton>
                             <div>
                                 <SidebarFilters
@@ -523,7 +591,7 @@ export const BookableSpacesList = ({
                                         // className="controlSpacesListButton"
                                         data-testid="spaces-open-spaces-list-button"
                                         onClick={() => toggleSpacesListPopupVisibility()}
-                                        title="Open and close the filter popup"
+                                        title="Open and close the spaces sidebar"
                                     >
                                         <span>
                                             {!!showSpacesSelectorPopup ? 'Hide Spaces list' : 'Show Spaces list'}

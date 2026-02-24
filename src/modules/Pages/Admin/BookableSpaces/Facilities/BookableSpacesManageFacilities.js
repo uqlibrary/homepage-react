@@ -5,11 +5,14 @@ import { useCookies } from 'react-cookie';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -38,6 +41,8 @@ import {
     showGenericConfirmAndDeleteDialog,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { a11yProps, reverseA11yProps } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
+import { TabPanel } from 'modules/Pages/LearningResources/shared/TabPanel';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -88,6 +93,17 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
                 display: 'none',
             },
         },
+    },
+}));
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    '& .TabSelected': {
+        color: 'white !important',
+        opacity: 1,
+    },
+    '& .TabUnselected': {
+        color: 'white !important',
+        opacity: 0.5,
     },
 }));
 // a primary button, but with a red color
@@ -221,6 +237,12 @@ export const BookableSpacesManageFacilities = ({
     );
 
     const [cookies, setCookie] = useCookies();
+
+    const tabOnLoad = 'editGroupsTab';
+    const [topmenu, setCurrentTopTab] = useState(tabOnLoad);
+    const handleTopTabChange = (event, topMenuTabId) => {
+        setCurrentTopTab(topMenuTabId);
+    };
 
     const [isConfirmationBoxOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [confirmationLocale, setConfirmationLocale] = useState({
@@ -450,6 +472,9 @@ export const BookableSpacesManageFacilities = ({
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.addEventListener('click', saveChangeToFacilityType);
 
+        const cancelButton = document.getElementById('cancelButton');
+        !!cancelButton && cancelButton.addEventListener('click', closeDialog);
+
         const deleteButton = document.getElementById('deleteButton');
         !!deleteButton &&
             deleteButton.addEventListener('click', e => openConfirmDeleteFacilityTypeDialog(e, facilityTypeDetails));
@@ -530,6 +555,9 @@ export const BookableSpacesManageFacilities = ({
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.addEventListener('click', saveNewFacilityType);
 
+        const cancelButton = document.getElementById('cancelButton');
+        !!cancelButton && cancelButton.addEventListener('click', closeDialog);
+
         const deleteButton = document.getElementById('deleteButton');
         !!deleteButton && (deleteButton.style.display = 'none');
 
@@ -580,7 +608,6 @@ export const BookableSpacesManageFacilities = ({
             })
             .then(() => {
                 displayToastMessage('Facility type created');
-                actions.loadAllFacilityTypes(); // reload facility types
             })
             .catch(e => {
                 if (groupCreated) {
@@ -608,6 +635,10 @@ export const BookableSpacesManageFacilities = ({
                         '[BSMF-010] Sorry, an error occurred and the facility group and type was not created - the admins have been informed',
                     );
                 }
+            })
+            .finally(() => {
+                actions.loadAllFacilityTypes();
+                handleTopTabChange(null, tabOnLoad);
             });
         return true;
     };
@@ -633,6 +664,10 @@ export const BookableSpacesManageFacilities = ({
 
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.addEventListener('click', saveNewFacilityTypeGroup);
+
+        const cancelButton = document.getElementById('cancelButton');
+        !!cancelButton && cancelButton.addEventListener('click', closeDialog);
+        !!cancelButton && cancelButton.addEventListener('click', () => handleTopTabChange(null, tabOnLoad));
 
         const deleteButton = document.getElementById('deleteButton');
         !!deleteButton && (deleteButton.style.display = 'none');
@@ -793,6 +828,9 @@ export const BookableSpacesManageFacilities = ({
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.addEventListener('click', updateFacilityTypeGroup);
 
+        const cancelButton = document.getElementById('cancelButton');
+        !!cancelButton && cancelButton.addEventListener('click', closeDialog);
+
         const deleteButton = document.getElementById('deleteButton');
         !!deleteButton &&
             deleteButton.addEventListener('click', e => openConfirmDeleteFacilityGroupDialog(e, thisGroup));
@@ -952,17 +990,42 @@ export const BookableSpacesManageFacilities = ({
                                     isOpen={isConfirmationBoxOpen}
                                     locale={confirmationLocale}
                                 />
-                                <Grid container>
-                                    <Grid item xs={12}>
-                                        <StyledPrimaryButton
-                                            style={{ marginBottom: '2rem' }}
+                                <StyledAppBar
+                                    data-analyticsid="learning-resource-top-menu"
+                                    data-testid="learning-resource-top-menu"
+                                    id="learning-resource-top-menu"
+                                    position="static"
+                                    component="div"
+                                >
+                                    <Tabs centered onChange={handleTopTabChange} value={topmenu}>
+                                        <Tab
+                                            value="editGroupsTab"
+                                            className={topmenu === tabOnLoad ? 'TabSelected' : 'TabUnselected'}
+                                            label="Edit groups"
+                                            {...a11yProps('0')}
+                                            data-testid="facility-group-edit"
+                                        />
+                                        <Tab
+                                            className={topmenu === 'addNewGroupTab' ? 'TabSelected' : 'TabUnselected'}
+                                            value="addNewGroupTab"
+                                            label="Add new Group"
                                             onClick={openDialogAddGroup}
-                                            data-testid="add-new-group-button"
-                                        >
-                                            Add new Facility type group
-                                        </StyledPrimaryButton>
-                                    </Grid>
-                                </Grid>
+                                            data-testid="facility-group-add"
+                                        />
+                                        {facilityTypeList?.data?.facility_type_groups?.length > 0 && (
+                                            <Tab
+                                                value="sortGroupsTab"
+                                                className={
+                                                    topmenu === 'sortGroupsTab' ? 'TabSelected' : 'TabUnselected'
+                                                }
+                                                label="Order groups"
+                                                {...a11yProps('2')}
+                                                data-testid="facility-group-order"
+                                            />
+                                        )}
+                                    </Tabs>
+                                </StyledAppBar>
+
                                 {facilityTypeList?.data?.facility_type_groups?.length === 0 && (
                                     <Grid container>
                                         <Grid item xs={12}>
@@ -972,53 +1035,67 @@ export const BookableSpacesManageFacilities = ({
                                         </Grid>
                                     </Grid>
                                 )}
-                                <Typography component={'h3'} variant={'h6'}>
-                                    Sort Filter group types
-                                </Typography>
-                                <Typography component={'p'}>
-                                    Tip: drag the Group name <i>onto</i> the group you want it to appear just above
-                                </Typography>
-                                <Grid container style={{ marginBottom: '2rem' }}>
-                                    <Grid item xs={12}>
-                                        <DndProvider backend={HTML5Backend}>
-                                            <div data-testid="spaces-dragLandingAarea">
-                                                <ul>
-                                                    {facilityTypeList?.data?.facility_type_groups
-                                                        ?.sort(
-                                                            (a, b) =>
-                                                                a.facility_type_group_order -
-                                                                b.facility_type_group_order,
-                                                        )
-                                                        .map((item, index) => (
-                                                            <DraggableListItem
-                                                                key={`draggable-facility-group-type-${index}`}
-                                                                item={item}
-                                                                index={index}
-                                                                moveItem={moveItem}
-                                                                // handleChange={handleChange}
-                                                            />
-                                                        ))}
-                                                </ul>
-                                            </div>
-                                        </DndProvider>
+                                <TabPanel
+                                    value={topmenu}
+                                    index="sortGroupsTab" // must match 'value' in Tabs
+                                    label="topmenu"
+                                    {...reverseA11yProps('2')}
+                                >
+                                    <Typography component={'h3'} variant={'h6'}>
+                                        Sort Filter group types
+                                    </Typography>
+                                    <Typography component={'p'}>
+                                        Tip: drag the Group name <i>onto</i> the group you want it to appear just above
+                                    </Typography>
+                                    <Grid container style={{ marginBottom: '2rem' }}>
+                                        <Grid item xs={12}>
+                                            <DndProvider backend={HTML5Backend}>
+                                                <div data-testid="spaces-dragLandingAarea">
+                                                    <ul>
+                                                        {facilityTypeList?.data?.facility_type_groups
+                                                            ?.sort(
+                                                                (a, b) =>
+                                                                    a.facility_type_group_order -
+                                                                    b.facility_type_group_order,
+                                                            )
+                                                            .map((item, index) => (
+                                                                <DraggableListItem
+                                                                    key={`draggable-facility-group-type-${index}`}
+                                                                    item={item}
+                                                                    index={index}
+                                                                    moveItem={moveItem}
+                                                                    // handleChange={handleChange}
+                                                                />
+                                                            ))}
+                                                    </ul>
+                                                </div>
+                                            </DndProvider>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
+                                </TabPanel>
                                 {!!facilityTypeList?.data?.facility_type_groups &&
                                     facilityTypeList?.data?.facility_type_groups.length > 0 && (
-                                        <>
+                                        <TabPanel
+                                            value={topmenu}
+                                            index="editGroupsTab" // must match 'value' in Tabs
+                                            label="topmenu"
+                                            {...reverseA11yProps('0')}
+                                        >
                                             <Typography
                                                 component={'h3'}
                                                 variant={'h6'}
                                                 style={{ marginBottom: '0.5rem' }}
+                                                data-testId="filter-add-edit-heading"
                                             >
                                                 Add and Edit Filter types
                                             </Typography>
                                             <Grid container>
                                                 {(
                                                     facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
-                                                        a.facility_type_group_name.localeCompare(
-                                                            b.facility_type_group_name,
-                                                        ),
+                                                        b.facility_type_children.length >
+                                                        a.facility_type_children.length
+                                                            ? -1
+                                                            : 1,
                                                     ) || []
                                                 )?.map(group => {
                                                     return (
@@ -1037,7 +1114,7 @@ export const BookableSpacesManageFacilities = ({
                                                     );
                                                 })}
                                             </Grid>
-                                        </>
+                                        </TabPanel>
                                     )}
                             </>
                         );
@@ -1059,7 +1136,13 @@ export const BookableSpacesManageFacilities = ({
                     />
                 </div>
             </dialog>
-            <StyledMainDialog id={'popupDialog'} closedby="any" data-testid="main-dialog">
+            <StyledMainDialog
+                id={'popupDialog'}
+                closedby="any"
+                data-testid="main-dialog"
+                style={{ marginTop: '21rem' }} // move it up so it covers the controls, to discourage them accidentally leaving a half done dialog
+                // note: it moves on different widths
+            >
                 <form>
                     <div id="dialogBody" />
                     <div id="dialogFooter" className={'dialogFooter'}>
@@ -1078,9 +1161,9 @@ export const BookableSpacesManageFacilities = ({
                             </div>
                             <div>
                                 <StyledSecondaryButton
+                                    id="cancelButton"
                                     className={'secondary'}
                                     children={'Cancel'}
-                                    onClick={closeDialog}
                                     data-testid="dialog-cancel-button"
                                 />
                                 <StyledPrimaryButton

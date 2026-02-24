@@ -650,7 +650,7 @@ export const BookableSpacesManageSpaces = ({
                                     htmlFor="filter-by-floor-input"
                                     disabled={!isLibrarySelected}
                                 >
-                                    By floor
+                                    By level
                                 </InputLabel>
                                 <Select
                                     id="filter-by-floor"
@@ -663,7 +663,7 @@ export const BookableSpacesManageSpaces = ({
                                     onChange={selectFilter('floor')}
                                     inputProps={{
                                         id: 'filter-by-floor-input',
-                                        title: 'Filter the displayed Spaces by floor',
+                                        title: 'Filter the displayed Spaces by level',
                                     }}
                                     disabled={!isLibrarySelected}
                                 >

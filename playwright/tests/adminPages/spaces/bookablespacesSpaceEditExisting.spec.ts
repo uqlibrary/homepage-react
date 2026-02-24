@@ -62,11 +62,20 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toHaveValue('Westernmost corner');
         await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Westernmost corner, 2nd Floor');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Walter Harrison Law Library');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Forgan Smith Building');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('(Building 0001)');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('St Lucia Campus');
+        await expect(page.getByTestId(`add-space-pretty-location`)).toBeVisible();
+        await expect(page.getByTestId(`add-space-pretty-location`).locator('.location-precise')).toContainText(
+            'Westernmost corner',
+        );
+        await expect(page.getByTestId(`add-space-pretty-location`).locator('.location-floor')).toContainText('Level 2');
+        await expect(page.getByTestId(`add-space-pretty-location`).locator('.location-library')).toContainText(
+            'Walter Harrison Law Library',
+        );
+        await expect(page.getByTestId(`add-space-pretty-location`).locator('.location-building')).toContainText(
+            'Forgan Smith Building (0001)',
+        );
+        await expect(page.getByTestId(`add-space-pretty-location`).locator('.location-campus')).toContainText(
+            'St Lucia',
+        );
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
@@ -141,28 +150,26 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TABS_LOCATION_HOURS).click();
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('PACE');
+        await expect(page.getByTestId('add-space-select-campus')).toContainText('Dutton Park');
         await expect(page.getByTestId('add-space-select-library').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-library')).toContainText(
-            'Pharmacy Australia Centre of Excellence',
-        );
+        await expect(page.getByTestId('add-space-select-library')).toContainText('Dutton Park Health Sciences');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText(
-            'Pharmacy Australia Centre of Excellence - 65',
-        );
+        await expect(page.getByTestId('add-space-select-floor')).toContainText('Dutton Park Health Sciences - 65');
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeEmpty();
 
         await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('6th Floor');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText(
-            'Pharmacy Australia Centre of Excellence',
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-precise')).not.toBeVisible();
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-floor')).toContainText('Level 6');
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-library')).toContainText(
+            'Dutton Park Health Sciences',
         );
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText(
-            'Pharmacy Australia Centre of Excellence',
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-building')).toContainText(
+            'Pharmacy Australia Centre of Excellence (870)',
         );
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('(Building 870)');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('PACE Campus');
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-campus')).toContainText(
+            'Dutton Park',
+        );
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-springshare-id')).toContainText('Dutton Park Health Science');
@@ -238,11 +245,21 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toHaveValue('Eastern corner');
         await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Eastern corner, 1st Floor');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('imaginary Liveris Library');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Andrew N. Liveris');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('(Building 0046)');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('St Lucia Campus');
+
+        await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-precise')).toContainText(
+            'Eastern corner',
+        );
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-floor')).toContainText('Level 1');
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-library')).toContainText(
+            'imaginary Liveris Library',
+        );
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-building')).toContainText(
+            'Andrew N. Liveris (0046)',
+        );
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-campus')).toContainText(
+            'St Lucia',
+        );
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-springshare-id')).toContainText(
@@ -699,7 +716,7 @@ test.describe('Spaces Admin - edit space', () => {
             .click();
         await page
             .getByRole('combobox', {
-                name: 'Floor * 1 [Library Warehouse',
+                name: 'Level * 1 [Library Warehouse',
             })
             .click();
         await page

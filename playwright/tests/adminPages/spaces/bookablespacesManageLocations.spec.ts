@@ -507,11 +507,11 @@ test.describe('Spaces Location admin', () => {
             await expect(dialog.getByTestId('building-number').locator('input')).toHaveValue('0001');
 
             const floorList = dialog.getByTestId('library-floor-list');
-            await expect(floorList.locator('h3')).toContainText('Floors - Choose ground floor:');
+            await expect(floorList.locator('h3')).toContainText('Levels - Choose ground floor:');
             await expect(floorList).toBeVisible();
             await expect(floorList.locator('ul > *')).toHaveCount(3);
-            await expect(floorList.locator('ul li:first-of-type label')).toContainText('Floor 2');
-            await expect(floorList.locator('ul li:nth-of-type(2) label')).toContainText('Floor 3A');
+            await expect(floorList.locator('ul li:first-of-type label')).toContainText('Level 2');
+            await expect(floorList.locator('ul li:nth-of-type(2) label')).toContainText('Level 3A');
             await expect(floorList.locator('ul li:last-of-type label')).toContainText('None');
             await expect(floorList.locator('ul li:last-of-type input')).toBeChecked();
 
@@ -726,7 +726,7 @@ test.describe('Spaces Location admin', () => {
             await assertCanOpenAddFloorDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
-            await expect(dialog.getByTestId('floor-name').locator('label')).toContainText('New floor name');
+            await expect(dialog.getByTestId('floor-name').locator('label')).toContainText('New level name');
             await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
 
             await expect(dialog.getByTestId('dialog-delete-button')).not.toBeVisible();
@@ -757,7 +757,7 @@ test.describe('Spaces Location admin', () => {
                 .fill('new name');
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Floor added');
+            await assertToastHasMessage(page, 'Level added');
             // cant assert change happens as mock list reloads
 
             const expectedValues = {
@@ -790,7 +790,7 @@ test.describe('Spaces Location admin', () => {
                 .setChecked(true);
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Floor added');
+            await assertToastHasMessage(page, 'Level added');
             // cant assert change happens as mock list reloads
 
             const expectedValues = {
@@ -810,7 +810,7 @@ test.describe('Spaces Location admin', () => {
 
             await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
             await expect(dialog.getByTestId('mark-ground-floor').locator('label')).toContainText(
-                'Current ground floor is Floor 1',
+                'Current ground floor is Level 1',
             );
 
             await dialog
@@ -823,7 +823,7 @@ test.describe('Spaces Location admin', () => {
                 .setChecked(true);
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Floor added');
+            await assertToastHasMessage(page, 'Level added');
             // cant assert change happens as mock list reloads
 
             const expectedValues = {
@@ -862,8 +862,8 @@ test.describe('Spaces Location admin', () => {
             await assertCanOpenEditFloorDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
-            await expect(dialog.locator('h2')).toContainText('Edit floor details');
-            await expect(dialog.getByTestId('floor-name').locator('label')).toContainText('Floor name');
+            await expect(dialog.locator('h2')).toContainText('Edit level details');
+            await expect(dialog.getByTestId('floor-name').locator('label')).toContainText('Level name');
             await expect(dialog.getByTestId('floor-name').locator('input')).toHaveValue('2');
 
             await expect(dialog.getByTestId('dialog-delete-button')).toBeVisible();
@@ -895,7 +895,7 @@ test.describe('Spaces Location admin', () => {
             await expect(page.getByTestId('confirmation-dialog')).not.toBeVisible(); // confirmation dialog has closed
             await expect(mainDialog).toBeVisible(); // but the main dialog is still open
             await expect(mainDialog.locator('h2')).toBeVisible();
-            await expect(mainDialog.locator('h2')).toContainText('Edit floor details'); // and is the expected dialog
+            await expect(mainDialog.locator('h2')).toContainText('Edit level details'); // and is the expected dialog
         });
         test('delete floor dialog is accessible', async ({ page }) => {
             await assertCanOpenEditFloorDialog(page, 1);
@@ -921,7 +921,7 @@ test.describe('Spaces Location admin', () => {
             await expect(confirmationDialog.getByTestId('confirmation-dialog-accept-button')).toContainText('Yes');
             await confirmationDialog.getByTestId('confirmation-dialog-accept-button').click();
 
-            await assertToastHasMessage(page, 'Floor 2 in Walter Harrison Law Library deleted');
+            await assertToastHasMessage(page, 'Level 2 in Walter Harrison Law Library deleted');
             await expect(page.getByTestId('confirmation-dialog')).not.toBeVisible(); // conf dialog closed
             await expect(mainDialog.locator('h2')).not.toBeVisible(); // the main dialog closed
             // cant assert change happens as mock list reloads

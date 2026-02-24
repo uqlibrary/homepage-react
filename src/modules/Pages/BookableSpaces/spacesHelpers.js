@@ -20,27 +20,28 @@ export const isInt = value => {
     return !isNaN(value) && (x | 0) === x;
 };
 
+export const getPrefixedFloorName = floorName => {
+    return floorName.startsWith('Level ') ? floorName : `Level ${floorName}`;
+};
 export function getFriendlyFloorName(bookableSpace) {
-    let floorName = bookableSpace?.space_floor_name;
     if (!!bookableSpace?.space_is_ground_floor) {
-        floorName = 'Ground floor';
-    } else if (isInt(bookableSpace?.space_floor_name)) {
-        // some floors are like "2A" so can't be made an ordinal number
-        const floorNumberAsOrdinal =
-            bookableSpace?.space_floor_name + getOrdinalSuffixFor(bookableSpace?.space_floor_name);
-        floorName = `${floorNumberAsOrdinal} Floor`;
+        return 'Ground floor';
     }
-
-    return !!bookableSpace?.space_precise ? `${bookableSpace?.space_precise}, ${floorName}` : floorName;
+    return getPrefixedFloorName(bookableSpace?.space_floor_name);
 }
 
 export function getFriendlyLocationDescription(bookableSpace) {
     return (
         <>
-            <div>{getFriendlyFloorName(bookableSpace)}</div>
-            {bookableSpace?.space_library_name && <div>{bookableSpace?.space_library_name}</div>}
-            <div>{`${bookableSpace?.space_building_name} (Building ${bookableSpace?.space_building_number})`}</div>
-            <div>{`${bookableSpace?.space_campus_name} Campus`}</div>
+            <div className="location-space location-campus">{`${bookableSpace?.space_campus_name}`}</div>
+            <div className="location-space location-building">{`${bookableSpace?.space_building_name} (${bookableSpace?.space_building_number})`}</div>
+            <div className="location-space location-library">
+                {bookableSpace?.space_library_name && bookableSpace?.space_library_name}{' '}
+                <span className="location-floor">{getFriendlyFloorName(bookableSpace)}</span>
+            </div>
+            {!!bookableSpace?.space_precise ? (
+                <div className="location-space location-precise">{bookableSpace?.space_precise}</div>
+            ) : null}
         </>
     );
 }

@@ -69,25 +69,24 @@ test.describe('Spaces Admin - add new space', () => {
         await page.getByTestId('spaces-form-next-button').click(); // to locations
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('PACE');
+        await expect(page.getByTestId('add-space-select-campus')).toContainText('Dutton Park');
         await expect(page.getByTestId('add-space-select-library').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-library')).toContainText(
-            'Pharmacy Australia Centre of Excellence',
-        );
+        await expect(page.getByTestId('add-space-select-library')).toContainText('Dutton Park Health Sciences');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText(
-            'Pharmacy Australia Centre of Excellence - 65',
-        );
+        await expect(page.getByTestId('add-space-select-floor')).toContainText('Dutton Park Health Sciences - 65');
+
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('6th Floor');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText(
-            'Pharmacy Australia Centre of Excellence',
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-floor')).toContainText('Level 6');
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-library')).toContainText(
+            'Dutton Park Health Sciences',
         );
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText(
-            'Pharmacy Australia Centre of Excellence (Building 870)',
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-building')).toContainText(
+            'Pharmacy Australia Centre of Excellence (870)',
         );
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('PACE Campus');
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-campus')).toContainText(
+            'Dutton Park',
+        );
         await expect(page.getByTestId('add-space-springshare-id')).toContainText('Dutton Park Health Sciences');
 
         const mapTab = (tabId: number) =>
@@ -228,9 +227,14 @@ test.describe('Spaces Admin - add new space', () => {
         await inputField('add-space-precise-location', page).fill('Northwest corner');
 
         await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Northwest corner, 2nd Floor');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Library Warehouse');
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Gatton Campus');
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-precise')).toContainText(
+            'Northwest corner',
+        );
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-floor')).toContainText('Level 2');
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-building')).toContainText(
+            'Library Warehouse (8248)',
+        );
+        await expect(page.getByTestId('add-space-pretty-location').locator('.location-campus')).toContainText('Gatton');
 
         // change springshare hours location
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
@@ -432,11 +436,11 @@ test.describe('Spaces Admin - add new space', () => {
 
         // the page loads with the expected campus-building-floor
         await expect(campusSelector.locator('input')).toBeVisible();
-        await expect(campusSelector).toContainText('PACE');
+        await expect(campusSelector).toContainText('Dutton Park');
         await expect(librarySelector.locator('input')).toBeVisible();
-        await expect(librarySelector).toContainText('Pharmacy Australia Centre of Excellence');
+        await expect(librarySelector).toContainText('Dutton Park Health Sciences');
         await expect(floorSelector.locator('input')).toBeVisible();
-        await expect(floorSelector).toContainText('Pharmacy Australia Centre of Excellence - 65');
+        await expect(floorSelector).toContainText('Dutton Park Health Sciences - 65');
         await expect(springshareSelector).toContainText('Dutton Park Health Sciences');
 
         await expect(aboutPageInputField).toContainText(
