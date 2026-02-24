@@ -1002,14 +1002,13 @@ export const BookableSpacesManageFacilities = ({
                                             value="editGroupsTab"
                                             className={topmenu === tabOnLoad ? 'TabSelected' : 'TabUnselected'}
                                             label="Edit groups"
-                                            {...a11yProps('1')}
+                                            {...a11yProps('0')}
                                             data-testid="facility-group-edit"
                                         />
                                         <Tab
                                             className={topmenu === 'addNewGroupTab' ? 'TabSelected' : 'TabUnselected'}
                                             value="addNewGroupTab"
                                             label="Add new Group"
-                                            {...a11yProps('0')}
                                             onClick={openDialogAddGroup}
                                             data-testid="facility-group-add"
                                         />
@@ -1020,7 +1019,7 @@ export const BookableSpacesManageFacilities = ({
                                                     topmenu === 'sortGroupsTab' ? 'TabSelected' : 'TabUnselected'
                                                 }
                                                 label="Order groups"
-                                                {...a11yProps('1')}
+                                                {...a11yProps('2')}
                                                 data-testid="facility-group-order"
                                             />
                                         )}
@@ -1040,7 +1039,7 @@ export const BookableSpacesManageFacilities = ({
                                     value={topmenu}
                                     index="sortGroupsTab" // must match 'value' in Tabs
                                     label="topmenu"
-                                    {...reverseA11yProps('0')}
+                                    {...reverseA11yProps('2')}
                                 >
                                     <Typography component={'h3'} variant={'h6'}>
                                         Sort Filter group types
