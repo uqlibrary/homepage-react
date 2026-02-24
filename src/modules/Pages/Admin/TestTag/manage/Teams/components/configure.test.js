@@ -8,21 +8,21 @@ describe('RenderBox component from helpers', () => {
         const props = {
             value: true,
             checked: true,
-            id: 'can_admin_cb-input',
+            id: 'team_current_flag_cb-input',
             inputProps: { 'data-testid': 'data-test-id' },
             onChange: jest.fn(),
         };
 
         const data = {
-            can_admin_cb: true,
+            team_current_flag_cb: true,
             isSelf: true,
         };
 
         const row = {
-            can_admin_cb: true,
+            team_current_flag_cb: true,
             isSelf: true,
         };
-        const { getByTestId } = render(<>{config.fields.can_admin_cb.component(props, data, row)}</>);
+        const { getByTestId } = render(<>{config.fields.team_current_flag_cb.component(props, data, row)}</>);
 
         expect(getByTestId('data-test-id')).toHaveAttribute('disabled');
     });

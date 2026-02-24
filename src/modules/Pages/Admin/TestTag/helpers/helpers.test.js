@@ -1,4 +1,11 @@
-import { capitaliseLeadingChar, isEmptyStr, isEmptyObject, createLocationString, isInvalidUUID } from './helpers';
+import {
+    capitaliseLeadingChar,
+    isEmptyStr,
+    isEmptyObject,
+    createLocationString,
+    isInvalidUUID,
+    isInvalidTeamSlug,
+} from './helpers';
 describe('helpers', () => {
     it('capitaliseLeadingChar operates correctly', () => {
         expect(capitaliseLeadingChar('test')).toEqual('Test');
@@ -35,5 +42,12 @@ describe('helpers', () => {
         expect(isInvalidUUID('A')).toEqual(true);
         expect(isInvalidUUID('a')).toEqual(false);
         expect(isInvalidUUID('123456789012345678901')).toEqual(true);
+    });
+    it('isInvalidTeamSlug operates correctly', () => {
+        expect(isInvalidTeamSlug('')).toEqual(true);
+        expect(isInvalidTeamSlug(null)).toEqual(true);
+        expect(isInvalidTeamSlug(undefined)).toEqual(true);
+        expect(isInvalidTeamSlug('abcdefghijk')).toEqual(true); // 11 chars, exceeds 10
+        expect(isInvalidTeamSlug('abcdefghij')).toEqual(false); // exactly 10 chars
     });
 });

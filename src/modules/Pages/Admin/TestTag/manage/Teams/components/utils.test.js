@@ -4,175 +4,104 @@ describe('utils', () => {
     it('transforms rows correctly', () => {
         const inputRow = [
             {
-                privileges: {
-                    can_admin: 1,
-                    can_inspect: 0,
-                    can_alter: 1,
-                    can_see_reports: 1,
-                },
-                user_current_flag: 0,
+                team_slug: 'team-a',
+                team_display_name: 'Team A',
+                team_current_flag: 0,
             },
             {
-                privileges: {
-                    can_admin: 0,
-                    can_inspect: 1,
-                    can_alter: 0,
-                    can_see_reports: 0,
-                },
-                user_current_flag: 1,
+                team_slug: 'team-b',
+                team_display_name: 'Team B',
+                team_current_flag: 1,
             },
         ];
 
         const expectedOutput = [
             {
-                privileges: {
-                    can_admin: 1,
-                    can_inspect: 0,
-                    can_alter: 1,
-                    can_see_reports: 1,
-                },
-                can_admin_cb: true,
-                can_inspect_cb: false,
-                can_alter_cb: true,
-                can_see_reports_cb: true,
-                user_current_flag_cb: false,
-                can_admin: 'Yes',
-                can_inspect: 'No',
-                can_alter: 'Yes',
-                can_see_reports: 'Yes',
-                user_current_flag: 'No',
+                team_slug: 'team-a',
+                team_display_name: 'Team A',
+                team_current_flag_cb: false,
+                team_current_flag: 'No',
             },
             {
-                privileges: {
-                    can_admin: 0,
-                    can_inspect: 1,
-                    can_alter: 0,
-                    can_see_reports: 0,
-                },
-                user_current_flag: 'Yes',
-                can_admin_cb: false,
-                can_inspect_cb: true,
-                can_alter_cb: false,
-                can_see_reports_cb: false,
-                user_current_flag_cb: true,
-                can_admin: 'No',
-                can_inspect: 'Yes',
-                can_alter: 'No',
-                can_see_reports: 'No',
+                team_slug: 'team-b',
+                team_display_name: 'Team B',
+                team_current_flag_cb: true,
+                team_current_flag: 'Yes',
             },
         ];
 
         const transformedRows = transformRow(inputRow);
         expect(transformedRows).toEqual(expectedOutput);
     });
+
     it('transforms Add request correctly', () => {
         const inputRequest = {
-            actions_count: 5,
-            id: 123,
-            department_display_name: 'Department A',
-            privileges: {
-                can_admin_cb: true,
-                can_inspect_cb: false,
-                can_alter_cb: true,
-                can_see_reports_cb: false,
-            },
-            user_current_flag_cb: true,
-            can_admin: 'Yes',
-            can_inspect: 'No',
-            can_alter: 'Yes',
-            can_see_reports: 'No',
+            team_slug: 'team-a',
+            team_display_name: 'Team A',
+            team_current_flag_cb: true,
         };
 
         const expectedOutput = {
-            department_display_name: 'Department A',
-            id: 123,
-            privileges: {
-                can_admin: 0,
-                can_inspect: 0,
-                can_alter: 0,
-                can_see_reports: 0,
-            },
-            user_current_flag: 1,
-            user_team: 'WSS',
-            user_licence_number: '',
+            team_slug: 'team-a',
+            team_display_name: 'Team A',
+            team_current_flag: 1,
         };
 
-        const transformedRequest = transformAddRequest(inputRequest, 'WSS');
+        const transformedRequest = transformAddRequest(inputRequest);
         expect(transformedRequest).toEqual(expectedOutput);
 
-        inputRequest.can_admin_cb = true;
-        inputRequest.can_inspect_cb = true;
-        inputRequest.can_alter_cb = true;
-        inputRequest.can_see_reports_cb = true;
-
-        expectedOutput.privileges = {
-            can_admin: 1,
-            can_inspect: 1,
-            can_alter: 1,
-            can_see_reports: 1,
+        // Test with team_current_flag_cb = false
+        const inputRequest2 = {
+            team_slug: 'team-b',
+            team_display_name: 'Team B',
+            team_current_flag_cb: false,
         };
-        expectedOutput.user_current_flag = 0;
-        expectedOutput.user_team = 'PF';
-        const transformedRequest2 = transformAddRequest(inputRequest, 'PF');
-        expect(transformedRequest2).toEqual(expectedOutput);
+
+        const expectedOutput2 = {
+            team_slug: 'team-b',
+            team_display_name: 'Team B',
+            team_current_flag: 0,
+        };
+
+        const transformedRequest2 = transformAddRequest(inputRequest2);
+        expect(transformedRequest2).toEqual(expectedOutput2);
     });
+
     it('transforms update request correctly', () => {
         const inputRequest = {
-            actions_count: 5,
-            id: 123,
-            department_display_name: 'Department A',
-            user_department: 'UQL',
-            user_team: 'SPACES',
-            privileges: {
-                can_admin_cb: true,
-                can_inspect_cb: false,
-                can_alter_cb: true,
-                can_see_reports_cb: false,
-            },
-            user_current_flag_cb: true,
-            can_admin: 'Yes',
-            can_inspect: 'No',
-            can_alter: 'Yes',
-            can_see_reports: 'No',
+            users_count: 5,
+            team_slug: 'team-a',
+            team_display_name: 'Team A',
+            team_current_flag_cb: true,
         };
 
         const expectedOutput = {
-            user_team: 'SPACES',
-            privileges: {
-                can_admin: 0,
-                can_inspect: 0,
-                can_alter: 0,
-                can_see_reports: 0,
-                can_admin_cb: true,
-                can_alter_cb: true,
-                can_inspect_cb: false,
-                can_see_reports_cb: false,
-            },
-            user_current_flag: 1,
+            team_slug: 'team-a',
+            team_display_name: 'Team A',
+            team_current_flag_cb: true,
+            team_current_flag: 1,
         };
 
         const transformedRequest = transformUpdateRequest(inputRequest);
         expect(transformedRequest).toEqual(expectedOutput);
 
-        inputRequest.can_admin_cb = true;
-        inputRequest.can_inspect_cb = true;
-        inputRequest.can_alter_cb = true;
-        inputRequest.can_see_reports_cb = true;
-
-        expectedOutput.privileges = {
-            can_admin: 1,
-            can_inspect: 1,
-            can_alter: 1,
-            can_see_reports: 1,
-            can_admin_cb: true,
-            can_alter_cb: true,
-            can_inspect_cb: false,
-            can_see_reports_cb: false,
+        // Test with team_current_flag_cb = false
+        const inputRequest2 = {
+            users_count: 3,
+            team_slug: 'team-b',
+            team_display_name: 'Team B',
+            team_current_flag_cb: false,
         };
-        expectedOutput.user_current_flag = 0;
 
-        const transformedRequest2 = transformUpdateRequest(inputRequest);
-        expect(transformedRequest2).toEqual(expectedOutput);
+        const expectedOutput2 = {
+            team_slug: 'team-b',
+            team_display_name: 'Team B',
+            team_current_flag_cb: false,
+            team_current_flag: 0,
+        };
+
+        const transformedRequest2 = transformUpdateRequest(inputRequest2);
+        expect(transformedRequest2).toEqual(expectedOutput2);
     });
 
     const emptyActionState = {
@@ -181,68 +110,77 @@ describe('utils', () => {
         isDelete: false,
         title: '',
         row: {},
-        props: {},
     };
 
     it('handles add, edit, delete, clear action correctly', () => {
+        // add
         const addAction = {
             type: 'add',
-            user_id: 'Auto',
-            user_uid: '',
-            user_name: '',
-            user_current_flag_cb: true,
-            user_licence_number: '',
+            title: 'Add Team',
         };
 
-        const expectedOutput = {
+        const expectedAddOutput = {
             isAdd: true,
             isEdit: false,
             isDelete: false,
+            title: 'Add Team',
             row: {
-                user_id: 'Auto',
-                user_uid: '',
-                user_name: '',
-                user_current_flag_cb: true,
-                user_licence_number: '',
+                team_slug: '',
+                team_display_name: '',
+                team_current_flag_cb: true,
             },
-            props: {
-                user_current_flag_cb: true,
-                user_id: 'Auto',
-                user_licence_number: '',
-                user_name: '',
-                user_uid: '',
-            },
+            props: {},
         };
-        // add
+
         const reducedState = actionReducer(emptyActionState, addAction);
-        expect(reducedState).toEqual(expectedOutput);
+        expect(reducedState).toEqual(expectedAddOutput);
+
         // edit
-        addAction.type = 'edit';
-        addAction.row = { user_id: 1 };
-        addAction.title = 'edit test';
-        expectedOutput.isAdd = false;
-        expectedOutput.isEdit = true;
-        expectedOutput.row = { id: 1, user_id: 1 };
-        expectedOutput.title = 'edit test';
-        const editState = actionReducer(emptyActionState, addAction);
-        expect(editState).toEqual(expectedOutput);
+        const editAction = {
+            type: 'edit',
+            title: 'Edit Team',
+            row: { team_slug: 'team-a', team_display_name: 'Team A' },
+        };
+
+        const expectedEditOutput = {
+            isAdd: false,
+            isEdit: true,
+            isDelete: false,
+            title: 'Edit Team',
+            row: { team_slug: 'team-a', team_display_name: 'Team A', id: 'team-a' },
+            props: {},
+        };
+
+        const editState = actionReducer(emptyActionState, editAction);
+        expect(editState).toEqual(expectedEditOutput);
+
         // delete
-        addAction.type = 'delete';
-        expectedOutput.isDelete = true;
-        expectedOutput.isEdit = false;
-        expectedOutput.row = { user_id: 1 };
-        expect(actionReducer(emptyActionState, addAction)).toEqual(expectedOutput);
+        const deleteAction = {
+            type: 'delete',
+            title: 'Delete Team',
+            row: { team_slug: 'team-a', team_display_name: 'Team A' },
+        };
+
+        const expectedDeleteOutput = {
+            isAdd: false,
+            isEdit: false,
+            isDelete: true,
+            title: 'Delete Team',
+            row: { team_slug: 'team-a', team_display_name: 'Team A' },
+            props: {},
+        };
+
+        expect(actionReducer(emptyActionState, deleteAction)).toEqual(expectedDeleteOutput);
+
         // clear
-        addAction.type = 'clear';
-        delete emptyActionState.props;
-        expect(actionReducer(emptyActionState, addAction)).toEqual(emptyActionState);
+        const clearAction = { type: 'clear' };
+        expect(actionReducer(emptyActionState, clearAction)).toEqual(emptyActionState);
     });
 
     it('handles unknown action correctly', () => {
         const unknownAction = {
             type: 'unknown',
             title: 'Unknown Action',
-            additionalProp: 'Additional',
         };
 
         expect(() => actionReducer(emptyActionState, unknownAction)).toThrow("Unknown action 'unknown'");
