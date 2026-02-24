@@ -1092,9 +1092,10 @@ export const BookableSpacesManageFacilities = ({
                                             <Grid container>
                                                 {(
                                                     facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
-                                                        a.facility_type_group_name.localeCompare(
-                                                            b.facility_type_group_name,
-                                                        ),
+                                                        b.facility_type_children.length >
+                                                        a.facility_type_children.length
+                                                            ? -1
+                                                            : 1,
                                                     ) || []
                                                 )?.map(group => {
                                                     return (
