@@ -24,6 +24,7 @@ export { default as testTagAssetsByFiltersReducer } from './testTagAssetsByFilte
 export { default as testTagBulkAssetUpdateReducer } from './testTagBulkAssetUpdateReducer';
 export { default as testTagInspectionDetailsUpdateReducer } from './testTagInspectionDetailsUpdateReducer';
 export { default as testTagUserListReducer } from './testTagUserListReducer';
+export { default as testTagTeamListReducer } from './testTagTeamListReducer';
 export { default as dlorListReducer } from './dlorListReducer';
 export { default as dlorFilterListReducer } from './dlorFilterListReducer';
 export { default as dlorGetSingleReducer } from './dlorGetSingleReducer';

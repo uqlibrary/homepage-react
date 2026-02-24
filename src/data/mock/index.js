@@ -54,6 +54,8 @@ import test_tag_tagged_building_list from './data/records/testAndTag/test_tag_ta
 import test_tag_assets_report_assets from './data/records/testAndTag/test_tag_assets_report_assets';
 import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine';
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
+import test_tag_team_list_uql from './data/records/testAndTag/test_tag_team_list_uql';
+import test_tag_team_list_pf from './data/records/testAndTag/test_tag_team_list_pf';
 
 import dlor_all from './data/records/dlor/dlor_all';
 import dlor_filter_list from './data/records/dlor/dlor_filter_list';
@@ -855,7 +857,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     })
     .onPut(/dlor\/admin\/schedule\/3/)
     .reply(() => {
-        return [500, {'message': 'Simulated server error on schedule ID 3'}];
+        return [500, { message: 'Simulated server error on schedule ID 3' }];
     })
     .onPut(/dlor\/admin\/schedule\/\d+/)
     .reply(() => {
@@ -863,7 +865,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     })
     .onDelete(/dlor\/admin\/schedule\/3/)
     .reply(() => {
-        return [500, {'message': 'Simulated server error on schedule ID 3'}];
+        return [500, { message: 'Simulated server error on schedule ID 3' }];
     })
     .onDelete(/dlor\/admin\/schedule\/\d+/)
     .reply(() => {
@@ -1425,6 +1427,8 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DETAILS_API('.*').apiUrl)))
     .reply(() => [200, { status: 'OK' }])
+
+    // users
     .onGet(routes.TEST_TAG_USER_LIST_API().apiUrl)
     .reply(withDelay([200, test_tag_user_list]))
     .onPut(/test-and-tag\/user\/5/)
@@ -1458,6 +1462,42 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ]),
     )
+
+    // teams
+    .onGet(routes.TEST_TAG_TEAM_LIST_API().apiUrl)
+    .reply(withDelay([200, test_tag_team_list_uql]))
+    .onPut(/test-and-tag\/team\/testfail/)
+    .reply(withDelay([400, {}]))
+    .onPut(/test-and-tag\/team\/[a-zA-Z0-9]+/)
+    .reply(
+        withDelay([
+            200,
+            {
+                status: 'OK',
+            },
+        ]),
+    )
+    .onPost(/test-and-tag\/team/)
+    .reply(
+        withDelay([
+            200,
+            {
+                status: 'OK',
+            },
+        ]),
+    )
+    .onDelete(/test-and-tag\/team\/testfail/)
+    .reply(withDelay([400, {}]))
+    .onDelete(/test-and-tag\/team\/[a-zA-Z0-9]+/)
+    .reply(
+        withDelay([
+            200,
+            {
+                status: 'OK',
+            },
+        ]),
+    )
+
     .onGet('https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json')
     .reply(() => {
         if (responseType === 'drupalError') {

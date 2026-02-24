@@ -27,6 +27,7 @@ export const flattedPathConfigExact = [
     '/admin/masquerade/',
     '/admin/testntag',
     '/admin/testntag/manage/users',
+    '/admin/testntag/manage/teams',
     '/admin/testntag/manage/assettypes',
     '/admin/testntag/manage/locations',
     '/admin/testntag/manage/inspectiondevices',
@@ -363,6 +364,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.testntagmanageusers,
             element: <components.TestTagManageUsers />,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagmanageteams,
+            element: <components.TestTagManageTeams />,
             exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
