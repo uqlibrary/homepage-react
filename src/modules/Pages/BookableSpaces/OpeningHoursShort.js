@@ -42,10 +42,20 @@ export const OpeningHoursShort = ({ weeklyHoursLoading, weeklyHoursError, weekly
 
     const todaysHours = openingHoursList.find(o => o.dayName === 'Today');
 
+    const spaceOpeningHoursMessage = () =>
+        !!bookableSpace?.space_opening_hours_override ? (
+            <>
+                <b>{bookableSpace?.space_library_name} opening hours</b> Today: {todaysHours.rendered}{' '}
+            </>
+        ) : (
+            <>
+                <b>Opening hours</b> Today: {todaysHours.rendered}{' '}
+            </>
+        );
     return (
         <>
             <StyledParagraphTypography component={'p'}>
-                <b>{bookableSpace?.space_library_name} opening hours</b> Today: {todaysHours.rendered}{' '}
+                {spaceOpeningHoursMessage()}
                 {bookableSpace?.space_opening_hours_override && `(${bookableSpace?.space_opening_hours_override})`}
             </StyledParagraphTypography>
         </>

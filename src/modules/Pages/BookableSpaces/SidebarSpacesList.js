@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import parse from 'html-react-parser';
 
 import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -109,39 +108,22 @@ const SidebarSpacesList = ({
                                 data-testid={`space-${bookableSpace?.space_id}`}
                                 // style={{ display: 'block' }}
                             >
-                                {showAllData ? (
-                                    <StyledStandardCard
-                                        fullHeight
-                                        title={`${bookableSpace?.space_name} - ${bookableSpace?.space_type}`}
-                                        style={{ marginRight: '0.5rem' }}
-                                        squareTop
-                                        subCard
-                                    >
-                                        <SpaceDetails
-                                            weeklyHours={weeklyHours}
-                                            weeklyHoursLoading={weeklyHoursLoading}
-                                            weeklyHoursError={weeklyHoursError}
-                                            bookableSpace={bookableSpace}
-                                            collapseable
-                                        />
-                                    </StyledStandardCard>
-                                ) : (
-                                    // <Button onClick={() => handleMapOpenButtonClick(location.id)}>
-                                    <StyledStandardCard
-                                        fullHeight
-                                        title={`${bookableSpace?.space_name} - ${bookableSpace?.space_type}`}
-                                        style={{ marginRight: '0.5rem' }}
-                                        squareTop
-                                        subCard
-                                    >
-                                        {bookableSpace?.space_description?.length > 0 && (
-                                            <div className="descriptionBlock">
-                                                {parse(bookableSpace?.space_description)}
-                                            </div>
-                                        )}
-                                    </StyledStandardCard>
-                                    // </Button>
-                                )}
+                                <StyledStandardCard
+                                    fullHeight
+                                    title={bookableSpace?.space_type}
+                                    style={{ marginRight: '0.5rem' }}
+                                    squareTop
+                                    subCard
+                                >
+                                    <SpaceDetails
+                                        weeklyHours={weeklyHours}
+                                        weeklyHoursLoading={weeklyHoursLoading}
+                                        weeklyHoursError={weeklyHoursError}
+                                        bookableSpace={bookableSpace}
+                                        collapsed
+                                        showAllData
+                                    />
+                                </StyledStandardCard>
                             </StyledBookableSpaceGridItem>
                         );
                     })}
