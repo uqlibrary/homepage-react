@@ -64,10 +64,10 @@ const Teams = ({ actions, teamListLoading, teamList, teamListError }) => {
     const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
-        const userID = request.user_id;
+        const teamSlug = request.team_slug;
         const wrappedRequest = transformUpdateRequest(request);
         actions
-            .updateTeam(userID, wrappedRequest)
+            .updateTeam(teamSlug, wrappedRequest)
             .then(() => {
                 openConfirmationAlert(locale.config.alerts.success(), 'success');
                 actions.loadTeamList();
@@ -85,10 +85,10 @@ const Teams = ({ actions, teamListLoading, teamList, teamListError }) => {
 
     const onRowDelete = React.useCallback(data => {
         setDialogueBusy(true);
-        const id = data.row.user_id;
+        const teamSlug = data.row.team_slug;
 
         actions
-            .deleteTeam(id)
+            .deleteTeam(teamSlug)
             .then(() => {
                 closeDialog();
                 openConfirmationAlert(locale.config.alerts.success(), 'success');

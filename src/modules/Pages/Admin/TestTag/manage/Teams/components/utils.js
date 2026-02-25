@@ -9,10 +9,14 @@ export const transformRow = row => {
 export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {} };
 
 export const transformUpdateRequest = request => {
-    delete request.users_count;
-
     request.team_current_flag = request?.team_current_flag_cb ? 1 : 0;
-
+    delete request.created_at;
+    delete request.id;
+    delete request.team_current_flag_cb;
+    delete request.team_department;
+    delete request.team_slug;
+    delete request.updated_at;
+    delete request.users_count;
     return request;
 };
 

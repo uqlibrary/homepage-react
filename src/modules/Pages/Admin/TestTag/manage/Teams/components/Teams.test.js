@@ -1,114 +1,91 @@
 import React from 'react';
-import Users from './Users';
+import Teams from './Teams';
 import { rtlRender, WithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
 import locale from '../../../testTag.locale';
 
 const actions = {
-    clearUserListError: jest.fn(),
-    loadUserList: jest.fn(() => Promise.resolve()),
-    addUser: jest.fn(() => Promise.resolve()),
-    updateUser: jest.fn(() => Promise.resolve()),
-    deleteUser: jest.fn(() => Promise.resolve()),
+    clearTeamListError: jest.fn(),
+    loadTeamList: jest.fn(() => Promise.resolve()),
+    addTeam: jest.fn(() => Promise.resolve()),
+    updateTeam: jest.fn(() => Promise.resolve()),
+    deleteTeam: jest.fn(() => Promise.resolve()),
 };
 
-const userList = [
+const user = {
+    department_display_name: 'Library',
+    team_current_flag: 1,
+    user_team: 'WSS',
+    team_display_name: 'Work Station Support',
+    user_id: 4,
+    user_licence_number: 'NOT LICENSED',
+    team_name: 'Reporting User',
+    team_slug: 'uqmanager',
+    privileges: {
+        can_admin: 1,
+        can_inspect: 0,
+        can_alter: 0,
+        can_see_reports: 1,
+    },
+    actions_count: 0,
+};
+
+const teamList = [
     {
-        department_display_name: 'Library',
-        user_current_flag: 1,
-        user_team: 'WSS',
-        team_display_name: 'Work Station Support',
-        user_id: 1,
-        user_licence_number: 'NOT LICENSED',
-        user_name: 'WSS Staff who can eg change locations but not inspect',
-        user_uid: 'uqjsmit',
-        privileges: {
-            can_admin: 0,
-            can_inspect: 0,
-            can_alter: 1,
-            can_see_reports: 0,
-        },
+        team_slug: 'SPACES',
+        team_department: 'UQL',
+        team_display_name: 'Spaces',
+        created_at: null,
+        updated_at: null,
+        team_current_flag: 1,
+        users_count: 1,
     },
     {
-        department_display_name: 'Library',
-        user_current_flag: 1,
-        user_team: 'WSS',
+        team_slug: 'WSS',
+        team_department: 'UQL',
         team_display_name: 'Work Station Support',
-        user_id: 2,
-        user_licence_number: '234567',
-        user_name: 'JTest user',
-        user_uid: 'uqtest1',
-        privileges: {
-            can_admin: 1,
-            can_inspect: 1,
-            can_alter: 1,
-            can_see_reports: 1,
-        },
-        actions_count: 8,
+        created_at: null,
+        updated_at: null,
+        team_current_flag: 1,
+        users_count: 15,
     },
     {
-        department_display_name: 'Library',
-        user_current_flag: 1,
-        user_team: 'WSS',
-        team_display_name: 'Work Station Support',
-        user_id: 4,
-        user_licence_number: 'NOT LICENSED',
-        user_name: 'Reporting User',
-        user_uid: 'uqmanager',
-        privileges: {
-            can_admin: 0,
-            can_inspect: 0,
-            can_alter: 0,
-            can_see_reports: 1,
-        },
-        actions_count: 0,
-    },
-    {
-        department_display_name: 'Library',
-        user_current_flag: 1,
-        user_team: 'WSS',
-        team_display_name: 'Work Station Support',
-        user_id: 5,
-        user_licence_number: '45678',
-        user_name: 'SecondTesting user',
-        user_uid: 'uqtest2',
-        privileges: {
-            can_admin: 1,
-            can_inspect: 1,
-            can_alter: 1,
-            can_see_reports: 1,
-        },
-        actions_count: 0,
+        team_slug: 'TESTDEL',
+        team_department: 'UQL',
+        team_display_name: 'Test deletion',
+        created_at: null,
+        updated_at: null,
+        team_current_flag: 1,
+        users_count: 0,
     },
 ];
 
-const userData = userList[3];
 function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
         accountReducer: {
             accountLoading: false,
-            account: { tnt: userData },
+            account: { tnt: user },
         },
         ...state,
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
             <WithRouter>
-                <Users
+                <Teams
                     id="test"
                     actions={actions}
-                    userListLoading={false}
-                    userList={userList}
-                    userListError={null}
+                    teamListLoading={false}
+                    teamList={teamList}
+                    teamListError={null}
                     {...props}
                 />
             </WithRouter>
         </WithReduxStore>,
     );
 }
-describe('Manage Users', () => {
+describe('Manage Teams', () => {
     beforeEach(() => {
         jest.spyOn(console, 'error');
         console.error.mockImplementation(() => null);
@@ -119,167 +96,130 @@ describe('Manage Users', () => {
     });
     it('renders component standard', () => {
         const { getByText } = setup({ actions: actions });
-        expect(
-            getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
-        ).toBeInTheDocument();
-        expect(getByText('uqjsmit')).toBeInTheDocument();
+        expect(getByText(locale.pages.manage.teams.header.pageSubtitle('', 'Library'))).toBeInTheDocument();
+        expect(getByText('SPACES')).toBeInTheDocument();
     });
-    it('catches error on LoadUserList', async () => {
-        actions.loadUserList = jest.fn(() => {
+    it('catches error on LoadteamList', async () => {
+        actions.loadteamList = jest.fn(() => {
             return Promise.reject('Testing Error');
         });
 
         const { getByText } = setup({ actions: actions });
         await waitFor(() => {
-            expect(
-                getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
-            ).toBeInTheDocument();
+            expect(getByText(locale.pages.manage.teams.header.pageSubtitle('', 'Library'))).toBeInTheDocument();
         });
-        expect(actions.loadUserList).rejects.toEqual('Testing Error');
+        expect(actions.loadteamList).rejects.toEqual('Testing Error');
     });
 
     it('Add User functions correctly', async () => {
-        actions.loadUserList = jest.fn(() => {
+        actions.loadteamList = jest.fn(() => {
             return Promise.resolve();
         });
         const { getByText, getByTestId } = setup({ actions: actions });
 
-        expect(
-            getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
-        ).toBeInTheDocument();
-        expect(getByText('uqjsmit')).toBeInTheDocument();
-        expect(getByTestId('user-management-data-table-toolbar-export-menu')).toBeInTheDocument();
+        expect(getByText(locale.pages.manage.teams.header.pageSubtitle('', 'Library'))).toBeInTheDocument();
+        expect(getByText('WSS')).toBeInTheDocument();
+        expect(getByTestId('team-management-data-table-toolbar-export-menu')).toBeInTheDocument();
         await act(async () => {
-            await fireEvent.click(getByTestId('user-management-data-table-toolbar-add-button'));
+            await fireEvent.click(getByTestId('team-management-data-table-toolbar-add-button'));
         });
 
         await waitFor(() => {
-            expect(getByTestId('user_uid-input')).toBeInTheDocument();
+            expect(getByTestId('team_slug-input')).toBeInTheDocument();
         });
         await act(async () => {
-            await fireEvent.change(getByTestId('user_uid-input'), { target: { value: 'uqtestuser' } });
-            await fireEvent.change(getByTestId('user_name-input'), { target: { value: 'TEST USER' } });
+            await fireEvent.change(getByTestId('team_slug-input'), { target: { value: 'TESTSLUG' } });
+            await fireEvent.change(getByTestId('team_display_name-input'), { target: { value: 'TEST NEW TEAM' } });
         });
-        // Check the disabled fields
-        expect(getByTestId('user_licence_number-input')).toHaveAttribute('disabled');
-        await act(async () => {
-            await fireEvent.click(getByTestId('can_inspect_cb-input'));
-            expect(getByTestId('user_licence_number-input')).toHaveAttribute('required');
-            await fireEvent.change(getByTestId('user_licence_number-input'), { target: { value: 'TEST LIC' } });
-        });
+
         // commit the change
         const expected = {
-            privileges: {
-                can_admin: 0,
-                can_alter: 0,
-                can_inspect: 1,
-                can_see_reports: 0,
-            },
-            user_current_flag: 1,
-            user_team: 'WSS',
-            user_licence_number: 'TEST LIC',
-            user_name: 'TEST USER',
-            user_uid: 'uqtestuser',
+            team_current_flag: 1,
+            team_display_name: 'TEST NEW TEAM',
+            team_slug: 'TESTSLUG',
         };
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
-            expect(actions.addUser).toHaveBeenCalledWith(expected);
+            expect(actions.addTeam).toHaveBeenCalledWith(expected);
         });
 
         // Check error condition for add
-        actions.addUser = jest.fn(() => Promise.reject('Test Error'));
+        actions.addTeam = jest.fn(() => Promise.reject('Test Error'));
         await act(async () => {
-            await fireEvent.click(getByTestId('user-management-data-table-toolbar-add-button'));
+            await fireEvent.click(getByTestId('team-management-data-table-toolbar-add-button'));
         });
 
         await waitFor(() => {
-            expect(getByTestId('user_uid-input')).toBeInTheDocument();
+            expect(getByTestId('team_slug-input')).toBeInTheDocument();
         });
         await act(async () => {
-            await fireEvent.change(getByTestId('user_uid-input'), { target: { value: 'uqtestuser' } });
-            await fireEvent.change(getByTestId('user_name-input'), { target: { value: 'TEST USER' } });
+            await fireEvent.change(getByTestId('team_slug-input'), { target: { value: 'TESTSLUG' } });
+            await fireEvent.change(getByTestId('team_display_name-input'), { target: { value: 'TEST NEW TEAM' } });
         });
 
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
-            expect(actions.addUser).rejects.toEqual('Test Error');
+            expect(actions.addTeam).rejects.toEqual('Test Error');
         });
     });
     it('Edit User functions correctly', async () => {
+        const selectedTeamSlug = teamList[1].team_slug;
         const { getByText, getByTestId } = setup({ actions: actions });
-        expect(
-            getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
-        ).toBeInTheDocument();
-        expect(getByText('uqjsmit')).toBeInTheDocument();
+        expect(getByText(locale.pages.manage.teams.header.pageSubtitle('', 'Library'))).toBeInTheDocument();
+        expect(getByText('WSS')).toBeInTheDocument();
+
         await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-1-edit-button'));
+            await fireEvent.click(getByTestId(`action_cell-${selectedTeamSlug}-edit-button`));
         });
         await waitFor(() => {
-            expect(getByTestId('user_uid-input')).toBeInTheDocument();
+            expect(getByTestId('team_display_name-input')).toBeInTheDocument();
         });
         await act(async () => {
-            await fireEvent.change(getByTestId('user_uid-input'), { target: { value: 'uqtestuser' } });
-            await fireEvent.change(getByTestId('user_name-input'), { target: { value: 'TEST USER' } });
+            await fireEvent.change(getByTestId('team_display_name-input'), { target: { value: 'TEST EDITED TEAM' } });
         });
-        // // commit the change
+        // commit the change
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
         });
-        expect(actions.updateUser).toHaveBeenCalledWith(1, {
-            isSelf: false,
-            privileges: {
-                can_admin: 0,
-                can_alter: 1,
-                can_inspect: 0,
-                can_see_reports: 0,
-            },
-            user_current_flag: 1,
-            user_team: 'WSS',
-            user_id: 1,
-            user_licence_number: 'NOT LICENSED',
-            user_name: 'TEST USER',
-            user_uid: 'uqtestuser',
+        expect(actions.updateTeam).toHaveBeenCalledWith(selectedTeamSlug, {
+            team_display_name: 'TEST EDITED TEAM',
+            team_current_flag: 1,
         });
-        // Check Save User fail on save.
-        actions.updateUser = jest.fn(() => Promise.reject('Test Error'));
+        // Check Save Team fail on save.
+        actions.updateTeam = jest.fn(() => Promise.reject('Test Error'));
         await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-1-edit-button'));
+            await fireEvent.click(getByTestId(`action_cell-${selectedTeamSlug}-edit-button`));
         });
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
         });
-        expect(actions.updateUser).rejects.toEqual('Test Error');
-        // Check state of editable fields for self admin
-        await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-5-edit-button'));
-        });
-        expect(getByTestId('can_admin_cb-input')).toHaveAttribute('disabled');
+        expect(actions.updateTeam).rejects.toEqual('Test Error');
     });
 
-    it('Delete or Reassign User functions correctly', async () => {
+    it('Delete or Reassign Team functions correctly', async () => {
+        const selectedTeamSlug = teamList[2].team_slug;
         const { getByText, getByTestId } = setup({ actions: actions });
-        expect(
-            getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
-        ).toBeInTheDocument();
-        expect(getByText('uqjsmit')).toBeInTheDocument();
+        expect(getByText(locale.pages.manage.teams.header.pageSubtitle('', 'Library'))).toBeInTheDocument();
+        expect(getByText('WSS')).toBeInTheDocument();
 
         await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-1-delete-button'));
+            await fireEvent.click(getByTestId(`action_cell-${selectedTeamSlug}-delete-button`));
         });
+
         await waitFor(() => {
-            expect(getByTestId('confirm-user-management')).toBeInTheDocument();
-            fireEvent.click(getByTestId('confirm-user-management'));
+            expect(getByTestId('confirm-team-management')).toBeInTheDocument();
+            fireEvent.click(getByTestId('confirm-team-management'));
         });
-        expect(actions.deleteUser).toHaveBeenCalledWith(1);
+        expect(actions.deleteTeam).toHaveBeenCalledWith(selectedTeamSlug);
         // Simulate an error
-        actions.deleteUser = jest.fn(() => Promise.reject('Test Error'));
+        actions.deleteTeam = jest.fn(() => Promise.reject('Test Error'));
         await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-1-delete-button'));
+            await fireEvent.click(getByTestId(`action_cell-${selectedTeamSlug}-delete-button`));
         });
         await waitFor(() => {
-            expect(getByTestId('confirm-user-management')).toBeInTheDocument();
-            fireEvent.click(getByTestId('confirm-user-management'));
+            expect(getByTestId('confirm-team-management')).toBeInTheDocument();
+            fireEvent.click(getByTestId('confirm-team-management'));
         });
-        expect(actions.deleteUser).rejects.toEqual('Test Error');
+        expect(actions.deleteTeam).rejects.toEqual('Test Error');
     });
 });

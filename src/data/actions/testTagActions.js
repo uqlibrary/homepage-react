@@ -1047,10 +1047,10 @@ export function clearTeamListError() {
     };
 }
 
-export function updateTeam(id, request) {
+export function updateTeam(team, request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_TEAM_LIST_UPDATING });
-        return put(TEST_TAG_UPDATE_TEAM_API(id), request)
+        return put(TEST_TAG_UPDATE_TEAM_API(team), request)
             .then(response => {
                 if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
@@ -1105,10 +1105,10 @@ export function addTeam(request) {
     };
 }
 
-export function deleteTeam(id) {
+export function deleteTeam(team) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_TEAM_LIST_DELETING });
-        return destroy(TEST_TAG_DELETE_TEAM_API(id))
+        return destroy(TEST_TAG_DELETE_TEAM_API(team))
             .then(response => {
                 if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({

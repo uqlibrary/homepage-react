@@ -76,9 +76,7 @@ describe('utils', () => {
         };
 
         const expectedOutput = {
-            team_slug: 'team-a',
             team_display_name: 'Team A',
-            team_current_flag_cb: true,
             team_current_flag: 1,
         };
 
@@ -94,9 +92,7 @@ describe('utils', () => {
         };
 
         const expectedOutput2 = {
-            team_slug: 'team-b',
             team_display_name: 'Team B',
-            team_current_flag_cb: false,
             team_current_flag: 0,
         };
 
