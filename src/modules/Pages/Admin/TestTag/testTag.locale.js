@@ -1127,7 +1127,8 @@ export default {
                 dialogDeleteConfirm: {
                     confirmButtonLabel: 'Proceed',
                     cancelButtonLabel: 'Cancel',
-                    confirmationMessage: 'Are you sure you wish to delete this Team?',
+                    confirmationMessage:
+                        'Are you sure you wish to delete this Team? Team members will not be able to log in until reassigned to a different team.',
                     confirmationTitle: 'Delete Team',
                 },
                 helperText: {

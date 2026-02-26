@@ -129,7 +129,7 @@ const Teams = ({ actions, teamListLoading, teamList, teamListError }) => {
     };
 
     const { row } = useDataTableRow(teamList, transformRow);
-    const shouldDisableDelete = row => (row?.users_count ?? 0) > 0;
+    const shouldDisableDelete = row => row?.users_count > 0;
     // const shouldDisableEdit = row => userUID === row?.user_uid;
     const { columns } = useDataTableColumns({
         config,

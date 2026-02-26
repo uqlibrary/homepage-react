@@ -99,8 +99,8 @@ describe('Manage Teams', () => {
         expect(getByText(locale.pages.manage.teams.header.pageSubtitle('', 'Library'))).toBeInTheDocument();
         expect(getByText('SPACES')).toBeInTheDocument();
     });
-    it('catches error on LoadteamList', async () => {
-        actions.loadteamList = jest.fn(() => {
+    it('catches error on LoadTeamList', async () => {
+        actions.loadTeamList = jest.fn(() => {
             return Promise.reject('Testing Error');
         });
 
@@ -108,11 +108,11 @@ describe('Manage Teams', () => {
         await waitFor(() => {
             expect(getByText(locale.pages.manage.teams.header.pageSubtitle('', 'Library'))).toBeInTheDocument();
         });
-        expect(actions.loadteamList).rejects.toEqual('Testing Error');
+        expect(actions.loadTeamList).rejects.toEqual('Testing Error');
     });
 
     it('Add User functions correctly', async () => {
-        actions.loadteamList = jest.fn(() => {
+        actions.loadTeamList = jest.fn(() => {
             return Promise.resolve();
         });
         const { getByText, getByTestId } = setup({ actions: actions });
