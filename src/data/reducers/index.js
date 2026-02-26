@@ -45,3 +45,4 @@ export { default as dlorAdminNotesReducer } from './dlorAdminNotesReducer';
 export { default as dlorKeywordsReducer } from './dlorKeywordsReducer';
 export { default as dlorStatisticsReducer } from './dlorStatisticsReducer';
 export { default as dlorScheduleReducer } from './dlorScheduleReducer';
+export { default as dlorDashboardReducer } from './dlorDashboardReducer';

@@ -75,6 +75,7 @@ import {
 import { vemcountData } from './data/vemcount';
 import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
 import dlor_keywords from './data/records/dlor/dlor_keywords';
+import { dlorDashboardSiteUsage } from './data/dlor/dlorDashboardSiteUsage';
 
 const moment = require('moment');
 
@@ -146,6 +147,10 @@ mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
         return [200, mockData.accounts[user]];
     }
     return [404, {}];
+});
+
+mock.onGet(routes.DLOR_DASHBOARD_API().apiUrl).reply(() => {
+    return [200, dlorDashboardSiteUsage];
 });
 
 mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
@@ -394,7 +399,7 @@ function getSpecificDlorObject(dlorId) {
     return singleRecord === null ? [404, {}] : [200, { data: singleRecord }];
 }
 
-mock.onGet(/dlor\/public\/find\/.*/)
+mock.onGet(/dlor\/(public|auth)\/find\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const dlorId = urlparts.split('?')[0];
@@ -872,6 +877,10 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onGet(/dlor\/admin\/schedule/)
     .reply(() => {
         return [200, dlorSchedules];
+    })
+    .onGet(/dlor\/auth\/dashboard/)
+    .reply(() => {
+        return [200, dlorDashboardData];
     })
     .onGet(routes.DLOR_STATISTICS_API().apiUrl)
     .reply(() => {

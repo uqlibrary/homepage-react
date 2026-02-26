@@ -9,6 +9,7 @@ import {
     DLOR_DESTROY_API,
     DLOR_FILE_TYPE_LIST_API,
     DLOR_GET_BY_ID_API,
+    DLOR_AUTHENTICATED_GET_BY_ID_API,
     DLOR_GET_FILTER_LIST,
     DLOR_SUBSCRIPTION_CONFIRMATION_API,
     DLOR_TEAM_CREATE_API,
@@ -34,7 +35,6 @@ import {
     DLOR_CREATE_TEAM_ADMIN_API,
     DLOR_EDIT_TEAM_ADMIN_API,
     DLOR_DELETE_TEAM_ADMIN_API,
-    DLOR_TEAM_MEMBER_SINGLE_GET_API,
     DLOR_KEYWORDS_API,
     DLOR_KEYWORDS_UPDATE_API,
     DLOR_KEYWORDS_DESTROY_API,
@@ -42,6 +42,7 @@ import {
     DLOR_SCHEDULE_API,
     DLOR_SCHEDULE_UPDATE_API,
     DLOR_REQUEST_KEYWORD_API,
+    DLOR_DASHBOARD_API,
 } from 'repositories/routes';
 import { checkExpireSession } from './actionhelpers';
 
@@ -85,10 +86,12 @@ export function loadAllDLORs() {
     };
 }
 
-export function loadADLOR(dlorId) {
+export function loadADLOR(dlorId, isauthenticated = false) {
     return dispatch => {
         dispatch({ type: actions.DLOR_DETAIL_LOADING });
-        return get(DLOR_GET_BY_ID_API({ id: dlorId }))
+        return get(
+            isauthenticated ? DLOR_AUTHENTICATED_GET_BY_ID_API({ id: dlorId }) : DLOR_GET_BY_ID_API({ id: dlorId }),
+        )
             .then(response => {
                 dispatch({
                     type: actions.DLOR_DETAIL_LOADED,
@@ -758,7 +761,7 @@ export function editDlorTeamMember(id, request) {
     };
 }
 
-export function deleteDlorTeamMember(id, team_id) {
+export function deleteDlorTeamMember(id, teamId) {
     return dispatch => {
         dispatch({ type: actions.DLOR_TEAM_LOADING });
         return destroy(DLOR_DELETE_TEAM_ADMIN_API(id))
@@ -768,7 +771,7 @@ export function deleteDlorTeamMember(id, team_id) {
                     payload: response.data,
                 });
                 // refresh the team after change
-                dispatch(loadADLORTeam(team_id));
+                dispatch(loadADLORTeam(teamId));
             })
             .catch(error => {
                 dispatch({
@@ -955,7 +958,7 @@ export function deleteDlorSchedule(id) {
             });
     };
 }
-// request for new keyword email action
+
 export function requestNewKeyword(request) {
     console.log('request new keyword called', request);
     return dispatch => {
@@ -969,9 +972,29 @@ export function requestNewKeyword(request) {
                 });
             })
             .catch(error => {
-                console.log('TESTING');
                 dispatch({
                     type: actions.DLOR_KEYWORDS_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                throw error;
+            });
+    };
+}
+
+export function loadDLORDashboard() {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_DASHBOARD_LOADING });
+        return get(DLOR_DASHBOARD_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_DASHBOARD_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_DASHBOARD_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
