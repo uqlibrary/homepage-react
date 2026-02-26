@@ -43,6 +43,7 @@ export const flattedPathConfigExact = [
     '/digital-learning-hub',
     'https://www.library.uq.edu.au/404.js',
     '/digital-learning-hub-list',
+    '/digital-learning-hub/dashboard',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
@@ -277,6 +278,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.dlorViewSecure(dlorId),
             element: <components.DLOView />,
             pageTitle: 'Digital Learning Object Repository - View Object',
+        },
+        {
+            path: pathConfig.dlorDashboard,
+            element: <components.DLODashboard />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository - Dashboard',
         },
     ];
 
