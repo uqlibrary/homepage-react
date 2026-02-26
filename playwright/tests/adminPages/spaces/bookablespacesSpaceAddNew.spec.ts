@@ -148,6 +148,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_opening_hours_id: 3967,
             space_latitude: PACE_DEFAULT_LATITUDE,
             space_longitude: PACE_DEFAULT_LONGITUDE,
+            space_external_book_url: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -175,11 +176,16 @@ test.describe('Spaces Admin - add new space', () => {
         //     .getByTestId('add-space-description')
         //     .fill('This is a sunny corner in the Law library where you blah blah blah');
 
-        // blur the form
-        await page.getByTestId('SpacesAdminPage-systemTitle').click();
-
         // change to facility type tab
         await page.getByTestId('spaces-form-next-button').click();
+
+        const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
+        const isBookableCheckbox = page.getByTestId('space-can-book').locator('input');
+        await expect(isBookableCheckbox).not.toBeChecked();
+        await expect(bookingUrlField).not.toBeVisible();
+        await isBookableCheckbox.check();
+        await expect(bookingUrlField).toBeVisible();
+        await bookingUrlField.fill('https://example.com');
 
         await expect(page.getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`).locator('input')).toBeVisible();
         await expect(page.getByTestId(`facility-type-listitem-${ASKUS_FILTER_TYPE}`)).toContainText('AskUs service');
@@ -285,6 +291,7 @@ test.describe('Spaces Admin - add new space', () => {
             // space_photo_url: 'https://example.com/image.jpg', // TODO, drag image
             space_precise: 'Northwest corner',
             space_description: '<p>This is a sunny corner in the Law library where you blah blah blah</p>',
+            space_external_book_url: 'https://example.com',
             space_type: 'Computer room',
             space_opening_hours_id: 3825, // dhesl
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',

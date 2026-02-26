@@ -71,6 +71,33 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-friendly-location`).locator('.location-campus')).not.toBeVisible();
         });
 
+        test('bookable links appear correct on load', async ({ page }) => {
+            // first panel
+            await expect(page.getByTestId(`${FORG}-not-bookable`)).not.toBeVisible();
+            await expect(page.getByTestId(`${FORG}-booking-link`)).toBeVisible();
+            await expect(page.getByTestId(`${FORG}-booking-link`).locator('a')).toBeVisible();
+            await expect(page.getByTestId(`${FORG}-booking-link`).locator('a')).toHaveAttribute(
+                'href',
+                `https://uqbookit.uq.edu.au/#/app/booking-types/111`,
+            );
+
+            // second panel
+            await expect(page.getByTestId(`${PACE}-not-bookable`)).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-booking-link`)).toBeVisible();
+            await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toBeVisible();
+            await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toHaveAttribute(
+                'href',
+                `https://uqbookit.uq.edu.au/#/app/booking-types/222`,
+            );
+
+            // third panel
+            await expect(page.getByTestId(`${LIV}-not-bookable`)).toBeVisible();
+            await expect(page.getByTestId(`${LIV}-not-bookable`)).toContainText(
+                'This space does not require a booking.',
+            );
+            await expect(page.getByTestId(`${LIV}-booking-link`)).not.toBeVisible();
+        });
+
         test('description loads correctly', async ({ page }) => {
             // first panel
             await expect(page.getByTestId(`${FORG}-description`)).toHaveCount(1); // second line is hidden
@@ -625,7 +652,7 @@ test.describe('Spaces', () => {
         // now unfilter using the cartouches
         await avEquipmentUnsetCartouche.click();
 
-        // back to 4 Spaces visible on the page
+        // spaces visible changes
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
             4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
         );
@@ -1045,8 +1072,6 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_NOISE_LEVEL))).not.toBeVisible();
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ROOM_FEATURES))).not.toBeVisible();
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
-
-            // await page.waitForTimeout(60000);
 
             // filter to show "Contains Artwork" only
             const containsArtworkId = 57;
