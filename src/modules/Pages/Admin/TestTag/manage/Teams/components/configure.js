@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { isEmptyStr, isInvalidTeamSlug } from '../../../helpers/helpers';
+import { isInvalidTeamSlug, isInvalidTeamDisplayName } from '../../../helpers/helpers';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
@@ -38,10 +38,14 @@ export default {
                     variant="standard"
                     {...props}
                     required
-                    helperText={props.error ? locale.pages.manage.teams.helperText.team_display_name : null}
+                    helperText={
+                        props.error
+                            ? locale.pages.manage.teams.helperText.team_display_name
+                            : locale.pages.general.helperText.maxChars(255)
+                    }
                 />
             ),
-            validate: value => isEmptyStr(value),
+            validate: value => isInvalidTeamDisplayName(value),
             fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
         },
         team_current_flag: {

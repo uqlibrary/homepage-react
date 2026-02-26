@@ -1466,7 +1466,7 @@ mock.onGet('exams/course/FREN1010/summary')
     // teams
     .onGet(routes.TEST_TAG_TEAM_LIST_API().apiUrl)
     .reply(withDelay([200, test_tag_team_list_uql]))
-    .onPut(/test-and-tag\/team\/testfail/)
+    .onPut(/test-and-tag\/team\/TESTFAIL/)
     .reply(withDelay([400, {}]))
     .onPut(/test-and-tag\/team\/[a-zA-Z0-9]+/)
     .reply(
@@ -1486,7 +1486,7 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ]),
     )
-    .onDelete(/test-and-tag\/team\/testfail/)
+    .onDelete(/test-and-tag\/team\/TESTFAIL/)
     .reply(withDelay([400, {}]))
     .onDelete(/test-and-tag\/team\/[a-zA-Z0-9]+/)
     .reply(
