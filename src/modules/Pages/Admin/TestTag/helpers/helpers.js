@@ -11,3 +11,6 @@ export const createLocationString = ({ site, building, floor, room }) =>
     `${floor ?? ''}${!!room ? `-${room}` : ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`.trim();
 
 export const isInvalidUUID = str => str?.length > 20 || !/^[a-z0-9]*$/.test(str);
+
+export const isInvalidTeamSlug = str => isEmptyStr(str) || str.length > 10;
+export const isInvalidTeamDisplayName = str => isEmptyStr(str) || str.length > 255;

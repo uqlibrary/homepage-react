@@ -4,3 +4,4 @@ export { default as testTagInspectionsByLicencedUser } from './report/inspection
 export { default as testTagInspectionsDue } from './report/inspectionsDue';
 export { default as testTagAssetReportByFilters } from './report/AssetReportByFilters';
 export { default as TestTagManageUsers } from './manage/Users/containers';
+export { default as TestTagManageTeams } from './manage/Teams/containers';
