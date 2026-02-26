@@ -335,6 +335,7 @@ test.describe('Spaces Admin - edit space', () => {
     const LOW_NOISE_LEVEL = 17;
     const POSTGRAD = 13;
     const UNDERGRAD = 14;
+    const BOOKABLE = 19;
 
     // to test the required fields are the only required fields, we have to clear all the other fields!!! Not a realistic thing a user would do, but it meets the mentioned need
     test('can save with only required fields', async ({ page, context }) => {
@@ -368,6 +369,7 @@ test.describe('Spaces Admin - edit space', () => {
             LOW_NOISE_LEVEL,
             POSTGRAD,
             UNDERGRAD,
+            BOOKABLE,
         ]) {
             await expect(page.getByTestId(`filtertype-${facilityTypeId}`).locator('input')).toBeChecked();
             await page
@@ -630,7 +632,6 @@ test.describe('Spaces Admin - edit space', () => {
     test('can change all fields in edit', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
-        // await page.getByRole('textbox', { name: 'Space name *' }).click();
         const nameField = page.getByTestId('space-name').locator('input');
         await expect(nameField).toBeVisible();
         await nameField.press('ControlOrMeta+a');
@@ -671,6 +672,7 @@ test.describe('Spaces Admin - edit space', () => {
             POSTGRAD,
             UNDERGRAD,
             CONTAINS_ARTWORK,
+            BOOKABLE,
         ];
         for (const facilityTypeId of originalFilters) {
             await expect(page.getByTestId(`filtertype-${facilityTypeId}`).locator('input')).toBeChecked();

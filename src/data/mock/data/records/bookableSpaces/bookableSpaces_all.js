@@ -78,6 +78,10 @@ export default {
                 {
                     "facility_type_id": 57,
                     "facility_type_name": "Contains Artwork"
+                },
+                {
+                    "facility_type_id": 19,
+                    "facility_type_name": "Bookable"
                 }
             ],
         }, {
@@ -155,6 +159,10 @@ export default {
                 {
                     "facility_type_id": 10,
                     "facility_type_name": "High noise level "
+                },
+                {
+                    "facility_type_id": 19,
+                    "facility_type_name": "Bookable"
                 }
             ],
             space_type: 'Group Study Room',
@@ -183,10 +191,6 @@ export default {
             space_latitude: "-27.49928",
             space_longitude: "153.01344",
             facility_types: [
-                {
-                    "facility_type_id": 19,
-                    "facility_type_name": "Bookable"
-                },
                 {
                     "facility_type_id": 23,
                     "facility_type_name": "Toilets, female"
@@ -403,6 +407,10 @@ export default {
                     {
                         "facility_type_id": 14,
                         "facility_type_name": "Undergrad spaces"
+                    },
+                    {
+                        "facility_type_id": 19,
+                        "facility_type_name": "Bookable"
                     }
                 ]
             },
@@ -570,6 +578,10 @@ export default {
                     {
                         "facility_type_id": 33,
                         "facility_type_name": "Client accessible power point"
+                    },
+                    {
+                        "facility_type_id": 19,
+                        "facility_type_name": "Bookable"
                     }
                 ]
             },
@@ -686,6 +698,10 @@ export default {
                     {
                         "facility_type_id": 17,
                         "facility_type_name": "Low noise level"
+                    },
+                    {
+                        "facility_type_id": 19,
+                        "facility_type_name": "Bookable"
                     }
                 ]
             }]
