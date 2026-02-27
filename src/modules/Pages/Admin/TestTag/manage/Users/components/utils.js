@@ -83,6 +83,7 @@ export const actionReducer = (_, action) => {
                 row: {
                     user_id: 'Auto',
                     user_uid: '',
+                    user_team: '',
                     user_name: '',
                     user_current_flag_cb: true,
                     user_licence_number: '',

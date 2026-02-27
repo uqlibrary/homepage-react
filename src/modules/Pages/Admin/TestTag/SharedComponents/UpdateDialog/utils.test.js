@@ -26,7 +26,6 @@ describe('utils', () => {
             InputLabelProps: 1,
             fullWidth: 1,
             error: 1,
-            onClick: 1,
         };
 
         expect(filterComponentProps(inputTextField)).toEqual(expectedTextfield);

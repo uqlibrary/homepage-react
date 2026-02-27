@@ -23,7 +23,7 @@ import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/T
 
 const componentId = 'user-management';
 
-const Users = ({ actions, userListLoading, userList, userListError }) => {
+const Users = ({ actions, userListLoading, userList, userListError, teamListLoading, teamList, teamListError }) => {
     const pageLocale = locale.pages.manage.users;
 
     const { user } = useAccountUser();
@@ -38,7 +38,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
     const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
-        errorMessage: userListError,
+        errorMessage: userListError || teamListError,
         errorMessageFormatter: locale.config.alerts.error,
     });
     const closeDialog = React.useCallback(() => {
@@ -91,6 +91,21 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const handleAddClick = () => {
+        console.log(teamList);
+        actionDispatch({
+            type: 'add',
+            title: pageLocale.dialogAdd?.confirmationTitle,
+            fieldProps: {
+                user_team: {
+                    options: teamList,
+                    getOptionKey: option => option.team_slug,
+                    getOptionLabel: option => option.team_display_name,
+                },
+            },
+        });
+    };
+
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
         row.isSelf = row?.user_uid === userUID;
@@ -98,6 +113,16 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
             type: 'edit',
             title: pageLocale.dialogEdit?.confirmationTitle,
             row,
+            fieldProps: {
+                user_team: {
+                    value: teamList.find(team => team.team_slug === row?.user_team),
+                    options: teamList,
+                    getOptionKey: option => option.team_slug,
+                    getOptionLabel: option =>
+                        teamList.find(team => team.team_slug === option.team_slug)?.team_display_name,
+                    isOptionEqualToValue: (option, value) => option.team_slug === value?.team_slug,
+                },
+            },
         });
     };
 
@@ -129,12 +154,6 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const handleAddClick = () => {
-        actionDispatch({
-            type: 'add',
-            title: pageLocale.dialogAdd?.confirmationTitle,
-        });
-    };
 
     const { row } = useDataTableRow(userList, transformRow);
     const shouldDisableDelete = row => (row?.actions_count ?? 0) > 0 || userUID === row?.user_uid;
@@ -157,10 +176,15 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
     }, []);
 
     React.useEffect(() => {
-        actions.loadUserList().catch(error => {
-            console.error(error);
-            openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.loadFail), 'error');
-        });
+        actions
+            .loadUserList()
+            .then(() => {
+                actions.loadTeamList();
+            })
+            .catch(error => {
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.loadFail), 'error');
+            });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actions]);
 
@@ -236,7 +260,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                             rows={row}
                             columns={columns}
                             rowId="user_id"
-                            loading={userListLoading}
+                            loading={userListLoading || teamListLoading}
                             components={{
                                 Toolbar: () => (
                                     <WithExportMenu id={componentId}>

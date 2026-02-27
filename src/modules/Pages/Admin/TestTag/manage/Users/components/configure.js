@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -43,6 +44,27 @@ export default {
             ),
             validate: value => isEmptyStr(value),
             fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
+        },
+        user_team: {
+            component: props => (
+                <Autocomplete
+                    renderInput={params => (
+                        <TextField
+                            variant="standard"
+                            label={locale.pages.manage.users.form.columns.user_team.label}
+                            required
+                            helperText={props.error ? locale.pages.manage.users.helperText.user_team : null}
+                            {...params}
+                        />
+                    )}
+                    {...props}
+                />
+            ),
+            validate: value => isEmptyStr(value),
+            fieldParams: { canEdit: true, renderInTable: false, minWidth: 200, flex: 1, type: 'autocomplete' },
+        },
+        team_display_name: {
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 200, flex: 1 },
         },
         can_inspect_cb: {
             component: props => {
