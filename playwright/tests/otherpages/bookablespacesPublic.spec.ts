@@ -92,9 +92,7 @@ test.describe('Spaces', () => {
 
             // third panel
             await expect(page.getByTestId(`${LIV}-not-bookable`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-not-bookable`)).toContainText(
-                'This space does not require a booking.',
-            );
+            await expect(page.getByTestId(`${LIV}-not-bookable`)).toContainText('No booking required.');
             await expect(page.getByTestId(`${LIV}-booking-link`)).not.toBeVisible();
         });
 

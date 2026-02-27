@@ -261,9 +261,7 @@ const SpaceDetails = ({
                     </StyledBookitLinkWrapperDiv>
                 )}
                 {!isBookable && (
-                    <div data-testid={`space-${bookableSpace?.space_id}-not-bookable`}>
-                        This space does not require a booking.
-                    </div>
+                    <div data-testid={`space-${bookableSpace?.space_id}-not-bookable`}>No booking required.</div>
                 )}
                 {!!bookableSpace?.space_capacity && bookableSpace?.space_capacity > 0 && (
                     <StyleCapacityDiv data-testid={`space-${bookableSpace?.space_id}-capacity`}>
