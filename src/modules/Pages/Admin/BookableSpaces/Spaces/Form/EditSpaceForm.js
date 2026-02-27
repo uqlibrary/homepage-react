@@ -1278,7 +1278,7 @@ export const EditSpaceForm = ({
                 />
                 {errorMessages?.length > 0 && (
                     <div data-testid="spaces-button-error-list">
-                        <h2 data-error-count="${errorMessages?.length}">Errors</h2>
+                        <h2 data-error-count={errorMessages?.length}>Errors</h2>
                         <p>These errors occurred:</p>
                         {errorMessages?.map((m, index) => {
                             return <p key={`error-${index}`}>{m?.message}</p>;

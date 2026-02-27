@@ -14,8 +14,8 @@ const TAB_IMAGERY = 'tab-imagery';
 const LAW_DEFAULT_LATITUDE = '-27.49718';
 const LAW_DEFAULT_LONGITUDE = '153.01214';
 
-const originalMockData = (spaceId: number) => {
-    const currentData = bookableSpaces?.data?.locations?.find(b => b.space_id === spaceId);
+const originalMockData = (spaceUud: string) => {
+    const currentData = bookableSpaces?.data?.locations?.find(b => b.space_uuid === spaceUud);
     const currentDataFacilities = currentData?.facility_types?.map(ft => ft.facility_type_id) || [];
     return {
         space_id: currentData?.space_id,
@@ -934,7 +934,7 @@ test.describe('booking link controller works properly', () => {
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
-            ...originalMockData(123456),
+            ...originalMockData('f98g_fwas_5g33'),
             space_external_book_url: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -958,7 +958,7 @@ test.describe('booking link controller works properly', () => {
         await expect(page.getByTestId('booking-link-details')).not.toBeVisible();
         await expect(page.getByTestId('spaces-skip-reminder-icon')).toBeVisible();
 
-        // click save button (there arent any changes
+        // click save button (there aren't any changes)
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await page.getByTestId('admin-spaces-save-button-submit').click();
 
@@ -968,7 +968,7 @@ test.describe('booking link controller works properly', () => {
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
-            ...originalMockData(43534),
+            ...originalMockData('97fd5_nm39_gh29'),
             space_opening_hours_id: -1, // might need to look into this?
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1029,7 +1029,7 @@ test.describe('booking link controller works properly', () => {
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
-            ...originalMockData(43534),
+            ...originalMockData('97fd5_nm39_gh29'),
             space_opening_hours_id: -1, // might need to look into this?
             space_external_book_url: 'http://example.com',
         };
