@@ -123,6 +123,9 @@ export const setTestDataCookie = async (context: BrowserContext, page: Page) => 
 
 export const assertExpectedDataSentToServer = async (page: Page, expectedValues: object) => {
     const cookies = await page.context().cookies();
+    // did you remember to both:
+    // - put `await setTestDataCookie(context, page);` at the top of the test, and
+    // - set CYPRESS_TEST_DATA to hold the sent values when the api save action is invoked?
     expect(cookies.some(c => c.name === 'CYPRESS_DATA_SAVED')).toBeTruthy();
 
     // Check the data we pretended to send to the server matches what we expect.

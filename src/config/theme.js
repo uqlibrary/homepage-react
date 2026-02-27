@@ -29,7 +29,7 @@ const palette = {
     },
     accent: {
         light: '#962A8B',
-        main: '#3881cb',
+        main: '#0d6dcd',
         dark: '#3b1a59',
     },
     white: {

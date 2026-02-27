@@ -26,6 +26,7 @@ export default {
             space_building_number: "0001",
             space_campus_id: 1,
             space_campus_name: "St Lucia",
+            "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/111',
             facility_types: [
                 {
                     "facility_type_id": 23,
@@ -78,6 +79,10 @@ export default {
                 {
                     "facility_type_id": 57,
                     "facility_type_name": "Contains Artwork"
+                },
+                {
+                    "facility_type_id": 19,
+                    "facility_type_name": "Bookable"
                 }
             ],
         }, {
@@ -95,6 +100,7 @@ export default {
             updated_at: "2025-08-01 11:00:00",
             space_latitude: "-27.49979",
             space_longitude: "153.03066",
+            "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/222',
             facility_types: [
                 {
                     "facility_type_id": 23,
@@ -155,6 +161,10 @@ export default {
                 {
                     "facility_type_id": 10,
                     "facility_type_name": "High noise level "
+                },
+                {
+                    "facility_type_id": 19,
+                    "facility_type_name": "Bookable"
                 }
             ],
             space_type: 'Group Study Room',
@@ -182,11 +192,8 @@ export default {
             updated_at: "2025-08-01 11:00:00",
             space_latitude: "-27.49928",
             space_longitude: "153.01344",
+            "space_external_book_url": null,
             facility_types: [
-                {
-                    "facility_type_id": 19,
-                    "facility_type_name": "Bookable"
-                },
                 {
                     "facility_type_id": 23,
                     "facility_type_name": "Toilets, female"
@@ -263,6 +270,7 @@ export default {
             "space_campus_id": 1,
             "space_campus_name": "St Lucia",
             "space_campus_number": "01",
+            "space_external_book_url": null,
             "facility_types": [
                 {
                     "facility_type_id": 23,
@@ -355,6 +363,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/333',
                 "facility_types": [
                     {
                         "facility_type_id": 23,
@@ -403,6 +412,10 @@ export default {
                     {
                         "facility_type_id": 14,
                         "facility_type_name": "Undergrad spaces"
+                    },
+                    {
+                        "facility_type_id": 19,
+                        "facility_type_name": "Bookable"
                     }
                 ]
             },
@@ -435,6 +448,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_external_book_url": null,
                 "facility_types": []
             },
             {
@@ -466,6 +480,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/444',
                 "facility_types": [
                     {
                         "facility_type_id": 19,
@@ -538,6 +553,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/555',
                 "facility_types": [
                     {
                         "facility_type_id": 7,
@@ -570,6 +586,10 @@ export default {
                     {
                         "facility_type_id": 33,
                         "facility_type_name": "Client accessible power point"
+                    },
+                    {
+                        "facility_type_id": 19,
+                        "facility_type_name": "Bookable"
                     }
                 ]
             },
@@ -602,6 +622,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_external_book_url": null,
                 "facility_types": [
                     {
                         "facility_type_id": 22,
@@ -662,6 +683,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/666',
                 "facility_types": [
                     {
                         "facility_type_id": 23,
@@ -686,6 +708,10 @@ export default {
                     {
                         "facility_type_id": 17,
                         "facility_type_name": "Low noise level"
+                    },
+                    {
+                        "facility_type_id": 19,
+                        "facility_type_name": "Bookable"
                     }
                 ]
             }]

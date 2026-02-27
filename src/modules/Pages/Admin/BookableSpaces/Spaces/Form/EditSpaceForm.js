@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import { Grid } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -18,6 +19,10 @@ import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -83,6 +88,23 @@ const StyledFilterWrapper = styled('div')(() => ({
     flexWrap: 'wrap',
 }));
 
+const StyledHighlightedGrid = styled(Grid)(({ theme }) => ({
+    border: theme.palette.designSystem.border,
+    marginTop: '2rem',
+    padding: '1rem',
+    '& h4': {
+        marginBottom: '0.5rem',
+    },
+}));
+
+const StyledAttentionMessageDiv = styled('div')(() => ({
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: '0.5rem',
+    paddingBottom: '0.5rem',
+    paddingTop: '1rem',
+}));
+
 const StyledUqTightLink = styled('a')(({ theme }) => ({
     color: theme.palette.primary.main,
     fontWeight: 500,
@@ -135,7 +157,7 @@ const StyledFacilityGroupCheckboxBlock = styled('div')(() => ({
                 cursor: 'pointer',
                 color: 'rgba(0, 0, 0, 1)',
             },
-            '& > span:first-child': {
+            '& > span:first-of-type': {
                 flexShrink: 0,
                 display: 'flex',
                 alignItems: 'center',
@@ -234,6 +256,7 @@ export const EditSpaceForm = ({
     console.log('TOP EditSpaceForm springshareList', springshareList);
 
     const { account } = useAccountContext();
+    const theme = useTheme();
 
     const [location, setLocation1] = useState({});
     const setLocation = newValues => {
@@ -281,8 +304,13 @@ export const EditSpaceForm = ({
         },
     };
 
+    const [isBookable, setIsBookable] = useState();
+
     useEffect(() => {
         hideConfirmation();
+
+        setIsBookable(!!formValues?.space_external_book_url || false);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -321,6 +349,10 @@ export const EditSpaceForm = ({
     };
 
     function validatePanelFacilityTypes(currentValues, errorMessages = []) {
+        if (!!isBookable && !currentValues?.space_external_book_url) {
+            errorMessages.push({ field: 'space_type', message: 'Provide the booking link, or uncheck the checkbox.' });
+        }
+
         return errorMessages;
     }
 
@@ -330,7 +362,7 @@ export const EditSpaceForm = ({
             errorMessages.push({ field: 'space_floor_id', message: 'A location is required.' });
         }
         if (!currentValues?.space_latitude || !currentValues?.space_longitude) {
-            errorMessages.push({ field: 'space_latitude', message: 'Please locate the space on the map' });
+            errorMessages.push({ field: 'space_latitude', message: 'Please locate the Space on the map' });
         }
         if (!!currentValues?.space_services_page && !isValidUrl(currentValues?.space_services_page)) {
             errorMessages.push({
@@ -414,7 +446,7 @@ export const EditSpaceForm = ({
     };
 
     const handleFieldCompletion = e => {
-        // clear what they entered in the new space type field - its already in the dropdown and selected there
+        // clear what they entered in the new Space type field - its already in the dropdown and selected there
         if (e?.target?.id === 'add-space-type-new') {
             e.target.value = '';
         }
@@ -435,7 +467,14 @@ export const EditSpaceForm = ({
 
         const updatedLocation = {};
         let prop = _prop;
-        if (_prop === 'facility_type_id') {
+        if (_prop === 'isBookableCheckbox') {
+            setIsBookable(e?.target?.checked);
+            if (theNewValue === false) {
+                console.log('handleChange booking url cleared');
+                // they have cleared the checkbox. Wipe the booking url
+                prop = 'space_external_book_url';
+            }
+        } else if (_prop === 'facility_type_id') {
             prop = 'facility_types';
             const clickedFacilityTypeId = parseInt(e?.target?.id?.replace('filtertype-', ''), 10);
             const newCheckboxAdded = theNewValue;
@@ -669,6 +708,9 @@ export const EditSpaceForm = ({
         valuesToSend.space_opening_hours_override = formValues?.space_opening_hours_override;
         valuesToSend.space_latitude = formValues?.space_latitude?.toString();
         valuesToSend.space_longitude = formValues?.space_longitude?.toString();
+        valuesToSend.space_external_book_url = !!formValues?.space_external_book_url
+            ? formValues?.space_external_book_url
+            : null;
         valuesToSend.facility_types = formValues?.facility_types?.map(ft => ft?.facility_type_id);
         valuesToSend.space_id = formValues?.space_id;
         valuesToSend.uploadedFile = formValues.uploadedFile;
@@ -761,6 +803,8 @@ export const EditSpaceForm = ({
         setPanel(newPanelId);
     };
 
+    const bookableCheckboxLabel = 'This Space is bookable';
+    const bookableUrlLabel = { inputProps: { 'aria-label': bookableCheckboxLabel } };
     const aboutPanel = () => {
         return (
             <Grid container spacing={3}>
@@ -875,6 +919,59 @@ export const EditSpaceForm = ({
     const facilityTypePanel = () => {
         return (
             <Grid container spacing={3}>
+                <StyledHighlightedGrid item xs={12}>
+                    <FormControlLabel
+                        label={bookableCheckboxLabel}
+                        data-testid="contains-bookable-checkbox"
+                        control={
+                            <Checkbox
+                                {...bookableUrlLabel}
+                                checked={!!isBookable || false}
+                                data-testid="space-can-book"
+                                className={'checkbox'}
+                                onChange={handleChange('isBookableCheckbox')}
+                            />
+                        }
+                    />
+                    {!!isBookable && (
+                        <div data-testid="booking-link-details">
+                            <Typography component={'h4'} variant={'p'}>
+                                Provide a booking link
+                            </Typography>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel htmlFor="space_external_book_url">
+                                    Enter the UQ Bookit landing page for this Space *
+                                </InputLabel>
+                                <Input
+                                    id="space_external_book_url"
+                                    data-testid="space_external_book_url"
+                                    value={formValues?.space_external_book_url || ''}
+                                    onChange={handleChange('space_external_book_url')}
+                                    onBlur={handleFieldCompletion}
+                                />
+                                <StyledErrorMessageTypography component={'div'}>
+                                    {reportErrorMessage('space_external_book_url')}
+                                </StyledErrorMessageTypography>
+                            </FormControl>
+                            <StyledAttentionMessageDiv>
+                                <WarningAmberIcon
+                                    style={{ color: theme.palette.error.light }}
+                                    data-testid="spaces-check-reminder-icon"
+                                />
+                                Also select the "Bookable" checkbox below!!
+                            </StyledAttentionMessageDiv>
+                        </div>
+                    )}
+                    {!isBookable && (
+                        <StyledAttentionMessageDiv>
+                            <InfoOutlined
+                                style={{ color: theme.palette.accent.main }}
+                                data-testid="spaces-skip-reminder-icon"
+                            />
+                            Not bookable? Ensure no "Bookable" checkboxes are checked below!
+                        </StyledAttentionMessageDiv>
+                    )}
+                </StyledHighlightedGrid>
                 <Grid item xs={12}>
                     <Typography component={'h3'} variant={'h6'} style={{ marginBottom: '1rem' }}>
                         Facility types

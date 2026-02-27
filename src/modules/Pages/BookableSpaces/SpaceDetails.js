@@ -32,6 +32,27 @@ const StyledSpaceDiv = styled('div')(({ theme }) => ({
         maxWidth: '80%',
     },
 }));
+const StyledBookitLinkWrapperDiv = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: '0.5rem',
+    '& svg': {
+        width: '24px',
+        height: '24px',
+        stroke: theme.palette.primary.main,
+    },
+    '& a': {
+        '&:hover, &:focus': {
+            backgroundColor: 'transparent',
+        },
+        '& span': {
+            '&:hover, &:focus': {
+                backgroundColor: '#51247a',
+                color: '#fff',
+            },
+        },
+    },
+}));
 const StyledLocationImg = styled('img')(({ theme }) => ({
     maxWidth: '100%',
     marginTop: '1rem',
@@ -42,7 +63,7 @@ const StyledLocationImg = styled('img')(({ theme }) => ({
         display: 'none',
     },
 }));
-const StyledDescription = styled('div')(() => ({
+const StyledDescriptionDiv = styled('div')(() => ({
     '&.truncated p': {
         whiteSpace: 'nowrap',
         overflow: 'hidden',
@@ -82,9 +103,9 @@ const SpaceDetails = ({
     weeklyHoursLoading,
     weeklyHoursError,
     bookableSpace,
-    collapseable = false,
-    // collapseable=true: called by sidebar, has open-close icon;
-    // collapseable=false: opens from icon in map, no open-close icon
+    collapsed = false,
+    // collapsed=true: called by sidebar, has open-close icon;
+    // collapsed=false: opens from icon in map, no open-close icon
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -92,6 +113,8 @@ const SpaceDetails = ({
     // const isTabletView = isMobileView ? false : _isTabletViewJust;
     // const isDesktopView = !isTabletView && !isMobileView;
     // console.log('BookableSpacesList window width (m, t, d):', isMobileView, isTabletView, isDesktopView);
+
+    const [isCollapsed, setIsCollapsed] = React.useState(collapsed);
 
     const summaryPanelElementId = spaceId => `summary-info-${spaceId}`;
 
@@ -122,6 +145,8 @@ const SpaceDetails = ({
             !!toggleButtonExpandIcon && (toggleButtonExpandIcon.style.display = 'none');
             const toggleButtonCollapseIcon = toggleButton.querySelector('svg.openPanel');
             !!toggleButtonCollapseIcon && (toggleButtonCollapseIcon.style.display = 'block');
+
+            setIsCollapsed(false);
         };
         const collapseSpace = (spaceId, spaceName) => {
             showPanel(summaryPanelElementId(spaceId));
@@ -141,6 +166,8 @@ const SpaceDetails = ({
                 `#${togglePanelButtonElementId(spaceId)} svg.openPanel`,
             );
             !!toggleButtonCollapseIcon && (toggleButtonCollapseIcon.style.display = 'none');
+
+            setIsCollapsed(true);
         };
         const toggleSpace = (spaceId, spaceName) => {
             const moreInfoPanel = document.getElementById(spaceExtraElementsId(spaceId));
@@ -157,7 +184,7 @@ const SpaceDetails = ({
                 onClick={() => toggleSpace(bookableSpace?.space_id, bookableSpace?.space_name)}
                 aria-label={`Show more information about ${bookableSpace?.space_name}`}
                 aria-haspopup="true"
-                aria-expanded="false"
+                aria-expanded={`${isCollapsed ? 'false' : 'true'}`}
                 aria-controls={spaceExtraElementsId(bookableSpace?.space_id)}
             >
                 <KeyboardArrowDownIcon style={{ display: 'block' }} className="closePanel" />
@@ -166,47 +193,88 @@ const SpaceDetails = ({
         );
     };
 
+    const isExpanded = !isCollapsed;
     const getDescriptionClassName = () => {
         if (!!isMobileView) {
-            return 'hasMaxHeight'; // on mobile we make the description scrollbale, in a desperate attempt to keep the popup height reasonable
+            return 'hasMaxHeight'; // on mobile we make the description scrollable, in a desperate attempt to keep the popup height reasonable
         }
-        if (!!collapseable) {
+        if (isCollapsed) {
             return 'truncated'; // main view can be shortened
         }
-        return 'hasMinWidth';
+        // return 'hasMinWidth';
+        return '';
     };
+    const getFirstParagraph = htmlString => {
+        if (!htmlString) {
+            return htmlString;
+        }
+
+        // find the string before the second html tag in the supplied string
+        const lookForString = '<';
+        const instanceInString = 3; // #3 is <p></p> here -> <p>
+        return htmlString.split(lookForString, instanceInString).join(lookForString);
+    };
+    // taken from uqbookit sidenav for the page these land on
+    const uqBookitMakeABookingIcon = (
+        <svg
+            className="sidebarNav-link-icon"
+            height="512"
+            viewBox="0 0 24 24"
+            width="512"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ strokeWidth: 0.2 }}
+        >
+            <path d="M17.5 24c-3.584 0-6.5-2.916-6.5-6.5s2.916-6.5 6.5-6.5 6.5 2.916 6.5 6.5-2.916 6.5-6.5 6.5zm0-11.5c-2.757 0-5 2.243-5 5s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z" />
+            <path d="M17.5 21a.75.75 0 01-.75-.75v-5.5a.75.75 0 011.5 0v5.5a.75.75 0 01-.75.75z" />
+            <path d="M20.25 18.25h-5.5a.75.75 0 010-1.5h5.5a.75.75 0 010 1.5zM9.19 21H2.75A2.752 2.752 0 010 18.25V2.75A2.752 2.752 0 012.75 0h11.5A2.752 2.752 0 0117 2.75v6.09a.75.75 0 01-1.5 0V2.75c0-.689-.561-1.25-1.25-1.25H2.75c-.689 0-1.25.561-1.25 1.25v15.5c0 .689.561 1.25 1.25 1.25h6.44a.75.75 0 010 1.5z" />
+            <path d="M13.25 9.5h-9.5a.75.75 0 010-1.5h9.5a.75.75 0 010 1.5zM9.25 13.5h-5.5a.75.75 0 010-1.5h5.5a.75.75 0 010 1.5zM8.25 5.5h-4.5a.75.75 0 010-1.5h4.5a.75.75 0 010 1.5z" />
+        </svg>
+    );
+    const isBookable = !!bookableSpace.space_external_book_url;
     return (
         <div id="SpaceDetailsTemp">
             <StyledSpaceDiv>
-                {!!collapseable && (
-                    <div style={{ float: 'right', marginTop: '-40px', marginRight: '-10px' }}>
-                        {showHideSpacePanel(bookableSpace)}
-                    </div>
-                )}
-                {!collapseable && (
-                    <Typography component={'h2'} variant={'h6'} style={{ fontWeight: 'bold' }}>
-                        {bookableSpace?.space_name} - {bookableSpace?.space_type}
-                    </Typography>
-                )}
-                {!isMobileView && (
-                    <StyledFriendlyLocationDiv data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
-                        {getFriendlyLocationDescription(bookableSpace)}
+                <div style={{ float: 'right', marginTop: '-40px', marginRight: '-10px' }}>
+                    {showHideSpacePanel(bookableSpace)}
+                </div>
+                {isCollapsed && (
+                    <StyledFriendlyLocationDiv
+                        data-testid={`space-${bookableSpace?.space_id}-friendly-location-collapsed`}
+                    >
+                        {getFriendlyLocationDescription(bookableSpace, isCollapsed)}
                     </StyledFriendlyLocationDiv>
                 )}
+                {isBookable && (
+                    <StyledBookitLinkWrapperDiv data-testid={`space-${bookableSpace?.space_id}-booking-link`}>
+                        {uqBookitMakeABookingIcon}
+                        <a href={bookableSpace.space_external_book_url} target={'_blank'}>
+                            <span>Book this space</span>
+                        </a>
+                    </StyledBookitLinkWrapperDiv>
+                )}
+                {!isBookable && (
+                    <div data-testid={`space-${bookableSpace?.space_id}-not-bookable`}>
+                        This space does not require a booking.
+                    </div>
+                )}
+                <div>[todo] "Up to x people" or "1 person only".</div>
+                <div>[todo] Short generic description for space type</div>
                 {bookableSpace?.space_description?.length > 0 && (
-                    <StyledDescription
+                    <StyledDescriptionDiv
                         id={`space-description-${bookableSpace?.space_id}`}
                         data-testid={`space-${bookableSpace?.space_id}-description`}
                         className={getDescriptionClassName()}
                     >
-                        {parse(bookableSpace?.space_description)}
-                    </StyledDescription>
+                        {!!isCollapsed
+                            ? parse(getFirstParagraph(bookableSpace?.space_description))
+                            : parse(bookableSpace?.space_description)}
+                    </StyledDescriptionDiv>
                 )}
                 <StyledCollapsableSection
                     // loads open
                     id={summaryPanelElementId(bookableSpace?.space_id)}
-                    data-testid={`space-${bookableSpace?.space_id}-summary-info`}
-                    style={{ display: !!collapseable ? null : 'none' }}
+                    data-testid={`space-${bookableSpace?.space_id}-summary-hours`}
+                    style={{ display: isCollapsed ? null : 'none' }}
                 >
                     <OpeningHoursShort
                         weeklyHoursLoading={weeklyHoursLoading}
@@ -220,8 +288,14 @@ const SpaceDetails = ({
                     // loads closed
                     id={`space-more-${bookableSpace?.space_id}`}
                     data-testid={`space-${bookableSpace?.space_id}-full-info`}
-                    className={!!collapseable ? 'hiddenSection' : null}
+                    className={isCollapsed ? 'hiddenSection' : null}
                 >
+                    {!isMobileView && (
+                        <StyledFriendlyLocationDiv data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
+                            {getFriendlyLocationDescription(bookableSpace)}
+                        </StyledFriendlyLocationDiv>
+                    )}
+                    <div>[todo] Share a location option.</div>
                     {isMobileView && (
                         <OpeningHoursDown
                             weeklyHoursLoading={weeklyHoursLoading}
@@ -242,7 +316,7 @@ const SpaceDetails = ({
                         <StyledLocationImg
                             src={bookableSpace?.space_photo_url}
                             alt={bookableSpace?.space_photo_description}
-                            className={!!collapseable ? null : 'hasMinWidth'}
+                            className={isCollapsed ? null : 'hasMinWidth'}
                         />
                     )}
                     {bookableSpace?.facility_types?.length > 0 && (
@@ -262,6 +336,8 @@ const SpaceDetails = ({
                             </ul>
                         </>
                     )}
+                    <div>[todo] ‘Check availability’ link to Bookit </div>
+                    <div>[todo] ‘Check availability of similar rooms’ link to Bookit </div>
                 </StyledCollapsableSection>
             </StyledSpaceDiv>
         </div>
@@ -273,7 +349,7 @@ SpaceDetails.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     bookableSpace: PropTypes.any,
-    collapseable: PropTypes.bool,
+    collapsed: PropTypes.bool,
 };
 
 export default React.memo(SpaceDetails);
