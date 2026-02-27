@@ -1,5 +1,7 @@
 import React from 'react';
 
+export const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
+
 export function getOrdinalSuffixFor(number) {
     const mod10 = number % 10;
     const mod100 = number % 100;
@@ -61,6 +63,7 @@ export const getFlatFacilityTypeList = facilityTypes => {
                 facility_type_group_id: groupId,
                 facility_type_id: child.facility_type_id,
                 facility_type_name: child.facility_type_name,
+                facility_special_action: child.facility_special_action,
             }));
         }) || []
     );

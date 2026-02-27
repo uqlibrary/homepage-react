@@ -15,7 +15,7 @@ import ReplayIcon from '@mui/icons-material/Replay';
 
 import { addClass, removeClass, standardText } from 'helpers/general';
 
-import { getFlatFacilityTypeList } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { FACILITY_TYPE_NAME_CURRENTLY_OPEN, getFlatFacilityTypeList } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const svgOrangeCheckbox =
     "data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid meet' focusable='false'%3E%3Cpath fill='%23c13e2a' d='M22.2,20.9l-1.3-1.3C21,19.4,21,19.2,21,19v-8h-2v6.7l-4.6-4.6l6-6l-1.4-1.4l-6,6L6.3,5H15V3H5C4.8,3,4.6,3,4.4,3.1L3,1.7L1.8,2.9l1.3,1.3C3.1,4.4,3,4.7,3,5v14c0,1.1,0.9,2,2,2h14c0.3,0,0.6-0.1,0.8-0.2l1.2,1.2L22.2,20.9z M5,19V6l6.9,6.9l-1.4,1.4l-3.1-3.1L6,12.6l4.5,4.5l2.8-2.8L18,19H5z'%3E%3C/path%3E%3C/svg%3E";
@@ -218,7 +218,24 @@ export const SidebarFilters = ({
     filteredFacilityTypeList,
     suppliedClassName,
 }) => {
-    const [facilityTypeFilterGroupOpenNess, setFacilityTypeFilterGroupOpenNess] = React.useState([]);
+    const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
+
+    function sortedUsedGroups() {
+        if (
+            !filteredFacilityTypeList?.data?.facility_type_groups ||
+            filteredFacilityTypeList?.data?.facility_type_groups.length === 0
+        ) {
+            return [];
+        }
+        console.log(
+            'sortedUsedGroups filteredFacilityTypeList?.data?.facility_type_groups=',
+            filteredFacilityTypeList?.data?.facility_type_groups,
+        );
+        const usedFilterList = [...filteredFacilityTypeList?.data?.facility_type_groups];
+        console.log('sortedUsedGroups usedFilterLists=', usedFilterList);
+
+        return usedFilterList.sort((a, b) => a.facility_type_group_order - b.facility_type_group_order);
+    }
 
     React.useEffect(() => {
         if (
@@ -229,51 +246,59 @@ export const SidebarFilters = ({
         ) {
             // initialise openness storage
             const openNessList = [];
-            filteredFacilityTypeList?.data?.facility_type_groups?.map(g => {
+            console.log('onload sortedUsedGroups=', sortedUsedGroups());
+            sortedUsedGroups()?.map(g => {
                 openNessList.push({
                     groupId: g.facility_type_group_id,
-                    isGroupOpen: g.facility_type_group_loads_open,
+                    isGroupExpanded: g.facility_type_group_loads_open,
                 });
             });
-            setFacilityTypeFilterGroupOpenNess(openNessList);
+            setFacilityTypeFilterGroupExpandedness(openNessList);
 
             const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
-            const newFilters = flatFacilityTypeList.map(facilityType => ({
-                facility_type_group_id: facilityType.facility_type_group_id,
-                facility_type_id: facilityType.facility_type_id,
-                selected: false,
-                unselected: false,
-            }));
+            const newFilters = flatFacilityTypeList.map(facilityType => {
+                // facilityType.facility_type_id === 9999 &&
+                console.log('111 facilityType=', facilityType);
+                return {
+                    facility_type_group_id: facilityType.facility_type_group_id,
+                    facility_type_id: facilityType.facility_type_id,
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: facilityType.facility_special_action,
+                };
+            });
             setSelectedFacilityTypes(newFilters);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const resetFacilityTypeFilterGroupOpenNess = (filterGroupId, isGroupOpenInput) => {
-        const newOpenness = facilityTypeFilterGroupOpenNess.filter(g => {
+    const resetFacilityTypeFilterGroupExpandedness = (filterGroupId, isGroupExpandedInput) => {
+        const newExpandedness = facilityTypeFilterGroupExpandedness.filter(g => {
             return g.groupId !== filterGroupId;
         });
-        newOpenness.push({
+        newExpandedness.push({
             groupId: filterGroupId,
-            isGroupOpen: isGroupOpenInput,
+            isGroupExpanded: isGroupExpandedInput,
         });
-        setFacilityTypeFilterGroupOpenNess(newOpenness);
+        setFacilityTypeFilterGroupExpandedness(newExpandedness);
     };
 
-    const setFilters = (facilityTypeId, isSelected, isUnselected) => {
+    const setFilters = (facilityTypeId, isSelected, isUnselected, facilitySpecialAction) => {
         const removedFilter = selectedFacilityTypes?.find(ftf => {
             return ftf.facility_type_id === facilityTypeId;
         });
         const newFilters = selectedFacilityTypes?.filter(ftf => {
             return ftf.facility_type_id !== facilityTypeId;
         });
-        newFilters.push({
-            facility_type_group_id: removedFilter.facility_type_group_id,
-            facility_type_id: facilityTypeId,
-            selected: isSelected,
-            unselected: isUnselected,
-        });
-        setSelectedFacilityTypes(newFilters);
+        !!removedFilter &&
+            newFilters.push({
+                facility_type_group_id: removedFilter.facility_type_group_id,
+                facility_type_id: facilityTypeId,
+                selected: isSelected,
+                unselected: isUnselected,
+                facility_special_action: facilitySpecialAction,
+            });
+        !!newFilters && setSelectedFacilityTypes(newFilters);
     };
 
     // hide listitems that are checked
@@ -300,18 +325,20 @@ export const SidebarFilters = ({
         !!topOfSidebar && topOfSidebar.focus();
     };
 
-    const handleFilterRejection = (e, facilityTypeId) => {
+    const handleFilterRejection = (e, facilityTypeId, facilitySpecialAction) => {
         showHideActiveFilterListItems(facilityTypeId, e);
 
-        setFilters(facilityTypeId, false, !!e.target.checked);
+        setFilters(facilityTypeId, false, !!e.target.checked, facilitySpecialAction);
 
         scrollToTopOfContent();
     };
 
-    const handleFilterSelection = (e, facilityTypeId) => {
+    const handleFilterSelection = (e, facilityType) => {
+        const facilityTypeId = facilityType.facility_type_id;
+        const facilitySpecialAction = facilityType.facility_special_action;
         showHideActiveFilterListItems(facilityTypeId, e);
 
-        setFilters(facilityTypeId, !!e.target.checked, false);
+        setFilters(facilityTypeId, !!e.target.checked, false, facilitySpecialAction);
 
         scrollToTopOfContent();
     };
@@ -319,7 +346,7 @@ export const SidebarFilters = ({
     const toggleFilterGroup = filterGroupId => {
         const filterGroupPanelVisible = document.getElementById(`filter-group-list-${filterGroupId}`);
         // reverse the panel show/ hide
-        resetFacilityTypeFilterGroupOpenNess(filterGroupId, !filterGroupPanelVisible);
+        resetFacilityTypeFilterGroupExpandedness(filterGroupId, !filterGroupPanelVisible);
     };
 
     const deSelectSelected = e => {
@@ -337,8 +364,10 @@ export const SidebarFilters = ({
                 facility_type_id: ft.facility_type_id,
                 selected: false,
                 unselected: false,
+                facility_special_action: ft.facility_special_action,
             };
         });
+        console.log('setSelectedFacilityTypes deSelectAll');
         setSelectedFacilityTypes(newFacilityTypes);
     };
     const getStyledInputListItem = facilityType => {
@@ -354,7 +383,7 @@ export const SidebarFilters = ({
                     className="selectedFilterTypeLabel"
                 >
                     <Checkbox
-                        onChange={e => handleFilterSelection(e, facilityType.facility_type_id)}
+                        onChange={e => handleFilterSelection(e, facilityType)}
                         data-testid={`filtertype-${facilityType.facility_type_id}`}
                         id={`filtertype-${facilityType.facility_type_id}`}
                         className="selectedFilterType"
@@ -370,7 +399,9 @@ export const SidebarFilters = ({
                     id={`reject-filtertype-${facilityType.facility_type_id}`}
                     data-testid={`reject-filtertype-${facilityType.facility_type_id}`}
                     className="rejectedFilterType"
-                    onChange={e => handleFilterRejection(e, facilityType.facility_type_id)}
+                    onChange={e =>
+                        handleFilterRejection(e, facilityType.facility_type_id, facilityType.facility_special_action)
+                    }
                     aria-label={`Exclude Spaces with ${facilityType.facility_type_name}`}
                     checked={
                         selectedFacilityTypes?.find(f1 => f1.facility_type_id === facilityType.facility_type_id)
@@ -387,11 +418,11 @@ export const SidebarFilters = ({
             </StyledInputListItem>
         );
     };
-    const showFilterGroupHeading = (group, isGroupOpen, numberChecked, filterGroupId, groupLength) => {
+    const showFilterGroupHeading = (group, isGroupExpanded, numberChecked, filterGroupId, groupLength) => {
         return (
             <StyledFilterSpaceListTypographyHeading component={'h3'} variant={'h6'} className="group-heading">
                 {group.facility_type_group_name}{' '}
-                {!isGroupOpen && numberChecked > 0 && (
+                {!isGroupExpanded && numberChecked > 0 && (
                     <span
                         className="countSelectedCheckboxes"
                         data-testid={`facility-type-group-${filterGroupId}-open-count`}
@@ -404,21 +435,21 @@ export const SidebarFilters = ({
                     data-testid={`facility-type-group-${filterGroupId}`}
                     onClick={() => toggleFilterGroup(filterGroupId)}
                     aria-label={
-                        !!isGroupOpen
+                        !!isGroupExpanded
                             ? `Hide ${group.facility_type_group_name} filter options`
                             : `Show ${group.facility_type_group_name} filter options`
                     }
                     aria-haspopup="true"
-                    aria-expanded={!!isGroupOpen ? 'true' : 'false'}
+                    aria-expanded={!!isGroupExpanded ? 'true' : 'false'}
                     aria-controls={`filter-group-list-${filterGroupId}`}
                 >
                     <KeyboardArrowDownIcon
-                        style={{ display: !!isGroupOpen ? 'block' : 'none' }}
+                        style={{ display: !!isGroupExpanded ? 'block' : 'none' }}
                         className="openGroup"
                         data-testid={`facility-type-group-${filterGroupId}-open`}
                     />
                     <KeyboardArrowUpIcon
-                        style={{ display: !!isGroupOpen ? 'none' : 'block' }}
+                        style={{ display: !!isGroupExpanded ? 'none' : 'block' }}
                         className="closeGroup"
                         data-testid={`facility-type-group-${filterGroupId}-collapsed`}
                     />
@@ -472,14 +503,6 @@ export const SidebarFilters = ({
         );
     };
 
-    const sortedUsedGroups =
-        !!filteredFacilityTypeList?.data?.facility_type_groups &&
-        filteredFacilityTypeList?.data?.facility_type_groups.length > 0
-            ? [...filteredFacilityTypeList?.data?.facility_type_groups].sort(
-                  (a, b) => a.facility_type_group_order - b.facility_type_group_order,
-              )
-            : [];
-
     const hasActiveFilters = selectedFacilityTypes?.some(f => !!f.selected || !!f.unselected);
 
     const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
@@ -498,6 +521,14 @@ export const SidebarFilters = ({
                 <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
                     Filter Spaces
                 </Typography>
+                {/* <StyledFacilityGroup data-testid={'filter-group-block-open'}>*/}
+                {/*    <StyledFilterSpaceList id={'filter-group-list-open'}>*/}
+                {/*        {getStyledInputListItem({*/}
+                {/*            facility_type_id: 'open',*/}
+                {/*            facility_type_name: 'Currently open',*/}
+                {/*        })}*/}
+                {/*    </StyledFilterSpaceList>*/}
+                {/* </StyledFacilityGroup>*/}
                 {!!hasActiveFilters && (
                     <>
                         <Typography component={'h3'} variant={'h6'}>
@@ -518,11 +549,10 @@ export const SidebarFilters = ({
                         )}
                     </>
                 )}
-
-                {sortedUsedGroups?.map(group => {
+                {sortedUsedGroups()?.map(group => {
                     const filterGroupId = group.facility_type_group_id;
-                    const isGroupOpen = !!facilityTypeFilterGroupOpenNess.find(o => o.groupId === filterGroupId)
-                        ?.isGroupOpen;
+                    const isGroupExpanded = !!facilityTypeFilterGroupExpandedness.find(o => o.groupId === filterGroupId)
+                        ?.isGroupExpanded;
                     const groupLength = selectedFacilityTypes.filter(
                         ftf => ftf.facility_type_group_id === filterGroupId,
                     ).length;
@@ -534,8 +564,8 @@ export const SidebarFilters = ({
                             key={`facility-group-${filterGroupId}`}
                             data-testid={`filter-group-block-${filterGroupId}`}
                         >
-                            {showFilterGroupHeading(group, isGroupOpen, numberChecked, filterGroupId, groupLength)}
-                            {!!isGroupOpen && (
+                            {showFilterGroupHeading(group, isGroupExpanded, numberChecked, filterGroupId, groupLength)}
+                            {!!isGroupExpanded && (
                                 <StyledFilterSpaceList id={`filter-group-list-${filterGroupId}`}>
                                     {group.facility_type_children && group.facility_type_children.length > 0 ? (
                                         group.facility_type_children?.map(facilityType =>

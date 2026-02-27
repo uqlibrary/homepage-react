@@ -20,6 +20,7 @@ import { standardText } from 'helpers/general';
 
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
+import { FACILITY_TYPE_NAME_CURRENTLY_OPEN } from './spacesHelpers';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -107,7 +108,7 @@ const StyledMobileWrapper = styled('div')(({ theme }) => ({
         top: 0,
         width: '20rem',
         maxWidth: '50%',
-        zIndex: 2000,
+        zIndex: 998,
         paddingLeft: '0.5rem',
         marginTop: 0,
     },
@@ -180,6 +181,7 @@ const StyledMapWrapperDiv = styled('div')(({ theme }) => ({
     },
 }));
 
+const FILTER_CURRENTLY_OPEN = 'open';
 export const BookableSpacesList = ({
     actions,
     bookableSpacesRoomList,
@@ -238,15 +240,56 @@ export const BookableSpacesList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // React.useEffect(() => {
-    //     if (bookableSpacesRoomListError === false && bookableSpacesRoomListLoading === false) {
-    //         // page is loaded
-    //         const spacesContent = document.getElementById('spacesContent');
-    //         !!spacesContent && spacesContent.scrollIntoView({ behavior: 'smooth' });
-    //     }
-    // }, [bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
+    function isLocationOpen(locationId, hoursData) {
+        function getDateStringInTimezone(offsetHours = 10) {
+            const date = new Date();
+            const offsetMs = offsetHours * 60 * 60 * 1000;
+            const localTime = new Date(date.getTime() + offsetMs);
 
-    function spaceAppears(spaceFacilityTypes, facilityTypeToGroup, selectedFacilityTypes) {
+            const year = localTime.getUTCFullYear();
+            const month = String(localTime.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(localTime.getUTCDate()).padStart(2, '0');
+
+            return `${year}-${month}-${day}`;
+        }
+        const currentDate = getDateStringInTimezone();
+
+        // Find matching location by lid (springshare library id)
+        const location = hoursData.locations.find(loc => loc.lid === locationId);
+
+        const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
+        if (!!location.departments) {
+            const newdept = location.departments?.filter(dept => {
+                return !!dept?.name ? displayedDepartments.includes(dept?.name) : false;
+            });
+            location.departments = newdept;
+        } else {
+            location.departments = [];
+        }
+
+        if (!location) {
+            return null;
+        }
+
+        // data is already stripped down to only the single department of interest
+        const department = location.departments[0];
+        if (!department) {
+            return null;
+        }
+
+        for (const week of department.weeks) {
+            for (const [dayName, dayData] of Object.entries(week)) {
+                if (dayData.date === currentDate) {
+                    return dayData.times.currently_open ?? null;
+                }
+            }
+        }
+        return null; // Date not found in data
+    }
+
+    function showSpace(space, facilityTypeToGroup, selectedFacilityTypes) {
+        const spaceFacilityTypes = space?.facility_types?.map(item => item.facility_type_id);
+
         // Create a map of facility_type_id to group_id for quick lookup
         // Group selected filters by their facility type group
         const selectedFiltersByGroup = {};
@@ -272,10 +315,19 @@ export const BookableSpacesList = ({
         // check if space should be excluded due to rejected facility types
         if (rejectedFilters.length > 0) {
             const hasRejectedFacility = rejectedFilters.some(rejectedId => spaceFacilityTypes?.includes(rejectedId));
+            console.log('rejectedFilters=');
             if (hasRejectedFacility) {
                 return false;
             }
         }
+
+        // // handle any "special" filter checkboxes
+        // // 1. "currently open"
+        // console.log('space=', space);
+        // console.log(
+        //     'ft.facility_type_children.facility_special_action=',
+        //     ft.facility_type_children.facility_special_action,
+        // );
 
         // If no inclusion filters are selected, show all spaces (that haven't been rejected)
         if (Object.keys(selectedFiltersByGroup).length === 0) {
@@ -287,7 +339,17 @@ export const BookableSpacesList = ({
             const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
             // OR within group
-            const hasMatchInGroup = selectedFiltersInGroup.some(filterId => spaceFacilityTypes?.includes(filterId));
+            const hasMatchInGroup = selectedFiltersInGroup.some(filterId => {
+                const filter = selectedFacilityTypes.find(f => f.facility_type_id === filterId);
+                if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
+                    const isSpaceOpen = !!space?.space_opening_hours_id
+                        ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
+                        : false;
+                    return isSpaceOpen;
+                } else {
+                    return spaceFacilityTypes?.includes(filterId);
+                }
+            });
             if (!hasMatchInGroup) {
                 return false;
             }
@@ -303,8 +365,8 @@ export const BookableSpacesList = ({
         const spaceFiltersSet = new Set(spaceFilters);
 
         // filter facility types so we only show the checkboxes where there is an associated space
-        // (remove the group completely if it has no shown checkboxes)
-        return {
+        // (this will remove the group completely if it has no shown checkboxes)
+        const filteredFacilityTypeList = {
             ...facilityTypeList,
             data: {
                 ...facilityTypeList?.data,
@@ -318,6 +380,27 @@ export const BookableSpacesList = ({
                     .filter(group => group.facility_type_children.length > 0),
             },
         };
+
+        // manually add a "Currently Open" filter
+        const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
+            facility_type_group_id:
+                Math.max(...filteredFacilityTypeList?.data?.facility_type_groups?.map(g => g.facility_type_group_id)) +
+                1,
+            facility_type_group_name: FACILITY_TYPE_NAME_CURRENTLY_OPEN,
+            facility_type_group_order: -999,
+            facility_type_group_loads_open: 1,
+            facility_type_group_type: 'choose-many',
+            facility_type_children: [
+                {
+                    facility_type_id: 9999,
+                    facility_type_name: 'Currently open',
+                    facility_special_action: FILTER_CURRENTLY_OPEN,
+                },
+            ],
+        };
+        !!filterOpenFacilityType && filteredFacilityTypeList?.data?.facility_type_groups?.push(filterOpenFacilityType);
+
+        return filteredFacilityTypeList;
     };
     const toggleFilterPopupVisibility = e => {
         setShowFilterSelectorPopup(!showFilterSelectorPopup);
@@ -347,40 +430,6 @@ export const BookableSpacesList = ({
         </svg>
     );
 
-    // const searchSliderIcon = (
-    //     // https://www.streamlinehq.com/icons/ultimate-regular-free?search=slider&icon=ico_2WutdSYuSihh0yLC
-    //     <svg
-    //         xmlns="http://www.w3.org/2000/svg"
-    //         fill="none"
-    //         viewBox="0 0 24 24"
-    //         height="24"
-    //         width="24"
-    //         aria-hidden="true"
-    //         focusable="false"
-    //     >
-    //         <desc>Show-Hide the list of Spaces</desc>
-    //         <g
-    //             transform="rotate(-90 12 12)"
-    //             stroke="#51247a"
-    //             strokeLinecap="round"
-    //             strokeLinejoin="round"
-    //             strokeMiterlimit="10"
-    //             strokeWidth="1.5"
-    //         >
-    //             <path d="M4.25 9.14999c0 0.6 -0.4 1.00001 -1 1.00001h-1.5c-0.6 0 -1 -0.40001 -1 -1.00001v-3c0 -0.6 0.4 -1 1 -1h1.5c0.6 0 1 0.4 1 1v3Z" />
-    //             <path d="M2.5 5.14999V0.75" />
-    //             <path d="M2.5 10.15v3" />
-    //             <path d="M9.75 18.25c0 0.6 -0.4 1 -1 1h-1.5c-0.6 0 -1 -0.4 -1 -1v-4.5c0 -0.6 0.4 -1 1 -1h1.5c0.6 0 1 0.4 1 1v4.5Z" />
-    //             <path d="M8 12.75v-3" />
-    //             <path d="M8 19.25v4" />
-    //             <path d="M16.55 16.85c0 0.6 -0.4 1 -1 1h-1.5c-0.6 0 -1 -0.4 -1 -1v-4c0 -0.6 0.4 -1 1 -1h1.5c0.6 0 1 0.4 1 1v4Z" />
-    //             <path d="M14.8 17.85v4" />
-    //             <path d="m17.25 6.85001 3 -3.60001 3 3.60001" />
-    //             <path d="M20.25 3.25v15.6" />
-    //         </g>
-    //     </svg>
-    // );
-
     const facilityTypeToGroup = {};
     getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList)?.data?.facility_type_groups?.forEach(
         group => {
@@ -389,9 +438,8 @@ export const BookableSpacesList = ({
             });
         },
     );
-    const filteredSpaceLocations = bookableSpacesRoomList?.data?.locations?.filter(s => {
-        const spaceFacilityTypes = s?.facility_types?.map(item => item.facility_type_id);
-        return spaceAppears(spaceFacilityTypes, facilityTypeToGroup, selectedFacilityTypes);
+    const filteredSpaceLocations = bookableSpacesRoomList?.data?.locations?.filter(space => {
+        return showSpace(space, facilityTypeToGroup, selectedFacilityTypes);
     });
 
     const handleMarkerClick = (e, space) => {
@@ -437,6 +485,7 @@ export const BookableSpacesList = ({
             setPreviousToggledSpaceButton(toggleSpaceButton);
         }
     };
+    console.log('BookableSpacesList filteredSpaceLocations=', filteredSpaceLocations);
     const showMap = () => {
         return (
             <StyledMapWrapperDiv>

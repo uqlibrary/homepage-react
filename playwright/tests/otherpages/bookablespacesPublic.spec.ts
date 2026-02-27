@@ -519,6 +519,29 @@ test.describe('Spaces', () => {
         await expect(andrewLiverisComputerRoom).toBeVisible();
         await expect(filterCount).not.toBeVisible();
     });
+    test('can filter for open spaces', async ({ page }) => {
+        await page.goto('');
+        await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
+        await page.goto('spaces');
+        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+
+        const currentlyOpenCheckbox = page.getByTestId('facility-type-listitem-9999');
+
+        // initially all Spaces are visible on the page
+        await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
+            10 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+        );
+
+        // show only 'currently open' spaces
+        await expect(currentlyOpenCheckbox.locator('label:first-of-type')).toBeVisible();
+        await expect(currentlyOpenCheckbox.locator('label:first-of-type')).toContainText('Currently open');
+        await currentlyOpenCheckbox.locator('span input').check();
+
+        // only one space shows now
+        await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
+            1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+        );
+    });
     test('can OR on filters in the same group', async ({ page }) => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
