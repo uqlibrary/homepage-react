@@ -23,6 +23,7 @@ const originalMockData = (spaceUud: string) => {
         space_name: currentData?.space_name, // required field
         space_type: currentData?.space_type, // required field
         facility_types: [...currentDataFacilities],
+        space_capacity: currentData?.space_capacity,
         space_precise: currentData?.space_precise,
         space_description: currentData?.space_description,
         space_photo_url: currentData?.space_photo_url,
@@ -69,7 +70,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 52;
+        const numberFacilityTypesInMockFacilityTypes = 53;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -165,7 +166,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 52;
+        const numberFacilityTypesInMockFacilityTypes = 53;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -252,7 +253,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 52;
+        const numberFacilityTypesInMockFacilityTypes = 53;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -360,6 +361,7 @@ test.describe('Spaces Admin - edit space', () => {
     const POSTGRAD = 13;
     const UNDERGRAD = 14;
     const BOOKABLE = 19;
+    // const SINGLE_OCCUPANCY = 51;
 
     // to test the required fields are the only required fields, we have to clear all the other fields!!! Not a realistic thing a user would do, but it meets the mentioned need
     test('can save with only required fields', async ({ page, context }) => {
@@ -384,6 +386,11 @@ test.describe('Spaces Admin - edit space', () => {
             .locator('input')
             .click();
 
+        const capacityCheckbox = page.getByTestId('contains-capacity-checkbox').locator('input');
+        await expect(capacityCheckbox).not.toBeChecked();
+        await expect(page.getByTestId('capacity-details')).not.toBeVisible();
+        await expect(page.getByTestId('capacity-skip-reminder-icon')).toBeVisible();
+
         // clear facility types
         for (const facilityTypeId of [
             CONTAINS_ARTWORK,
@@ -400,6 +407,7 @@ test.describe('Spaces Admin - edit space', () => {
             POSTGRAD,
             UNDERGRAD,
             BOOKABLE,
+            // SINGLE_OCCUPANCY,
         ]) {
             await expect(page.getByTestId(`filtertype-${facilityTypeId}`).locator('input')).toBeChecked();
             await page
@@ -475,6 +483,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_name: '01-W431', // required field
             space_type: 'Collaborative space', // required field
             facility_types: [],
+            space_capacity: null,
             space_precise: '',
             space_description: '',
             space_external_book_url: null,
@@ -694,6 +703,17 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(bookingUrlField).toHaveValue('https://uqbookit.uq.edu.au/#/app/booking-types/111');
         await bookingUrlField.fill('http://example.com');
 
+        // enter a Space capacity
+        const capacityCheckbox = page.getByTestId('contains-capacity-checkbox').locator('input');
+        await expect(capacityCheckbox).not.toBeChecked();
+        await expect(page.getByTestId('capacity-details')).not.toBeVisible();
+        await capacityCheckbox.click();
+        await expect(page.getByTestId('capacity-details')).toBeVisible();
+
+        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+        await capacityNumberField.click(); // focus
+        await capacityNumberField.fill('32');
+
         // confirm current filter types
         const originalFilters = [
             FEMALE_TOILETS,
@@ -710,6 +730,7 @@ test.describe('Spaces Admin - edit space', () => {
             UNDERGRAD,
             CONTAINS_ARTWORK,
             BOOKABLE,
+            // SINGLE_OCCUPANCY,
         ];
         for (const facilityTypeId of originalFilters) {
             await expect(page.getByTestId(`filtertype-${facilityTypeId}`).locator('input')).toBeChecked();
@@ -806,6 +827,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_opening_hours_override: 'space is open from 7am',
             space_latitude: LAW_DEFAULT_LATITUDE, // TODO: drag an drop to change these
             space_longitude: LAW_DEFAULT_LONGITUDE,
+            space_capacity: '32',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -1032,6 +1054,238 @@ test.describe('booking link controller works properly', () => {
             ...originalMockData('97fd5_nm39_gh29'),
             space_opening_hours_id: -1, // might need to look into this?
             space_external_book_url: 'http://example.com',
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+});
+test.describe('space capacity controller works properly', () => {
+    test('can clear capacity', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+
+        await page.goto('/admin/spaces/edit/97fd5_nm39_gh29?user=libSpaces');
+        await page.setViewportSize({
+            width: 1300,
+            height: 1000,
+        });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        // change to facility type tab
+        await page.getByTestId(TAB_FACILITY_TYPES).click();
+
+        // space capacity is currently defined
+        await expect(page.getByTestId('has-space-capacity').locator('input')).toBeChecked();
+        await expect(page.getByTestId('capacity-details')).toBeVisible();
+        await expect(capacityNumberField).toHaveValue('1');
+
+        // remove the space capacity limit
+        const capacityCheckbox = page.getByTestId('contains-capacity-checkbox').locator('input');
+        await expect(capacityCheckbox).toBeChecked();
+        await expect(page.getByTestId('capacity-details')).toBeVisible();
+        await capacityCheckbox.click();
+        await expect(page.getByTestId('capacity-details')).not.toBeVisible();
+
+        // save changes - click Save button
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+
+        // check the data we pretended to send to the server matches what we expect
+        // acts as check of what we sent to api
+        const expectedValues = {
+            ...originalMockData('97fd5_nm39_gh29'),
+            space_opening_hours_id: -1, // might need to look into this?
+            space_capacity: null,
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('no capacity limit remains unset on save', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
+        await page.setViewportSize({
+            width: 1300,
+            height: 1000,
+        });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        // swap to facility type tab
+        await page.getByTestId(TAB_FACILITY_TYPES).click();
+
+        // capacity is not checked
+        await expect(page.getByTestId('has-space-capacity').locator('input')).not.toBeChecked();
+        await expect(page.getByTestId('capacity-details')).not.toBeVisible();
+
+        // click save button (there aren't any changes)
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+
+        // check the data we pretended to send to the server matches what we expect
+        // acts as check of what we sent to api
+        const expectedValues = {
+            ...originalMockData('f98g_fwas_5g33'),
+            space_capacity: null,
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('can add a capacity limit', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+
+        await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
+        await page.setViewportSize({
+            width: 1300,
+            height: 1000,
+        });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        // change to facility type tab
+        await page.getByTestId(TAB_FACILITY_TYPES).click();
+
+        // capacity is not checked
+        await expect(page.getByTestId('has-space-capacity').locator('input')).not.toBeChecked();
+        await expect(page.getByTestId('capacity-details')).not.toBeVisible();
+
+        // turn on "has a capacity limit" (check box)
+        const capacityCheckbox = page.getByTestId('contains-capacity-checkbox').locator('input');
+        await expect(capacityCheckbox).not.toBeChecked();
+        await expect(page.getByTestId('capacity-details')).not.toBeVisible();
+        await capacityCheckbox.click();
+        await expect(page.getByTestId('capacity-details')).toBeVisible();
+
+        // save now to confirm it throws an error for want of the url
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('spaces-button-error-list')).toBeVisible();
+        await expect(page.getByTestId('spaces-button-error-list')).toContainText('These errors occurred');
+        await expect(page.getByTestId('spaces-button-error-list')).toContainText(
+            'Provide the capacity of the Space, or uncheck the capacity checkbox',
+        );
+
+        await expect(page.getByTestId('toast-message')).toBeVisible();
+        await expect(page.getByTestId('toast-message')).toContainText('These errors occurred');
+        await expect(page.getByTestId('toast-message')).toContainText(
+            'Provide the capacity of the Space, or uncheck the capacity checkbox',
+        );
+
+        // ok, save failed - now enter a number
+        await capacityNumberField.click(); // focus
+        await capacityNumberField.fill('7');
+
+        // save our changes
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // check the data we pretended to send to the server matches what we expect
+        // acts as check of what we sent to api
+        const expectedValues = {
+            ...originalMockData('f98g_fwas_5g33'),
+            space_capacity: '7',
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('when the user changes their mind about the capacity, it saves correctly', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        const capacityCheckbox = page.getByTestId('contains-capacity-checkbox').locator('input');
+        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+
+        await page.goto('/admin/spaces/edit/df40_2jsf_zdk5?user=libSpaces');
+        await page.setViewportSize({
+            width: 1300,
+            height: 1000,
+        });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        // change to facility type tab
+        await page.getByTestId(TAB_FACILITY_TYPES).click();
+
+        // capacity is checked
+        await expect(page.getByTestId('has-space-capacity').locator('input')).toBeChecked();
+        await expect(page.getByTestId('capacity-details')).toBeVisible();
+
+        // turn off capacity with checkbox
+        await capacityCheckbox.uncheck();
+        await expect(page.getByTestId('capacity-details')).not.toBeVisible();
+
+        // change your mind and re-enable it
+        await capacityCheckbox.check();
+        await expect(page.getByTestId('capacity-details')).toBeVisible();
+        // capacity has wiped to 0
+        await expect(capacityNumberField).toHaveValue('0');
+
+        // now enter a number
+        await capacityNumberField.click(); // focus
+        await capacityNumberField.fill('2');
+
+        // save our changes
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // check the data we pretended to send to the server matches what we expect
+        // acts as check of what we sent to api
+        const expectedValues = {
+            ...originalMockData('df40_2jsf_zdk5'),
+            space_capacity: '2',
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('when the user changes their mind a lot about the capacity, it saves correctly', async ({ page, context }) => {
+        await page.goto('/admin/spaces/edit/df40_2jsf_zdk5?user=libSpaces');
+        await page.setViewportSize({
+            width: 1300,
+            height: 1000,
+        });
+        await setTestDataCookie(context, page);
+
+        const capacityCheckbox = page.getByTestId('contains-capacity-checkbox').locator('input');
+        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        // change to facility type tab
+        await page.getByTestId(TAB_FACILITY_TYPES).click();
+
+        // capacity is checked
+        await expect(page.getByTestId('has-space-capacity').locator('input')).toBeChecked();
+        await expect(page.getByTestId('capacity-details')).toBeVisible();
+
+        // turn off capacity with checkbox
+        await capacityCheckbox.uncheck();
+        await expect(page.getByTestId('capacity-details')).not.toBeVisible();
+
+        // change your mind and re-enable it
+        await capacityCheckbox.check();
+        await expect(page.getByTestId('capacity-details')).toBeVisible();
+        // it reopens with the value set to 0
+        await expect(capacityNumberField).toHaveValue('0');
+
+        // turn off capacity with checkbox
+        await capacityCheckbox.uncheck();
+        await expect(page.getByTestId('capacity-details')).not.toBeVisible();
+
+        // save our changes
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // check the data we pretended to send to the server matches what we expect
+        // acts as check of what we sent to api
+        const expectedValues = {
+            ...originalMockData('df40_2jsf_zdk5'),
+            space_capacity: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
