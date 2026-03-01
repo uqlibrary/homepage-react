@@ -50,6 +50,10 @@ export default {
                 {
                     "facility_type_id": 19,
                     "facility_type_name": "Bookable"
+                },
+                {
+                    "facility_type_id": 51,
+                    "facility_type_name": "Single person space"
                 }
             ]
         },

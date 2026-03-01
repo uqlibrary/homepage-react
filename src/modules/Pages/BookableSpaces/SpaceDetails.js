@@ -4,16 +4,16 @@ import parse from 'html-react-parser';
 
 import IconButton from '@mui/material/IconButton';
 import { styled, useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 
 import { OpeningHoursDown } from './OpeningHoursDown';
 import { OpeningHoursShort } from './OpeningHoursShort';
 import { OpeningHoursTable } from './OpeningHoursTable';
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { addClass, removeClass } from 'helpers/general';
+import { addClass, pluralise, removeClass } from 'helpers/general';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const StyledFriendlyLocationDiv = styled('div')(() => ({
@@ -30,6 +30,14 @@ const StyledSpaceDiv = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         overflow: 'auto',
         maxWidth: '80%',
+    },
+}));
+const StyleCapacityDiv = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: '0.5rem',
+    '& svg': {
+        color: theme.palette.primary.main,
     },
 }));
 const StyledBookitLinkWrapperDiv = styled('div')(({ theme }) => ({
@@ -257,7 +265,16 @@ const SpaceDetails = ({
                         This space does not require a booking.
                     </div>
                 )}
-                <div>[todo] "Up to x people" or "1 person only".</div>
+                {!!bookableSpace?.space_capacity && bookableSpace?.space_capacity > 0 && (
+                    <StyleCapacityDiv data-testid={`space-${bookableSpace?.space_id}-capacity`}>
+                        <PeopleOutlineIcon />
+                        {`Space for ${bookableSpace.space_capacity} ${pluralise(
+                            'person',
+                            bookableSpace.space_capacity,
+                            'people',
+                        )}.`}
+                    </StyleCapacityDiv>
+                )}
                 <div>[todo] Short generic description for space type</div>
                 {bookableSpace?.space_description?.length > 0 && (
                     <StyledDescriptionDiv

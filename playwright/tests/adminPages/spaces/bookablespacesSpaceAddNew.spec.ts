@@ -149,6 +149,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_latitude: PACE_DEFAULT_LATITUDE,
             space_longitude: PACE_DEFAULT_LONGITUDE,
             space_external_book_url: null,
+            space_capacity: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -186,6 +187,17 @@ test.describe('Spaces Admin - add new space', () => {
         await isBookableCheckbox.check();
         await expect(bookingUrlField).toBeVisible();
         await bookingUrlField.fill('https://example.com');
+
+        // enter a Space capacity
+        const capacityCheckbox = page.getByTestId('contains-capacity-checkbox').locator('input');
+        await expect(capacityCheckbox).not.toBeChecked();
+        await expect(page.getByTestId('capacity-details')).not.toBeVisible();
+        await capacityCheckbox.click();
+        await expect(page.getByTestId('capacity-details')).toBeVisible();
+
+        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+        await capacityNumberField.click(); // focus
+        await capacityNumberField.fill('8');
 
         await expect(page.getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`).locator('input')).toBeVisible();
         await expect(page.getByTestId(`facility-type-listitem-${ASKUS_FILTER_TYPE}`)).toContainText('AskUs service');
@@ -298,6 +310,7 @@ test.describe('Spaces Admin - add new space', () => {
             facility_types: [ASKUS_FILTER_TYPE, MICROWAVE_FILTER_TYPE],
             space_latitude: PACE_DEFAULT_LATITUDE, // TODO add drag and drop test
             space_longitude: PACE_DEFAULT_LONGITUDE,
+            space_capacity: '8',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });

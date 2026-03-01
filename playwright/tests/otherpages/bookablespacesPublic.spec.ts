@@ -98,6 +98,17 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-booking-link`)).not.toBeVisible();
         });
 
+        test('capacity loads correctly', async ({ page }) => {
+            // first panel
+            await expect(page.getByTestId(`${FORG}-capacity`)).not.toBeVisible();
+
+            // second panel
+            await expect(page.getByTestId(`${PACE}-capacity`)).toContainText('Space for 5 people.');
+
+            // third panel
+            await expect(page.getByTestId(`${LIV}-capacity`)).toContainText('Space for 1 person.');
+        });
+
         test('description loads correctly', async ({ page }) => {
             // first panel
             await expect(page.getByTestId(`${FORG}-description`)).toHaveCount(1); // second line is hidden
@@ -292,7 +303,7 @@ test.describe('Spaces', () => {
             // third panel
             page.getByTestId(`${LIV}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${LIV}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-facility`).locator(' > *')).toHaveCount(9);
+            await expect(page.getByTestId(`${LIV}-facility`).locator(' > *')).toHaveCount(10);
             await expect(page.getByTestId(`${LIV}-facility-23`)).toContainText('Toilets, female');
             await expect(page.getByTestId(`${LIV}-facility-22`)).toContainText('Toilets, male');
             await expect(page.getByTestId(`${LIV}-facility-29`)).toContainText('Recharge Station');
