@@ -607,6 +607,211 @@ export const accounts = {
         "blocked": false,
         "user_group": "REMRHD",
     },
+    uqacad1: {
+        "id": "uqacad1",
+        "class": [
+            "AGE_OVER_18",
+            "Campus-None",
+            "Campus-STLUCIA",
+            "Faculty of Humanities, Arts and Social Sciences",
+            "IS_ACADEMIC",
+            "IS_CONTINUING",
+            "IS_CURRENT",
+            "IS_PAID",
+            "IS_SUBSTANTIVE",
+            "IS_TEACHING_AND_RESEARCH",
+            "IS_UNPAID",
+            "IS_UQ_STAFF_PLACEMENT",
+            "OrgUnit-Centre for Critical and Creative Writing",
+            "OrgUnit-Centre of Architecture, Theory, Criticism and History",
+            "School of Architecture, Design and Planning",
+            "School of Communication and Arts",
+            "staff@uq.edu.au",
+            "uqajoh25@uq.edu.au"
+        ],
+        "type": 3,
+        "homeLib": "St Lucia",
+        "firstName": "Some random academic",
+        "lastName": "with duplicate courses",
+        "name": "Some random academic with duplicate courses",
+        "mail": "uqacad1@student.uq.edu.au",
+        "barcode": "111111111111567",
+        "groups": [
+        ],
+        "user_group": "STAFF",
+        "classes": [
+            {
+                "ACAD_CAREER": "NAWD",
+                "DESCR": "Australian Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "3100",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7620"
+            },
+            {
+                "ACAD_CAREER": "NAWD",
+                "DESCR": "Contemporary Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "1500",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7560"
+            },
+            {
+                "ACAD_CAREER": "NAWD",
+                "DESCR": "World Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "2080",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7560"
+            },
+            {
+                "ACAD_CAREER": "PGCW",
+                "DESCR": "Australian Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "3100",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7620"
+            },
+            {
+                "ACAD_CAREER": "UGRD",
+                "DESCR": "Australian Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "3100",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7620"
+            },
+            {
+                "ACAD_CAREER": "UGRD",
+                "DESCR": "Contemporary Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "1500",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7560"
+            },
+            {
+                "ACAD_CAREER": "UGRD",
+                "DESCR": "Research Design Arts & Culture",
+                "SUBJECT": "HHSS",
+                "CATALOG_NBR": "6040",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7620"
+            },
+            {
+                "ACAD_CAREER": "UGRD",
+                "DESCR": "World Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "2080",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7560"
+            }
+        ],
+        "current_classes": [
+            {
+                "ACAD_CAREER": "NAWD",
+                "DESCR": "Contemporary Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "1500",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7560"
+            },
+            {
+                "ACAD_CAREER": "NAWD",
+                "DESCR": "World Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "2080",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7560"
+            },
+            {
+                "ACAD_CAREER": "UGRD",
+                "DESCR": "Contemporary Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "1500",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7560"
+            },
+            {
+                "ACAD_CAREER": "UGRD",
+                "DESCR": "World Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "2080",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7560"
+            },
+            {
+                "ACAD_CAREER": "NAWD",
+                "DESCR": "Australian Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "3100",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7620"
+            },
+            {
+                "ACAD_CAREER": "PGCW",
+                "DESCR": "Australian Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "3100",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7620"
+            },
+            {
+                "ACAD_CAREER": "UGRD",
+                "DESCR": "Australian Literature",
+                "SUBJECT": "ENGL",
+                "CATALOG_NBR": "3100",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7620"
+            },
+            {
+                "ACAD_CAREER": "UGRD",
+                "DESCR": "Research Design Arts & Culture",
+                "SUBJECT": "HHSS",
+                "CATALOG_NBR": "6040",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "HSS",
+                "STRM": "7620"
+            }
+        ],
+        "expiryDate": "31-12-2199",
+        "hasSession": true,
+        "tokenBased": false,
+        "canMasquerade": false,
+        "blocked": false,
+        "masqueradingId": "uqldegro",
+        "masqueradingType": "full",
+        "tnt": null,
+    },
     // rhd student doing a non-research subject
     s6666666: {
         "id": "s6666666",
