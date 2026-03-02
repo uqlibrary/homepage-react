@@ -78,37 +78,18 @@ const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
 }));
 
-// const StyledMainWrapperDiv = styled('div')(() => ({
-//     // position: 'relative',
-//     marginTop: '1px',
-//     display: 'flex',
-//     marginBottom: '-50px', // bring footer up
-//     marginInline: '2rem',
-// }));
-// const StyledPageWrapperDiv = styled('div')(() => ({
-//     position: 'relative',
-// }));
-const StyledMobileWrapper = styled('div')(({ theme }) => ({
+const StyledMobileWrapper = styled('div')(() => ({
     position: 'relative',
     height: '99vh',
     marginInline: '2rem',
-    '& .narrowFilterList': {
-        //
-    },
-    '& .popupSpacesList': {
-        right: 0,
-        height: 'calc(100% - 70px)',
-    },
-    '& .popupFilterList': {
-        right: 0,
-        height: 'calc(100% - 32px)',
-    },
     '& .popupSpacesList, .popupFilterList': {
         position: 'absolute',
         top: 0,
+        right: 0,
+        height: 'calc(100% - 56px)',
         width: '20rem',
         maxWidth: '50%',
-        zIndex: 998,
+        zIndex: 997,
         paddingLeft: '0.5rem',
         marginTop: 0,
     },
@@ -122,7 +103,7 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
     position: 'absolute',
     top: '0.25rem',
     right: '1rem',
-    zIndex: 2001,
+    zIndex: 998,
     display: 'flex',
     alignItems: 'center',
     columnGap: '0.25rem',
@@ -132,8 +113,13 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
         fontSize: '1rem',
     },
     backgroundColor: '#fff',
+    textDecoration: 'underline',
     '&:hover, :focus': {
         backgroundColor: '#fff',
+        '& > span:first-of-type > span': {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+        },
     },
 
     backgroundImage: schoolBuildingBackgroundimage,
@@ -146,16 +132,21 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
 const StyledFilterOpenButton = styled(Button)(({ theme }) => ({
     position: 'absolute',
     top: '0.25rem',
-    left: '1rem',
-    zIndex: 2001,
+    left: '12rem', // have the button sit on the right of the filter sidebar, so the labels slide inside it
+    zIndex: 998,
     backgroundColor: '#fff',
     display: 'flex',
     alignItems: 'center',
     columnGap: '0.25rem',
     paddingLeft: 0,
     marginLeft: '-0.5rem',
+    textDecoration: 'underline',
     '&:hover, :focus': {
         backgroundColor: '#fff',
+        '& > span:first-of-type > span': {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+        },
     },
     '& span': {
         textTransform: 'capitalize',
@@ -320,14 +311,6 @@ export const BookableSpacesList = ({
                 return false;
             }
         }
-
-        // // handle any "special" filter checkboxes
-        // // 1. "currently open"
-        // console.log('space=', space);
-        // console.log(
-        //     'ft.facility_type_children.facility_special_action=',
-        //     ft.facility_type_children.facility_special_action,
-        // );
 
         // If no inclusion filters are selected, show all spaces (that haven't been rejected)
         if (Object.keys(selectedFiltersByGroup).length === 0) {
@@ -543,6 +526,15 @@ export const BookableSpacesList = ({
             />
         );
     };
+    function neededPaddingRight() {
+        if (activeFilterCount === 0) {
+            return 0;
+        }
+        if (activeFilterCount > 9) {
+            return '1rem';
+        }
+        return '0.75rem';
+    }
     return (
         <BookableSpacesListWrapperDiv>
             {(() => {
@@ -604,22 +596,19 @@ export const BookableSpacesList = ({
                     // mobile and tablet
                     return (
                         <StyledMobileWrapper data-testid="library-spaces">
-                            <StyledFilterOpenButton
-                                id="toggleFilterButton"
-                                // className="controlFilterButton"
-                                data-testid="spaces-open-filter-button"
-                                onClick={() => toggleFilterPopupVisibility()}
-                                title="Open and close the filter sidebar"
-                            >
-                                {filterToggleButtonIcon}{' '}
-                                <span>
-                                    <span style={{ paddingRight: activeFilterCount < 10 ? '0.8rem' : '1.1rem' }}>
-                                        {!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}
+                            <div>
+                                <StyledFilterOpenButton
+                                    id="toggleFilterButton"
+                                    data-testid="spaces-open-filter-button"
+                                    onClick={() => toggleFilterPopupVisibility()}
+                                    title="Open and close the filter sidebar"
+                                >
+                                    {filterToggleButtonIcon}{' '}
+                                    <span style={{ paddingRight: neededPaddingRight() }}>
+                                        <span>{!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}</span>
                                     </span>
                                     {countIcon()}
-                                </span>
-                            </StyledFilterOpenButton>
-                            <div>
+                                </StyledFilterOpenButton>
                                 <SidebarFilters
                                     facilityTypeList={facilityTypeList}
                                     facilityTypeListLoading={facilityTypeListLoading}
@@ -643,7 +632,9 @@ export const BookableSpacesList = ({
                                         title="Open and close the spaces sidebar"
                                     >
                                         <span>
-                                            {!!showSpacesSelectorPopup ? 'Hide Spaces list' : 'Show Spaces list'}
+                                            <span>
+                                                {!!showSpacesSelectorPopup ? 'Hide Spaces list' : 'Show Spaces list'}
+                                            </span>
                                         </span>
                                     </StyledSpaceListOpenButton>
                                     <div

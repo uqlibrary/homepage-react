@@ -13,9 +13,9 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CloseIcon from '@mui/icons-material/Close';
 import ReplayIcon from '@mui/icons-material/Replay';
 
-import { addClass, removeClass, standardText } from 'helpers/general';
+import { addClass, removeClass, standardText, StyledPrimaryButton } from 'helpers/general';
 
-import { FACILITY_TYPE_NAME_CURRENTLY_OPEN, getFlatFacilityTypeList } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { getFlatFacilityTypeList } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const svgOrangeCheckbox =
     "data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid meet' focusable='false'%3E%3Cpath fill='%23c13e2a' d='M22.2,20.9l-1.3-1.3C21,19.4,21,19.2,21,19v-8h-2v6.7l-4.6-4.6l6-6l-1.4-1.4l-6,6L6.3,5H15V3H5C4.8,3,4.6,3,4.4,3.1L3,1.7L1.8,2.9l1.3,1.3C3.1,4.4,3,4.7,3,5v14c0,1.1,0.9,2,2,2h14c0.3,0,0.6-0.1,0.8-0.2l1.2,1.2L22.2,20.9z M5,19V6l6.9,6.9l-1.4,1.4l-3.1-3.1L6,12.6l4.5,4.5l2.8-2.8L18,19H5z'%3E%3C/path%3E%3C/svg%3E";
@@ -41,7 +41,16 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
     display: 'flex',
     '& label': {
         ...standardText(theme),
+        textDecoration: 'underline',
         display: 'inline',
+        '&:hover, :focus': {
+            '& > span:nth-of-type(2)': {
+                backgroundColor: theme.palette.primary.main,
+                color: '#fff',
+                textDecoration: 'underline',
+                lineHeight: 1.2,
+            },
+        },
         '& span:last-of-type': {
             overflow: 'hidden',
             whiteSpace: 'nowrap',
@@ -174,7 +183,7 @@ const StyledFilterSpaceList = styled('ul')(() => ({
 const StyledCartoucheList = styled('ul')(({ theme }) => ({
     listStyle: 'none',
     display: 'block',
-    margin: 0,
+    margin: '0 0 0.5rem 0',
     padding: 0,
     '& li': {
         listStyle: 'none',
@@ -538,14 +547,20 @@ export const SidebarFilters = ({
                             {showCartoucheList(flatFacilityTypeList)}
                         </StyledCartoucheList>
                         {checkFiltersList?.length > 0 && (
-                            <Button
+                            <StyledPrimaryButton
                                 id={'button-deselect-all-filters'}
                                 data-testid={'button-deselect-all-filters'}
                                 onClick={deSelectAll}
+                                style={{
+                                    padding: '0.5rem 1rem',
+                                    marginRight: 'auto',
+                                    marginLeft: 'auto',
+                                    display: 'block',
+                                }}
                             >
                                 <ReplayIcon style={{ fontSize: '16px' }} />
                                 <span>Remove all filters</span>
-                            </Button>
+                            </StyledPrimaryButton>
                         )}
                     </>
                 )}

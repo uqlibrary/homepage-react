@@ -52,9 +52,7 @@ const StyledBookitLinkWrapperDiv = styled('div')(({ theme }) => ({
     '& a': {
         '&:hover, &:focus': {
             backgroundColor: 'transparent',
-        },
-        '& span': {
-            '&:hover, &:focus': {
+            '& span': {
                 backgroundColor: '#51247a',
                 color: '#fff',
             },
