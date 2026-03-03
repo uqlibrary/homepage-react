@@ -28,7 +28,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
 
     const { user } = useAccountUser();
 
-    const userDepartment = user?.user_department ?? /* istanbul ignore next */ null;
+    const userTeam = user?.user_team ?? /* istanbul ignore next */ null;
     const userUID = user?.user_uid ?? /* istanbul ignore next */ null;
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
@@ -49,7 +49,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         data => {
             setDialogueBusy(true);
             const request = structuredClone(data);
-            const wrappedRequest = transformAddRequest(request, userDepartment);
+            const wrappedRequest = transformAddRequest(request, userTeam);
             actions
                 .addUser(wrappedRequest)
                 .then(() => {
@@ -66,7 +66,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                 });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [userDepartment],
+        [userTeam],
     );
 
     const onRowEdit = React.useCallback(data => {

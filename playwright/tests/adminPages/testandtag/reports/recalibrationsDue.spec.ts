@@ -10,7 +10,10 @@ test.describe('Test and Tag Report - RecalibrationsDue due', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.recalibrationsDue.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.report.recalibrationsDue.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'device_model_name', 0)).getByText('AV 025')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
@@ -18,7 +21,10 @@ test.describe('Test and Tag Report - RecalibrationsDue due', () => {
 
     test('sorting works as expected, and indicates overdue', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.recalibrationsDue.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.report.recalibrationsDue.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'device_model_name', 0)).getByText('AV 025')).toBeVisible();
         // Change the sort order

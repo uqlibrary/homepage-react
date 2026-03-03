@@ -10,7 +10,10 @@ test.describe('Test and Tag Report - Inspections due', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.inspectionsDue.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.report.inspectionsDue.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000007')).toBeVisible();
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
@@ -24,7 +27,10 @@ test.describe('Test and Tag Report - Inspections due', () => {
 
     test('page UI elements function as expected', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.inspectionsDue.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.report.inspectionsDue.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000007')).toBeVisible();
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
