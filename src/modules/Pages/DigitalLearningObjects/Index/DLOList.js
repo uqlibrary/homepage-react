@@ -1463,6 +1463,12 @@ export const DLOList = ({
     // this will eventually be an internal form
     const contactFormLink = 'https://forms.office.com/r/8t0ugSZgE7';
 
+    const isDlorTeamMember = Array.isArray(dlorTeamList) ? isADlorTeamMember(account, dlorTeamList) : false;
+    const isDlorAuthor =
+        !!account?.id &&
+        Array.isArray(dlorList) &&
+        dlorList.some(item => item?.owner?.publishing_user_username === account.id);
+
     function containsFacetWithShowHelp(selectedFilters, filterListTrimmed) {
         // Build a Set of all facet ids with facet_show_help === true
         const facetIdsWithShowHelp = new Set(
@@ -1518,7 +1524,7 @@ export const DLOList = ({
                             </StyledSkipLinkButton>
                         </Typography>
                     </Grid>
-                    {!!isADlorTeamMember(account, dlorTeamList) && (
+                    {!!(isDlorTeamMember || isDlorAuthor) && (
                         <Grid item xs={1} md="auto" sx={{ textAlign: 'right' }}>
                             <IconButton
                                 color="primary"
@@ -1564,6 +1570,16 @@ export const DLOList = ({
                                 <Divider />
                                 <MenuItem
                                     onClick={() => {
+                                        handleMenuClose();
+                                        window.location.href = '/digital-learning-hub/dashboard';
+                                    }}
+                                    data-testid="team-dlor-dashboard--button"
+                                >
+                                    View Digital Learning Object dashboard
+                                </MenuItem>
+                                <Divider />
+                                <MenuItem
+                                    onClick={() => {
                                         exportDLORDataToCSV(dlorList, 'dlor_data.csv');
                                         handleMenuClose();
                                     }}
@@ -1574,24 +1590,19 @@ export const DLOList = ({
                             </Menu>
                         </Grid>
                     )}
-                    {!!account?.id &&
-                        !!!isDlorAdminUser(account) &&
-                        !!!isADlorTeamMember(
-                            account || /* istanbul ignore next */ null,
-                            dlorTeamList || /* istanbul ignore next */ null,
-                        ) && (
-                            <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
-                                <UqActionLink
-                                    data-testid="dlor-homepage-request-new-item"
-                                    onClick={handleRequestNewItem}
-                                    title="Request a new item"
-                                    sx={{ display: 'flex', alignItems: 'center' }}
-                                >
-                                    Submit new object request&nbsp;
-                                    {/* <OpenInNewIcon /> */}
-                                </UqActionLink>
-                            </Grid>
-                        )}
+                    {!!account?.id && !!!isDlorAdminUser(account) && !isDlorTeamMember && !isDlorAuthor && (
+                        <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
+                            <UqActionLink
+                                data-testid="dlor-homepage-request-new-item"
+                                onClick={handleRequestNewItem}
+                                title="Request a new item"
+                                sx={{ display: 'flex', alignItems: 'center' }}
+                            >
+                                Submit new object request&nbsp;
+                                {/* <OpenInNewIcon /> */}
+                            </UqActionLink>
+                        </Grid>
+                    )}
                     <Grid item xs={12} sx={{ marginTop: '20px' }}>
                         <LoginPrompt account={account} />
                     </Grid>
