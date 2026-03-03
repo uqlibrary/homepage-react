@@ -132,7 +132,7 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
 const StyledFilterOpenButton = styled(Button)(({ theme }) => ({
     position: 'absolute',
     top: '0.25rem',
-    left: '12rem', // have the button sit on the right of the filter sidebar, so the labels slide inside it
+    left: '11rem', // have the button sit on the right of the filter sidebar, so the labels slide inside it
     zIndex: 998,
     backgroundColor: '#fff',
     display: 'flex',
@@ -306,7 +306,7 @@ export const BookableSpacesList = ({
         // check if space should be excluded due to rejected facility types
         if (rejectedFilters.length > 0) {
             const hasRejectedFacility = rejectedFilters.some(rejectedId => spaceFacilityTypes?.includes(rejectedId));
-            console.log('rejectedFilters=');
+            console.log('rejectedFilters=', hasRejectedFacility, rejectedFilters);
             if (hasRejectedFacility) {
                 return false;
             }
@@ -424,6 +424,18 @@ export const BookableSpacesList = ({
     const filteredSpaceLocations = bookableSpacesRoomList?.data?.locations?.filter(space => {
         return showSpace(space, facilityTypeToGroup, selectedFacilityTypes);
     });
+    const visibleSpacesCountBadge = () => {
+        return filteredSpaceLocations.length > 0 &&
+            filteredSpaceLocations.length < bookableSpacesRoomList?.data?.locations?.length ? (
+            <Badge
+                badgeContent={filteredSpaceLocations.length}
+                max={bookableSpacesRoomList?.data?.locations?.length}
+                color="primary"
+                style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
+                data-testid="space-filter-count"
+            />
+        ) : null;
+    };
 
     const handleMarkerClick = (e, space) => {
         // Stop the click from opening the popup
@@ -515,7 +527,7 @@ export const BookableSpacesList = ({
         );
     };
     const activeFilterCount = selectedFacilityTypes.filter(ft => !!ft.selected || !!ft.unselected).length;
-    const countIcon = () => {
+    const activeFilterCountBadge = () => {
         return activeFilterCount === 0 ? null : (
             <Badge
                 badgeContent={activeFilterCount}
@@ -607,7 +619,7 @@ export const BookableSpacesList = ({
                                     <span style={{ paddingRight: neededPaddingRight() }}>
                                         <span>{!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}</span>
                                     </span>
-                                    {countIcon()}
+                                    {activeFilterCountBadge()}
                                 </StyledFilterOpenButton>
                                 <SidebarFilters
                                     facilityTypeList={facilityTypeList}
@@ -631,11 +643,18 @@ export const BookableSpacesList = ({
                                         onClick={() => toggleSpacesListPopupVisibility()}
                                         title="Open and close the spaces sidebar"
                                     >
-                                        <span>
+                                        <span
+                                            style={{
+                                                paddingRight: filteredSpaceLocations.length > 10 ? '1rem' : '0.5rem',
+                                                // covers 1 and 2 digit - will need more ifs when we have more data: > 100, > 1000
+                                                // but maybe [> 100] ?
+                                            }}
+                                        >
                                             <span>
                                                 {!!showSpacesSelectorPopup ? 'Hide Spaces list' : 'Show Spaces list'}
                                             </span>
                                         </span>
+                                        {visibleSpacesCountBadge()}
                                     </StyledSpaceListOpenButton>
                                     <div
                                         className={
