@@ -441,7 +441,7 @@ export const BookableSpacesList = ({
                 max={bookableSpacesRoomList?.data?.locations?.length}
                 color="primary"
                 style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
-                data-testid="space-filter-count"
+                data-testid="space-space-count"
             />
         ) : null;
     };
