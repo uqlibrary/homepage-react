@@ -99,16 +99,19 @@ export const UpdateDialogue = ({
         e.stopPropagation();
     };
 
-    const handleChange = event => {
+    const handleChange = (event, value) => {
         const isCheckbox = event.target.type === 'checkbox';
+        const isOption = event.target.getAttribute('role') === 'option';
+        const dataKey = isOption ? event.target.id.split('-')[0] : event.target.name;
+        const optionKey = fields?.[dataKey]?.fieldParams?.optionKey;
         // eslint-disable-next-line no-nested-ternary
-        const value = !isCheckbox ? event.target.value : event.target.checked;
+        const newValue = isOption ? value?.[optionKey] : isCheckbox ? event.target.checked : event.target.value;
+
         setData(prevState => ({
             ...prevState,
-            [event.target.name]: value,
+            [dataKey]: newValue,
         }));
     };
-
     return (
         <StyledDialog open={isOpen} id={`${componentId}`} data-testid={`${componentId}`}>
             <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
@@ -152,10 +155,6 @@ export const UpdateDialogue = ({
                                                         id: `${field}-input`,
                                                         name: field,
                                                         label: dataColumns[field].label,
-                                                        value:
-                                                            dataFields[field]?.valueFormatter?.(data?.[field]) ??
-                                                            data?.[field] ??
-                                                            '',
                                                         error:
                                                             dataFields[field]?.validate?.(data?.[field], data) ?? false,
                                                         checked: !!data?.[field],
@@ -172,6 +171,11 @@ export const UpdateDialogue = ({
                                                         },
                                                         fullWidth: true,
                                                         type: dataFields[field]?.fieldParams?.type ?? undefined,
+                                                        value:
+                                                            dataFields[field]?.valueFormatter?.(data?.[field]) ??
+                                                            data?.[field] ??
+                                                            '',
+                                                        ...(props?.fieldProps?.[field] ? props.fieldProps[field] : {}),
                                                     }),
                                                     data,
                                                     row,
@@ -253,6 +257,7 @@ UpdateDialogue.propTypes = {
     onCancelAction: PropTypes.func,
     onClose: PropTypes.func,
     props: PropTypes.object,
+    fieldProps: PropTypes.object,
     isBusy: PropTypes.bool,
 };
 

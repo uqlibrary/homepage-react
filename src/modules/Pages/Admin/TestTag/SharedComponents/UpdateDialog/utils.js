@@ -1,20 +1,29 @@
 import PropTypes from 'prop-types';
+import {
+    commonPropNames,
+    textfieldPropNames,
+    checkboxPropNames,
+    autocompletePropNames,
+    overrides,
+} from './componentProps';
 
 export const componentProps = {
-    default: ['id', 'name', 'label', 'value', 'onChange', 'inputProps'],
-    textfield: ['InputLabelProps', 'fullWidth', 'error', 'onClick'],
-    checkbox: ['checked'],
+    textfield: textfieldPropNames,
+    checkbox: checkboxPropNames,
+    autocomplete: autocompletePropNames,
 };
-export const filterComponentProps = ({ type = 'textfield', ...props }) => {
-    if (type !== 'textfield' && type !== 'checkbox') return props;
+const componentPropKeys = Object.keys(componentProps);
 
-    const fullProps = [...componentProps.default, ...componentProps[type]];
+export const filterComponentProps = ({ type = 'textfield', ...props }) => {
+    if (!componentPropKeys.includes(type)) return props;
+
+    const fullProps = [...commonPropNames, ...componentProps[type], ...(overrides?.[type] ? overrides?.[type] : [])];
     Object.keys(props).forEach(key => {
         if (!fullProps.includes(key)) delete props[key];
     });
     return props;
 };
 filterComponentProps.propTypes = {
-    type: PropTypes.oneOf(['textfield', 'checkbox']),
+    type: PropTypes.oneOf(componentPropKeys),
     props: PropTypes.object.isRequired,
 };

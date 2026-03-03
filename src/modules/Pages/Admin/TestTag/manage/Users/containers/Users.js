@@ -7,6 +7,7 @@ import { withUser } from '../../../helpers/withUser';
 export const mapStateToProps = state => {
     return {
         ...state.get('testTagUserListReducer'),
+        ...state.get('testTagTeamListReducer'),
     };
 };
 

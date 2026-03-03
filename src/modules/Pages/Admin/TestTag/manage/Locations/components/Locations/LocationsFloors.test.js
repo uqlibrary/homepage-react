@@ -235,7 +235,7 @@ describe('Locations', () => {
             expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
 
             expect(getByTestId('floor_id_displayed-input')).toHaveAttribute('value', '2');
-
+            await userEvent.click(getByTestId('floor_id_displayed-input'));
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
             userEvent.click(getByTestId('update_dialog-action-button'));

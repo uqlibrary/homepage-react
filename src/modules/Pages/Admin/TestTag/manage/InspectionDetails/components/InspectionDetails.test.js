@@ -165,6 +165,7 @@ describe('InspectionDetails', () => {
         expect(getByTestId('inspect_notes-input')).toBeInTheDocument();
         expect(getByTestId('discard_reason-input')).toHaveAttribute('disabled');
 
+        await userEvent.click(getByTestId('inspect_notes-input'));
         await userEvent.type(getByTestId('inspect_notes-input'), 'TEST NOTES');
         await userEvent.type(getByTestId('inspect_fail_reason-input'), 'TEST FAIL REASON');
         await userEvent.tab();

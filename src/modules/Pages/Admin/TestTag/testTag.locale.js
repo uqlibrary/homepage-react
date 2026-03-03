@@ -980,7 +980,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `User management for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `User management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -994,6 +994,12 @@ export default {
                         },
                         user_name: {
                             label: 'Name',
+                        },
+                        user_team: {
+                            label: 'Team',
+                        },
+                        user_team_display: {
+                            label: 'Team',
                         },
                         user_licence_number: {
                             label: 'Lic #',
@@ -1067,6 +1073,7 @@ export default {
                     user_uid: 'A user ID must contain only lower case letters and numbers',
                     user_licence_number: 'A licence number is required for inspect privilege',
                     user_name: 'A user name is required',
+                    user_team: 'A user team is required',
                 },
             },
             teams: {
