@@ -12,7 +12,10 @@ export default {
             "is_popular": 1,
             "object_owning_team_id": 1,
             "created_at": "2024-01-01T00:00:00.000000Z",
-            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "updated_at": (() => {
+                const d = new Date(Date.now() - 24 * 60 * 60 * 1000);
+                return d.toISOString().replace(/\.\d{3}Z$/, '.000000Z');
+            })(),
             "object_download_instructions": "<p>Download the Common Cartridge file and H5P quiz to embed in Blackboard.</p><p>and a second line of detail in the description, looking at an <a href='http://example.com'>example link</a></p>",
             "object_link_url": "https://www.youtube.com/watch?v=jwKH6X3cGMg",
             "object_filters": [
@@ -109,6 +112,13 @@ export default {
             "object_series_description": 'Digital Essentials description',
             "object_series_order": 4,
             "object_cultural_advice": 0,
+            "object_review_stage": null,
+            "total_favorites": 1,
+            "total_subscriptions": 0,
+            "is_favourited": true,
+            "is_subscribed": false,
+            "due_for_review": false,
+            "due_for_unpublish": false,
         },
         {
             "object_id": 2,
@@ -203,6 +213,13 @@ export default {
             "object_series_order": 1,
             "object_cultural_advice": 1,
             "object_is_featured": 1,
+            "object_review_stage": 1,
+            "total_favorites": 1,
+            "total_subscriptions": 0,
+            "is_favourited": true,
+            "is_subscribed": false,
+            "due_for_review": false,
+            "due_for_unpublish": false,
         },
         {
             "object_id": 8,
@@ -288,6 +305,13 @@ export default {
             "object_series_description": 'Indigenising curriculum description',
             "object_series_order": 1,
             "object_cultural_advice": 1,
+            "object_review_stage": 2,
+            "total_favorites": 1,
+            "total_subscriptions": 2,
+            "is_favourited": true,
+            "is_subscribed": true,
+            "due_for_review": true,
+            "due_for_unpublish": false,
         },
         {
             "object_id": 3,
@@ -397,6 +421,13 @@ export default {
             "object_series_description": null,
             "object_series_order": 2,
             "object_cultural_advice": 0,
+            "object_review_stage": null,
+            "total_favorites": 1,
+            "total_subscriptions": 0,
+            "is_favourited": true,
+            "is_subscribed": false,
+            "due_for_review": false,
+            "due_for_unpublish": true,
         },
         {
             "object_id": 4,
