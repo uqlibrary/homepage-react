@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
@@ -33,7 +32,6 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 import { convertSnakeCaseToKebabCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/VisitHomepage';
 import {
     dlorAdminLink,
     exportDemographicsToCSV,
@@ -469,6 +467,16 @@ export const DLOAdminHomepage = ({
                             data-testid="admin-dlor-export-favourites-button"
                         >
                             {isExportingFavourites ? 'Exporting...' : 'Export Favourites Data to CSV'}
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem
+                            onClick={() => {
+                                window.location.href = '/digital-learning-hub/dashboard';
+                                handleMenuClose();
+                            }}
+                            data-testid="dlor-admin-dashboard--button"
+                        >
+                            View Digital Learning Object dashboard
                         </MenuItem>
                         <Divider />
                         <MenuItem
