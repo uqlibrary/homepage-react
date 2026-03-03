@@ -64,6 +64,17 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await manageSeriesButton.click();
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`);
         });
+        test('has a working "view digital learning object dashboard" button', async ({ page }) => {
+            await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+
+            await page.getByTestId('admin-dlor-team-admin-menu-button').click();
+            const viewDashboardButton = page.getByTestId('team-dlor-dashboard--button');
+            await expect(viewDashboardButton).toContainText('View Digital Learning Object dashboard');
+            await viewDashboardButton.click();
+
+            await expect(page).toHaveURL(/\/digital-learning-hub\/dashboard/);
+        });
         test('has a working "edit an object" button', async ({ page }) => {
             const editButton = page.getByTestId('dlor-homepage-edit-98s0_dy5k3_98h4');
             await editButton.click();
