@@ -191,6 +191,7 @@ describe('Locations', () => {
             expect(getByTestId('building_id_displayed-input')).toHaveAttribute('value', '8248');
             expect(getByTestId('building_name-input')).toHaveAttribute('value', 'Library Warehouse');
 
+            await userEvent.click(getByTestId('building_id_displayed-input'));
             await userEvent.type(getByTestId('building_id_displayed-input'), ' update');
             await userEvent.type(getByTestId('building_name-input'), ' update');
 

@@ -25,7 +25,6 @@ const componentId = 'user-management';
 
 const Users = ({ actions, userListLoading, userList, userListError, teamListLoading, teamList, teamListError }) => {
     const pageLocale = locale.pages.manage.users;
-
     const { user } = useAccountUser();
 
     const userTeam = user?.user_team ?? /* istanbul ignore next */ null;
@@ -45,11 +44,26 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
         actionDispatch({ type: 'clear' });
     }, []);
 
+    const fieldProps = React.useMemo(
+        () => ({
+            user_team: {
+                options: teamList,
+                getOptionKey: option => option.team_slug,
+                getOptionLabel: option =>
+                    teamList?.find?.(team => team.team_slug === option)?.team_display_name ||
+                    option?.team_display_name ||
+                    '',
+                isOptionEqualToValue: (option, value) => option.team_slug === value,
+            },
+        }),
+        [teamList],
+    );
+
     const onRowAdd = React.useCallback(
         data => {
             setDialogueBusy(true);
             const request = structuredClone(data);
-            const wrappedRequest = transformAddRequest(request, userTeam);
+            const wrappedRequest = transformAddRequest(request);
             actions
                 .addUser(wrappedRequest)
                 .then(() => {
@@ -92,38 +106,23 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
     }, []);
 
     const handleAddClick = () => {
-        console.log(teamList);
         actionDispatch({
             type: 'add',
             title: pageLocale.dialogAdd?.confirmationTitle,
-            fieldProps: {
-                user_team: {
-                    options: teamList,
-                    getOptionKey: option => option.team_slug,
-                    getOptionLabel: option => option.team_display_name,
-                },
-            },
+            fieldProps,
         });
     };
 
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
         row.isSelf = row?.user_uid === userUID;
-        actionDispatch({
+        const actionProps = {
             type: 'edit',
             title: pageLocale.dialogEdit?.confirmationTitle,
             row,
-            fieldProps: {
-                user_team: {
-                    value: teamList.find(team => team.team_slug === row?.user_team),
-                    options: teamList,
-                    getOptionKey: option => option.team_slug,
-                    getOptionLabel: option =>
-                        teamList.find(team => team.team_slug === option.team_slug)?.team_display_name,
-                    isOptionEqualToValue: (option, value) => option.team_slug === value?.team_slug,
-                },
-            },
-        });
+            fieldProps,
+        };
+        actionDispatch(actionProps);
     };
 
     const handleDeleteClick = ({ id, api }) => {
@@ -264,7 +263,11 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
                             components={{
                                 Toolbar: () => (
                                     <WithExportMenu id={componentId}>
-                                        <AddButton label={pageLocale.form.addButtonLabel} onClick={handleAddClick} />
+                                        <AddButton
+                                            label={pageLocale.form.addButtonLabel}
+                                            onClick={handleAddClick}
+                                            disabled={userListLoading || teamListLoading}
+                                        />
                                     </WithExportMenu>
                                 ),
                             }}
@@ -289,6 +292,9 @@ Users.propTypes = {
     userList: PropTypes.array,
     userListLoading: PropTypes.bool,
     userListError: PropTypes.string,
+    teamList: PropTypes.array,
+    teamListLoading: PropTypes.bool,
+    teamListError: PropTypes.string,
 };
 
 export default React.memo(Users);

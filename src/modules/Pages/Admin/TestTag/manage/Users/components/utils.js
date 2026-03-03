@@ -43,12 +43,11 @@ export const transformUpdateRequest = request => {
     return request;
 };
 
-export const transformAddRequest = (request, team) => {
+export const transformAddRequest = request => {
     // clear data not required from UI for request.
     delete request.actions_count;
     delete request.user_id;
-    // Assign user team
-    request.user_team = team;
+
     // Prime Privileges
     request.privileges = {};
     request.user_licence_number = request?.can_inspect_cb ? request?.user_licence_number : '';

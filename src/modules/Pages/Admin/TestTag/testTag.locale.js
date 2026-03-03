@@ -980,7 +980,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `User management for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `User management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -998,7 +998,7 @@ export default {
                         user_team: {
                             label: 'Team',
                         },
-                        team_display_name: {
+                        user_team_display: {
                             label: 'Team',
                         },
                         user_licence_number: {

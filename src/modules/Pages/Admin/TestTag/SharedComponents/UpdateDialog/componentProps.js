@@ -108,4 +108,10 @@ export const autocompletePropNames = [
     'renderTags',
     'selectOnFocus',
     'slotProps',
+    'error',
 ];
+
+// preserve the props we always send through to each component,
+// but which may be stripped if the parent component has
+// a renderInput slot (e.g. Autocomplete -> TextField)
+export const renderInputPropNames = ['InputLabelProps', 'inputProps'];

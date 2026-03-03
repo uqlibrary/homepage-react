@@ -173,6 +173,7 @@ describe('Locations', () => {
             expect(getByTestId('site_id_displayed-input')).toHaveAttribute('value', '01');
             expect(getByTestId('site_name-input')).toHaveAttribute('value', 'St Lucia');
 
+            await userEvent.click(getByTestId('site_id_displayed-input'));
             await userEvent.type(getByTestId('site_id_displayed-input'), ' update');
             await userEvent.type(getByTestId('site_name-input'), ' update');
 

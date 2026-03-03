@@ -103,10 +103,14 @@ export const UpdateDialogue = ({
         const isCheckbox = event.target.type === 'checkbox';
         const isOption = event.target.getAttribute('role') === 'option';
         const dataKey = isOption ? event.target.id.split('-')[0] : event.target.name;
+        const optionKey = fields?.[dataKey]?.fieldParams?.optionKey;
         // eslint-disable-next-line no-nested-ternary
-        const newValue = isOption ? value : isCheckbox ? event.target.checked : event.target.value;
+        const newValue = isOption
+            ? value?.[optionKey] ?? event.target.getAttribute('data-value')
+            : isCheckbox
+            ? event.target.checked
+            : event.target.value;
 
-        console.log(event, value, newValue, dataKey);
         setData(prevState => ({
             ...prevState,
             [dataKey]: newValue,
@@ -150,46 +154,11 @@ export const UpdateDialogue = ({
                                             (action === 'add' &&
                                                 !!(dataFields[field]?.fieldParams?.canAdd ?? true))) && (
                                             <>
-                                                {console.log(
-                                                    field,
-                                                    data,
-                                                    dataFields[field]?.valueFormatter,
-                                                    filterComponentProps({
-                                                        ...(props?.fieldProps?.[field] ? props.fieldProps[field] : {}),
-                                                        id: `${field}-input`,
-                                                        name: field,
-                                                        label: dataColumns[field].label,
-                                                        error:
-                                                            dataFields[field]?.validate?.(data?.[field], data) ?? false,
-                                                        checked: !!data?.[field],
-                                                        onChange: handleChange,
-                                                        onClick: _onClickAction,
-                                                        InputLabelProps: {
-                                                            shrink: true,
-                                                            htmlFor: `${field}-input`,
-                                                            id: `${field}-label`,
-                                                            ['data-testid']: `${field}-label`,
-                                                        },
-                                                        inputProps: {
-                                                            ['data-testid']: `${field}-input`,
-                                                        },
-                                                        fullWidth: true,
-                                                        type: dataFields[field]?.fieldParams?.type ?? undefined,
-                                                        value:
-                                                            dataFields[field]?.valueFormatter?.(data?.[field]) ??
-                                                            data?.[field] ??
-                                                            '',
-                                                    }),
-                                                )}
                                                 {dataFields[field]?.component(
                                                     filterComponentProps({
                                                         id: `${field}-input`,
                                                         name: field,
                                                         label: dataColumns[field].label,
-                                                        value:
-                                                            dataFields[field]?.valueFormatter?.(data?.[field]) ??
-                                                            data?.[field] ??
-                                                            '',
                                                         error:
                                                             dataFields[field]?.validate?.(data?.[field], data) ?? false,
                                                         checked: !!data?.[field],
@@ -206,6 +175,12 @@ export const UpdateDialogue = ({
                                                         },
                                                         fullWidth: true,
                                                         type: dataFields[field]?.fieldParams?.type ?? undefined,
+                                                        value:
+                                                            dataFields[field]?.valueFormatter?.(data?.[field]) ??
+                                                            data?.[field] ??
+                                                            '',
+                                                        hasRenderInput:
+                                                            dataFields[field]?.fieldParams?.type === 'autocomplete',
                                                         ...(props?.fieldProps?.[field] ? props.fieldProps[field] : {}),
                                                     }),
                                                     data,
@@ -288,6 +263,7 @@ UpdateDialogue.propTypes = {
     onCancelAction: PropTypes.func,
     onClose: PropTypes.func,
     props: PropTypes.object,
+    fieldProps: PropTypes.object,
     isBusy: PropTypes.bool,
 };
 

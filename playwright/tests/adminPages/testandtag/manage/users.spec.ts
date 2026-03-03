@@ -16,7 +16,7 @@ test.describe('Test and Tag Manage Users', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
-    test('base page edit controls function correctly', async ({ page }) => {
+    test.only('base page edit controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
@@ -54,6 +54,11 @@ test.describe('Test and Tag Manage Users', () => {
         await page.locator('#action_cell-1-edit-button[data-value="uqjsmit"]').click();
         await page.getByTestId('user_uid-input').clear();
         await page.getByTestId('user_uid-input').fill('test');
+
+        await page.getByTestId('user_team-input').click({ clickCount: 2 }); // bug:in edit mode the autocomplete auto closes on first click
+        await page.locator('#user_team-input-option-0').click();
+        await expect(page.getByTestId('user_team-input')).toHaveValue('Spaces');
+
         await page.getByTestId('update_dialog-action-button').click();
         await expect(page.getByTestId('confirmation_alert-success-alert')).toBeVisible();
     });
@@ -69,6 +74,7 @@ test.describe('Test and Tag Manage Users', () => {
         // Check default helper texts are in required state
         await expect(page.locator('#user_uid-input-helper-text')).toHaveClass(/Mui-error/);
         await expect(page.locator('#user_name-input-helper-text')).toHaveClass(/Mui-error/);
+        await expect(page.locator('#user_team-input-helper-text')).toHaveClass(/Mui-error/);
         // Check default state of Licence field (disabled)
         await expect(page.getByTestId('user_licence_number-input')).toBeDisabled();
         // Enter content, uid no longer error
@@ -86,6 +92,11 @@ test.describe('Test and Tag Manage Users', () => {
         await expect(page.getByTestId('user_licence_number-input')).toBeDisabled();
         await page.getByTestId('can_inspect_cb-input').click();
         await expect(page.getByTestId('user_licence_number-input')).not.toBeDisabled();
+
+        await page.getByTestId('user_team-input').click();
+        await page.locator('#user_team-input-option-1').click();
+        await expect(page.getByTestId('user_team-input')).toHaveValue('Work Station Support');
+
         // commit the change
         await page.getByTestId('update_dialog-action-button').click();
         await expect(page.getByTestId('confirmation_alert-success-alert')).toBeVisible();

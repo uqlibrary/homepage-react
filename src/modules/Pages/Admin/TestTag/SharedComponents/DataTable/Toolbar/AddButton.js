@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import { useTheme } from '@mui/material/styles';
 
-const AddButton = ({ id, label, onClick }) => {
+const AddButton = ({ id, label, ...props }) => {
     const theme = useTheme();
     return (
         <Button
@@ -14,7 +14,7 @@ const AddButton = ({ id, label, onClick }) => {
             color="primary"
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={onClick}
+            {...props}
         >
             {label}
         </Button>
@@ -24,7 +24,6 @@ const AddButton = ({ id, label, onClick }) => {
 AddButton.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
 };
 
 export default React.memo(AddButton);
