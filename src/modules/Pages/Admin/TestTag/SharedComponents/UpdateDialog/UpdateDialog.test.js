@@ -116,7 +116,10 @@ describe('UpdateDialog Renders component', () => {
 
     it('doesnt render Add fields', async () => {
         const fields = {
-            asset_id_displayed: { component: props => <TextField variant="standard" {...props} />, fieldParams: { renderInAdd: false } },
+            asset_id_displayed: {
+                component: props => <TextField variant="standard" {...props} />,
+                fieldParams: { renderInAdd: false },
+            },
             asset_type_name: { component: props => <TextField variant="standard" {...props} />, fieldParams: {} },
         };
         const columns = {

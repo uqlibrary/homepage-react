@@ -95,21 +95,13 @@ export const UpdateDialogue = ({
         onCancelAction?.();
     };
 
-    const _onClickAction = e => {
-        e.stopPropagation();
-    };
-
     const handleChange = (event, value) => {
         const isCheckbox = event.target.type === 'checkbox';
         const isOption = event.target.getAttribute('role') === 'option';
         const dataKey = isOption ? event.target.id.split('-')[0] : event.target.name;
         const optionKey = fields?.[dataKey]?.fieldParams?.optionKey;
         // eslint-disable-next-line no-nested-ternary
-        const newValue = isOption
-            ? value?.[optionKey] ?? event.target.getAttribute('data-value')
-            : isCheckbox
-            ? event.target.checked
-            : event.target.value;
+        const newValue = isOption ? value?.[optionKey] : isCheckbox ? event.target.checked : event.target.value;
 
         setData(prevState => ({
             ...prevState,
@@ -163,7 +155,6 @@ export const UpdateDialogue = ({
                                                             dataFields[field]?.validate?.(data?.[field], data) ?? false,
                                                         checked: !!data?.[field],
                                                         onChange: handleChange,
-                                                        onClick: _onClickAction,
                                                         InputLabelProps: {
                                                             shrink: true,
                                                             htmlFor: `${field}-input`,

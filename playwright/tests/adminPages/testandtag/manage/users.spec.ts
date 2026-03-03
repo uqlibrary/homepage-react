@@ -16,7 +16,7 @@ test.describe('Test and Tag Manage Users', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
-    test.only('base page edit controls function correctly', async ({ page }) => {
+    test('base page edit controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);

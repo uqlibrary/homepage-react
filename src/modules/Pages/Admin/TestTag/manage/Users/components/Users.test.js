@@ -242,6 +242,9 @@ describe('Manage Users', () => {
             await fireEvent.change(getByTestId('user_name-input'), { target: { value: 'TEST USER' } });
         });
 
+        await userEvent.click(getByTestId('user_team-input'));
+        selectOptionFromListByIndex(0);
+
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
             expect(actions.addUser).rejects.toEqual('Test Error');
