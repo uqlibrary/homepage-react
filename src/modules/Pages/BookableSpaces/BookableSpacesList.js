@@ -304,8 +304,18 @@ export const BookableSpacesList = ({
         });
 
         // check if space should be excluded due to rejected facility types
+        console.log('selectedFacilityTypes=', selectedFacilityTypes);
+        console.log('rejectedFilters=', rejectedFilters);
         if (rejectedFilters.length > 0) {
-            const hasRejectedFacility = rejectedFilters.some(rejectedId => spaceFacilityTypes?.includes(rejectedId));
+            const hasRejectedFacility = rejectedFilters.some(rejectedId => {
+                const filter = selectedFacilityTypes.find(ft => ft.facility_type_id === rejectedId);
+                if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
+                    return !!space?.space_opening_hours_id
+                        ? !isLocationOpen(space?.space_opening_hours_id, weeklyHours)
+                        : false;
+                }
+                return spaceFacilityTypes?.includes(rejectedId);
+            });
             console.log('rejectedFilters=', hasRejectedFacility, rejectedFilters);
             if (hasRejectedFacility) {
                 return false;
@@ -325,10 +335,9 @@ export const BookableSpacesList = ({
             const hasMatchInGroup = selectedFiltersInGroup.some(filterId => {
                 const filter = selectedFacilityTypes.find(f => f.facility_type_id === filterId);
                 if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
-                    const isSpaceOpen = !!space?.space_opening_hours_id
+                    return !!space?.space_opening_hours_id
                         ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
                         : false;
-                    return isSpaceOpen;
                 } else {
                     return spaceFacilityTypes?.includes(filterId);
                 }
