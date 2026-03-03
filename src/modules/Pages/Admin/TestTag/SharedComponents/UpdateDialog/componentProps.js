@@ -26,6 +26,7 @@ export const textfieldPropNames = [
     'multiline',
     'onBlur',
     'onFocus',
+    'onClick',
     'placeholder',
     'required',
     'rows',
@@ -111,7 +112,10 @@ export const autocompletePropNames = [
     'error',
 ];
 
-// preserve the props we always send through to each component,
-// but which may be stripped if the parent component has
-// a renderInput slot (e.g. Autocomplete -> TextField)
-export const renderInputPropNames = ['InputLabelProps', 'inputProps'];
+// insert additional props that
+// ordinarily will be stripped, such as
+// when a component has a renderInput slot
+// (e.g. Autocomplete -> TextField)
+export const overrides = {
+    autocomplete: ['InputLabelProps', 'inputProps', 'onClick'],
+};

@@ -95,6 +95,10 @@ export const UpdateDialogue = ({
         onCancelAction?.();
     };
 
+    const _onClickAction = e => {
+        e.stopPropagation();
+    };
+
     const handleChange = (event, value) => {
         const isCheckbox = event.target.type === 'checkbox';
         const isOption = event.target.getAttribute('role') === 'option';
@@ -155,6 +159,7 @@ export const UpdateDialogue = ({
                                                             dataFields[field]?.validate?.(data?.[field], data) ?? false,
                                                         checked: !!data?.[field],
                                                         onChange: handleChange,
+                                                        onClick: _onClickAction,
                                                         InputLabelProps: {
                                                             shrink: true,
                                                             htmlFor: `${field}-input`,
@@ -170,8 +175,6 @@ export const UpdateDialogue = ({
                                                             dataFields[field]?.valueFormatter?.(data?.[field]) ??
                                                             data?.[field] ??
                                                             '',
-                                                        hasRenderInput:
-                                                            dataFields[field]?.fieldParams?.type === 'autocomplete',
                                                         ...(props?.fieldProps?.[field] ? props.fieldProps[field] : {}),
                                                     }),
                                                     data,

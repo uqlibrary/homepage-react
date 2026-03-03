@@ -4,7 +4,7 @@ import {
     textfieldPropNames,
     checkboxPropNames,
     autocompletePropNames,
-    renderInputPropNames,
+    overrides,
 } from './componentProps';
 
 export const componentProps = {
@@ -14,10 +14,10 @@ export const componentProps = {
 };
 const componentPropKeys = Object.keys(componentProps);
 
-export const filterComponentProps = ({ type = 'textfield', hasRenderInput = false, ...props }) => {
+export const filterComponentProps = ({ type = 'textfield', ...props }) => {
     if (!componentPropKeys.includes(type)) return props;
 
-    const fullProps = [...commonPropNames, ...componentProps[type], ...(hasRenderInput ? renderInputPropNames : [])];
+    const fullProps = [...commonPropNames, ...componentProps[type], ...(overrides?.[type] ? overrides?.[type] : [])];
     Object.keys(props).forEach(key => {
         if (!fullProps.includes(key)) delete props[key];
     });
@@ -25,6 +25,5 @@ export const filterComponentProps = ({ type = 'textfield', hasRenderInput = fals
 };
 filterComponentProps.propTypes = {
     type: PropTypes.oneOf(componentPropKeys),
-    hasRenderInput: PropTypes.bool,
     props: PropTypes.object.isRequired,
 };

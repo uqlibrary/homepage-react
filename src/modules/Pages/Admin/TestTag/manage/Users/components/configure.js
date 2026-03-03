@@ -46,7 +46,7 @@ export default {
             fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
         },
         user_team: {
-            component: ({ InputLabelProps, inputProps, error, ...props }) => (
+            component: ({ InputLabelProps, inputProps, onClick, error, ...props }) => (
                 <Autocomplete
                     renderInput={params => (
                         <TextField
@@ -61,6 +61,7 @@ export default {
                                 ...params.inputProps,
                                 ...inputProps,
                             }}
+                            onClick={onClick}
                         />
                     )}
                     {...props}

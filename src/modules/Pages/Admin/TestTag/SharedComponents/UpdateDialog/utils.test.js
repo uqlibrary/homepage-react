@@ -26,6 +26,7 @@ describe('utils', () => {
             InputLabelProps: 1,
             fullWidth: 1,
             error: 1,
+            onClick: 1,
         };
 
         expect(filterComponentProps(inputTextField)).toEqual(expectedTextfield);
@@ -44,7 +45,7 @@ describe('utils', () => {
         expect(filterComponentProps({ type: 'checkbox', ...inputCheckbox })).toEqual(expectedCheckbox);
     });
 
-    it('filterComponentProps returns expected autocomplete result with hasRenderInput', () => {
+    it('filterComponentProps returns expected autocomplete result with overrides', () => {
         const inputAutocomplete = {
             invalid1: 1,
             id: 1,
@@ -56,6 +57,7 @@ describe('utils', () => {
             clearOnBlur: 1,
             InputLabelProps: 1,
             inputProps: 1,
+            onClick: 1,
             invalid2: 1,
         };
         const expectedAutocomplete = {
@@ -68,11 +70,10 @@ describe('utils', () => {
             clearOnBlur: 1,
             InputLabelProps: 1,
             inputProps: 1,
+            onClick: 1,
         };
 
-        expect(filterComponentProps({ type: 'autocomplete', hasRenderInput: true, ...inputAutocomplete })).toEqual(
-            expectedAutocomplete,
-        );
+        expect(filterComponentProps({ type: 'autocomplete', ...inputAutocomplete })).toEqual(expectedAutocomplete);
     });
 
     it('filterComponentProps returns expected result when invalid type passed', () => {
