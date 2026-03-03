@@ -213,7 +213,6 @@ export const HomePage = ({
     const verySimplelayout =
         !canSeeLearningResourcesPanel(account) && !isEspaceAuthor(account, author) && !canSeeReadPublish(account);
 
-    console.log('DLOR STATISTISCS IN HOMEPAGE:', dlorStatistics, dlorStatisticsLoading, dlorStatisticsError);
     return (
         <>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
