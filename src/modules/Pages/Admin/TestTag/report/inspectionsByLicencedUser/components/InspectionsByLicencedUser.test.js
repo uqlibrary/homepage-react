@@ -72,7 +72,7 @@ describe('InspectionsByLicencedUser', () => {
         const { getByText, getByTestId } = setup({
             actions: { getInspectionsByLicencedUser: jest.fn(() => Promise.resolve()) },
         });
-        expect(getByText('Tests by licenced users report for Library')).toBeInTheDocument();
+        expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
         expect(getByTestId('user_inspections-user-name-select')).toBeInTheDocument();
         expect(getByTestId('user_inspections-tagged-start-input')).toBeInTheDocument();
         expect(getByTestId('user_inspections-tagged-end-input')).toBeInTheDocument();
@@ -108,7 +108,7 @@ describe('InspectionsByLicencedUser', () => {
             const { getByText, getByTestId, getByRole, getAllByRole } = setup({
                 actions: { getInspectionsByLicencedUser: getInspectionsByLicencedUserFn },
             });
-            expect(getByText('Tests by licenced users report for Library')).toBeInTheDocument();
+            expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
             expect(getByTestId('user_inspections-user-name-select')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('user_inspections-user-name-select'));
@@ -138,7 +138,7 @@ describe('InspectionsByLicencedUser', () => {
             const { getByText, getByTestId } = setup({
                 actions: { getInspectionsByLicencedUser: getInspectionsByLicencedUserFn },
             });
-            expect(getByText('Tests by licenced users report for Library')).toBeInTheDocument();
+            expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
             expect(getByTestId('user_inspections-tagged-start-input')).toBeInTheDocument();
 
             await userEvent.type(getByTestId('user_inspections-tagged-start-input'), '2021-01-01');
@@ -169,7 +169,7 @@ describe('InspectionsByLicencedUser', () => {
             const { getByText, queryByText, getByTestId } = setup({
                 actions: { getInspectionsByLicencedUser: getInspectionsByLicencedUserFn },
             });
-            expect(getByText('Tests by licenced users report for Library')).toBeInTheDocument();
+            expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
             expect(getByTestId('user_inspections-tagged-start-input')).toBeInTheDocument();
 
             await userEvent.type(getByTestId('user_inspections-tagged-start-input'), '2021-01-01');
@@ -204,7 +204,7 @@ describe('InspectionsByLicencedUser', () => {
                 },
                 licencedUsers: null,
             });
-            expect(getByText('Tests by licenced users report for Library')).toBeInTheDocument();
+            expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
             expect(getLicencedUsersFn).toHaveBeenCalled();
         });
         it('fires call to get licenced users if empty array', () => {
@@ -216,7 +216,7 @@ describe('InspectionsByLicencedUser', () => {
                 },
                 licencedUsers: [],
             });
-            expect(getByText('Tests by licenced users report for Library')).toBeInTheDocument();
+            expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
             expect(getLicencedUsersFn).toHaveBeenCalled();
         });
         it('shows alert if licencedUsersError is set', async () => {
@@ -256,7 +256,7 @@ describe('InspectionsByLicencedUser', () => {
             const { getByText, getByTestId, getByRole, getAllByRole } = setup({
                 actions: { getInspectionsByLicencedUser: getInspectionsByLicencedUserFn },
             });
-            expect(getByText('Tests by licenced users report for Library')).toBeInTheDocument();
+            expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
             expect(getByTestId('user_inspections-user-name-select')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('user_inspections-user-name-select'));

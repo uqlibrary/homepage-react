@@ -311,7 +311,12 @@ describe('Inspection component', () => {
 
         expect(getByText(locale.pages.general.pageTitle)).toBeInTheDocument();
         expect(
-            getByText(locale.pages.inspect.header.pageSubtitle?.(configData.user.department_display_name)),
+            getByText(
+                locale.pages.inspect.header.pageSubtitle?.(
+                    configData.user.team_display_name,
+                    configData.user.department_display_name,
+                ),
+            ),
         ).toBeInTheDocument();
         expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
         expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();

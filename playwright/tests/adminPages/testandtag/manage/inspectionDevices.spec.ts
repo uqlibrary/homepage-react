@@ -10,7 +10,10 @@ test.describe('Test and Tag manage inspection devices', () => {
 
     const checkBaseline = async (page: Page) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'device_model_name', 0)).getByText('AV 025')).toBeVisible();
     };
