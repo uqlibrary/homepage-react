@@ -555,7 +555,9 @@ export const SidebarFilters = ({
                                     padding: '0.5rem 1rem',
                                     marginRight: 'auto',
                                     marginLeft: 'auto',
-                                    display: 'block',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    columnGap: '0.5rem',
                                 }}
                             >
                                 <ReplayIcon style={{ fontSize: '16px' }} />
