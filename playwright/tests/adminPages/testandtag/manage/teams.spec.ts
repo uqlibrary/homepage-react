@@ -12,10 +12,16 @@ test.describe('Test and Tag Manage teams', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle('', 'Library'));
         await forcePageRefresh(page);
-        await expect((await getFieldValue(page, 'team_slug', 0)).getByText('SPACES')).toBeVisible();
-        await expect((await getFieldValue(page, 'team_slug', 1)).getByText('TESTDEL')).toBeVisible();
-        await expect((await getFieldValue(page, 'team_slug', 2)).getByText('TESTFAIL')).toBeVisible();
-        await expect((await getFieldValue(page, 'team_slug', 3)).getByText('WSS')).toBeVisible();
+        await expect((await getFieldValue(page, 'team_display_name', 0)).getByText('Spaces')).toBeVisible();
+        await expect(
+            (await getFieldValue(page, 'team_display_name', 1)).getByText('Work Station Support'),
+        ).toBeVisible();
+        await expect(
+            (await getFieldValue(page, 'team_display_name', 2)).getByText('Team to test deletion'),
+        ).toBeVisible();
+        await expect(
+            (await getFieldValue(page, 'team_display_name', 3)).getByText('Team to test failure'),
+        ).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
@@ -23,7 +29,7 @@ test.describe('Test and Tag Manage teams', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle('', 'Library'));
         await forcePageRefresh(page);
-        await expect((await getFieldValue(page, 'team_slug', 0)).getByText('SPACES')).toBeVisible();
+        await expect((await getFieldValue(page, 'team_display_name', 0)).getByText('Spaces')).toBeVisible();
 
         await expect(page.locator('#action_cell-WSS-edit-button[data-value="WSS"]')).not.toBeDisabled();
         // Click the first edit button
@@ -56,7 +62,7 @@ test.describe('Test and Tag Manage teams', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle('', 'Library'));
         await forcePageRefresh(page);
-        await expect((await getFieldValue(page, 'team_slug', 0)).getByText('SPACES')).toBeVisible();
+        await expect((await getFieldValue(page, 'team_display_name', 0)).getByText('Spaces')).toBeVisible();
         // Add.
         await page.getByTestId('team-management-data-table-toolbar-add-button').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
@@ -102,7 +108,9 @@ test.describe('Test and Tag Manage teams', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle('', 'Library'));
         await forcePageRefresh(page);
-        await expect((await getFieldValue(page, 'team_slug', 1)).getByText('TESTDEL')).toBeVisible();
+        await expect(
+            (await getFieldValue(page, 'team_display_name', 2)).getByText('Team to test deletion'),
+        ).toBeVisible();
         await expect(page.getByTestId('action_cell-TESTDEL-delete-button')).toBeEnabled();
         await expect(page.getByTestId('action_cell-WSS-delete-button')).toBeDisabled();
         await expect(page.getByTestId('action_cell-SPACES-delete-button')).toBeDisabled();
