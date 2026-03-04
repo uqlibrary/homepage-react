@@ -54,7 +54,7 @@ export const OpeningHoursTable = ({ weeklyHoursLoading, weeklyHoursError, weekly
 
     const openingHoursList = spaceOpeningHours(bookableSpace, weeklyHours);
 
-    if (!openingHoursList || openingHoursList.length === 0) {
+    if (!openingHoursList || openingHoursList?.length === 0) {
         return overrideMessage; // no opening hours
     }
 
@@ -76,7 +76,7 @@ export const OpeningHoursTable = ({ weeklyHoursLoading, weeklyHoursError, weekly
                                     scope="col"
                                     id={`day-${index}`}
                                 >
-                                    {d.dayName}
+                                    {d?.dayName}
                                 </th>
                             ))}
                         </tr>
@@ -85,7 +85,7 @@ export const OpeningHoursTable = ({ weeklyHoursLoading, weeklyHoursError, weekly
                         <tr>
                             {openingHoursList?.map((d, index) => (
                                 <td key={`space-${spaceId}-opening-td-${index}`} tabIndex="0" headers={`day-${index}`}>
-                                    {d.rendered}
+                                    {d?.rendered}
                                 </td>
                             ))}
                         </tr>

@@ -138,7 +138,7 @@ const StyledStickyTableCell = styled(TableCell)(() => ({
         justifyContent: 'space-between',
     },
 }));
-const TableWrapper = styled('div')(() => ({
+const StyledTableWrapperDiv = styled('div')(() => ({
     '&.expanded': {
         position: 'fixed',
         top: 0,
@@ -232,9 +232,9 @@ export const BookableSpacesManageSpaces = ({
     const resetAvailableFilters = (filterTypeName, filterTypeValue) => {
         const newFilterTypes =
             availableFilters?.filter(g => {
-                return g.filterType !== filterTypeName;
+                return g?.filterType !== filterTypeName;
             }) || [];
-        newFilterTypes.push({
+        newFilterTypes?.push({
             filterType: filterTypeName,
             filterValue: filterTypeValue,
         });
@@ -244,11 +244,11 @@ export const BookableSpacesManageSpaces = ({
     React.useEffect(() => {
         if (campusListError === false && campusListLoading === false && !!campusList) {
             const campusIdList = [
-                ...new Set(bookableSpacesRoomList?.data?.locations?.map(space => space.space_campus_id)),
+                ...new Set(bookableSpacesRoomList?.data?.locations?.map(space => space?.space_campus_id)),
             ];
 
-            const availableCampusList = campusList?.filter(c => campusIdList.includes(c.campus_id));
-            availableCampusList.unshift({
+            const availableCampusList = campusList?.filter(c => campusIdList?.includes(c?.campus_id));
+            availableCampusList?.unshift({
                 campus_id: CAMPUS_ID_UNSELECTED,
                 campus_number: 'none',
                 campus_name: 'Show all campuses',
@@ -295,8 +295,8 @@ export const BookableSpacesManageSpaces = ({
             // initialise the shown rows to the first N according to the paginator widget
             const usableRows = [];
             bookableSpacesRoomList?.data?.locations?.map((space, index) => {
-                usableRows.push({
-                    spaceId: space.space_id,
+                usableRows?.push({
+                    spaceId: space?.space_id,
                     showSpace: showSpaceByPagination(index, pageNum, rowsPerPage),
                 });
             });
@@ -323,17 +323,17 @@ export const BookableSpacesManageSpaces = ({
 
     const doesSpaceShow = (space, currentLocationFilters) => {
         let showSpaceByFilter = true;
-        currentLocationFilters.forEach(f => {
-            if (f.filterType === 'campus') {
-                if (f.filterValue !== CAMPUS_ID_UNSELECTED && space.space_campus_id !== f.filterValue) {
+        currentLocationFilters?.forEach(f => {
+            if (f?.filterType === 'campus') {
+                if (f?.filterValue !== CAMPUS_ID_UNSELECTED && space?.space_campus_id !== f?.filterValue) {
                     showSpaceByFilter = false;
                 }
-            } else if (f.filterType === 'library') {
-                if (f.filterValue !== LIBRARY_ID_UNSELECTED && space.space_library_id !== f.filterValue) {
+            } else if (f?.filterType === 'library') {
+                if (f?.filterValue !== LIBRARY_ID_UNSELECTED && space?.space_library_id !== f?.filterValue) {
                     showSpaceByFilter = false;
                 }
-            } else if (f.filterType === 'floor') {
-                if (f.filterValue !== FLOOR_ID_UNSELECTED && space.space_floor_id !== f.filterValue) {
+            } else if (f?.filterType === 'floor') {
+                if (f?.filterValue !== FLOOR_ID_UNSELECTED && space?.space_floor_id !== f?.filterValue) {
                     showSpaceByFilter = false;
                 }
             }
@@ -344,11 +344,11 @@ export const BookableSpacesManageSpaces = ({
     const resetDisplayedRows = latestUpdate => {
         console.log('resetDisplayedRows latestUpdate=', latestUpdate);
         // if we have just set data to UseState, they aren't available yet - weird! :(
-        const usedFilters = latestUpdate?.location ? latestUpdate.location : selectedFilters;
-        let suppliedPageNum = 'pagination' in latestUpdate ? latestUpdate.pagination : pageNum;
+        const usedFilters = latestUpdate?.location ? latestUpdate?.location : selectedFilters;
+        let suppliedPageNum = 'pagination' in latestUpdate ? latestUpdate?.pagination : pageNum;
         let suppliedRowsPerPage = rowsPerPage;
         if (latestUpdate?.rowsPerPage) {
-            suppliedRowsPerPage = latestUpdate.rowsPerPage;
+            suppliedRowsPerPage = latestUpdate?.rowsPerPage;
             suppliedPageNum = 0;
         }
 
@@ -357,20 +357,20 @@ export const BookableSpacesManageSpaces = ({
         bookableSpacesRoomList?.data?.locations?.forEach(space => {
             const showSpaceByFilter = doesSpaceShow(space, usedFilters);
 
-            displayedRowsLocal = displayedRowsLocal.filter(r => {
-                return r.spaceId !== space.space_id;
+            displayedRowsLocal = displayedRowsLocal?.filter(r => {
+                return r?.spaceId !== space?.space_id;
             });
-            const spaceRow = document.getElementById(`space-${space.space_id}`);
+            const spaceRow = document.getElementById(`space-${space?.space_id}`);
             if (!!showSpaceByFilter && showSpaceByPagination(numRow, suppliedPageNum, suppliedRowsPerPage)) {
                 removeClass(spaceRow, 'hiddenRow');
-                displayedRowsLocal.push({
-                    spaceId: space.space_id,
+                displayedRowsLocal?.push({
+                    spaceId: space?.space_id,
                     showSpace: true,
                 });
             } else {
                 addClass(spaceRow, 'hiddenRow');
-                displayedRowsLocal.push({
-                    spaceId: space.space_id,
+                displayedRowsLocal?.push({
+                    spaceId: space?.space_id,
                     showSpace: false,
                 });
             }
@@ -384,26 +384,26 @@ export const BookableSpacesManageSpaces = ({
     const resetSelectedFilters = (filterTypeName, filterTypeValue) => {
         console.log('resetSelectedFilters', filterTypeName, filterTypeValue);
         let newFilterTypes = selectedFilters?.filter(g => {
-            return g.filterType !== filterTypeName;
+            return g?.filterType !== filterTypeName;
         });
-        newFilterTypes.push({
+        newFilterTypes?.push({
             filterType: filterTypeName,
             filterValue: filterTypeValue,
         });
         if (filterTypeName === 'campus') {
             newFilterTypes = newFilterTypes?.filter(g => {
-                return g.filterType !== 'library';
+                return g?.filterType !== 'library';
             });
-            newFilterTypes.push({
+            newFilterTypes?.push({
                 filterType: 'library',
                 filterValue: LIBRARY_ID_UNSELECTED,
             });
         }
         if (filterTypeName === 'campus' || filterTypeName === 'library') {
             newFilterTypes = newFilterTypes?.filter(g => {
-                return g.filterType !== 'floor';
+                return g?.filterType !== 'floor';
             });
-            newFilterTypes.push({
+            newFilterTypes?.push({
                 filterType: 'floor',
                 filterValue: FLOOR_ID_UNSELECTED,
             });
@@ -416,14 +416,14 @@ export const BookableSpacesManageSpaces = ({
         resetDisplayedRows({ location: newFilterTypes });
     };
     const isCampusSelected =
-        selectedFilters?.find(f => f.filterType === 'campus')?.filterValue !== CAMPUS_ID_UNSELECTED;
+        selectedFilters?.find(f => f?.filterType === 'campus')?.filterValue !== CAMPUS_ID_UNSELECTED;
     const isLibrarySelected =
         !!isCampusSelected &&
-        selectedFilters?.find(f => f.filterType === 'library')?.filterValue !== LIBRARY_ID_UNSELECTED;
+        selectedFilters?.find(f => f?.filterType === 'library')?.filterValue !== LIBRARY_ID_UNSELECTED;
 
     function hasFacility(facilityType, bookableSpace) {
         return bookableSpace?.facility_types?.some(spaceFacility => {
-            return spaceFacility.facility_type_id === facilityType.facility_type_id;
+            return spaceFacility?.facility_type_id === facilityType?.facility_type_id;
         });
     }
 
@@ -435,11 +435,11 @@ export const BookableSpacesManageSpaces = ({
         resetDisplayedRows({ pagination: newPageNum });
     };
     const handleChangeRowsPerPage = event => {
-        const newRowsPerPage = parseInt(event.target.value, 10);
+        const newRowsPerPage = parseInt(event?.target?.value, 10);
 
         const current = new Date();
         const nextYear = new Date();
-        nextYear.setFullYear(current.getFullYear() + 1);
+        nextYear?.setFullYear(current?.getFullYear() + 1);
         setCookie(paginatorCookieName, newRowsPerPage, { expires: nextYear });
 
         setRowsPerPage(newRowsPerPage);
@@ -473,15 +473,15 @@ export const BookableSpacesManageSpaces = ({
     function prefilterFacilityData(data) {
         // first ensure sorted in sort order
         const sortedGroups = [...data?.facility_type_groups]?.sort(
-            (a, b) => a.facility_type_group_order - b.facility_type_group_order,
+            (a, b) => a?.facility_type_group_order - b?.facility_type_group_order,
         );
 
         // then add an overall sort order, to help us to tiger stripe the columns
         let overallCounter = 1;
         return sortedGroups?.map(group => {
             // sort the facility types alphabetically (they should already be, but...)
-            const sortedChildren = [...group.facility_type_children]?.sort((a, b) =>
-                a.facility_type_name.localeCompare(b.facility_type_name),
+            const sortedChildren = [...group?.facility_type_children]?.sort((a, b) =>
+                a?.facility_type_name?.localeCompare(b?.facility_type_name),
             );
 
             const childrenWithCounter = sortedChildren?.map(child => ({
@@ -519,8 +519,8 @@ export const BookableSpacesManageSpaces = ({
     };
 
     const openEditSpacePage = e => {
-        const buttonClicked = e.target.closest('button');
-        const spaceuuid = !!buttonClicked && buttonClicked.getAttribute('data-spaceuuid');
+        const buttonClicked = e?.target?.closest('button');
+        const spaceuuid = !!buttonClicked && buttonClicked?.getAttribute('data-spaceuuid');
         !!spaceuuid && (window.location.href = spacesAdminLink(`/admin/spaces/edit/${spaceuuid}`, account));
         /* istanbul ignore next */
         !spaceuuid && console.log('no valid button clicked');
@@ -528,7 +528,7 @@ export const BookableSpacesManageSpaces = ({
 
     const selectFilter = prop => e => {
         console.log('selectFilter', prop, e);
-        resetSelectedFilters(prop, e.target.value);
+        resetSelectedFilters(prop, e?.target?.value);
     };
 
     function displayListOfBookableSpaces() {
@@ -536,19 +536,23 @@ export const BookableSpacesManageSpaces = ({
 
         const sortedFacilityTypeGroups = prefilterFacilityData(facilityTypeList?.data);
 
-        const campusFilterTypes = availableFilters?.find(ft => ft.filterType === 'campus')?.filterValue;
-        const selectedCampusId = selectedFilters?.find(f => f.filterType === 'campus')?.filterValue;
+        const campusFilterTypes = availableFilters?.find(ft => ft?.filterType === 'campus')?.filterValue;
+        const selectedCampusId = selectedFilters?.find(f => f?.filterType === 'campus')?.filterValue;
         const selectedCampus =
             !!campusFilterTypes &&
             !!campusFilterTypes &&
             campusFilterTypes?.length > 0 &&
-            campusFilterTypes?.find(campus => campus.campus_id === selectedCampusId);
-        const selectedLibraryId = selectedFilters?.find(f => f.filterType === 'library')?.filterValue;
+            campusFilterTypes?.find(campus => campus?.campus_id === selectedCampusId);
+        const selectedLibraryId = selectedFilters?.find(f => f?.filterType === 'library')?.filterValue;
         const selectedLibrary =
-            !!selectedCampus && selectedCampus?.libraries?.find(library => library.library_id === selectedLibraryId);
+            !!selectedCampus && selectedCampus?.libraries?.find(library => library?.library_id === selectedLibraryId);
         return (
             <>
-                <TableWrapper id="wrappedTableList" style={{ backgroundColor: '#fff' }} data-testid="table-wrapper">
+                <StyledTableWrapperDiv
+                    id="wrappedTableList"
+                    style={{ backgroundColor: '#fff' }}
+                    data-testid="table-wrapper"
+                >
                     <div data-testid="tablefilter" style={{ width: '100%' }}>
                         <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
                             <StyledExpandCollapseTableIconButton
@@ -585,7 +589,7 @@ export const BookableSpacesManageSpaces = ({
                                     labelId="filter-by-campus-label"
                                     data-testid="filter-by-campus"
                                     value={
-                                        selectedFilters?.find(f => f.filterType === 'campus')?.filterValue ||
+                                        selectedFilters?.find(f => f?.filterType === 'campus')?.filterValue ||
                                         CAMPUS_ID_UNSELECTED
                                     }
                                     onChange={selectFilter('campus')}
@@ -599,9 +603,9 @@ export const BookableSpacesManageSpaces = ({
                                         campusFilterTypes?.length > 0 &&
                                         campusFilterTypes?.map((campus, index) => (
                                             <MenuItem
-                                                value={campus.campus_id}
+                                                value={campus?.campus_id}
                                                 key={`filter-by-campus-menuitem-${index}`}
-                                                selected={campus.campus_id === 99999}
+                                                selected={campus?.campus_id === 99999}
                                             >
                                                 {campus.campus_name}
                                             </MenuItem>
@@ -621,7 +625,7 @@ export const BookableSpacesManageSpaces = ({
                                     labelId="filter-by-library-label"
                                     data-testid="filter-by-library"
                                     value={
-                                        selectedFilters?.find(f => f.filterType === 'library')?.filterValue ||
+                                        selectedFilters?.find(f => f?.filterType === 'library')?.filterValue ||
                                         LIBRARY_ID_UNSELECTED
                                     }
                                     onChange={selectFilter('library')}
@@ -632,14 +636,14 @@ export const BookableSpacesManageSpaces = ({
                                     disabled={!isCampusSelected}
                                 >
                                     {selectedCampus?.libraries
-                                        ?.sort((a, b) => a.library_name.localeCompare(b.library_name))
+                                        ?.sort((a, b) => a?.library_name?.localeCompare(b?.library_name))
                                         ?.map((library, index) => (
                                             <MenuItem
-                                                value={library.library_id}
+                                                value={library?.library_id}
                                                 key={`filter-by-library-menuitem-${index}`}
-                                                selected={library.library_id === 99999}
+                                                selected={library?.library_id === 99999}
                                             >
-                                                {library.library_name}
+                                                {library?.library_name}
                                             </MenuItem>
                                         ))}
                                 </Select>
@@ -657,7 +661,7 @@ export const BookableSpacesManageSpaces = ({
                                     labelId="filter-by-floor-label"
                                     data-testid="filter-by-floor"
                                     value={
-                                        selectedFilters?.find(f => f.filterType === 'floor')?.filterValue ||
+                                        selectedFilters?.find(f => f?.filterType === 'floor')?.filterValue ||
                                         FLOOR_ID_UNSELECTED
                                     }
                                     onChange={selectFilter('floor')}
@@ -668,13 +672,13 @@ export const BookableSpacesManageSpaces = ({
                                     disabled={!isLibrarySelected}
                                 >
                                     {!!selectedLibrary &&
-                                        selectedLibrary?.floors.map((floor, index) => (
+                                        selectedLibrary?.floors?.map((floor, index) => (
                                             <MenuItem
-                                                value={floor.floor_id}
+                                                value={floor?.floor_id}
                                                 key={`filter-by-floor-menuitem-${index}`}
-                                                selected={floor.floor_id === 99999}
+                                                selected={floor?.floor_id === 99999}
                                             >
-                                                {floor.floor_name}
+                                                {floor?.floor_name}
                                             </MenuItem>
                                         ))}
                                 </Select>
@@ -708,7 +712,7 @@ export const BookableSpacesManageSpaces = ({
                                                 <TableCell
                                                     key={`header-cell-${index}`}
                                                     component="th"
-                                                    colSpan={group.facility_type_children?.length}
+                                                    colSpan={group?.facility_type_children?.length}
                                                     sx={{
                                                         borderBottomWidth: 0,
                                                         borderTop: borderColour,
@@ -717,7 +721,7 @@ export const BookableSpacesManageSpaces = ({
                                                         borderLeft: borderColour,
                                                     }}
                                                 >
-                                                    {group.facility_type_group_name}
+                                                    {group?.facility_type_group_name}
                                                 </TableCell>
                                             );
                                         })}
@@ -734,15 +738,15 @@ export const BookableSpacesManageSpaces = ({
                                         group?.facility_type_children?.map(facilityType => (
                                             <StyledHeadingFacilityTableCell
                                                 component="th"
-                                                key={`facilitytype-${facilityType.facility_type_id}`}
+                                                key={`facilitytype-${facilityType?.facility_type_id}`}
                                                 sx={{
                                                     backgroundColor: getColumnBackgroundColor(
-                                                        facilityType.overall_order,
+                                                        facilityType?.overall_order,
                                                     ),
                                                     borderLeft: borderColour,
                                                 }}
                                             >
-                                                {facilityType.facility_type_name}
+                                                {facilityType?.facility_type_name}
                                             </StyledHeadingFacilityTableCell>
                                         )),
                                     )}
@@ -752,7 +756,7 @@ export const BookableSpacesManageSpaces = ({
                                 {displayedRows?.length > 0 &&
                                     bookableSpacesRoomList?.data?.locations
                                         ?.filter(space =>
-                                            displayedRows.find(u => u.spaceId === space.space_id && !!u.showSpace),
+                                            displayedRows?.find(u => u?.spaceId === space?.space_id && !!u?.showSpace),
                                         )
                                         ?.map(bookableSpace => {
                                             return (
@@ -815,7 +819,7 @@ export const BookableSpacesManageSpaces = ({
                                                         sortedFacilityTypeGroups?.map(group => {
                                                             return group?.facility_type_children?.map(facilityType => {
                                                                 const facilitySlug = slugifyName(
-                                                                    facilityType.facility_type_name,
+                                                                    facilityType?.facility_type_name,
                                                                 );
                                                                 return (
                                                                     <TableCell
@@ -823,20 +827,20 @@ export const BookableSpacesManageSpaces = ({
                                                                         data-testid={`space-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
                                                                         sx={{
                                                                             backgroundColor: getColumnBackgroundColor(
-                                                                                facilityType.overall_order,
+                                                                                facilityType?.overall_order,
                                                                             ),
                                                                             textAlign: 'center',
                                                                             borderInline: borderColour,
                                                                         }}
                                                                         title={
                                                                             hasFacility(facilityType, bookableSpace)
-                                                                                ? `Space has ${facilityType.facility_type_name}`
-                                                                                : `Space DOES NOT have ${facilityType.facility_type_name}`
+                                                                                ? `Space has ${facilityType?.facility_type_name}`
+                                                                                : `Space DOES NOT have ${facilityType?.facility_type_name}`
                                                                         }
                                                                     >
                                                                         {hasFacility(facilityType, bookableSpace) && (
                                                                             <DoneIcon
-                                                                                titleAccess={`Space has ${facilityType.facility_type_name}`}
+                                                                                titleAccess={`Space has ${facilityType?.facility_type_name}`}
                                                                                 style={{ stroke: 'green' }}
                                                                                 data-testid={`tick-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
                                                                             />
@@ -876,7 +880,7 @@ export const BookableSpacesManageSpaces = ({
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                </TableWrapper>
+                </StyledTableWrapperDiv>
             </>
         );
     }
@@ -901,7 +905,7 @@ export const BookableSpacesManageSpaces = ({
                         );
                     } else if (
                         !bookableSpacesRoomList?.data?.locations ||
-                        bookableSpacesRoomList?.data?.locations.length === 0
+                        bookableSpacesRoomList?.data?.locations?.length === 0
                     ) {
                         return (
                             <StyledBookableSpaceGridItem item xs={12} md={9}>

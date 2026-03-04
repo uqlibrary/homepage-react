@@ -230,10 +230,10 @@ export const BookableSpacesManageLocations = ({
 
         const primaryTextElement = document.createElement('span');
         !!primaryTextElement && (primaryTextElement.id = warningTextId);
-        !!primaryTextElement && !!warningMessageNode && primaryTextElement.appendChild(warningMessageNode);
+        !!primaryTextElement && !!warningMessageNode && primaryTextElement?.appendChild(warningMessageNode);
 
         const dialogMessageElement = document.getElementById('dialogMessageContent');
-        !!dialogMessageElement && !!primaryTextElement && dialogMessageElement.appendChild(primaryTextElement);
+        !!dialogMessageElement && !!primaryTextElement && dialogMessageElement?.appendChild(primaryTextElement);
 
         const warningIcon = document.getElementById('warning-icon');
         !!showWarningIcon && removeClass(warningIcon, 'hidden');
@@ -258,7 +258,7 @@ export const BookableSpacesManageLocations = ({
             weeklyHoursLoading === false &&
             weeklyHoursError === false &&
             weeklyHours?.locations &&
-            Array.isArray(weeklyHours.locations)
+            Array.isArray(weeklyHours?.locations)
         ) {
             return springshareLocations(weeklyHours);
         }
@@ -291,7 +291,7 @@ export const BookableSpacesManageLocations = ({
     }
 
     const saveChangeToLibrary = e => {
-        const form = e.target.closest('form');
+        const form = e?.target?.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
@@ -300,11 +300,12 @@ export const BookableSpacesManageLocations = ({
 
         // validate form
         const errorMessages = [];
-        !data.library_name && errorMessages.push('Please enter the Library name');
-        (!data.building_name || !data.building_number) && errorMessages.push('Please enter building name and number');
-        if (errorMessages.length > 0) {
-            // showErrorMessageinPopup(errorMessages.join('; '));
-            displayUserWarningMessage(errorMessages.join('; '), errorMessages.length > 0);
+        !data?.library_name && errorMessages?.push('Please enter the Library name');
+        (!data?.building_name || !data?.building_number) &&
+            errorMessages?.push('Please enter building name and number');
+        if (errorMessages?.length > 0) {
+            // showErrorMessageinPopup(errorMessages?.join('; '));
+            displayUserWarningMessage(errorMessages?.join('; '), errorMessages?.length > 0);
             return;
         }
 
@@ -312,13 +313,13 @@ export const BookableSpacesManageLocations = ({
         closeDialog(e);
 
         const valuesToSend = {
-            library_name: data.library_name,
-            building_name: data.building_name,
-            building_number: data.building_number,
-            library_campus_id: data.campus_id,
-            building_ground_floor_id: data.building_ground_floor_id,
-            library_about_page_default: data.library_about_page_default,
-            library_springshare_id: data.library_springshare_id,
+            library_name: data?.library_name,
+            building_name: data?.building_name,
+            building_number: data?.building_number,
+            library_campus_id: data?.campus_id,
+            building_ground_floor_id: data?.building_ground_floor_id,
+            library_about_page_default: data?.library_about_page_default,
+            library_springshare_id: data?.library_springshare_id,
         };
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
@@ -346,7 +347,7 @@ export const BookableSpacesManageLocations = ({
     };
 
     const saveChangeToCampus = e => {
-        const form = e.target.closest('form');
+        const form = e?.target?.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
@@ -355,7 +356,7 @@ export const BookableSpacesManageLocations = ({
         const locationId = data[`${locationType}Id`];
 
         // validate form
-        const failureMessage = (!data.campus_name || !data.campus_number) && 'Please enter campus name and number';
+        const failureMessage = (!data?.campus_name || !data?.campus_number) && 'Please enter campus name and number';
         console.log(failureMessage);
         if (!!failureMessage) {
             displayUserWarningMessage(failureMessage, true);
@@ -363,10 +364,10 @@ export const BookableSpacesManageLocations = ({
         }
 
         const valuesToSend = {
-            campus_name: data.campus_name,
-            campus_number: data.campus_number,
-            campus_latitude: data.campus_latitude,
-            campus_longitude: data.campus_longitude,
+            campus_name: data?.campus_name,
+            campus_number: data?.campus_number,
+            campus_latitude: data?.campus_latitude,
+            campus_longitude: data?.campus_longitude,
         };
 
         showSavingProgress(true);
@@ -404,7 +405,7 @@ export const BookableSpacesManageLocations = ({
      * FLOOR FUNCTIONS
      */
     const floorCoreForm = (floorDetails = {}) => {
-        const floorNameFieldLabel = Object.keys(floorDetails).length === 0 ? 'New level name' : 'Level name';
+        const floorNameFieldLabel = Object.keys(floorDetails)?.length === 0 ? 'New level name' : 'Level name';
         return `<input name="locationType" type="hidden" value="floor" />
         <div class="dialogRow" data-testid="floor-name">
             <label for="displayedFloorId">${floorNameFieldLabel}</label>
@@ -419,13 +420,13 @@ export const BookableSpacesManageLocations = ({
     };
 
     const saveNewFloor = e => {
-        const form = e.target.closest('form');
+        const form = e?.target?.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
 
         // validate form
-        if (!data.floor_name) {
+        if (!data?.floor_name) {
             // showErrorMessageinPopup('Please enter floor name');
             displayUserWarningMessage('Please enter floor name', true);
             return false;
@@ -436,8 +437,8 @@ export const BookableSpacesManageLocations = ({
 
         const locationType = data?.locationType;
         const valuesToSend = {
-            floor_name: data.floor_name,
-            floor_library_id: data.libraryId,
+            floor_name: data?.floor_name,
+            floor_library_id: data?.libraryId,
         };
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
@@ -449,11 +450,11 @@ export const BookableSpacesManageLocations = ({
             actions
                 .addBookableSpaceLocation(valuesToSend, locationType)
                 .then(newFloor => {
-                    if (!!data.isGroundFloor && data?.isGroundFloor === 'Y') {
+                    if (!!data?.isGroundFloor && data?.isGroundFloor === 'Y') {
                         const libraryData = {
                             locationType: 'library',
-                            libraryId: data.libraryId,
-                            ground_floor_id: newFloor.data.floor_id,
+                            libraryId: data?.libraryId,
+                            ground_floor_id: newFloor?.data?.floor_id,
                         };
                         return actions.updateBookableSpaceLocation(libraryData, locationType);
                     } else {
@@ -479,7 +480,7 @@ export const BookableSpacesManageLocations = ({
 
     function showAddFloorForm(e, libraryDetails, currentGroundFloorDetails) {
         const groundFloorDescription = !!currentGroundFloorDetails
-            ? `Current ground floor is Level ${currentGroundFloorDetails.floor_name}`
+            ? `Current ground floor is Level ${currentGroundFloorDetails?.floor_name}`
             : 'No floor is currently marked as the ground floor';
         const formBody = `<h2>Add a floor to ${displayedLibraryName(libraryDetails)}</h2>
             <input name="libraryId" type="hidden" value="${libraryDetails?.library_id}" />
@@ -506,21 +507,21 @@ export const BookableSpacesManageLocations = ({
         !!deleteButton && (deleteButton.style.display = 'none');
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.removeEventListener('click', saveChangeToLibrary);
-        !!saveButton && saveButton.addEventListener('click', saveNewFloor);
+        !!saveButton && saveButton?.removeEventListener('click', saveChangeToLibrary);
+        !!saveButton && saveButton?.addEventListener('click', saveNewFloor);
 
         const dialog = document.getElementById('popupDialog');
-        !!dialog && dialog.showModal();
+        !!dialog && dialog?.showModal();
     }
 
     const saveChangeToFloor = e => {
-        const form = e.target.closest('form');
+        const form = e?.target?.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
 
         // validate form
-        const failureMessage = !data.floor_name && 'Please enter floor name';
+        const failureMessage = !data?.floor_name && 'Please enter floor name';
         if (!!failureMessage) {
             // showErrorMessageinPopup(failureMessage);
             displayUserWarningMessage(failureMessage, true);
@@ -531,11 +532,11 @@ export const BookableSpacesManageLocations = ({
         closeDialog(e);
 
         const locationType = data?.locationType;
-        const locationId = data[`${locationType}Id`];
+        const locationId = !!data && data[`${locationType}Id`];
 
         const valuesToSend = {
-            floor_name: data.floor_name,
-            floor_library_id: data.floor_library_id,
+            floor_name: data?.floor_name,
+            floor_library_id: data?.floor_library_id,
         };
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
@@ -567,15 +568,15 @@ export const BookableSpacesManageLocations = ({
         const locationType = 'floor';
         const locationId = floorDetails?.floor_id;
         const successMessage = `Level ${floorDetails?.floor_name} in ${displayedLibraryName(floorDetails)} deleted`;
-        const failureMessage = `catch: deleting floor ${floorDetails.floor_id} failed:`;
+        const failureMessage = `catch: deleting floor ${floorDetails?.floor_id} failed:`;
         deleteGenericLocation(locationType, locationId, successMessage, failureMessage);
     }
 
     function showConfirmAndDeleteFloorDialog(e, floorDetails) {
-        const line1 = `Do you really want to delete floor ${floorDetails.floor_name}?`;
+        const line1 = `Do you really want to delete floor ${floorDetails?.floor_name}?`;
         const line2 = 'This will also delete associated rooms.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
-        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteFloor(e, floorDetails));
+        !!confirmationOKButton && confirmationOKButton?.addEventListener('click', e => deleteFloor(e, floorDetails));
         showGenericConfirmAndDeleteDialog(line1, line2);
     }
 
@@ -584,8 +585,8 @@ export const BookableSpacesManageLocations = ({
             floorId > 0 &&
             (() => {
                 for (const campus of campusList) {
-                    for (const library of campus.libraries) {
-                        const floor = library?.floors?.find(floor => floor.floor_id === floorId);
+                    for (const library of campus?.libraries) {
+                        const floor = library?.floors?.find(floor => floor?.floor_id === floorId);
                         if (floor) {
                             return {
                                 ...floor,
@@ -614,20 +615,21 @@ export const BookableSpacesManageLocations = ({
         !!addNewButton && (addNewButton.style.display = 'none');
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.addEventListener('click', saveChangeToFloor);
+        !!saveButton && saveButton?.addEventListener('click', saveChangeToFloor);
 
         const deleteButton = document.getElementById('deleteButton');
-        !!deleteButton && deleteButton.addEventListener('click', e => showConfirmAndDeleteFloorDialog(e, floorDetails));
+        !!deleteButton &&
+            deleteButton?.addEventListener('click', e => showConfirmAndDeleteFloorDialog(e, floorDetails));
 
         const dialog = document.getElementById('popupDialog');
-        !!dialog && dialog.showModal();
+        !!dialog && dialog?.showModal();
     }
 
     /*
      * LIBRARY FUNCTIONS
      */
     function libraryCoreForm(libraryDetails = {}) {
-        const libraryNameFieldLabel = Object.keys(libraryDetails).length === 0 ? 'New Library name' : 'Library name';
+        const libraryNameFieldLabel = Object.keys(libraryDetails)?.length === 0 ? 'New Library name' : 'Library name';
         return `<input name="locationType" type="hidden" value="library" />
             <div class="dialogRow" data-testid="library-name">
                 <label for="libraryName">${libraryNameFieldLabel} *</label>
@@ -652,17 +654,19 @@ export const BookableSpacesManageLocations = ({
                         <label for="library_springshare_id-0">None</label>
                      </li>
                         ${(!!springshareList &&
-                            springshareList.length > 0 &&
+                            springshareList?.length > 0 &&
                             springshareList
                                 ?.map(springshareItem => {
                                     const checked =
-                                        libraryDetails.library_springshare_id === springshareItem.id ? ' checked' : '';
+                                        libraryDetails?.library_springshare_id === springshareItem?.id
+                                            ? ' checked'
+                                            : '';
                                     return `<li style="padding-block: 0.25rem">
-                                    <input type="radio" name="library_springshare_id" id="library_springshare_id-${springshareItem.id}" data-testid="library_springshare_id-${springshareItem.id}" value="${springshareItem.id}"${checked} />
-                                    <label for="library_springshare_id-${springshareItem.id}">${springshareItem.display_name}</label>
+                                    <input type="radio" name="library_springshare_id" id="library_springshare_id-${springshareItem?.id}" data-testid="library_springshare_id-${springshareItem?.id}" value="${springshareItem?.id}"${checked} />
+                                    <label for="library_springshare_id-${springshareItem?.id}">${springshareItem?.display_name}</label>
                                  </li>`;
                                 })
-                                .join('')) ||
+                                ?.join('')) ||
                             ''}
                 </ul>
             </div>
@@ -675,19 +679,19 @@ export const BookableSpacesManageLocations = ({
     }
 
     const saveNewLibrary = e => {
-        const form = e.target.closest('form');
+        const form = e?.target?.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
 
         // validate form
         const errorMessages = [];
-        !data.library_name && errorMessages.push('Please enter the Library name');
-        (!data.building_name || !data.building_number) && errorMessages.push('Please enter building name and number');
-        const errorFound = errorMessages.length > 0;
+        !data?.library_name && errorMessages?.push('Please enter the Library name');
+        (!data?.building_name || !data?.building_number) &&
+            errorMessages?.push('Please enter building name and number');
+        const errorFound = errorMessages?.length > 0;
         if (errorFound) {
-            // showErrorMessageinPopup(errorMessages.join('; '));
-            displayUserWarningMessage(errorMessages.join('; '), errorMessages.length > 0);
+            displayUserWarningMessage(errorMessages?.join('; '), errorMessages?.length > 0);
             return;
         }
 
@@ -696,12 +700,12 @@ export const BookableSpacesManageLocations = ({
 
         const locationType = data?.locationType;
         const valuesToSend = {
-            library_name: data.library_name,
-            building_name: data.building_name,
-            building_number: data.building_number,
-            library_campus_id: data.library_campus_id,
-            library_about_page_default: data.library_about_page_default,
-            library_springshare_id: data.library_springshare_id,
+            library_name: data?.library_name,
+            building_name: data?.building_name,
+            building_number: data?.building_number,
+            library_campus_id: data?.library_campus_id,
+            library_about_page_default: data?.library_about_page_default,
+            library_springshare_id: data?.library_springshare_id,
         };
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
@@ -748,11 +752,11 @@ export const BookableSpacesManageLocations = ({
         !!deleteButton && (deleteButton.style.display = 'none');
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.removeEventListener('click', saveChangeToCampus);
-        !!saveButton && saveButton.addEventListener('click', saveNewLibrary);
+        !!saveButton && saveButton?.removeEventListener('click', saveChangeToCampus);
+        !!saveButton && saveButton?.addEventListener('click', saveNewLibrary);
 
         const dialog = document.getElementById('popupDialog');
-        !!dialog && dialog.showModal();
+        !!dialog && dialog?.showModal();
     }
 
     function deleteLibrary(e, libraryDetails) {
@@ -767,14 +771,15 @@ export const BookableSpacesManageLocations = ({
         const line1 = `Do you really want to delete ${displayedLibraryName(libraryDetails)}?`;
         const line2 = 'This will also delete associated floors.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
-        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteLibrary(e, libraryDetails));
+        !!confirmationOKButton &&
+            confirmationOKButton?.addEventListener('click', e => deleteLibrary(e, libraryDetails));
         showGenericConfirmAndDeleteDialog(line1, line2);
     }
 
     function showEditLibraryForm(libraryId, libraryCampusId) {
         const libraryDetails =
             libraryId > 0 &&
-            campusList?.flatMap(campus => campus.libraries)?.find(library => library.library_id === libraryId);
+            campusList?.flatMap(campus => campus?.libraries)?.find(library => library?.library_id === libraryId);
 
         if (!libraryDetails) {
             console.log(`Can't find library with library_id = "${libraryId}" in campus list from api`);
@@ -792,20 +797,20 @@ export const BookableSpacesManageLocations = ({
                         ? '<ul class="radioList">' +
                           libraryDetails?.floors
                               ?.map(floor => {
-                                  const checked = floor.floor_id === libraryDetails.ground_floor_id ? ' checked' : '';
+                                  const checked = floor?.floor_id === libraryDetails?.ground_floor_id ? ' checked' : '';
                                   return `<li>
                                             <input type="radio" id="groundFloor-${
-                                                floor.floor_id
-                                            }" name="ground_floor_id" ${checked} value="${floor.floor_id}" />
-                                            <label for="groundFloor-${floor.floor_id}">${getPrefixedFloorName(
-                                      floor.floor_name,
+                                                floor?.floor_id
+                                            }" name="ground_floor_id" ${checked} value="${floor?.floor_id}" />
+                                            <label for="groundFloor-${floor?.floor_id}">${getPrefixedFloorName(
+                                      floor?.floor_name,
                                   )}</label> 
                                         </li>`;
                               })
-                              .join('') +
+                              ?.join('') +
                           `<li>
                             <input type="radio" id="groundFloor-none" name="ground_floor_id" ${
-                                !libraryDetails.ground_floor_id ? ' checked' : ''
+                                !libraryDetails?.ground_floor_id ? ' checked' : ''
                             } />
                             <label for="groundFloor-none">None</label> 
                         </li>
@@ -824,13 +829,13 @@ export const BookableSpacesManageLocations = ({
                     <ul class="radioList" data-testid="change-campus">
                     ${campusList
                         ?.map(campus => {
-                            const checked = campus.campus_id === libraryCampusId ? ' checked' : '';
+                            const checked = campus?.campus_id === libraryCampusId ? ' checked' : '';
                             return `<li>
-                                    <input type="radio" id="chooseSite-${campus.campus_id}" name="campus_id" ${checked} value="${campus.campus_id}" />
-                                    <label for="chooseSite-${campus.campus_id}">${campus.campus_name}</label> 
+                                    <input type="radio" id="chooseSite-${campus?.campus_id}" name="campus_id" ${checked} value="${campus?.campus_id}" />
+                                    <label for="chooseSite-${campus?.campus_id}">${campus?.campus_name}</label> 
                                 </li>`;
                         })
-                        .join('')}
+                        ?.join('')}
                     </ul>
                 </div>`;
 
@@ -840,27 +845,29 @@ export const BookableSpacesManageLocations = ({
         const addNewButton = document.getElementById('addNewButton');
         !!addNewButton && (addNewButton.innerText = 'Add floor');
         const currentGroundFloorDetails = libraryDetails?.floors?.find(
-            f => libraryDetails.ground_floor_id === f.floor_id,
+            f => libraryDetails?.ground_floor_id === f?.floor_id,
         );
         !!addNewButton &&
-            addNewButton.addEventListener('click', e => showAddFloorForm(e, libraryDetails, currentGroundFloorDetails));
+            addNewButton?.addEventListener('click', e =>
+                showAddFloorForm(e, libraryDetails, currentGroundFloorDetails),
+            );
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.addEventListener('click', saveChangeToLibrary);
+        !!saveButton && saveButton?.addEventListener('click', saveChangeToLibrary);
 
         const deleteButton = document.getElementById('deleteButton');
         !!deleteButton &&
-            deleteButton.addEventListener('click', e => showConfirmAndDeleteLibraryDialog(e, libraryDetails));
+            deleteButton?.addEventListener('click', e => showConfirmAndDeleteLibraryDialog(e, libraryDetails));
 
         const dialog = document.getElementById('popupDialog');
-        !!dialog && dialog.showModal();
+        !!dialog && dialog?.showModal();
     }
 
     /*
      * CAMPUS FUNCTIONS
      */
     const campusCoreForm = (campusDetails = {}) => {
-        const campusNameFieldLabel = Object.keys(campusDetails).length === 0 ? 'New campus name' : 'Campus name';
+        const campusNameFieldLabel = Object.keys(campusDetails)?.length === 0 ? 'New campus name' : 'Campus name';
         const formType = !campusDetails?.campus_name ? 'add' : 'edit';
         const campusName = campusDetails?.campus_name ?? '';
         const campusNumber = campusDetails?.campus_number ?? '';
@@ -883,14 +890,14 @@ export const BookableSpacesManageLocations = ({
 
     const saveNewCampus = e => {
         console.log('saveNewCampus');
-        const form = e.target.closest('form');
+        const form = e?.target?.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
         console.log('saveNewCampus data=', data);
 
         // validate form
-        if (!data.campus_name || !data.campus_number) {
+        if (!data?.campus_name || !data?.campus_number) {
             console.log('saveNewCampus err');
             displayUserWarningMessage('Please enter campus name and number', true);
 
@@ -903,10 +910,10 @@ export const BookableSpacesManageLocations = ({
 
         const locationType = data?.locationType;
         const valuesToSend = {
-            campus_name: data.campus_name,
-            campus_number: data.campus_number,
-            campus_latitude: data.campus_latitude,
-            campus_longitude: data.campus_longitude,
+            campus_name: data?.campus_name,
+            campus_number: data?.campus_number,
+            campus_latitude: data?.campus_latitude,
+            campus_longitude: data?.campus_longitude,
         };
         console.log('saveNewCampus valuesToSend', valuesToSend);
 
@@ -953,13 +960,13 @@ export const BookableSpacesManageLocations = ({
             !!deleteButton && (deleteButton.style.display = 'none');
 
             const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton.addEventListener('click', saveNewCampus);
+            !!saveButton && saveButton?.addEventListener('click', saveNewCampus);
 
             const mapWrapper = document.getElementById('mapWrapper');
             !!mapWrapper && (mapWrapper.style.display = 'block');
 
             const dialog = document.getElementById('popupDialog');
-            !!dialog && dialog.showModal();
+            !!dialog && dialog?.showModal();
 
             // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
             window.dispatchEvent(new Event('resize'));
@@ -977,15 +984,15 @@ export const BookableSpacesManageLocations = ({
     }
 
     function showConfirmAndDeleteCampusDialog(e, campusDetails) {
-        const line1 = `Do you really want to delete ${campusDetails.campus_name} campus?`;
+        const line1 = `Do you really want to delete ${campusDetails?.campus_name} campus?`;
         const line2 = 'This will also delete associated Libraries.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
-        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteCampus(e, campusDetails));
+        !!confirmationOKButton && confirmationOKButton?.addEventListener('click', e => deleteCampus(e, campusDetails));
         showGenericConfirmAndDeleteDialog(line1, line2);
     }
 
     function showEditCampusForm(campusId) {
-        const campusDetails = campusId > 0 && campusList?.find(s => s.campus_id === campusId);
+        const campusDetails = campusId > 0 && campusList?.find(s => s?.campus_id === campusId);
 
         if (!campusDetails) {
             console.log(`Can't find campus with campus_id = "${campusId}" in campuslist from api`);
@@ -994,16 +1001,16 @@ export const BookableSpacesManageLocations = ({
         }
 
         const formBody = `<h2 data-testid="edit-campus-dialog-heading">Edit campus details</h2>
-            <input  name="campusId" type="hidden" value="${campusDetails.campus_id}" />${campusCoreForm(
+            <input  name="campusId" type="hidden" value="${campusDetails?.campus_id}" />${campusCoreForm(
             campusDetails,
         )}<div class="dialogRow">
                 <h3>Libraries on this Campus</h3>
                 ${
                     campusDetails?.libraries?.length > 0
                         ? `<ul data-testid="campus-library-list">${campusDetails?.libraries
-                              ?.sort((a, b) => a?.library_name?.localeCompare(b.library_name))
+                              ?.sort((a, b) => a?.library_name?.localeCompare(b?.library_name))
                               ?.map(library => `<li>${displayedLibraryName(library)}</li>`)
-                              .join('')}</ul>`
+                              ?.join('')}</ul>`
                         : ''
                 }
                 ${campusDetails?.libraries?.length === 0 ? '<p>No libraries</p>' : ''}
@@ -1014,22 +1021,22 @@ export const BookableSpacesManageLocations = ({
             !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
             const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton.addEventListener('click', saveChangeToCampus);
+            !!saveButton && saveButton?.addEventListener('click', saveChangeToCampus);
 
             const addNewButton = document.getElementById('addNewButton');
             !!addNewButton && (addNewButton.innerText = 'Add Library');
-            !!addNewButton && addNewButton.addEventListener('click', e => showAddLibraryForm(e, campusDetails));
+            !!addNewButton && addNewButton?.addEventListener('click', e => showAddLibraryForm(e, campusDetails));
 
             const deleteButton = document.getElementById('deleteButton');
             !!deleteButton &&
-                deleteButton.addEventListener('click', e => showConfirmAndDeleteCampusDialog(e, campusDetails));
+                deleteButton?.addEventListener('click', e => showConfirmAndDeleteCampusDialog(e, campusDetails));
 
             const mapid = 'mapWrapper';
             const mapWrapper = document.getElementById(mapid);
             !!mapWrapper && (mapWrapper.style.display = 'block');
 
             const dialog = document.getElementById('popupDialog');
-            !!dialog && dialog.showModal();
+            !!dialog && dialog?.showModal();
 
             // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
             window.dispatchEvent(new Event('resize'));
@@ -1040,50 +1047,49 @@ export const BookableSpacesManageLocations = ({
         return (
             <>
                 <StyledRow
-                    key={`campus-${campus.campus_id}`}
+                    key={`campus-${campus?.campus_id}`}
                     data-testid={'spaces-campus-entry'}
                     style={{ paddingLeft: '4rem' }}
                 >
                     <StyledEditButton
-                        onClick={() => showEditCampusForm(campus.campus_id)}
-                        aria-label={`Edit ${campus.campus_name} campus details`}
-                        data-testid={`edit-campus-${campus.campus_id}-button`}
+                        onClick={() => showEditCampusForm(campus?.campus_id)}
+                        aria-label={`Edit ${campus?.campus_name} campus details`}
+                        data-testid={`edit-campus-${campus?.campus_id}-button`}
                     >
-                        <span id={`campus-${campus.campus_id}`}>{campus.campus_name}</span>
+                        <span id={`campus-${campus?.campus_id}`}>{campus?.campus_name}</span>
                         <EditIcon />
                     </StyledEditButton>
                 </StyledRow>
                 <>
-                    {campus.libraries.flatMap(library => [
-                        <StyledRow key={`library-${library.library_id}`} style={{ paddingLeft: '8rem' }}>
+                    {campus?.libraries?.flatMap(library => [
+                        <StyledRow key={`library-${library?.library_id}`} style={{ paddingLeft: '8rem' }}>
                             <StyledEditButton
                                 color="primary"
-                                onClick={() => showEditLibraryForm(library.library_id, campus.campus_id)}
+                                onClick={() => showEditLibraryForm(library?.library_id, campus?.campus_id)}
                                 aria-label={`Edit ${displayedLibraryName(library)} details`}
-                                data-testid={`edit-library-${library.library_id}-button`}
+                                data-testid={`edit-library-${library?.library_id}-button`}
                             >
-                                <span id={`library-${library.library_id}`}>{`${displayedLibraryName(library)}`}</span>
-                                <span style={{ paddingLeft: '0.5rem' }}>{`(${library.floors.length} ${pluralise(
+                                <span id={`library-${library?.library_id}`}>{`${displayedLibraryName(library)}`}</span>
+                                <span style={{ paddingLeft: '0.5rem' }}>{`(${library?.floors?.length} ${pluralise(
                                     'Level',
-                                    library.floors.length,
+                                    library?.floors?.length,
                                 )})`}</span>
                                 <EditIcon />
                             </StyledEditButton>
                         </StyledRow>,
-                        ...library.floors?.map(floor => (
-                            <StyledRow key={`location-floor-${floor.floor_id}`} style={{ paddingLeft: '12rem' }}>
+                        ...library?.floors?.map(floor => (
+                            <StyledRow key={`location-floor-${floor?.floor_id}`} style={{ paddingLeft: '12rem' }}>
                                 <StyledEditButton
                                     color="primary"
-                                    // onClick={() => showEditCampusForm(campus.campus_id)}
-                                    onClick={() => showEditFloorForm(floor.floor_id)}
-                                    aria-label={`Edit Level ${floor.floor_name}`}
-                                    data-testid={`edit-floor-${floor.floor_id}-button`}
+                                    onClick={() => showEditFloorForm(floor?.floor_id)}
+                                    aria-label={`Edit Level ${floor?.floor_name}`}
+                                    data-testid={`edit-floor-${floor?.floor_id}-button`}
                                 >
-                                    <span id={`floor-${floor.floor_id}`}>{floor.floor_name}</span>
-                                    {library.ground_floor_id === floor.floor_id && (
+                                    <span id={`floor-${floor?.floor_id}`}>{floor?.floor_name}</span>
+                                    {library?.ground_floor_id === floor?.floor_id && (
                                         <StyledGroundFloorIndicatorSpan
-                                            id={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
-                                            data-testid={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
+                                            id={getIdentifierForFloorGroundFloorIndicator(floor?.floor_id)}
+                                            data-testid={getIdentifierForFloorGroundFloorIndicator(floor?.floor_id)}
                                         >
                                             (Ground floor)
                                         </StyledGroundFloorIndicatorSpan>
@@ -1105,7 +1111,7 @@ export const BookableSpacesManageLocations = ({
                     return <InlineLoader message="Loading" />;
                 } else if (!!campusListError) {
                     return <p>Something went wrong - please try again later.</p>;
-                } else if (!campusList || campusList.length === 0) {
+                } else if (!campusList || campusList?.length === 0) {
                     return <p>No spaces currently in system.</p>;
                 } else {
                     return (

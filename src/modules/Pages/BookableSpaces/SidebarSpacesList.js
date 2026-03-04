@@ -83,12 +83,12 @@ const SidebarSpacesList = ({
                 <a className="showsOnlyOnFocus" href="#topOfSidebar">
                     Skip back to list of filters
                 </a>
-                {filteredSpaceLocations.length === 0 && (
+                {filteredSpaceLocations?.length === 0 && (
                     <p data-testid="no-spaces-visible">
                         No Spaces match these filters - change your selection in the sidebar to show some spaces.
                     </p>
                 )}
-                {filteredSpaceLocations.length > 0 && (
+                {filteredSpaceLocations?.length > 0 && (
                     <Typography
                         component={'h2'}
                         variant={'h6'}
@@ -97,7 +97,7 @@ const SidebarSpacesList = ({
                         Available Spaces
                     </Typography>
                 )}
-                {filteredSpaceLocations.length > 0 &&
+                {filteredSpaceLocations?.length > 0 &&
                     filteredSpaceLocations?.map(bookableSpace => {
                         return (
                             <StyledBookableSpaceGridItem

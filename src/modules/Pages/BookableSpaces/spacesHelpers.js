@@ -23,7 +23,7 @@ export const isInt = value => {
 };
 
 export const getPrefixedFloorName = floorName => {
-    return floorName.startsWith('Level ') ? floorName : `Level ${floorName}`;
+    return floorName?.startsWith('Level ') ? floorName : `Level ${floorName}`;
 };
 export function getFriendlyFloorName(bookableSpace) {
     if (!!bookableSpace?.space_is_ground_floor) {
@@ -58,12 +58,12 @@ export function getFriendlyLocationDescription(bookableSpace, isCollapsed = fals
 export const getFlatFacilityTypeList = facilityTypes => {
     return (
         facilityTypes?.data?.facility_type_groups?.flatMap(group => {
-            const groupId = group.facility_type_group_id;
+            const groupId = group?.facility_type_group_id;
             return group?.facility_type_children?.map(child => ({
                 facility_type_group_id: groupId,
-                facility_type_id: child.facility_type_id,
-                facility_type_name: child.facility_type_name,
-                facility_special_action: child.facility_special_action,
+                facility_type_id: child?.facility_type_id,
+                facility_type_name: child?.facility_type_name,
+                facility_special_action: child?.facility_special_action,
             }));
         }) || []
     );
@@ -72,22 +72,22 @@ export const getFlatFacilityTypeList = facilityTypes => {
 function filterNext7Days(departmentData) {
     // Get today's date (start of day)
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today?.setHours(0, 0, 0, 0);
 
     // Calculate the end date (6 days from today)
     const endDate = new Date(today);
-    endDate.setDate(today.getDate() + 6);
+    endDate?.setDate(today?.getDate() + 6);
 
     // Filter days to include only the next 7 days starting from today
-    const filteredDays = departmentData.days.filter(day => {
-        const dayDate = new Date(day.date);
-        dayDate.setHours(0, 0, 0, 0);
+    const filteredDays = departmentData?.days?.filter(day => {
+        const dayDate = new Date(day?.date);
+        dayDate?.setHours(0, 0, 0, 0);
 
         return dayDate >= today && dayDate <= endDate;
     });
 
     // Sort by date to ensure chronological order
-    filteredDays?.sort((a, b) => new Date(a.date) - new Date(b.date));
+    filteredDays?.sort((a, b) => new Date(a?.date) - new Date(b?.date));
 
     filteredDays?.map((d, index) => {
         if (index <= 1) {
@@ -118,39 +118,39 @@ function convertWeeksToDays(data) {
     const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
     const filteredData = {
         ...location,
-        department: location.departments.find(dept => displayedDepartments.includes(dept.name)),
+        department: location?.departments?.find(dept => displayedDepartments?.includes(dept?.name)),
     };
     delete filteredData.departments;
 
-    if (filteredData.department.weeks && Array.isArray(filteredData.department.weeks)) {
+    if (filteredData?.department?.weeks && Array.isArray(filteredData?.department?.weeks)) {
         const allDays = [];
 
-        filteredData.department.weeks.forEach(week => {
-            dayOrder.forEach(dayName => {
+        filteredData?.department?.weeks?.forEach(week => {
+            dayOrder?.forEach(dayName => {
                 if (week[dayName]) {
                     // Add day name as a property for easier identification
                     const dayData = {
                         dayName: dayName,
                         ...week[dayName],
                     };
-                    allDays.push(dayData);
+                    allDays?.push(dayData);
                 }
             });
         });
 
-        delete filteredData.department.weeks;
-        allDays?.sort((a, b) => new Date(a.date) - new Date(b.date));
+        delete filteredData?.department?.weeks;
+        allDays?.sort((a, b) => new Date(a?.date) - new Date(b?.date));
         filteredData.department.days = allDays;
     }
 
-    !!filteredData.department.days && (filteredData.department = filterNext7Days(filteredData.department));
+    !!filteredData?.department?.days && (filteredData.department = filterNext7Days(filteredData?.department));
 
     return filteredData;
 }
 
 export const spaceOpeningHours = (bookableSpace, weeklyHours) => {
     const details = weeklyHours?.locations?.find(spaceOpeningHours => {
-        return spaceOpeningHours.lid === bookableSpace?.space_opening_hours_id;
+        return spaceOpeningHours?.lid === bookableSpace?.space_opening_hours_id;
     });
     if (!!details) {
         const openingDetails = convertWeeksToDays(details);

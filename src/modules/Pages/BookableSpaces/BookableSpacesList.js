@@ -16,7 +16,7 @@ import { breadcrumbs } from 'config/routes';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { standardText } from 'helpers/general';
+import { addClass, removeClass, standardText } from 'helpers/general';
 
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
@@ -213,8 +213,12 @@ export const BookableSpacesList = ({
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
-        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
-        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
+        !!siteHeader &&
+            !!breadcrumbs?.bookablespaces?.title &&
+            siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
+        !!siteHeader &&
+            !!breadcrumbs?.bookablespaces?.title &&
+            siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
         if (
             bookableSpacesRoomListError === null &&
             bookableSpacesRoomListLoading === null &&
@@ -246,12 +250,12 @@ export const BookableSpacesList = ({
         const currentDate = getDateStringInTimezone();
 
         // Find matching location by lid (springshare library id)
-        const location = hoursData.locations.find(loc => loc.lid === locationId);
+        const location = hoursData?.locations?.find(loc => loc?.lid === locationId);
 
         const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
-        if (!!location.departments) {
-            const newdept = location.departments?.filter(dept => {
-                return !!dept?.name ? displayedDepartments.includes(dept?.name) : false;
+        if (!!location?.departments) {
+            const newdept = location?.departments?.filter(dept => {
+                return !!dept?.name ? displayedDepartments?.includes(dept?.name) : false;
             });
             location.departments = newdept;
         } else {
@@ -263,15 +267,16 @@ export const BookableSpacesList = ({
         }
 
         // data is already stripped down to only the single department of interest
-        const department = location.departments[0];
+        const department =
+            !!location?.departments && location?.departments.length > 0 ? location?.departments[0] : null;
         if (!department) {
             return null;
         }
 
-        for (const week of department.weeks) {
+        for (const week of department?.weeks) {
             for (const [dayName, dayData] of Object.entries(week)) {
-                if (dayData.date === currentDate) {
-                    return dayData.times.currently_open ?? null;
+                if (dayData?.date === currentDate) {
+                    return dayData?.times?.currently_open ?? null;
                 }
             }
         }
@@ -279,7 +284,7 @@ export const BookableSpacesList = ({
     }
 
     function showSpace(space, facilityTypeToGroup, selectedFacilityTypes) {
-        const spaceFacilityTypes = space?.facility_types?.map(item => item.facility_type_id);
+        const spaceFacilityTypes = space?.facility_types?.map(item => item?.facility_type_id);
 
         // Create a map of facility_type_id to group_id for quick lookup
         // Group selected filters by their facility type group
@@ -287,28 +292,28 @@ export const BookableSpacesList = ({
         const rejectedFilters = [];
 
         selectedFacilityTypes?.forEach(filter => {
-            if (filter.selected) {
-                const groupId = facilityTypeToGroup[filter.facility_type_id];
+            if (filter?.selected) {
+                const groupId = facilityTypeToGroup[filter?.facility_type_id];
                 if (groupId) {
                     if (!selectedFiltersByGroup[groupId]) {
                         selectedFiltersByGroup[groupId] = [];
                     }
-                    selectedFiltersByGroup[groupId].push(filter.facility_type_id);
+                    selectedFiltersByGroup[groupId].push(filter?.facility_type_id);
                 }
             }
 
             // Collect rejected facility types
-            if (filter.unselected) {
-                rejectedFilters.push(filter.facility_type_id);
+            if (filter?.unselected) {
+                rejectedFilters?.push(filter?.facility_type_id);
             }
         });
 
         // check if space should be excluded due to rejected facility types
         console.log('selectedFacilityTypes=', selectedFacilityTypes);
         console.log('rejectedFilters=', rejectedFilters);
-        if (rejectedFilters.length > 0) {
-            const hasRejectedFacility = rejectedFilters.some(rejectedId => {
-                const filter = selectedFacilityTypes.find(ft => ft.facility_type_id === rejectedId);
+        if (rejectedFilters?.length > 0) {
+            const hasRejectedFacility = rejectedFilters?.some(rejectedId => {
+                const filter = selectedFacilityTypes?.find(ft => ft?.facility_type_id === rejectedId);
                 if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
                     return !!space?.space_opening_hours_id
                         ? !isLocationOpen(space?.space_opening_hours_id, weeklyHours)
@@ -323,7 +328,7 @@ export const BookableSpacesList = ({
         }
 
         // If no inclusion filters are selected, show all spaces (that haven't been rejected)
-        if (Object.keys(selectedFiltersByGroup).length === 0) {
+        if (Object.keys(selectedFiltersByGroup)?.length === 0) {
             return true;
         }
 
@@ -332,8 +337,8 @@ export const BookableSpacesList = ({
             const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
             // OR within group
-            const hasMatchInGroup = selectedFiltersInGroup.some(filterId => {
-                const filter = selectedFacilityTypes.find(f => f.facility_type_id === filterId);
+            const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
+                const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
                 if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
                     return !!space?.space_opening_hours_id
                         ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
@@ -352,8 +357,8 @@ export const BookableSpacesList = ({
     const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
         // get a list of the filters used in spaces
         const spaceFilters = bookableSpacesRoomList?.data?.locations
-            .flatMap(location => location.facility_types || [])
-            .map(facilityType => facilityType.facility_type_id);
+            ?.flatMap(location => location?.facility_types || [])
+            ?.map(facilityType => facilityType?.facility_type_id);
         const spaceFiltersSet = new Set(spaceFilters);
 
         // filter facility types so we only show the checkboxes where there is an associated space
@@ -363,20 +368,20 @@ export const BookableSpacesList = ({
             data: {
                 ...facilityTypeList?.data,
                 facility_type_groups: facilityTypeList?.data?.facility_type_groups
-                    .map(group => ({
+                    ?.map(group => ({
                         ...group,
-                        facility_type_children: (group.facility_type_children || []).filter(child =>
-                            spaceFiltersSet.has(child.facility_type_id),
+                        facility_type_children: (group?.facility_type_children || [])?.filter(child =>
+                            spaceFiltersSet?.has(child?.facility_type_id),
                         ),
                     }))
-                    .filter(group => group.facility_type_children.length > 0),
+                    ?.filter(group => group?.facility_type_children?.length > 0),
             },
         };
 
         // manually add a "Currently Open" filter
         const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
             facility_type_group_id:
-                Math.max(...filteredFacilityTypeList?.data?.facility_type_groups?.map(g => g.facility_type_group_id)) +
+                Math.max(...filteredFacilityTypeList?.data?.facility_type_groups?.map(g => g?.facility_type_group_id)) +
                 1,
             facility_type_group_name: FACILITY_TYPE_NAME_CURRENTLY_OPEN,
             facility_type_group_order: -999,
@@ -425,8 +430,8 @@ export const BookableSpacesList = ({
     const facilityTypeToGroup = {};
     getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList)?.data?.facility_type_groups?.forEach(
         group => {
-            group.facility_type_children.forEach(child => {
-                facilityTypeToGroup[child.facility_type_id] = group.facility_type_group_id;
+            group?.facility_type_children?.forEach(child => {
+                facilityTypeToGroup[child?.facility_type_id] = group?.facility_type_group_id;
             });
         },
     );
@@ -434,10 +439,10 @@ export const BookableSpacesList = ({
         return showSpace(space, facilityTypeToGroup, selectedFacilityTypes);
     });
     const visibleSpacesCountBadge = () => {
-        return filteredSpaceLocations.length > 0 &&
-            filteredSpaceLocations.length < bookableSpacesRoomList?.data?.locations?.length ? (
+        return filteredSpaceLocations?.length > 0 &&
+            filteredSpaceLocations?.length < bookableSpacesRoomList?.data?.locations?.length ? (
             <Badge
-                badgeContent={filteredSpaceLocations.length}
+                badgeContent={filteredSpaceLocations?.length}
                 max={bookableSpacesRoomList?.data?.locations?.length}
                 color="primary"
                 style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
@@ -448,38 +453,34 @@ export const BookableSpacesList = ({
 
     const handleMarkerClick = (e, space) => {
         // Stop the click from opening the popup
-        e.originalEvent.stopPropagation();
+        e?.originalEvent?.stopPropagation();
 
         // scroll the spaces sidebar to the relevant space
-        const spaceElement = document.getElementById(`space-${space.space_id}`);
+        const spaceElement = document.getElementById(`space-${space?.space_id}`);
         !!spaceElement &&
-            typeof spaceElement.scrollIntoView === 'function' &&
-            spaceElement.scrollIntoView({
+            typeof spaceElement?.scrollIntoView === 'function' &&
+            spaceElement?.scrollIntoView({
                 behavior: 'smooth',
             });
 
         // highlight it
-        const spacePanel = document.querySelector(`#space-${space.space_id} > div:first-of-type`);
-        !!spacePanel && !spacePanel.classList.contains('highlightPanel') && spacePanel.classList.add('highlightPanel');
-        !!spacePanel &&
-            !spacePanel.classList.contains('mobileHighlightPanel') &&
-            spacePanel.classList.add('mobileHighlightPanel');
+        const spacePanel = document.querySelector(`#space-${space?.space_id} > div:first-of-type`);
+        addClass(spacePanel, 'highlightPanel');
+        addClass(spacePanel, 'mobileHighlightPanel');
 
         setTimeout(() => {
-            !!spacePanel &&
-                !!spacePanel.classList.contains('highlightPanel') &&
-                spacePanel.classList.remove('highlightPanel');
+            removeClass(spacePanel, 'highlightPanel');
         }, 3000);
 
-        !!spaceElement && spaceElement.focus();
+        !!spaceElement && spaceElement?.focus();
 
         // if we opened one earlier, close it now (so they don't have masses of them open)
         if (!!previousToggledSpaceButton) {
-            previousToggledSpaceButton.click();
+            previousToggledSpaceButton?.click();
         }
 
         // expand it, if not already open
-        const toggleSpaceButton = document.getElementById(`toggle-panel-button-space-${space.space_id}`);
+        const toggleSpaceButton = document.getElementById(`toggle-panel-button-space-${space?.space_id}`);
         if (
             !!toggleSpaceButton &&
             toggleSpaceButton.hasAttribute('aria-expanded') &&
@@ -494,7 +495,7 @@ export const BookableSpacesList = ({
         return (
             <StyledMapWrapperDiv>
                 <MapContainer
-                    center={[uqStLuciaDefaultLocation.latitude, uqStLuciaDefaultLocation.longitude]}
+                    center={[uqStLuciaDefaultLocation?.latitude, uqStLuciaDefaultLocation?.longitude]}
                     zoom={18}
                     style={{ width: '100%', height: '100%' }}
                 >
@@ -506,7 +507,7 @@ export const BookableSpacesList = ({
                     />
                     {filteredSpaceLocations.length > 0 &&
                         filteredSpaceLocations
-                            ?.filter(m => !!m.space_latitude && !!m.space_longitude)
+                            ?.filter(m => !!m?.space_latitude && !!m?.space_longitude)
                             ?.map(mapPoint => {
                                 // show the filtered Spaces on the map
                                 // console.log(
@@ -521,7 +522,7 @@ export const BookableSpacesList = ({
                                     <Marker
                                         key={locationKey}
                                         id={locationKey}
-                                        position={[mapPoint.space_latitude, mapPoint.space_longitude]}
+                                        position={[mapPoint?.space_latitude, mapPoint?.space_longitude]}
                                         eventHandlers={{
                                             click(e) {
                                                 handleMarkerClick(e, mapPoint); // mapPoint is captured via closure
@@ -535,12 +536,12 @@ export const BookableSpacesList = ({
             </StyledMapWrapperDiv>
         );
     };
-    const activeFilterCount = selectedFacilityTypes.filter(ft => !!ft.selected || !!ft.unselected).length;
+    const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
     const activeFilterCountBadge = () => {
         return activeFilterCount === 0 ? null : (
             <Badge
                 badgeContent={activeFilterCount}
-                max={selectedFacilityTypes.length}
+                max={selectedFacilityTypes?.length}
                 color="primary"
                 style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
                 data-testid="space-filter-count"
@@ -654,7 +655,7 @@ export const BookableSpacesList = ({
                                     >
                                         <span
                                             style={{
-                                                paddingRight: filteredSpaceLocations.length > 10 ? '1rem' : '0.5rem',
+                                                paddingRight: filteredSpaceLocations?.length > 10 ? '1rem' : '0.5rem',
                                                 // covers 1 and 2 digit - will need more ifs when we have more data: > 100, > 1000
                                                 // but maybe [> 100] ?
                                             }}

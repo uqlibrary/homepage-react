@@ -36,20 +36,20 @@ export const OpeningHoursShort = ({ weeklyHoursLoading, weeklyHoursError, weekly
 
     const openingHoursList = spaceOpeningHours(bookableSpace, weeklyHours);
 
-    if (!openingHoursList || openingHoursList.length === 0) {
+    if (!openingHoursList || openingHoursList?.length === 0) {
         return overrideMessage(''); // no springshare opening hours
     }
 
-    const todaysHours = openingHoursList.find(o => o.dayName === 'Today');
+    const todaysHours = openingHoursList?.find(o => o?.dayName === 'Today');
 
     const spaceOpeningHoursMessage = () =>
         !!bookableSpace?.space_opening_hours_override ? (
             <>
-                <b>{bookableSpace?.space_library_name} opening hours</b> Today: {todaysHours.rendered}{' '}
+                <b>{bookableSpace?.space_library_name} opening hours</b> Today: {todaysHours?.rendered}{' '}
             </>
         ) : (
             <>
-                <b>Opening hours</b> Today: {todaysHours.rendered}{' '}
+                <b>Opening hours</b> Today: {todaysHours?.rendered}{' '}
             </>
         );
     return (

@@ -271,7 +271,7 @@ export const BookableSpacesManageFacilities = ({
 
     const updateGroupOrder = valuesToSend => {
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+        if (!!cypressTestCookie && location?.host === 'localhost:2020' && cypressTestCookie === 'active') {
             console.log('SET COOKIE', valuesToSend);
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -342,8 +342,8 @@ export const BookableSpacesManageFacilities = ({
             setSortList({
                 data: facilityTypeList?.data?.facility_type_groups.map(g => {
                     return {
-                        facility_type_group_id: g.facility_type_group_id,
-                        facility_type_group_order: g.facility_type_group_order,
+                        facility_type_group_id: g?.facility_type_group_id,
+                        facility_type_group_order: g?.facility_type_group_order,
                     };
                 }),
                 update: false,
@@ -357,10 +357,10 @@ export const BookableSpacesManageFacilities = ({
 
         const primaryTextElement = document.createElement('span');
         !!primaryTextElement && (primaryTextElement.id = warningTextId);
-        !!primaryTextElement && !!warningMessageNode && primaryTextElement.appendChild(warningMessageNode);
+        !!primaryTextElement && !!warningMessageNode && primaryTextElement?.appendChild(warningMessageNode);
 
         const dialogMessageElement = document.getElementById('dialogMessageContent');
-        !!dialogMessageElement && !!primaryTextElement && dialogMessageElement.appendChild(primaryTextElement);
+        !!dialogMessageElement && !!primaryTextElement && dialogMessageElement?.appendChild(primaryTextElement);
 
         const warningIcon = document.getElementById('warning-icon');
         !!showWarningIcon && removeClass(warningIcon, 'hidden');
@@ -379,8 +379,8 @@ export const BookableSpacesManageFacilities = ({
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        !!valuesToSend.facility_type_name &&
-            !!valuesToSend.facility_type_id &&
+        !!valuesToSend?.facility_type_name &&
+            !!valuesToSend?.facility_type_id &&
             actions
                 .updateSpacesFacilityType(valuesToSend)
                 .then(() => {
@@ -408,7 +408,7 @@ export const BookableSpacesManageFacilities = ({
         closeDeletionConfirmation(); // close delete conf dialog
         closeDialog(); // close main dialog
 
-        const facilityTypeid = facilityTypeDetails.facility_type_id;
+        const facilityTypeid = facilityTypeDetails?.facility_type_id;
         actions
             .deleteSpacesFacilityType(facilityTypeid)
             .then(() => {
@@ -423,35 +423,34 @@ export const BookableSpacesManageFacilities = ({
                 );
             })
             .finally(() => {
-                // actions.loadBookableSpaceCampusChildren();
                 actions.loadAllFacilityTypes();
             });
     }
 
     function openConfirmDeleteFacilityTypeDialog(e, facilityTypeDetails) {
-        const line1 = `Do you really want to delete ${facilityTypeDetails.facility_type_name}?`;
+        const line1 = `Do you really want to delete ${facilityTypeDetails?.facility_type_name}?`;
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton &&
-            confirmationOKButton.addEventListener('click', e => deleteFacilityType(e, facilityTypeDetails));
+            confirmationOKButton?.addEventListener('click', e => deleteFacilityType(e, facilityTypeDetails));
         showGenericConfirmAndDeleteDialog(line1, '');
         document.activeElement.blur();
         // don't put focus on 'no' button, it doesn't work well with these daft primary and secondary buttons
     }
 
     const openDialogForEditFacilityType = e => {
-        const buttonClicked = e.target.closest('button');
-        const _facilityTypeId = buttonClicked.getAttribute('data-facilitytypeid');
+        const buttonClicked = e?.target?.closest('button');
+        const _facilityTypeId = buttonClicked?.getAttribute('data-facilitytypeid');
         const facilityTypeId = !!_facilityTypeId && parseInt(_facilityTypeId, 10);
 
         // show the form
         const flatFacilityTypeList = getFlatFacilityTypeList(facilityTypeList);
-        const facilityTypeDetails = flatFacilityTypeList?.find(item => item.facility_type_id === facilityTypeId);
+        const facilityTypeDetails = flatFacilityTypeList?.find(item => item?.facility_type_id === facilityTypeId);
         const formBody = `<div>
                 <h2 data-testid="add-facility-type-heading">Edit a Facility Type</h2>
                 <input type="hidden" name="facility_type_id" id="facility_type_id" value="${facilityTypeId}" />
                 <div class="dialogRow">
                     <label for="facility_type_name">Facility type name</label>
-                    <input type="text" name="facility_type_name" id="facility_type_name" data-testid="facility_type_name" value="${facilityTypeDetails.facility_type_name}" required />
+                    <input type="text" name="facility_type_name" id="facility_type_name" data-testid="facility_type_name" value="${facilityTypeDetails?.facility_type_name}" required />
                 </div>
             </div>`;
         const dialogBodyElement = document.getElementById('dialogBody');
@@ -459,7 +458,7 @@ export const BookableSpacesManageFacilities = ({
 
         // add a deletion warning message about how many Spaces are affected
         const spacesWithThisFacilityType = bookableSpacesRoomList?.data?.locations?.filter(location => {
-            return location.facility_types.some(facilityType => facilityType.facility_type_id === facilityTypeId);
+            return location?.facility_types?.some(facilityType => facilityType?.facility_type_id === facilityTypeId);
         });
         const count = spacesWithThisFacilityType?.length || 0;
         const pluralSpace = pluralise('Space', count);
@@ -470,36 +469,36 @@ export const BookableSpacesManageFacilities = ({
         displayUserWarningMessage(warningMessage, count > 0);
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.addEventListener('click', saveChangeToFacilityType);
+        !!saveButton && saveButton?.addEventListener('click', saveChangeToFacilityType);
 
         const cancelButton = document.getElementById('cancelButton');
-        !!cancelButton && cancelButton.addEventListener('click', closeDialog);
+        !!cancelButton && cancelButton?.addEventListener('click', closeDialog);
 
         const deleteButton = document.getElementById('deleteButton');
         !!deleteButton &&
-            deleteButton.addEventListener('click', e => openConfirmDeleteFacilityTypeDialog(e, facilityTypeDetails));
+            deleteButton?.addEventListener('click', e => openConfirmDeleteFacilityTypeDialog(e, facilityTypeDetails));
 
         const dialog = document.getElementById('popupDialog');
-        !!dialog && dialog.showModal();
+        !!dialog && dialog?.showModal();
     };
 
     const saveNewFacilityType = e => {
         //
-        const form = e.target.closest('form');
+        const form = e?.target?.closest('form');
 
         const formData = !!form && new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
 
         // validate form
-        const failureMessage = !data.facility_type_name && 'Please enter a facility type name';
+        const failureMessage = !data?.facility_type_name && 'Please enter a facility type name';
         if (!!failureMessage) {
             showErrorMessageinPopup(failureMessage);
             return false;
         }
 
         const valuesToSend = {
-            facility_type__group_id: data.facility_type__group_id,
-            facility_type_name: data.facility_type_name,
+            facility_type__group_id: data?.facility_type__group_id,
+            facility_type_name: data?.facility_type_name,
         };
 
         // showSavingProgress(true);
@@ -519,8 +518,8 @@ export const BookableSpacesManageFacilities = ({
             .catch(e => {
                 console.log(
                     'catch: saving facility type (',
-                    data.facility_type__group_id,
-                    data.facility_type_name,
+                    data?.facility_type__group_id,
+                    data?.facility_type_name,
                     ') failed:',
                     e,
                 );
@@ -533,11 +532,11 @@ export const BookableSpacesManageFacilities = ({
 
     const openDialogAddTypeToGroupForm = e => {
         // here
-        const buttonClicked = e.target.closest('button');
-        const groupId = buttonClicked.getAttribute('data-groupid');
+        const buttonClicked = e?.target?.closest('button');
+        const groupId = buttonClicked?.getAttribute('data-groupid');
 
         const thisGroup = facilityTypeList?.data?.facility_type_groups?.find(
-            g => g.facility_type_group_id === parseInt(groupId, 10),
+            g => g?.facility_type_group_id === parseInt(groupId, 10),
         );
         const groupname = thisGroup?.facility_type_group_name;
         const formBody = `<div>
@@ -553,27 +552,27 @@ export const BookableSpacesManageFacilities = ({
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.addEventListener('click', saveNewFacilityType);
+        !!saveButton && saveButton?.addEventListener('click', saveNewFacilityType);
 
         const cancelButton = document.getElementById('cancelButton');
-        !!cancelButton && cancelButton.addEventListener('click', closeDialog);
+        !!cancelButton && cancelButton?.addEventListener('click', closeDialog);
 
         const deleteButton = document.getElementById('deleteButton');
         !!deleteButton && (deleteButton.style.display = 'none');
 
         const dialog = document.getElementById('popupDialog');
-        !!dialog && dialog.showModal();
+        !!dialog && dialog?.showModal();
     };
 
     const saveNewFacilityTypeGroup = e => {
-        const form = e.target.closest('form');
+        const form = e?.target?.closest('form');
 
         const formData = !!form && new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
 
         // validate form
         const failureMessage =
-            (!data.facility_type_name || !data.facility_type_group_name) && 'Please enter both fields.';
+            (!data?.facility_type_name || !data?.facility_type_group_name) && 'Please enter both fields.';
         if (!!failureMessage) {
             showErrorMessageinPopup(failureMessage);
             return false;
@@ -582,7 +581,7 @@ export const BookableSpacesManageFacilities = ({
         closeDialog(e);
 
         const groupValuesToSend = {
-            facility_type_group_name: data.facility_type_group_name,
+            facility_type_group_name: data?.facility_type_group_name,
             facility_type_group_order: 0,
             // 'facility_type_group_type' => (one of: 'choose-one', 'choose-many'), // TODO
         };
@@ -594,7 +593,7 @@ export const BookableSpacesManageFacilities = ({
                 groupCreated = true;
                 const typeValuesToSend = {
                     facility_type__group_id: response?.data?.facility_type_group_id,
-                    facility_type_name: data.facility_type_name,
+                    facility_type_name: data?.facility_type_name,
                 };
                 // const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
                 // if (
@@ -614,8 +613,8 @@ export const BookableSpacesManageFacilities = ({
                     // type create failed
                     console.log(
                         'catch: saving facility type (',
-                        data.facility_type__group_id,
-                        data.facility_type_name,
+                        data?.facility_type__group_id,
+                        data?.facility_type_name,
                         ') failed:',
                         e,
                     );
@@ -626,8 +625,8 @@ export const BookableSpacesManageFacilities = ({
                     // group create failed
                     console.log(
                         'catch: saving facility type (',
-                        data.facility_type__group_id,
-                        data.facility_type_name,
+                        data?.facility_type__group_id,
+                        data?.facility_type_name,
                         ') failed:',
                         e,
                     );
@@ -663,26 +662,26 @@ export const BookableSpacesManageFacilities = ({
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.addEventListener('click', saveNewFacilityTypeGroup);
+        !!saveButton && saveButton?.addEventListener('click', saveNewFacilityTypeGroup);
 
         const cancelButton = document.getElementById('cancelButton');
-        !!cancelButton && cancelButton.addEventListener('click', closeDialog);
-        !!cancelButton && cancelButton.addEventListener('click', () => handleTopTabChange(null, tabOnLoad));
+        !!cancelButton && cancelButton?.addEventListener('click', closeDialog);
+        !!cancelButton && cancelButton?.addEventListener('click', () => handleTopTabChange(null, tabOnLoad));
 
         const deleteButton = document.getElementById('deleteButton');
         !!deleteButton && (deleteButton.style.display = 'none');
 
         const dialog = document.getElementById('popupDialog');
-        !!dialog && dialog.showModal();
+        !!dialog && dialog?.showModal();
     };
 
     const updateFacilityTypeGroup = e => {
-        const form = e.target.closest('form');
+        const form = e?.target?.closest('form');
 
         const formData = !!form && new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
 
-        const failureMessage = !data.facility_type_group_name && 'Please enter a facility group type name';
+        const failureMessage = !data?.facility_type_group_name && 'Please enter a facility group type name';
         if (!!failureMessage) {
             showErrorMessageinPopup(failureMessage);
 
@@ -690,8 +689,8 @@ export const BookableSpacesManageFacilities = ({
         }
 
         const valuesToSend = {
-            facility_type_group_name: data.facility_type_group_name,
-            facility_type_group_loads_open: data.facility_type_group_loads_open,
+            facility_type_group_name: data?.facility_type_group_name,
+            facility_type_group_loads_open: data?.facility_type_group_loads_open,
         };
 
         closeDialog();
@@ -702,7 +701,7 @@ export const BookableSpacesManageFacilities = ({
         }
 
         actions
-            .updateSpacesFacilityGroupSingle(valuesToSend, data.facility_type_group_id)
+            .updateSpacesFacilityGroupSingle(valuesToSend, data?.facility_type_group_id)
             .then(() => {
                 displayToastMessage('Facility type updated');
             })
@@ -732,7 +731,7 @@ export const BookableSpacesManageFacilities = ({
         closeDeletionConfirmation(); // close delete conf dialog
         closeDialog(); // close main dialog
 
-        const facilityTypeid = facilityTypeGroupDetails.facility_type_group_id;
+        const facilityTypeid = facilityTypeGroupDetails?.facility_type_group_id;
         actions
             .deleteSpacesFacilityTypeGroup(facilityTypeid)
             .then(() => {
@@ -745,7 +744,6 @@ export const BookableSpacesManageFacilities = ({
                 );
             })
             .finally(() => {
-                // actions.loadBookableSpaceCampusChildren();
                 actions.loadAllFacilityTypes();
             });
     };
@@ -753,33 +751,33 @@ export const BookableSpacesManageFacilities = ({
     function countSpacesWithFacilityTypeGroup(targetGroupId) {
         const facilityTypeGroups = facilityTypeList?.data?.facility_type_groups;
         const targetGroups =
-            facilityTypeGroups?.find(group => group.facility_type_group_id === parseInt(targetGroupId, 10)) || {};
-        const targetFacilityTypeIds = targetGroups?.facility_type_children?.map(child => child.facility_type_id) || [];
+            facilityTypeGroups?.find(group => group?.facility_type_group_id === parseInt(targetGroupId, 10)) || {};
+        const targetFacilityTypeIds = targetGroups?.facility_type_children?.map(child => child?.facility_type_id) || [];
 
         const allSpaces = bookableSpacesRoomList?.data?.locations;
         const spaces = allSpaces?.filter(s =>
-            s.facility_types.some(ft => targetFacilityTypeIds?.includes(ft.facility_type_id)),
+            s?.facility_types?.some(ft => targetFacilityTypeIds?.includes(ft?.facility_type_id)),
         );
         return spaces?.length || 0;
     }
 
     function openConfirmDeleteFacilityGroupDialog(e, facilityGroupDetails) {
         console.log('facilityGroupDetails=', facilityGroupDetails);
-        const line1 = `Do you really want to delete ${facilityGroupDetails.facility_type_group_name}?`;
+        const line1 = `Do you really want to delete ${facilityGroupDetails?.facility_type_group_name}?`;
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton &&
-            confirmationOKButton.addEventListener('click', e => deleteFacilityTypeGroup(e, facilityGroupDetails));
+            confirmationOKButton?.addEventListener('click', e => deleteFacilityTypeGroup(e, facilityGroupDetails));
         showGenericConfirmAndDeleteDialog(line1, '');
         document.activeElement.blur();
         // don't put focus on 'no' button, it doesn't work well with these daft primary and secondary buttons
     }
 
     const openDialogForEditGroup = e => {
-        const buttonClicked = e.target.closest('button');
-        const groupId = buttonClicked.getAttribute('data-groupid');
+        const buttonClicked = e?.target?.closest('button');
+        const groupId = buttonClicked?.getAttribute('data-groupid');
         const thisGroup =
             facilityTypeList?.data?.facility_type_groups?.find(
-                g => g.facility_type_group_id === parseInt(groupId, 10),
+                g => g?.facility_type_group_id === parseInt(groupId, 10),
             ) || {};
         console.log('buttonClicked=', buttonClicked);
         console.log('groupId=', groupId);
@@ -826,22 +824,22 @@ export const BookableSpacesManageFacilities = ({
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.addEventListener('click', updateFacilityTypeGroup);
+        !!saveButton && saveButton?.addEventListener('click', updateFacilityTypeGroup);
 
         const cancelButton = document.getElementById('cancelButton');
-        !!cancelButton && cancelButton.addEventListener('click', closeDialog);
+        !!cancelButton && cancelButton?.addEventListener('click', closeDialog);
 
         const deleteButton = document.getElementById('deleteButton');
         !!deleteButton &&
-            deleteButton.addEventListener('click', e => openConfirmDeleteFacilityGroupDialog(e, thisGroup));
+            deleteButton?.addEventListener('click', e => openConfirmDeleteFacilityGroupDialog(e, thisGroup));
 
         const dialog = document.getElementById('popupDialog');
-        !!dialog && dialog.showModal();
+        !!dialog && dialog?.showModal();
     };
 
     const writeFilterTypeController = group => {
-        const groupName = group.facility_type_group_name;
-        const groupId = group.facility_type_group_id;
+        const groupName = group?.facility_type_group_name;
+        const groupId = group?.facility_type_group_id;
         return (
             <>
                 <div style={{ display: 'flex' }}>
@@ -869,7 +867,7 @@ export const BookableSpacesManageFacilities = ({
                 </Typography>
 
                 {group?.facility_type_children?.map(facilityType => {
-                    const facilityTypeId = facilityType.facility_type_id;
+                    const facilityTypeId = facilityType?.facility_type_id;
                     return (
                         <div key={`facilitytype-list-${facilityTypeId}`}>
                             <StyledEditIconButton
@@ -878,7 +876,7 @@ export const BookableSpacesManageFacilities = ({
                                 id={`edit-facility-type-${facilityTypeId}-button`}
                                 onClick={openDialogForEditFacilityType}
                                 data-facilitytypeid={facilityTypeId}
-                                aria-label={`Edit facility type ${facilityType.facility_type_name}`}
+                                aria-label={`Edit facility type ${facilityType?.facility_type_name}`}
                             >
                                 <EditIcon
                                     style={{
@@ -892,9 +890,9 @@ export const BookableSpacesManageFacilities = ({
                                 variant={'p'}
                                 data-testid={`facilitytype-name-${facilityTypeId}`}
                             >
-                                {formValues.facility_types?.find(
+                                {formValues?.facility_types?.find(
                                     f => f?.facility_type_id === facilityType?.facility_type_id,
-                                )?.facility_type_name || facilityType.facility_type_name}
+                                )?.facility_type_name || facilityType?.facility_type_name}
                             </Typography>
                         </div>
                     );
@@ -910,9 +908,9 @@ export const BookableSpacesManageFacilities = ({
                         paddingInline: 0,
                         display: 'block',
                     }}
-                    aria-label={`Add another facility type for ${group.facility_type_group_name}`}
+                    aria-label={`Add another facility type for ${group?.facility_type_group_name}`}
                 >
-                    <AddIcon data-testid={`add-type-${slugifyName(group.facility_type_group_name)}`} />
+                    <AddIcon data-testid={`add-type-${slugifyName(group?.facility_type_group_name)}`} />
                 </IconButton>
             </>
         );
@@ -921,26 +919,26 @@ export const BookableSpacesManageFacilities = ({
     const moveItem = (fromIndex, toIndex) => {
         const newSortList = [...sortList];
 
-        const sourceItemIndex = newSortList.findIndex(item => item.facility_type_group_order === fromIndex + 1);
+        const sourceItemIndex = newSortList?.findIndex(item => item?.facility_type_group_order === fromIndex + 1);
         if (sourceItemIndex === -1) {
             console.warn(`Item with facility_type_group_order ${fromIndex} not found`);
             return;
         }
 
-        const [sourceItem] = newSortList.splice(sourceItemIndex, 1);
+        const [sourceItem] = newSortList?.splice(sourceItemIndex, 1);
 
-        newSortList.push({
-            facility_type_group_id: sourceItem.facility_type_group_id,
+        newSortList?.push({
+            facility_type_group_id: sourceItem?.facility_type_group_id,
             facility_type_group_order: toIndex === 1 ? 0 : toIndex,
         });
 
-        newSortList.sort((a, b) => a.facility_type_group_order - b.facility_type_group_order);
+        newSortList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order);
 
-        newSortList.forEach((item, index) => {
+        newSortList?.forEach((item, index) => {
             item.facility_type_group_order = index + 1;
         });
 
-        const result = [...newSortList].sort((a, b) => a.facility_type_group_order - b.facility_type_group_order);
+        const result = [...newSortList]?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order);
 
         setSortList({ data: result, update: true });
     };
@@ -1055,10 +1053,10 @@ export const BookableSpacesManageFacilities = ({
                                                         {facilityTypeList?.data?.facility_type_groups
                                                             ?.sort(
                                                                 (a, b) =>
-                                                                    a.facility_type_group_order -
-                                                                    b.facility_type_group_order,
+                                                                    a?.facility_type_group_order -
+                                                                    b?.facility_type_group_order,
                                                             )
-                                                            .map((item, index) => (
+                                                            ?.map((item, index) => (
                                                                 <DraggableListItem
                                                                     key={`draggable-facility-group-type-${index}`}
                                                                     item={item}
@@ -1074,7 +1072,7 @@ export const BookableSpacesManageFacilities = ({
                                     </Grid>
                                 </TabPanel>
                                 {!!facilityTypeList?.data?.facility_type_groups &&
-                                    facilityTypeList?.data?.facility_type_groups.length > 0 && (
+                                    facilityTypeList?.data?.facility_type_groups?.length > 0 && (
                                         <TabPanel
                                             value={topmenu}
                                             index="editGroupsTab" // must match 'value' in Tabs
@@ -1092,8 +1090,8 @@ export const BookableSpacesManageFacilities = ({
                                             <Grid container>
                                                 {(
                                                     facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
-                                                        b.facility_type_children.length >
-                                                        a.facility_type_children.length
+                                                        b?.facility_type_children?.length >
+                                                        a?.facility_type_children?.length
                                                             ? -1
                                                             : 1,
                                                     ) || []
@@ -1104,9 +1102,9 @@ export const BookableSpacesManageFacilities = ({
                                                             xs={12}
                                                             sm={3}
                                                             data-testid={`facilitygroup-${slugifyName(
-                                                                group.facility_type_group_name,
+                                                                group?.facility_type_group_name,
                                                             )}`}
-                                                            key={group.facility_type_group_name}
+                                                            key={group?.facility_type_group_name}
                                                             style={{ maxWidth: '200px' }}
                                                         >
                                                             {writeFilterTypeController(group)}

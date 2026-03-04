@@ -120,9 +120,9 @@ export const BookableSpacesAddSpace = ({
             bookableSpacesRoomList?.data?.locations?.length > 0
         ) {
             const _mostRecentSpace = bookableSpacesRoomList?.data?.locations
-                .filter(s => !!s.space_latitude && !!s.space_longitude)
-                .reduce((prev, current) => {
-                    if (+current.space_id > +prev.space_id) {
+                ?.filter(s => !!s?.space_latitude && !!s?.space_longitude)
+                ?.reduce((prev, current) => {
+                    if (+current?.space_id > +prev?.space_id) {
                         return current;
                     } else {
                         return prev;
@@ -189,7 +189,7 @@ export const BookableSpacesAddSpace = ({
         currentCampusList?.length === 0 ||
         (bookableSpacesRoomListLoading === false &&
             bookableSpacesRoomListError === false &&
-            (!bookableSpacesRoomList?.data?.locations || bookableSpacesRoomList?.data?.locations.length === 0))
+            (!bookableSpacesRoomList?.data?.locations || bookableSpacesRoomList?.data?.locations?.length === 0))
     ) {
         return (
             <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
@@ -233,8 +233,8 @@ export const BookableSpacesAddSpace = ({
                     springshareList={springshareList}
                     currentCampusList={currentCampusList}
                     initialCampus={
-                        !!currentCampusList && currentCampusList.length > 0
-                            ? currentCampusList?.findIndex(c => c.campus_id === formValues.campus_id)
+                        !!currentCampusList && currentCampusList?.length > 0
+                            ? currentCampusList?.findIndex(c => c?.campus_id === formValues?.campus_id)
                             : null
                     }
                     mode="add"
