@@ -30,7 +30,7 @@ export default {
                 />
             ),
             validate: value => isInvalidTeamSlug(value),
-            fieldParams: { canEdit: false, canAdd: true, minWidth: 100 },
+            fieldParams: { canEdit: false, canAdd: true, renderInUpdate: false, renderInTable: false, minWidth: 100 },
         },
         team_display_name: {
             component: props => (

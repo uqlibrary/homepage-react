@@ -97,7 +97,7 @@ describe('Manage Teams', () => {
     it('renders component standard', () => {
         const { getByText } = setup({ actions: actions });
         expect(getByText(locale.pages.manage.teams.header.pageSubtitle('', 'Library'))).toBeInTheDocument();
-        expect(getByText('SPACES')).toBeInTheDocument();
+        expect(getByText('Spaces')).toBeInTheDocument();
     });
     it('catches error on LoadTeamList', async () => {
         actions.loadTeamList = jest.fn(() => {
@@ -118,7 +118,7 @@ describe('Manage Teams', () => {
         const { getByText, getByTestId } = setup({ actions: actions });
 
         expect(getByText(locale.pages.manage.teams.header.pageSubtitle('', 'Library'))).toBeInTheDocument();
-        expect(getByText('WSS')).toBeInTheDocument();
+        expect(getByText('Work Station Support')).toBeInTheDocument();
         expect(getByTestId('team-management-data-table-toolbar-export-menu')).toBeInTheDocument();
         await act(async () => {
             await fireEvent.click(getByTestId('team-management-data-table-toolbar-add-button'));
@@ -166,7 +166,7 @@ describe('Manage Teams', () => {
         const selectedTeamSlug = teamList[1].team_slug;
         const { getByText, getByTestId } = setup({ actions: actions });
         expect(getByText(locale.pages.manage.teams.header.pageSubtitle('', 'Library'))).toBeInTheDocument();
-        expect(getByText('WSS')).toBeInTheDocument();
+        expect(getByText('Work Station Support')).toBeInTheDocument();
 
         await act(async () => {
             await fireEvent.click(getByTestId(`action_cell-${selectedTeamSlug}-edit-button`));
@@ -200,7 +200,7 @@ describe('Manage Teams', () => {
         const selectedTeamSlug = teamList[2].team_slug;
         const { getByText, getByTestId } = setup({ actions: actions });
         expect(getByText(locale.pages.manage.teams.header.pageSubtitle('', 'Library'))).toBeInTheDocument();
-        expect(getByText('WSS')).toBeInTheDocument();
+        expect(getByText('Work Station Support')).toBeInTheDocument();
 
         await act(async () => {
             await fireEvent.click(getByTestId(`action_cell-${selectedTeamSlug}-delete-button`));
