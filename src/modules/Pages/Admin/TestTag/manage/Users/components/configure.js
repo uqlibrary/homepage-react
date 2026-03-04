@@ -4,6 +4,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Popper from '@mui/material/Popper';
 
 import { isEmptyStr, isInvalidUUID } from '../../../helpers/helpers';
 
@@ -63,6 +64,9 @@ export default {
                             }}
                             onClick={onClick}
                         />
+                    )}
+                    PopperComponent={props => (
+                        <Popper {...props} id={'user_team-users-options'} data-testid={'user_team-users-options'} />
                     )}
                     {...props}
                 />
