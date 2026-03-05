@@ -127,7 +127,7 @@ export default {
         },
         dashboard: {
             header: {
-                pageSubtitle: dept => `Dashboard for ${dept}`,
+                pageSubtitle: (team, dept) => `Dashboard for ${team} (${dept})`,
             },
             panel: {
                 inspections: {
@@ -263,7 +263,7 @@ export default {
                 },
             ],
             header: {
-                pageSubtitle: dept => `Testing assets for ${dept}`,
+                pageSubtitle: (team, dept) => `Testing assets for ${team} (${dept})`,
             },
             form: {
                 event: {
@@ -422,7 +422,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset type management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Asset type management for ${team} (${dept})`,
                     addButtonLabel: 'Add asset type',
                 },
                 addAsset: {
@@ -510,7 +510,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Locations management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Locations management for ${team} (${dept})`,
                 },
                 form: {
                     title: 'Filter',
@@ -643,7 +643,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Testing device management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Testing device management for ${team} (${dept})`,
                 },
                 form: {
                     actions: 'Actions',
@@ -721,7 +721,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Test note management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Test note management for ${team} (${dept})`,
                 },
                 form: {
                     actions: 'Actions',
@@ -800,7 +800,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Bulk asset management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Bulk asset management for ${team} (${dept})`,
                 },
                 form: {
                     columns: {
@@ -972,7 +972,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `User management for ${dept}`,
+                    pageSubtitle: (team, dept) => `User management for ${team} (${dept})`,
                 },
                 form: {
                     actions: 'Actions',
@@ -1076,7 +1076,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Testing devices due recalibration report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Testing devices due recalibration report for ${team} (${dept})`,
                 },
                 form: {
                     columns: {
@@ -1112,7 +1112,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset tests due report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Asset tests due report for ${team} (${dept})`,
                 },
                 form: {
                     title: 'Filter',
@@ -1149,7 +1149,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Tests by licenced users report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Tests by licenced users report for ${team} (${dept})`,
                 },
                 form: {
                     title: 'Filter',
@@ -1204,7 +1204,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset tests report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Asset tests report for ${team} (${dept})`,
                 },
                 form: {
                     title: 'Filters',

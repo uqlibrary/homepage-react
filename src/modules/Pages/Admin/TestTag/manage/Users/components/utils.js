@@ -21,6 +21,8 @@ export const transformUpdateRequest = request => {
     delete request.actions_count;
     delete request.id;
     delete request.department_display_name;
+    delete request.user_department;
+    delete request.team_display_name;
     request.privileges.can_admin = request?.can_admin_cb ? 1 : 0;
     request.privileges.can_inspect = request?.can_inspect_cb ? 1 : 0;
     request.privileges.can_alter = request?.can_alter_cb ? 1 : 0;
@@ -41,12 +43,12 @@ export const transformUpdateRequest = request => {
     return request;
 };
 
-export const transformAddRequest = (request, dept) => {
+export const transformAddRequest = (request, team) => {
     // clear data not required from UI for request.
     delete request.actions_count;
     delete request.user_id;
-    // Assign user department
-    request.user_department = dept;
+    // Assign user team
+    request.user_team = team;
     // Prime Privileges
     request.privileges = {};
     request.user_licence_number = request?.can_inspect_cb ? request?.user_licence_number : '';

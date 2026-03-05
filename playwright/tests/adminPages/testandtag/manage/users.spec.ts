@@ -10,7 +10,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
@@ -18,7 +18,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('base page edit controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
 
@@ -60,7 +60,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('base page add controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         // Add.
@@ -97,7 +97,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('base page delete controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         // Delete
