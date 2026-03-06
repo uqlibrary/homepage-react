@@ -176,7 +176,7 @@
         "history": "^4.7.2",
         "html-react-parser": "^3.0.16",
         "html2text": "^6.0.0",
-        "immutable": "^3.8.2",
+        "immutable": "^5.1.5",
         "js-cookie": "^2.2.0",
         "jss-preset-default": "^10.10.0",
         "lodash": "^4.17.21",
