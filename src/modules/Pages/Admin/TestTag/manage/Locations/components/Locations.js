@@ -21,7 +21,7 @@ import { useLocationDisplayName } from './hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
-import { emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
+import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 import { locationType } from '../../../SharedComponents/LocationPicker/utils';
 import { breadcrumbs } from 'config/routes';
 import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
@@ -71,7 +71,7 @@ const ManageLocations = ({ actions }) => {
 
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
-    const { row, setRow } = useDataTableRow([]);
+    const { row, setRow } = useDataTableRow([], transformRow);
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();

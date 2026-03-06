@@ -13,6 +13,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import LocationPicker from '../../SharedComponents/LocationPicker/LocationPicker';
 
+import { useIncludedLocations } from '../utils/hooks';
+
 const componentId = 'event-panel';
 const componentIdLower = 'event_panel';
 
@@ -39,6 +41,13 @@ const EventPanel = ({
     );
     const { floorList, floorListLoading, roomList, roomListLoading } = useSelector(state =>
         state.get?.('testTagLocationReducer'),
+    );
+
+    const { sites, buildings, floors, rooms } = useIncludedLocations(
+        location,
+        inspectionConfig?.sites,
+        floorList?.floors,
+        roomList?.rooms,
     );
 
     const updateLocation = (update, useRoomId = false) => {
@@ -134,15 +143,13 @@ const EventPanel = ({
 
                     <LocationPicker
                         id={componentId}
-                        siteList={inspectionConfig?.sites ?? []}
+                        siteList={sites}
                         siteListLoading={inspectionConfigLoading}
-                        buildingList={
-                            inspectionConfig?.sites?.find(site => site.site_id === location.site)?.buildings ?? []
-                        }
+                        buildingList={buildings}
                         buildingListLoading={inspectionConfigLoading}
-                        floorList={floorList?.floors ?? []}
+                        floorList={floors}
                         floorListLoading={floorListLoading}
-                        roomList={roomList?.rooms ?? []}
+                        roomList={rooms}
                         roomListLoading={roomListLoading}
                         actions={actions}
                         location={location}
@@ -195,3 +202,4 @@ EventPanel.propTypes = {
 };
 
 export default React.memo(EventPanel);
+export { useIncludedLocations };

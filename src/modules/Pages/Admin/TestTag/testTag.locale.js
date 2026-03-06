@@ -530,6 +530,12 @@ export default {
                             asset_count: {
                                 label: 'No. assets',
                             },
+                            site_excluded: {
+                                label: 'Excluded',
+                            },
+                            site_excluded_cb: {
+                                label: 'Exclude',
+                            },
                         },
                         building: {
                             building_id: {
@@ -547,6 +553,13 @@ export default {
                             asset_count: {
                                 label: 'No. assets',
                             },
+                            building_excluded: {
+                                label: 'Excluded',
+                            },
+                            building_excluded_cb: {
+                                label: 'Exclude',
+                                labelAlt: 'Exclude (Site already excluded)',
+                            },
                         },
                         floor: {
                             floor_id: {
@@ -560,6 +573,13 @@ export default {
                             },
                             asset_count: {
                                 label: 'No. assets',
+                            },
+                            floor_excluded: {
+                                label: 'Excluded',
+                            },
+                            floor_excluded_cb: {
+                                label: 'Exclude',
+                                labelAlt: 'Exclude (Building already excluded)',
                             },
                         },
                         room: {
@@ -577,6 +597,13 @@ export default {
                             },
                             asset_count: {
                                 label: 'No. assets',
+                            },
+                            room_excluded: {
+                                label: 'Excluded',
+                            },
+                            room_excluded_cb: {
+                                label: 'Exclude',
+                                labelAlt: 'Exclude (Floor already excluded)',
                             },
                         },
                     },
@@ -972,7 +999,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `User management for ${team} (${dept})`,
+                    pageSubtitle: (team, dept) => `User management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',

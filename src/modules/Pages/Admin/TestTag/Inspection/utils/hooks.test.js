@@ -1,6 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import {
     useLabelPrinterPreference,
+    useIncludedLocations,
     extractCorePrinterName,
     printerToCookieString,
     parsePrinterFromCookieString,
@@ -614,6 +615,204 @@ describe('Tests custom hooks', () => {
             expect(() => {
                 actionReducer(null, testAction);
             }).toThrow();
+        });
+    });
+
+    describe('useIncludedLocations', () => {
+        it('returns empty arrays when all inputs are undefined', () => {
+            const location = { site: -1 };
+            const { result } = renderHook(() => useIncludedLocations(location, undefined, undefined, undefined));
+
+            expect(result.current.sites).toEqual([]);
+            expect(result.current.buildings).toEqual([]);
+            expect(result.current.floors).toEqual([]);
+            expect(result.current.rooms).toEqual([]);
+        });
+
+        it('returns empty arrays when all inputs are null', () => {
+            const location = { site: -1 };
+            const { result } = renderHook(() => useIncludedLocations(location, null, null, null));
+
+            expect(result.current.sites).toEqual([]);
+            expect(result.current.buildings).toEqual([]);
+            expect(result.current.floors).toEqual([]);
+            expect(result.current.rooms).toEqual([]);
+        });
+
+        it('filters out excluded sites', () => {
+            const location = { site: -1 };
+            const sites = [
+                { site_id: 1, site_name: 'Included Site', site_excluded: false, buildings: [] },
+                { site_id: 2, site_name: 'Excluded Site', site_excluded: true, buildings: [] },
+                { site_id: 3, site_name: 'Also Included', buildings: [] },
+            ];
+            const { result } = renderHook(() => useIncludedLocations(location, sites, undefined, undefined));
+
+            expect(result.current.sites).toHaveLength(2);
+            expect(result.current.sites.map(s => s.site_id)).toEqual([1, 3]);
+        });
+
+        it('returns buildings for the selected site, filtering excluded', () => {
+            const location = { site: 1 };
+            const sites = [
+                {
+                    site_id: 1,
+                    site_name: 'St Lucia',
+                    buildings: [
+                        {
+                            building_id: 1,
+                            building_name: 'Forgan Smith',
+                            building_excluded: false,
+                            parent_excluded: false,
+                        },
+                        {
+                            building_id: 2,
+                            building_name: 'Excluded Bldg',
+                            building_excluded: true,
+                            parent_excluded: false,
+                        },
+                        {
+                            building_id: 3,
+                            building_name: 'Parent Excluded',
+                            building_excluded: false,
+                            parent_excluded: true,
+                        },
+                        {
+                            building_id: 4,
+                            building_name: 'Duhig Tower',
+                            building_excluded: false,
+                            parent_excluded: false,
+                        },
+                    ],
+                },
+            ];
+            const { result } = renderHook(() => useIncludedLocations(location, sites, undefined, undefined));
+
+            expect(result.current.buildings).toHaveLength(2);
+            expect(result.current.buildings.map(b => b.building_id)).toEqual([1, 4]);
+        });
+
+        it('returns empty buildings when selected site is not found', () => {
+            const location = { site: 999 };
+            const sites = [
+                { site_id: 1, site_name: 'St Lucia', buildings: [{ building_id: 1, building_name: 'Forgan Smith' }] },
+            ];
+            const { result } = renderHook(() => useIncludedLocations(location, sites, undefined, undefined));
+
+            expect(result.current.buildings).toEqual([]);
+        });
+
+        it('returns empty buildings when selected site is excluded', () => {
+            const location = { site: 1 };
+            const sites = [
+                {
+                    site_id: 1,
+                    site_name: 'Excluded Site',
+                    site_excluded: true,
+                    buildings: [{ building_id: 1, building_name: 'A Building' }],
+                },
+            ];
+            const { result } = renderHook(() => useIncludedLocations(location, sites, undefined, undefined));
+
+            // Site is excluded so it's not in includedSites, so building lookup finds nothing
+            expect(result.current.buildings).toEqual([]);
+        });
+
+        it('filters out excluded floors', () => {
+            const location = { site: -1 };
+            const floors = [
+                { floor_id: 1, floor_id_displayed: '1', floor_excluded: false },
+                { floor_id: 2, floor_id_displayed: '2', floor_excluded: true },
+                { floor_id: 3, floor_id_displayed: '3' },
+            ];
+            const { result } = renderHook(() => useIncludedLocations(location, undefined, floors, undefined));
+
+            expect(result.current.floors).toHaveLength(2);
+            expect(result.current.floors.map(f => f.floor_id)).toEqual([1, 3]);
+        });
+
+        it('filters out excluded rooms', () => {
+            const location = { site: -1 };
+            const rooms = [
+                { room_id: 1, room_id_displayed: 'W334', room_excluded: false },
+                { room_id: 2, room_id_displayed: 'W335', room_excluded: true },
+                { room_id: 3, room_id_displayed: 'W341' },
+            ];
+            const { result } = renderHook(() => useIncludedLocations(location, undefined, undefined, rooms));
+
+            expect(result.current.rooms).toHaveLength(2);
+            expect(result.current.rooms.map(r => r.room_id)).toEqual([1, 3]);
+        });
+
+        it('maintains referential stability when inputs do not change', () => {
+            const location = { site: 1 };
+            const sites = [
+                { site_id: 1, site_name: 'St Lucia', buildings: [{ building_id: 1, building_name: 'Forgan Smith' }] },
+            ];
+            const floors = [{ floor_id: 1, floor_id_displayed: '1' }];
+            const rooms = [{ room_id: 1, room_id_displayed: 'W334' }];
+
+            const { result, rerender } = renderHook(
+                ({ location, sites, floors, rooms }) => useIncludedLocations(location, sites, floors, rooms),
+                { initialProps: { location, sites, floors, rooms } },
+            );
+
+            const firstResult = result.current;
+
+            // Rerender with the exact same references
+            rerender({ location, sites, floors, rooms });
+
+            expect(result.current.sites).toBe(firstResult.sites);
+            expect(result.current.buildings).toBe(firstResult.buildings);
+            expect(result.current.floors).toBe(firstResult.floors);
+            expect(result.current.rooms).toBe(firstResult.rooms);
+        });
+
+        it('recalculates buildings when location.site changes', () => {
+            const sites = [
+                {
+                    site_id: 1,
+                    site_name: 'St Lucia',
+                    buildings: [{ building_id: 1, building_name: 'Forgan Smith' }],
+                },
+                {
+                    site_id: 2,
+                    site_name: 'Gatton',
+                    buildings: [{ building_id: 8, building_name: 'J.K. Murray Library' }],
+                },
+            ];
+
+            const { result, rerender } = renderHook(
+                ({ location }) => useIncludedLocations(location, sites, undefined, undefined),
+                { initialProps: { location: { site: 1 } } },
+            );
+
+            expect(result.current.buildings).toHaveLength(1);
+            expect(result.current.buildings[0].building_name).toBe('Forgan Smith');
+
+            rerender({ location: { site: 2 } });
+
+            expect(result.current.buildings).toHaveLength(1);
+            expect(result.current.buildings[0].building_name).toBe('J.K. Murray Library');
+        });
+
+        it('does not recalculate sites when only location.site changes', () => {
+            const sites = [
+                { site_id: 1, site_name: 'St Lucia', buildings: [] },
+                { site_id: 2, site_name: 'Gatton', buildings: [] },
+            ];
+
+            const { result, rerender } = renderHook(
+                ({ location }) => useIncludedLocations(location, sites, undefined, undefined),
+                { initialProps: { location: { site: 1 } } },
+            );
+
+            const firstSites = result.current.sites;
+
+            rerender({ location: { site: 2 } });
+
+            // Sites array should be referentially identical since the sites input didn't change
+            expect(result.current.sites).toBe(firstSites);
         });
     });
 });
