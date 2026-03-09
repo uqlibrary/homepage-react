@@ -288,7 +288,7 @@ const ManageLocations = ({ actions }) => {
                                       confirmButtonLabel: (
                                           <CircularProgress
                                               color="inherit"
-                                              size={25}
+                                              size={16}
                                               id={`${componentId}-progress`}
                                               data-testid={`${componentId}-progress`}
                                           />
