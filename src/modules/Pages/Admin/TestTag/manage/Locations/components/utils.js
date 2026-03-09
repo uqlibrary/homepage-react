@@ -52,32 +52,53 @@ export const getAssociatedCollectionKeyBySelectedLocation = (collection, current
     return key;
 };
 
+export const cleanObjectByLocation = (request, location) => {
+    const locationTypes = ['site', 'building', 'floor', 'room'];
+    locationTypes
+        .filter(type => type !== location)
+        .forEach(type => {
+            delete request[`${type}_excluded_cb`];
+            delete request[`${type}_excluded`];
+        });
+    delete request[`${location}_excluded`];
+    delete request.parent_excluded;
+
+    location === 'site' && (request.site_excluded_cb = !!request?.site_excluded_cb);
+    location === 'building' && (request.building_excluded_cb = !!request?.building_excluded_cb);
+    location === 'floor' && (request.floor_excluded_cb = !!request?.floor_excluded_cb);
+    location === 'room' && (request.room_excluded_cb = !!request?.room_excluded_cb);
+    return request;
+};
+
 export const transformAddRequest = ({ request, selectedLocation, location }) => {
     // add requests may have an id field (probably 'auto') that needs to be removed
     delete request[`${selectedLocation}_id`];
 
+    const cleanedRequest = cleanObjectByLocation(request, selectedLocation);
     const prevKey = getAssociatedCollectionKeyBySelectedLocation(location, selectedLocation, 'prev');
-    if (!!!prevKey) return request;
+    if (!!!prevKey) return cleanedRequest;
 
     // build a new request by inserting a key:value in format e.g. 'room_floor_id: 1'
-    return { ...request, [`${selectedLocation}_${prevKey}_id`]: location[prevKey] };
+    return { ...cleanedRequest, [`${selectedLocation}_${prevKey}_id`]: location[prevKey] };
 };
 
 export const transformUpdateRequest = ({ request, selectedLocation, location }) => {
     const prevKey = getAssociatedCollectionKeyBySelectedLocation(location, selectedLocation, 'prev');
     const nextKey = getAssociatedCollectionKeyBySelectedLocation(location, selectedLocation);
 
+    const cleanedRequest = cleanObjectByLocation(request, selectedLocation);
+
     // now remove the array of next location data we got from the server e.g.
     // for sites, we also get a buildings:[] array (note plural), for buildings
     // we also get a rooms:[] array etc.
     // We dont need to send all of this stuff back to the server.
-    delete request[`${nextKey}s`];
+    delete cleanedRequest[`${nextKey}s`];
     // dont need this either
-    delete request.asset_count;
+    delete cleanedRequest.asset_count;
 
     // if there's no previous key to send, return request as it now is
-    if (!!!prevKey) return request;
+    if (!!!prevKey) return cleanedRequest;
 
     // build a new request by inserting a key:value in format e.g. 'room_floor_id: 1'
-    return { ...request, [`${selectedLocation}_${prevKey}_id`]: location[prevKey] };
+    return { ...cleanedRequest, [`${selectedLocation}_${prevKey}_id`]: location[prevKey] };
 };

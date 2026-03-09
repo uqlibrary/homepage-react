@@ -655,9 +655,9 @@ export default {
                 },
                 snackbar: {
                     addSuccess: 'Added the location successfully',
-                    addFail: 'Unable to save the location',
+                    addFail: 'Unable to save the location. Ensure the ID and/or name do not already exist.',
                     updateSuccess: 'updated successfully',
-                    updateFail: 'Unable to update the location',
+                    updateFail: 'Unable to update the location. Ensure the ID and/or name do not already exist.',
                     deleteSuccess: 'deleted successfully',
                     deleteFail: 'Unable to delete the location',
                 },
