@@ -17,9 +17,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -102,9 +104,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         ...standardText(theme),
     },
     '&:hover': {
-        backgroundColor: 'rgb(189 186 186)',
+        backgroundColor: 'rgb(245 245 245)',
         '& th, & td': {
-            backgroundColor: 'rgb(189 186 186)',
+            backgroundColor: 'rgb(245 245 245)',
         },
     },
     '&.hiddenRow': {
@@ -114,7 +116,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         paddingBlock: 0,
         '&:hover, &:focus': {
             backgroundColor: 'inherit',
-            color: '#fff',
         },
     },
 }));
@@ -215,6 +216,12 @@ export const BookableSpacesManageSpaceTypes = ({
         !!cookies[paginatorCookieName] ? parseInt(cookies[paginatorCookieName], 10) : 5,
     );
     const [pageNum, setPageNum] = React.useState(0);
+    const [editingSpaceTypeId, setEditingSpaceTypeId] = useState(null);
+    const [editingDraft, setEditingDraft] = useState({
+        spaceTypeName: '',
+        spaceTypeDescription: '',
+    });
+    const [spaceTypeEdits, setSpaceTypeEdits] = useState({});
 
     // the filters we will show on the page
     const [availableFilters, setAvailableFilters2] = useState([
@@ -526,6 +533,56 @@ export const BookableSpacesManageSpaceTypes = ({
         resetSelectedFilters(prop, e.target.value);
     };
 
+    const getEffectiveSpaceType = row => {
+        const key = String(row.spaceTypeId);
+        const editValues = spaceTypeEdits[key] || {};
+        return {
+            ...row,
+            ...editValues,
+        };
+    };
+
+    const startInlineEdit = row => {
+        const effectiveRow = getEffectiveSpaceType(row);
+        setEditingSpaceTypeId(String(row.spaceTypeId));
+        setEditingDraft({
+            spaceTypeName: effectiveRow.spaceTypeName || '',
+            spaceTypeDescription: effectiveRow.spaceTypeDescription || '',
+        });
+    };
+
+    const cancelInlineEdit = () => {
+        setEditingSpaceTypeId(null);
+        setEditingDraft({
+            spaceTypeName: '',
+            spaceTypeDescription: '',
+        });
+    };
+
+    const saveInlineEdit = () => {
+        if (!editingSpaceTypeId) {
+            return;
+        }
+
+        const spaceTypeName = editingDraft.spaceTypeName?.trim() || 'Unspecified';
+        const spaceTypeDescription = editingDraft.spaceTypeDescription?.trim() || '-';
+
+        setSpaceTypeEdits(prev => ({
+            ...prev,
+            [editingSpaceTypeId]: {
+                spaceTypeName,
+                spaceTypeDescription,
+            },
+        }));
+
+        console.log('Inline space type saved (UI only)', {
+            spaceTypeId: editingSpaceTypeId,
+            spaceTypeName,
+            spaceTypeDescription,
+        });
+        setEditingSpaceTypeId(null);
+    };
+
     function displayListOfBookableSpaceTypes() {
         const groupedSpaceTypes =
             bookableSpacesRoomList?.data?.locations?.reduce((acc, space) => {
@@ -576,7 +633,7 @@ export const BookableSpacesManageSpaceTypes = ({
                                 <StyledHeadingFacilityTableCell sx={{ width: '8rem' }}>
                                     Allocated Spaces
                                 </StyledHeadingFacilityTableCell>
-                                <StyledHeadingFacilityTableCell sx={{ width: '7rem' }}>
+                                <StyledHeadingFacilityTableCell sx={{ width: '9rem' }}>
                                     Actions
                                 </StyledHeadingFacilityTableCell>
                             </StyledHeaderTableRow>
@@ -589,44 +646,115 @@ export const BookableSpacesManageSpaceTypes = ({
                                     </TableCell>
                                 </StyledTableRow>
                             )}
-                            {spaceTypeRows.map(row => (
-                                <StyledTableRow key={`space-type-${row.spaceTypeId}`}>
-                                    <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
-                                        {row.spaceTypeId}
-                                    </TableCell>
-                                    <TableCell>{row.spaceTypeName}</TableCell>
-                                    <TableCell sx={{ whiteSpace: 'normal', overflowWrap: 'anywhere' }}>
-                                        <Typography variant="body2">{row.spaceTypeDescription}</Typography>
-                                    </TableCell>
-                                    <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
-                                        {row.spacesCount}
-                                    </TableCell>
-                                    <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
-                                        <IconButton
-                                            aria-label={`Edit space type ${row.spaceTypeName}`}
-                                            size="small"
-                                            onClick={() =>
-                                                console.log('Edit space type clicked', {
-                                                    spaceTypeId: row.spaceTypeId,
-                                                })
-                                            }
-                                        >
-                                            <EditIcon fontSize="small" />
-                                        </IconButton>
-                                        <IconButton
-                                            aria-label={`Delete space type ${row.spaceTypeName}`}
-                                            size="small"
-                                            onClick={() =>
-                                                console.log('Delete space type clicked', {
-                                                    spaceTypeId: row.spaceTypeId,
-                                                })
-                                            }
-                                        >
-                                            <DeleteOutlineIcon fontSize="small" />
-                                        </IconButton>
-                                    </TableCell>
-                                </StyledTableRow>
-                            ))}
+                            {spaceTypeRows.map(row => {
+                                const effectiveRow = getEffectiveSpaceType(row);
+                                const isEditing = editingSpaceTypeId === String(row.spaceTypeId);
+
+                                return (
+                                    <StyledTableRow key={`space-type-${row.spaceTypeId}`}>
+                                        <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
+                                            {effectiveRow.spaceTypeId}
+                                        </TableCell>
+                                        <TableCell>
+                                            {isEditing ? (
+                                                <TextField
+                                                    size="small"
+                                                    fullWidth
+                                                    variant="standard"
+                                                    value={editingDraft.spaceTypeName}
+                                                    sx={{
+                                                        '& .MuiInputBase-input': {
+                                                            fontSize: '0.875rem',
+                                                            lineHeight: 1.43,
+                                                        },
+                                                    }}
+                                                    onChange={e =>
+                                                        setEditingDraft(prev => ({
+                                                            ...prev,
+                                                            spaceTypeName: e.target.value,
+                                                        }))
+                                                    }
+                                                />
+                                            ) : (
+                                                effectiveRow.spaceTypeName
+                                            )}
+                                        </TableCell>
+                                        <TableCell sx={{ whiteSpace: 'normal', overflowWrap: 'anywhere' }}>
+                                            {isEditing ? (
+                                                <TextField
+                                                    size="small"
+                                                    fullWidth
+                                                    variant="standard"
+                                                    multiline
+                                                    minRows={1}
+                                                    value={editingDraft.spaceTypeDescription}
+                                                    sx={{
+                                                        '& .MuiInputBase-inputMultiline': {
+                                                            fontSize: '0.875rem',
+                                                            lineHeight: 1.43,
+                                                            overflow: 'hidden',
+                                                        },
+                                                    }}
+                                                    onChange={e =>
+                                                        setEditingDraft(prev => ({
+                                                            ...prev,
+                                                            spaceTypeDescription: e.target.value,
+                                                        }))
+                                                    }
+                                                />
+                                            ) : (
+                                                <Typography variant="body2">
+                                                    {effectiveRow.spaceTypeDescription}
+                                                </Typography>
+                                            )}
+                                        </TableCell>
+                                        <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
+                                            {effectiveRow.spacesCount}
+                                        </TableCell>
+                                        <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
+                                            {isEditing ? (
+                                                <>
+                                                    <IconButton
+                                                        aria-label={`Save space type ${effectiveRow.spaceTypeName}`}
+                                                        size="small"
+                                                        onClick={saveInlineEdit}
+                                                    >
+                                                        <DoneIcon fontSize="small" />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        aria-label={`Cancel editing ${effectiveRow.spaceTypeName}`}
+                                                        size="small"
+                                                        onClick={cancelInlineEdit}
+                                                    >
+                                                        <CloseIcon fontSize="small" />
+                                                    </IconButton>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <IconButton
+                                                        aria-label={`Edit space type ${effectiveRow.spaceTypeName}`}
+                                                        size="small"
+                                                        onClick={() => startInlineEdit(row)}
+                                                    >
+                                                        <EditIcon fontSize="small" />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        aria-label={`Delete space type ${effectiveRow.spaceTypeName}`}
+                                                        size="small"
+                                                        onClick={() =>
+                                                            console.log('Delete space type clicked', {
+                                                                spaceTypeId: effectiveRow.spaceTypeId,
+                                                            })
+                                                        }
+                                                    >
+                                                        <DeleteOutlineIcon fontSize="small" />
+                                                    </IconButton>
+                                                </>
+                                            )}
+                                        </TableCell>
+                                    </StyledTableRow>
+                                );
+                            })}
                         </TableBody>
                     </Table>
                 </StyledTableContainer>
