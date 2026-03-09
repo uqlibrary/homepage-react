@@ -26,6 +26,12 @@ export default {
             space_building_name: "Forgan Smith Building",
             space_building_number: "0001",
             space_campus_id: 1,
+            space_type_id: 1,
+            space_type_details: {
+                "space_type_id": 1,
+                "space_type_name": "Collaborative space",
+                "space_type_description": "A space type for spaces designed for group work and collaboration. These spaces may include features such as larger tables, whiteboards, and AV equipment to facilitate group work."
+            },
             space_campus_name: "St Lucia",
             "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/111',
             facility_types: [
@@ -95,6 +101,12 @@ export default {
             space_photo_url: "",
             space_photo_description: "",
             space_opening_hours_id: 3967,
+            space_type_id: 2,
+            space_type_details: {
+                "space_type_id": 2,
+                "space_type_name": "Group Study Room",
+                "space_type_description": "A space type designed for group study and collaboration. These rooms typically include features such as larger tables, whiteboards, and AV equipment to facilitate group work."
+            },
             space_services_page: "https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library",
             space_opening_hours_override: 'this space opens at 8am',
             created_at: "2025-08-01 10:00:00",
@@ -196,6 +208,12 @@ export default {
             space_latitude: "-27.49928",
             space_longitude: "153.01344",
             "space_external_book_url": null,
+            space_type_id: 3,
+            space_type_details: {
+                "space_type_id": 3,
+                "space_type_name": "Computer room",
+                "space_type_description": "A space type designed for computer-based work. These rooms typically include multiple computer stations, high-speed internet access, and other technology resources to support individual or group work."
+            },
             facility_types: [
                 {
                     "facility_type_id": 23,
@@ -279,6 +297,12 @@ export default {
             "space_campus_name": "St Lucia",
             "space_campus_number": "01",
             "space_external_book_url": null,
+            space_type_id: 4,
+            space_type_details: {
+                "space_type_id": 4,
+                "space_type_name": "Communal space",
+                "space_type_description": "A space type designed for communal activities and interactions. These spaces typically include seating areas, tables, and other amenities to support socializing and group activities."
+            },
             "facility_types": [
                 {
                     "facility_type_id": 23,
@@ -373,6 +397,12 @@ export default {
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/333',
+                space_type_id: 4,
+                space_type_details: {
+                    "space_type_id": 4,
+                    "space_type_name": "Communal space",
+                    "space_type_description": "A space type designed for communal activities and interactions. These spaces typically include seating areas, tables, and other amenities to support socializing and group activities."
+                },
                 "facility_types": [
                     {
                         "facility_type_id": 23,
@@ -459,7 +489,13 @@ export default {
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
                 "space_external_book_url": null,
-                "facility_types": []
+                "facility_types": [],
+                space_type_id: 5,
+                space_type_details: {
+                    "space_type_id": 5,
+                    "space_type_name": "Training room",
+                    "space_type_description": "A space type designed for training and educational activities. These spaces typically include seating areas, tables, and other amenities to support learning and group activities."
+                },
             },
             {
                 "space_id": 4,
@@ -492,6 +528,12 @@ export default {
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/444',
+                space_type_id: 6,
+                space_type_details: {
+                    "space_type_id": 6,
+                    "space_type_name": "Meeting room",
+                    "space_type_description": "A space type designed for meetings and collaborative work. These spaces typically include seating areas, tables, and other amenities to support discussions and group activities."
+                },
                 "facility_types": [
                     {
                         "facility_type_id": 19,
@@ -566,6 +608,12 @@ export default {
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/555',
+                "space_type_id": 7,
+                "space_type_details": {
+                    "space_type_id": 7,
+                    "space_type_name": "Individual Study",
+                    "space_type_description": "A space type designed for individual study. These spaces typically include seating areas, tables, and other amenities to support focused, independent work."
+                },
                 "facility_types": [
                     {
                         "facility_type_id": 7,
@@ -636,6 +684,12 @@ export default {
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
                 "space_external_book_url": null,
+                "space_type_id": 7,
+                "space_type_details": {
+                    "space_type_id": 7,
+                    "space_type_name": "Individual Study",
+                    "space_type_description": "A space type designed for individual study. These spaces typically include seating areas, tables, and other amenities to support focused, independent work."
+                },
                 "facility_types": [
                     {
                         "facility_type_id": 22,
@@ -698,6 +752,12 @@ export default {
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/666',
+                "space_type_id": 4,
+                "space_type_details": {
+                    "space_type_id": 4,
+                    "space_type_name": "Communal space",
+                    "space_type_description": "A space type designed for communal activities. These spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
+                },
                 "facility_types": [
                     {
                         "facility_type_id": 23,
