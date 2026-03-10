@@ -42,8 +42,8 @@ describe('utils', () => {
                 { building_excluded: true, parent_excluded: false },
             ];
             const result = transformRow(row);
-            expect(result[0].building_excluded_cb).toBe(true);
-            expect(result[0].building_excluded).toBe('Yes');
+            expect(result[0].building_excluded_cb).toBe(false); // actual value shouldnt change
+            expect(result[0].building_excluded).toBe('Yes'); // display value should be yes if either building_excluded or parent_excluded is true
             expect(result[1].building_excluded_cb).toBe(true);
             expect(result[1].building_excluded).toBe('Yes');
         });
