@@ -274,6 +274,9 @@ export const BookableSpacesManageSpaceTypes = ({
         console.log('Delete space type confirmed', {
             spaceTypeId: deleteCandidate.spaceTypeId,
         });
+        actions.deleteBookableSpaceType(deleteCandidate.spaceTypeId).then(() => {
+            actions.loadAllBookableSpacesRooms();
+        });
         setDeleteCandidate(null);
     };
 

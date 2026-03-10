@@ -31,6 +31,12 @@ export default {
                 "space_type_name": "Individual study pod",
                 "space_type_description": "Designed for individual study, these spaces typically include local, isolated areas and amenities to support focused, independent work.",
                 "spaces_count": 1
+            },
+             {
+                "space_type_id": 6,
+                "space_type_name": "An unallocated space type",
+                "space_type_description": "A space type that has not yet been allocated to any spaces. This is used to test the display of space types with no spaces allocated to them.",
+                "spaces_count": 0
             }
         ],
         "locations": [{

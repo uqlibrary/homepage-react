@@ -343,15 +343,18 @@ export const EditSpaceForm = ({
         if (!currentValues?.space_name) {
             errorMessages.push({ field: 'space_name', message: 'A Name is required.' });
         }
-        if (!currentValues?.space_type) {
-            errorMessages.push({ field: 'space_type', message: 'A Type is required.' });
+        if (!currentValues?.space_type_id) {
+            errorMessages.push({ field: 'space_type_id', message: 'A Type is required.' });
         }
         return errorMessages;
     };
 
     function validatePanelFacilityTypes(currentValues, errorMessages = []) {
         if (!!isBookable && !currentValues?.space_external_book_url) {
-            errorMessages.push({ field: 'space_type', message: 'Provide the booking link, or uncheck the checkbox.' });
+            errorMessages.push({
+                field: 'space_external_book_url',
+                message: 'Provide the booking link, or uncheck the checkbox.',
+            });
         }
         if (!!hasCapacityLimit && !currentValues?.space_capacity) {
             errorMessages.push({
@@ -511,6 +514,19 @@ export const EditSpaceForm = ({
         } else if (prop === 'space_type_new') {
             // update the form value for the Select, not the text field (which is cleared in the form completion
             prop = 'space_type';
+        } else if (_prop === 'space_type_id') {
+            const selectedSpaceType = bookableSpacesRoomList?.data?.known_space_types?.find(
+                spaceType => String(spaceType?.space_type_id) === String(theNewValue),
+            );
+
+            const newValues = {
+                ...formValues,
+                space_type_id: theNewValue,
+                space_type: selectedSpaceType?.space_type_name || '',
+            };
+
+            setFormValues(newValues);
+            return;
         } else if (prop === 'space_opening_hours_id') {
             const springshareElement = document.querySelector('.asLoaded');
             removeClass(springshareElement, 'asLoaded');
@@ -620,14 +636,20 @@ export const EditSpaceForm = ({
     };
 
     const spaceTypeList = React.useMemo(() => {
+        console.log(
+            'bookableSpacesRoomList for spaceTypeList',
+            bookableSpacesRoomListLoading,
+            bookableSpacesRoomListError,
+            bookableSpacesRoomList,
+        );
         if (
             bookableSpacesRoomListLoading === false &&
             bookableSpacesRoomListError === false &&
-            bookableSpacesRoomList?.data?.locations &&
-            Array.isArray(bookableSpacesRoomList?.data?.locations) &&
-            bookableSpacesRoomList?.data?.locations?.length > 0
+            bookableSpacesRoomList?.data?.known_space_types &&
+            Array.isArray(bookableSpacesRoomList?.data?.known_space_types) &&
+            bookableSpacesRoomList?.data?.known_space_types?.length > 0
         ) {
-            const list = bookableSpacesRoomList?.data?.locations?.map(location => location?.space_type);
+            const list = bookableSpacesRoomList?.data?.known_space_types?.map(spaceType => spaceType?.space_type_name);
             !!formValues?.space_type && list.push(formValues?.space_type);
             const filteredList = list?.filter(
                 (spaceType, index, array) =>
@@ -639,6 +661,34 @@ export const EditSpaceForm = ({
         }
         return [];
     }, [bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList, formValues?.space_type]);
+
+    const selectedSpaceType = React.useMemo(() => {
+        if (
+            bookableSpacesRoomListLoading === false &&
+            bookableSpacesRoomListError === false &&
+            Array.isArray(bookableSpacesRoomList?.data?.known_space_types)
+        ) {
+            return (
+                bookableSpacesRoomList?.data?.known_space_types?.find(spaceType => {
+                    if (!!formValues?.space_type_id) {
+                        return String(spaceType?.space_type_id) === String(formValues?.space_type_id);
+                    }
+                    return spaceType?.space_type_name === formValues?.space_type;
+                }) || null
+            );
+        }
+        return null;
+    }, [
+        bookableSpacesRoomListLoading,
+        bookableSpacesRoomListError,
+        bookableSpacesRoomList,
+        formValues?.space_type_id,
+        formValues?.space_type,
+    ]);
+
+    const selectedSpaceTypeDescription = React.useMemo(() => {
+        return selectedSpaceType?.space_type_description || '';
+    }, [selectedSpaceType]);
 
     const reportCurrentLibraryAboutPage = location => (
         <>
@@ -712,7 +762,7 @@ export const EditSpaceForm = ({
     const handleSaveClick = () => {
         const valuesToSend = {};
         valuesToSend.space_name = formValues?.space_name;
-        valuesToSend.space_type = formValues?.space_type;
+        valuesToSend.space_type_id = formValues?.space_type_id || selectedSpaceType?.space_type_id || null;
         valuesToSend.space_floor_id = formValues?.floor_id;
         valuesToSend.space_precise = formValues?.space_precise;
         valuesToSend.space_capacity = !!formValues?.space_capacity ? formValues?.space_capacity : null;
@@ -847,7 +897,8 @@ export const EditSpaceForm = ({
                         </StyledErrorMessageTypography>
                     </FormControl>
                 </Grid>
-                <Grid item md={5} xs={12}>
+                <Grid item md={6} xs={12}>
+                    {console.log('space Type List', spaceTypeList)}
                     <FormControl variant="standard" fullWidth>
                         <InputLabel id="add-space-type-label" htmlFor="add-space-type-input">
                             Choose an existing Space type *
@@ -856,8 +907,8 @@ export const EditSpaceForm = ({
                             id="add-space-type"
                             labelId="add-space-type-label"
                             data-testid="space-type"
-                            value={formValues?.space_type || ''}
-                            onChange={handleChange('space_type')}
+                            value={formValues?.space_type_id || selectedSpaceType?.space_type_id || ''}
+                            onChange={handleChange('space_type_id')}
                             onBlur={handleFieldCompletion}
                             inputProps={{
                                 id: 'add-space-type-input',
@@ -866,37 +917,28 @@ export const EditSpaceForm = ({
                         >
                             {!!spaceTypeList &&
                                 spaceTypeList?.length > 0 &&
-                                spaceTypeList?.map((spaceType, index) => {
+                                bookableSpacesRoomList?.data?.known_space_types?.map((spaceType, index) => {
                                     return (
-                                        <MenuItem value={spaceType} key={`spacetype-${index}`}>
-                                            {spaceType}
+                                        <MenuItem value={spaceType?.space_type_id} key={`spacetype-${index}`}>
+                                            {spaceType?.space_type_name}
                                         </MenuItem>
                                     );
                                 })}
                         </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item md={1} xs={12} style={{ marginBlock: 'auto', marginInline: 'auto' }}>
-                    ...or...
-                </Grid>
-                <Grid item md={6} xs={12}>
-                    <FormControl fullWidth>
-                        <InputLabel id="add-space-type-new-label">Enter new Space type</InputLabel>
-                        <Input
-                            id="add-space-type-new"
-                            labelId="add-space-type-new-label"
-                            data-testid="add-space-type-new"
-                            onChange={handleChange('space_type_new')}
-                            onBlur={handleFieldCompletion}
-                            inputProps={{
-                                'aria-labelledby': 'add-space-type-new-label',
-                            }}
-                        />
                         <StyledErrorMessageTypography component={'div'}>
-                            {reportErrorMessage('space_type')}
+                            {reportErrorMessage('space_type_id')}
                         </StyledErrorMessageTypography>
                     </FormControl>
                 </Grid>
+
+                {!!selectedSpaceTypeDescription && (
+                    <Grid item xs={12} data-testid="selected-space-type-description">
+                        <Typography component={'p'} variant={'body2'}>
+                            {selectedSpaceTypeDescription}
+                        </Typography>
+                    </Grid>
+                )}
+
                 <Grid item xs={12} data-testid="add-space-description">
                     <label htmlFor="space_description">
                         Space description

@@ -1764,6 +1764,13 @@ mock.onGet('exams/course/FREN1010/summary')
         }
         return [200, { status: 'OK' }];
     })
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_SPACETYPE_DELETE_API({ id: '.*' }).apiUrl)))
+    .reply(() => {
+        if (responseType === 'spaceTypeDeleteError') {
+            return [500, {}];
+        }
+        return [200, { status: 'OK' }];
+    })
     // .onDelete(/bookable_spaces\/campus|library|floor\/.*/)
     // .reply(() => {
     //     if (responseType === 'error') {
