@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
-import { useAccountContext } from 'context';
 
-import FormControl from '@mui/material/FormControl';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
@@ -11,16 +9,12 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -32,23 +26,12 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
-import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import DoneIcon from '@mui/icons-material/Done';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 
-import { addClass, removeClass, slugifyName, standardText } from 'helpers/general';
+import { addClass, removeClass, standardText } from 'helpers/general';
 
-import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import {
-    addBreadcrumbsToSiteHeader,
-    spacesAdminLink,
-} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
+import { addBreadcrumbsToSiteHeader } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
-
-const backgroundColorColumn = '#f0f0f0';
-const borderColour = '1px solid rgb(224 224 224 / 1)';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     '& .MuiCardHeader-root': {
@@ -60,32 +43,6 @@ const StyledStandardCard = styled(StandardCard)(() => ({
 }));
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
-}));
-const StyledTablePagination = styled(TablePagination)(() => ({
-    overflow: 'hidden',
-    '& .MuiTablePagination-toolbar': {
-        display: 'flex !important',
-        alignItems: 'center !important',
-        justifyContent: 'center !important',
-        gap: 0,
-        flexWrap: 'wrap',
-        paddingInline: 0,
-    },
-    '& .MuiTablePagination-spacer': {
-        display: 'none',
-    },
-    '& .MuiTablePagination-selectLabel, .MuiTablePagination-input, .MuiTablePagination-displayedRows, .MuiTablePagination-actions ': {
-        flexShrink: 0,
-    },
-    '& .MuiTablePagination-input': {
-        marginLeft: 0,
-        '& select': {
-            paddingLeft: 0,
-        },
-    },
-    '& .MuiTablePagination-actions': {
-        marginLeft: '0 !important',
-    },
 }));
 const StyledTableContainer = styled(TableContainer)(() => ({
     position: 'relative',
@@ -124,59 +81,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         },
     },
 }));
-const StyledStickyTableCell = styled(TableCell)(() => ({
-    position: 'sticky',
-    backgroundColor: backgroundColorColumn,
-    left: 0,
-    '< div:first-of-type': {
-        display: 'flex',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        marginInline: '-1px',
-    },
-    '& .spaceDescription': {
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-}));
-const TableWrapper = styled('div')(() => ({
-    '&.expanded': {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '95vw',
-        height: '92vh',
-        zIndex: 100,
-        padding: '20px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginInline: '20px',
-        border: 'thick solid black',
-        marginTop: '4px',
-        borderRadius: '10px',
-        '& .tableContainer': {
-            height: '90%',
-        },
-    },
-}));
-const StyledFilterWrapperDiv = styled('div')(() => ({
-    display: 'flex',
-    columnGap: '1rem',
-    marginBottom: '1rem',
-}));
-const StyledExpandCollapseTableIconButton = styled(IconButton)(({ theme }) => ({
-    transform: 'scale(-1, 1)',
-    transformOrigin: 'center',
-    backgroundColor: theme.palette.primary.main,
-    border: `1px solid ${theme.palette.primary.main}`,
-    color: 'white',
-    '&:hover, &:focus': {
-        backgroundColor: 'white',
-        color: theme.palette.primary.main,
-    },
-    marginRight: '1rem',
-}));
 
 const CAMPUS_ID_UNSELECTED = '';
 const LIBRARY_ID_UNSELECTED = '';
@@ -206,8 +110,6 @@ export const BookableSpacesManageSpaceTypes = ({
     console.log('TOP weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
     console.log('TOP facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
 
-    const { account } = useAccountContext();
-
     const [displayedRows, setDisplayedRows2] = useState([]);
     const setDisplayedRows = rows => {
         console.log('setDisplayedRows', rows);
@@ -228,44 +130,30 @@ export const BookableSpacesManageSpaceTypes = ({
     });
     const [spaceTypeEdits, setSpaceTypeEdits] = useState({});
     const [deleteCandidate, setDeleteCandidate] = useState(null);
+    const [isAddSpaceTypeDialogOpen, setIsAddSpaceTypeDialogOpen] = useState(false);
+    const [addSpaceTypeDraft, setAddSpaceTypeDraft] = useState({
+        spaceTypeName: '',
+        spaceTypeDescription: '',
+    });
 
     // the filters we will show on the page
-    const [availableFilters, setAvailableFilters2] = useState([
-        { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
-    ]);
-    const setAvailableFilters = availableFilters => {
-        console.log('setAvailableFilters', availableFilters);
-        setAvailableFilters2(availableFilters);
-    };
-    const resetAvailableFilters = (filterTypeName, filterTypeValue) => {
-        const newFilterTypes =
-            availableFilters?.filter(g => {
-                return g.filterType !== filterTypeName;
-            }) || [];
-        newFilterTypes.push({
-            filterType: filterTypeName,
-            filterValue: filterTypeValue,
-        });
-        setAvailableFilters(newFilterTypes);
-    };
+    // React.useEffect(() => {
+    //     if (campusListError === false && campusListLoading === false && !!campusList) {
+    //         const campusIdList = [
+    //             ...new Set(bookableSpacesRoomList?.data?.locations?.map(space => space.space_campus_id)),
+    //         ];
 
-    React.useEffect(() => {
-        if (campusListError === false && campusListLoading === false && !!campusList) {
-            const campusIdList = [
-                ...new Set(bookableSpacesRoomList?.data?.locations?.map(space => space.space_campus_id)),
-            ];
+    //         const availableCampusList = campusList?.filter(c => campusIdList.includes(c.campus_id));
+    //         availableCampusList.unshift({
+    //             campus_id: CAMPUS_ID_UNSELECTED,
+    //             campus_number: 'none',
+    //             campus_name: 'Show all campuses',
+    //             libraries: [],
+    //         });
 
-            const availableCampusList = campusList?.filter(c => campusIdList.includes(c.campus_id));
-            availableCampusList.unshift({
-                campus_id: CAMPUS_ID_UNSELECTED,
-                campus_number: 'none',
-                campus_name: 'Show all campuses',
-                libraries: [],
-            });
-
-            resetAvailableFilters('campus', availableCampusList);
-        }
-    }, [campusListError, campusListLoading, campusList, bookableSpacesRoomList?.data?.locations]);
+    //         resetAvailableFilters('campus', availableCampusList);
+    //     }
+    // }, [campusListError, campusListLoading, campusList, bookableSpacesRoomList?.data?.locations]);
 
     React.useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -318,227 +206,6 @@ export const BookableSpacesManageSpaceTypes = ({
         campusListLoading,
         campusList,
     ]);
-
-    const [selectedFilters, setSelectedFilters2] = useState([
-        { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
-        { filterType: 'library', filterValue: LIBRARY_ID_UNSELECTED },
-        { filterType: 'floor', filterValue: FLOOR_ID_UNSELECTED },
-    ]);
-    const setSelectedFilters = newFilter => {
-        console.log('setSelectedFilters', newFilter);
-        setSelectedFilters2(newFilter);
-    };
-
-    const doesSpaceShow = (space, currentLocationFilters) => {
-        let showSpaceByFilter = true;
-        currentLocationFilters.forEach(f => {
-            if (f.filterType === 'campus') {
-                if (f.filterValue !== CAMPUS_ID_UNSELECTED && space.space_campus_id !== f.filterValue) {
-                    showSpaceByFilter = false;
-                }
-            } else if (f.filterType === 'library') {
-                if (f.filterValue !== LIBRARY_ID_UNSELECTED && space.space_library_id !== f.filterValue) {
-                    showSpaceByFilter = false;
-                }
-            } else if (f.filterType === 'floor') {
-                if (f.filterValue !== FLOOR_ID_UNSELECTED && space.space_floor_id !== f.filterValue) {
-                    showSpaceByFilter = false;
-                }
-            }
-        });
-        return showSpaceByFilter;
-    };
-
-    const resetDisplayedRows = latestUpdate => {
-        console.log('resetDisplayedRows latestUpdate=', latestUpdate);
-        // if we have just set data to UseState, they aren't available yet - weird! :(
-        const usedFilters = latestUpdate?.location ? latestUpdate.location : selectedFilters;
-        let suppliedPageNum = 'pagination' in latestUpdate ? latestUpdate.pagination : pageNum;
-        let suppliedRowsPerPage = rowsPerPage;
-        if (latestUpdate?.rowsPerPage) {
-            suppliedRowsPerPage = latestUpdate.rowsPerPage;
-            suppliedPageNum = 0;
-        }
-
-        let numRow = 0;
-        let displayedRowsLocal = [...displayedRows];
-        bookableSpacesRoomList?.data?.locations?.forEach(space => {
-            const showSpaceByFilter = doesSpaceShow(space, usedFilters);
-
-            displayedRowsLocal = displayedRowsLocal.filter(r => {
-                return r.spaceId !== space.space_id;
-            });
-            const spaceRow = document.getElementById(`space-${space.space_id}`);
-            if (!!showSpaceByFilter && showSpaceByPagination(numRow, suppliedPageNum, suppliedRowsPerPage)) {
-                removeClass(spaceRow, 'hiddenRow');
-                displayedRowsLocal.push({
-                    spaceId: space.space_id,
-                    showSpace: true,
-                });
-            } else {
-                addClass(spaceRow, 'hiddenRow');
-                displayedRowsLocal.push({
-                    spaceId: space.space_id,
-                    showSpace: false,
-                });
-            }
-            if (!!showSpaceByFilter) {
-                numRow++;
-            }
-        });
-
-        setDisplayedRows(displayedRowsLocal);
-    };
-    const resetSelectedFilters = (filterTypeName, filterTypeValue) => {
-        console.log('resetSelectedFilters', filterTypeName, filterTypeValue);
-        let newFilterTypes = selectedFilters?.filter(g => {
-            return g.filterType !== filterTypeName;
-        });
-        newFilterTypes.push({
-            filterType: filterTypeName,
-            filterValue: filterTypeValue,
-        });
-        if (filterTypeName === 'campus') {
-            newFilterTypes = newFilterTypes?.filter(g => {
-                return g.filterType !== 'library';
-            });
-            newFilterTypes.push({
-                filterType: 'library',
-                filterValue: LIBRARY_ID_UNSELECTED,
-            });
-        }
-        if (filterTypeName === 'campus' || filterTypeName === 'library') {
-            newFilterTypes = newFilterTypes?.filter(g => {
-                return g.filterType !== 'floor';
-            });
-            newFilterTypes.push({
-                filterType: 'floor',
-                filterValue: FLOOR_ID_UNSELECTED,
-            });
-        }
-        setSelectedFilters(newFilterTypes);
-        console.log('resetSelectedFilters newFilterTypes=', newFilterTypes);
-
-        // show-hide Spaces according to selected filters
-
-        resetDisplayedRows({ location: newFilterTypes });
-    };
-    const isCampusSelected =
-        selectedFilters?.find(f => f.filterType === 'campus')?.filterValue !== CAMPUS_ID_UNSELECTED;
-    const isLibrarySelected =
-        !!isCampusSelected &&
-        selectedFilters?.find(f => f.filterType === 'library')?.filterValue !== LIBRARY_ID_UNSELECTED;
-
-    function hasFacility(facilityType, bookableSpace) {
-        return bookableSpace?.facility_types?.some(spaceFacility => {
-            return spaceFacility.facility_type_id === facilityType.facility_type_id;
-        });
-    }
-
-    const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : '#fff');
-
-    const handleChangePage = (event, newPageNum) => {
-        console.log('handleChangePage', newPageNum, event);
-        setPageNum(newPageNum);
-        resetDisplayedRows({ pagination: newPageNum });
-    };
-    const handleChangeRowsPerPage = event => {
-        const newRowsPerPage = parseInt(event.target.value, 10);
-
-        const current = new Date();
-        const nextYear = new Date();
-        nextYear.setFullYear(current.getFullYear() + 1);
-        setCookie(paginatorCookieName, newRowsPerPage, { expires: nextYear });
-
-        setRowsPerPage(newRowsPerPage);
-        setPageNum(0);
-        resetDisplayedRows({ rowsPerPage: newRowsPerPage });
-    };
-
-    const expandButtonElementId = spaceId => `expand-button-space-${spaceId}`;
-    const collapseButtonElementId = spaceId => `collapse-button-space-${spaceId}`;
-    // const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
-    const spaceDescriptionElementsId = spaceId => `space-description-${spaceId}`;
-    const expandSpace = spaceId => {
-        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
-        !!spaceDescription && (spaceDescription.style.display = 'block');
-
-        const expandButton = document.getElementById(expandButtonElementId(spaceId));
-        !!expandButton && (expandButton.style.display = 'none');
-        const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
-        !!collapseButton && (collapseButton.style.display = 'inline-flex');
-    };
-    const collapseSpace = spaceId => {
-        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
-        !!spaceDescription && (spaceDescription.style.display = 'none');
-
-        const expandButton = document.getElementById(expandButtonElementId(spaceId));
-        !!expandButton && (expandButton.style.display = 'inline-flex');
-        const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
-        !!collapseButton && (collapseButton.style.display = 'none');
-    };
-
-    function prefilterFacilityData(data) {
-        // first ensure sorted in sort order
-        const sortedGroups = [...data?.facility_type_groups]?.sort(
-            (a, b) => a.facility_type_group_order - b.facility_type_group_order,
-        );
-
-        // then add an overall sort order, to help us to tiger stripe the columns
-        let overallCounter = 1;
-        return sortedGroups?.map(group => {
-            // sort the facility types alphabetically (they should already be, but...)
-            const sortedChildren = [...group.facility_type_children]?.sort((a, b) =>
-                a.facility_type_name.localeCompare(b.facility_type_name),
-            );
-
-            const childrenWithCounter = sortedChildren?.map(child => ({
-                ...child,
-                overall_order: overallCounter++,
-            }));
-
-            return {
-                ...group,
-                facility_type_children: childrenWithCounter,
-            };
-        });
-    }
-
-    const expandTable = e => {
-        const thisButton = document.getElementById('table-pushout-button');
-        !!thisButton && (thisButton.style.display = 'none');
-
-        const otherButton = document.getElementById('table-pushin-button');
-        !!otherButton && (otherButton.style.display = 'inline-flex');
-
-        const tableEtc = document.getElementById('wrappedTableList');
-        addClass(tableEtc, 'expanded');
-    };
-
-    const collapseTable = e => {
-        const thisButton = document.getElementById('table-pushin-button');
-        !!thisButton && (thisButton.style.display = 'none');
-
-        const otherButton = document.getElementById('table-pushout-button');
-        !!otherButton && (otherButton.style.display = 'inline-flex');
-
-        const tableEtc = document.getElementById('wrappedTableList');
-        removeClass(tableEtc, 'expanded');
-    };
-
-    const openEditSpacePage = e => {
-        const buttonClicked = e.target.closest('button');
-        const spaceuuid = !!buttonClicked && buttonClicked.getAttribute('data-spaceuuid');
-        !!spaceuuid && (window.location.href = spacesAdminLink(`/admin/spaces/edit/${spaceuuid}`, account));
-        /* istanbul ignore next */
-        !spaceuuid && console.log('no valid button clicked');
-    };
-
-    const selectFilter = prop => e => {
-        console.log('selectFilter', prop, e);
-        resetSelectedFilters(prop, e.target.value);
-    };
-
     const getEffectiveSpaceType = row => {
         const key = String(row.spaceTypeId);
         const editValues = spaceTypeEdits[key] || {};
@@ -580,12 +247,14 @@ export const BookableSpacesManageSpaceTypes = ({
                 spaceTypeDescription,
             },
         }));
+        actions.updateBookableSpaceType(
+            {
+                space_type_name: spaceTypeName,
+                space_type_description: spaceTypeDescription,
+            },
+            editingSpaceTypeId,
+        );
 
-        console.log('Inline space type saved (UI only)', {
-            spaceTypeId: editingSpaceTypeId,
-            spaceTypeName,
-            spaceTypeDescription,
-        });
         setEditingSpaceTypeId(null);
     };
 
@@ -608,6 +277,35 @@ export const BookableSpacesManageSpaceTypes = ({
         setDeleteCandidate(null);
     };
 
+    const openAddSpaceTypeDialog = () => {
+        setIsAddSpaceTypeDialogOpen(true);
+    };
+
+    const closeAddSpaceTypeDialog = () => {
+        setIsAddSpaceTypeDialogOpen(false);
+        setAddSpaceTypeDraft({
+            spaceTypeName: '',
+            spaceTypeDescription: '',
+        });
+    };
+
+    const submitAddSpaceType = () => {
+        const spaceTypeName = addSpaceTypeDraft.spaceTypeName?.trim();
+        const spaceTypeDescription = addSpaceTypeDraft.spaceTypeDescription?.trim() || '';
+        if (!spaceTypeName) {
+            return;
+        }
+
+        const request = {
+            space_type_name: spaceTypeName,
+            space_type_description: spaceTypeDescription,
+        };
+
+        actions.createBookableSpaceType(request);
+
+        closeAddSpaceTypeDialog();
+    };
+
     function displayListOfBookableSpaceTypes() {
         const knownSpaceTypes = bookableSpacesRoomList?.data?.known_space_types || [];
 
@@ -624,35 +322,57 @@ export const BookableSpacesManageSpaceTypes = ({
             });
 
         return (
-            <StyledStandardCard fullHeight>
-                <StyledTableContainer className="tableContainer">
+            <StyledStandardCard fullHeight data-testid="space-types-card">
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+                    <Button variant="contained" onClick={openAddSpaceTypeDialog} data-testid="space-types-add-button">
+                        Add new space type
+                    </Button>
+                </div>
+                <StyledTableContainer className="tableContainer" data-testid="space-types-table-container">
                     <Table
                         size="small"
                         aria-label="Bookable space types table"
                         sx={{ width: '100%', tableLayout: 'fixed' }}
+                        data-testid="space-types-table"
                     >
-                        <StyledTableHead>
-                            <StyledHeaderTableRow>
-                                <StyledHeadingFacilityTableCell sx={{ width: '5rem' }}>
+                        <StyledTableHead data-testid="space-types-table-head">
+                            <StyledHeaderTableRow data-testid="space-types-table-header-row">
+                                <StyledHeadingFacilityTableCell
+                                    sx={{ width: '5rem' }}
+                                    data-testid="space-types-header-id"
+                                >
                                     ID
                                 </StyledHeadingFacilityTableCell>
-                                <StyledHeadingFacilityTableCell sx={{ textAlign: 'left' }}>
+                                <StyledHeadingFacilityTableCell
+                                    sx={{ textAlign: 'left' }}
+                                    data-testid="space-types-header-name"
+                                >
                                     Space Type
                                 </StyledHeadingFacilityTableCell>
-                                <StyledHeadingFacilityTableCell>Description</StyledHeadingFacilityTableCell>
-                                <StyledHeadingFacilityTableCell sx={{ width: '8rem' }}>
+                                <StyledHeadingFacilityTableCell data-testid="space-types-header-description">
+                                    Description
+                                </StyledHeadingFacilityTableCell>
+                                <StyledHeadingFacilityTableCell
+                                    sx={{ width: '8rem' }}
+                                    data-testid="space-types-header-count"
+                                >
                                     Allocated Spaces
                                 </StyledHeadingFacilityTableCell>
-                                <StyledHeadingFacilityTableCell sx={{ width: '9rem' }}>
+                                <StyledHeadingFacilityTableCell
+                                    sx={{ width: '9rem' }}
+                                    data-testid="space-types-header-actions"
+                                >
                                     Actions
                                 </StyledHeadingFacilityTableCell>
                             </StyledHeaderTableRow>
                         </StyledTableHead>
-                        <TableBody>
+                        <TableBody data-testid="space-types-table-body">
                             {spaceTypeRows.length === 0 && (
-                                <StyledTableRow>
-                                    <TableCell colSpan={5}>
-                                        <Typography variant="body2">No space types found.</Typography>
+                                <StyledTableRow data-testid="space-types-empty-row">
+                                    <TableCell colSpan={5} data-testid="space-types-empty-cell">
+                                        <Typography variant="body2" data-testid="space-types-empty-message">
+                                            No space types found.
+                                        </Typography>
                                     </TableCell>
                                 </StyledTableRow>
                             )}
@@ -660,18 +380,24 @@ export const BookableSpacesManageSpaceTypes = ({
                                 const effectiveRow = getEffectiveSpaceType(row);
                                 const isEditing = editingSpaceTypeId === String(row.spaceTypeId);
                                 const hasAllocatedSpaces = Number(effectiveRow.spacesCount) > 0;
+                                const rowTestIdPrefix = `space-type-row-${effectiveRow.spaceTypeId}`;
 
                                 return (
-                                    <StyledTableRow key={`space-type-${row.spaceTypeId}`}>
-                                        <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
+                                    <StyledTableRow key={`space-type-${row.spaceTypeId}`} data-testid={rowTestIdPrefix}>
+                                        <TableCell
+                                            align="center"
+                                            sx={{ whiteSpace: 'nowrap' }}
+                                            data-testid={`${rowTestIdPrefix}-id`}
+                                        >
                                             {effectiveRow.spaceTypeId}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell data-testid={`${rowTestIdPrefix}-name`}>
                                             {isEditing ? (
                                                 <TextField
                                                     size="small"
                                                     fullWidth
                                                     variant="standard"
+                                                    data-testid={`${rowTestIdPrefix}-name-input`}
                                                     value={editingDraft.spaceTypeName}
                                                     sx={{
                                                         '& .MuiInputBase-input': {
@@ -690,7 +416,10 @@ export const BookableSpacesManageSpaceTypes = ({
                                                 effectiveRow.spaceTypeName
                                             )}
                                         </TableCell>
-                                        <TableCell sx={{ whiteSpace: 'normal', overflowWrap: 'anywhere' }}>
+                                        <TableCell
+                                            sx={{ whiteSpace: 'normal', overflowWrap: 'anywhere' }}
+                                            data-testid={`${rowTestIdPrefix}-description`}
+                                        >
                                             {isEditing ? (
                                                 <TextField
                                                     size="small"
@@ -698,6 +427,7 @@ export const BookableSpacesManageSpaceTypes = ({
                                                     variant="standard"
                                                     multiline
                                                     minRows={1}
+                                                    data-testid={`${rowTestIdPrefix}-description-input`}
                                                     value={editingDraft.spaceTypeDescription}
                                                     sx={{
                                                         '& .MuiInputBase-inputMultiline': {
@@ -719,16 +449,25 @@ export const BookableSpacesManageSpaceTypes = ({
                                                 </Typography>
                                             )}
                                         </TableCell>
-                                        <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
+                                        <TableCell
+                                            align="center"
+                                            sx={{ whiteSpace: 'nowrap' }}
+                                            data-testid={`${rowTestIdPrefix}-count`}
+                                        >
                                             {effectiveRow.spacesCount}
                                         </TableCell>
-                                        <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
+                                        <TableCell
+                                            align="center"
+                                            sx={{ whiteSpace: 'nowrap' }}
+                                            data-testid={`${rowTestIdPrefix}-actions`}
+                                        >
                                             {isEditing ? (
                                                 <>
                                                     <IconButton
                                                         aria-label={`Save space type ${effectiveRow.spaceTypeName}`}
                                                         size="small"
                                                         onClick={saveInlineEdit}
+                                                        data-testid={`${rowTestIdPrefix}-save-button`}
                                                     >
                                                         <DoneIcon fontSize="small" />
                                                     </IconButton>
@@ -736,6 +475,7 @@ export const BookableSpacesManageSpaceTypes = ({
                                                         aria-label={`Cancel editing ${effectiveRow.spaceTypeName}`}
                                                         size="small"
                                                         onClick={cancelInlineEdit}
+                                                        data-testid={`${rowTestIdPrefix}-cancel-button`}
                                                     >
                                                         <CloseIcon fontSize="small" />
                                                     </IconButton>
@@ -746,6 +486,7 @@ export const BookableSpacesManageSpaceTypes = ({
                                                         aria-label={`Edit space type ${effectiveRow.spaceTypeName}`}
                                                         size="small"
                                                         onClick={() => startInlineEdit(row)}
+                                                        data-testid={`${rowTestIdPrefix}-edit-button`}
                                                     >
                                                         <EditIcon fontSize="small" />
                                                     </IconButton>
@@ -754,6 +495,7 @@ export const BookableSpacesManageSpaceTypes = ({
                                                         size="small"
                                                         disabled={hasAllocatedSpaces}
                                                         onClick={() => openDeleteConfirmation(effectiveRow)}
+                                                        data-testid={`${rowTestIdPrefix}-delete-button`}
                                                     >
                                                         <DeleteOutlineIcon fontSize="small" />
                                                     </IconButton>
@@ -766,14 +508,80 @@ export const BookableSpacesManageSpaceTypes = ({
                         </TableBody>
                     </Table>
                 </StyledTableContainer>
-                <Dialog open={!!deleteCandidate} onClose={closeDeleteConfirmation}>
+                <Dialog
+                    open={!!deleteCandidate}
+                    onClose={closeDeleteConfirmation}
+                    data-testid="space-types-delete-dialog"
+                >
                     <DialogContent>
-                        <DialogContentText>Are you sure you wish to delete this space type?</DialogContentText>
+                        <DialogContentText data-testid="space-types-delete-dialog-message">
+                            Are you sure you wish to delete this space type?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions data-testid="space-types-delete-dialog-actions">
+                        <Button onClick={closeDeleteConfirmation} data-testid="space-types-delete-cancel-button">
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={confirmDeleteSpaceType}
+                            color="error"
+                            variant="contained"
+                            data-testid="space-types-delete-confirm-button"
+                        >
+                            Delete
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
+                    open={isAddSpaceTypeDialogOpen}
+                    onClose={closeAddSpaceTypeDialog}
+                    data-testid="space-types-add-dialog"
+                >
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Space type name"
+                            fullWidth
+                            variant="standard"
+                            value={addSpaceTypeDraft.spaceTypeName}
+                            onChange={e =>
+                                setAddSpaceTypeDraft(prev => ({
+                                    ...prev,
+                                    spaceTypeName: e.target.value,
+                                }))
+                            }
+                            data-testid="space-types-add-name-input"
+                        />
+                        <TextField
+                            margin="dense"
+                            label="Space type description"
+                            fullWidth
+                            variant="standard"
+                            multiline
+                            minRows={2}
+                            value={addSpaceTypeDraft.spaceTypeDescription}
+                            onChange={e =>
+                                setAddSpaceTypeDraft(prev => ({
+                                    ...prev,
+                                    spaceTypeDescription: e.target.value,
+                                }))
+                            }
+                            data-testid="space-types-add-description-input"
+                        />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={closeDeleteConfirmation}>Cancel</Button>
-                        <Button onClick={confirmDeleteSpaceType} color="error" variant="contained">
-                            Delete
+                        <Button onClick={closeAddSpaceTypeDialog} data-testid="space-types-add-cancel-button">
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={submitAddSpaceType}
+                            variant="contained"
+                            disabled={!addSpaceTypeDraft.spaceTypeName?.trim()}
+                            data-testid="space-types-add-ok-button"
+                        >
+                            OK
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -787,13 +595,13 @@ export const BookableSpacesManageSpaceTypes = ({
                 {(() => {
                     if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                            <StyledBookableSpaceGridItem item xs={12} md={9} data-testid="space-types-loading">
                                 <InlineLoader message="Loading" />
                             </StyledBookableSpaceGridItem>
                         );
                     } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                            <StyledBookableSpaceGridItem item xs={12} md={9} data-testid="space-types-error">
                                 <StyledStandardCard fullHeight>
                                     <p>Something went wrong - please try again later.</p>
                                 </StyledStandardCard>
@@ -804,7 +612,7 @@ export const BookableSpacesManageSpaceTypes = ({
                         bookableSpacesRoomList?.data?.locations.length === 0
                     ) {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                            <StyledBookableSpaceGridItem item xs={12} md={9} data-testid="space-types-no-spaces">
                                 <StyledStandardCard fullHeight>
                                     <p>No spaces currently in system - please try again soon.</p>
                                 </StyledStandardCard>

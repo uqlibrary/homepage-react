@@ -7,6 +7,9 @@ import {
     SPACES_ALL_API,
     SPACES_SITE_API,
     UPLOAD_PUBLIC_FILES_API,
+    SPACES_SPACETYPE_CREATE_API,
+    SPACES_SPACETYPE_UPDATE_API,
+    SPACES_SPACETYPE_DELETE_API,
 } from 'repositories/routes';
 import { API_URL } from 'config';
 
@@ -350,5 +353,96 @@ export function clearBookableSpaceFloors() {
 export function clearBookableSpaceFloorsError() {
     return dispatch => {
         dispatch({ type: actions.SPACES_FLOOR_LIST_CLEAR_ERROR });
+    };
+}
+
+export function createBookableSpaceType(request) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_LOCATION_ADDING });
+        const url = SPACES_SPACETYPE_CREATE_API();
+        return post(url, request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_LOCATION_ADDED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_LOCATION_ADD_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_LOCATION_ADD_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function updateBookableSpaceType(request, spaceTypeId) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_LOCATION_UPDATING });
+        const url = SPACES_SPACETYPE_UPDATE_API({ id: spaceTypeId });
+        console.log('updateBookableSpaceType calling', url, request);
+        return put(url, request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_LOCATION_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_LOCATION_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_LOCATION_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function deleteBookableSpaceType(spaceTypeId) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_LOCATION_DELETING });
+        const url = SPACES_SPACETYPE_DELETE_API({ id: spaceTypeId });
+        return destroy(url)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_LOCATION_DELETED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_LOCATION_DELETE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_LOCATION_DELETE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
     };
 }

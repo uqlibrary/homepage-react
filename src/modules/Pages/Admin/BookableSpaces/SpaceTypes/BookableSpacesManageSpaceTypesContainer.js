@@ -10,7 +10,6 @@ const mapStateToProps = state => {
         ...state.get('weeklyHoursReducer'),
         ...state.get('bookablespacesFacilityTypeReducer'),
         ...state.get('bookableSpaceLocationReducer'),
-        ...state.get('bookableSpacesSpaceTypeReducer'),
     };
 };
 

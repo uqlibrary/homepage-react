@@ -1714,6 +1714,20 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'space', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_SPACETYPE_UPDATE_API({ id: '.*' }).apiUrl)))
+    .reply(() => {
+        if (responseType === 'spaceTypeCreateError') {
+            return [500, {}];
+        }
+        return [200, { status: 'OK' }];
+    })
+    .onPost(new RegExp(panelRegExp(routes.SPACES_SPACETYPE_CREATE_API().apiUrl)))
+    .reply(() => {
+        if (responseType === 'spaceTypeCreateError') {
+            return [500, {}];
+        }
+        return [200, { status: 'OK' }];
+    })
     // .onDelete(/bookable_spaces\/campus|library|floor\/.*/)
     // .reply(() => {
     //     if (responseType === 'error') {
