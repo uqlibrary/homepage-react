@@ -54,6 +54,9 @@ export default {
             bookablespaces: {
                 title: 'Spaces Management',
             },
+            bookablespacetypes: {
+                title: 'Space Type Management',
+            },
         },
         learningresources: {
             title: 'Learning resources',
@@ -72,6 +75,9 @@ export default {
         },
         bookablespaces: {
             title: 'Spaces',
+        },
+        bookablespacetypes: {
+            title: 'Space Types',
         },
     },
 };
