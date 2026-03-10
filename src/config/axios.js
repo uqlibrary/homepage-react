@@ -16,6 +16,7 @@ let apiClient = axios.create({
     baseURL: API_URL,
     crossdomain: true,
 });
+
 if (!isDevEnv() && !isTest()) {
     apiClient = setupCache(apiClient, {
         // unfortunately the below doesn't work for tests

@@ -53,8 +53,8 @@ describe('StandardAuthPage', () => {
         expect(getByText(locale.pages.general.pageUnavailable)).toBeInTheDocument();
     });
 
-    it('renders component with title, subtitle (department_display_name) and protected content when user has any required permission', () => {
-        const mockSubtitleFn = jest.fn(dept => `Subtitle for ${dept}`);
+    it('renders component with title, subtitle (team_display_name & department_display_name) and protected content when user has any required permission', () => {
+        const mockSubtitleFn = jest.fn((team, dept) => `Subtitle for ${team} (${dept})`);
         const { getByTestId, getByText } = setup({
             locale: { header: { pageSubtitle: mockSubtitleFn } },
             inclusive: false,
@@ -66,17 +66,17 @@ describe('StandardAuthPage', () => {
                 PERMISSIONS.can_see_reports,
             ],
         });
-        expect(mockSubtitleFn).toHaveBeenCalledWith('Library');
+        expect(mockSubtitleFn).toHaveBeenCalledWith('Work Station Support', 'Library');
         expect(getByTestId('StandardPage-title')).toHaveTextContent('Test title');
-        expect(getByTestId('test_tag_header')).toHaveTextContent('Subtitle for Library');
+        expect(getByTestId('test_tag_header')).toHaveTextContent('Subtitle for Work Station Support (Library)');
         expect(getByText(contentText)).toBeInTheDocument();
     });
 
-    it('renders component with title, subtitle (user_department) and protected content when user has any required permission', () => {
-        const mockSubtitleFn = jest.fn(dept => `Subtitle for ${dept}`);
+    it('renders component with title, subtitle (user_team & user_department) and protected content when user has any required permission', () => {
+        const mockSubtitleFn = jest.fn((team, dept) => `Subtitle for ${team} (${dept})`);
         const { getByTestId, getByText } = setup({
             state: {
-                account: { tnt: { ...userData, department_display_name: undefined } },
+                account: { tnt: { ...userData, team_display_name: undefined, department_display_name: undefined } },
             },
             locale: { header: { pageSubtitle: mockSubtitleFn } },
             inclusive: false,
@@ -88,21 +88,21 @@ describe('StandardAuthPage', () => {
                 PERMISSIONS.can_see_reports,
             ],
         });
-        expect(mockSubtitleFn).toHaveBeenCalledWith('UQL');
+        expect(mockSubtitleFn).toHaveBeenCalledWith('WSS', 'UQL');
         expect(getByTestId('StandardPage-title')).toHaveTextContent('Test title');
-        expect(getByTestId('test_tag_header')).toHaveTextContent('Subtitle for UQL');
+        expect(getByTestId('test_tag_header')).toHaveTextContent('Subtitle for WSS (UQL)');
         expect(getByText(contentText)).toBeInTheDocument();
     });
     it('renders component with title and subtitle and protected content', () => {
-        const mockSubtitleFn = jest.fn(dept => `Subtitle for ${dept}`);
+        const mockSubtitleFn = jest.fn((team, dept) => `Subtitle for ${team} (${dept})`);
         const { getByTestId, getByText } = setup({
             locale: { header: { pageSubtitle: mockSubtitleFn } },
             title: 'Test title',
             requiredPermissions: [PERMISSIONS.can_inspect],
         });
-        expect(mockSubtitleFn).toHaveBeenCalledWith('Library');
+        expect(mockSubtitleFn).toHaveBeenCalledWith('Work Station Support', 'Library');
         expect(getByTestId('StandardPage-title')).toHaveTextContent('Test title');
-        expect(getByTestId('test_tag_header')).toHaveTextContent('Subtitle for Library');
+        expect(getByTestId('test_tag_header')).toHaveTextContent('Subtitle for Work Station Support (Library)');
         expect(getByText(contentText)).toBeInTheDocument();
     });
     it('renders component with denied text when error loading user', () => {

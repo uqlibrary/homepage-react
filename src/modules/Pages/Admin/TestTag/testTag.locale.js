@@ -111,10 +111,23 @@ export default {
                     {count > 1 ? 's' : ''}
                 </>
             ),
+            labelPrinting: {
+                error: {
+                    noPrinterSelected: 'No printer selected to print label.',
+                    noLabelData: 'No label data available to print.',
+                    noLabelTemplate: 'No label template found for the selected printer.',
+                    noConnection:
+                        'Unable to connect to the selected printer. Please check the printer connection and try again.',
+                    printerNotReady: 'The selected printer is not ready. Please check the printer and try again.',
+                    printJobError: 'Unable to send the print job. Please try again.',
+                    uncaughtException: 'An unhandled error occurred during the printing process.',
+                },
+                printJobSent: printerName => `Print job sent to ${printerName}.`,
+            },
         },
         dashboard: {
             header: {
-                pageSubtitle: dept => `Dashboard for ${dept}`,
+                pageSubtitle: (team, dept) => `Dashboard for ${team} (${dept})`,
             },
             panel: {
                 inspections: {
@@ -250,7 +263,7 @@ export default {
                 },
             ],
             header: {
-                pageSubtitle: dept => `Testing assets for ${dept}`,
+                pageSubtitle: (team, dept) => `Testing assets for ${team} (${dept})`,
             },
             form: {
                 event: {
@@ -391,6 +404,11 @@ export default {
                     tagPlacedBy: 'TAG PLACED BY:',
                 },
             },
+            labelPrinting: {
+                unknownPrinter: 'unconfigured',
+                selectPrinter: 'Label printer selection',
+                printButton: 'Print tag',
+            },
         },
         manage: {
             config: {
@@ -404,7 +422,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset type management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Asset type management for ${team} (${dept})`,
                     addButtonLabel: 'Add asset type',
                 },
                 addAsset: {
@@ -492,7 +510,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Locations management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Locations management for ${team} (${dept})`,
                 },
                 form: {
                     title: 'Filter',
@@ -625,7 +643,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Testing device management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Testing device management for ${team} (${dept})`,
                 },
                 form: {
                     actions: 'Actions',
@@ -703,7 +721,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Test note management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Test note management for ${team} (${dept})`,
                 },
                 form: {
                     actions: 'Actions',
@@ -782,7 +800,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Bulk asset management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Bulk asset management for ${team} (${dept})`,
                 },
                 form: {
                     columns: {
@@ -954,7 +972,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `User management for ${dept}`,
+                    pageSubtitle: (team, dept) => `User management for ${team} (${dept})`,
                 },
                 form: {
                     actions: 'Actions',
@@ -1058,7 +1076,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Testing devices due recalibration report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Testing devices due recalibration report for ${team} (${dept})`,
                 },
                 form: {
                     columns: {
@@ -1094,7 +1112,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset tests due report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Asset tests due report for ${team} (${dept})`,
                 },
                 form: {
                     title: 'Filter',
@@ -1102,6 +1120,7 @@ export default {
                         asset_barcode: {
                             label: 'Barcode',
                         },
+                        asset_type_id: { label: 'Asset ID' },
                         asset_type_name: {
                             label: 'Asset type',
                         },
@@ -1130,7 +1149,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Tests by licenced users report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Tests by licenced users report for ${team} (${dept})`,
                 },
                 form: {
                     title: 'Filter',
@@ -1185,7 +1204,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset tests report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Asset tests report for ${team} (${dept})`,
                 },
                 form: {
                     title: 'Filters',
@@ -1210,6 +1229,12 @@ export default {
                         },
                         user_name: {
                             label: 'Last tested by',
+                        },
+                        inspect_comment: {
+                            label: 'Comments',
+                        },
+                        inspect_fail_reason: {
+                            label: 'Fail Reason',
                         },
                     },
                     filterStatusLabel: 'With status',

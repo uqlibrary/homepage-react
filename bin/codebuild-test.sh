@@ -105,9 +105,6 @@ function run_pw_test_shard() {
     npm run test:e2e:cc -- -- --shard="${SHARD_INDEX}/${PW_SHARD_COUNT}"
 }
 
-echo "pwd "
-pwd
-
 case "$PIPE_NUM" in
 "1")
     npm run start:mock &

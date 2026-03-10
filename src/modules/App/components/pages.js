@@ -62,6 +62,9 @@ export const BookableSpacesEditSpace = lazy(() => lazyRetry(() => import('module
 export const BookableSpacesManageLocations = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Locations/BookableSpacesManageLocationsContainer')));
 export const BookableSpacesManageFacilities = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Facilities/BookableSpacesManageFacilitiesContainer')));
 
+// Dashboard
+export const DLODashboard = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Dashboard/DashboardContainer')));
+export const DLOBulkSchedule = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/BulkSchedule/DLOBulkScheduleContainer')));
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';

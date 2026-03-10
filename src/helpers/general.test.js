@@ -8,6 +8,7 @@ import {
     unescapeString,
     isValidUrl,
     standardText,
+    standardisedExtension,
 } from './general';
 
 describe('general helpers', () => {
@@ -124,5 +125,14 @@ describe('general helpers', () => {
         expect(isValidUrl('blahblahblah')).toEqual(false);
         expect(isValidUrl('blah blah blah')).toEqual(false);
         expect(isValidUrl('https://x.c')).toBe(false); // too short
+    });
+    it('extracts extension', () => {
+        expect(standardisedExtension('http://example.com/something.jpg')).toEqual('JPG');
+        expect(standardisedExtension('.jpg')).toEqual('JPG'); // first char
+        expect(standardisedExtension('http://example.com/something.')).toEqual(''); // last char
+        expect(standardisedExtension('no_dot_at_all')).toEqual(''); // not a url
+        expect(standardisedExtension(null)).toEqual(''); // invalid url
+        expect(standardisedExtension(1)).toEqual(''); // invalid url
+        expect(standardisedExtension(false)).toEqual(''); // invalid url
     });
 });

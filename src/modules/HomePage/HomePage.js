@@ -213,7 +213,6 @@ export const HomePage = ({
     const verySimplelayout =
         !canSeeLearningResourcesPanel(account) && !isEspaceAuthor(account, author) && !canSeeReadPublish(account);
 
-    console.log('DLOR STATISTISCS IN HOMEPAGE:', dlorStatistics, dlorStatisticsLoading, dlorStatisticsError);
     return (
         <>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
@@ -358,6 +357,18 @@ export const HomePage = ({
                                                                 <ReadPublish />
                                                             </StyledGridItemLoggedIn>
                                                         )}
+                                                        <StyledGridItemLoggedIn
+                                                            item
+                                                            xs={12}
+                                                            data-testid="dlor-links-panel"
+                                                        >
+                                                            <DigitalLearningHub
+                                                                dlorStatistics={dlorStatistics}
+                                                                account={account}
+                                                                dlorStatisticsLoading={dlorStatisticsLoading}
+                                                                dlorStatisticsError={dlorStatisticsError}
+                                                            />
+                                                        </StyledGridItemLoggedIn>
                                                     </Grid>
                                                 </Grid>
                                                 <Grid item uqDsDesktop={6} xs={12}>
@@ -375,23 +386,6 @@ export const HomePage = ({
                                                                 />
                                                             </StyledGridItemLoggedIn>
                                                         )}
-                                                    </Grid>
-                                                </Grid>
-                                                {/* DIITAL LEARNING HUB PANEL START*/}
-                                                <Grid item uqDsDesktop={6} xs={12}>
-                                                    <Grid container>
-                                                        <StyledGridItemLoggedIn
-                                                            item
-                                                            xs={12}
-                                                            data-testid="dlor-links-panel"
-                                                        >
-                                                            <DigitalLearningHub
-                                                                dlorStatistics={dlorStatistics}
-                                                                account={account}
-                                                                dlorStatisticsLoading={dlorStatisticsLoading}
-                                                                dlorStatisticsError={dlorStatisticsError}
-                                                            />
-                                                        </StyledGridItemLoggedIn>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>

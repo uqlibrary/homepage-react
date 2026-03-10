@@ -9,7 +9,6 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
@@ -18,6 +17,7 @@ import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 import { breadcrumbs } from 'config/routes';
+import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 
 const moment = require('moment');
 
@@ -259,17 +259,17 @@ const InspectionDevices = ({
                                 rows={row}
                                 columns={columns}
                                 rowId={'device_id'}
-                                components={{ ...(canManage ? { Toolbar: AddToolbar } : {}) }}
-                                componentsProps={{
-                                    ...(canManage
-                                        ? {
-                                              toolbar: {
-                                                  id: componentId,
-                                                  label: pageLocale.form?.addDeviceButton,
-                                                  onClick: handleAddClick,
-                                              },
-                                          }
-                                        : {}),
+                                components={{
+                                    Toolbar: () => (
+                                        <WithExportMenu id={componentId}>
+                                            {canManage && (
+                                                <AddButton
+                                                    label={pageLocale.form?.addDeviceButton}
+                                                    onClick={handleAddClick}
+                                                />
+                                            )}
+                                        </WithExportMenu>
+                                    ),
                                 }}
                                 loading={inspectionDevicesLoading}
                                 getCellClassName={params =>

@@ -12,14 +12,20 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.report.assetReportByFilters.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
     test('UI Dropdown for Status and building function correctly', async ({ page }) => {
-        await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.report.assetReportByFilters.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
 
@@ -53,7 +59,10 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
     test('UI for date pickers function correctly', async ({ page }) => {
         const currentYear = new Date().getFullYear();
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
-        await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.report.assetReportByFilters.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         // Select a Tagged from Date
@@ -104,7 +113,10 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
     });
 
     test('Sorting should work correctly', async ({ page }) => {
-        await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.report.assetReportByFilters.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         await page.locator('.MuiDataGrid-columnHeader--sorted .MuiDataGrid-iconButtonContainer button').click();

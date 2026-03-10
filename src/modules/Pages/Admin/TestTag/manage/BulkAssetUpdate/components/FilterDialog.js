@@ -67,6 +67,7 @@ const FilterDialog = ({
         store: locationStore,
         condition: () => isOpen,
     });
+    const searchParamsRef = React.useRef({ lastSelectedLocation, location: '{}', searchNotes, assetTypeId });
     const { columns } = useDataTableColumns({
         config,
         locale: locale.form.columns,
@@ -83,6 +84,16 @@ const FilterDialog = ({
     useEffect(() => {
         /* istanbul ignore else */
         if (isOpen && !isBusy) {
+            const locationStr = JSON.stringify(location);
+            if (
+                searchParamsRef.current.lastSelectedLocation === lastSelectedLocation &&
+                searchParamsRef.current.location === locationStr &&
+                searchParamsRef.current.searchNotes === searchNotes &&
+                searchParamsRef.current.assetTypeId === assetTypeId
+            ) {
+                return;
+            }
+            searchParamsRef.current = { lastSelectedLocation, location: locationStr, searchNotes, assetTypeId };
             actions.loadAssetsMine({
                 ...((lastSelectedLocation === 'floor' && location.floor !== -1) ||
                 (lastSelectedLocation === 'room' && location.room !== -1) ||
@@ -90,7 +101,6 @@ const FilterDialog = ({
                 (lastSelectedLocation === 'site' && location.site !== -1)
                     ? {
                           locationType: lastSelectedLocation,
-                          // locationId: lastSelectedLocation === 'room' ? location.room : location.floor,
                           locationId: location[lastSelectedLocation],
                       }
                     : {}),
@@ -98,8 +108,7 @@ const FilterDialog = ({
                 textSearch: searchNotes,
             });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lastSelectedLocation, location, assetTypeId, searchNotes, isOpen, isBusy]);
+    }, [lastSelectedLocation, location, assetTypeId, searchNotes, isOpen, isBusy, actions]);
 
     const handleCancelAction = () => {
         onCancel?.();

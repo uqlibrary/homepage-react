@@ -28,6 +28,7 @@ export const flattedPathConfigExact = [
     '/admin/dlor/team/add',
     '/admin/dlor/filters',
     '/admin/dlor/vocabulary',
+    '/admin/dlor/schedule',
     '/admin/masquerade',
     '/admin/masquerade/',
     '/admin/testntag',
@@ -52,6 +53,7 @@ export const flattedPathConfigExact = [
     '/admin/spaces/manage/locations',
     '/admin/spaces/add',
     '/admin/spaces/manage/facilitytypes',
+    '/digital-learning-hub/dashboard',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
@@ -275,6 +277,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: 'Manage Vocabulary',
         },
+        {
+            path: pathConfig.admin.dlorScheduler,
+            element: <components.DLOBulkSchedule />,
+            exact: true,
+            pageTitle: 'Manage feature schedules',
+        },
     ];
     const authenticatedDlorDisplay = [
         {
@@ -287,6 +295,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.dlorViewSecure(dlorId),
             element: <components.DLOView />,
             pageTitle: 'Digital Learning Object Repository - View Object',
+        },
+        {
+            path: pathConfig.dlorDashboard,
+            element: <components.DLODashboard />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository - Dashboard',
         },
     ];
 

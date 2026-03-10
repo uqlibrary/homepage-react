@@ -10,7 +10,10 @@ test.describe('Test and Tag Manage Inspection Notes', () => {
 
     const checkBaseline = async (page: Page) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
     };
 

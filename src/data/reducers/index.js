@@ -48,3 +48,5 @@ export { default as bookableSpacesRoomListReducer } from './bookableSpacesRoomLi
 export { default as weeklyHoursReducer } from './weeklyHoursReducer';
 export { default as bookablespacesFacilityTypeReducer } from './bookablespacesFacilityTypeReducer';
 export { default as bookableSpaceLocationReducer } from './bookableSpaceLocationReducer';
+export { default as dlorScheduleReducer } from './dlorScheduleReducer';
+export { default as dlorDashboardReducer } from './dlorDashboardReducer';

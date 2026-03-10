@@ -106,7 +106,7 @@ export class StandardCard extends Component {
             : `standard-card${
                   typeof title === 'string'
                       ? `-${title
-                            .replace(/ /g, '-')
+                            ?.replace(/ /g, '-')
                             .replace(/"/g, "'")
                             .toLowerCase()}`
                       : /* istanbul ignore next */ ''

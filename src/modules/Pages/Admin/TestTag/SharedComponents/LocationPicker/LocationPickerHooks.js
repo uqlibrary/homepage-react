@@ -11,7 +11,7 @@ export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultF
     });
 
     const setLocation = update => {
-        _setLocation({ ...location, ...update });
+        _setLocation(prev => ({ ...prev, ...update }));
     };
 
     const resetLocation = () => {
@@ -80,7 +80,7 @@ export const useSelectLocation = ({
                             ?.buildings?.find(building => building.building_id === location.building)?.floors ?? [],
                     );
                     setLocation?.({ floor: -1, room: -1 });
-                    actions?.clearFloors();
+                    actions?.clearFloors?.();
                 }
                 setSelectedLocation(locationType.floor);
                 setLastSelectedLocation(locationType.building);

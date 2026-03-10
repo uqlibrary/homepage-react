@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 
 import { styled } from '@mui/material/styles';
-import { linkToDrupal } from 'helpers/general';
+import { standardisedExtension, linkToDrupal } from 'helpers/general';
 
 const StyledItem = styled(Grid)(() => ({
     borderTop: '1px solid #e8e8e8',
@@ -45,10 +45,6 @@ const StyledBodyText = styled(Typography)(() => ({
 export const PastExamPapers = ({ examList, examListLoading, examListError, headingLevel }) => {
     const subject = !!examList && examList.coursecode;
 
-    const _extractExtension = url => {
-        return url.substring(url.lastIndexOf('.') + 1).toUpperCase();
-    };
-
     const listOfExams = !!examList && !!examList.list && examList.list.length > 0 ? examList.list : false;
 
     const numberExcessExams =
@@ -56,7 +52,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
 
     const examTotalCount = listOfExams.length + numberExcessExams;
 
-    const examAriaLabel = paper => `past exam paper for ${paper.period} format ${_extractExtension(paper.url)}`;
+    const examAriaLabel = paper => `past exam paper for ${paper.period} format ${standardisedExtension(paper.url)}`;
 
     const itemCountLabel = _pluralise('item', examTotalCount);
     const examPaperTitle = `Past exam papers ${
@@ -64,7 +60,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
     }`;
 
     const showLinkToPaper = (paper, index) => {
-        const sampleIndicator = paper.paperType.toLowerCase().includes('sample') ? '(Sample)' : '';
+        const sampleIndicator = paper?.paperType?.toLowerCase().includes('sample') ? '(Sample)' : '';
         return (
             <a
                 aria-label={examAriaLabel(paper)}
@@ -75,7 +71,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                 key={`exam-${index}`}
             >
                 <span>
-                    {paper.period} ({_extractExtension(paper.url)}) {sampleIndicator}
+                    {paper.period} ({standardisedExtension(paper.url)}) {sampleIndicator}
                 </span>
             </a>
         );
