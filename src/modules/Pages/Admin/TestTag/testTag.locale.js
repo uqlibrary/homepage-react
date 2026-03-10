@@ -645,7 +645,7 @@ export default {
                                         deleting a site will also delete all of the site's buildings, floors and rooms.
                                         <br />
                                         <br />
-                                        <strong>THIS ACTION CAN NOT BE UNDONE.</strong>
+                                        <strong>THIS ACTION CANNOT BE UNDONE.</strong>
                                     </Alert>
                                 </>
                             )}

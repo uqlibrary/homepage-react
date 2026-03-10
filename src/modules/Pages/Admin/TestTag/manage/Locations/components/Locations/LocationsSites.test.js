@@ -99,17 +99,17 @@ describe('Locations', () => {
             expect(getByTestId('locations-data-table-toolbar-add-button')).toHaveTextContent('Add site');
 
             // check header row is as expected
-            assertHeader(grid, ['Site ID', 'Site name', 'No. assets']);
+            assertHeader(grid, ['Site ID', 'Site name', 'No. assets', 'Excluded']);
 
             // check first row is as expected
-            const cells1 = assertRow(grid, ['01', 'St Lucia', '120'], 1);
-            expect(within(cells1[3]).getByTestId('action_cell-1-edit-button')).not.toHaveAttribute('disabled');
-            expect(within(cells1[3]).getByTestId('action_cell-1-delete-button')).toHaveAttribute('disabled');
+            const cells1 = assertRow(grid, ['01', 'St Lucia', '120', 'No'], 1);
+            expect(within(cells1[4]).getByTestId('action_cell-1-edit-button')).not.toHaveAttribute('disabled');
+            expect(within(cells1[4]).getByTestId('action_cell-1-delete-button')).toHaveAttribute('disabled');
 
             // check second row is as expected
-            const cells2 = assertRow(grid, ['29', 'Gatton', '0'], 2);
-            expect(within(cells2[3]).getByTestId('action_cell-2-edit-button')).not.toHaveAttribute('disabled');
-            expect(within(cells2[3]).getByTestId('action_cell-2-delete-button')).not.toHaveAttribute('disabled');
+            const cells2 = assertRow(grid, ['29', 'Gatton', '0', 'Yes'], 2);
+            expect(within(cells2[4]).getByTestId('action_cell-2-edit-button')).not.toHaveAttribute('disabled');
+            expect(within(cells2[4]).getByTestId('action_cell-2-delete-button')).not.toHaveAttribute('disabled');
         });
 
         it('handles add action as expected', async () => {
@@ -128,13 +128,42 @@ describe('Locations', () => {
             expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
             expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
-            userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
+
+            // add with excluded=false
+            await userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
 
             await userEvent.type(getByTestId('site_id_displayed-input'), 'Test ID');
             await userEvent.type(getByTestId('site_name-input'), 'Test name');
             expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+
+            await userEvent.click(getByTestId('update_dialog-action-button'));
+
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+
+            expect(addLocationFn).toHaveBeenCalledWith({
+                request: {
+                    site_id_displayed: 'Test ID',
+                    site_name: 'Test name',
+                    site_excluded_cb: false,
+                },
+                type: 'site',
+            });
+
+            await findByTestId('confirmation_alert-success');
+            expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
+
+            // add with excluded=true
+            await userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
+            await findByTestId('update_dialog-locations');
+            expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
+
+            await userEvent.type(getByTestId('site_id_displayed-input'), 'Test ID');
+            await userEvent.type(getByTestId('site_name-input'), 'Test name');
+            expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+
+            await userEvent.click(getByTestId('site_excluded_cb-input'));
 
             userEvent.click(getByTestId('update_dialog-action-button'));
 
@@ -144,6 +173,7 @@ describe('Locations', () => {
                 request: {
                     site_id_displayed: 'Test ID',
                     site_name: 'Test name',
+                    site_excluded_cb: true,
                 },
                 type: 'site',
             });
@@ -167,7 +197,8 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
-            userEvent.click(getByTestId('action_cell-1-edit-button'));
+            // update with excluded =true
+            await userEvent.click(getByTestId('action_cell-1-edit-button'));
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
             expect(getByTestId('site_id_displayed-input')).toHaveAttribute('value', '01');
@@ -175,8 +206,9 @@ describe('Locations', () => {
 
             await userEvent.type(getByTestId('site_id_displayed-input'), ' update');
             await userEvent.type(getByTestId('site_name-input'), ' update');
+            await userEvent.click(getByTestId('site_excluded_cb-input'));
 
-            userEvent.click(getByTestId('update_dialog-action-button'));
+            await userEvent.click(getByTestId('update_dialog-action-button'));
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
@@ -184,6 +216,34 @@ describe('Locations', () => {
                     site_id: 1,
                     site_id_displayed: '01 update',
                     site_name: 'St Lucia update',
+                    site_excluded_cb: true,
+                },
+                type: 'site',
+            });
+
+            await findByTestId('confirmation_alert-success');
+            expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
+
+            // update with excluded =false
+            await userEvent.click(getByTestId('action_cell-2-edit-button'));
+            await findByTestId('update_dialog-locations');
+            expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+            expect(getByTestId('site_id_displayed-input')).toHaveAttribute('value', '29');
+            expect(getByTestId('site_name-input')).toHaveAttribute('value', 'Gatton');
+
+            await userEvent.type(getByTestId('site_id_displayed-input'), ' update');
+            await userEvent.type(getByTestId('site_name-input'), ' update');
+            await userEvent.click(getByTestId('site_excluded_cb-input'));
+
+            await userEvent.click(getByTestId('update_dialog-action-button'));
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+
+            expect(updateLocationFn).toHaveBeenCalledWith({
+                request: {
+                    site_id: 2,
+                    site_id_displayed: '29 update',
+                    site_name: 'Gatton update',
+                    site_excluded_cb: false,
                 },
                 type: 'site',
             });

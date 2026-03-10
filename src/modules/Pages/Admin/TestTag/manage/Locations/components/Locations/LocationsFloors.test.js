@@ -125,13 +125,13 @@ describe('Locations', () => {
             expect(getByTestId('location_picker-locations-floor-input')).not.toHaveAttribute('disabled');
 
             const grid = getByTestId('data_table-locations');
-            assertHeader(grid, ['Floor ID', 'No. assets']);
-            const cells1 = assertRow(grid, ['1', '1'], 1);
-            expect(within(cells1[2]).getByTestId('action_cell-29-edit-button')).not.toHaveAttribute('disabled');
-            expect(within(cells1[2]).getByTestId('action_cell-29-delete-button')).toHaveAttribute('disabled');
-            const cells2 = assertRow(grid, ['2', '0'], 2);
-            expect(within(cells2[2]).getByTestId('action_cell-30-edit-button')).not.toHaveAttribute('disabled');
-            expect(within(cells2[2]).getByTestId('action_cell-30-delete-button')).not.toHaveAttribute('disabled');
+            assertHeader(grid, ['Floor ID', 'No. assets', 'Excluded']);
+            const cells1 = assertRow(grid, ['29', '1', 'No'], 1);
+            expect(within(cells1[3]).getByTestId('action_cell-29-edit-button')).not.toHaveAttribute('disabled');
+            expect(within(cells1[3]).getByTestId('action_cell-29-delete-button')).toHaveAttribute('disabled');
+            const cells2 = assertRow(grid, ['30', '0', 'Yes'], 2);
+            expect(within(cells2[3]).getByTestId('action_cell-30-edit-button')).not.toHaveAttribute('disabled');
+            expect(within(cells2[3]).getByTestId('action_cell-30-delete-button')).not.toHaveAttribute('disabled');
         });
 
         it('handles add action as expected', async () => {
@@ -169,7 +169,9 @@ describe('Locations', () => {
             });
 
             expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
-            userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
+
+            // add floor with excluded false
+            await userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
 
@@ -179,7 +181,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('floor_id_displayed-input'), 'Test ID');
             expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
 
-            userEvent.click(getByTestId('update_dialog-action-button'));
+            await userEvent.click(getByTestId('update_dialog-action-button'));
 
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
@@ -187,6 +189,35 @@ describe('Locations', () => {
                 request: {
                     floor_id_displayed: 'Test ID',
                     floor_building_id: 8,
+                    floor_excluded_cb: false,
+                },
+                type: 'floor',
+            });
+
+            await findByTestId('confirmation_alert-success');
+            expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
+
+            // add floor with excluded true
+            await userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
+            await findByTestId('update_dialog-locations');
+            expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
+
+            expect(
+                within(getByTestId('update_dialog-locations')).getByText('J.K. Murray Library, Gatton'),
+            ).toBeInTheDocument();
+            await userEvent.type(getByTestId('floor_id_displayed-input'), 'Test ID');
+            await userEvent.click(getByTestId('floor_excluded_cb-input'));
+            expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+
+            await userEvent.click(getByTestId('update_dialog-action-button'));
+
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+
+            expect(addLocationFn).toHaveBeenCalledWith({
+                request: {
+                    floor_id_displayed: 'Test ID',
+                    floor_building_id: 8,
+                    floor_excluded_cb: true,
                 },
                 type: 'floor',
             });
@@ -195,7 +226,98 @@ describe('Locations', () => {
             expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
         });
 
-        it('handles update action as expected', async () => {
+        it('handles update action as expected where parent is not excluded', async () => {
+            const updateLocationFn = jest.fn(() => Promise.resolve());
+            const { getByText, getByTestId, findByTestId, queryByTestId, getByRole } = setup({
+                isOpen: true,
+                actions: {
+                    loadSites: jest.fn(),
+                    loadFloors: jest.fn(),
+                    clearSites: jest.fn(),
+                    clearRooms: jest.fn(),
+                    clearFloors: jest.fn(),
+                    updateLocation: updateLocationFn,
+                },
+                state: {
+                    testTagLocationReducer: {
+                        ...defaultLocationState,
+                        floorList: floorList[0],
+                        floorListLoaded: true,
+                    },
+                },
+            });
+
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
+            await act(async () => {
+                await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
+            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
+            await act(async () => {
+                await userEvent.selectOptions(getByRole('listbox'), '0001 - Forgan Smith Building');
+            });
+
+            // floor excluded=true
+            await userEvent.click(getByTestId('action_cell-2-edit-button'));
+
+            await findByTestId('update_dialog-locations');
+            expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+            expect(getByTestId('floor_excluded_cb-input')).not.toHaveAttribute('disabled');
+
+            expect(getByTestId('floor_id_displayed-input')).toHaveAttribute('value', '3');
+
+            await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
+
+            await userEvent.click(getByTestId('update_dialog-action-button'));
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+
+            expect(updateLocationFn).toHaveBeenCalledWith({
+                request: {
+                    floor_id: 2,
+                    floor_building_id: 1,
+                    floor_id_displayed: '3 update',
+                    floor_excluded_cb: false,
+                },
+                type: 'floor',
+            });
+
+            await findByTestId('confirmation_alert-success');
+            expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
+
+            // floor excluded=true
+            await userEvent.click(getByTestId('action_cell-2-edit-button'));
+
+            await findByTestId('update_dialog-locations');
+            expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+            expect(getByTestId('floor_excluded_cb-input')).not.toHaveAttribute('disabled');
+            await userEvent.click(getByTestId('floor_excluded_cb-input'));
+
+            expect(getByTestId('floor_id_displayed-input')).toHaveAttribute('value', '3');
+
+            await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
+
+            await userEvent.click(getByTestId('update_dialog-action-button'));
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+
+            expect(updateLocationFn).toHaveBeenCalledWith({
+                request: {
+                    floor_id: 2,
+                    floor_building_id: 1,
+                    floor_id_displayed: '3 update',
+                    floor_excluded_cb: true,
+                },
+                type: 'floor',
+            });
+
+            await findByTestId('confirmation_alert-success');
+            expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
+        });
+
+        it('handles update action as expected where parent is excluded', async () => {
             const updateLocationFn = jest.fn(() => Promise.resolve());
             const { getByText, getByTestId, findByTestId, queryByTestId, getByRole } = setup({
                 isOpen: true,
@@ -229,23 +351,55 @@ describe('Locations', () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
 
-            userEvent.click(getByTestId('action_cell-30-edit-button'));
+            // floor excluded=true
+            await userEvent.click(getByTestId('action_cell-29-edit-button'));
 
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+            expect(getByTestId('floor_excluded_cb-input')).toHaveAttribute('disabled');
+            expect(getByTestId('floor_excluded_cb-input')).toBeChecked(); // floor_excluded=true
 
-            expect(getByTestId('floor_id_displayed-input')).toHaveAttribute('value', '2');
+            expect(getByTestId('floor_id_displayed-input')).toHaveAttribute('value', '29');
 
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
-            userEvent.click(getByTestId('update_dialog-action-button'));
+            await userEvent.click(getByTestId('update_dialog-action-button'));
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+
+            expect(updateLocationFn).toHaveBeenCalledWith({
+                request: {
+                    floor_id: 29,
+                    floor_building_id: 8,
+                    floor_id_displayed: '29 update',
+                    floor_excluded_cb: true, // flag is retained
+                },
+                type: 'floor',
+            });
+
+            await findByTestId('confirmation_alert-success');
+            expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
+
+            // floor excluded=false
+            await userEvent.click(getByTestId('action_cell-30-edit-button'));
+
+            await findByTestId('update_dialog-locations');
+            expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+            expect(getByTestId('floor_excluded_cb-input')).toHaveAttribute('disabled');
+            expect(getByTestId('floor_excluded_cb-input')).not.toBeChecked(); // floor_excluded=true
+
+            expect(getByTestId('floor_id_displayed-input')).toHaveAttribute('value', '30');
+
+            await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
+
+            await userEvent.click(getByTestId('update_dialog-action-button'));
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
                     floor_id: 30,
                     floor_building_id: 8,
-                    floor_id_displayed: '2 update',
+                    floor_id_displayed: '30 update',
+                    floor_excluded_cb: false, // flag is retained
                 },
                 type: 'floor',
             });
@@ -291,7 +445,7 @@ describe('Locations', () => {
             userEvent.click(getByTestId('action_cell-30-delete-button'));
 
             await findByTestId('dialogbox-locations');
-            expect(getByTestId('message-content')).toHaveTextContent('Are you sure you wish to delete the floor "2"?');
+            expect(getByTestId('message-content')).toHaveTextContent('Are you sure you wish to delete the floor "30"?');
             expect(getByTestId('confirm-delete-alert')).toBeInTheDocument();
             expect(getByTestId('confirm-locations')).toHaveAttribute('disabled');
 
