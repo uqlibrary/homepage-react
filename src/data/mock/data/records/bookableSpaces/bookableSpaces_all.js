@@ -1,6 +1,38 @@
 export default {
     "status": "OK",
     "data": {
+        "known_space_types": [
+            {
+                "space_type_id": 1,
+                "space_type_name": "Communal space",
+                "space_type_description": "Designed for communal activities, these spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement.",
+                "spaces_count": 3
+            },
+            {
+                "space_type_id": 2,
+                "space_type_name": "Training room",
+                "space_type_description": "Designed for training and educational activities, these spaces typically include seating areas, tables, and other amenities to support learning and group activities.",
+                "spaces_count": 1
+            },
+            {
+                "space_type_id": 3,
+                "space_type_name": "Meeting room",
+                "space_type_description": "Designed for meetings and collaborative work, these spaces typically include seating areas, tables, and other amenities to support discussions and group activities.",
+                "spaces_count": 2
+            },
+            {
+                "space_type_id": 4,
+                "space_type_name": "Individual study",
+                "space_type_description": "Designed for individual study, these spaces typically include seating areas, tables, and other amenities to support focused, independent work.",
+                "spaces_count": 2
+            },
+            {
+                "space_type_id": 5,
+                "space_type_name": "Individual study pod",
+                "space_type_description": "Designed for individual study, these spaces typically include local, isolated areas and amenities to support focused, independent work.",
+                "spaces_count": 1
+            }
+        ],
         "locations": [{
             space_id: 123456,
             space_uuid: "f98g_fwas_5g33",

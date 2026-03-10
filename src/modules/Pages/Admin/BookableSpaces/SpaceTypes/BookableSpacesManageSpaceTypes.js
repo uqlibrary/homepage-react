@@ -6,6 +6,11 @@ import { useAccountContext } from 'context';
 import FormControl from '@mui/material/FormControl';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -222,6 +227,7 @@ export const BookableSpacesManageSpaceTypes = ({
         spaceTypeDescription: '',
     });
     const [spaceTypeEdits, setSpaceTypeEdits] = useState({});
+    const [deleteCandidate, setDeleteCandidate] = useState(null);
 
     // the filters we will show on the page
     const [availableFilters, setAvailableFilters2] = useState([
@@ -583,35 +589,39 @@ export const BookableSpacesManageSpaceTypes = ({
         setEditingSpaceTypeId(null);
     };
 
-    function displayListOfBookableSpaceTypes() {
-        const groupedSpaceTypes =
-            bookableSpacesRoomList?.data?.locations?.reduce((acc, space) => {
-                const details = space?.space_type_details || {};
-                const fallbackId = space?.space_type_id;
-                const spaceTypeId = details?.space_type_id ?? fallbackId;
+    const openDeleteConfirmation = row => {
+        setDeleteCandidate(row);
+    };
 
-                // Ignore rows where a usable type id is not present.
-                if (spaceTypeId === undefined || spaceTypeId === null || spaceTypeId === '') {
-                    return acc;
-                }
+    const closeDeleteConfirmation = () => {
+        setDeleteCandidate(null);
+    };
 
-                const key = String(spaceTypeId);
-                if (!acc[key]) {
-                    acc[key] = {
-                        spaceTypeId,
-                        spaceTypeName: details?.space_type_name || 'Unspecified',
-                        spaceTypeDescription: details?.space_type_description || '-',
-                        spacesCount: 0,
-                    };
-                }
+    const confirmDeleteSpaceType = () => {
+        if (!deleteCandidate) {
+            return;
+        }
 
-                acc[key].spacesCount += 1;
-                return acc;
-            }, {}) || {};
-
-        const spaceTypeRows = Object.values(groupedSpaceTypes).sort((a, b) => {
-            return Number(a.spaceTypeId) - Number(b.spaceTypeId);
+        console.log('Delete space type confirmed', {
+            spaceTypeId: deleteCandidate.spaceTypeId,
         });
+        setDeleteCandidate(null);
+    };
+
+    function displayListOfBookableSpaceTypes() {
+        const knownSpaceTypes = bookableSpacesRoomList?.data?.known_space_types || [];
+
+        const spaceTypeRows = knownSpaceTypes
+            .map(spaceType => ({
+                spaceTypeId: spaceType?.space_type_id,
+                spaceTypeName: spaceType?.space_type_name || 'Unspecified',
+                spaceTypeDescription: spaceType?.space_type_description || '-',
+                spacesCount: spaceType?.spaces_count || 0,
+            }))
+            .filter(row => row.spaceTypeId !== undefined && row.spaceTypeId !== null && row.spaceTypeId !== '')
+            .sort((a, b) => {
+                return Number(a.spaceTypeId) - Number(b.spaceTypeId);
+            });
 
         return (
             <StyledStandardCard fullHeight>
@@ -649,6 +659,7 @@ export const BookableSpacesManageSpaceTypes = ({
                             {spaceTypeRows.map(row => {
                                 const effectiveRow = getEffectiveSpaceType(row);
                                 const isEditing = editingSpaceTypeId === String(row.spaceTypeId);
+                                const hasAllocatedSpaces = Number(effectiveRow.spacesCount) > 0;
 
                                 return (
                                     <StyledTableRow key={`space-type-${row.spaceTypeId}`}>
@@ -741,11 +752,8 @@ export const BookableSpacesManageSpaceTypes = ({
                                                     <IconButton
                                                         aria-label={`Delete space type ${effectiveRow.spaceTypeName}`}
                                                         size="small"
-                                                        onClick={() =>
-                                                            console.log('Delete space type clicked', {
-                                                                spaceTypeId: effectiveRow.spaceTypeId,
-                                                            })
-                                                        }
+                                                        disabled={hasAllocatedSpaces}
+                                                        onClick={() => openDeleteConfirmation(effectiveRow)}
                                                     >
                                                         <DeleteOutlineIcon fontSize="small" />
                                                     </IconButton>
@@ -758,6 +766,17 @@ export const BookableSpacesManageSpaceTypes = ({
                         </TableBody>
                     </Table>
                 </StyledTableContainer>
+                <Dialog open={!!deleteCandidate} onClose={closeDeleteConfirmation}>
+                    <DialogContent>
+                        <DialogContentText>Are you sure you wish to delete this space type?</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={closeDeleteConfirmation}>Cancel</Button>
+                        <Button onClick={confirmDeleteSpaceType} color="error" variant="contained">
+                            Delete
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </StyledStandardCard>
         );
     }
