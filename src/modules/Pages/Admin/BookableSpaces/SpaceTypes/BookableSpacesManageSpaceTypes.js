@@ -301,9 +301,17 @@ export const BookableSpacesManageSpaceTypes = ({
             space_type_description: spaceTypeDescription,
         };
 
-        actions.createBookableSpaceType(request);
-
-        closeAddSpaceTypeDialog();
+        actions
+            .createBookableSpaceType(request)
+            .then(() => {
+                actions.loadAllBookableSpacesRooms();
+            })
+            .catch(err => {
+                console.error('Error creating space type', err);
+            })
+            .finally(() => {
+                closeAddSpaceTypeDialog();
+            });
     };
 
     function displayListOfBookableSpaceTypes() {
