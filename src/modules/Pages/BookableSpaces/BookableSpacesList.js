@@ -20,7 +20,7 @@ import { addClass, removeClass, standardText } from 'helpers/general';
 
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
-import { FACILITY_TYPE_NAME_CURRENTLY_OPEN } from './spacesHelpers';
+import { FACILITY_TYPE_CHECKBOX, FILTER_CURRENTLY_OPEN } from './spacesHelpers';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -172,7 +172,6 @@ const StyledMapWrapperDiv = styled('div')(({ theme }) => ({
     },
 }));
 
-const FILTER_CURRENTLY_OPEN = 'open';
 export const BookableSpacesList = ({
     actions,
     bookableSpacesRoomList,
@@ -205,6 +204,8 @@ export const BookableSpacesList = ({
     const isTabletView = isMobileView ? false : _isTabletViewJust;
     const isDesktopView = !isTabletView && !isMobileView;
     // console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
+
+    const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
 
     const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
@@ -254,22 +255,24 @@ export const BookableSpacesList = ({
         console.log('isLocationOpen location', location);
 
         const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
-        if (!!location?.departments) {
-            const newdept = location?.departments?.filter(dept => {
+        if (!!openingHoursLocationData?.departments) {
+            const newdept = openingHoursLocationData?.departments?.filter(dept => {
                 return !!dept?.name ? displayedDepartments?.includes(dept?.name) : false;
             });
-            location.departments = newdept;
+            openingHoursLocationData.departments = newdept;
         } else {
-            location.departments = [];
+            openingHoursLocationData.departments = [];
         }
 
-        if (!location) {
+        if (!openingHoursLocationData) {
             return null;
         }
 
         // data is already stripped down to only the single department of interest
         const department =
-            !!location?.departments && location?.departments.length > 0 ? location?.departments[0] : null;
+            !!openingHoursLocationData?.departments && openingHoursLocationData?.departments.length > 0
+                ? openingHoursLocationData?.departments[0]
+                : null;
         if (!department) {
             return null;
         }
@@ -357,6 +360,11 @@ export const BookableSpacesList = ({
         return true;
     }
 
+    const nextFacilityTypeid = filteredFacilityTypeList => {
+        return (
+            Math.max(...filteredFacilityTypeList?.data?.facility_type_groups?.map(g => g?.facility_type_group_id)) + 1
+        );
+    };
     const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
         // get a list of the filters used in spaces
         const spaceFilters = bookableSpacesRoomList?.data?.locations
@@ -383,18 +391,18 @@ export const BookableSpacesList = ({
 
         // manually add a "Currently Open" filter
         const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
-            facility_type_group_id:
-                Math.max(...filteredFacilityTypeList?.data?.facility_type_groups?.map(g => g?.facility_type_group_id)) +
-                1,
+            facility_type_group_id: nextFacilityTypeid(filteredFacilityTypeList),
             facility_type_group_name: FACILITY_TYPE_NAME_CURRENTLY_OPEN,
             facility_type_group_order: -999,
             facility_type_group_loads_open: 1,
             facility_type_group_type: 'choose-many',
+            filterType: FACILITY_TYPE_CHECKBOX, // is default, for clarity only
             facility_type_children: [
                 {
-                    facility_type_id: 9999,
+                    facility_type_id: 9999, // must be unique!
                     facility_type_name: 'Currently open',
                     facility_special_action: FILTER_CURRENTLY_OPEN,
+                    facility_type: FACILITY_TYPE_CHECKBOX,
                 },
             ],
         };

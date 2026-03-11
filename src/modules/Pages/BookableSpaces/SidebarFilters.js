@@ -254,15 +254,15 @@ export const SidebarFilters = ({
             selectedFacilityTypes?.length === 0
         ) {
             // initialise openness storage
-            const openNessList = [];
+            const expandednessList = [];
             console.log('onload sortedUsedGroups=', sortedUsedGroups());
             sortedUsedGroups()?.map(g => {
-                openNessList?.push({
+                expandednessList?.push({
                     groupId: g?.facility_type_group_id,
                     isGroupExpanded: g?.facility_type_group_loads_open,
                 });
             });
-            setFacilityTypeFilterGroupExpandedness(openNessList);
+            setFacilityTypeFilterGroupExpandedness(expandednessList);
 
             const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
             const newFilters = flatFacilityTypeList?.map(facilityType => {
@@ -309,11 +309,11 @@ export const SidebarFilters = ({
     };
 
     // hide listitems that are checked
-    const showHideActiveFilterListItems = (facilityTypeId, e) => {
+    const showHideActiveFilterListItems = (facilityTypeId, isChecked) => {
         const listItemId = `facility-type-listitem-${facilityTypeId}`;
         const listItemElement = !!listItemId && document.getElementById(listItemId);
         if (!!listItemElement) {
-            !!e?.target?.checked
+            !!isChecked
                 ? addClass(listItemElement, 'checkedCheckbox')
                 : removeClass(listItemElement, 'checkedCheckbox');
         }
@@ -332,20 +332,20 @@ export const SidebarFilters = ({
         !!topOfSidebar && topOfSidebar?.focus();
     };
 
-    const handleFilterRejection = (e, facilityTypeId, facilitySpecialAction) => {
-        showHideActiveFilterListItems(facilityTypeId, e);
+    const handleFilterRejection = (isChecked, facilityTypeId, facilitySpecialAction) => {
+        showHideActiveFilterListItems(facilityTypeId, isChecked);
 
-        setFilters(facilityTypeId, false, !!e?.target?.checked, facilitySpecialAction);
+        setFilters(facilityTypeId, false, isChecked, facilitySpecialAction);
 
         scrollToTopOfContent();
     };
 
-    const handleFilterSelection = (e, facilityType) => {
+    const handleFilterSelection = (isChecked, facilityType) => {
         const facilityTypeId = facilityType?.facility_type_id;
         const facilitySpecialAction = facilityType?.facility_special_action;
-        showHideActiveFilterListItems(facilityTypeId, e);
+        showHideActiveFilterListItems(facilityTypeId, isChecked);
 
-        setFilters(facilityTypeId, !!e?.target?.checked, false, facilitySpecialAction);
+        setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
 
         scrollToTopOfContent();
     };
@@ -360,7 +360,7 @@ export const SidebarFilters = ({
         const button = e?.target?.closest('button');
         const facilityTypeId = parseInt(button?.id?.replace('button-deselect-selected-', ''), 10);
 
-        showHideActiveFilterListItems(facilityTypeId, e);
+        showHideActiveFilterListItems(facilityTypeId, e?.target?.checked);
 
         setFilters(facilityTypeId, false, false);
     };
@@ -372,6 +372,7 @@ export const SidebarFilters = ({
                 selected: false,
                 unselected: false,
                 facility_special_action: ft?.facility_special_action,
+                facility_type: ft?.facility_type,
             };
         });
         console.log('setSelectedFacilityTypes deSelectAll');
@@ -390,7 +391,7 @@ export const SidebarFilters = ({
                     className="selectedFilterTypeLabel"
                 >
                     <Checkbox
-                        onChange={e => handleFilterSelection(e, facilityType)}
+                        onChange={e => handleFilterSelection(e?.target?.checked, facilityType)}
                         data-testid={`filtertype-${facilityType?.facility_type_id}`}
                         id={`filtertype-${facilityType?.facility_type_id}`}
                         className="selectedFilterType"
@@ -407,7 +408,11 @@ export const SidebarFilters = ({
                     data-testid={`reject-filtertype-${facilityType?.facility_type_id}`}
                     className="rejectedFilterType"
                     onChange={e =>
-                        handleFilterRejection(e, facilityType?.facility_type_id, facilityType?.facility_special_action)
+                        handleFilterRejection(
+                            e?.target?.checked,
+                            facilityType?.facility_type_id,
+                            facilityType?.facility_special_action,
+                        )
                     }
                     aria-label={`Exclude Spaces with ${facilityType?.facility_type_name}`}
                     checked={
@@ -432,7 +437,7 @@ export const SidebarFilters = ({
                 {!isGroupExpanded && numberChecked > 0 && (
                     <span
                         className="countSelectedCheckboxes"
-                        data-testid={`facility-type-group-${filterGroupId}-open-count`}
+                        data-testid={`facility-type-group-${filterGroupId}-expanded-count`}
                     >
                         ({numberChecked} of {groupLength})
                     </span>
@@ -452,12 +457,12 @@ export const SidebarFilters = ({
                 >
                     <KeyboardArrowDownIcon
                         style={{ display: !!isGroupExpanded ? 'block' : 'none' }}
-                        className="openGroup"
+                        className="expandedGroup"
                         data-testid={`facility-type-group-${filterGroupId}-open`}
                     />
                     <KeyboardArrowUpIcon
                         style={{ display: !!isGroupExpanded ? 'none' : 'block' }}
-                        className="closeGroup"
+                        className="collapsedGroup"
                         data-testid={`facility-type-group-${filterGroupId}-collapsed`}
                     />
                 </IconButton>

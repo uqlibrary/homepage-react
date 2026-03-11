@@ -810,9 +810,9 @@ test.describe('Spaces', () => {
         const filterGroup = (groupId: string | number, page: Page) => page.getByTestId('filter-group-block-' + groupId);
         const filterGroupButton = (groupId: number, page: Page) => page.getByTestId(`facility-type-group-${groupId}`);
         const collapseIcon = (groupId: number, page: Page) =>
-            page.getByTestId(`facility-type-group-${groupId}`).locator('svg.openGroup');
+            page.getByTestId(`facility-type-group-${groupId}`).locator('svg.expandedGroup');
         const expandIcon = (groupId: number, page: Page) =>
-            page.getByTestId(`facility-type-group-${groupId}`).locator('svg.closeGroup');
+            page.getByTestId(`facility-type-group-${groupId}`).locator('svg.collapsedGroup');
 
         test('sidebar filter type group open-collapse loads correctly', async ({ page }) => {
             await page.goto('spaces');
@@ -1083,7 +1083,7 @@ test.describe('Spaces', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
 
-            const openCountTestId = (groupId: number) => `facility-type-group-${groupId}-open-count`;
+            const openCountTestId = (groupId: number) => `facility-type-group-${groupId}-expanded-count`;
 
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_EDIA))).not.toBeVisible();
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_ROOM_TYPE))).not.toBeVisible();
@@ -1139,7 +1139,7 @@ test.describe('Spaces', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
 
-            const openCountTestId = (groupId: number) => `facility-type-group-${groupId}-open-count`;
+            const openCountTestId = (groupId: number) => `facility-type-group-${groupId}-expanded-count`;
 
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_EDIA))).not.toBeVisible();
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_ROOM_TYPE))).not.toBeVisible();
