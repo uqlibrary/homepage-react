@@ -97,3 +97,23 @@ export const actionReducer = (_, action) => {
             throw `Unknown action '${action.type}'`;
     }
 };
+
+export const useIncludedLocations = (location, sites, floors, rooms) => {
+    const includedSites = useMemo(() => sites?.filter?.(site => !site.site_excluded) ?? [], [sites]);
+    const includedBuildings = useMemo(
+        () =>
+            (includedSites?.find?.(site => site.site_id === location.site)?.buildings ?? []).filter(
+                building => !building.building_excluded && !building.parent_excluded,
+            ),
+        [includedSites, location.site],
+    );
+    const includedFloors = useMemo(() => floors?.filter?.(floor => !floor.floor_excluded) ?? [], [floors]);
+    const includedRooms = useMemo(() => rooms?.filter?.(room => !room.room_excluded) ?? [], [rooms]);
+
+    return {
+        sites: includedSites,
+        buildings: includedBuildings,
+        floors: includedFloors,
+        rooms: includedRooms,
+    };
+};
