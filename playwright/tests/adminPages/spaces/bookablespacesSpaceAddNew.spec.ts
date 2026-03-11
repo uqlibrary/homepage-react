@@ -7,6 +7,20 @@ import { assertErrorPopupAppears } from '@uq/pw/tests/adminPages/spaces/spacesTe
 
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
 
+const chooseAnySpaceType = async (page: Page): Promise<number> => {
+    const spaceTypeSelector = page.getByTestId('space-type');
+    await expect(spaceTypeSelector).toBeVisible();
+    await spaceTypeSelector.click();
+
+    const firstSpaceTypeOption = page.locator('ul[aria-labelledby="add-space-type-label"] li[role="option"]').first();
+    await expect(firstSpaceTypeOption).toBeVisible();
+    const selectedSpaceTypeId = await firstSpaceTypeOption.getAttribute('data-value');
+    await firstSpaceTypeOption.click();
+
+    expect(selectedSpaceTypeId).toBeTruthy();
+    return Number(selectedSpaceTypeId);
+};
+
 const STEP_ABOUT = 'tab-about';
 const STEP_FACILITY_TYPES = 'tab-facility-types';
 const STEP_LOCATION_HOURS = 'tab-location-hours';
@@ -60,7 +74,7 @@ test.describe('Spaces Admin - add new space', () => {
 
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-type-new').locator('input')).toBeVisible();
+        // await expect(page.getByTestId('add-space-type-new').locator('input')).toBeVisible();
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).not.toBeVisible();
 
@@ -112,13 +126,11 @@ test.describe('Spaces Admin - add new space', () => {
         await setTestDataCookie(context, page);
 
         const nameField = page.getByTestId('space-name').locator('input');
-        const typeField = page.getByTestId('space-type').locator('input');
 
         await expect(nameField).toBeVisible();
         await nameField.fill('W12343');
 
-        await expect(typeField).toBeVisible();
-        await typeField.fill('Computer room');
+        const selectedSpaceTypeId = await chooseAnySpaceType(page);
 
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
@@ -144,7 +156,7 @@ test.describe('Spaces Admin - add new space', () => {
             // locationType: 'space',
             space_floor_id: 65,
             space_name: 'W12343',
-            space_type: 'Computer room',
+            space_type_id: Number(selectedSpaceTypeId),
             space_opening_hours_id: 3967,
             space_latitude: PACE_DEFAULT_LATITUDE,
             space_longitude: PACE_DEFAULT_LONGITUDE,
@@ -160,14 +172,11 @@ test.describe('Spaces Admin - add new space', () => {
         const MICROWAVE_FILTER_TYPE = 4;
 
         const nameField = page.getByTestId('space-name').locator('input');
-        const typeField = page.getByTestId('space-type').locator('input');
 
         await expect(nameField).toBeVisible();
         await nameField.fill('W12343');
 
-        await expect(typeField).toBeVisible();
-        await typeField.fill('Computer room');
-        await typeField.press('Tab');
+        const selectedSpaceTypeId = await chooseAnySpaceType(page);
 
         const descriptionField = page.getByRole('textbox', { name: 'Editor editing area: main' });
         await descriptionField.fill('This is a sunny corner in the Law library where you blah blah blah');
@@ -304,7 +313,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_precise: 'Northwest corner',
             space_description: '<p>This is a sunny corner in the Law library where you blah blah blah</p>',
             space_external_book_url: 'https://example.com',
-            space_type: 'Computer room',
+            space_type_id: selectedSpaceTypeId,
             space_opening_hours_id: 3825, // dhesl
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
             facility_types: [ASKUS_FILTER_TYPE, MICROWAVE_FILTER_TYPE],
@@ -317,13 +326,11 @@ test.describe('Spaces Admin - add new space', () => {
 
     test('add spaces page save dialog is accessible', async ({ page }) => {
         const nameField = page.getByTestId('space-name').locator('input');
-        const typeField = page.getByTestId('space-type').locator('input');
 
         await expect(nameField).toBeVisible();
         await nameField.fill('W12343');
 
-        await expect(typeField).toBeVisible();
-        await typeField.fill('Computer room');
+        await chooseAnySpaceType(page);
 
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
@@ -384,11 +391,7 @@ test.describe('Spaces Admin - add new space', () => {
         await page.getByTestId('spaces-form-back-button').click(); // to about
 
         // they enter the type
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-type')
-            .locator('input')
-            .fill('Computer room');
+        await chooseAnySpaceType(page);
 
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
@@ -694,12 +697,10 @@ test.describe('Spaces Admin - errors', () => {
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
 
         const spaceNameField = page.getByTestId('space-name').locator('input');
-        const spaceTypeField = page.getByTestId('add-space-type-new').locator('input');
 
         await expect(spaceNameField).toBeVisible();
         await spaceNameField.fill('W12343');
-        await expect(spaceTypeField).toBeVisible();
-        await spaceTypeField.fill('Computer room');
+        await chooseAnySpaceType(page);
 
         // blur the form
         await page.getByTestId('SpacesAdminPage-systemTitle').click();
