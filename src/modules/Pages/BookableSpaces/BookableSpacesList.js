@@ -251,8 +251,8 @@ export const BookableSpacesList = ({
         const currentDate = getDateStringInTimezone();
 
         // Find matching location by lid (springshare library id)
-        const location = hoursData?.locations?.find(loc => loc?.lid === locationId) || {};
-        console.log('isLocationOpen location', location);
+        const openingHoursLocationData = hoursData?.locations?.find(loc => loc?.lid === locationId) || {};
+        console.log('isLocationOpen openingHoursLocationData', openingHoursLocationData);
 
         const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
         if (!!openingHoursLocationData?.departments) {
