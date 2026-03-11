@@ -78,7 +78,7 @@ const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
 }));
 
-const StyledMobileWrapper = styled('div')(() => ({
+const StyledLayoutWrapper = styled('div')(() => ({
     position: 'relative',
     height: '99vh',
     marginInline: '2rem',
@@ -250,7 +250,8 @@ export const BookableSpacesList = ({
         const currentDate = getDateStringInTimezone();
 
         // Find matching location by lid (springshare library id)
-        const location = hoursData?.locations?.find(loc => loc?.lid === locationId);
+        const location = hoursData?.locations?.find(loc => loc?.lid === locationId) || {};
+        console.log('isLocationOpen location', location);
 
         const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
         if (!!location?.departments) {
@@ -334,21 +335,23 @@ export const BookableSpacesList = ({
 
         // AND between groups
         for (const groupId in selectedFiltersByGroup) {
-            const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
+            if (Object.hasOwn(selectedFiltersByGroup, groupId)) {
+                const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
-            // OR within group
-            const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
-                const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
-                    return !!space?.space_opening_hours_id
-                        ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
-                        : false;
-                } else {
-                    return spaceFacilityTypes?.includes(filterId);
+                // OR within group
+                const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
+                    const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
+                    if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
+                        return !!space?.space_opening_hours_id
+                            ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
+                            : false;
+                    } else {
+                        return spaceFacilityTypes?.includes(filterId);
+                    }
+                });
+                if (!hasMatchInGroup) {
+                    return false;
                 }
-            });
-            if (!hasMatchInGroup) {
-                return false;
             }
         }
         return true;
@@ -560,7 +563,7 @@ export const BookableSpacesList = ({
     return (
         <BookableSpacesListWrapperDiv>
             {(() => {
-                if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading) {
+                if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                     return (
                         <Grid container spacing={3} data-testid="library-spaces">
                             <StyledBookableSpaceGridItem item xs={12} md={9}>
@@ -569,6 +572,7 @@ export const BookableSpacesList = ({
                         </Grid>
                     );
                 } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
+                    // but not weeklyHoursError as we handle bad hours internally
                     return (
                         <StandardPage title="Library spaces">
                             <p data-testid="spaces-error">Something went wrong - please try again later.</p>
@@ -583,41 +587,10 @@ export const BookableSpacesList = ({
                             <p data-testid="no-spaces">No locations found yet - please try again soon.</p>
                         </StandardPage>
                     );
-                    // } else if (!!isDesktopView) {
-                    //     return (
-                    //         <StyledPageWrapperDiv>
-                    //             <StyledMainWrapperDiv
-                    //                 id="spacesContent"
-                    //                 data-testid="library-spaces"
-                    //                 style={{ height: '99vh' }}
-                    //             >
-                    //                 <SidebarFilters
-                    //                     facilityTypeList={facilityTypeList}
-                    //                     facilityTypeListLoading={facilityTypeListLoading}
-                    //                     facilityTypeListError={facilityTypeListError}
-                    //                     selectedFacilityTypes={selectedFacilityTypes}
-                    //                     setSelectedFacilityTypes={setSelectedFacilityTypes}
-                    //                     filteredFacilityTypeList={getFilteredFacilityTypeList(
-                    //                         bookableSpacesRoomList,
-                    //                         facilityTypeList,
-                    //                     )}
-                    //                 />
-                    //                 <SidebarSpacesList
-                    //                     filteredSpaceLocations={filteredSpaceLocations}
-                    //                     weeklyHours={weeklyHours}
-                    //                     weeklyHoursLoading={weeklyHoursLoading}
-                    //                     weeklyHoursError={weeklyHoursError}
-                    //                     StyledStandardCard={StyledStandardCard}
-                    //                     showAllData
-                    //                 />
-                    //                 {showMap()}
-                    //             </StyledMainWrapperDiv>
-                    //         </StyledPageWrapperDiv>
-                    //     );
                 } else {
                     // mobile and tablet
                     return (
-                        <StyledMobileWrapper data-testid="library-spaces">
+                        <StyledLayoutWrapper data-testid="library-spaces">
                             <div>
                                 <StyledFilterOpenButton
                                     id="toggleFilterButton"
@@ -656,8 +629,8 @@ export const BookableSpacesList = ({
                                         <span
                                             style={{
                                                 paddingRight: filteredSpaceLocations?.length > 10 ? '1rem' : '0.5rem',
-                                                // covers 1 and 2 digit - will need more ifs when we have more data: > 100, > 1000
-                                                // but maybe [> 100] ?
+                                                // covers 1 and 2 digit
+                                                // will need more ifs when we have more data: > 100, > 1000
                                             }}
                                         >
                                             <span>
@@ -689,7 +662,7 @@ export const BookableSpacesList = ({
                             <div id="mapWrapper" className="mapHolder">
                                 {showMap()}
                             </div>
-                        </StyledMobileWrapper>
+                        </StyledLayoutWrapper>
                     );
                 }
             })()}
