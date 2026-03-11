@@ -78,17 +78,17 @@ const SpaceLocationMap = ({
     console.log('SpaceLocationMap campusCoordinateList=', campusCoordinateList);
     console.log('SpaceLocationMap initialCampus=', initialCampus);
 
-    const tabList = campusCoordinateList.map((c, index) => {
-        return { id: index, label: c.campus_name, coords: [c.campus_latitude, c.campus_longitude] };
+    const tabList = campusCoordinateList?.map((c, index) => {
+        return { id: index, label: c?.campus_name, coords: [c?.campus_latitude, c?.campus_longitude] };
     });
 
     const initialisePosition = () => {
-        if (!!formValues.space_latitude && !!formValues.space_longitude) {
-            return [formValues.space_latitude, formValues.space_longitude];
+        if (!!formValues?.space_latitude && !!formValues?.space_longitude) {
+            return [formValues?.space_latitude, formValues?.space_longitude];
         }
 
         // show some point so the map works
-        return locale.locations.greatCourtCoordinates;
+        return locale?.locations.greatCourtCoordinates;
     };
     const [position, setPositionLocal] = useState(initialisePosition());
     const setPosition = p => {
@@ -96,8 +96,8 @@ const SpaceLocationMap = ({
 
         setFormValues({
             ...formValues,
-            ['space_latitude']: p.lat,
-            ['space_longitude']: p.lng,
+            ['space_latitude']: p?.lat,
+            ['space_longitude']: p?.lng,
         });
     };
 
@@ -110,8 +110,8 @@ const SpaceLocationMap = ({
                     const marker = markerRef.current;
                     if (marker !== null) {
                         console.log('marker', marker);
-                        console.log('marker.getLatLng()', marker.getLatLng());
-                        setPosition(marker.getLatLng());
+                        console.log('marker.getLatLng()', marker?.getLatLng());
+                        setPosition(marker?.getLatLng());
                     }
                 },
             }),
@@ -136,10 +136,10 @@ const SpaceLocationMap = ({
     const handleMapCampusChange = (event, newMapCampusId) => {
         setMapCampusPanel(newMapCampusId);
 
-        map.setView(tabList[newMapCampusId].coords, 17);
+        map?.setView(tabList[newMapCampusId]?.coords, 17);
 
-        const newMarkerCoords = tabList.at(newMapCampusId).coords;
-        const marker = markerRef.current;
+        const newMarkerCoords = tabList?.at(newMapCampusId)?.coords;
+        const marker = markerRef?.current;
         if (marker !== null) {
             setPosition(newMarkerCoords);
             const newValues = {
@@ -163,14 +163,14 @@ const SpaceLocationMap = ({
                         aria-label="Campus maps"
                         data-testid="spaces-campus-maps-tabs"
                     >
-                        {campusCoordinateList.map((tab, index) => {
+                        {campusCoordinateList?.map((tab, index) => {
                             return (
                                 <Tab
-                                    key={`${tab.campus_id}-map`}
-                                    label={`${tab.campus_name}`}
+                                    key={`${tab?.campus_id}-map`}
+                                    label={`${tab?.campus_name}`}
                                     id={`campus-tab-${index}`}
                                     aria-controls={`campus-tabpanel-${index}`}
-                                    data-testid={`tab-${slugifyName(tab.campus_name)}`}
+                                    data-testid={`tab-${slugifyName(tab?.campus_name)}`}
                                     style={{ width: '20%' }}
                                 />
                             );
@@ -185,13 +185,13 @@ const SpaceLocationMap = ({
                     maxNativeZoom={19}
                     maxZoom={25}
                 />
-                <DraggableMarker position={locale.locations.greatCourtCoordinates}>
+                <DraggableMarker position={locale?.locations.greatCourtCoordinates}>
                     <Popup>Space position</Popup>
                 </DraggableMarker>
                 {bookableSpacesRoomList?.data?.locations?.length > 0 &&
-                    bookableSpacesRoomList.data.locations.map((m, index) => {
+                    bookableSpacesRoomList?.data?.locations?.map((m, index) => {
                         // skip the current space, and any entries without a lat-long
-                        if (formValues.space_id === m.space_id || !m.space_latitude || !m.space_longitude) {
+                        if (formValues?.space_id === m?.space_id || !m?.space_latitude || !m?.space_longitude) {
                             return null;
                         }
 
@@ -199,11 +199,11 @@ const SpaceLocationMap = ({
                         return (
                             <Marker
                                 key={`mappoint-${index}`}
-                                position={[m.space_latitude, m.space_longitude]}
+                                position={[m?.space_latitude, m?.space_longitude]}
                                 icon={otherSpacesIcon}
                             >
                                 <Popup>
-                                    {m.space_name} - {m.space_type}
+                                    {m?.space_name} - {m?.space_type}
                                 </Popup>
                             </Marker>
                         );

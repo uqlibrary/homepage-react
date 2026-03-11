@@ -52,7 +52,7 @@ export const AdminButton = ({ currentPageSlug }) => {
     const open = Boolean(anchorEl);
 
     const openMenu = event => {
-        setAnchorEl(event.currentTarget);
+        setAnchorEl(event?.currentTarget);
     };
 
     const closeMenu = () => {

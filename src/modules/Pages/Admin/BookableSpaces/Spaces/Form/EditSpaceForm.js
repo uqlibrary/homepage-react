@@ -244,7 +244,7 @@ export const EditSpaceForm = ({
         bookableSpacesRoomUpdateResult,
     );
     console.log('TOP EditSpaceForm currentCampusList', currentCampusList);
-    console.log('TOP EditSpaceForm formValues', Object.keys(formValues).length, formValues);
+    console.log('TOP EditSpaceForm formValues', Object.keys(formValues)?.length, formValues);
     console.log(
         'TOP EditSpaceForm bookableSpacesRoomList',
         bookableSpacesRoomListLoading,
@@ -341,7 +341,7 @@ export const EditSpaceForm = ({
 
     const validatePanelAbout = (currentValues, errorMessages = []) => {
         if (!currentValues?.space_name) {
-            errorMessages.push({ field: 'space_name', message: 'A Name is required.' });
+            errorMessages?.push({ field: 'space_name', message: 'A Name is required.' });
         }
         if (!currentValues?.space_type_id) {
             errorMessages.push({ field: 'space_type_id', message: 'A Type is required.' });
@@ -357,7 +357,7 @@ export const EditSpaceForm = ({
             });
         }
         if (!!hasCapacityLimit && !currentValues?.space_capacity) {
-            errorMessages.push({
+            errorMessages?.push({
                 field: 'space_capacity',
                 message: 'Provide the capacity of the Space, or uncheck the capacity checkbox.',
             });
@@ -368,13 +368,13 @@ export const EditSpaceForm = ({
     function validatePanelLocation(currentValues, errorMessages = []) {
         console.log('validatePanelLocation currentValues=', currentValues);
         if (!currentValues?.space_floor_id && !currentValues?.floor_id) {
-            errorMessages.push({ field: 'space_floor_id', message: 'A location is required.' });
+            errorMessages?.push({ field: 'space_floor_id', message: 'A location is required.' });
         }
         if (!currentValues?.space_latitude || !currentValues?.space_longitude) {
-            errorMessages.push({ field: 'space_latitude', message: 'Please locate the Space on the map' });
+            errorMessages?.push({ field: 'space_latitude', message: 'Please locate the Space on the map' });
         }
         if (!!currentValues?.space_services_page && !isValidUrl(currentValues?.space_services_page)) {
-            errorMessages.push({
+            errorMessages?.push({
                 field: 'space_services_page',
                 message: 'Please supply a valid "About" page, or clear the field.',
             });
@@ -385,13 +385,13 @@ export const EditSpaceForm = ({
     function validatePanelImagery(currentValues, errorMessages = []) {
         if (!!currentValues?.space_photo_url && !currentValues?.space_photo_description) {
             // if a photo is supplied then it must have an accessible description; the photo itself is not required
-            errorMessages.push({
+            errorMessages?.push({
                 field: 'space_photo_description',
                 message: 'When a photo is supplied, a description must be supplied.',
             });
         }
         if (!!currentValues?.space_photo_url && !isValidUrl(currentValues?.space_photo_url)) {
-            errorMessages.push({ field: 'space_photo_url', message: 'The photo is not valid.' });
+            errorMessages?.push({ field: 'space_photo_url', message: 'The photo is not valid.' });
         }
         return errorMessages;
     }
@@ -401,35 +401,35 @@ export const EditSpaceForm = ({
         const messages = [];
 
         validatePanelAbout(valuesToSend, messages)?.forEach(m => {
-            const findIndex = messages.findIndex(e => e.field === m.field);
+            const findIndex = messages?.findIndex(e => e?.field === m?.field);
             if (findIndex !== -1) {
-                messages.splice(findIndex, 1);
+                messages?.splice(findIndex, 1);
             }
-            messages.push(m);
+            messages?.push(m);
         });
 
         validatePanelFacilityTypes(valuesToSend, messages)?.forEach(m => {
-            const findIndex = messages.findIndex(e => e.field === m.field);
+            const findIndex = messages?.findIndex(e => e?.field === m?.field);
             if (findIndex !== -1) {
-                messages.splice(findIndex, 1);
+                messages?.splice(findIndex, 1);
             }
-            messages.push(m);
+            messages?.push(m);
         });
 
         validatePanelLocation(valuesToSend, messages)?.forEach(m => {
-            const findIndex = messages.findIndex(e => e.field === m.field);
+            const findIndex = messages?.findIndex(e => e?.field === m?.field);
             if (findIndex !== -1) {
-                messages.splice(findIndex, 1);
+                messages?.splice(findIndex, 1);
             }
-            messages.push(m);
+            messages?.push(m);
         });
 
         validatePanelImagery(valuesToSend, messages)?.forEach(m => {
-            const findIndex = messages.findIndex(e => e.field === m.field);
+            const findIndex = messages?.findIndex(e => e?.field === m?.field);
             if (findIndex !== -1) {
-                messages.splice(findIndex, 1);
+                messages?.splice(findIndex, 1);
             }
-            messages.push(m);
+            messages?.push(m);
         });
 
         console.log('formValid errorMessages=', messages);
@@ -817,14 +817,14 @@ export const EditSpaceForm = ({
             (!!currentCampusList &&
                 currentCampusList.length > 0 &&
                 currentCampusList?.find(c => {
-                    const match = c.campus_id === formValues?.campus_id;
+                    const match = c?.campus_id === formValues?.campus_id;
                     return match;
                 })) ||
             {};
         const currentCampusLibraries = validLibraryList(currentCampus?.libraries || []);
         const currentLibrary =
             currentCampusLibraries?.find(l => {
-                const match = l.library_id === formValues.library_id;
+                const match = l?.library_id === formValues?.library_id;
                 return match;
             }) || {};
         const currentLibraryFloors = currentLibrary?.floors || [];
@@ -838,10 +838,9 @@ export const EditSpaceForm = ({
         updatedLocation.library_id = currentLibrary?.library_id;
 
         updatedLocation.currentLibraryFloors = currentLibrary?.floors;
-        updatedLocation.currentFloor = currentLibrary?.floors?.find(f => f.floor_id === formValues?.floor_id);
+        updatedLocation.currentFloor = currentLibrary?.floors?.find(f => f?.floor_id === formValues?.floor_id);
         updatedLocation.floor_id = formValues?.floor_id;
         setLocation({
-            // ...location,
             ...updatedLocation,
         });
     }, [currentCampusList, formValues]);
@@ -1015,7 +1014,7 @@ export const EditSpaceForm = ({
                             </FormControl>
                             <StyledAttentionMessageDiv>
                                 <WarningAmberIcon
-                                    style={{ color: theme.palette.error.light }}
+                                    style={{ color: theme?.palette.error.light }}
                                     data-testid="spaces-check-reminder-icon"
                                 />
                                 Also select the "Bookable" checkbox below!!
@@ -1025,7 +1024,7 @@ export const EditSpaceForm = ({
                     {!isBookable && (
                         <StyledAttentionMessageDiv>
                             <InfoOutlined
-                                style={{ color: theme.palette.accent.main }}
+                                style={{ color: theme?.palette.accent.main }}
                                 data-testid="spaces-skip-reminder-icon"
                             />
                             Not bookable? Ensure no "Bookable" checkboxes are checked below!
@@ -1083,7 +1082,7 @@ export const EditSpaceForm = ({
                     {!hasCapacityLimit && (
                         <StyledAttentionMessageDiv>
                             <InfoOutlined
-                                style={{ color: theme.palette.accent.main }}
+                                style={{ color: theme?.palette.accent.main }}
                                 data-testid="capacity-skip-reminder-icon"
                             />
                             No capacity limit? Ensure no "Capacity" checkboxes are checked below!
@@ -1297,7 +1296,7 @@ export const EditSpaceForm = ({
                                 springshareList?.map((s, index) => {
                                     return (
                                         <MenuItem value={s?.id} key={`select-floor-${index}`}>
-                                            {s.display_name}
+                                            {s?.display_name}
                                         </MenuItem>
                                     );
                                 })}
@@ -1338,7 +1337,7 @@ export const EditSpaceForm = ({
                         <ImageUploadDropzone
                             onAddFile={handleSuppliedFiles}
                             onClearFile={clearSuppliedFile}
-                            currentImage={formValues.space_photo_url}
+                            currentImage={formValues?.space_photo_url}
                         />
                         <StyledErrorMessageTypography component={'div'}>
                             {reportErrorMessage('space_photo_url')}
@@ -1428,7 +1427,7 @@ export const EditSpaceForm = ({
                 onClose={hideConfirmation}
                 onAction={() => returnToDashboard()}
                 //
-                hideCancelButton={!confirmationLocale.success.cancelButtonLabel}
+                hideCancelButton={!confirmationLocale?.success?.cancelButtonLabel}
                 onCancelAction={() => {
                     mode === 'edit' ? reEditRecord() : clearForm();
                 }}
@@ -1439,8 +1438,8 @@ export const EditSpaceForm = ({
                 //
                 locale={
                     !!bookableSpacesRoomAddError || !!bookableSpacesRoomUpdateError
-                        ? confirmationLocale.error
-                        : confirmationLocale.success
+                        ? confirmationLocale?.error
+                        : confirmationLocale?.success
                 }
                 cancelButtonColor="accent"
             />
@@ -1457,7 +1456,7 @@ export const EditSpaceForm = ({
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <Stepper activeStep={activeStep}>
-                                        {tabLabels.map((tabName, index) => {
+                                        {tabLabels?.map((tabName, index) => {
                                             const stepProps = { completed: null };
                                             const labelProps = {
                                                 optional: null,
@@ -1504,7 +1503,7 @@ export const EditSpaceForm = ({
                                         </StyledSecondaryButton>
                                         <Box sx={{ flex: '1 1 auto' }} />
                                         {activeStep === lastTabId ? (
-                                            saveButton(errorMessages.length > 0)
+                                            saveButton(errorMessages?.length > 0)
                                         ) : (
                                             <StyledPrimaryButton
                                                 onClick={handleNext}
@@ -1530,7 +1529,7 @@ export const EditSpaceForm = ({
                             <Box sx={{ width: '100%' }}>
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                     <StyledTabs value={panelId} onChange={handleTabChange} aria-label="Space fields">
-                                        {tabLabels.map((tabName, index) => {
+                                        {tabLabels?.map((tabName, index) => {
                                             return (
                                                 <Tab
                                                     key={`${tabName}-edit`}

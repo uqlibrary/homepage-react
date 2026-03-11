@@ -16,10 +16,11 @@ import { breadcrumbs } from 'config/routes';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { standardText } from 'helpers/general';
+import { addClass, removeClass, standardText } from 'helpers/general';
 
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
+import { FACILITY_TYPE_NAME_CURRENTLY_OPEN } from './spacesHelpers';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -77,37 +78,18 @@ const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
 }));
 
-// const StyledMainWrapperDiv = styled('div')(() => ({
-//     // position: 'relative',
-//     marginTop: '1px',
-//     display: 'flex',
-//     marginBottom: '-50px', // bring footer up
-//     marginInline: '2rem',
-// }));
-// const StyledPageWrapperDiv = styled('div')(() => ({
-//     position: 'relative',
-// }));
-const StyledMobileWrapper = styled('div')(({ theme }) => ({
+const StyledLayoutWrapper = styled('div')(() => ({
     position: 'relative',
     height: '99vh',
     marginInline: '2rem',
-    '& .narrowFilterList': {
-        //
-    },
-    '& .popupSpacesList': {
-        right: 0,
-        height: 'calc(100% - 70px)',
-    },
-    '& .popupFilterList': {
-        right: 0,
-        height: 'calc(100% - 32px)',
-    },
     '& .popupSpacesList, .popupFilterList': {
         position: 'absolute',
         top: 0,
+        right: 0,
+        height: 'calc(100% - 56px)',
         width: '20rem',
         maxWidth: '50%',
-        zIndex: 2000,
+        zIndex: 997,
         paddingLeft: '0.5rem',
         marginTop: 0,
     },
@@ -121,7 +103,7 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
     position: 'absolute',
     top: '0.25rem',
     right: '1rem',
-    zIndex: 2001,
+    zIndex: 998,
     display: 'flex',
     alignItems: 'center',
     columnGap: '0.25rem',
@@ -131,8 +113,13 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
         fontSize: '1rem',
     },
     backgroundColor: '#fff',
+    textDecoration: 'underline',
     '&:hover, :focus': {
         backgroundColor: '#fff',
+        '& > span:first-of-type > span': {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+        },
     },
 
     backgroundImage: schoolBuildingBackgroundimage,
@@ -145,16 +132,21 @@ const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
 const StyledFilterOpenButton = styled(Button)(({ theme }) => ({
     position: 'absolute',
     top: '0.25rem',
-    left: '1rem',
-    zIndex: 2001,
+    left: '11rem', // have the button sit on the right of the filter sidebar, so the labels slide inside it
+    zIndex: 998,
     backgroundColor: '#fff',
     display: 'flex',
     alignItems: 'center',
     columnGap: '0.25rem',
     paddingLeft: 0,
     marginLeft: '-0.5rem',
+    textDecoration: 'underline',
     '&:hover, :focus': {
         backgroundColor: '#fff',
+        '& > span:first-of-type > span': {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+        },
     },
     '& span': {
         textTransform: 'capitalize',
@@ -180,6 +172,7 @@ const StyledMapWrapperDiv = styled('div')(({ theme }) => ({
     },
 }));
 
+const FILTER_CURRENTLY_OPEN = 'open';
 export const BookableSpacesList = ({
     actions,
     bookableSpacesRoomList,
@@ -220,8 +213,12 @@ export const BookableSpacesList = ({
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
-        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
-        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
+        !!siteHeader &&
+            !!breadcrumbs?.bookablespaces?.title &&
+            siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
+        !!siteHeader &&
+            !!breadcrumbs?.bookablespaces?.title &&
+            siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
         if (
             bookableSpacesRoomListError === null &&
             bookableSpacesRoomListLoading === null &&
@@ -238,58 +235,123 @@ export const BookableSpacesList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // React.useEffect(() => {
-    //     if (bookableSpacesRoomListError === false && bookableSpacesRoomListLoading === false) {
-    //         // page is loaded
-    //         const spacesContent = document.getElementById('spacesContent');
-    //         !!spacesContent && spacesContent.scrollIntoView({ behavior: 'smooth' });
-    //     }
-    // }, [bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
+    function isLocationOpen(locationId, hoursData) {
+        function getDateStringInTimezone(offsetHours = 10) {
+            const date = new Date();
+            const offsetMs = offsetHours * 60 * 60 * 1000;
+            const localTime = new Date(date.getTime() + offsetMs);
 
-    function spaceAppears(spaceFacilityTypes, facilityTypeToGroup, selectedFacilityTypes) {
+            const year = localTime.getUTCFullYear();
+            const month = String(localTime.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(localTime.getUTCDate()).padStart(2, '0');
+
+            return `${year}-${month}-${day}`;
+        }
+        const currentDate = getDateStringInTimezone();
+
+        // Find matching location by lid (springshare library id)
+        const location = hoursData?.locations?.find(loc => loc?.lid === locationId) || {};
+        console.log('isLocationOpen location', location);
+
+        const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
+        if (!!location?.departments) {
+            const newdept = location?.departments?.filter(dept => {
+                return !!dept?.name ? displayedDepartments?.includes(dept?.name) : false;
+            });
+            location.departments = newdept;
+        } else {
+            location.departments = [];
+        }
+
+        if (!location) {
+            return null;
+        }
+
+        // data is already stripped down to only the single department of interest
+        const department =
+            !!location?.departments && location?.departments.length > 0 ? location?.departments[0] : null;
+        if (!department) {
+            return null;
+        }
+
+        for (const week of department?.weeks) {
+            for (const [dayName, dayData] of Object.entries(week)) {
+                if (dayData?.date === currentDate) {
+                    return dayData?.times?.currently_open ?? null;
+                }
+            }
+        }
+        return null; // Date not found in data
+    }
+
+    function showSpace(space, facilityTypeToGroup, selectedFacilityTypes) {
+        const spaceFacilityTypes = space?.facility_types?.map(item => item?.facility_type_id);
+
         // Create a map of facility_type_id to group_id for quick lookup
         // Group selected filters by their facility type group
         const selectedFiltersByGroup = {};
         const rejectedFilters = [];
 
         selectedFacilityTypes?.forEach(filter => {
-            if (filter.selected) {
-                const groupId = facilityTypeToGroup[filter.facility_type_id];
+            if (filter?.selected) {
+                const groupId = facilityTypeToGroup[filter?.facility_type_id];
                 if (groupId) {
                     if (!selectedFiltersByGroup[groupId]) {
                         selectedFiltersByGroup[groupId] = [];
                     }
-                    selectedFiltersByGroup[groupId].push(filter.facility_type_id);
+                    selectedFiltersByGroup[groupId].push(filter?.facility_type_id);
                 }
             }
 
             // Collect rejected facility types
-            if (filter.unselected) {
-                rejectedFilters.push(filter.facility_type_id);
+            if (filter?.unselected) {
+                rejectedFilters?.push(filter?.facility_type_id);
             }
         });
 
         // check if space should be excluded due to rejected facility types
-        if (rejectedFilters.length > 0) {
-            const hasRejectedFacility = rejectedFilters.some(rejectedId => spaceFacilityTypes?.includes(rejectedId));
+        console.log('selectedFacilityTypes=', selectedFacilityTypes);
+        console.log('rejectedFilters=', rejectedFilters);
+        if (rejectedFilters?.length > 0) {
+            const hasRejectedFacility = rejectedFilters?.some(rejectedId => {
+                const filter = selectedFacilityTypes?.find(ft => ft?.facility_type_id === rejectedId);
+                if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
+                    return !!space?.space_opening_hours_id
+                        ? !isLocationOpen(space?.space_opening_hours_id, weeklyHours)
+                        : false;
+                }
+                return spaceFacilityTypes?.includes(rejectedId);
+            });
+            console.log('rejectedFilters=', hasRejectedFacility, rejectedFilters);
             if (hasRejectedFacility) {
                 return false;
             }
         }
 
         // If no inclusion filters are selected, show all spaces (that haven't been rejected)
-        if (Object.keys(selectedFiltersByGroup).length === 0) {
+        if (Object.keys(selectedFiltersByGroup)?.length === 0) {
             return true;
         }
 
         // AND between groups
         for (const groupId in selectedFiltersByGroup) {
-            const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
+            if (Object.hasOwn(selectedFiltersByGroup, groupId)) {
+                const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
-            // OR within group
-            const hasMatchInGroup = selectedFiltersInGroup.some(filterId => spaceFacilityTypes?.includes(filterId));
-            if (!hasMatchInGroup) {
-                return false;
+                // OR within group
+                const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
+                    const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
+                    if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
+                        return !!space?.space_opening_hours_id
+                            ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
+                            : false;
+                    } else {
+                        return spaceFacilityTypes?.includes(filterId);
+                    }
+                });
+                if (!hasMatchInGroup) {
+                    return false;
+                }
             }
         }
         return true;
@@ -298,26 +360,47 @@ export const BookableSpacesList = ({
     const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
         // get a list of the filters used in spaces
         const spaceFilters = bookableSpacesRoomList?.data?.locations
-            .flatMap(location => location.facility_types || [])
-            .map(facilityType => facilityType.facility_type_id);
+            ?.flatMap(location => location?.facility_types || [])
+            ?.map(facilityType => facilityType?.facility_type_id);
         const spaceFiltersSet = new Set(spaceFilters);
 
         // filter facility types so we only show the checkboxes where there is an associated space
-        // (remove the group completely if it has no shown checkboxes)
-        return {
+        // (this will remove the group completely if it has no shown checkboxes)
+        const filteredFacilityTypeList = {
             ...facilityTypeList,
             data: {
                 ...facilityTypeList?.data,
                 facility_type_groups: facilityTypeList?.data?.facility_type_groups
-                    .map(group => ({
+                    ?.map(group => ({
                         ...group,
-                        facility_type_children: (group.facility_type_children || []).filter(child =>
-                            spaceFiltersSet.has(child.facility_type_id),
+                        facility_type_children: (group?.facility_type_children || [])?.filter(child =>
+                            spaceFiltersSet?.has(child?.facility_type_id),
                         ),
                     }))
-                    .filter(group => group.facility_type_children.length > 0),
+                    ?.filter(group => group?.facility_type_children?.length > 0),
             },
         };
+
+        // manually add a "Currently Open" filter
+        const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
+            facility_type_group_id:
+                Math.max(...filteredFacilityTypeList?.data?.facility_type_groups?.map(g => g?.facility_type_group_id)) +
+                1,
+            facility_type_group_name: FACILITY_TYPE_NAME_CURRENTLY_OPEN,
+            facility_type_group_order: -999,
+            facility_type_group_loads_open: 1,
+            facility_type_group_type: 'choose-many',
+            facility_type_children: [
+                {
+                    facility_type_id: 9999,
+                    facility_type_name: 'Currently open',
+                    facility_special_action: FILTER_CURRENTLY_OPEN,
+                },
+            ],
+        };
+        !!filterOpenFacilityType && filteredFacilityTypeList?.data?.facility_type_groups?.push(filterOpenFacilityType);
+
+        return filteredFacilityTypeList;
     };
     const toggleFilterPopupVisibility = e => {
         setShowFilterSelectorPopup(!showFilterSelectorPopup);
@@ -347,87 +430,60 @@ export const BookableSpacesList = ({
         </svg>
     );
 
-    // const searchSliderIcon = (
-    //     // https://www.streamlinehq.com/icons/ultimate-regular-free?search=slider&icon=ico_2WutdSYuSihh0yLC
-    //     <svg
-    //         xmlns="http://www.w3.org/2000/svg"
-    //         fill="none"
-    //         viewBox="0 0 24 24"
-    //         height="24"
-    //         width="24"
-    //         aria-hidden="true"
-    //         focusable="false"
-    //     >
-    //         <desc>Show-Hide the list of Spaces</desc>
-    //         <g
-    //             transform="rotate(-90 12 12)"
-    //             stroke="#51247a"
-    //             strokeLinecap="round"
-    //             strokeLinejoin="round"
-    //             strokeMiterlimit="10"
-    //             strokeWidth="1.5"
-    //         >
-    //             <path d="M4.25 9.14999c0 0.6 -0.4 1.00001 -1 1.00001h-1.5c-0.6 0 -1 -0.40001 -1 -1.00001v-3c0 -0.6 0.4 -1 1 -1h1.5c0.6 0 1 0.4 1 1v3Z" />
-    //             <path d="M2.5 5.14999V0.75" />
-    //             <path d="M2.5 10.15v3" />
-    //             <path d="M9.75 18.25c0 0.6 -0.4 1 -1 1h-1.5c-0.6 0 -1 -0.4 -1 -1v-4.5c0 -0.6 0.4 -1 1 -1h1.5c0.6 0 1 0.4 1 1v4.5Z" />
-    //             <path d="M8 12.75v-3" />
-    //             <path d="M8 19.25v4" />
-    //             <path d="M16.55 16.85c0 0.6 -0.4 1 -1 1h-1.5c-0.6 0 -1 -0.4 -1 -1v-4c0 -0.6 0.4 -1 1 -1h1.5c0.6 0 1 0.4 1 1v4Z" />
-    //             <path d="M14.8 17.85v4" />
-    //             <path d="m17.25 6.85001 3 -3.60001 3 3.60001" />
-    //             <path d="M20.25 3.25v15.6" />
-    //         </g>
-    //     </svg>
-    // );
-
     const facilityTypeToGroup = {};
     getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList)?.data?.facility_type_groups?.forEach(
         group => {
-            group.facility_type_children.forEach(child => {
-                facilityTypeToGroup[child.facility_type_id] = group.facility_type_group_id;
+            group?.facility_type_children?.forEach(child => {
+                facilityTypeToGroup[child?.facility_type_id] = group?.facility_type_group_id;
             });
         },
     );
-    const filteredSpaceLocations = bookableSpacesRoomList?.data?.locations?.filter(s => {
-        const spaceFacilityTypes = s?.facility_types?.map(item => item.facility_type_id);
-        return spaceAppears(spaceFacilityTypes, facilityTypeToGroup, selectedFacilityTypes);
+    const filteredSpaceLocations = bookableSpacesRoomList?.data?.locations?.filter(space => {
+        return showSpace(space, facilityTypeToGroup, selectedFacilityTypes);
     });
+    const visibleSpacesCountBadge = () => {
+        return filteredSpaceLocations?.length > 0 &&
+            filteredSpaceLocations?.length < bookableSpacesRoomList?.data?.locations?.length ? (
+            <Badge
+                badgeContent={filteredSpaceLocations?.length}
+                max={bookableSpacesRoomList?.data?.locations?.length}
+                color="primary"
+                style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
+                data-testid="space-space-count"
+            />
+        ) : null;
+    };
 
     const handleMarkerClick = (e, space) => {
         // Stop the click from opening the popup
-        e.originalEvent.stopPropagation();
+        e?.originalEvent?.stopPropagation();
 
         // scroll the spaces sidebar to the relevant space
-        const spaceElement = document.getElementById(`space-${space.space_id}`);
+        const spaceElement = document.getElementById(`space-${space?.space_id}`);
         !!spaceElement &&
-            typeof spaceElement.scrollIntoView === 'function' &&
-            spaceElement.scrollIntoView({
+            typeof spaceElement?.scrollIntoView === 'function' &&
+            spaceElement?.scrollIntoView({
                 behavior: 'smooth',
             });
 
         // highlight it
-        const spacePanel = document.querySelector(`#space-${space.space_id} > div:first-of-type`);
-        !!spacePanel && !spacePanel.classList.contains('highlightPanel') && spacePanel.classList.add('highlightPanel');
-        !!spacePanel &&
-            !spacePanel.classList.contains('mobileHighlightPanel') &&
-            spacePanel.classList.add('mobileHighlightPanel');
+        const spacePanel = document.querySelector(`#space-${space?.space_id} > div:first-of-type`);
+        addClass(spacePanel, 'highlightPanel');
+        addClass(spacePanel, 'mobileHighlightPanel');
 
         setTimeout(() => {
-            !!spacePanel &&
-                !!spacePanel.classList.contains('highlightPanel') &&
-                spacePanel.classList.remove('highlightPanel');
+            removeClass(spacePanel, 'highlightPanel');
         }, 3000);
 
-        !!spaceElement && spaceElement.focus();
+        !!spaceElement && spaceElement?.focus();
 
         // if we opened one earlier, close it now (so they don't have masses of them open)
         if (!!previousToggledSpaceButton) {
-            previousToggledSpaceButton.click();
+            previousToggledSpaceButton?.click();
         }
 
         // expand it, if not already open
-        const toggleSpaceButton = document.getElementById(`toggle-panel-button-space-${space.space_id}`);
+        const toggleSpaceButton = document.getElementById(`toggle-panel-button-space-${space?.space_id}`);
         if (
             !!toggleSpaceButton &&
             toggleSpaceButton.hasAttribute('aria-expanded') &&
@@ -437,11 +493,12 @@ export const BookableSpacesList = ({
             setPreviousToggledSpaceButton(toggleSpaceButton);
         }
     };
+    console.log('BookableSpacesList filteredSpaceLocations=', filteredSpaceLocations);
     const showMap = () => {
         return (
             <StyledMapWrapperDiv>
                 <MapContainer
-                    center={[uqStLuciaDefaultLocation.latitude, uqStLuciaDefaultLocation.longitude]}
+                    center={[uqStLuciaDefaultLocation?.latitude, uqStLuciaDefaultLocation?.longitude]}
                     zoom={18}
                     style={{ width: '100%', height: '100%' }}
                 >
@@ -453,7 +510,7 @@ export const BookableSpacesList = ({
                     />
                     {filteredSpaceLocations.length > 0 &&
                         filteredSpaceLocations
-                            ?.filter(m => !!m.space_latitude && !!m.space_longitude)
+                            ?.filter(m => !!m?.space_latitude && !!m?.space_longitude)
                             ?.map(mapPoint => {
                                 // show the filtered Spaces on the map
                                 // console.log(
@@ -468,7 +525,7 @@ export const BookableSpacesList = ({
                                     <Marker
                                         key={locationKey}
                                         id={locationKey}
-                                        position={[mapPoint.space_latitude, mapPoint.space_longitude]}
+                                        position={[mapPoint?.space_latitude, mapPoint?.space_longitude]}
                                         eventHandlers={{
                                             click(e) {
                                                 handleMarkerClick(e, mapPoint); // mapPoint is captured via closure
@@ -482,22 +539,31 @@ export const BookableSpacesList = ({
             </StyledMapWrapperDiv>
         );
     };
-    const activeFilterCount = selectedFacilityTypes.filter(ft => !!ft.selected || !!ft.unselected).length;
-    const countIcon = () => {
+    const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
+    const activeFilterCountBadge = () => {
         return activeFilterCount === 0 ? null : (
             <Badge
                 badgeContent={activeFilterCount}
-                max={selectedFacilityTypes.length}
+                max={selectedFacilityTypes?.length}
                 color="primary"
                 style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
                 data-testid="space-filter-count"
             />
         );
     };
+    function neededPaddingRight() {
+        if (activeFilterCount === 0) {
+            return 0;
+        }
+        if (activeFilterCount > 9) {
+            return '1rem';
+        }
+        return '0.75rem';
+    }
     return (
         <BookableSpacesListWrapperDiv>
             {(() => {
-                if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading) {
+                if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                     return (
                         <Grid container spacing={3} data-testid="library-spaces">
                             <StyledBookableSpaceGridItem item xs={12} md={9}>
@@ -506,6 +572,7 @@ export const BookableSpacesList = ({
                         </Grid>
                     );
                 } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
+                    // but not weeklyHoursError as we handle bad hours internally
                     return (
                         <StandardPage title="Library spaces">
                             <p data-testid="spaces-error">Something went wrong - please try again later.</p>
@@ -520,57 +587,23 @@ export const BookableSpacesList = ({
                             <p data-testid="no-spaces">No locations found yet - please try again soon.</p>
                         </StandardPage>
                     );
-                    // } else if (!!isDesktopView) {
-                    //     return (
-                    //         <StyledPageWrapperDiv>
-                    //             <StyledMainWrapperDiv
-                    //                 id="spacesContent"
-                    //                 data-testid="library-spaces"
-                    //                 style={{ height: '99vh' }}
-                    //             >
-                    //                 <SidebarFilters
-                    //                     facilityTypeList={facilityTypeList}
-                    //                     facilityTypeListLoading={facilityTypeListLoading}
-                    //                     facilityTypeListError={facilityTypeListError}
-                    //                     selectedFacilityTypes={selectedFacilityTypes}
-                    //                     setSelectedFacilityTypes={setSelectedFacilityTypes}
-                    //                     filteredFacilityTypeList={getFilteredFacilityTypeList(
-                    //                         bookableSpacesRoomList,
-                    //                         facilityTypeList,
-                    //                     )}
-                    //                 />
-                    //                 <SidebarSpacesList
-                    //                     filteredSpaceLocations={filteredSpaceLocations}
-                    //                     weeklyHours={weeklyHours}
-                    //                     weeklyHoursLoading={weeklyHoursLoading}
-                    //                     weeklyHoursError={weeklyHoursError}
-                    //                     StyledStandardCard={StyledStandardCard}
-                    //                     showAllData
-                    //                 />
-                    //                 {showMap()}
-                    //             </StyledMainWrapperDiv>
-                    //         </StyledPageWrapperDiv>
-                    //     );
                 } else {
                     // mobile and tablet
                     return (
-                        <StyledMobileWrapper data-testid="library-spaces">
-                            <StyledFilterOpenButton
-                                id="toggleFilterButton"
-                                // className="controlFilterButton"
-                                data-testid="spaces-open-filter-button"
-                                onClick={() => toggleFilterPopupVisibility()}
-                                title="Open and close the filter sidebar"
-                            >
-                                {filterToggleButtonIcon}{' '}
-                                <span>
-                                    <span style={{ paddingRight: activeFilterCount < 10 ? '0.8rem' : '1.1rem' }}>
-                                        {!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}
-                                    </span>
-                                    {countIcon()}
-                                </span>
-                            </StyledFilterOpenButton>
+                        <StyledLayoutWrapper data-testid="library-spaces">
                             <div>
+                                <StyledFilterOpenButton
+                                    id="toggleFilterButton"
+                                    data-testid="spaces-open-filter-button"
+                                    onClick={() => toggleFilterPopupVisibility()}
+                                    title="Open and close the filter sidebar"
+                                >
+                                    {filterToggleButtonIcon}{' '}
+                                    <span style={{ paddingRight: neededPaddingRight() }}>
+                                        <span>{!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}</span>
+                                    </span>
+                                    {activeFilterCountBadge()}
+                                </StyledFilterOpenButton>
                                 <SidebarFilters
                                     facilityTypeList={facilityTypeList}
                                     facilityTypeListLoading={facilityTypeListLoading}
@@ -593,9 +626,18 @@ export const BookableSpacesList = ({
                                         onClick={() => toggleSpacesListPopupVisibility()}
                                         title="Open and close the spaces sidebar"
                                     >
-                                        <span>
-                                            {!!showSpacesSelectorPopup ? 'Hide Spaces list' : 'Show Spaces list'}
+                                        <span
+                                            style={{
+                                                paddingRight: filteredSpaceLocations?.length > 10 ? '1rem' : '0.5rem',
+                                                // covers 1 and 2 digit
+                                                // will need more ifs when we have more data: > 100, > 1000
+                                            }}
+                                        >
+                                            <span>
+                                                {!!showSpacesSelectorPopup ? 'Hide Spaces list' : 'Show Spaces list'}
+                                            </span>
                                         </span>
+                                        {visibleSpacesCountBadge()}
                                     </StyledSpaceListOpenButton>
                                     <div
                                         className={
@@ -620,7 +662,7 @@ export const BookableSpacesList = ({
                             <div id="mapWrapper" className="mapHolder">
                                 {showMap()}
                             </div>
-                        </StyledMobileWrapper>
+                        </StyledLayoutWrapper>
                     );
                 }
             })()}

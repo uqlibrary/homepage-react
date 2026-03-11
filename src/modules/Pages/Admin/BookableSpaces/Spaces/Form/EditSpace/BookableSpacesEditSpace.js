@@ -155,7 +155,7 @@ export const BookableSpacesEditSpace = ({
         bookableSpaceGetting === false &&
         bookableSpaceGetError === false &&
         !!bookableSpaceGetResult?.data &&
-        Object.keys(bookableSpaceGetResult?.data).length === 0
+        Object.keys(bookableSpaceGetResult?.data)?.length === 0
     ) {
         return (
             <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
@@ -205,7 +205,7 @@ export const BookableSpacesEditSpace = ({
         currentCampusList?.length === 0 ||
         (bookableSpacesRoomListLoading === false &&
             bookableSpacesRoomListError === false &&
-            (!bookableSpacesRoomList?.data?.locations || bookableSpacesRoomList?.data?.locations.length === 0))
+            (!bookableSpacesRoomList?.data?.locations || bookableSpacesRoomList?.data?.locations?.length === 0))
     ) {
         console.log('No Libraries currentCampusList=', currentCampusList);
         console.log('No Libraries bookableSpacesRoomListLoading=', bookableSpacesRoomListLoading);
@@ -251,7 +251,7 @@ export const BookableSpacesEditSpace = ({
                 bookableSpaceGetError={bookableSpaceGetError}
                 springshareList={springshareList}
                 currentCampusList={currentCampusList}
-                initialCampus={currentCampusList.findIndex(c => c.campus_id === formValues.campus_id)}
+                initialCampus={currentCampusList?.findIndex(c => c?.campus_id === formValues?.campus_id)}
                 mode="edit"
             />
         );

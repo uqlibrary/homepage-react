@@ -42,7 +42,7 @@ export const OpeningHoursDown = ({ weeklyHoursLoading, weeklyHoursError, weeklyH
 
     const openingHoursList = spaceOpeningHours(bookableSpace, weeklyHours);
 
-    if (!openingHoursList || openingHoursList.length === 0) {
+    if (!openingHoursList || openingHoursList?.length === 0) {
         return overrideMessage; // no opening hours
     }
 
@@ -55,9 +55,9 @@ export const OpeningHoursDown = ({ weeklyHoursLoading, weeklyHoursError, weeklyH
                 {overrideMessage}
                 {openingHoursList
                     ?.slice(0, 2) // onlyy today and tomorrow, to make the display shorter
-                    .map(d => (
+                    ?.map(d => (
                         <div>
-                            {d.dayName}: {d.rendered}
+                            {d?.dayName}: {d?.rendered}
                         </div>
                     ))}
             </div>

@@ -43,18 +43,18 @@ export const spacesAdminLink = (spacesPath = '', /* istanbul ignore next */ acco
 export function addBreadcrumbsToSiteHeader(localChildren) {
     const awaitSiteHeader = setInterval(() => {
         const siteHeader = document.querySelector('uq-site-header');
-        const siteHeaderShadowRoot = siteHeader.shadowRoot;
+        const siteHeaderShadowRoot = siteHeader?.shadowRoot;
 
         if (!!siteHeaderShadowRoot) {
             clearInterval(awaitSiteHeader);
 
-            const breadcrumbParent = !!siteHeaderShadowRoot && siteHeaderShadowRoot.getElementById('breadcrumb_nav');
-            if (breadcrumbParent.children.length > 2) {
+            const breadcrumbParent = !!siteHeaderShadowRoot && siteHeaderShadowRoot?.getElementById('breadcrumb_nav');
+            if (breadcrumbParent?.children?.length > 2) {
                 return; // already added
             }
 
-            !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
-            !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
+            !!siteHeader && siteHeader?.setAttribute('secondleveltitle', breadcrumbs?.bookablespaces?.title);
+            !!siteHeader && siteHeader?.setAttribute('secondLevelUrl', breadcrumbs?.bookablespaces?.pathname);
 
             const listItems = [
                 `<li class="uq-breadcrumb__item">
@@ -63,16 +63,16 @@ export function addBreadcrumbsToSiteHeader(localChildren) {
                 ...localChildren,
             ];
             !!listItems &&
-                listItems.length > 0 &&
-                listItems.forEach(item => {
-                    breadcrumbParent.insertAdjacentHTML('beforeend', item);
+                listItems?.length > 0 &&
+                listItems?.forEach(item => {
+                    breadcrumbParent?.insertAdjacentHTML('beforeend', item);
                 });
         }
     }, 100);
 }
 
 export function displayToastMessage(message) {
-    const messageLocal = !!message && !message.startsWith('<') ? `<p>${message}</p>` : message;
+    const messageLocal = !!message && !message?.startsWith('<') ? `<p>${message}</p>` : message;
     const backgroundColor = '#4aa74e';
     const icon =
         'url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27%23fff%27 viewBox=%270 0 16 16%27%3E%3Cg stroke=%27%23fff%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3E%3Cpath fill=%27none%27 d=%27M9.258 10.516h-.43A.829.829 0 0 1 8 9.687V7.602c0-.23-.2-.43-.43-.43h-.425%27/%3E%3Cpath d=%27M7.8 5.059a.194.194 0 0 0-.198.199c0 .113.085.199.199.199a.195.195 0 0 0 .199-.2.195.195 0 0 0-.2-.198zm0 0%27/%3E%3Cpath fill=%27none%27 d=%27M8 1.715c3.457 0 6.285 2.828 6.285 6.285 0 3.457-2.828 6.285-6.285 6.285-3.457 0-6.285-2.828-6.285-6.285 0-3.457 2.828-6.285 6.285-6.285zm0 0%27/%3E%3C/g%3E%3C/svg%3E")';
@@ -114,7 +114,7 @@ export function displayToastMessage(message) {
     const template = document.createElement('template');
     !!html && !!template && (template.innerHTML = html);
     const body = document.querySelector('body');
-    !!body && !!template && body.appendChild(template.content.cloneNode(true));
+    !!body && !!template && body?.appendChild(template.content.cloneNode(true));
     // error messages show for longer to give them time to copy it,
     // but not on dev, as playwright wont wait that long for it to appear :(
     const hideDelay = 3000;
@@ -124,13 +124,13 @@ export function displayToastMessage(message) {
     }, hideDelay);
     setTimeout(() => {
         const toast = document.getElementById('toast-message');
-        !!toast && toast.remove();
+        !!toast && toast?.remove();
         const styles = document.getElementById('locations-toast-styles');
-        !!styles && styles.remove();
+        !!styles && styles?.remove();
     }, hideDelay + 1000);
 }
 export function displayToastErrorMessage(message) {
-    const messageLocal = !!message && !message.startsWith('<') ? `<p>${message}</p>` : message;
+    const messageLocal = !!message && !message?.startsWith('<') ? `<p>${message}</p>` : message;
     const backgroundColor = '#D62929';
     const icon =
         'url("data:image/svg+xml,%3csvg viewBox=%270 0 24 24%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M20.127 18.545a1.18 1.18 0 0 1-1.055 1.706H4.929a1.18 1.18 0 0 1-1.055-1.706l7.072-14.143a1.179 1.179 0 0 1 2.109 0l7.072 14.143Z%27 stroke=%27%23fff%27 stroke-width=%271.5%27%3e%3c/path%3e%3cpath d=%27M12 9v4%27 stroke=%27%23fff%27 stroke-width=%271.5%27 stroke-linecap=%27round%27%3e%3c/path%3e%3ccircle cx=%2711.9%27 cy=%2716.601%27 r=%271.1%27 fill=%27%23fff%27%3e%3c/circle%3e%3c/svg%3e")';
@@ -172,7 +172,7 @@ export function displayToastErrorMessage(message) {
     const template = document.createElement('template');
     !!html && !!template && (template.innerHTML = html);
     const body = document.querySelector('body');
-    !!body && !!template && body.appendChild(template.content.cloneNode(true));
+    !!body && !!template && body?.appendChild(template.content.cloneNode(true));
     // error messages show for longer to give them time to copy it,
     // but not on dev, as playwright wont wait that long for it to appear :(
     const hideDelay = window.location.hostname !== 'localhost' ? /* istanbul ignore next */ 10000 : 3000;
@@ -182,17 +182,17 @@ export function displayToastErrorMessage(message) {
     }, hideDelay);
     setTimeout(() => {
         const toast = document.getElementById('toast-message');
-        !!toast && toast.remove();
+        !!toast && toast?.remove();
         const styles = document.getElementById('locations-toast-styles');
-        !!styles && styles.remove();
+        !!styles && styles?.remove();
     }, hideDelay + 1000);
 }
 export const springshareLocations = weeklyHours =>
     !!weeklyHours?.locations &&
-    weeklyHours.locations.length > 0 &&
-    weeklyHours.locations
-        ?.filter(l => l.lid !== ASKUS_SPRINGSHARE_ID)
-        ?.sort((a, b) => a.display_name.localeCompare(b.display_name))
+    weeklyHours?.locations?.length > 0 &&
+    weeklyHours?.locations
+        ?.filter(l => l?.lid !== ASKUS_SPRINGSHARE_ID)
+        ?.sort((a, b) => a?.display_name?.localeCompare(b?.display_name))
         // eslint-disable-next-line camelcase
         ?.map(({ lid, display_name }) => ({
             id: lid,
@@ -205,14 +205,14 @@ export function removeAnyListeners(element) {
         return false;
     }
     // we cant actually generically remove listeners - but we can start from scratch
-    const clonedElement = element.cloneNode(true);
-    element.replaceWith(clonedElement);
+    const clonedElement = element?.cloneNode(true);
+    element?.replaceWith(clonedElement);
     return clonedElement;
 }
 
 export function closeDeletionConfirmation() {
     const dialog = document.getElementById('confirmationDialog');
-    !!dialog && dialog.close();
+    !!dialog && dialog?.close();
 
     const confirmationMessageElement = document.getElementById('confDialogMessage');
     !!confirmationMessageElement && (confirmationMessageElement.innerHTML = '');
@@ -231,15 +231,15 @@ export function showGenericConfirmAndDeleteDialog(line1, line2 = '') {
     !!confirmationMessageElement && (confirmationMessageElement.innerHTML = innerHTML);
 
     const confirmationCancelButton = document.getElementById('confDialogCancelButton');
-    !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeDeletionConfirmation);
+    !!confirmationCancelButton && confirmationCancelButton?.addEventListener('click', closeDeletionConfirmation);
 
     const dialog = document.getElementById('confirmationDialog');
-    !!dialog && dialog.showModal();
+    !!dialog && dialog?.showModal();
 }
 
 export function closeDialog(e = null) {
-    const dialog = !e ? document.getElementById('popupDialog') : e.target.closest('dialog');
-    !!dialog && dialog.close();
+    const dialog = !e ? document.getElementById('popupDialog') : e?.target?.closest('dialog');
+    !!dialog && dialog?.close();
 
     const dialogMessageElement = document.getElementById('dialogMessageContent');
     !!dialogMessageElement && (dialogMessageElement.innerHTML = '');
@@ -248,7 +248,7 @@ export function closeDialog(e = null) {
     addClass(warningIcon, 'hidden');
 
     const dialogWarningText = document.getElementById('warningtext');
-    !!dialogWarningText && dialogWarningText.remove();
+    !!dialogWarningText && dialogWarningText?.remove();
 
     const dialogBodyElement = document.getElementById('dialogBody');
     !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
@@ -276,11 +276,11 @@ export const weeklyHoursLoaded = (weeklyHoursLoading, weeklyHoursError, weeklyHo
         weeklyHoursLoading === false &&
         weeklyHoursError === false &&
         Array.isArray(weeklyHours?.locations) &&
-        weeklyHours?.locations.length > 0
+        weeklyHours?.locations?.length > 0
     );
 };
 export const initialisedSpringshareList = (locale, weeklyHours) => [
-    locale.unselectedSpringshareOption,
+    locale?.unselectedSpringshareOption,
     ...springshareLocations(weeklyHours),
 ];
 

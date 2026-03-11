@@ -53,9 +53,7 @@ const StyledBookitLinkWrapperDiv = styled('div')(({ theme }) => ({
     '& a': {
         '&:hover, &:focus': {
             backgroundColor: 'transparent',
-        },
-        '& span': {
-            '&:hover, &:focus': {
+            '& span': {
                 backgroundColor: '#51247a',
                 color: '#fff',
             },
@@ -150,9 +148,9 @@ const SpaceDetails = ({
             const toggleButton = document.getElementById(togglePanelButtonElementId(spaceId));
             toggleButton?.setAttribute('aria-expanded', true);
             toggleButton?.setAttribute('aria-label', `Show fewer details for ${spaceName}`);
-            const toggleButtonExpandIcon = toggleButton.querySelector('svg.closePanel');
+            const toggleButtonExpandIcon = toggleButton?.querySelector('svg.closePanel');
             !!toggleButtonExpandIcon && (toggleButtonExpandIcon.style.display = 'none');
-            const toggleButtonCollapseIcon = toggleButton.querySelector('svg.openPanel');
+            const toggleButtonCollapseIcon = toggleButton?.querySelector('svg.openPanel');
             !!toggleButtonCollapseIcon && (toggleButtonCollapseIcon.style.display = 'block');
 
             setIsCollapsed(false);
@@ -221,7 +219,7 @@ const SpaceDetails = ({
         // find the string before the second html tag in the supplied string
         const lookForString = '<';
         const instanceInString = 3; // #3 is <p></p> here -> <p>
-        return htmlString.split(lookForString, instanceInString).join(lookForString);
+        return htmlString?.split(lookForString, instanceInString)?.join(lookForString);
     };
     // taken from uqbookit sidenav for the page these land on
     const uqBookitMakeABookingIcon = (
@@ -239,7 +237,7 @@ const SpaceDetails = ({
             <path d="M13.25 9.5h-9.5a.75.75 0 010-1.5h9.5a.75.75 0 010 1.5zM9.25 13.5h-5.5a.75.75 0 010-1.5h5.5a.75.75 0 010 1.5zM8.25 5.5h-4.5a.75.75 0 010-1.5h4.5a.75.75 0 010 1.5z" />
         </svg>
     );
-    const isBookable = !!bookableSpace.space_external_book_url;
+    const isBookable = !!bookableSpace?.space_external_book_url;
     return (
         <div id="SpaceDetailsTemp">
             <StyledSpaceDiv>
@@ -256,22 +254,20 @@ const SpaceDetails = ({
                 {isBookable && (
                     <StyledBookitLinkWrapperDiv data-testid={`space-${bookableSpace?.space_id}-booking-link`}>
                         {uqBookitMakeABookingIcon}
-                        <a href={bookableSpace.space_external_book_url} target={'_blank'}>
+                        <a href={bookableSpace?.space_external_book_url} target={'_blank'}>
                             <span>Book this space</span>
                         </a>
                     </StyledBookitLinkWrapperDiv>
                 )}
                 {!isBookable && (
-                    <div data-testid={`space-${bookableSpace?.space_id}-not-bookable`}>
-                        This space does not require a booking.
-                    </div>
+                    <div data-testid={`space-${bookableSpace?.space_id}-not-bookable`}>No booking required.</div>
                 )}
                 {!!bookableSpace?.space_capacity && bookableSpace?.space_capacity > 0 && (
                     <StyleCapacityDiv data-testid={`space-${bookableSpace?.space_id}-capacity`}>
                         <PeopleOutlineIcon />
-                        {`Space for ${bookableSpace.space_capacity} ${pluralise(
+                        {`Space for ${bookableSpace?.space_capacity} ${pluralise(
                             'person',
-                            bookableSpace.space_capacity,
+                            bookableSpace?.space_capacity,
                             'people',
                         )}.`}
                     </StyleCapacityDiv>
@@ -345,10 +341,10 @@ const SpaceDetails = ({
                                 {bookableSpace?.facility_types?.map(facility => {
                                     return (
                                         <li
-                                            key={`space-${bookableSpace?.space_id}-facility-${facility.facility_type_id}`}
-                                            data-testid={`space-${bookableSpace?.space_id}-facility-${facility.facility_type_id}`}
+                                            key={`space-${bookableSpace?.space_id}-facility-${facility?.facility_type_id}`}
+                                            data-testid={`space-${bookableSpace?.space_id}-facility-${facility?.facility_type_id}`}
                                         >
-                                            {facility.facility_type_name}
+                                            {facility?.facility_type_name}
                                         </li>
                                     );
                                 })}

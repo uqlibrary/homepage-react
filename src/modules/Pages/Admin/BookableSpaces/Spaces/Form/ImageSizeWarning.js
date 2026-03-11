@@ -17,31 +17,31 @@ const addConstantsToDisplayValues = (displayText, imageWidthIn, imageHeightIn, r
         .replace('[WIDTH]', imageWidthIn)
         .replace('[HEIGHT]', imageHeightIn)
         .replace('[RATIO]', ratio)
-        .replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000);
+        .replace('[MAXFILESIZE]', locale?.form.upload.maxSize / 1000);
 };
 
 const isImageSizeQuestionable = (imageWidthIn, imageHeightIn) => {
-    const ratio = (imageWidthIn / imageHeightIn).toFixed(2);
+    const ratio = (imageWidthIn / imageHeightIn)?.toFixed(2);
     return (
-        imageWidthIn < locale.form.upload.ideal.width - locale.form.upload.heightWidthFlex ||
-        imageWidthIn > locale.form.upload.ideal.width + locale.form.upload.heightWidthFlex ||
+        imageWidthIn < locale?.form.upload.ideal.width - locale?.form.upload.heightWidthFlex ||
+        imageWidthIn > locale?.form.upload.ideal.width + locale?.form.upload.heightWidthFlex ||
         /* istanbul ignore next */
-        imageHeightIn < locale.form.upload.ideal.height - locale.form.upload.heightWidthFlex ||
+        imageHeightIn < locale?.form.upload.ideal.height - locale?.form.upload.heightWidthFlex ||
         /* istanbul ignore next */
-        imageHeightIn > locale.form.upload.ideal.height + locale.form.upload.heightWidthFlex ||
+        imageHeightIn > locale?.form.upload.ideal.height + locale?.form.upload.heightWidthFlex ||
         /* istanbul ignore next */
-        ratio < locale.form.upload.minRatio ||
+        ratio < locale?.form.upload.minRatio ||
         /* istanbul ignore next */
-        ratio > locale.form.upload.maxRatio
+        ratio > locale?.form.upload.maxRatio
     );
 };
 
 export const ImageSizeWarning = ({ imgWidth, imgHeight }) => {
     const outputMessage = addConstantsToDisplayValues(
-        locale.form.upload.currentDimensionsNotification,
+        locale?.form.upload.currentDimensionsNotification,
         imgWidth,
         imgHeight,
-        (imgWidth / imgHeight).toFixed(2),
+        (imgWidth / imgHeight)?.toFixed(2),
     );
     if (isImageSizeQuestionable(imgWidth, imgHeight)) {
         return (
@@ -50,7 +50,7 @@ export const ImageSizeWarning = ({ imgWidth, imgHeight }) => {
                     <Warning fontSize="small" style={{ height: 15 }} />
                     {outputMessage}
                 </StyledWarning>
-                <div>{locale.form.upload.dimensionsWarning}</div>
+                <div>{locale?.form.upload.dimensionsWarning}</div>
             </>
         );
     }

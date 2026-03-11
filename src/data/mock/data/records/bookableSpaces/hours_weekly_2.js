@@ -3354,7 +3354,7 @@ export default {
                         "date": "2025-08-26",
                         "times": {
                             "status": "24hours",
-                            "currently_open": false
+                            "currently_open": true
                         },
                         "rendered": "24 Hours",
                         "open": "00:00:00",
@@ -3364,7 +3364,7 @@ export default {
                         "date": "2025-08-27",
                         "times": {
                             "status": "24hours",
-                            "currently_open": false
+                            "currently_open": true
                         },
                         "rendered": "24 Hours",
                         "open": "00:00:00",
@@ -3374,7 +3374,7 @@ export default {
                         "date": "2025-08-28",
                         "times": {
                             "status": "24hours",
-                            "currently_open": false
+                            "currently_open": true
                         },
                         "rendered": "24 Hours",
                         "open": "00:00:00",
@@ -3384,7 +3384,7 @@ export default {
                         "date": "2025-08-29",
                         "times": {
                             "status": "24hours",
-                            "currently_open": false
+                            "currently_open": true
                         },
                         "rendered": "24 Hours",
                         "open": "00:00:00",
@@ -3394,7 +3394,7 @@ export default {
                         "date": "2025-08-30",
                         "times": {
                             "status": "24hours",
-                            "currently_open": false
+                            "currently_open": true
                         },
                         "rendered": "24 Hours",
                         "open": "00:00:00",
@@ -3404,7 +3404,7 @@ export default {
                         "date": "2025-08-31",
                         "times": {
                             "status": "24hours",
-                            "currently_open": false
+                            "currently_open": true
                         },
                         "rendered": "24 Hours",
                         "open": "00:00:00",
@@ -3416,7 +3416,7 @@ export default {
                             "date": "2025-09-01",
                             "times": {
                                 "status": "24hours",
-                                "currently_open": false
+                                "currently_open": true
                             },
                             "rendered": "24 Hours",
                             "open": "00:00:00",
@@ -3426,7 +3426,7 @@ export default {
                             "date": "2025-09-02",
                             "times": {
                                 "status": "24hours",
-                                "currently_open": false
+                                "currently_open": true
                             },
                             "rendered": "24 Hours",
                             "open": "00:00:00",
@@ -3436,7 +3436,7 @@ export default {
                             "date": "2025-09-03",
                             "times": {
                                 "status": "24hours",
-                                "currently_open": false
+                                "currently_open": true
                             },
                             "rendered": "24 Hours",
                             "open": "00:00:00",
@@ -3446,7 +3446,7 @@ export default {
                             "date": "2025-09-04",
                             "times": {
                                 "status": "24hours",
-                                "currently_open": false
+                                "currently_open": true
                             },
                             "rendered": "24 Hours",
                             "open": "00:00:00",
@@ -3456,7 +3456,7 @@ export default {
                             "date": "2025-09-05",
                             "times": {
                                 "status": "24hours",
-                                "currently_open": false
+                                "currently_open": true
                             },
                             "rendered": "24 Hours",
                             "open": "00:00:00",
@@ -3466,7 +3466,7 @@ export default {
                             "date": "2025-09-06",
                             "times": {
                                 "status": "24hours",
-                                "currently_open": false
+                                "currently_open": true
                             },
                             "rendered": "24 Hours",
                             "open": "00:00:00",
@@ -3476,7 +3476,7 @@ export default {
                             "date": "2025-09-07",
                             "times": {
                                 "status": "24hours",
-                                "currently_open": false
+                                "currently_open": true
                             },
                             "rendered": "24 Hours",
                             "open": "00:00:00",

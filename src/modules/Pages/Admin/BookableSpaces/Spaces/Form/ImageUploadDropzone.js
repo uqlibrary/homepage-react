@@ -72,17 +72,17 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
     const setDimensions = acceptedFiles => {
         // based on https://stackoverflow.com/a/8904008/1246313
         /* istanbul ignore next */
-        if (!acceptedFiles || acceptedFiles.length === 0) {
+        if (!acceptedFiles || acceptedFiles?.length === 0) {
             return;
         }
         const url = URL.createObjectURL(acceptedFiles[0]);
         const img = new Image();
 
         img.onload = () => {
-            setImageWidth(img.width);
-            setImageHeight(img.height);
+            setImageWidth(img?.width);
+            setImageHeight(img?.height);
 
-            URL.revokeObjectURL(img.src);
+            URL.revokeObjectURL(img?.src);
         };
         img.src = url;
     };
@@ -92,7 +92,7 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
         onDrop: acceptedFiles => {
             console.log('onDrop', acceptedFiles);
             setFiles(
-                acceptedFiles.map(file =>
+                acceptedFiles?.map(file =>
                     Object.assign(file, {
                         preview: URL.createObjectURL(file),
                     }),
@@ -103,9 +103,9 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
             /* istanbul ignore next */
             if (
                 !!acceptedFiles &&
-                acceptedFiles.length > 0 &&
-                acceptedFiles[0].size &&
-                acceptedFiles[0].size > locale.form.upload.maxSize
+                acceptedFiles?.length > 0 &&
+                acceptedFiles[0]?.size &&
+                acceptedFiles[0]?.size > locale?.form.upload.maxSize
             ) {
                 showFileProblemConfirmation();
             }
@@ -120,24 +120,24 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
             !!this.naturalHeight && setImageHeight(this.naturalHeight);
         }
         if (!!currentImage) {
-            img.addEventListener('load', setSizes);
+            img?.addEventListener('load', setSizes);
             img.src = currentImage;
         }
         return function cleanup() {
-            img.removeEventListener('load', setSizes);
+            img?.removeEventListener('load', setSizes);
         };
     }, [currentImage]);
 
     useEffect(
         () => () => {
             // Make sure to revoke the data uris to avoid memory leaks
-            !!files && files.length > 0 && files.forEach(file => URL.revokeObjectURL(file.preview));
+            !!files && files?.length > 0 && files?.forEach(file => URL.revokeObjectURL(file?.preview));
         },
         [files],
     );
 
     const removeUpload = () => {
-        files.forEach(file => URL.revokeObjectURL(file.preview));
+        files?.forEach(file => URL.revokeObjectURL(file?.preview));
         setFiles([]);
 
         onClearFile();
@@ -151,27 +151,27 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
 
     const addConstantsToDisplayValues = (displayText, imageWidthIn, imageHeightIn, ratio) => {
         return displayText
-            .replace('[WIDTH]', imageWidthIn)
+            ?.replace('[WIDTH]', imageWidthIn)
             .replace('[HEIGHT]', imageHeightIn)
             .replace('[RATIO]', ratio)
-            .replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000);
+            .replace('[MAXFILESIZE]', locale?.form.upload.maxSize / 1000);
     };
     const idealDimensionsNotification = () => {
         return addConstantsToDisplayValues(
-            locale.form.upload.recommendedDimensionsNotification,
-            locale.form.upload.ideal.width,
-            locale.form.upload.ideal.height,
-            locale.form.upload.ideal.ratio,
+            locale?.form.upload.recommendedDimensionsNotification,
+            locale?.form.upload.ideal.width,
+            locale?.form.upload.ideal.height,
+            locale?.form.upload.ideal.ratio,
         );
     };
 
     const uploadErrorLocale = {
-        ...locale.form.upload.fileTooLarge,
+        ...locale?.form.upload.fileTooLarge,
         confirmationTitle: addConstantsToDisplayValues(
-            locale.form.upload.fileTooLarge.confirmationTitle,
-            locale.form.upload.ideal.width,
-            locale.form.upload.ideal.height,
-            locale.form.upload.ideal.ratio,
+            locale?.form.upload.fileTooLarge.confirmationTitle,
+            locale?.form.upload.ideal.width,
+            locale?.form.upload.ideal.height,
+            locale?.form.upload.ideal.ratio,
         ),
     };
 
@@ -194,15 +194,15 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
                 locale={uploadErrorLocale}
             />
             <section className="container" data-testid="spaces-form-upload-dropzone">
-                {!!files && files.length > 0 && !!files[0].preview ? (
+                {!!files && files?.length > 0 && !!files[0]?.preview ? (
                     <Grid container data-testid="dropzone-preview" style={thumbsContainer}>
                         <Grid item xs={12}>
                             <h4>Preview:</h4>
                         </Grid>
                         <Grid item xs={10}>
-                            {files.map(file => (
-                                <div style={thumbInner} key={file.name}>
-                                    <img alt="preview of uploaded Spaces photo" src={file.preview} style={thumbImg} />
+                            {files?.map(file => (
+                                <div style={thumbInner} key={file?.name}>
+                                    <img alt="preview of uploaded Spaces photo" src={file?.preview} style={thumbImg} />
                                 </div>
                             ))}
                         </Grid>
@@ -218,11 +218,11 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
                             </IconButton>
                         </Grid>
                         {/* show the size info & possible warning */}
-                        {files.map(file => (
+                        {files?.map(file => (
                             <Grid
                                 item
                                 xs={12}
-                                key={`${file.name}-dimensions`}
+                                key={`${file?.name}-dimensions`}
                                 style={dimensionBox}
                                 data-testid="dropzone-dimension-warning"
                             >
@@ -236,14 +236,14 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
                 ) : (
                     <div {...getRootProps({ className: 'dropzone' })} style={emptyDropzone}>
                         <input data-testid="dropzone-dragarea" {...getInputProps()} />
-                        {dragareaInstructions.map((line, index) => {
+                        {dragareaInstructions?.map((line, index) => {
                             return (
                                 <p key={`instruction-${index}`}>
                                     {addConstantsToDisplayValues(
                                         line,
-                                        locale.form.upload.ideal.width,
-                                        locale.form.upload.ideal.height,
-                                        locale.form.upload.ideal.ratio,
+                                        locale?.form.upload.ideal.width,
+                                        locale?.form.upload.ideal.height,
+                                        locale?.form.upload.ideal.ratio,
                                     )}
                                 </p>
                             );

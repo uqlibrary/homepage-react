@@ -21,17 +21,17 @@ L.Icon.Default.mergeOptions({
 const CampusLocationMap = (campusCentre = null) => {
     const initialCentre =
         campusCentre?.space_latitude && campusCentre?.space_longitude
-            ? [campusCentre.space_latitude, campusCentre.space_longitude]
-            : locale.locations.greatCourtCoordinates;
+            ? [campusCentre?.space_latitude, campusCentre?.space_longitude]
+            : locale?.locations?.greatCourtCoordinates;
 
-    const [position, setPosition2] = useState(locale.locations.greatCourtCoordinates);
+    const [position, setPosition2] = useState(locale?.locations?.greatCourtCoordinates);
     const setPosition = p => {
         const campusLatitudeField = document.getElementById('campus_latitude');
-        !!campusLatitudeField && (campusLatitudeField.value = p.lat);
-        console.log('set campus_latitude to ', p.lat);
+        !!campusLatitudeField && (campusLatitudeField.value = p?.lat);
+        console.log('set campus_latitude to ', p?.lat);
         const campusLongitudeField = document.getElementById('campus_longitude');
-        !!campusLongitudeField && (campusLongitudeField.value = p.lng);
-        console.log('set campus_longitude to ', p.lng);
+        !!campusLongitudeField && (campusLongitudeField.value = p?.lng);
+        console.log('set campus_longitude to ', p?.lng);
         setPosition2(p);
     };
 
@@ -43,7 +43,7 @@ const CampusLocationMap = (campusCentre = null) => {
                 dragend() {
                     const marker = markerRef.current;
                     if (marker !== null) {
-                        setPosition(marker.getLatLng());
+                        setPosition(marker?.getLatLng());
                     }
                 },
             }),
@@ -71,7 +71,7 @@ const CampusLocationMap = (campusCentre = null) => {
                     maxNativeZoom={19}
                     maxZoom={25}
                 />
-                <DraggableMarker position={locale.locations.greatCourtCoordinates} />
+                <DraggableMarker position={locale?.locations?.greatCourtCoordinates} />
             </MapContainer>
             <Typography component={'p'}>
                 Drill out on the map to find the campus, then drag the blue icon to roughly the centre of the campus.
