@@ -6,9 +6,9 @@ export const transformRow = row => {
         building_excluded_cb: line?.building_excluded === true,
         building_excluded: line?.building_excluded === true || line?.parent_excluded === true ? 'Yes' : 'No',
         floor_excluded_cb: line?.floor_excluded === true,
-        floor_excluded: line?.floor_excluded === true ? 'Yes' : 'No',
+        floor_excluded: line?.floor_excluded === true || line?.parent_excluded === true ? 'Yes' : 'No',
         room_excluded_cb: line?.room_excluded === true,
-        room_excluded: line?.room_excluded === true ? 'Yes' : 'No',
+        room_excluded: line?.room_excluded === true || line?.parent_excluded === true ? 'Yes' : 'No',
     }));
 };
 
