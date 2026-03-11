@@ -20,7 +20,12 @@ import { addClass, removeClass, standardText } from 'helpers/general';
 
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
-import { FACILITY_TYPE_CHECKBOX, FILTER_CURRENTLY_OPEN } from './spacesHelpers';
+import {
+    FACILITY_TYPE_SLIDER,
+    FACILITY_TYPE_CHECKBOX,
+    FILTER_CURRENTLY_OPEN,
+    FILTER_SPACE_CAPACITY,
+} from './spacesHelpers';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -206,11 +211,28 @@ export const BookableSpacesList = ({
     // console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
 
     const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
+    const FACILITY_TYPE_NAME_CAPACITY = 'Capacity';
 
     const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
+
+    // the space with the highest capacity
+    const spaceMaxCapacity = bookableSpacesRoomList?.data?.locations?.reduce(function findMax(
+        highestCapacity,
+        current,
+    ) {
+        return highestCapacity &&
+            typeof current.space_capacity === 'number' &&
+            highestCapacity.space_capacity < current.space_capacity
+            ? current
+            : highestCapacity;
+    });
+
+    const minimumSpaceCapacity = 1;
+    const maximumSpaceCapacity = spaceMaxCapacity?.space_capacity;
+    const [capacityFilterValue, setCapacityFilterValue] = React.useState([minimumSpaceCapacity, maximumSpaceCapacity]);
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -289,6 +311,7 @@ export const BookableSpacesList = ({
 
     function showSpace(space, facilityTypeToGroup, selectedFacilityTypes) {
         const spaceFacilityTypes = space?.facility_types?.map(item => item?.facility_type_id);
+        console.log('showSpace space', space.space_id, spaceFacilityTypes);
 
         // Create a map of facility_type_id to group_id for quick lookup
         // Group selected filters by their facility type group
@@ -311,10 +334,9 @@ export const BookableSpacesList = ({
                 rejectedFilters?.push(filter?.facility_type_id);
             }
         });
+        console.log('showSpace selectedFiltersByGroup', selectedFiltersByGroup);
 
         // check if space should be excluded due to rejected facility types
-        console.log('selectedFacilityTypes=', selectedFacilityTypes);
-        console.log('rejectedFilters=', rejectedFilters);
         if (rejectedFilters?.length > 0) {
             const hasRejectedFacility = rejectedFilters?.some(rejectedId => {
                 const filter = selectedFacilityTypes?.find(ft => ft?.facility_type_id === rejectedId);
@@ -407,6 +429,26 @@ export const BookableSpacesList = ({
             ],
         };
         !!filterOpenFacilityType && filteredFacilityTypeList?.data?.facility_type_groups?.push(filterOpenFacilityType);
+
+        // manually add a "Choose number of people" filter
+        const filterCapacityFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
+            facility_type_group_id: nextFacilityTypeid(filteredFacilityTypeList),
+            facility_type_group_name: FACILITY_TYPE_NAME_CAPACITY,
+            facility_type_group_order: -999,
+            facility_type_group_loads_open: 1,
+            facility_type_group_type: 'choose-many',
+            filterType: FACILITY_TYPE_SLIDER,
+            facility_type_children: [
+                {
+                    facility_type_id: 9998, // must be unique!
+                    facility_type_name: 'Space capacity',
+                    facility_special_action: FILTER_SPACE_CAPACITY,
+                    facility_type: FACILITY_TYPE_SLIDER,
+                },
+            ],
+        };
+        !!filterOpenFacilityType &&
+            filteredFacilityTypeList?.data?.facility_type_groups?.push(filterCapacityFacilityType);
 
         return filteredFacilityTypeList;
     };
@@ -623,6 +665,10 @@ export const BookableSpacesList = ({
                                         facilityTypeList,
                                     )}
                                     suppliedClassName={showFilterSelectorPopup ? 'popupFilterList' : 'hide'}
+                                    minimumSpaceCapacity={minimumSpaceCapacity}
+                                    maximumSpaceCapacity={maximumSpaceCapacity}
+                                    capacityFilterValue={capacityFilterValue}
+                                    setCapacityFilterValue={setCapacityFilterValue}
                                 />
                             </div>
                             {isDesktopView && (

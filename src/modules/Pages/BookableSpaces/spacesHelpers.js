@@ -1,6 +1,7 @@
 import React from 'react';
 
 export const FILTER_CURRENTLY_OPEN = 'open';
+export const FILTER_SPACE_CAPACITY = 'capacity';
 
 export const FACILITY_TYPE_CHECKBOX = 'checkbox';
 export const FACILITY_TYPE_SLIDER = 'slider';
