@@ -218,21 +218,9 @@ export const BookableSpacesList = ({
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
 
-    // the space with the highest capacity
-    const spaceMaxCapacity = bookableSpacesRoomList?.data?.locations?.reduce(function findMax(
-        highestCapacity,
-        current,
-    ) {
-        return highestCapacity &&
-            typeof current.space_capacity === 'number' &&
-            highestCapacity.space_capacity < current.space_capacity
-            ? current
-            : highestCapacity;
-    });
-
     const minimumSpaceCapacity = 1;
-    const maximumSpaceCapacity = spaceMaxCapacity?.space_capacity;
-    const [capacityFilterValue, setCapacityFilterValue] = React.useState([minimumSpaceCapacity, maximumSpaceCapacity]);
+    const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
+    const [maximumSpaceCapacity, setMaximumSpaceCapacity] = React.useState(50);
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -257,6 +245,28 @@ export const BookableSpacesList = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    React.useEffect(() => {
+        if (
+            !bookableSpacesRoomListError &&
+            !bookableSpacesRoomListLoading &&
+            !!bookableSpacesRoomList?.data?.locations
+        ) {
+            // the space with the highest capacity
+            const spaceMaxCapacity = bookableSpacesRoomList?.data?.locations?.reduce(function findMax(
+                highestCapacity,
+                current,
+            ) {
+                return highestCapacity &&
+                    typeof current.space_capacity === 'number' &&
+                    highestCapacity.space_capacity < current.space_capacity
+                    ? current
+                    : highestCapacity;
+            });
+            setMaximumSpaceCapacity(!!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity);
+            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
+        }
+    }, [bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
 
     function isLocationOpen(locationId, hoursData) {
         function getDateStringInTimezone(offsetHours = 10) {
@@ -370,6 +380,16 @@ export const BookableSpacesList = ({
                         return !!space?.space_opening_hours_id
                             ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
                             : false;
+                        // } else if (
+                        //     filter?.facility_special_action &&
+                        //     filter?.facility_special_action === FILTER_SPACE_CAPACITY
+                        // ) {
+                        //     const showSpace =
+                        //         !!space?.space_capacity &&
+                        //         space?.space_capacity[0] > minimumSpaceCapacity &&
+                        //         space?.space_capacity[1] < maximumSpaceCapacity;
+                        //     console.log('showSpace space', space.space_id, space?.space_capacity, showSpace);
+                        //     return showSpace;
                     } else {
                         return spaceFacilityTypes?.includes(filterId);
                     }

@@ -254,6 +254,7 @@ export const SidebarFilters = ({
     capacityFilterValue,
     setCapacityFilterValue,
 }) => {
+    // console.log('SidebarFilters', minimumSpaceCapacity, maximumSpaceCapacity, capacityFilterValue);
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
 
     function sortedUsedGroups() {
