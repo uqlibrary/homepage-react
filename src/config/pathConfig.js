@@ -32,6 +32,7 @@ export const pathConfig = {
         testntagreportinspectionsdue: '/admin/testntag/report/inspectionsdue',
         testntagreportrecalibrationssdue: '/admin/testntag/report/recalibrationsdue',
         testntagmanageusers: '/admin/testntag/manage/users',
+        testntagmanageteams: '/admin/testntag/manage/teams',
         dlorScheduler: '/admin/dlor/schedule',
     },
     bookExamBooth: '/book-exam-booth',
