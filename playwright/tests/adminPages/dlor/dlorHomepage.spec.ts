@@ -36,6 +36,13 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await addObjectButton.click();
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
         });
+        test('has a working "Schedule objects" button', async ({ page }) => {
+            await page.getByTestId('admin-dlor-menu-button').click();
+            const scheduleButton = page.getByTestId('admin-dlor-schedule-featured-button');
+            await expect(scheduleButton).toContainText('Manage featured object scheduling');
+            await scheduleButton.click();
+            await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/schedule?user=${DLOR_ADMIN_USER}`);
+        });
         test('has a working "manage teams" button', async ({ page }) => {
             await page.getByTestId('admin-dlor-menu-button').click();
             const manageTeamsButton = page.getByTestId('admin-dlor-visit-manage-teams-button');
@@ -57,6 +64,17 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await manageSeriesButton.click();
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`);
         });
+        test('has a working "view digital learning object dashboard" button', async ({ page }) => {
+            await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+
+            await page.getByTestId('admin-dlor-team-admin-menu-button').click();
+            const viewDashboardButton = page.getByTestId('team-dlor-dashboard--button');
+            await expect(viewDashboardButton).toContainText('View Digital Learning Object dashboard');
+            await viewDashboardButton.click();
+
+            await expect(page).toHaveURL(/\/digital-learning-hub\/dashboard/);
+        });
         test('has a working "edit an object" button', async ({ page }) => {
             const editButton = page.getByTestId('dlor-homepage-edit-98s0_dy5k3_98h4');
             await editButton.click();
@@ -64,6 +82,7 @@ test.describe('Digital Learning Hub admin homepage', () => {
                 `http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`,
             );
         });
+
         test('shows a list of objects to manage', async ({ page }) => {
             const list = page.getByTestId('dlor-homepage-list');
             await expect(list.locator('> div')).toHaveCount(gridFromExpectedRowCount());

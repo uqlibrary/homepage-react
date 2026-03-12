@@ -101,7 +101,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 
@@ -115,7 +115,8 @@ describe('Locations', () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
 
-            expect(getByTestId('add_toolbar-locations-add-button')).toHaveTextContent('Add floor');
+            expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
+            expect(getByTestId('locations-data-table-toolbar-add-button')).toHaveTextContent('Add floor');
 
             expect(getByTestId('location_picker-locations-building-input')).toHaveAttribute(
                 'value',
@@ -153,7 +154,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 
@@ -167,7 +168,8 @@ describe('Locations', () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
 
-            userEvent.click(getByTestId('add_toolbar-locations-add-button'));
+            expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
+            userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
 
@@ -213,7 +215,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 
@@ -272,7 +274,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 

@@ -221,6 +221,7 @@ export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id
 export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' }); // is admin in staging
 export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/public/list/current' });
 export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/public/find/${id}` });
+export const DLOR_AUTHENTICATED_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/auth/find/${id}` });
 export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/public/facet/list' });
 export const DLOR_SERIES_LIST_API = () => ({ apiUrl: 'dlor/public/series/list' });
 export const DLOR_SUBSCRIPTION_CONFIRMATION_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/subscribe` });
@@ -266,7 +267,11 @@ export const DLOR_KEYWORDS_API = () => ({ apiUrl: 'dlor/public/keywords/list' })
 export const DLOR_KEYWORDS_UPDATE_API = () => ({ apiUrl: 'dlor/admin/keywords' });
 export const DLOR_KEYWORDS_DESTROY_API = () => ({ apiUrl: 'dlor/admin/keywords/delete' });
 export const DLOR_STATISTICS_API = () => ({ apiUrl: 'dlor/auth/stats' });
+export const DLOR_SCHEDULE_API = () => ({ apiUrl: 'dlor/admin/schedule' });
+export const DLOR_SCHEDULE_UPDATE_API = id => ({ apiUrl: `dlor/admin/schedule/${id}` });
 export const DLOR_REQUEST_KEYWORD_API = () => ({ apiUrl: 'dlor/auth/keywords/request' });
+
+export const DLOR_DASHBOARD_API = () => ({ apiUrl: 'dlor/auth/dashboard' });
 
 const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';
@@ -331,3 +336,6 @@ export const SPACES_ADD_LOCATION_API = ({ type }) => ({ apiUrl: `bookable_spaces
 export const SPACES_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `bookable_spaces/${type}/${id}` });
 
 export const SPACES_SITE_API = () => ({ apiUrl: 'bookable_spaces/campus/all' });
+export const SPACES_SPACETYPE_CREATE_API = () => ({ apiUrl: 'bookable_spaces/space_type' });
+export const SPACES_SPACETYPE_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });
+export const SPACES_SPACETYPE_DELETE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });

@@ -112,7 +112,7 @@ const AssetTypeSelector = ({
                     const filtered = filterOptions(options, params);
                     canAddNew &&
                         filtered.push({
-                            asset_type_name: locale.addNewLabel.toUpperCase(),
+                            asset_type_name: locale?.addNewLabel?.toUpperCase(),
                             asset_type_id: ADD_NEW_ID,
                         });
 

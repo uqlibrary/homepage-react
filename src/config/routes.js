@@ -28,6 +28,7 @@ export const flattedPathConfigExact = [
     '/admin/dlor/team/add',
     '/admin/dlor/filters',
     '/admin/dlor/vocabulary',
+    '/admin/dlor/schedule',
     '/admin/masquerade',
     '/admin/masquerade/',
     '/admin/testntag',
@@ -49,9 +50,11 @@ export const flattedPathConfigExact = [
     '/digital-learning-hub-list',
     '/spaces',
     '/admin/spaces',
+    '/admin/spacetypes',
     '/admin/spaces/manage/locations',
     '/admin/spaces/add',
     '/admin/spaces/manage/facilitytypes',
+    '/digital-learning-hub/dashboard',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
@@ -275,6 +278,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: 'Manage Vocabulary',
         },
+        {
+            path: pathConfig.admin.dlorScheduler,
+            element: <components.DLOBulkSchedule />,
+            exact: true,
+            pageTitle: 'Manage feature schedules',
+        },
     ];
     const authenticatedDlorDisplay = [
         {
@@ -287,6 +296,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.dlorViewSecure(dlorId),
             element: <components.DLOView />,
             pageTitle: 'Digital Learning Object Repository - View Object',
+        },
+        {
+            path: pathConfig.dlorDashboard,
+            element: <components.DLODashboard />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository - Dashboard',
         },
     ];
 
@@ -386,6 +401,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.BookableSpacesManageSpaces />,
             exact: true,
             pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpaceTypesDashboard,
+            element: <components.BookableSpacesManageSpaceTypes />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespacetypes.title,
         },
         {
             path: pathConfig.admin.bookableSpacesManageLocations,

@@ -110,7 +110,7 @@ const SidebarSpacesList = ({
                             >
                                 <StyledStandardCard
                                     fullHeight
-                                    title={bookableSpace?.space_type}
+                                    title={bookableSpace?.space_type_details?.space_type_name}
                                     style={{ marginRight: '0.5rem' }}
                                     squareTop
                                     subCard

@@ -71,9 +71,10 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
-            userEvent.click(getByTestId('add_toolbar-locations-add-button'));
+            expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
+            userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
             await findByTestId('update_dialog-locations');
 
             userEvent.click(getByTestId('update_dialog-cancel-button'));
@@ -94,9 +95,10 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
-            userEvent.click(getByTestId('add_toolbar-locations-add-button'));
+            expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
+            userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
 
@@ -123,7 +125,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
             userEvent.click(getByTestId('action_cell-1-edit-button'));
             await findByTestId('update_dialog-locations');
@@ -151,7 +153,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
             userEvent.click(getByTestId('action_cell-2-delete-button'));
             await findByTestId('dialogbox-locations');

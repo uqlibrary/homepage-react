@@ -10,7 +10,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
@@ -18,7 +18,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('base page edit controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
 
@@ -60,11 +60,11 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('base page add controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         // Add.
-        await page.getByTestId('add_toolbar-user-management-add-button').click();
+        await page.getByTestId('user-management-data-table-toolbar-add-button').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
         // Check default helper texts are in required state
         await expect(page.locator('#user_uid-input-helper-text')).toHaveClass(/Mui-error/);
@@ -90,14 +90,14 @@ test.describe('Test and Tag Manage Users', () => {
         await page.getByTestId('update_dialog-action-button').click();
         await expect(page.getByTestId('confirmation_alert-success-alert')).toBeVisible();
         // Fire an open and close on the edit - no change should occur
-        await page.getByTestId('add_toolbar-user-management-add-button').click();
+        await page.getByTestId('user-management-data-table-toolbar-add-button').click();
         await page.getByTestId('update_dialog-cancel-button').click();
         await expect(page.getByTestId('confirmation_alert-success-alert')).not.toBeVisible();
     });
 
     test('base page delete controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         // Delete

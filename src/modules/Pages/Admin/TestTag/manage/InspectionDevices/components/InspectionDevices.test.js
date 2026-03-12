@@ -62,7 +62,9 @@ describe('InspectionDevices', () => {
     });
     it('renders component standard', () => {
         const { getByText } = setup({ actions: actions });
-        expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
         expect(getByText('AV 025')).toBeInTheDocument();
     });
     it('catches error on loadInspectionDevices', async () => {
@@ -72,7 +74,9 @@ describe('InspectionDevices', () => {
 
         const { getByText } = setup({ actions: actions });
         await waitFor(() => {
-            expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
+            expect(
+                getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library')),
+            ).toBeInTheDocument();
         });
         expect(actions.loadInspectionDevices).rejects.toEqual('Error');
     });
@@ -83,10 +87,12 @@ describe('InspectionDevices', () => {
         });
         const { getByText, getByTestId } = setup({ actions: actions });
 
-        expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
-        expect(getByTestId('add_toolbar-test-add-button')).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
+        expect(getByTestId('test-data-table-toolbar-export-menu')).toBeInTheDocument();
         await act(async () => {
-            await fireEvent.click(getByTestId('add_toolbar-test-add-button'));
+            await fireEvent.click(getByTestId('test-data-table-toolbar-add-button'));
         });
 
         await waitFor(() => {
@@ -121,7 +127,7 @@ describe('InspectionDevices', () => {
         actions.addInspectionDevice = jest.fn(() => Promise.reject('Testing 2'));
 
         await act(async () => {
-            await fireEvent.click(getByTestId('add_toolbar-test-add-button'));
+            await fireEvent.click(getByTestId('test-data-table-toolbar-add-button'));
         });
 
         await waitFor(() => {
@@ -146,7 +152,9 @@ describe('InspectionDevices', () => {
         const { getByText, getByTestId } = setup({
             actions: actions,
         });
-        expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
         await waitFor(() => {
             expect(getByText('AV 025')).toBeVisible();
         });
@@ -197,7 +205,9 @@ describe('InspectionDevices', () => {
         const { getByText, getByTestId } = setup({
             actions: actions,
         });
-        expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
         await waitFor(() => {
             expect(getByText('AV 025')).toBeVisible();
         });
@@ -221,7 +231,9 @@ describe('InspectionDevices', () => {
         const { getByText, getByTestId } = setup({
             actions: actions,
         });
-        expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
         await waitFor(() => {
             expect(getByText('AV 025')).toBeVisible();
         });

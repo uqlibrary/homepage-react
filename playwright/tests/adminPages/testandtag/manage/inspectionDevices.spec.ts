@@ -10,7 +10,10 @@ test.describe('Test and Tag manage inspection devices', () => {
 
     const checkBaseline = async (page: Page) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'));
+        await assertTitles(
+            page,
+            locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library'),
+        );
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'device_model_name', 0)).getByText('AV 025')).toBeVisible();
     };
@@ -26,7 +29,7 @@ test.describe('Test and Tag manage inspection devices', () => {
         await checkBaseline(page);
 
         // Adding an Inspection Device
-        await page.getByTestId('add_toolbar-inspection-devices-add-button').click();
+        await page.getByTestId('inspection-devices-data-table-toolbar-add-button').click();
 
         await assertAccessibility(page, '[data-testid="StandardPage"]');
 
@@ -53,7 +56,7 @@ test.describe('Test and Tag manage inspection devices', () => {
         await expect(page.locator('.MuiAlert-message').getByText('Request successfully completed')).toBeVisible();
 
         // Cancel button - Add
-        await page.getByTestId('add_toolbar-inspection-devices-add-button').click();
+        await page.getByTestId('inspection-devices-data-table-toolbar-add-button').click();
         await page.getByTestId('update_dialog-cancel-button').click();
         await expect(page.locator('.MuiAlert-message')).not.toBeVisible();
 

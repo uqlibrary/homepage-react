@@ -64,7 +64,7 @@ const TestTagHeader = (
                         Dashboard
                     </Link>
                     {breadcrumbs.map((breadcrumb, index) => {
-                        const normalisedTitle = breadcrumb.title.replace(/ /g, '-').toLowerCase();
+                        const normalisedTitle = breadcrumb?.title?.replace(/ /g, '-').toLowerCase();
                         return breadcrumb.link ? (
                             <Link
                                 color="inherit"

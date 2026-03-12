@@ -93,11 +93,11 @@ describe('utils', () => {
                 can_see_reports: 0,
             },
             user_current_flag: 1,
-            user_department: 'UQL',
+            user_team: 'WSS',
             user_licence_number: '',
         };
 
-        const transformedRequest = transformAddRequest(inputRequest, 'UQL');
+        const transformedRequest = transformAddRequest(inputRequest, 'WSS');
         expect(transformedRequest).toEqual(expectedOutput);
 
         inputRequest.can_admin_cb = true;
@@ -112,7 +112,7 @@ describe('utils', () => {
             can_see_reports: 1,
         };
         expectedOutput.user_current_flag = 0;
-        expectedOutput.user_department = 'PF';
+        expectedOutput.user_team = 'PF';
         const transformedRequest2 = transformAddRequest(inputRequest, 'PF');
         expect(transformedRequest2).toEqual(expectedOutput);
     });
@@ -121,6 +121,8 @@ describe('utils', () => {
             actions_count: 5,
             id: 123,
             department_display_name: 'Department A',
+            user_department: 'UQL',
+            user_team: 'SPACES',
             privileges: {
                 can_admin_cb: true,
                 can_inspect_cb: false,
@@ -135,6 +137,7 @@ describe('utils', () => {
         };
 
         const expectedOutput = {
+            user_team: 'SPACES',
             privileges: {
                 can_admin: 0,
                 can_inspect: 0,

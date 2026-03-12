@@ -104,6 +104,14 @@ export const AdminButton = ({ currentPageSlug }) => {
                     {icon(currentPageSlug === 'dashboard')}
                     <span className={`${currentPageSlug !== 'dashboard' ? 'clickable' : ''}`}>Manage Spaces</span>
                 </MenuItem>
+                <MenuItem
+                    component="a"
+                    href={spacesAdminLink('/admin/spacetypes', account)}
+                    data-testid="admin-spacetypes-visit-dashboard-button"
+                >
+                    {icon(currentPageSlug === 'spacetypes')}
+                    <span className={`${currentPageSlug !== 'spacetypes' ? 'clickable' : ''}`}>Manage Space Types</span>
+                </MenuItem>
 
                 <MenuItem
                     component="a"

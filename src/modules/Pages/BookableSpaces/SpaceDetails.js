@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -271,7 +272,8 @@ const SpaceDetails = ({
                         )}.`}
                     </StyleCapacityDiv>
                 )}
-                <div>[todo] Short generic description for space type</div>
+                <Typography variant="body2">{bookableSpace?.space_type_details?.space_type_description}</Typography>
+                {console.log('bookableSpace Specific Data', bookableSpace)}
                 {bookableSpace?.space_description?.length > 0 && (
                     <StyledDescriptionDiv
                         id={`space-description-${bookableSpace?.space_id}`}

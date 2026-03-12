@@ -8,7 +8,6 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -20,6 +19,7 @@ import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionS
 import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import config from './configure';
 import { breadcrumbs } from 'config/routes';
+import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 
 const componentId = 'user-management';
 
@@ -28,7 +28,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
 
     const { user } = useAccountUser();
 
-    const userDepartment = user?.user_department ?? /* istanbul ignore next */ null;
+    const userTeam = user?.user_team ?? /* istanbul ignore next */ null;
     const userUID = user?.user_uid ?? /* istanbul ignore next */ null;
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
@@ -49,7 +49,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         data => {
             setDialogueBusy(true);
             const request = structuredClone(data);
-            const wrappedRequest = transformAddRequest(request, userDepartment);
+            const wrappedRequest = transformAddRequest(request, userTeam);
             actions
                 .addUser(wrappedRequest)
                 .then(() => {
@@ -66,7 +66,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                 });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [userDepartment],
+        [userTeam],
     );
 
     const onRowEdit = React.useCallback(data => {
@@ -237,13 +237,12 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                             columns={columns}
                             rowId="user_id"
                             loading={userListLoading}
-                            components={{ Toolbar: AddToolbar }}
-                            componentsProps={{
-                                toolbar: {
-                                    label: pageLocale.form.addButtonLabel,
-                                    onClick: handleAddClick,
-                                    id: componentId,
-                                },
+                            components={{
+                                Toolbar: () => (
+                                    <WithExportMenu id={componentId}>
+                                        <AddButton label={pageLocale.form.addButtonLabel} onClick={handleAddClick} />
+                                    </WithExportMenu>
+                                ),
                             }}
                             {...(config.sort ?? /* istanbul ignore next */ {})}
                         />

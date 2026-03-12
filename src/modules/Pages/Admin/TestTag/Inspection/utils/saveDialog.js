@@ -6,13 +6,18 @@ import { styled } from '@mui/material/styles';
 
 import { statusEnum } from '../utils/helpers';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
+
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
-const savedDialogMessages = {
+export const savedDialogMessages = {
     [testStatusEnum.CURRENT.value]: (data, locale) => (
-        <Grid container item xs={12} sm={6} alignItems="center" className={'dialogContainer dialogPassedContainer'}>
+        <Grid container item xs={12} sm={8} alignItems="center" className={'dialogContainer dialogPassedContainer'}>
             <Grid item xs={12} className={'dialogTitle dialogSuccessTitle'} variant="subtitle1">
-                <Typography gutterBottom id="saved-asset-id" data-testid="saved-licence-number">
+                <Typography
+                    gutterBottom
+                    id="saved-licence-number-container"
+                    data-testid="saved-licence-number-container"
+                >
                     <span id="saved-licence-number-label" data-testid="saved-licence-number-label">
                         {locale.testedBy}
                     </span>{' '}
@@ -43,13 +48,13 @@ const savedDialogMessages = {
             </Grid>
             <Grid item xs={12} sm={6} className={'dialogSuccessLineItems'} variant="subtitle1">
                 <Typography gutterBottom id="saved-asset-id" data-testid="saved-asset-id">
-                    {data.asset_next_test_due_date ?? locale.notApplicable}
+                    {data.asset_next_test_due_date}
                 </Typography>
             </Grid>
         </Grid>
     ),
     other: (data, locale) => (
-        <Grid container item xs={12} sm={6} alignItems="center" className={'dialogContainer dialogFailedContaine'}>
+        <Grid container item xs={12} sm={8} alignItems="center" className={'dialogContainer dialogFailedContainer'}>
             <Grid item xs={12} className={'dialogTitle dialogFailedTitle'}>
                 <Typography gutterBottom variant="h4" id="saved-title-label" data-testid="saved-title-label">
                     {locale.outOfService}
@@ -146,8 +151,11 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export const getSuccessDialog = (response, locale) => {
+    /* istanbul ignore next */
     if (!!!response) return {};
     const key = response.asset_status !== testStatusEnum.CURRENT.value ? 'other' : response.asset_status;
     const messageFragment = <StyledBox>{savedDialogMessages[key](response, locale.form.dialogLabels)}</StyledBox>;
-    return locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
+    const configLocale = locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
+
+    return configLocale;
 };

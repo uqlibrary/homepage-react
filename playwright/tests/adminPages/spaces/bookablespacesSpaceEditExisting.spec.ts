@@ -14,6 +14,57 @@ const TAB_IMAGERY = 'tab-imagery';
 const LAW_DEFAULT_LATITUDE = '-27.49718';
 const LAW_DEFAULT_LONGITUDE = '153.01214';
 
+const chooseAnySpaceType = async page => {
+    const spaceTypeSelector = page.getByTestId('space-type');
+    await expect(spaceTypeSelector).toBeVisible();
+    await spaceTypeSelector.click();
+
+    const firstSpaceTypeOption = page.locator('ul[aria-labelledby="add-space-type-label"] li[role="option"]').first();
+    await expect(firstSpaceTypeOption).toBeVisible();
+    const selectedSpaceTypeId = await firstSpaceTypeOption.getAttribute('data-value');
+    await firstSpaceTypeOption.click();
+
+    expect(selectedSpaceTypeId).toBeTruthy();
+    return Number(selectedSpaceTypeId);
+};
+
+const ensureSpaceTypeSelected = async page => {
+    await page.getByTestId(TAB_ABOUT).click();
+    const nativeSpaceTypeInput = page.locator('#add-space-type-input');
+    await expect(nativeSpaceTypeInput).toBeAttached();
+
+    const currentSelectionId = await nativeSpaceTypeInput.inputValue();
+    if (currentSelectionId) {
+        return null;
+    }
+
+    return chooseAnySpaceType(page);
+};
+
+const chooseDifferentSpaceType = async page => {
+    const spaceTypeCombobox = page.getByRole('combobox', { name: 'Choose an existing Space type *' });
+    await expect(spaceTypeCombobox).toBeVisible();
+    const currentSpaceTypeName = ((await spaceTypeCombobox.textContent()) || '').trim();
+
+    const spaceTypeSelector = page.getByTestId('space-type');
+    await spaceTypeSelector.click();
+
+    const spaceTypeOptions = page.locator('ul[aria-labelledby="add-space-type-label"] li[role="option"]');
+    const optionCount = await spaceTypeOptions.count();
+    for (let i = 0; i < optionCount; i += 1) {
+        const option = spaceTypeOptions.nth(i);
+        const optionText = (await option.textContent())?.trim() || '';
+        if (optionText !== currentSpaceTypeName) {
+            const selectedSpaceTypeId = await option.getAttribute('data-value');
+            await option.click();
+            expect(selectedSpaceTypeId).toBeTruthy();
+            return Number(selectedSpaceTypeId);
+        }
+    }
+
+    throw new Error('No alternate space type option available in dropdown');
+};
+
 const originalMockData = (spaceUud: string) => {
     const currentData = bookableSpaces?.data?.locations?.find(b => b.space_uuid === spaceUud);
     const currentDataFacilities = currentData?.facility_types?.map(ft => ft.facility_type_id) || [];
@@ -21,7 +72,7 @@ const originalMockData = (spaceUud: string) => {
         space_id: currentData?.space_id,
         space_floor_id: currentData?.space_floor_id,
         space_name: currentData?.space_name, // required field
-        space_type: currentData?.space_type, // required field
+        space_type_id: currentData?.space_type_id, // required field
         facility_types: [...currentDataFacilities],
         space_capacity: currentData?.space_capacity,
         space_precise: currentData?.space_precise,
@@ -63,8 +114,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-type').locator('input')).toHaveValue('Collaborative space');
+        await expect(page.getByRole('combobox', { name: 'Choose an existing Space type *' })).toBeVisible();
 
         // change to facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -159,8 +209,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
 
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('6078');
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-type').locator('input')).toHaveValue('Group Study Room');
+        await expect(page.getByRole('combobox', { name: 'Choose an existing Space type *' })).toBeVisible();
 
         // change to Facility-type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -246,8 +295,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
 
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('46-342/343');
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-type').locator('input')).toHaveValue('Computer room');
+        await expect(page.getByRole('combobox', { name: 'Choose an existing Space type *' })).toBeVisible();
 
         // change to Facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -340,6 +388,7 @@ test.describe('Spaces Admin - edit space', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await ensureSpaceTypeSelected(page);
     });
 
     test('edit spaces page is accessible', async ({ page }) => {
@@ -373,7 +422,7 @@ test.describe('Spaces Admin - edit space', () => {
         // clear as many of the non-required fields as is possible and confirm will submit
 
         // clear description field manually!
-        await page.getByRole('textbox', { name: 'Enter new Space type' }).click();
+        await page.getByRole('textbox', { name: 'Editor editing area: main' }).click();
         await page.getByRole('textbox', { name: 'Editor editing area: main' }).press('ControlOrMeta+a');
         await page.getByRole('textbox', { name: 'Editor editing area: main' }).press('ControlOrMeta+x');
 
@@ -481,7 +530,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_id: 123456,
             space_floor_id: 1,
             space_name: '01-W431', // required field
-            space_type: 'Collaborative space', // required field
+            space_type_id: 1, // required field
             facility_types: [],
             space_capacity: null,
             space_precise: '',
@@ -521,8 +570,7 @@ test.describe('Spaces Admin - edit space', () => {
 
         // panel 1 fields visible
         await expect(spaceNameField).toBeVisible();
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-type-new').locator('input')).toBeVisible();
+        await expect(page.getByRole('combobox', { name: 'Choose an existing Space type *' })).toBeVisible();
 
         // other panel fields NOT visible
         await expect(firstFacilityTypeCheckbox).toBeDefined();
@@ -678,21 +726,14 @@ test.describe('Spaces Admin - edit space', () => {
         await nameField.fill('New space name');
         await nameField.press('Tab');
 
-        await page.getByRole('combobox', { name: 'Choose an existing Space type' }).press('Tab');
-        const typeField = page.getByRole('textbox', { name: 'Enter new Space type' });
-        await typeField.fill('New space type');
-        await typeField.press('Tab');
+        const selectedSpaceTypeId = await chooseDifferentSpaceType(page);
 
         await page.getByText('Ut enim ad minim veniam, quis').click();
         const descriptionField = page.getByRole('textbox', { name: 'Editor editing area: main' });
         await descriptionField.press('ControlOrMeta+a');
         await descriptionField.fill('a long description that has a number of words');
 
-        // check the typed in "Enter new space type" has transferred to the dropdown
-        // (the "new space type" field auto clears on blur, and the select preloads)
         await nameField.click();
-        await expect(page.getByTestId('add-space-type-new').locator('input')).toBeEmpty();
-        await expect(page.getByTestId('space-type').locator('input')).toHaveValue('New space type');
 
         // change to Facility types tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -814,7 +855,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_id: 123456,
             space_floor_id: 32,
             space_name: 'New space name', // required field
-            space_type: 'New space type', // required field
+            space_type_id: selectedSpaceTypeId, // required field
             facility_types: finalFilters,
             space_precise: 'somewhere deep in the bowels of the warehouse',
             space_description: '<p>a long description that has a number of words</p>',
@@ -889,6 +930,7 @@ test.describe('Spaces Admin - edit space', () => {
             });
             // wait for page to load
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+            await ensureSpaceTypeSelected(page);
 
             const facilityTypeId = '7';
             const label = 'On-desk power point';
@@ -927,6 +969,7 @@ test.describe('booking link controller works properly', () => {
         });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await ensureSpaceTypeSelected(page);
 
         // change to facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -957,6 +1000,7 @@ test.describe('booking link controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('f98g_fwas_5g33'),
+            space_type_id: 1,
             space_external_book_url: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -971,6 +1015,7 @@ test.describe('booking link controller works properly', () => {
         });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await ensureSpaceTypeSelected(page);
 
         // change to facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -991,6 +1036,7 @@ test.describe('booking link controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
+            space_type_id: 1,
             space_opening_hours_id: -1, // might need to look into this?
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1007,6 +1053,7 @@ test.describe('booking link controller works properly', () => {
         });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await ensureSpaceTypeSelected(page);
 
         // change to facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -1052,6 +1099,7 @@ test.describe('booking link controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
+            space_type_id: 1,
             space_opening_hours_id: -1, // might need to look into this?
             space_external_book_url: 'http://example.com',
         };
@@ -1071,6 +1119,7 @@ test.describe('space capacity controller works properly', () => {
         });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await ensureSpaceTypeSelected(page);
 
         // change to facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -1098,6 +1147,7 @@ test.describe('space capacity controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
+            space_type_id: 1,
             space_opening_hours_id: -1, // might need to look into this?
             space_capacity: null,
         };
@@ -1113,6 +1163,7 @@ test.describe('space capacity controller works properly', () => {
         });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await ensureSpaceTypeSelected(page);
 
         // swap to facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -1132,6 +1183,7 @@ test.describe('space capacity controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('f98g_fwas_5g33'),
+            space_type_id: 1,
             space_capacity: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1148,6 +1200,7 @@ test.describe('space capacity controller works properly', () => {
         });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await ensureSpaceTypeSelected(page);
 
         // change to facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -1191,6 +1244,7 @@ test.describe('space capacity controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('f98g_fwas_5g33'),
+            space_type_id: 1,
             space_capacity: '7',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1208,6 +1262,7 @@ test.describe('space capacity controller works properly', () => {
         });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await ensureSpaceTypeSelected(page);
 
         // change to facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -1238,6 +1293,7 @@ test.describe('space capacity controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('df40_2jsf_zdk5'),
+            space_type_id: 1,
             space_capacity: '2',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1255,6 +1311,7 @@ test.describe('space capacity controller works properly', () => {
 
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await ensureSpaceTypeSelected(page);
 
         // change to facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -1285,6 +1342,7 @@ test.describe('space capacity controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('df40_2jsf_zdk5'),
+            space_type_id: 1,
             space_capacity: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);

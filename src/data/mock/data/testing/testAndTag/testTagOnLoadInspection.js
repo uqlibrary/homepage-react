@@ -63,7 +63,9 @@ export default {
         "user_license_number": "123456",
         "user_name": "Lee Sibbald",
         "user_department": "UQL",
+        "user_team": "WSS",
         "department_display_name": "Library",
+        "team_display_name": "Work Station Support",
         "user_current_flag": 1,
     },
     "sites": [

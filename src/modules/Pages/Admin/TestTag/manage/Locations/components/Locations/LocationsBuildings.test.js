@@ -94,7 +94,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 
@@ -103,8 +103,8 @@ describe('Locations', () => {
             });
             expect(getByTestId('location_picker-locations-site-input')).toHaveAttribute('value', 'Gatton');
             expect(getByTestId('location_picker-locations-building-input')).not.toHaveAttribute('disabled');
-
-            expect(getByTestId('add_toolbar-locations-add-button')).toHaveTextContent('Add building');
+            expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
+            expect(getByTestId('locations-data-table-toolbar-add-button')).toHaveTextContent('Add building');
 
             const grid = getByTestId('data_table-locations');
             assertHeader(grid, ['Building ID', 'Building name', 'No. assets']);
@@ -129,7 +129,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 
@@ -137,7 +137,8 @@ describe('Locations', () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
 
-            userEvent.click(getByTestId('add_toolbar-locations-add-button'));
+            expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
+            userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
 
@@ -175,7 +176,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 
@@ -223,7 +224,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Library')).toBeInTheDocument();
+            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 
