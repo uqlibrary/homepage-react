@@ -20,7 +20,12 @@ import { addClass, removeClass, standardText } from 'helpers/general';
 
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
-import { FACILITY_TYPE_CHECKBOX, FILTER_CURRENTLY_OPEN } from './spacesHelpers';
+import {
+    FACILITY_TYPE_CHECKBOX,
+    FACILITY_TYPE_SLIDER,
+    FILTER_CURRENTLY_OPEN,
+    FILTER_SPACE_CAPACITY,
+} from './spacesHelpers';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -206,11 +211,16 @@ export const BookableSpacesList = ({
     // console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
 
     const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
+    const FACILITY_TYPE_NAME_CAPACITY = 'Capacity';
 
     const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
+
+    const minimumSpaceCapacity = 1;
+    const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
+    const [maximumSpaceCapacity, setMaximumSpaceCapacity] = React.useState(50);
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -235,6 +245,29 @@ export const BookableSpacesList = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    React.useEffect(() => {
+        if (
+            !bookableSpacesRoomListError &&
+            !bookableSpacesRoomListLoading &&
+            !!bookableSpacesRoomList?.data?.locations
+        ) {
+            // the space with the highest capacity
+            const spaceMaxCapacity = bookableSpacesRoomList?.data?.locations?.reduce(function findMax(
+                highestCapacity,
+                current,
+            ) {
+                return highestCapacity &&
+                    typeof current.space_capacity === 'number' &&
+                    highestCapacity.space_capacity < current.space_capacity
+                    ? current
+                    : highestCapacity;
+            });
+            const calculatedMaxCapaity = !!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity;
+            setMaximumSpaceCapacity(calculatedMaxCapaity);
+            setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
+        }
+    }, [bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
 
     function isLocationOpen(locationId, hoursData) {
         function getDateStringInTimezone(offsetHours = 10) {
@@ -311,10 +344,9 @@ export const BookableSpacesList = ({
                 rejectedFilters?.push(filter?.facility_type_id);
             }
         });
+        console.log('showSpace selectedFiltersByGroup', selectedFiltersByGroup);
 
         // check if space should be excluded due to rejected facility types
-        console.log('selectedFacilityTypes=', selectedFacilityTypes);
-        console.log('rejectedFilters=', rejectedFilters);
         if (rejectedFilters?.length > 0) {
             const hasRejectedFacility = rejectedFilters?.some(rejectedId => {
                 const filter = selectedFacilityTypes?.find(ft => ft?.facility_type_id === rejectedId);
@@ -348,6 +380,15 @@ export const BookableSpacesList = ({
                         return !!space?.space_opening_hours_id
                             ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
                             : false;
+                    } else if (
+                        filter?.facility_special_action &&
+                        filter?.facility_special_action === FILTER_SPACE_CAPACITY
+                    ) {
+                        return (
+                            !!space?.space_capacity &&
+                            space?.space_capacity >= capacityFilterValue[0] &&
+                            space?.space_capacity <= capacityFilterValue[1]
+                        );
                     } else {
                         return spaceFacilityTypes?.includes(filterId);
                     }
@@ -407,6 +448,26 @@ export const BookableSpacesList = ({
             ],
         };
         !!filterOpenFacilityType && filteredFacilityTypeList?.data?.facility_type_groups?.push(filterOpenFacilityType);
+
+        // manually add a "Choose number of people" filter
+        const filterCapacityFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
+            facility_type_group_id: nextFacilityTypeid(filteredFacilityTypeList),
+            facility_type_group_name: FACILITY_TYPE_NAME_CAPACITY,
+            facility_type_group_order: -999,
+            facility_type_group_loads_open: 1,
+            facility_type_group_type: 'choose-many',
+            filterType: FACILITY_TYPE_SLIDER,
+            facility_type_children: [
+                {
+                    facility_type_id: 9998, // must be unique!
+                    facility_type_name: 'Space capacity',
+                    facility_special_action: FILTER_SPACE_CAPACITY,
+                    facility_type: FACILITY_TYPE_SLIDER,
+                },
+            ],
+        };
+        !!filterOpenFacilityType &&
+            filteredFacilityTypeList?.data?.facility_type_groups?.push(filterCapacityFacilityType);
 
         return filteredFacilityTypeList;
     };
@@ -623,6 +684,10 @@ export const BookableSpacesList = ({
                                         facilityTypeList,
                                     )}
                                     suppliedClassName={showFilterSelectorPopup ? 'popupFilterList' : 'hide'}
+                                    minimumSpaceCapacity={minimumSpaceCapacity}
+                                    maximumSpaceCapacity={maximumSpaceCapacity}
+                                    capacityFilterValue={capacityFilterValue}
+                                    setCapacityFilterValue={setCapacityFilterValue}
                                 />
                             </div>
                             {isDesktopView && (
