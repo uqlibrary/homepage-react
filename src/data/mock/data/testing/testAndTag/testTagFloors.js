@@ -11,13 +11,19 @@ export default [
           "floor_id": 1,
           "floor_id_displayed": "2",
           "asset_count": 1,
+          "floor_excluded": false,
+          "parent_excluded": false,
         },
         {
           "floor_id": 2,
           "floor_id_displayed": "3",
           "asset_count": 0,
+          "floor_excluded": false,
+          "parent_excluded": false,
         },
-      ]
+      ],
+      "building_excluded": false,
+      "parent_excluded": false,
     },
     {
       "building_id": 2,
@@ -31,13 +37,19 @@ export default [
           "floor_id": 4,
           "floor_id_displayed": "1",
           "asset_count": 1,
+          "floor_excluded": false,
+          "parent_excluded": false,
         },
         {
           "floor_id": 5,
           "floor_id_displayed": "2",
           "asset_count": 0,
+          "floor_excluded": false,
+          "parent_excluded": false,
         },
-      ]
+      ],
+      "building_excluded": false,
+      "parent_excluded": false,
     },
     {
       "building_id": 8,
@@ -49,15 +61,21 @@ export default [
       "floors": [
         {
           "floor_id": 29,
-          "floor_id_displayed": "1",
+          "floor_id_displayed": "29",
           "asset_count": 1,
+          "floor_excluded": true,
+          "parent_excluded": true,
         },
         {
           "floor_id": 30,
-          "floor_id_displayed": "2",
+          "floor_id_displayed": "30",
           "asset_count": 0,
+          "floor_excluded": false,
+          "parent_excluded": true,
         }
-      ]
+      ],
+      "building_excluded": false,
+      "parent_excluded": true,
     },{
       "building_id": 9,
       "building_id_displayed": "8248",
@@ -68,14 +86,20 @@ export default [
       "floors": [
         {
           "floor_id": 31,
-          "floor_id_displayed": "1",
+          "floor_id_displayed": "31",
           "asset_count": 1,
+          "floor_excluded": false,
+          "parent_excluded": true,
         },
         {
           "floor_id": 32,
-          "floor_id_displayed": "2",
+          "floor_id_displayed": "32",
           "asset_count": 0,
+          "floor_excluded": false,
+          "parent_excluded": true,
         },
-      ]
+      ],
+      "building_excluded": true,
+      "parent_excluded": true,
     }
   ];
