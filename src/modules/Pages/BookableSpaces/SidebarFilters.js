@@ -43,8 +43,14 @@ const visibleRejectedCheckbox = {
 
 const StyledSlider = styled(Slider)(() => ({
     marginTop: '1rem', // space for tooltips to appear in
+    '& .MuiSlider-track': {
+        marginLeft: '0.2rem', // don't let the range bar peek out to the left
+    },
     '& [data-index="0"]': {
-        marginLeft: '0.5rem',
+        marginLeft: '0.6rem', // shift the minimum dot a little to the right so it's all visible
+    },
+    '& [data-index="1"]': {
+        marginLeft: '-0.6rem !important', // shift the maximum dot a little to the left so it's all visible
     },
 }));
 const StyledSliderInput = styled(MuiInput)(() => ({
@@ -59,6 +65,9 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
     paddingLeft: 0,
     marginLeft: '-9px',
     display: 'flex',
+    '& p': {
+        margin: '0 0 0 1rem',
+    },
     '&:has(.rightSlider)': {
         display: 'block',
     },
@@ -481,7 +490,7 @@ export const SidebarFilters = ({
             >
                 {facilityType.facility_type === FACILITY_TYPE_SLIDER ? (
                     <>
-                        <p style={{ marginLeft: '1rem' }}>Our largest space can fit {maximumSpaceCapacity} people.</p>
+                        <p>Our largest space can fit {maximumSpaceCapacity} people.</p>
                         <InputLabel
                             title={`Filter in Spaces with ${facilityType?.facility_type_name}`}
                             htmlFor={`filtertype-${facilityType?.facility_type_id}`}
