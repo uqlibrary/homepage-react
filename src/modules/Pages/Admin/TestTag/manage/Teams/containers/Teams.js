@@ -1,12 +1,11 @@
 import { connect } from 'react-redux';
-import Users from '../components/Users';
+import Teams from '../components/Teams';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
 import { withUser } from '../../../helpers/withUser';
 
 export const mapStateToProps = state => {
     return {
-        ...state.get('testTagUserListReducer'),
         ...state.get('testTagTeamListReducer'),
     };
 };
@@ -17,7 +16,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let UsersContainer = connect(mapStateToProps, mapDispatchToProps)(Users);
-UsersContainer = withUser(UsersContainer);
+let TeamsContainer = connect(mapStateToProps, mapDispatchToProps)(Teams);
+TeamsContainer = withUser(TeamsContainer);
 
-export default UsersContainer;
+export default TeamsContainer;
