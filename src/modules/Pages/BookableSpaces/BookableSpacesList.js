@@ -352,6 +352,7 @@ export const BookableSpacesList = ({
                         ? !isLocationOpen(space?.space_opening_hours_id, weeklyHours)
                         : false;
                 }
+                // we have no "don't include" for capacity
                 return spaceFacilityTypes?.includes(rejectedId);
             });
             if (hasRejectedFacility) {
@@ -372,19 +373,18 @@ export const BookableSpacesList = ({
                 // OR within group
                 const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
                     const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                    if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
-                        return !!space?.space_opening_hours_id
-                            ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
-                            : false;
-                    } else if (
-                        filter?.facility_special_action &&
-                        filter?.facility_special_action === FILTER_SPACE_CAPACITY
-                    ) {
-                        return (
-                            !!space?.space_capacity &&
-                            space?.space_capacity >= capacityFilterValue[0] &&
-                            space?.space_capacity <= capacityFilterValue[1]
-                        );
+                    if (filter?.facility_special_action) {
+                        if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
+                            return !!space?.space_opening_hours_id
+                                ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
+                                : false;
+                        } else if (filter?.facility_special_action === FILTER_SPACE_CAPACITY) {
+                            return (
+                                !!space?.space_capacity &&
+                                space?.space_capacity >= capacityFilterValue[0] &&
+                                space?.space_capacity <= capacityFilterValue[1]
+                            );
+                        }
                     } else {
                         return spaceFacilityTypes?.includes(filterId);
                     }
@@ -397,7 +397,7 @@ export const BookableSpacesList = ({
         return true;
     }
 
-    const nextFacilityTypeid = filteredFacilityTypeList => {
+    const nextFacilityTypeId = filteredFacilityTypeList => {
         return (
             Math.max(...filteredFacilityTypeList?.data?.facility_type_groups?.map(g => g?.facility_type_group_id)) + 1
         );
@@ -428,7 +428,7 @@ export const BookableSpacesList = ({
 
         // manually add a "Currently Open" filter
         const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
-            facility_type_group_id: nextFacilityTypeid(filteredFacilityTypeList),
+            facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
             facility_type_group_name: FACILITY_TYPE_NAME_CURRENTLY_OPEN,
             facility_type_group_order: -999,
             facility_type_group_loads_open: 1,
@@ -447,7 +447,7 @@ export const BookableSpacesList = ({
 
         // manually add a "Choose number of people" filter
         const filterCapacityFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
-            facility_type_group_id: nextFacilityTypeid(filteredFacilityTypeList),
+            facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
             facility_type_group_name: FACILITY_TYPE_NAME_CAPACITY,
             facility_type_group_order: -999,
             facility_type_group_loads_open: 1,
