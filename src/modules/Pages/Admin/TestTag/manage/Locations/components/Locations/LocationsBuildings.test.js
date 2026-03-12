@@ -224,6 +224,7 @@ describe('Locations', () => {
             expect(getByTestId('building_excluded_cb-input')).not.toHaveAttribute('disabled');
             expect(getByTestId('building_excluded_cb-input')).not.toHaveAttribute('disabled');
 
+            await userEvent.click(getByTestId('building_id_displayed-input'));
             await userEvent.type(getByTestId('building_id_displayed-input'), ' update');
             await userEvent.type(getByTestId('building_name-input'), ' update');
             await userEvent.click(getByTestId('building_excluded_cb-input'));
