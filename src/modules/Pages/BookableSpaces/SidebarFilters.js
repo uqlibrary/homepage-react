@@ -263,7 +263,6 @@ export const SidebarFilters = ({
     capacityFilterValue,
     setCapacityFilterValue,
 }) => {
-    // console.log('SidebarFilters', minimumSpaceCapacity, maximumSpaceCapacity, capacityFilterValue);
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
 
     function sortedUsedGroups() {
@@ -273,12 +272,7 @@ export const SidebarFilters = ({
         ) {
             return [];
         }
-        console.log(
-            'sortedUsedGroups filteredFacilityTypeList?.data?.facility_type_groups=',
-            filteredFacilityTypeList?.data?.facility_type_groups,
-        );
         const usedFilterList = [...filteredFacilityTypeList?.data?.facility_type_groups];
-        console.log('sortedUsedGroups usedFilterLists=', usedFilterList);
 
         return usedFilterList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order);
     }
@@ -394,15 +388,9 @@ export const SidebarFilters = ({
         const parts = idInput?.split('-');
         const facilityTypeId =
             !!parts && parts.length === 3 ? parseInt(parts.pop(), 10) : /* istanbul ignore next */ -999;
-        console.log(' capacity handleCapacityFilterChange e=', e || 'not found');
-        console.log(' capacity handleCapacityFilterChange facilityTypeId=', facilityTypeId);
-        console.log(' capacity handleCapacityFilterChange newValue=', newValue);
 
-        console.log(' capacity handleCapacityFilterChange selectedFacilityTypes=', selectedFacilityTypes);
         const capacityFilterType = selectedFacilityTypes?.find(ft => ft.facility_type_id === facilityTypeId);
-        console.log(' capacity handleCapacityFilterChange capacityFilterType=', capacityFilterType);
         const isCapacityDefaultValues = newValue[0] === minimumSpaceCapacity && newValue[1] === maximumSpaceCapacity;
-        console.log(' capacity handleCapacityFilterChange isCapacityDefaultValues=', isCapacityDefaultValues);
         if (isCapacityDefaultValues) {
             handleFilterRejection(false, facilityTypeId, capacityFilterType?.facility_special_action);
         } else {
@@ -410,12 +398,10 @@ export const SidebarFilters = ({
         }
     };
     const handleCapacityMinInputChange = e => {
-        console.log(' capacity handleCapacityMinInputChange  e=', e?.target?.value, e || 'not found');
         const newMin = e?.target?.value === '' ? '' : Number(e?.target?.value);
         handleCapacityFilterChange(e, [newMin, capacityFilterValue[1]]);
     };
     const handleCapacityMinInputBlur = e => {
-        console.log(' capacity handleCapacityInputBlur e=', e?.target?.value, e || 'not found');
         const value = e?.target?.value;
         if (value < 0) {
             handleCapacityFilterChange(e, [minimumSpaceCapacity, capacityFilterValue[1]]);
@@ -424,12 +410,10 @@ export const SidebarFilters = ({
         }
     };
     const handleCapacityMaxInputChange = e => {
-        console.log(' capacity handleCapacityMaxInputChange  e=', e?.target?.value, e || 'not found');
         const newMax = e?.target?.value === '' ? '' : Number(e?.target?.value);
         handleCapacityFilterChange(e, [capacityFilterValue[0], newMax]);
     };
     const handleCapacityMaxInputBlur = e => {
-        console.log(' capacity handleCapacityMaxInputBlur e=', e);
         const value = e.target.value;
         if (value < 0) {
             handleCapacityFilterChange(e, [minimumSpaceCapacity, capacityFilterValue[1]]);
@@ -467,7 +451,6 @@ export const SidebarFilters = ({
                 facility_type: ft?.facility_type,
             };
         });
-        console.log('setSelectedFacilityTypes deSelectAll');
         setSelectedFacilityTypes(newFacilityTypes);
 
         setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);

@@ -208,7 +208,6 @@ export const BookableSpacesList = ({
     const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
     const isTabletView = isMobileView ? false : _isTabletViewJust;
     const isDesktopView = !isTabletView && !isMobileView;
-    // console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
 
     const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
     const FACILITY_TYPE_NAME_CAPACITY = 'Capacity';
@@ -285,7 +284,6 @@ export const BookableSpacesList = ({
 
         // Find matching location by lid (springshare library id)
         const openingHoursLocationData = hoursData?.locations?.find(loc => loc?.lid === locationId) || {};
-        console.log('isLocationOpen openingHoursLocationData', openingHoursLocationData);
 
         const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
         if (!!openingHoursLocationData?.departments) {
@@ -344,7 +342,6 @@ export const BookableSpacesList = ({
                 rejectedFilters?.push(filter?.facility_type_id);
             }
         });
-        console.log('showSpace selectedFiltersByGroup', selectedFiltersByGroup);
 
         // check if space should be excluded due to rejected facility types
         if (rejectedFilters?.length > 0) {
@@ -357,7 +354,6 @@ export const BookableSpacesList = ({
                 }
                 return spaceFacilityTypes?.includes(rejectedId);
             });
-            console.log('rejectedFilters=', hasRejectedFacility, rejectedFilters);
             if (hasRejectedFacility) {
                 return false;
             }
@@ -562,7 +558,6 @@ export const BookableSpacesList = ({
             setPreviousToggledSpaceButton(toggleSpaceButton);
         }
     };
-    console.log('BookableSpacesList filteredSpaceLocations=', filteredSpaceLocations);
     const showMap = () => {
         return (
             <StyledMapWrapperDiv>
@@ -582,13 +577,6 @@ export const BookableSpacesList = ({
                             ?.filter(m => !!m?.space_latitude && !!m?.space_longitude)
                             ?.map(mapPoint => {
                                 // show the filtered Spaces on the map
-                                // console.log(
-                                //     'map point:',
-                                //     mapPoint.space_name,
-                                //     mapPoint.space_library_name,
-                                //     mapPoint.space_latitude,
-                                //     mapPoint.space_longitude,
-                                // );
                                 const locationKey = `mappoint-space-${mapPoint?.space_id}`;
                                 return (
                                     <Marker
