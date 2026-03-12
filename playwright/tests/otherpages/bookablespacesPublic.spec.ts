@@ -309,7 +309,7 @@ test.describe('Spaces', () => {
             // third panel
             page.getByTestId(`${LIV}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${LIV}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-facility`).locator(' > *')).toHaveCount(10);
+            await expect(page.getByTestId(`${LIV}-facility`).locator(' > *')).toHaveCount(9);
             await expect(page.getByTestId(`${LIV}-facility-23`)).toContainText('Toilets, female');
             await expect(page.getByTestId(`${LIV}-facility-22`)).toContainText('Toilets, male');
             await expect(page.getByTestId(`${LIV}-facility-29`)).toContainText('Recharge Station');

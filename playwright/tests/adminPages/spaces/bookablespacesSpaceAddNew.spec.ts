@@ -132,6 +132,11 @@ test.describe('Spaces Admin - add new space', () => {
 
         const selectedSpaceTypeId = await chooseAnySpaceType(page);
 
+        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+        await expect(capacityNumberField).toBeVisible();
+        await capacityNumberField.clear();
+        await capacityNumberField.fill('1');
+
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
         await page.getByTestId('spaces-form-next-button').click(); // to final step, imagery
@@ -140,6 +145,7 @@ test.describe('Spaces Admin - add new space', () => {
         await page.getByTestId('SpacesAdminPage-systemTitle').click();
 
         // click save button
+        await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible();
         const saveButton = page.getByTestId('admin-spaces-save-button-submit');
         await expect(saveButton).toBeVisible();
         await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
@@ -161,7 +167,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_latitude: PACE_DEFAULT_LATITUDE,
             space_longitude: PACE_DEFAULT_LONGITUDE,
             space_external_book_url: null,
-            space_capacity: null,
+            space_capacity: '1',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -181,10 +187,11 @@ test.describe('Spaces Admin - add new space', () => {
         const descriptionField = page.getByRole('textbox', { name: 'Editor editing area: main' });
         await descriptionField.fill('This is a sunny corner in the Law library where you blah blah blah');
 
-        // await expect(page.getByTestId('add-space-description')).toBeVisible();
-        // await page
-        //     .getByTestId('add-space-description')
-        //     .fill('This is a sunny corner in the Law library where you blah blah blah');
+        // enter a Space capacity
+        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+        await expect(capacityNumberField).toBeVisible();
+        await capacityNumberField.clear();
+        await capacityNumberField.fill('8');
 
         // change to facility type tab
         await page.getByTestId('spaces-form-next-button').click();
@@ -196,17 +203,6 @@ test.describe('Spaces Admin - add new space', () => {
         await isBookableCheckbox.check();
         await expect(bookingUrlField).toBeVisible();
         await bookingUrlField.fill('https://example.com');
-
-        // enter a Space capacity
-        const capacityCheckbox = page.getByTestId('contains-capacity-checkbox').locator('input');
-        await expect(capacityCheckbox).not.toBeChecked();
-        await expect(page.getByTestId('capacity-details')).not.toBeVisible();
-        await capacityCheckbox.click();
-        await expect(page.getByTestId('capacity-details')).toBeVisible();
-
-        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
-        await capacityNumberField.click(); // focus
-        await capacityNumberField.fill('8');
 
         await expect(page.getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`).locator('input')).toBeVisible();
         await expect(page.getByTestId(`facility-type-listitem-${ASKUS_FILTER_TYPE}`)).toContainText('AskUs service');
@@ -294,6 +290,7 @@ test.describe('Spaces Admin - add new space', () => {
         await page.getByTestId('add-space-photo-description').fill('a table and chairs in a stark white room');
 
         // click save button
+        await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await page.getByTestId('admin-spaces-save-button-submit').click();
 
@@ -332,10 +329,16 @@ test.describe('Spaces Admin - add new space', () => {
 
         await chooseAnySpaceType(page);
 
+        // enter a Space capacity
+        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+        await expect(capacityNumberField).toBeVisible();
+        await capacityNumberField.clear();
+        await capacityNumberField.fill('8');
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
         await page.getByTestId('spaces-form-next-button').click(); // to final step, imagery
 
+        await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await page.getByTestId('admin-spaces-save-button-submit').click();
 
@@ -345,7 +348,7 @@ test.describe('Spaces Admin - add new space', () => {
         // check the popup
         await assertAccessibility(page, '.MuiDialog-container[role="presentation"]');
     });
-    test('add new space - validation - required fields 1', async ({ page }) => {
+    test('add new space - validation - required fields', async ({ page }) => {
         // when the user has not entered required fields, they get an error
 
         //  blank form gives an error
@@ -355,7 +358,6 @@ test.describe('Spaces Admin - add new space', () => {
 
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeDisabled();
-        // await page.getByTestId('admin-spaces-save-button-submit').click();
         await expect(page.getByTestId('spaces-button-error-list')).toBeVisible();
         await expect(page.getByTestId('spaces-button-error-list').locator('[data-error-count="2"]')).toBeDefined();
         await expect(page.getByTestId('spaces-button-error-list')).toContainText('These errors occurred');
@@ -373,6 +375,11 @@ test.describe('Spaces Admin - add new space', () => {
 
         // blur the form
         await page.getByTestId('SpacesAdminPage-systemTitle').click();
+
+        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+        await expect(capacityNumberField).toBeVisible();
+        await capacityNumberField.clear();
+        await capacityNumberField.fill('1');
 
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
@@ -397,6 +404,7 @@ test.describe('Spaces Admin - add new space', () => {
         await page.getByTestId('spaces-form-next-button').click(); // to locations
         await page.getByTestId('spaces-form-next-button').click(); // to final step, imagery
 
+        await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible();
         await page.getByTestId('admin-spaces-save-button-submit').click();
 
         // now the form is valid!
@@ -700,7 +708,13 @@ test.describe('Spaces Admin - errors', () => {
 
         await expect(spaceNameField).toBeVisible();
         await spaceNameField.fill('W12343');
+
         await chooseAnySpaceType(page);
+
+        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+        await expect(capacityNumberField).toBeVisible();
+        await capacityNumberField.clear();
+        await capacityNumberField.fill('1');
 
         // blur the form
         await page.getByTestId('SpacesAdminPage-systemTitle').click();
@@ -709,6 +723,7 @@ test.describe('Spaces Admin - errors', () => {
         await page.getByTestId('spaces-form-next-button').click(); // to locations
         await page.getByTestId('spaces-form-next-button').click(); // to final imagery tab
         // click save button
+        await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await page.getByTestId('admin-spaces-save-button-submit').click();
 

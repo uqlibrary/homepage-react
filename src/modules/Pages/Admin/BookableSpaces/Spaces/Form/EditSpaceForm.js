@@ -346,6 +346,12 @@ export const EditSpaceForm = ({
         if (!currentValues?.space_type_id) {
             errorMessages.push({ field: 'space_type_id', message: 'A Type is required.' });
         }
+        if (!currentValues?.space_capacity || currentValues?.space_capacity < 1) {
+            errorMessages.push({
+                field: 'space_capacity',
+                message: 'The number of patrons who can use the space is required is required.',
+            });
+        }
         return errorMessages;
     };
 
@@ -354,12 +360,6 @@ export const EditSpaceForm = ({
             errorMessages.push({
                 field: 'space_external_book_url',
                 message: 'Provide the booking link, or uncheck the checkbox.',
-            });
-        }
-        if (!!hasCapacityLimit && !currentValues?.space_capacity) {
-            errorMessages?.push({
-                field: 'space_capacity',
-                message: 'Provide the capacity of the Space, or uncheck the capacity checkbox.',
             });
         }
         return errorMessages;
@@ -501,15 +501,6 @@ export const EditSpaceForm = ({
             } else {
                 // it must exist and we are removing it
                 theNewValue = formValues?.facility_types?.filter(f => f?.facility_type_id !== clickedFacilityTypeId);
-            }
-        } else if (_prop === 'space_capacity') {
-            theNewValue = e?.target?.value;
-        } else if (_prop === 'hasCapacityLimitCheckbox') {
-            setHasCapacityLimit(e?.target?.checked);
-            if (theNewValue === false) {
-                console.log('handleChange capacity cleared');
-                // they have cleared the checkbox. Wipe the capacity
-                prop = 'space_capacity';
             }
         } else if (prop === 'space_type_new') {
             // update the form value for the Select, not the text field (which is cleared in the form completion
@@ -765,7 +756,7 @@ export const EditSpaceForm = ({
         valuesToSend.space_type_id = formValues?.space_type_id || selectedSpaceType?.space_type_id || null;
         valuesToSend.space_floor_id = formValues?.floor_id;
         valuesToSend.space_precise = formValues?.space_precise;
-        valuesToSend.space_capacity = !!formValues?.space_capacity ? formValues?.space_capacity : null;
+        valuesToSend.space_capacity = !!formValues?.space_capacity ? formValues?.space_capacity : 1;
         valuesToSend.space_description = formValues?.space_description;
         valuesToSend.space_photo_url = formValues?.space_photo_url;
         valuesToSend.space_photo_description = formValues?.space_photo_description;
@@ -827,7 +818,6 @@ export const EditSpaceForm = ({
                 const match = l?.library_id === formValues?.library_id;
                 return match;
             }) || {};
-        const currentLibraryFloors = currentLibrary?.floors || [];
 
         const updatedLocation = {};
         updatedLocation.currentCampus = currentCampus;
@@ -870,8 +860,6 @@ export const EditSpaceForm = ({
 
     const bookableCheckboxLabel = 'This Space is bookable';
     const bookableUrlLabel = { inputProps: { 'aria-label': bookableCheckboxLabel } };
-    const capacityCheckboxLabel = 'This Space has a limit to how many patrons it can hold.';
-    const capacityCounterLabel = { inputProps: { 'aria-label': capacityCheckboxLabel } };
     const aboutPanel = () => {
         return (
             <Grid container spacing={3}>
@@ -972,6 +960,37 @@ export const EditSpaceForm = ({
                         {reportErrorMessage('space_description')}
                     </StyledErrorMessageTypography>
                 </Grid>
+                <Grid item xs={12}>
+                    <div data-testid="capacity-details">
+                        <Typography component={'h4'} variant={'p'}>
+                            How many people can use this space?
+                        </Typography>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="space_capacity">
+                                Enter the number of patrons who can make use of this Space *
+                            </InputLabel>
+                            <Input
+                                type="number"
+                                id="space_capacity"
+                                data-testid="space_capacity"
+                                value={formValues?.space_capacity || 0}
+                                onChange={handleChange('space_capacity')}
+                                // onBlur={handleChange('space_capacity')}
+                                onBlur={handleFieldCompletion}
+                                style={{ width: '5rem' }}
+                                inputProps={{
+                                    style: { textAlign: 'right' },
+                                    min: 1,
+                                    // onchange: formValid(formValues),
+                                }}
+                                required
+                            />
+                            <StyledErrorMessageTypography component={'div'}>
+                                {reportErrorMessage('space_capacity')}
+                            </StyledErrorMessageTypography>
+                        </FormControl>
+                    </div>
+                </Grid>
             </Grid>
         );
     };
@@ -1028,64 +1047,6 @@ export const EditSpaceForm = ({
                                 data-testid="spaces-skip-reminder-icon"
                             />
                             Not bookable? Ensure no "Bookable" checkboxes are checked below!
-                        </StyledAttentionMessageDiv>
-                    )}
-                </StyledHighlightedGrid>
-                <StyledHighlightedGrid item xs={12}>
-                    <FormControlLabel
-                        label={capacityCheckboxLabel}
-                        data-testid="contains-capacity-checkbox"
-                        control={
-                            <Checkbox
-                                {...capacityCounterLabel}
-                                checked={!!hasCapacityLimit || false}
-                                data-testid="has-space-capacity"
-                                className={'checkbox'}
-                                onChange={handleChange('hasCapacityLimitCheckbox')}
-                            />
-                        }
-                    />
-                    {!!hasCapacityLimit && (
-                        <div data-testid="capacity-details">
-                            <Typography component={'h4'} variant={'p'}>
-                                This Space has limited capacity
-                            </Typography>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel htmlFor="space_capacity">
-                                    Enter the number of patrons who can make use of this Space *
-                                </InputLabel>
-                                <Input
-                                    type="number"
-                                    id="space_capacity"
-                                    data-testid="space_capacity"
-                                    value={formValues?.space_capacity || 0}
-                                    onChange={handleChange('space_capacity')}
-                                    // onBlur={handleChange('space_capacity')}
-                                    onBlur={handleFieldCompletion}
-                                    style={{ width: '5rem' }}
-                                    inputProps={{
-                                        style: { textAlign: 'right' },
-                                        min: 1,
-                                        // onchange: formValid(formValues),
-                                    }}
-                                />
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('space_capacity')}
-                                </StyledErrorMessageTypography>
-                            </FormControl>
-                            <StyledAttentionMessageDiv>
-                                <WarningAmberIcon />
-                                Also choose any related Capacity checkbox below!
-                            </StyledAttentionMessageDiv>
-                        </div>
-                    )}
-                    {!hasCapacityLimit && (
-                        <StyledAttentionMessageDiv>
-                            <InfoOutlined
-                                style={{ color: theme?.palette.accent.main }}
-                                data-testid="capacity-skip-reminder-icon"
-                            />
-                            No capacity limit? Ensure no "Capacity" checkboxes are checked below!
                         </StyledAttentionMessageDiv>
                     )}
                 </StyledHighlightedGrid>

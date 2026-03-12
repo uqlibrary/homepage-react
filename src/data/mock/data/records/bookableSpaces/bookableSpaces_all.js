@@ -288,10 +288,6 @@ export default {
                 {
                     "facility_type_id": 14,
                     "facility_type_name": "Undergrad spaces"
-                },
-                {
-                    "facility_type_id": 51,
-                    "facility_type_name": "Single person space"
                 }
             ],
             space_type: 'Computer room',
