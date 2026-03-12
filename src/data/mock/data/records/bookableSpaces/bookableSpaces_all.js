@@ -146,7 +146,7 @@ export default {
                 "space_type_description": "A space type designed for group study and collaboration. These rooms typically include features such as larger tables, whiteboards, and AV equipment to facilitate group work."
             },
             space_services_page: "https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library",
-            space_opening_hours_override: 'this space opens at 8am',
+            "space_opening_hours_override": null,
             created_at: "2025-08-01 10:00:00",
             updated_at: "2025-08-01 11:00:00",
             "space_capacity": 5,
@@ -414,7 +414,7 @@ export default {
                 "space_photo_description": null,
                 "space_opening_hours_id": 3823,
                 "space_services_page": null,
-                "space_opening_hours_override": null,
+                space_opening_hours_override: 'this space opens at 8am',
                 "created_at": "2025-10-07T05:36:16.000000Z",
                 "updated_at": "2025-12-03T01:54:01.000000Z",
                 "space_capacity": 8,

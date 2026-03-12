@@ -128,10 +128,9 @@ test.describe('Spaces', () => {
             // second panel
             await expect(page.getByTestId(`${PACE}-summary-hours`)).toBeVisible();
             await expect(page.getByTestId(`${PACE}-summary-hours`)).toContainText(
-                'Dutton Park Health Sciences opening hours Today: 7am - 10:30pm',
+                'Opening hours Today: 10:15pm - 10:30pm',
             );
             await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).toContainText('this space opens at 8am');
 
             // third panel
             await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
@@ -141,8 +140,7 @@ test.describe('Spaces', () => {
                 'Open from 7am Monday - Friday',
             );
 
-            // the spaces below the first 3 have the correct details (only a light check)
-            // summary hours show correctly
+            // the spaces below the first 3 have the correct details
             await expect(page.getByTestId(`${FOURTH_PANEL}-summary-hours`)).toBeVisible();
             await expect(page.getByTestId(`${FOURTH_PANEL}-summary-hours`)).toContainText(
                 'Opening hours Today: 7:30am - 7:30pm',
@@ -150,8 +148,12 @@ test.describe('Spaces', () => {
 
             await expect(page.getByTestId(`${FIFTH_PANEL}-summary-hours`)).toBeVisible();
             await expect(page.getByTestId(`${FIFTH_PANEL}-summary-hours`)).toContainText(
-                'Opening hours Today: 7:30am - 7:30pm',
+                'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
             );
+            await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).toContainText(
+                'this space opens at 8am',
+            );
+
             await expect(page.getByTestId(`${SIXTH_PANEL}-summary-hours`)).not.toBeVisible();
             await expect(page.getByTestId(`${SEVENTH_PANEL}-summary-hours`)).toBeVisible();
             await expect(page.getByTestId(`${SEVENTH_PANEL}-summary-hours`)).toContainText(
@@ -243,8 +245,13 @@ test.describe('Spaces', () => {
             // second panel
             await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
             page.getByTestId(`${PACE}-toggle-panel-button`).click();
-            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).toContainText(
+            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
+
+            // fifth panel
+            await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).not.toBeVisible();
+            page.getByTestId(`${FIFTH_PANEL}-toggle-panel-button`).click();
+            await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).toBeVisible();
+            await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).toContainText(
                 'Note: this space opens at 8am',
             );
         });
@@ -523,6 +530,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
         });
         test('can filter for open spaces', async ({ page }) => {
+            // we have hacked the "opening hours" data so only one record is "currently_open"
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');

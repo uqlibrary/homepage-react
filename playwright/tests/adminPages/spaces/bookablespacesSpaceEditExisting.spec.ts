@@ -1,4 +1,4 @@
-import { expect, test } from '@uq/pw/test';
+import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 
@@ -14,7 +14,7 @@ const TAB_IMAGERY = 'tab-imagery';
 const LAW_DEFAULT_LATITUDE = '-27.49718';
 const LAW_DEFAULT_LONGITUDE = '153.01214';
 
-const chooseAnySpaceType = async page => {
+const chooseAnySpaceType = async (page: Page) => {
     const spaceTypeSelector = page.getByTestId('space-type');
     await expect(spaceTypeSelector).toBeVisible();
     await spaceTypeSelector.click();
@@ -28,7 +28,7 @@ const chooseAnySpaceType = async page => {
     return Number(selectedSpaceTypeId);
 };
 
-const ensureSpaceTypeSelected = async page => {
+const ensureSpaceTypeSelected = async (page: Page) => {
     await page.getByTestId(TAB_ABOUT).click();
     const nativeSpaceTypeInput = page.locator('#add-space-type-input');
     await expect(nativeSpaceTypeInput).toBeAttached();
@@ -41,7 +41,7 @@ const ensureSpaceTypeSelected = async page => {
     return chooseAnySpaceType(page);
 };
 
-const chooseDifferentSpaceType = async page => {
+const chooseDifferentSpaceType = async (page: Page) => {
     const spaceTypeCombobox = page.getByRole('combobox', { name: 'Choose an existing Space type *' });
     await expect(spaceTypeCombobox).toBeVisible();
     const currentSpaceTypeName = ((await spaceTypeCombobox.textContent()) || '').trim();
@@ -255,9 +255,10 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(mapTab(3)).toHaveCSS('color', COLOR_UQPURPLE);
 
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
-            'this space opens at 8am',
-        );
+        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue('');
+        // await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
+        //     'this space opens at 8am',
+        // );
 
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
         await expect(page.getByTestId('space_services_page').locator('input')).toHaveValue(
@@ -375,6 +376,31 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
         await expect(cancelButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(cancelButton).toHaveCSS('color', COLOR_UQPURPLE);
+
+        const saveButton = page.getByTestId('admin-spaces-save-button-submit');
+        await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+        await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+        await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
+    });
+    test('override hours load properly', async ({ page }) => {
+        await page.goto('/admin/spaces/edit/a00de509-570b-4acb-9ca1-89c4baebe2e6?user=libSpaces');
+        await page.setViewportSize({
+            width: 1300,
+            height: 1000,
+        });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        // change to Location tab
+        await page.getByTestId(TABS_LOCATION_HOURS).click();
+
+        await expect(page.getByTestId('space-2-summary-hours').locator('input')).toHaveValue(
+            'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
+        );
+        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
+            'this space opens at 8am',
+        );
 
         const saveButton = page.getByTestId('admin-spaces-save-button-submit');
         await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
