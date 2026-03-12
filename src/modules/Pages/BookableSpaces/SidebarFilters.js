@@ -274,14 +274,6 @@ export const SidebarFilters = ({
         return usedFilterList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order);
     }
 
-    const capacityFilterIsActive = ft => {
-        const result =
-            ft?.facility_type === FACILITY_TYPE_SLIDER &&
-            capacityFilterValue[0] > minimumSpaceCapacity &&
-            capacityFilterValue[1] < maximumSpaceCapacity;
-        ft?.facility_type === FACILITY_TYPE_SLIDER && console.log('capacityFilterIsActive', result, ft);
-        return result;
-    };
     React.useEffect(() => {
         if (
             facilityTypeListError === false &&
@@ -505,6 +497,7 @@ export const SidebarFilters = ({
                                 onBlur={handleCapacityMinInputBlur}
                                 inputProps={{
                                     id: `capacitySlider-inputRight-${facilityType?.facility_type_id}`,
+                                    'data-testid': 'capacitySlider-inputRight',
                                     step: 1,
                                     min: minimumSpaceCapacity,
                                     max: capacityFilterValue[1] - 1,
@@ -540,6 +533,7 @@ export const SidebarFilters = ({
                                 onBlur={handleCapacityMaxInputBlur}
                                 inputProps={{
                                     id: `capacitySlider-inputLeft-${facilityType?.facility_type_id}`,
+                                    'data-testid': 'capacitySlider-inputLeft',
                                     step: 1,
                                     min: capacityFilterValue[0] + 1,
                                     max: maximumSpaceCapacity,

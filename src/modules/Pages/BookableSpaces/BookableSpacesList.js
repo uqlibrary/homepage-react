@@ -21,8 +21,8 @@ import { addClass, removeClass, standardText } from 'helpers/general';
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import {
-    FACILITY_TYPE_SLIDER,
     FACILITY_TYPE_CHECKBOX,
+    FACILITY_TYPE_SLIDER,
     FILTER_CURRENTLY_OPEN,
     FILTER_SPACE_CAPACITY,
 } from './spacesHelpers';
@@ -263,8 +263,9 @@ export const BookableSpacesList = ({
                     ? current
                     : highestCapacity;
             });
-            setMaximumSpaceCapacity(!!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity);
-            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
+            const calculatedMaxCapaity = !!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity;
+            setMaximumSpaceCapacity(calculatedMaxCapaity);
+            setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
         }
     }, [bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
 
@@ -321,7 +322,6 @@ export const BookableSpacesList = ({
 
     function showSpace(space, facilityTypeToGroup, selectedFacilityTypes) {
         const spaceFacilityTypes = space?.facility_types?.map(item => item?.facility_type_id);
-        console.log('showSpace space', space.space_id, spaceFacilityTypes);
 
         // Create a map of facility_type_id to group_id for quick lookup
         // Group selected filters by their facility type group
@@ -380,16 +380,15 @@ export const BookableSpacesList = ({
                         return !!space?.space_opening_hours_id
                             ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
                             : false;
-                        // } else if (
-                        //     filter?.facility_special_action &&
-                        //     filter?.facility_special_action === FILTER_SPACE_CAPACITY
-                        // ) {
-                        //     const showSpace =
-                        //         !!space?.space_capacity &&
-                        //         space?.space_capacity[0] > minimumSpaceCapacity &&
-                        //         space?.space_capacity[1] < maximumSpaceCapacity;
-                        //     console.log('showSpace space', space.space_id, space?.space_capacity, showSpace);
-                        //     return showSpace;
+                    } else if (
+                        filter?.facility_special_action &&
+                        filter?.facility_special_action === FILTER_SPACE_CAPACITY
+                    ) {
+                        return (
+                            !!space?.space_capacity &&
+                            space?.space_capacity >= capacityFilterValue[0] &&
+                            space?.space_capacity <= capacityFilterValue[1]
+                        );
                     } else {
                         return spaceFacilityTypes?.includes(filterId);
                     }
