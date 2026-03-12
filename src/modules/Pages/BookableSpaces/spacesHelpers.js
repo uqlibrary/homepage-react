@@ -1,6 +1,10 @@
 import React from 'react';
 
-export const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
+export const FILTER_CURRENTLY_OPEN = 'open';
+export const FILTER_SPACE_CAPACITY = 'capacity';
+
+export const FACILITY_TYPE_CHECKBOX = 'checkbox';
+export const FACILITY_TYPE_SLIDER = 'slider';
 
 export function getOrdinalSuffixFor(number) {
     const mod10 = number % 10;
