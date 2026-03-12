@@ -134,6 +134,7 @@ export const BookableSpacesEditSpace = ({
                 space_precise: bookableSpaceGetResult?.data?.space_precise,
                 space_services_page: bookableSpaceGetResult?.data?.space_services_page,
                 space_type: bookableSpaceGetResult?.data?.space_type,
+                space_type_id: bookableSpaceGetResult?.data?.space_type_id,
                 space_uuid: bookableSpaceGetResult?.data?.space_uuid,
             });
         }
