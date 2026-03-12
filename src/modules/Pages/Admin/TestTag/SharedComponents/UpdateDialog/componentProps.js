@@ -1,0 +1,121 @@
+/* istanbul ignore file */
+
+// Common props shared by TextField, Checkbox & Autocomplete (8 props)
+export const commonPropNames = ['className', 'classes', 'disabled', 'id', 'name', 'onChange', 'size', 'sx', 'value'];
+
+// TextField-specific props (28 props)
+export const textfieldPropNames = [
+    'FormHelperTextProps',
+    'InputLabelProps',
+    'InputProps',
+    'SelectProps',
+    'autoComplete',
+    'autoFocus',
+    'children',
+    'color',
+    'defaultValue',
+    'error',
+    'fullWidth',
+    'helperText',
+    'inputProps',
+    'inputRef',
+    'label',
+    'margin',
+    'maxRows',
+    'minRows',
+    'multiline',
+    'onBlur',
+    'onFocus',
+    'onClick',
+    'placeholder',
+    'required',
+    'rows',
+    'select',
+    'type',
+    'variant',
+];
+
+// Checkbox-specific props (11 props)
+export const checkboxPropNames = [
+    'checked',
+    'checkedIcon',
+    'color',
+    'defaultChecked',
+    'disableRipple',
+    'icon',
+    'indeterminate',
+    'indeterminateIcon',
+    'inputProps',
+    'inputRef',
+    'required',
+];
+
+// Autocomplete-specific props (57 props)
+export const autocompletePropNames = [
+    'ChipProps',
+    'ListboxComponent',
+    'ListboxProps',
+    'PaperComponent',
+    'PopperComponent',
+    'autoComplete',
+    'autoHighlight',
+    'autoSelect',
+    'blurOnSelect',
+    'clearIcon',
+    'clearOnBlur',
+    'clearOnEscape',
+    'clearText',
+    'closeText',
+    'componentsProps',
+    'defaultValue',
+    'disableClearable',
+    'disableCloseOnSelect',
+    'disableListWrap',
+    'disablePortal',
+    'disabledItemsFocusable',
+    'filterOptions',
+    'filterSelectedOptions',
+    'forcePopupIcon',
+    'freeSolo',
+    'fullWidth',
+    'getLimitTagsText',
+    'getOptionDisabled',
+    'getOptionKey',
+    'getOptionLabel',
+    'groupBy',
+    'handleHomeEndKeys',
+    'includeInputInList',
+    'inputValue',
+    'isOptionEqualToValue',
+    'limitTags',
+    'loading',
+    'loadingText',
+    'multiple',
+    'noOptionsText',
+    'onClose',
+    'onHighlightChange',
+    'onInputChange',
+    'onKeyDown',
+    'onOpen',
+    'open',
+    'openOnFocus',
+    'openText',
+    'options',
+    'popupIcon',
+    'readOnly',
+    'renderGroup',
+    'renderInput',
+    'renderOption',
+    'renderTags',
+    'selectOnFocus',
+    'slotProps',
+    'error',
+];
+
+// insert additional props that
+// ordinarily will be stripped, such as
+// when a component has a renderInput slot
+// (e.g. Autocomplete -> TextField)
+export const overrides = {
+    autocomplete: ['InputLabelProps', 'inputProps', 'onClick'],
+};
