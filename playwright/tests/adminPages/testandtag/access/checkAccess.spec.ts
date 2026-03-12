@@ -228,9 +228,7 @@ test.describe('Test and Tag Page Access', () => {
     const visitManageLocations = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/locations?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(
-            standardPage.getByText(expectedAllowed ? 'for Work Station Support (Library)' : 'Page unavailable'),
-        ).toBeVisible();
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
     };
 
     const visitManageUsers = async (page: Page, user: string, expectedAllowed = true) => {

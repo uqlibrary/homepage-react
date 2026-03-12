@@ -518,7 +518,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `Locations management for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `Locations management for ${dept}`,
                 },
                 form: {
                     title: 'Filter',

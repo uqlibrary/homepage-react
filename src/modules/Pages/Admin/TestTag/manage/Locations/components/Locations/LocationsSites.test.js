@@ -85,7 +85,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
             expect(getByTestId('location_picker-locations-site-input')).toBeInTheDocument();
             expect(getByTestId('location_picker-locations-site-input')).toHaveAttribute('value', 'All sites');
             expect(getByTestId('location_picker-locations-site-input')).not.toHaveAttribute('disabled');
@@ -125,7 +125,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
 
             expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
 
@@ -195,7 +195,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
 
             // update with excluded =true
             await userEvent.click(getByTestId('action_cell-1-edit-button'));
