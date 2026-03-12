@@ -48,7 +48,7 @@ const StyledSlider = styled(Slider)(() => ({
     },
 }));
 const StyledSliderInput = styled(MuiInput)(() => ({
-    width: '25px',
+    width: '42px',
     '&.rightSlider input': {
         textAlign: 'right',
     },
