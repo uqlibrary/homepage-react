@@ -88,6 +88,7 @@ export const BookableSpacesEditSpace = ({
 
     useEffect(() => {
         if (!!spaceUuid) {
+            setFormValues({});
             actions.loadABookableSpacesRoom(spaceUuid);
         }
     }, [actions, spaceUuid]);
@@ -168,7 +169,12 @@ export const BookableSpacesEditSpace = ({
             </SpacesAdminPage>
         );
     }
-    if (!!bookableSpaceGetting || !!bookableSpacesRoomListLoading || !!campusListLoading) {
+    if (
+        !!bookableSpaceGetting ||
+        !!bookableSpacesRoomListLoading ||
+        !!campusListLoading ||
+        formValues?.space_uuid !== spaceUuid
+    ) {
         return (
             <Grid container>
                 <Grid item xs={12} style={{ paddingTop: '5rem' }}>
@@ -231,6 +237,7 @@ export const BookableSpacesEditSpace = ({
         console.log('BookableSpacesEditSpace formValues=', formValues);
         return (
             <EditSpaceForm
+                key={spaceUuid}
                 actions={actions}
                 bookableSpacesRoomUpdating={bookableSpacesRoomUpdating}
                 bookableSpacesRoomUpdateError={bookableSpacesRoomUpdateError}
