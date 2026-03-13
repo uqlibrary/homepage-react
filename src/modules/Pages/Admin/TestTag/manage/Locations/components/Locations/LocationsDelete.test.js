@@ -70,7 +70,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
 
             userEvent.click(getByTestId('action_cell-2-delete-button'));
             await findByTestId('dialogbox-locations');

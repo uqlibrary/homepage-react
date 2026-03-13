@@ -40,6 +40,7 @@ export const TestTagReportInspectionsByLicencedUser = lazy(() => lazyRetry(() =>
 export const TestTagAssetReportByFilters = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/AssetReportByFilters/containers/AssetReportByFilters')));
 export const TestTagManageBulkAssetUpdate = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/BulkAssetUpdate/containers/BulkAssetUpdate')));
 export const TestTagManageUsers = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/Users/containers/Users')));
+export const TestTagManageTeams = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/Teams/containers/Teams')));
 
 export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Masquerade/containers/Masquerade')));
 export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));
