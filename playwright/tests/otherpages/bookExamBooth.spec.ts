@@ -112,11 +112,12 @@ test.describe('Book Exam Booth page', () => {
         const yesterday = moment().subtract(1, 'day');
         expect(defaultDate.format('DD/MM/YYYY')).toBe(yesterday.format('DD/MM/YYYY'));
 
+        const calendarHeader = page.locator('.MuiPickersCalendarHeader-label');
         const selectNextMonth = async (date: moment.Moment): Promise<moment.Moment> => {
-            await expect(page.getByText(date.format('MMMM'))).toBeVisible({ timeout: 2000 });
+            await expect(calendarHeader.getByText(date.format('MMMM'))).toBeVisible({ timeout: 2000 });
             await page.getByTestId('ArrowRightIcon').click({ timeout: 2000 });
             await expect(page.getByTestId('ArrowRightIcon')).toBeVisible({ timeout: 2000 });
-            await expect(page.getByText(date.format('MMMM'))).not.toBeVisible({ timeout: 2000 });
+            await expect(calendarHeader.getByText(date.format('MMMM'))).not.toBeVisible({ timeout: 2000 });
             return date.clone().add(1, 'month');
         };
 
@@ -129,7 +130,7 @@ test.describe('Book Exam Booth page', () => {
             if (moment().date() === 1) {
                 selectedDate = await selectNextMonth(selectedDate);
             }
-            await expect(page.getByText(selectedDate.format('MMMM'))).toBeVisible({ timeout: 2000 });
+            await expect(calendarHeader.getByText(selectedDate.format('MMMM'))).toBeVisible({ timeout: 2000 });
 
             await page
                 .locator('.MuiPickersDay-root')
