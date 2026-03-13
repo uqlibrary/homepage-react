@@ -315,6 +315,7 @@ export default {
                             'Unable to save your new asset type. Please ensure the asset type name you have entered does not already exist in your department',
                     },
                     ownerLabel: 'Asset owner',
+                    includeAllTeams: 'All team assets',
                 },
                 lastInspectionPanel: {
                     title: suffix => `Previous test ${suffix}`,

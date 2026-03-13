@@ -46,6 +46,7 @@ const AssetSelector = ({
     const inputRef = React.useRef();
     const dispatch = useDispatch();
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
+    console.log('Assets list from store:', assetsList, assetsListLoading); // --- IGNORE ---
     const [currentValue, setCurrentValue] = useState(selectedAsset ?? null);
 
     const [formAssetList, setFormAssetList] = useState(assetsList);
@@ -58,12 +59,21 @@ const AssetSelector = ({
         dispatch(actions.clearAssets());
     };
 
+    // React.useEffect(() => {
+    //     if (isOpen && !!currentValue && currentValue.length >= minAssetIdLength) {
+    //         console.log('Searching assets with pattern:', currentValue, 'and filter:', filter); // --- IGNORE ---
+    //         onSearch?.(currentValue);
+    //         dispatch(!!filter ? actions.loadAssetsFiltered(currentValue, filter) : actions.loadAssets(currentValue));
+    //     }
+    // }, [currentValue, dispatch, filter, isOpen, minAssetIdLength, onSearch]);
+
     const debounceAssetsSearch = React.useRef(
         debounce(500, (pattern, user) => {
             const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
             setCurrentValue(assetPartial);
             /* istanbul ignore else */
             if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
+                console.log('Searching assets with pattern:', assetPartial, 'and filter:', filter, !!filter); // --- IGNORE ---
                 onSearch?.(assetPartial);
                 dispatch(
                     !!filter ? actions.loadAssetsFiltered(assetPartial, filter) : actions.loadAssets(assetPartial),
@@ -90,6 +100,7 @@ const AssetSelector = ({
             clearOnSelect && clearInput();
         }
         /* istanbul ignore else */ if (assetsList?.length < 1) {
+            console.log('reset form');
             onReset?.(false);
             setIsOpen(false);
         }

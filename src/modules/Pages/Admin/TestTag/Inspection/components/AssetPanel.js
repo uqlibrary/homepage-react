@@ -4,6 +4,11 @@ import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+
+import { useCookies } from 'react-cookie';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import InspectionPanel from './InspectionPanel';
@@ -24,6 +29,52 @@ const componentIdLower = 'asset_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
+export const IncludeAllTeams = ({
+    locale,
+    onChange,
+    defaultValue = false,
+    withCookie = true,
+    cookieName = 'TNT_ALL_TEAMS',
+}) => {
+    const [cookies, setCookie] = useCookies();
+    const init = () => {
+        return withCookie ? Boolean(cookies[cookieName]) : defaultValue;
+    };
+    const [checked, setChecked] = React.useState(init);
+
+    const _onChange = event => {
+        const newValue = event.target.checked;
+        if (withCookie) {
+            const current = new Date();
+            const nextYear = new Date();
+            nextYear.setFullYear(current.getFullYear() + 1);
+            setCookie(cookieName, newValue, { path: '/', expires: nextYear });
+        }
+        setChecked(newValue);
+        onChange?.(newValue);
+    };
+
+    React.useEffect(() => {
+        _onChange({ target: { checked: init() } });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return (
+        <FormControlLabel
+            control={<Switch checked={checked} onChange={_onChange} name="includeAllTeams" color="primary" />}
+            label={locale.includeAllTeams}
+        />
+    );
+};
+
+IncludeAllTeams.propTypes = {
+    defaultValue: PropTypes.bool,
+    onChange: PropTypes.func,
+    withCookie: PropTypes.bool,
+    cookieName: PropTypes.string,
+    locale: PropTypes.object.isRequired,
+};
+
 const AssetPanel = ({
     actions,
     formValues,
@@ -38,6 +89,7 @@ const AssetPanel = ({
     canAddAssetType,
     openConfirmationAlert,
 }) => {
+    const [allTeams, setAllTeams] = React.useState(false);
     const pageLocale = locale.pages.inspect.form.asset;
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
@@ -103,6 +155,16 @@ const AssetPanel = ({
         } else handleChange('asset_type_id')(assetType.asset_type_id);
     };
 
+    const onAllTeamsChange = value => {
+        setAllTeams(value);
+    };
+
+    const includeAllTeams = React.useMemo(() => {
+        const retval = allTeams ? { all_teams: true } : {};
+        retval.key = Date.now(); // Force re-mount of AssetSelector when toggling all teams to reset its internal state
+        return retval;
+    }, [allTeams]);
+
     return (
         <StandardCard
             standardCardId={componentIdLower}
@@ -129,17 +191,22 @@ const AssetPanel = ({
             />
             <Grid container spacing={3}>
                 <Grid xs={12} item sm={6} md={3}>
-                    <AssetSelector
-                        id={componentId}
-                        locale={pageLocale}
-                        user={user}
-                        classNames={{ formControl: 'formControl' }}
-                        autoFocus={shouldAutoFocus}
-                        onChange={assignCurrentAsset}
-                        onReset={resetForm}
-                        validateAssetId={isValidAssetId}
-                        selectedAsset={formValues?.asset_id_displayed}
-                    />
+                    <FormGroup>
+                        <AssetSelector
+                            key={includeAllTeams.key}
+                            id={componentId}
+                            locale={pageLocale}
+                            user={user}
+                            classNames={{ formControl: 'formControl' }}
+                            autoFocus={shouldAutoFocus}
+                            onChange={assignCurrentAsset}
+                            onReset={resetForm}
+                            validateAssetId={isValidAssetId}
+                            selectedAsset={formValues?.asset_id_displayed}
+                            filter={includeAllTeams}
+                        />
+                        <IncludeAllTeams locale={pageLocale} onChange={onAllTeamsChange} />
+                    </FormGroup>
                 </Grid>
                 <Grid xs={12} item sm={6}>
                     <FormControl variant="standard" className={'formControl'} fullWidth>
