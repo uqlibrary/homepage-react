@@ -81,6 +81,7 @@ describe('utils', () => {
             can_inspect: 'No',
             can_alter: 'Yes',
             can_see_reports: 'No',
+            user_team: 'WSS',
         };
 
         const expectedOutput = {
@@ -97,13 +98,14 @@ describe('utils', () => {
             user_licence_number: '',
         };
 
-        const transformedRequest = transformAddRequest(inputRequest, 'WSS');
+        const transformedRequest = transformAddRequest(inputRequest);
         expect(transformedRequest).toEqual(expectedOutput);
 
         inputRequest.can_admin_cb = true;
         inputRequest.can_inspect_cb = true;
         inputRequest.can_alter_cb = true;
         inputRequest.can_see_reports_cb = true;
+        inputRequest.user_team = 'PF';
 
         expectedOutput.privileges = {
             can_admin: 1,
@@ -113,7 +115,7 @@ describe('utils', () => {
         };
         expectedOutput.user_current_flag = 0;
         expectedOutput.user_team = 'PF';
-        const transformedRequest2 = transformAddRequest(inputRequest, 'PF');
+        const transformedRequest2 = transformAddRequest(inputRequest);
         expect(transformedRequest2).toEqual(expectedOutput);
     });
     it('transforms update request correctly', () => {
@@ -202,6 +204,7 @@ describe('utils', () => {
                 user_id: 'Auto',
                 user_uid: '',
                 user_name: '',
+                user_team: '',
                 user_current_flag_cb: true,
                 user_licence_number: '',
             },

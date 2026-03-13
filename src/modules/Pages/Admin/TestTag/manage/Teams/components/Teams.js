@@ -16,83 +16,61 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionState, actionReducer } from './utils';
-import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
+import { useConfirmationAlert } from '../../../helpers/hooks';
 import config from './configure';
 import { breadcrumbs } from 'config/routes';
 import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 
-const componentId = 'user-management';
+const componentId = 'team-management';
 
-const Users = ({ actions, userListLoading, userList, userListError, teamListLoading, teamList, teamListError }) => {
-    const pageLocale = locale.pages.manage.users;
-    const { user } = useAccountUser();
-
-    const userTeam = user?.user_team ?? /* istanbul ignore next */ null;
-    const userUID = user?.user_uid ?? /* istanbul ignore next */ null;
+const Teams = ({ actions, teamListLoading, teamList, teamListError }) => {
+    const pageLocale = locale.pages.manage.teams;
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
-    const onCloseConfirmationAlert = () => actions.clearUserListError();
+    const onCloseConfirmationAlert = () => actions.clearTeamListError();
     const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
-        errorMessage: userListError || teamListError,
+        errorMessage: teamListError,
         errorMessageFormatter: locale.config.alerts.error,
     });
     const closeDialog = React.useCallback(() => {
         actionDispatch({ type: 'clear' });
     }, []);
 
-    const fieldProps = React.useMemo(
-        () => ({
-            user_team: {
-                options: teamList,
-                getOptionKey: option => option.team_slug,
-                getOptionLabel: option =>
-                    teamList?.find?.(team => team.team_slug === option)?.team_display_name ||
-                    option?.team_display_name ||
-                    '',
-                isOptionEqualToValue: (option, value) => option.team_slug === value,
-            },
-        }),
-        [teamList],
-    );
-
-    const onRowAdd = React.useCallback(
-        data => {
-            setDialogueBusy(true);
-            const request = structuredClone(data);
-            const wrappedRequest = transformAddRequest(request);
-            actions
-                .addUser(wrappedRequest)
-                .then(() => {
-                    closeDialog();
-                    openConfirmationAlert(locale.config.alerts.success(), 'success');
-                    actions.loadUserList();
-                })
-                .catch(error => {
-                    console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.addFail), 'error');
-                })
-                .finally(() => {
-                    setDialogueBusy(false);
-                });
-        },
+    const onRowAdd = React.useCallback(data => {
+        setDialogueBusy(true);
+        const request = structuredClone(data);
+        const wrappedRequest = transformAddRequest(request);
+        actions
+            .addTeam(wrappedRequest)
+            .then(() => {
+                closeDialog();
+                openConfirmationAlert(locale.config.alerts.success(), 'success');
+                actions.loadTeamList();
+            })
+            .catch(error => {
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.addFail), 'error');
+            })
+            .finally(() => {
+                setDialogueBusy(false);
+            });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [userTeam],
-    );
+    }, []);
 
     const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
-        const userID = request.user_id;
+        const teamSlug = request.team_slug;
         const wrappedRequest = transformUpdateRequest(request);
         actions
-            .updateUser(userID, wrappedRequest)
+            .updateTeam(teamSlug, wrappedRequest)
             .then(() => {
                 openConfirmationAlert(locale.config.alerts.success(), 'success');
-                actions.loadUserList();
+                actions.loadTeamList();
                 closeDialog();
             })
             .catch(error => {
@@ -105,44 +83,16 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleAddClick = () => {
-        actionDispatch({
-            type: 'add',
-            title: pageLocale.dialogAdd?.confirmationTitle,
-            fieldProps,
-        });
-    };
-
-    const handleEditClick = ({ id, api }) => {
-        const row = api.getRow(id);
-        row.isSelf = row?.user_uid === userUID;
-        const actionProps = {
-            type: 'edit',
-            title: pageLocale.dialogEdit?.confirmationTitle,
-            row,
-            fieldProps,
-        };
-        actionDispatch(actionProps);
-    };
-
-    const handleDeleteClick = ({ id, api }) => {
-        const row = api.getRow(id);
-        actionDispatch({
-            type: 'delete',
-            row,
-        });
-    };
-
     const onRowDelete = React.useCallback(data => {
         setDialogueBusy(true);
-        const id = data.row.user_id;
+        const teamSlug = data.row.team_slug;
 
         actions
-            .deleteUser(id)
+            .deleteTeam(teamSlug)
             .then(() => {
                 closeDialog();
                 openConfirmationAlert(locale.config.alerts.success(), 'success');
-                actions.loadUserList();
+                actions.loadTeamList();
             })
             .catch(error => {
                 console.error(error);
@@ -154,8 +104,32 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const { row } = useDataTableRow(userList, transformRow);
-    const shouldDisableDelete = row => (row?.actions_count ?? 0) > 0 || userUID === row?.user_uid;
+    const handleAddClick = () => {
+        actionDispatch({
+            type: 'add',
+            title: pageLocale.dialogAdd?.confirmationTitle,
+        });
+    };
+
+    const handleEditClick = ({ id, api }) => {
+        const row = api.getRow(id);
+        actionDispatch({
+            type: 'edit',
+            title: pageLocale.dialogEdit?.confirmationTitle,
+            row,
+        });
+    };
+
+    const handleDeleteClick = ({ id, api }) => {
+        const row = api.getRow(id);
+        actionDispatch({
+            type: 'delete',
+            row,
+        });
+    };
+
+    const { row } = useDataTableRow(teamList, transformRow);
+    const shouldDisableDelete = row => row?.users_count > 0;
     // const shouldDisableEdit = row => userUID === row?.user_uid;
     const { columns } = useDataTableColumns({
         config,
@@ -164,7 +138,7 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
         handleDeleteClick,
         shouldDisableDelete,
         // shouldDisableEdit,
-        actionDataFieldKeys: { valueKey: 'user_uid' },
+        actionDataFieldKeys: { valueKey: 'team_slug' },
         actionTooltips: pageLocale.form.actionTooltips,
     });
 
@@ -175,15 +149,10 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
     }, []);
 
     React.useEffect(() => {
-        actions
-            .loadUserList()
-            .then(() => {
-                actions.loadTeamList();
-            })
-            .catch(error => {
-                console.error(error);
-                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.loadFail), 'error');
-            });
+        actions.loadTeamList().catch(error => {
+            console.error(error);
+            openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.loadFail), 'error');
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actions]);
 
@@ -258,16 +227,12 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
                             id={componentId}
                             rows={row}
                             columns={columns}
-                            rowId="user_id"
-                            loading={userListLoading || teamListLoading}
+                            rowId="team_slug"
+                            loading={teamListLoading}
                             components={{
                                 Toolbar: () => (
                                     <WithExportMenu id={componentId}>
-                                        <AddButton
-                                            label={pageLocale.form.addButtonLabel}
-                                            onClick={handleAddClick}
-                                            disabled={userListLoading || teamListLoading}
-                                        />
+                                        <AddButton label={pageLocale.form.addButtonLabel} onClick={handleAddClick} />
                                     </WithExportMenu>
                                 ),
                             }}
@@ -287,14 +252,11 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
     );
 };
 
-Users.propTypes = {
+Teams.propTypes = {
     actions: PropTypes.object,
-    userList: PropTypes.array,
-    userListLoading: PropTypes.bool,
-    userListError: PropTypes.string,
     teamList: PropTypes.array,
     teamListLoading: PropTypes.bool,
     teamListError: PropTypes.string,
 };
 
-export default React.memo(Users);
+export default React.memo(Teams);

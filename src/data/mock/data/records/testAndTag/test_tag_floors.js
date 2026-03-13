@@ -77,7 +77,59 @@ export default {
         "floor_id_displayed": "2",
         "asset_count": 0,
       },
-    ]
-  }
+    ],
+  },
+  {
+    "building_id": 100,
+    "building_id_displayed": "100",
+    "building_name": "Included building",
+    "site_id": 4,
+    "site_id_displayed": "100",
+    "site_name": "Excluded Site",
+    "floors": [
+      {
+        "floor_id": 100,
+        "floor_id_displayed": "Included floor",
+        "asset_count": 0,
+        "floor_excluded": false,
+        "parent_excluded": true,
+      },
+      {
+        "floor_id": 101,
+        "floor_id_displayed": "Excluded floor",
+        "asset_count": 0,
+        "floor_excluded": true,
+        "parent_excluded": true,
+      },
+    ],
+    "building_excluded": false,
+    "parent_excluded": true,
+  },
+  {
+    "building_id": 101,
+    "building_id_displayed": "101",
+    "building_name": "Excluded building",
+    "site_id": 4,
+    "site_id_displayed": "100",
+    "site_name": "Excluded Site",
+    "floors": [
+      {
+        "floor_id": 102,
+        "floor_id_displayed": "Included floor",
+        "asset_count": 0,
+        "floor_excluded": false,
+        "parent_excluded": true,
+      },
+      {
+        "floor_id": 103,
+        "floor_id_displayed": "Excluded floor",
+        "asset_count": 0,
+        "floor_excluded": true,
+        "parent_excluded": true,
+      },
+    ],
+    "building_excluded": true,
+    "parent_excluded": true,
+  },
 ]
 };

@@ -7,6 +7,7 @@ import { pathConfig } from '../../../../config/pathConfig';
 
 import InspectionIcon from '@mui/icons-material/Search';
 import UsersIcon from '@mui/icons-material/People';
+import TeamsIcon from '@mui/icons-material/Groups';
 import AssetTypeIcon from '@mui/icons-material/DevicesOther';
 import LocationIcon from '@mui/icons-material/LocationCity';
 import InspectionDeviceIcon from '@mui/icons-material/Build';
@@ -206,6 +207,13 @@ export default {
                             icon: <UsersIcon />,
                             permissions: [PERMISSIONS.can_admin],
                             path: pathConfig.admin.testntagmanageusers,
+                        },
+                        {
+                            id: 'teams',
+                            title: 'Teams',
+                            icon: <TeamsIcon />,
+                            permissions: [PERMISSIONS.can_admin],
+                            path: pathConfig.admin.testntagmanageteams,
                         },
                     ],
                 },
@@ -510,7 +518,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `Locations management for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `Locations management for ${dept}`,
                 },
                 form: {
                     title: 'Filter',
@@ -530,6 +538,12 @@ export default {
                             asset_count: {
                                 label: 'No. assets',
                             },
+                            site_excluded: {
+                                label: 'Excluded',
+                            },
+                            site_excluded_cb: {
+                                label: 'Exclude',
+                            },
                         },
                         building: {
                             building_id: {
@@ -547,6 +561,13 @@ export default {
                             asset_count: {
                                 label: 'No. assets',
                             },
+                            building_excluded: {
+                                label: 'Excluded',
+                            },
+                            building_excluded_cb: {
+                                label: 'Exclude',
+                                labelAlt: 'Exclude (Site already excluded)',
+                            },
                         },
                         floor: {
                             floor_id: {
@@ -560,6 +581,13 @@ export default {
                             },
                             asset_count: {
                                 label: 'No. assets',
+                            },
+                            floor_excluded: {
+                                label: 'Excluded',
+                            },
+                            floor_excluded_cb: {
+                                label: 'Exclude',
+                                labelAlt: 'Exclude (Building already excluded)',
                             },
                         },
                         room: {
@@ -577,6 +605,13 @@ export default {
                             },
                             asset_count: {
                                 label: 'No. assets',
+                            },
+                            room_excluded: {
+                                label: 'Excluded',
+                            },
+                            room_excluded_cb: {
+                                label: 'Exclude',
+                                labelAlt: 'Exclude (Floor already excluded)',
                             },
                         },
                     },
@@ -618,7 +653,7 @@ export default {
                                         deleting a site will also delete all of the site's buildings, floors and rooms.
                                         <br />
                                         <br />
-                                        <strong>THIS ACTION CAN NOT BE UNDONE.</strong>
+                                        <strong>THIS ACTION CANNOT BE UNDONE.</strong>
                                     </Alert>
                                 </>
                             )}
@@ -628,9 +663,9 @@ export default {
                 },
                 snackbar: {
                     addSuccess: 'Added the location successfully',
-                    addFail: 'Unable to save the location',
+                    addFail: 'Unable to save the location. Ensure the ID and/or name do not already exist.',
                     updateSuccess: 'updated successfully',
-                    updateFail: 'Unable to update the location',
+                    updateFail: 'Unable to update the location. Ensure the ID and/or name do not already exist.',
                     deleteSuccess: 'deleted successfully',
                     deleteFail: 'Unable to delete the location',
                 },
@@ -972,7 +1007,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `User management for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `User management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -986,6 +1021,12 @@ export default {
                         },
                         user_name: {
                             label: 'Name',
+                        },
+                        user_team: {
+                            label: 'Team',
+                        },
+                        user_team_display: {
+                            label: 'Team',
                         },
                         user_licence_number: {
                             label: 'Lic #',
@@ -1027,7 +1068,7 @@ export default {
                     actionTooltips: {
                         edit: 'Edit this user',
                         delete: 'Delete this user',
-                        deleteDisabled: 'This user has recorded tests and can not be deleted',
+                        deleteDisabled: 'This user has recorded tests and cannot be deleted',
                     },
                 },
                 dialogAdd: {
@@ -1059,6 +1100,74 @@ export default {
                     user_uid: 'A user ID must contain only lower case letters and numbers',
                     user_licence_number: 'A licence number is required for inspect privilege',
                     user_name: 'A user name is required',
+                    user_team: 'A user team is required',
+                },
+            },
+            teams: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage - Teams',
+                        icon: <TeamsIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: (_, dept) => `Team management for ${dept}`,
+                },
+                form: {
+                    actions: 'Actions',
+                    addButtonLabel: 'Add Team',
+                    columns: {
+                        team_slug: {
+                            label: 'Team slug',
+                        },
+                        team_display_name: {
+                            label: 'Display name',
+                        },
+                        team_current_flag: {
+                            label: 'Active',
+                        },
+                        team_current_flag_cb: {
+                            label: 'Active',
+                        },
+                        users_count: {
+                            label: 'Member count',
+                        },
+                    },
+                    actionTooltips: {
+                        edit: 'Edit this team',
+                        delete: 'Delete this team',
+                        deleteDisabled: 'This team has member users and cannot be deleted',
+                    },
+                },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Add new team',
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Edit Team',
+                },
+                snackbar: {
+                    loadFail: 'unable to load team list',
+                    addSuccess: 'Team added successfully',
+                    addFail: 'Unable to add the Team',
+                    updateSuccess: 'Team updated successfully',
+                    updateFail: 'Unable to update the Team',
+                    deleteSuccess: 'Team deleted successfully',
+                    deleteFail: 'Unable to delete the Team',
+                },
+                dialogDeleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage:
+                        'Are you sure you wish to delete this Team? Team members will not be able to log in until reassigned to a different team.',
+                    confirmationTitle: 'Delete Team',
+                },
+                helperText: {
+                    team_slug: 'A team ID must contain only lower case letters and numbers',
+                    team_display_name: 'A team display name is required',
                 },
             },
         },

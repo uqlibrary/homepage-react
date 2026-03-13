@@ -53,8 +53,8 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
             await firstItem.dragTo(secondItem);
 
             const listItems = page.locator('#dragLandingAarea li');
-            await expect(listItems.first().getByText('for science')).toBeVisible();
-            await expect(listItems.nth(1)).toHaveText(/Advanced literature searching/);
+            await expect(listItems.nth(1).getByText('for science')).toBeVisible();
+            await expect(listItems.first()).toHaveText(/Advanced literature searching/);
 
             // Drag first item to second item's position again to revert
             await firstItem.dragTo(secondItem);
@@ -63,8 +63,8 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
             await page.waitForSelector('#dragLandingAarea li');
 
             const updatedListItems = page.locator('#dragLandingAarea li');
-            await expect(updatedListItems.first().getByText('Advanced literature searching')).toBeVisible();
-            await expect(updatedListItems.nth(1)).toHaveText(/for science/);
+            await expect(updatedListItems.nth(1).getByText('Advanced literature searching')).toBeVisible();
+            await expect(updatedListItems.first()).toHaveText(/for science/);
         });
 
         test('has a working "cancel edit" button', async ({ page }) => {
