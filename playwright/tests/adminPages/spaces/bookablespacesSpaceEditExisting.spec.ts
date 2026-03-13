@@ -14,7 +14,9 @@ const TAB_IMAGERY = 'tab-imagery';
 const LAW_DEFAULT_LATITUDE = '-27.49718';
 const LAW_DEFAULT_LONGITUDE = '153.01214';
 
-const chooseAnySpaceType = async page => {
+import { Page } from '@playwright/test';
+
+const chooseAnySpaceType = async (page: Page) => {
     const spaceTypeSelector = page.getByTestId('space-type');
     await expect(spaceTypeSelector).toBeVisible();
     await spaceTypeSelector.click();
@@ -28,7 +30,7 @@ const chooseAnySpaceType = async page => {
     return Number(selectedSpaceTypeId);
 };
 
-const ensureSpaceTypeSelected = async page => {
+const ensureSpaceTypeSelected = async (page: Page) => {
     await page.getByTestId(TAB_ABOUT).click();
     const nativeSpaceTypeInput = page.locator('#add-space-type-input');
     await expect(nativeSpaceTypeInput).toBeAttached();
@@ -41,7 +43,7 @@ const ensureSpaceTypeSelected = async page => {
     return chooseAnySpaceType(page);
 };
 
-const chooseDifferentSpaceType = async page => {
+const chooseDifferentSpaceType = async (page: Page) => {
     const spaceTypeCombobox = page.getByRole('combobox', { name: 'Choose an existing Space type *' });
     await expect(spaceTypeCombobox).toBeVisible();
     const currentSpaceTypeName = ((await spaceTypeCombobox.textContent()) || '').trim();
@@ -1036,7 +1038,7 @@ test.describe('booking link controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
-            space_type_id: 1,
+            space_type_id: 3,
             space_opening_hours_id: -1, // might need to look into this?
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1099,7 +1101,7 @@ test.describe('booking link controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
-            space_type_id: 1,
+            space_type_id: 3,
             space_opening_hours_id: -1, // might need to look into this?
             space_external_book_url: 'http://example.com',
         };
@@ -1147,7 +1149,7 @@ test.describe('space capacity controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
-            space_type_id: 1,
+            space_type_id: 3,
             space_opening_hours_id: -1, // might need to look into this?
             space_capacity: null,
         };
@@ -1293,7 +1295,7 @@ test.describe('space capacity controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('df40_2jsf_zdk5'),
-            space_type_id: 1,
+            space_type_id: 2,
             space_capacity: '2',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1342,7 +1344,7 @@ test.describe('space capacity controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('df40_2jsf_zdk5'),
-            space_type_id: 1,
+            space_type_id: 2,
             space_capacity: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
