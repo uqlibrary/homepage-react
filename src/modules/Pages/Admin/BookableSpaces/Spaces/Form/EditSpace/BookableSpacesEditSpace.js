@@ -169,12 +169,14 @@ export const BookableSpacesEditSpace = ({
             </SpacesAdminPage>
         );
     }
-    if (
-        !!bookableSpaceGetting ||
-        !!bookableSpacesRoomListLoading ||
-        !!campusListLoading ||
-        formValues?.space_uuid !== spaceUuid
-    ) {
+    const isLoadedSpaceMismatched =
+        bookableSpaceGetting === false &&
+        bookableSpaceGetError === false &&
+        !!bookableSpaceGetResult?.data &&
+        Object.keys(bookableSpaceGetResult?.data)?.length > 0 &&
+        formValues?.space_uuid !== spaceUuid;
+
+    if (!!bookableSpaceGetting || !!bookableSpacesRoomListLoading || !!campusListLoading || isLoadedSpaceMismatched) {
         return (
             <Grid container>
                 <Grid item xs={12} style={{ paddingTop: '5rem' }}>
