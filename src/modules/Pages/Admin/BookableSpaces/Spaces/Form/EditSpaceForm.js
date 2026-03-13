@@ -312,8 +312,7 @@ export const EditSpaceForm = ({
         setIsBookable(!!formValues?.space_external_book_url || false);
 
         setHasCapacityLimit(formValues?.space_capacity > 0 || false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [hideConfirmation, formValues?.space_uuid, formValues?.space_external_book_url, formValues?.space_capacity]);
 
     useEffect(() => {
         if (!bookableSpacesRoomAdding && (!!bookableSpacesRoomAddError || !!bookableSpacesRoomAddResult)) {

@@ -1036,7 +1036,7 @@ test.describe('booking link controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
-            space_type_id: 1,
+            space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
             space_opening_hours_id: -1, // might need to look into this?
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1099,7 +1099,7 @@ test.describe('booking link controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
-            space_type_id: 1,
+            space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
             space_opening_hours_id: -1, // might need to look into this?
             space_external_book_url: 'http://example.com',
         };
@@ -1147,7 +1147,7 @@ test.describe('space capacity controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
-            space_type_id: 1,
+            space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
             space_opening_hours_id: -1, // might need to look into this?
             space_capacity: null,
         };
@@ -1293,7 +1293,7 @@ test.describe('space capacity controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('df40_2jsf_zdk5'),
-            space_type_id: 1,
+            space_type_id: originalMockData('df40_2jsf_zdk5')?.space_type_id,
             space_capacity: '2',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1342,7 +1342,7 @@ test.describe('space capacity controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('df40_2jsf_zdk5'),
-            space_type_id: 1,
+            space_type_id: originalMockData('df40_2jsf_zdk5')?.space_type_id,
             space_capacity: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
