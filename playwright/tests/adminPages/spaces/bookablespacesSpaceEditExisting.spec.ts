@@ -1,4 +1,4 @@
-import { expect, Page, test } from '@uq/pw/test';
+import { expect, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 
@@ -13,6 +13,8 @@ const TAB_IMAGERY = 'tab-imagery';
 
 const LAW_DEFAULT_LATITUDE = '-27.49718';
 const LAW_DEFAULT_LONGITUDE = '153.01214';
+
+import { Page } from '@playwright/test';
 
 const chooseAnySpaceType = async (page: Page) => {
     const spaceTypeSelector = page.getByTestId('space-type');
@@ -1051,7 +1053,7 @@ test.describe('booking link controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
-            space_type_id: 1,
+            space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
             space_opening_hours_id: -1, // might need to look into this?
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1114,7 +1116,7 @@ test.describe('booking link controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
-            space_type_id: 1,
+            space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
             space_opening_hours_id: -1, // might need to look into this?
             space_external_book_url: 'http://example.com',
         };

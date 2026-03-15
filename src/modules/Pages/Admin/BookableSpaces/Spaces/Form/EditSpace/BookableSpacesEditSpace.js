@@ -88,6 +88,7 @@ export const BookableSpacesEditSpace = ({
 
     useEffect(() => {
         if (!!spaceUuid) {
+            setFormValues({});
             actions.loadABookableSpacesRoom(spaceUuid);
         }
     }, [actions, spaceUuid]);
@@ -134,6 +135,7 @@ export const BookableSpacesEditSpace = ({
                 space_precise: bookableSpaceGetResult?.data?.space_precise,
                 space_services_page: bookableSpaceGetResult?.data?.space_services_page,
                 space_type: bookableSpaceGetResult?.data?.space_type,
+                space_type_id: bookableSpaceGetResult?.data?.space_type_id,
                 space_uuid: bookableSpaceGetResult?.data?.space_uuid,
             });
         }
@@ -167,7 +169,14 @@ export const BookableSpacesEditSpace = ({
             </SpacesAdminPage>
         );
     }
-    if (!!bookableSpaceGetting || !!bookableSpacesRoomListLoading || !!campusListLoading) {
+    const isLoadedSpaceMismatched =
+        bookableSpaceGetting === false &&
+        bookableSpaceGetError === false &&
+        !!bookableSpaceGetResult?.data &&
+        Object.keys(bookableSpaceGetResult?.data)?.length > 0 &&
+        formValues?.space_uuid !== spaceUuid;
+
+    if (!!bookableSpaceGetting || !!bookableSpacesRoomListLoading || !!campusListLoading || isLoadedSpaceMismatched) {
         return (
             <Grid container>
                 <Grid item xs={12} style={{ paddingTop: '5rem' }}>
@@ -230,6 +239,7 @@ export const BookableSpacesEditSpace = ({
         console.log('BookableSpacesEditSpace formValues=', formValues);
         return (
             <EditSpaceForm
+                key={spaceUuid}
                 actions={actions}
                 bookableSpacesRoomUpdating={bookableSpacesRoomUpdating}
                 bookableSpacesRoomUpdateError={bookableSpacesRoomUpdateError}

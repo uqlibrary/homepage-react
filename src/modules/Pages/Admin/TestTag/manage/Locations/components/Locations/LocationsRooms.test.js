@@ -102,7 +102,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 
@@ -119,21 +119,21 @@ describe('Locations', () => {
             await userEvent.click(getByTestId('location_picker-locations-floor-input'));
 
             await act(async () => {
-                await userEvent.selectOptions(getByRole('listbox'), '1');
+                await userEvent.selectOptions(getByRole('listbox'), '29');
             });
 
             expect(getByTestId('locations-data-table-toolbar-add-button')).toHaveTextContent('Add room');
             expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
-            expect(getByTestId('location_picker-locations-floor-input')).toHaveAttribute('value', '1');
+            expect(getByTestId('location_picker-locations-floor-input')).toHaveAttribute('value', '29');
 
             const grid = getByTestId('data_table-locations');
-            assertHeader(grid, ['Room ID', 'Room name', 'No. assets']);
-            const cells1 = assertRow(grid, ['101', 'Library Facilities', '1'], 1);
-            expect(within(cells1[3]).getByTestId('action_cell-476-edit-button')).not.toHaveAttribute('disabled');
-            expect(within(cells1[3]).getByTestId('action_cell-476-delete-button')).toHaveAttribute('disabled');
-            const cells2 = assertRow(grid, ['102', 'Library Facilities', '0'], 2);
-            expect(within(cells2[3]).getByTestId('action_cell-477-edit-button')).not.toHaveAttribute('disabled');
-            expect(within(cells2[3]).getByTestId('action_cell-477-delete-button')).not.toHaveAttribute('disabled');
+            assertHeader(grid, ['Room ID', 'Room name', 'No. assets', 'Excluded']);
+            const cells1 = assertRow(grid, ['101', 'Library Facilities', '1', 'No'], 1);
+            expect(within(cells1[4]).getByTestId('action_cell-476-edit-button')).not.toHaveAttribute('disabled');
+            expect(within(cells1[4]).getByTestId('action_cell-476-delete-button')).toHaveAttribute('disabled');
+            const cells2 = assertRow(grid, ['102', 'Library Facilities', '0', 'Yes'], 2);
+            expect(within(cells2[4]).getByTestId('action_cell-477-edit-button')).not.toHaveAttribute('disabled');
+            expect(within(cells2[4]).getByTestId('action_cell-477-delete-button')).not.toHaveAttribute('disabled');
         });
 
         it('handles add action as expected', async () => {
@@ -157,7 +157,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 
@@ -174,23 +174,25 @@ describe('Locations', () => {
             await userEvent.click(getByTestId('location_picker-locations-floor-input'));
 
             await act(async () => {
-                await userEvent.selectOptions(getByRole('listbox'), '1');
+                await userEvent.selectOptions(getByRole('listbox'), '29');
             });
 
             expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
-            userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
+
+            // add with exclude = false
+            await userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
 
             expect(
-                within(getByTestId('update_dialog-locations')).getByText('Floor 1 J.K. Murray Library, Gatton'),
+                within(getByTestId('update_dialog-locations')).getByText('Floor 29 J.K. Murray Library, Gatton'),
             ).toBeInTheDocument();
 
             await userEvent.type(getByTestId('room_id_displayed-input'), 'Test ID'); // only field that is required
             expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
             await userEvent.type(getByTestId('room_description-input'), 'Test description'); // only field that is required
 
-            userEvent.click(getByTestId('update_dialog-action-button'));
+            await userEvent.click(getByTestId('update_dialog-action-button'));
 
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
@@ -199,6 +201,38 @@ describe('Locations', () => {
                     room_id_displayed: 'Test ID',
                     room_description: 'Test description',
                     room_floor_id: 29,
+                    room_excluded_cb: false,
+                },
+                type: 'room',
+            });
+
+            await findByTestId('confirmation_alert-success');
+            expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
+
+            // add with exclude = true
+            await userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
+            await findByTestId('update_dialog-locations');
+            expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
+
+            expect(
+                within(getByTestId('update_dialog-locations')).getByText('Floor 29 J.K. Murray Library, Gatton'),
+            ).toBeInTheDocument();
+
+            await userEvent.type(getByTestId('room_id_displayed-input'), 'Test ID'); // only field that is required
+            expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+            await userEvent.type(getByTestId('room_description-input'), 'Test description'); // only field that is required
+            await userEvent.click(getByTestId('room_excluded_cb-input'));
+
+            await userEvent.click(getByTestId('update_dialog-action-button'));
+
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+
+            expect(addLocationFn).toHaveBeenCalledWith({
+                request: {
+                    room_id_displayed: 'Test ID',
+                    room_description: 'Test description',
+                    room_floor_id: 29,
+                    room_excluded_cb: true,
                 },
                 type: 'room',
             });
@@ -207,7 +241,7 @@ describe('Locations', () => {
             expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
         });
 
-        it('handles update action as expected', async () => {
+        it('handles update action as expected where parent is not excluded', async () => {
             const updateLocationFn = jest.fn(() => Promise.resolve());
             const { getByText, getByTestId, findByTestId, queryByTestId, getByRole } = setup({
                 isOpen: true,
@@ -228,7 +262,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 
@@ -245,20 +279,22 @@ describe('Locations', () => {
             await userEvent.click(getByTestId('location_picker-locations-floor-input'));
 
             await act(async () => {
-                await userEvent.selectOptions(getByRole('listbox'), '1');
+                await userEvent.selectOptions(getByRole('listbox'), '29');
             });
 
-            userEvent.click(getByTestId('action_cell-477-edit-button'));
+            // excluded false
+            await userEvent.click(getByTestId('action_cell-477-edit-button'));
 
             await findByTestId('update_dialog-locations');
             expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
 
             expect(getByTestId('room_id_displayed-input')).toHaveAttribute('value', '102');
+            await userEvent.click(getByTestId('room_id_displayed-input'));
             await userEvent.type(getByTestId('room_id_displayed-input'), ' update');
             expect(getByTestId('room_description-input')).toHaveAttribute('value', 'Library Facilities');
             await userEvent.type(getByTestId('room_description-input'), ' update');
 
-            userEvent.click(getByTestId('update_dialog-action-button'));
+            await userEvent.click(getByTestId('update_dialog-action-button'));
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
@@ -267,6 +303,140 @@ describe('Locations', () => {
                     room_floor_id: 29,
                     room_id_displayed: '102 update',
                     room_description: 'Library Facilities update',
+                    room_excluded_cb: false,
+                },
+                type: 'room',
+            });
+
+            await findByTestId('confirmation_alert-success');
+            expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
+
+            // excluded true
+            await userEvent.click(getByTestId('action_cell-477-edit-button'));
+
+            await findByTestId('update_dialog-locations');
+            expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+
+            expect(getByTestId('room_id_displayed-input')).toHaveAttribute('value', '102');
+            await userEvent.type(getByTestId('room_id_displayed-input'), ' update');
+            expect(getByTestId('room_description-input')).toHaveAttribute('value', 'Library Facilities');
+            await userEvent.type(getByTestId('room_description-input'), ' update');
+            await userEvent.click(getByTestId('room_excluded_cb-input'));
+
+            await userEvent.click(getByTestId('update_dialog-action-button'));
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+
+            expect(updateLocationFn).toHaveBeenCalledWith({
+                request: {
+                    room_id: 477,
+                    room_floor_id: 29,
+                    room_id_displayed: '102 update',
+                    room_description: 'Library Facilities update',
+                    room_excluded_cb: true,
+                },
+                type: 'room',
+            });
+
+            await findByTestId('confirmation_alert-success');
+            expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
+        });
+
+        it('handles update action as expected where parent is excluded', async () => {
+            const updateLocationFn = jest.fn(() => Promise.resolve());
+            const { getByText, getByTestId, findByTestId, queryByTestId, getByRole } = setup({
+                isOpen: true,
+                actions: {
+                    loadSites: jest.fn(),
+                    loadFloors: jest.fn(),
+                    loadRooms: jest.fn(),
+                    clearSites: jest.fn(),
+                    clearRooms: jest.fn(),
+                    clearFloors: jest.fn(),
+                    updateLocation: updateLocationFn,
+                },
+                state: {
+                    testTagLocationReducer: {
+                        ...defaultLocationState,
+                        roomList: roomList[5],
+                        roomListLoaded: true,
+                    },
+                },
+            });
+
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
+            await act(async () => {
+                await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
+            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
+            await act(async () => {
+                await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
+            });
+
+            await userEvent.click(getByTestId('location_picker-locations-floor-input'));
+
+            await act(async () => {
+                await userEvent.selectOptions(getByRole('listbox'), '30');
+            });
+
+            // excluded true
+            await userEvent.click(getByTestId('action_cell-497-edit-button'));
+
+            await findByTestId('update_dialog-locations');
+            expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+
+            expect(getByTestId('room_excluded_cb-input')).toHaveAttribute('disabled'); // parent excluded, so checkbox is disabled
+            expect(getByTestId('room_excluded_cb-input')).toBeChecked(); // excluded flag for specific room is set
+
+            expect(getByTestId('room_id_displayed-input')).toHaveAttribute('value', '201');
+            await userEvent.type(getByTestId('room_id_displayed-input'), ' update');
+            expect(getByTestId('room_description-input')).toHaveAttribute('value', 'Learning & Study');
+            await userEvent.type(getByTestId('room_description-input'), ' update');
+
+            await userEvent.click(getByTestId('update_dialog-action-button'));
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+
+            expect(updateLocationFn).toHaveBeenCalledWith({
+                request: {
+                    room_id: 497,
+                    room_floor_id: 30,
+                    room_id_displayed: '201 update',
+                    room_description: 'Learning & Study update',
+                    room_excluded_cb: true,
+                },
+                type: 'room',
+            });
+
+            await findByTestId('confirmation_alert-success');
+            expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
+
+            // excluded false
+            await userEvent.click(getByTestId('action_cell-498-edit-button'));
+
+            await findByTestId('update_dialog-locations');
+            expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+            expect(getByTestId('room_excluded_cb-input')).toHaveAttribute('disabled'); // parent excluded, so checkbox is disabled
+            expect(getByTestId('room_excluded_cb-input')).not.toBeChecked(); // excluded flag for specific room not set
+
+            expect(getByTestId('room_id_displayed-input')).toHaveAttribute('value', '202');
+            await userEvent.type(getByTestId('room_id_displayed-input'), ' update');
+            expect(getByTestId('room_description-input')).toHaveAttribute('value', 'Learning & Study');
+            await userEvent.type(getByTestId('room_description-input'), ' update');
+
+            await userEvent.click(getByTestId('update_dialog-action-button'));
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+
+            expect(updateLocationFn).toHaveBeenCalledWith({
+                request: {
+                    room_id: 498,
+                    room_floor_id: 30,
+                    room_id_displayed: '202 update',
+                    room_description: 'Learning & Study update',
+                    room_excluded_cb: false,
                 },
                 type: 'room',
             });
@@ -296,7 +466,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
 
             await userEvent.click(getByTestId('location_picker-locations-site-input'));
 
@@ -313,10 +483,10 @@ describe('Locations', () => {
             await userEvent.click(getByTestId('location_picker-locations-floor-input'));
 
             await act(async () => {
-                await userEvent.selectOptions(getByRole('listbox'), '1');
+                await userEvent.selectOptions(getByRole('listbox'), '29');
             });
 
-            userEvent.click(getByTestId('action_cell-477-delete-button'));
+            await userEvent.click(getByTestId('action_cell-477-delete-button'));
 
             await findByTestId('dialogbox-locations');
             expect(getByTestId('message-content')).toHaveTextContent('Are you sure you wish to delete the room "102"?');
@@ -327,7 +497,7 @@ describe('Locations', () => {
                 timeout: 3000,
             });
 
-            userEvent.click(getByTestId('confirm-locations'));
+            await userEvent.click(getByTestId('confirm-locations'));
             await waitForElementToBeRemoved(() => queryByTestId('dialogbox-locations'));
 
             expect(deleteLocationFn).toHaveBeenCalledWith({
