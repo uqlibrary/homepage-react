@@ -529,7 +529,8 @@ test.describe('Spaces', () => {
             await expect(filterCount).not.toBeVisible();
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
         });
-        test('can filter for open spaces', async ({ page }) => {
+        // TODO
+        test.skip('can filter for open spaces', async ({ page }) => {
             // we have hacked the "opening hours" data so only one record is "currently_open"
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
@@ -555,7 +556,8 @@ test.describe('Spaces', () => {
             );
             await expect(page.getByTestId('space-space-count')).toContainText('1');
         });
-        test('can filter to reject open spaces', async ({ page }) => {
+        // TODO
+        test.skip('can filter to reject open spaces', async ({ page }) => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');

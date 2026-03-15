@@ -348,7 +348,7 @@ export const EditSpaceForm = ({
         if (!currentValues?.space_capacity || currentValues?.space_capacity < 1) {
             errorMessages.push({
                 field: 'space_capacity',
-                message: 'The number of patrons who can use the space is required is required.',
+                message: 'The number of patrons who can use the space is required.',
             });
         }
         return errorMessages;
@@ -454,11 +454,6 @@ export const EditSpaceForm = ({
     };
 
     const handleFieldCompletion = e => {
-        // clear what they entered in the new Space type field - its already in the dropdown and selected there
-        if (e?.target?.id === 'add-space-type-new') {
-            e.target.value = '';
-        }
-
         const validationResult = formValid(formValues);
         if (validationResult !== true) {
             setErrorMessages(validationResult);
@@ -972,7 +967,7 @@ export const EditSpaceForm = ({
                                 type="number"
                                 id="space_capacity"
                                 data-testid="space_capacity"
-                                value={formValues?.space_capacity || 0}
+                                value={formValues?.space_capacity || 1}
                                 onChange={handleChange('space_capacity')}
                                 // onBlur={handleChange('space_capacity')}
                                 onBlur={handleFieldCompletion}

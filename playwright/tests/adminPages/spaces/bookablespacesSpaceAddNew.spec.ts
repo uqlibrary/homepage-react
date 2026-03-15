@@ -134,15 +134,13 @@ test.describe('Spaces Admin - add new space', () => {
 
         const capacityNumberField = page.getByTestId('space_capacity').locator('input');
         await expect(capacityNumberField).toBeVisible();
+        await expect(capacityNumberField).toHaveValue('1');
         await capacityNumberField.clear();
-        await capacityNumberField.fill('1');
+        await capacityNumberField.fill('2');
 
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
         await page.getByTestId('spaces-form-next-button').click(); // to final step, imagery
-
-        // blur the form
-        await page.getByTestId('SpacesAdminPage-systemTitle').click();
 
         // click save button
         await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible();
@@ -167,7 +165,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_latitude: PACE_DEFAULT_LATITUDE,
             space_longitude: PACE_DEFAULT_LONGITUDE,
             space_external_book_url: null,
-            space_capacity: '1',
+            space_capacity: '2',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -376,10 +374,7 @@ test.describe('Spaces Admin - add new space', () => {
         // blur the form
         await page.getByTestId('SpacesAdminPage-systemTitle').click();
 
-        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
-        await expect(capacityNumberField).toBeVisible();
-        await capacityNumberField.clear();
-        await capacityNumberField.fill('1');
+        // use default capacity of 1
 
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
@@ -711,13 +706,7 @@ test.describe('Spaces Admin - errors', () => {
 
         await chooseAnySpaceType(page);
 
-        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
-        await expect(capacityNumberField).toBeVisible();
-        await capacityNumberField.clear();
-        await capacityNumberField.fill('1');
-
-        // blur the form
-        await page.getByTestId('SpacesAdminPage-systemTitle').click();
+        // use default capacity
 
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
