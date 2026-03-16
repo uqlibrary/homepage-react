@@ -556,32 +556,36 @@ export const SidebarFilters = ({
                             />
                             <span>{facilityType?.facility_type_name}</span>
                         </InputLabel>
-                        <input
-                            type="checkbox"
-                            id={`reject-filtertype-${facilityType?.facility_type_id}`}
-                            data-testid={`reject-filtertype-${facilityType?.facility_type_id}`}
-                            className="rejectedFilterType"
-                            onChange={e =>
-                                handleFilterRejection(
-                                    e?.target?.checked,
-                                    facilityType?.facility_type_id,
-                                    facilityType?.facility_special_action,
-                                )
-                            }
-                            aria-label={`Exclude Spaces with ${facilityType?.facility_type_name}`}
-                            checked={
-                                selectedFacilityTypes?.find(
-                                    f1 => f1?.facility_type_id === facilityType?.facility_type_id,
-                                )?.unselected || false
-                            }
-                        />
-                        <label
-                            htmlFor={`reject-filtertype-${facilityType?.facility_type_id}`}
-                            className="rejectedFacilityTypeLabel"
-                            data-testid={`reject-filtertype-label-${facilityType?.facility_type_id}`}
-                            title={`Exclude Spaces with ${facilityType?.facility_type_name}`}
-                        />
-                        <span className="fortestfocus" style={{ width: '10px' }} />
+                        {facilityType?.filterRejectAvailable !== false && (
+                            <>
+                                <input
+                                    type="checkbox"
+                                    id={`reject-filtertype-${facilityType?.facility_type_id}`}
+                                    data-testid={`reject-filtertype-${facilityType?.facility_type_id}`}
+                                    className="rejectedFilterType"
+                                    onChange={e =>
+                                        handleFilterRejection(
+                                            e?.target?.checked,
+                                            facilityType?.facility_type_id,
+                                            facilityType?.facility_special_action,
+                                        )
+                                    }
+                                    aria-label={`Exclude Spaces with ${facilityType?.facility_type_name}`}
+                                    checked={
+                                        selectedFacilityTypes?.find(
+                                            f1 => f1?.facility_type_id === facilityType?.facility_type_id,
+                                        )?.unselected || false
+                                    }
+                                />
+                                <label
+                                    htmlFor={`reject-filtertype-${facilityType?.facility_type_id}`}
+                                    className="rejectedFacilityTypeLabel"
+                                    data-testid={`reject-filtertype-label-${facilityType?.facility_type_id}`}
+                                    title={`Exclude Spaces with ${facilityType?.facility_type_name}`}
+                                />
+                                <span className="fortestfocus" style={{ width: '10px' }} />
+                            </>
+                        )}
                     </>
                 )}
             </StyledInputListItem>
@@ -690,14 +694,6 @@ export const SidebarFilters = ({
                 <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
                     Filter Spaces
                 </Typography>
-                {/* <StyledFacilityGroup data-testid={'filter-group-block-open'}>*/}
-                {/*    <StyledFilterSpaceList id={'filter-group-list-open'}>*/}
-                {/*        {getStyledInputListItem({*/}
-                {/*            facility_type_id: 'open',*/}
-                {/*            facility_type_name: 'Currently open',*/}
-                {/*        })}*/}
-                {/*    </StyledFilterSpaceList>*/}
-                {/* </StyledFacilityGroup>*/}
                 {!!hasActiveFilters && (
                     <>
                         <Typography component={'h3'} variant={'h6'}>
