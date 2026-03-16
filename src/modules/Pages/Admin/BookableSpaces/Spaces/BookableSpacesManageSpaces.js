@@ -546,7 +546,7 @@ export const BookableSpacesManageSpaces = ({
         if (!deleteCandidate) {
             return;
         }
-        actions.deleteBookableSpace(deleteCandidate.spaceUuid).then(() => {
+        actions.deleteBookableSpace(deleteCandidate.spaceId).then(() => {
             actions.loadAllBookableSpacesRooms();
         });
         setDeleteCandidate(null);
