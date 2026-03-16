@@ -1906,10 +1906,10 @@ export default {
                         "times": {
                             "status": "open",
                             "hours": [{
-                                "from": "10:15pm", // times so it will always be closed for test (don't run tests in the evening! ;) )
+                                "from": "10:15pm", // times so it will always be closed for test
                                 "to": "10:30pm"
                             }],
-                            "currently_open": true
+                            "currently_open": false
                         },
                         "rendered": "10:15pm - 10:30pm",
                         "open": "22:15:00",

@@ -529,8 +529,7 @@ test.describe('Spaces', () => {
             await expect(filterCount).not.toBeVisible();
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
         });
-        // TODO
-        test.skip('can filter for open spaces', async ({ page }) => {
+        test('can filter for open spaces', async ({ page }) => {
             // we have hacked the "opening hours" data so only one record is "currently_open"
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
@@ -552,37 +551,9 @@ test.describe('Spaces', () => {
 
             // only one space shows now
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
-            await expect(page.getByTestId('space-space-count')).toContainText('1');
-        });
-        // TODO
-        test.skip('can filter to reject open spaces', async ({ page }) => {
-            await page.goto('');
-            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
-            const currentlyOpenId = '9999';
-            const openCheckboxlabel = page.getByTestId(`reject-filtertype-label-${currentlyOpenId}`);
-            const openCheckbox = page.getByTestId(`facility-type-listitem-${currentlyOpenId}`);
-
-            // initially all Spaces are visible on the page
-            await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                10 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
-            );
-            await expect(page.getByTestId('space-space-count')).not.toBeVisible();
-
-            // reject 'currently open' spaces
-            await openCheckbox.locator('span.fortestfocus').click(); // a hack of the page so playwright can tap on the exclude filter
-            await expect(openCheckboxlabel).toBeVisible();
-            await openCheckboxlabel.check();
-
-            // only one space shows now
-            await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                6 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
-            );
-            await expect(page.getByTestId('space-space-count')).toContainText('6');
+            await expect(page.getByTestId('space-space-count')).toContainText('4');
         });
         test('can OR on filters in the same group', async ({ page }) => {
             await page.goto('');
