@@ -417,6 +417,38 @@ export function updateBookableSpaceType(request, spaceTypeId) {
     };
 }
 
+export function deleteBookableSpace(spaceUuid) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_LOCATION_DELETING });
+        console.log('deleteBookableSpace calling', spaceUuid);
+        console.log('deleteBookableSpace url', SPACES_SINGLE_API({ uuid: spaceUuid }));
+        const url = SPACES_SINGLE_API({ uuid: spaceUuid });
+        return destroy(url)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_LOCATION_DELETED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_LOCATION_DELETE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_LOCATION_DELETE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
 export function deleteBookableSpaceType(spaceTypeId) {
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_DELETING });
