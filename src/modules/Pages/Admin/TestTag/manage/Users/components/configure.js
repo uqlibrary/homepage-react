@@ -9,6 +9,7 @@ import Popper from '@mui/material/Popper';
 import { isEmptyStr, isInvalidUUID } from '../../../helpers/helpers';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
+import Licence from './Licence';
 
 export default {
     sort: {
@@ -99,24 +100,7 @@ export default {
             },
         },
         user_licence_number: {
-            component: (props, data, row) => {
-                return (
-                    <TextField
-                        variant="standard"
-                        required={data?.can_inspect_cb}
-                        disabled={
-                            !data?.can_inspect_cb || (data?.can_inspect_cb && !isEmptyStr(row?.user_licence_number))
-                        }
-                        {...props}
-                        inputProps={{ ...props.inputProps, maxLength: 45 }}
-                        helperText={
-                            props.error
-                                ? locale.pages.manage.users.helperText.user_licence_number
-                                : locale.pages.general.helperText.maxChars(45)
-                        }
-                    />
-                );
-            },
+            component: (props, data, row) => <Licence {...props} data={data} row={row} />,
 
             fieldParams: {
                 canAdd: true,
