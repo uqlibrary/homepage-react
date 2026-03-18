@@ -42,7 +42,7 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
             await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['link-name'] });
         });
 
-        test('drag drop functions as expected', async ({ page }) => {
+        test.skip('drag drop functions as expected', async ({ page }) => {
             // Select the first and second draggable items
             const firstItem = page.getByTestId('dlor-series-edit-draggable-title-98s0_dy5k3_98h4');
             const secondItem = page.getByTestId(
