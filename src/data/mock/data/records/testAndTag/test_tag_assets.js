@@ -4,8 +4,9 @@ export default {
         "asset_id": 100000,
         "asset_id_displayed": "UQL100000",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 1,
             "room_id_displayed": "W111",
@@ -58,23 +59,24 @@ export default {
             "repairer_current_flag": 1
         },
          "last_discard": {
-        "discard_date": "2022-12-14 10:33:00",
-        "discard_reason": "Asset being passed to RBH (Qld Health)",
-        "user_id": 1,
-        "user_uid": "uqddegro",
-        "user_licence_number": "13962556",
-        "user_name": "David de Groot",
-        "user_department": "UQL",
-         "department_display_name": "Library",
-        "user_current_flag": 1
-    }
+            "discard_date": "2022-12-14 10:33:00",
+            "discard_reason": "Asset being passed to RBH (Qld Health)",
+            "user_id": 1,
+            "user_uid": "uqddegro",
+            "user_licence_number": "13962556",
+            "user_name": "David de Groot",
+            "user_department": "UQL",
+                "department_display_name": "Library",
+            "user_current_flag": 1
+        }
     },
     {
         "asset_id": 100100,
         "asset_id_displayed": "UQL100100",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 1,
             "room_id_displayed": "W111",
@@ -141,8 +143,9 @@ export default {
         "asset_id": 200000,
         "asset_id_displayed": "UQL200000",
         "asset_next_test_due_date": "",
-        "asset_department_owned_by": "UQL-WSS",
         "asset_status": "OUTFORREPAIR",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 1,
             "room_id_displayed": "W212",
@@ -203,8 +206,9 @@ export default {
         "asset_id": 300000,
         "asset_id_displayed": "UQL300000",
         "asset_next_test_due_date": "",
-        "asset_department_owned_by": "UQL-WSS",
         "asset_status": "DISCARDED",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 6,
             "room_id_displayed": "W266",
@@ -260,8 +264,9 @@ export default {
         "asset_id": 310000,
         "asset_id_displayed": "UQL310000",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 1,
             "room_id_displayed": "W212",
@@ -328,8 +333,9 @@ export default {
         "asset_id": 310040,
         "asset_id_displayed": "UQL310040",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 49,
             "room_id_displayed": "D201A",
@@ -396,8 +402,9 @@ export default {
         "asset_id": 310050,
         "asset_id_displayed": "UQL310050",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
         "asset_status": "FAILED",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 7,
             "room_id_displayed": "W277",
@@ -446,6 +453,8 @@ export default {
         "asset_id_displayed": "UQL000001",
         "asset_next_test_due_date": "2023-10-01",
         "asset_status": "DISCARDED",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 1,
             "room_id_displayed": "W212",
@@ -494,6 +503,8 @@ export default {
         "asset_id_displayed": "UQL000002",
         "asset_next_test_due_date": "2024-06-02",
         "asset_status": "DISCARDED",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 275,
             "room_id_displayed": "N204A",
@@ -542,6 +553,8 @@ export default {
         "asset_id_displayed": "UQL000003",
         "asset_next_test_due_date": "2024-06-06",
         "asset_status": "DISCARDED",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 1,
             "room_id_displayed": "W212",
@@ -590,6 +603,8 @@ export default {
         "asset_id_displayed": "UQL000004",
         "asset_next_test_due_date": "2027-10-01",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 477,
             "room_id_displayed": "102",
@@ -638,6 +653,8 @@ export default {
         "asset_id_displayed": "UQL000005",
         "asset_next_test_due_date": "2027-10-01",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 477,
             "room_id_displayed": "102",
@@ -686,6 +703,8 @@ export default {
         "asset_id_displayed": "UQL000006",
         "asset_next_test_due_date": "2027-10-01",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 477,
             "room_id_displayed": "102",
@@ -734,6 +753,8 @@ export default {
         "asset_id_displayed": "UQL000007",
         "asset_next_test_due_date": "2023-09-10",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -782,6 +803,8 @@ export default {
         "asset_id_displayed": "UQL000008",
         "asset_next_test_due_date": "2023-09-10",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -830,6 +853,8 @@ export default {
         "asset_id_displayed": "UQL000009",
         "asset_next_test_due_date": "2023-09-10",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -878,6 +903,8 @@ export default {
         "asset_id_displayed": "UQL000010",
         "asset_next_test_due_date": "2023-05-08",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -926,6 +953,8 @@ export default {
         "asset_id_displayed": "UQL000011",
         "asset_next_test_due_date": "2023-05-08",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -974,6 +1003,8 @@ export default {
         "asset_id_displayed": "UQL000012",
         "asset_next_test_due_date": "2023-05-08",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -1022,6 +1053,8 @@ export default {
         "asset_id_displayed": "UQL000013",
         "asset_next_test_due_date": "2023-05-08",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -1070,6 +1103,8 @@ export default {
         "asset_id_displayed": "UQL000014",
         "asset_next_test_due_date": "2023-05-08",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -1118,6 +1153,8 @@ export default {
         "asset_id_displayed": "UQL000015",
         "asset_next_test_due_date": "2023-05-08",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -1166,6 +1203,8 @@ export default {
         "asset_id_displayed": "UQL000016",
         "asset_next_test_due_date": "2023-05-08",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -1214,6 +1253,8 @@ export default {
         "asset_id_displayed": "UQL000017",
         "asset_next_test_due_date": "2023-05-08",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -1262,6 +1303,8 @@ export default {
         "asset_id_displayed": "UQL000018",
         "asset_next_test_due_date": "2023-05-22",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -1310,6 +1353,8 @@ export default {
         "asset_id_displayed": "UQL000019",
         "asset_next_test_due_date": "2023-05-22",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -1358,6 +1403,8 @@ export default {
         "asset_id_displayed": "UQL000020",
         "asset_next_test_due_date": "2023-05-08",
         "asset_status": "CURRENT",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 404,
             "room_id_displayed": "L412",
@@ -1405,8 +1452,9 @@ export default {
         "asset_id": 123,
         "asset_id_displayed": "UQL000123",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
         "asset_status": "FAILED",
+        "asset_team_slug": "WSS",
+        "asset_team_display_name": "Work Station Support",
         "last_location": {
             "room_id": 7,
             "room_id_displayed": "W277",
@@ -1454,8 +1502,9 @@ export default {
         "asset_id": 91,
         "asset_id_displayed": "UQPF000091",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
         "asset_status": "FAILED",
+        "asset_team_slug": "PF",
+        "asset_team_display_name": "Property and Facilities",
         "last_location": {
             "room_id": 7,
             "room_id_displayed": "W277",

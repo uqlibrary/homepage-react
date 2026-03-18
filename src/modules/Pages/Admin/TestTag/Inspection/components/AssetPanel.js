@@ -5,10 +5,7 @@ import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-
-import { useCookies } from 'react-cookie';
+import Alert from '@mui/material/Alert';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import InspectionPanel from './InspectionPanel';
@@ -16,6 +13,7 @@ import LastInspectionPanel from './LastInspectionPanel';
 import AssetSelector from '../../SharedComponents/AssetSelector/AssetSelector';
 import UpdateDialog from '../../SharedComponents/UpdateDialog/UpdateDialog';
 import AssetTypeSelector, { ADD_NEW_ID } from '../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
+import SwitchIncludeAllTeams from './partials/SwitchIncludeAllTeams';
 
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
 import { transformAddAssetTypeRequest } from '../utils/transformers';
@@ -28,52 +26,6 @@ const componentId = 'asset-panel';
 const componentIdLower = 'asset_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
-
-export const IncludeAllTeams = ({
-    locale,
-    onChange,
-    defaultValue = false,
-    withCookie = true,
-    cookieName = 'TNT_ALL_TEAMS',
-}) => {
-    const [cookies, setCookie] = useCookies();
-    const init = () => {
-        return withCookie ? Boolean(cookies[cookieName]) : defaultValue;
-    };
-    const [checked, setChecked] = React.useState(init);
-
-    const _onChange = event => {
-        const newValue = event.target.checked;
-        if (withCookie) {
-            const current = new Date();
-            const nextYear = new Date();
-            nextYear.setFullYear(current.getFullYear() + 1);
-            setCookie(cookieName, newValue, { path: '/', expires: nextYear });
-        }
-        setChecked(newValue);
-        onChange?.(newValue);
-    };
-
-    React.useEffect(() => {
-        _onChange({ target: { checked: init() } });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return (
-        <FormControlLabel
-            control={<Switch checked={checked} onChange={_onChange} name="includeAllTeams" color="primary" />}
-            label={locale.includeAllTeams}
-        />
-    );
-};
-
-IncludeAllTeams.propTypes = {
-    defaultValue: PropTypes.bool,
-    onChange: PropTypes.func,
-    withCookie: PropTypes.bool,
-    cookieName: PropTypes.string,
-    locale: PropTypes.object.isRequired,
-};
 
 const AssetPanel = ({
     actions,
@@ -89,7 +41,7 @@ const AssetPanel = ({
     canAddAssetType,
     openConfirmationAlert,
 }) => {
-    const [allTeams, setAllTeams] = React.useState(false);
+    const [allTeams, setAllTeams] = React.useState();
     const pageLocale = locale.pages.inspect.form.asset;
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
@@ -99,6 +51,16 @@ const AssetPanel = ({
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [shouldAutoFocus, setShouldAutoFocus] = React.useState(false);
+    const [searchTerm, setSearchTerm] = React.useState();
+
+    const onSearch = React.useCallback(term => {
+        setSearchTerm(term);
+    }, []);
+
+    const onClear = React.useCallback(() => {
+        console.log('Clearing asset selection'); // --- IGNORE ---
+        setSearchTerm(undefined);
+    }, []);
 
     React.useLayoutEffect(() => {
         setShouldAutoFocus(
@@ -155,15 +117,34 @@ const AssetPanel = ({
         } else handleChange('asset_type_id')(assetType.asset_type_id);
     };
 
+    const createFilter = value => {
+        console.log('Creating filter for all teams value:', value); // --- IGNORE ---
+        const retval = value ? { all_teams: true } : {};
+        retval.key = Date.now(); // Force re-mount of AssetSelector when toggling all teams to reset its internal state
+        return retval;
+    };
+
     const onAllTeamsChange = value => {
+        console.log('Toggling all teams filter. New value:', value); // --- IGNORE ---
         setAllTeams(value);
+        if (value === false && selectedAsset?.asset_team_slug !== user.user_team) {
+            // only reset the asset list when disabling the 'all' option, and when
+            // the user already selected an asset that is outside their team
+            actions.clearAssets();
+        }
+        console.log(value, searchTerm);
+        if (searchTerm !== undefined) {
+            const filters = createFilter(value);
+            console.log('Applying all teams filter to current search term:', filters); // --- IGNORE ---
+            actions.loadAssetsFiltered(searchTerm, filters);
+        }
     };
 
     const includeAllTeams = React.useMemo(() => {
-        const retval = allTeams ? { all_teams: true } : {};
-        retval.key = Date.now(); // Force re-mount of AssetSelector when toggling all teams to reset its internal state
-        return retval;
+        return createFilter(allTeams);
     }, [allTeams]);
+
+    console.log(includeAllTeams);
 
     return (
         <StandardCard
@@ -193,19 +174,19 @@ const AssetPanel = ({
                 <Grid xs={12} item sm={6} md={3}>
                     <FormGroup>
                         <AssetSelector
-                            key={includeAllTeams.key}
                             id={componentId}
                             locale={pageLocale}
                             user={user}
                             classNames={{ formControl: 'formControl' }}
                             autoFocus={shouldAutoFocus}
+                            onClear={onClear}
                             onChange={assignCurrentAsset}
                             onReset={resetForm}
                             validateAssetId={isValidAssetId}
                             selectedAsset={formValues?.asset_id_displayed}
                             filter={includeAllTeams}
+                            onSearch={onSearch}
                         />
-                        <IncludeAllTeams locale={pageLocale} onChange={onAllTeamsChange} />
                     </FormGroup>
                 </Grid>
                 <Grid xs={12} item sm={6}>
@@ -227,6 +208,22 @@ const AssetPanel = ({
                             autoSelect={false}
                         />
                     </FormControl>
+                </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+                <Grid xs={12} item>
+                    <SwitchIncludeAllTeams locale={pageLocale} onChange={onAllTeamsChange} />
+                    {!!allTeams &&
+                        Object.keys(selectedAsset ?? {}).length > 0 &&
+                        selectedAsset?.asset_team_slug !== user.user_team && (
+                            <Alert
+                                severity="warning"
+                                id={`${componentIdLower}-all-teams-warning-text`}
+                                data-testid={`${componentIdLower}-all-teams-warning-text`}
+                            >
+                                {pageLocale.allTeamsAlert(selectedAsset?.asset_team_display_name)}
+                            </Alert>
+                        )}
                 </Grid>
             </Grid>
             <LastInspectionPanel

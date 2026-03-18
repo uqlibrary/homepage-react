@@ -38,34 +38,33 @@ const AssetSelector = ({
     onChange,
     onReset,
     onSearch,
+    onClear,
     validateAssetId,
     filter,
 }) => {
+    console.log('AssetSelector render', filter);
     const componentId = `${rootId}-${id}`;
     const previousValueRef = React.useRef(null);
     const inputRef = React.useRef();
     const dispatch = useDispatch();
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
-    console.log('Assets list from store:', assetsList, assetsListLoading); // --- IGNORE ---
     const [currentValue, setCurrentValue] = useState(selectedAsset ?? null);
 
     const [formAssetList, setFormAssetList] = useState(assetsList);
 
     const [isOpen, setIsOpen] = React.useState(false);
-
-    const clearInput = () => {
+    const filterRef = React.useRef(filter);
+    React.useEffect(() => {
+        filterRef.current = filter;
+    }, [filter]);
+    console.log('>', assetsList, formAssetList);
+    const clearInput = reason => {
         setCurrentValue(null);
+        setFormAssetList([]);
         previousValueRef.current = null;
         dispatch(actions.clearAssets());
+        onClear?.(reason);
     };
-
-    // React.useEffect(() => {
-    //     if (isOpen && !!currentValue && currentValue.length >= minAssetIdLength) {
-    //         console.log('Searching assets with pattern:', currentValue, 'and filter:', filter); // --- IGNORE ---
-    //         onSearch?.(currentValue);
-    //         dispatch(!!filter ? actions.loadAssetsFiltered(currentValue, filter) : actions.loadAssets(currentValue));
-    //     }
-    // }, [currentValue, dispatch, filter, isOpen, minAssetIdLength, onSearch]);
 
     const debounceAssetsSearch = React.useRef(
         debounce(500, (pattern, user) => {
@@ -73,10 +72,12 @@ const AssetSelector = ({
             setCurrentValue(assetPartial);
             /* istanbul ignore else */
             if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
-                console.log('Searching assets with pattern:', assetPartial, 'and filter:', filter, !!filter); // --- IGNORE ---
                 onSearch?.(assetPartial);
+                console.log('debounce', assetPartial, filterRef.current);
                 dispatch(
-                    !!filter ? actions.loadAssetsFiltered(assetPartial, filter) : actions.loadAssets(assetPartial),
+                    !!filterRef.current
+                        ? actions.loadAssetsFiltered(assetPartial, filterRef.current)
+                        : actions.loadAssets(assetPartial),
                 );
             }
         }),
@@ -100,7 +101,6 @@ const AssetSelector = ({
             clearOnSelect && clearInput();
         }
         /* istanbul ignore else */ if (assetsList?.length < 1) {
-            console.log('reset form');
             onReset?.(false);
             setIsOpen(false);
         }
@@ -122,7 +122,11 @@ const AssetSelector = ({
                 fullWidth
                 open={!headless && isOpen}
                 value={currentValue ?? previousValueRef.current ?? ''}
-                onChange={(event, newValue) => {
+                onChange={(event, newValue, reason) => {
+                    if (reason === 'clear') {
+                        clearInput(reason);
+                        return;
+                    }
                     if (newValue && newValue.inputValue) {
                         // Create a new value from the user input
                         onChange?.({
@@ -132,7 +136,7 @@ const AssetSelector = ({
                         onChange?.(newValue);
                     }
                     setIsOpen(false);
-                    clearOnSelect && clearInput();
+                    clearOnSelect && clearInput(reason);
                 }}
                 filterOptions={(options, params) => {
                     const filtered = filterOptions(options, params);
@@ -235,6 +239,7 @@ AssetSelector.propTypes = {
     clearOnSelect: PropTypes.bool,
     user: PropTypes.object,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
+    onClear: PropTypes.func,
     onChange: PropTypes.func,
     onSearch: PropTypes.func,
     onReset: PropTypes.func,

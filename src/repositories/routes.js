@@ -119,9 +119,9 @@ export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
         // TODO: add more filters as required
     };
     const qs = new URLSearchParams(urlParams);
-    console.log('Asset search filters:', urlParams); // --- IGNORE ---
     const hasParams = [...qs].length > 0;
     const apiUrl = `test-and-tag/asset/search/current/${pattern}${hasParams ? `?${qs.toString()}` : ''}`;
+    console.log('Constructed API URL:', apiUrl); // --- IGNORE ---
     return {
         apiUrl,
     };
