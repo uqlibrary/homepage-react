@@ -4,6 +4,7 @@ import { rtlRender } from 'test-utils';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import Licence from './Licence';
+import { waitFor } from '@testing-library/react';
 
 function setup(testProps = {}, renderer = rtlRender) {
     const { data, row, ...rest } = testProps;
@@ -14,7 +15,7 @@ function setup(testProps = {}, renderer = rtlRender) {
         },
         data: { user_id: 'Auto', ...data },
         row: { ...row },
-        onChange: jest.fn(),
+        onChange: testProps.onChange || jest.fn(),
     };
 
     const props = { ...defaultProps, ...rest };
@@ -26,8 +27,10 @@ function setup(testProps = {}, renderer = rtlRender) {
 }
 
 describe('Licence', () => {
-    test('should call onChange when input value changes', async () => {
-        const { props, getByTestId } = setup();
+    test('should call given onChange on input value changes', async () => {
+        const { props, getByTestId } = setup({
+            data: { can_inspect_cb: true },
+        });
 
         await userEvent.type(getByTestId('test-input'), 'new licence');
 
@@ -39,37 +42,56 @@ describe('Licence', () => {
     });
 
     describe('creation mode', () => {
-        test('should render default state', () => {
+        test('should render as disabled', () => {
             const { getByTestId, getByText, queryByText } = setup();
 
-            expect(getByTestId('test-input')).toHaveAttribute('maxlength', '45');
+            const input = getByTestId('test-input');
+            expect(input).toBeDisabled();
+            expect(input).toHaveAttribute('maxlength', '45');
+
             expect(getByText(locale.pages.general.helperText.maxChars(45))).toBeInTheDocument();
             expect(queryByText(locale.pages.manage.users.helperText.user_licence_number)).toBeNull();
         });
 
-        test('should display required message based on users perms', () => {
+        test('should render as unlockd', () => {
+            const { getByTestId, getByText, queryByText } = setup({
+                data: { can_inspect_cb: true },
+            });
+
+            const input = getByTestId('test-input');
+            expect(input).not.toBeDisabled();
+            expect(input).toBeRequired();
+
+            expect(getByText(locale.pages.general.helperText.maxChars(45))).toBeInTheDocument();
+            expect(queryByText(locale.pages.manage.users.helperText.user_licence_number)).toBeNull();
+        });
+
+        test('should display required message', () => {
             const { getByTestId, getByText, queryByText } = setup({
                 data: { can_inspect_cb: true },
                 error: true,
             });
 
-            expect(getByTestId('test-input')).toBeRequired();
+            const input = getByTestId('test-input');
+            expect(input).not.toBeDisabled();
+            expect(input).toBeRequired();
+
             expect(queryByText(locale.pages.general.helperText.maxChars(45))).toBeNull();
             expect(getByText(locale.pages.manage.users.helperText.user_licence_number)).toBeInTheDocument();
         });
     });
 
-    describe('updating mode', () => {
-        test('should allow to toggle input disable state', async () => {
+    describe('update mode', () => {
+        test('should allow to toggle input lock state', async () => {
             const { getByTestId } = setup({
-                data: { user_id: 123 },
+                data: { user_id: 123, can_inspect_cb: true },
                 row: { test: 'ABC123' },
             });
 
             const input = getByTestId('test-input');
             expect(input).toBeDisabled();
 
-            const lockToggleButton = getByTestId('test-enable-button');
+            const lockToggleButton = getByTestId('test-unlock-button');
             await userEvent.click(lockToggleButton);
             expect(input).not.toBeDisabled();
 
@@ -77,17 +99,17 @@ describe('Licence', () => {
             expect(input).toBeDisabled();
         });
 
-        test('should show warning according to isDirt state', async () => {
+        test('should show licence update warning', async () => {
             const initialValue = 'initial value';
             const { getByTestId, queryByText } = setup({
-                data: { user_id: 123 },
+                data: { user_id: 123, can_inspect_cb: true },
                 value: initialValue,
             });
 
             const input = getByTestId('test-input');
 
             expect(queryByText(locale.pages.manage.users.helperText.licence_update_warning)).not.toBeInTheDocument();
-            await userEvent.click(getByTestId('test-enable-button'));
+            await userEvent.click(getByTestId('test-unlock-button'));
 
             await userEvent.type(input, 'updated');
             expect(queryByText(locale.pages.manage.users.helperText.licence_update_warning)).toBeInTheDocument();
@@ -97,26 +119,56 @@ describe('Licence', () => {
             expect(queryByText(locale.pages.manage.users.helperText.licence_update_warning)).not.toBeInTheDocument();
         });
 
-        test('should revert value when disabling field when the value has changed', async () => {
-            const { props, getByTestId } = setup({
-                data: { user_id: 123 },
-                value: 'ORIGINAL',
+        describe('changes rollback', () => {
+            test('should rollback changes when locking the field on dirty state', async () => {
+                const { props, getByTestId } = setup({
+                    data: { user_id: 123, can_inspect_cb: true },
+                    value: 'ORIGINAL',
+                });
+
+                await userEvent.click(getByTestId('test-unlock-button'));
+
+                const input = getByTestId('test-input');
+
+                await userEvent.clear(input);
+                await userEvent.type(input, 'UPDATED');
+
+                await userEvent.click(getByTestId('test-lock-button'));
+
+                expect(props.onChange).toHaveBeenLastCalledWith({
+                    target: {
+                        name: 'test',
+                        value: 'ORIGINAL',
+                    },
+                });
             });
 
-            await userEvent.click(getByTestId('test-enable-button'));
-
-            const input = getByTestId('test-input');
-
-            await userEvent.clear(input);
-            await userEvent.type(input, 'UPDATED');
-
-            await userEvent.click(getByTestId('test-disable-button'));
-
-            expect(props.onChange).toHaveBeenLastCalledWith({
-                target: {
-                    name: 'test',
+            test('should revert changes the field is disabled', async () => {
+                const { rerender, props, getByTestId } = setup({
+                    data: { user_id: 123, can_inspect_cb: true },
                     value: 'ORIGINAL',
-                },
+                });
+
+                await userEvent.click(getByTestId('test-unlock-button'));
+
+                const input = getByTestId('test-input');
+
+                await userEvent.clear(input);
+                await userEvent.type(input, 'UPDATED');
+
+                setup(
+                    {
+                        ...props,
+                        data: { user_id: 123 },
+                    },
+                    rerender,
+                );
+
+                await waitFor(() => {
+                    expect(props.onChange).toHaveBeenLastCalledWith({
+                        target: { name: 'test', value: 'ORIGINAL' },
+                    });
+                });
             });
         });
     });
