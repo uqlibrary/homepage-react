@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import TextField from '@mui/material/TextField';
-import { isEmptyStr } from '../../../helpers/helpers';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Lock, LockOpen } from '@mui/icons-material';
@@ -28,7 +27,7 @@ const Licence = ({ data, row, ...props }) => {
             : locale.pages.general.helperText.maxChars(45);
 
     // update value's local and parent state
-    const handleChange = newValue => {
+    const handleChange = (newValue) => {
         console.log(newValue);
         setValue(newValue);
         props.onChange?.({
@@ -63,7 +62,7 @@ const Licence = ({ data, row, ...props }) => {
     }
 
     const toggleLock = () => {
-        setLocked(prev => {
+        setLocked((prev) => {
             const next = !prev;
 
             if (next || isDirty) {
@@ -79,7 +78,7 @@ const Licence = ({ data, row, ...props }) => {
         <TextField
             {...props}
             value={currentValue}
-            onChange={e => handleChange(e.target.value)}
+            onChange={(e) => handleChange(e.target.value)}
             variant="standard"
             disabled={locked}
             required={required}

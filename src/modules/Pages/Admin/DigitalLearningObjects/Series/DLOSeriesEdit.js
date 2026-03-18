@@ -70,8 +70,8 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
     const ref = React.useRef(null);
     const [, drop] = useDrop({
         accept: 'LIST_ITEM',
-        /* istanbul ignore next */
         drop(draggedItem) {
+            /* istanbul ignore else */
             if (draggedItem.index !== index) {
                 moveItem(draggedItem.index, index);
                 draggedItem.index = index;
@@ -82,7 +82,7 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
     const [{ isDragging }, drag] = useDrag({
         type: 'LIST_ITEM',
         item: { index },
-        collect: (monitor) => ({
+        collect: monitor => ({
             isDragging: monitor.isDragging(),
         }),
     });
@@ -98,7 +98,7 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
                 backgroundColor: '#f9f9f9', // Optional: Add background color for better visibility
                 border: '1px solid #ddd', // Optional: Add border for better visibility
                 borderRadius: '4px', // Optional: Add border radius for better visibility
-                opacity: isDragging ? /* istanbul ignore next */ 0.5 : 1,
+                opacity: isDragging ? 0.5 : 1,
                 marginBottom: '5px', // Add margin to the bottom
                 padding: '5px', // Add padding for better spacing
                 alignItems: 'center', // Center items vertically
@@ -174,7 +174,6 @@ export const DLOSeriesEdit = ({
         object_list_unassigned: [],
     });
 
-    /* istanbul ignore next */
     const moveItem = (fromIndex, toIndex) => {
         const updatedList = [...formValues.object_list_linked];
         const [movedItem] = updatedList.splice(fromIndex, 1);
@@ -214,11 +213,11 @@ export const DLOSeriesEdit = ({
         setConfirmationOpen(!dlorItemUpdating && (!!dlorUpdatedItemError || !!dlorUpdatedItem));
     }, [dlorItemUpdating, dlorUpdatedItemError, dlorUpdatedItem]);
 
-    const isValidSeriesName = (seriesName) => {
+    const isValidSeriesName = seriesName => {
         return seriesName?.trim() !== '';
     };
 
-    const isValidForm = (currentValues) => {
+    const isValidForm = currentValues => {
         return isValidSeriesName(currentValues?.series_name);
     };
 
@@ -241,13 +240,12 @@ export const DLOSeriesEdit = ({
         console.log('DLOR SERIES', dlorSeries);
         if (!dlorListLoading && !dlorListError && (!!dlorList || !!dlorSeries?.series_name)) {
             setConfirmationOpen(false);
-            const seriesDetail =
-                (!!dlorList && dlorList?.find((s) => s.object_series_id === Number(dlorSeriesId))) || {};
+            const seriesDetail = (!!dlorList && dlorList?.find(s => s.object_series_id === Number(dlorSeriesId))) || {};
             if (Object.keys(seriesDetail).length === 0) {
                 console.log('Doing the things');
                 seriesDetail.object_series_id = dlorSeriesId;
-                ((seriesDetail.object_series_name = dlorSeries?.series_name),
-                    (seriesDetail.object_series_description = dlorSeries?.series_description));
+                (seriesDetail.object_series_name = dlorSeries?.series_name),
+                    (seriesDetail.object_series_description = dlorSeries?.series_description);
             }
             mode === 'EDIT' &&
                 setOriginalSeriesDetails({
@@ -261,13 +259,13 @@ export const DLOSeriesEdit = ({
                 series_description: seriesDetail?.object_series_description,
                 object_list_linked:
                     dlorList?.length > 0
-                        ? dlorList?.filter((o) => {
+                        ? dlorList?.filter(o => {
                               return o.object_series_id === Number(dlorSeriesId);
                           })
                         : /* istanbul ignore next */ [],
                 object_list_unassigned:
                     dlorList?.length > 0
-                        ? dlorList?.filter((d) => {
+                        ? dlorList?.filter(d => {
                               return !(d?.object_series_id > 0);
                           })
                         : /* istanbul ignore next */ [],
@@ -312,8 +310,8 @@ export const DLOSeriesEdit = ({
         let newValues;
         let linked = formValues.object_list_linked;
         const unassigned = formValues.object_list_unassigned;
-        const indexToRemove = linked.findIndex((d) => d.object_public_uuid === uuid);
-        const thisdlor = linked.find((d) => d.object_public_uuid === uuid);
+        const indexToRemove = linked.findIndex(d => d.object_public_uuid === uuid);
+        const thisdlor = linked.find(d => d.object_public_uuid === uuid);
         /* istanbul ignore else */
         if (indexToRemove !== -1) {
             linked.splice(indexToRemove, 1);
@@ -332,13 +330,13 @@ export const DLOSeriesEdit = ({
         setFormValues(newValues);
     };
 
-    const handleAdd = (uuid) => {
+    const handleAdd = uuid => {
         let newValues;
         console.log(uuid);
         let linked = formValues.object_list_linked;
         const unassigned = formValues.object_list_unassigned;
-        const thisdlor = unassigned.find((d) => d.object_public_uuid === uuid);
-        const indexToRemove = unassigned.findIndex((d) => d.object_public_uuid === uuid);
+        const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);
+        const indexToRemove = unassigned.findIndex(d => d.object_public_uuid === uuid);
         thisdlor.object_series_order = linked.length + 1;
         /* istanbul ignore else */
         if (indexToRemove !== -1) {
@@ -356,7 +354,7 @@ export const DLOSeriesEdit = ({
         setFormValues(newValues);
     };
 
-    const handleChange = (prop) => (e) => {
+    const handleChange = prop => e => {
         const theNewValue = e.target.value;
         let newValues;
         newValues = { ...formValues, [prop]: theNewValue };
@@ -368,8 +366,8 @@ export const DLOSeriesEdit = ({
             series_name: formValues.series_name,
             series_description: formValues.series_description,
             series_list: formValues.object_list_linked
-                .filter((item) => Number(item.object_series_order) > 0)
-                .map((item) => ({
+                .filter(item => Number(item.object_series_order) > 0)
+                .map(item => ({
                     object_public_uuid: item.object_public_uuid,
                     object_series_order: Number(item.object_series_order),
                 })),
@@ -387,7 +385,7 @@ export const DLOSeriesEdit = ({
     };
 
     function toProperCase(text) {
-        return text.replace(/\w\S*/g, function (txt) {
+        return text.replace(/\w\S*/g, function(txt) {
             return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         });
     }
@@ -485,8 +483,8 @@ export const DLOSeriesEdit = ({
                                                             editor={ClassicEditor}
                                                             config={editorConfig}
                                                             data={formValues?.series_description || ''}
-                                                            onReady={(editor) => {
-                                                                editor.editing.view.change((writer) => {
+                                                            onReady={editor => {
+                                                                editor.editing.view.change(writer => {
                                                                     writer.setStyle(
                                                                         'height',
                                                                         '200px',
@@ -539,7 +537,7 @@ export const DLOSeriesEdit = ({
                                                 Objects available to add to this series
                                             </Typography>
                                             <StyledSeriesList>
-                                                {formValues?.object_list_unassigned?.map((f) => {
+                                                {formValues?.object_list_unassigned?.map(f => {
                                                     return (
                                                         <StyledDraggableListItem
                                                             key={f.object_id}
