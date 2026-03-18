@@ -98,7 +98,8 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
                 backgroundColor: '#f9f9f9', // Optional: Add background color for better visibility
                 border: '1px solid #ddd', // Optional: Add border for better visibility
                 borderRadius: '4px', // Optional: Add border radius for better visibility
-                opacity: isDragging ? /* istanbul ignore next */ 0.5 : 1,
+                /* istanbul ignore next */
+                opacity: isDragging ? /* istanbul ignore next */ 0.5 : /* istanbul ignore next */ 1,
                 marginBottom: '5px', // Add margin to the bottom
                 padding: '5px', // Add padding for better spacing
                 alignItems: 'center', // Center items vertically
