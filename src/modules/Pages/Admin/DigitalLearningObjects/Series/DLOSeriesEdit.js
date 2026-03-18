@@ -70,8 +70,8 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
     const ref = React.useRef(null);
     const [, drop] = useDrop({
         accept: 'LIST_ITEM',
+        /* istanbul ignore next */
         drop(draggedItem) {
-            /* istanbul ignore next */
             if (draggedItem.index !== index) {
                 moveItem(draggedItem.index, index);
                 draggedItem.index = index;
@@ -98,8 +98,7 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
                 backgroundColor: '#f9f9f9', // Optional: Add background color for better visibility
                 border: '1px solid #ddd', // Optional: Add border for better visibility
                 borderRadius: '4px', // Optional: Add border radius for better visibility
-                /* istanbul ignore next */
-                opacity: isDragging ? /* istanbul ignore next */ 0.5 : /* istanbul ignore next */ 1,
+                opacity: isDragging ? /* istanbul ignore next */ 0.5 : 1,
                 marginBottom: '5px', // Add margin to the bottom
                 padding: '5px', // Add padding for better spacing
                 alignItems: 'center', // Center items vertically
