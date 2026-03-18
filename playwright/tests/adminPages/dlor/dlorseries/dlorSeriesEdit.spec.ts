@@ -49,12 +49,15 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
                 'dlor-series-edit-draggable-title-9bc1894a-8b0d-46da-a25e-02d26e2e056c',
             );
 
+            const listItems = page.locator('#dragLandingAarea li');
+            const originalFirstItemText = (await listItems.first().innerText()).trim();
+            const originalSecondItemText = (await listItems.nth(1).innerText()).trim();
+
             // Drag first item to second item's position
             await firstItem.dragTo(secondItem);
 
-            const listItems = page.locator('#dragLandingAarea li');
-            await expect(listItems.first().getByText('for science')).toBeVisible();
-            await expect(listItems.nth(1)).toHaveText(/Advanced literature searching/);
+            await expect(listItems.first()).toContainText(originalSecondItemText);
+            await expect(listItems.nth(1)).toContainText(originalFirstItemText);
 
             // Drag first item to second item's position again to revert
             await firstItem.dragTo(secondItem);
@@ -62,9 +65,8 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
             // Wait for the list to be updated
             await page.waitForSelector('#dragLandingAarea li');
 
-            const updatedListItems = page.locator('#dragLandingAarea li');
-            await expect(updatedListItems.first().getByText('Advanced literature searching')).toBeVisible();
-            await expect(updatedListItems.nth(1)).toHaveText(/for science/);
+            await expect(listItems.first()).toContainText(originalFirstItemText);
+            await expect(listItems.nth(1)).toContainText(originalSecondItemText);
         });
 
         test('has a working "cancel edit" button', async ({ page }) => {
@@ -90,15 +92,18 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
         });
 
         test('can add a series with objects', async ({ page }) => {
+            const listItems = page.locator('#dragLandingAarea li');
+            const originalFirstItemText = (await listItems.first().innerText()).trim();
+            const originalSecondItemText = (await listItems.nth(1).innerText()).trim();
+
             await page.getByTestId('admin-dlor-series-summary-button').click();
             await page.getByTestId('admin-series-add-object-button-980').click();
             await page.getByTestId('admin-series-add-object-button-981').click();
             await page.getByTestId('admin-series-remove-object-button-2').click();
             await page.getByTestId('admin-series-remove-object-button-2').click();
 
-            const listItems = page.locator('#dragLandingAarea li');
-            await expect(listItems.nth(1)).toHaveText(/for science/);
-            await expect(listItems.first().getByText('Advanced literature searching')).toBeVisible();
+            await expect(listItems.first()).toContainText(originalFirstItemText);
+            await expect(listItems.nth(1)).toContainText(originalSecondItemText);
 
             const seriesNameInput = page.locator('#series_name');
             await seriesNameInput.clear();

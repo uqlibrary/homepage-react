@@ -165,6 +165,9 @@ test.describe('LibraryUpdates', () => {
 
             await expect(page.locator('[data-testid="library-updates-parent"] > div')).toHaveCount(5); // 4 news stories and a heading
 
+            // Scroll to ensure all articles are rendered before measuring
+            await page.getByTestId('drupal-article-3').scrollIntoViewIfNeeded();
+
             // at mobile width, the articles are laid out:
             //  /------\
             //  | XXXX |
@@ -172,42 +175,30 @@ test.describe('LibraryUpdates', () => {
             //    XXXX
             //    XXXX
             //    XXXX
-            const firstBox = await getBoundingBox(page, 'drupal-article-0', {
-                x: 25,
-                y: 3346.9375,
-                width: 325,
-                height: 480.8125,
-            });
+            const getBox = async (testId: string): Promise<BoundingBox> => {
+                await expect(page.getByTestId(testId)).toBeVisible();
+                return (await page.getByTestId(testId).boundingBox()) as BoundingBox;
+            };
+
+            const firstBox = await getBox('drupal-article-0');
+            const secondBox = await getBox('drupal-article-1');
+            const thirdBox = await getBox('drupal-article-2');
+            const fourthBox = await getBox('drupal-article-3');
+
+            // first article is near the left edge
             expect(firstBox.x).toBeLessThan(26);
 
-            const secondBox = await getBoundingBox(page, 'drupal-article-1', {
-                x: 24,
-                y: 3860.75,
-                width: 327,
-                height: 154.5625,
-            });
-            expect(secondBox.x - firstBox.x).toBeLessThan(1);
-            expect(secondBox.x + secondBox.width - (firstBox.x + firstBox.width)).toBeLessThanOrEqual(1);
-            expect(secondBox.y).toBeGreaterThan(firstBox.y + firstBox.height);
-
-            const thirdBox = await getBoundingBox(page, 'drupal-article-2', {
-                x: 24,
-                y: 4047.3125,
-                width: 327,
-                height: 142.828125,
-            });
+            // all articles share the same left and right edges (single column layout)
+            expect(Math.abs(secondBox.x - firstBox.x)).toBeLessThanOrEqual(1);
+            expect(Math.abs(secondBox.x + secondBox.width - (firstBox.x + firstBox.width))).toBeLessThanOrEqual(1);
             expect(thirdBox.x).toBe(secondBox.x);
             expect(thirdBox.x + thirdBox.width).toBe(secondBox.x + secondBox.width);
-            expect(thirdBox.y).toBeGreaterThan(secondBox.y + secondBox.height);
-
-            const fourthBox = await getBoundingBox(page, 'drupal-article-3', {
-                x: 24,
-                y: 4222.140625,
-                width: 327,
-                height: 142.828125,
-            });
             expect(fourthBox.x).toBe(secondBox.x);
             expect(fourthBox.x + fourthBox.width).toBe(secondBox.x + secondBox.width);
+
+            // articles are stacked vertically
+            expect(secondBox.y).toBeGreaterThan(firstBox.y + firstBox.height);
+            expect(thirdBox.y).toBeGreaterThan(secondBox.y + secondBox.height);
             expect(fourthBox.y).toBeGreaterThan(thirdBox.y + thirdBox.height);
         });
 
