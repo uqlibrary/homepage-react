@@ -1,5 +1,8 @@
 import '@testing-library/jest-dom';
 import { toMatchDiffSnapshot } from 'snapshot-diff';
+import { jestPreviewConfigure } from 'jest-preview';
+
+jestPreviewConfigure({ autoPreview: true });
 
 const extensions = {
     toHaveDispatchedActions: (actions, expectedActions) => {
