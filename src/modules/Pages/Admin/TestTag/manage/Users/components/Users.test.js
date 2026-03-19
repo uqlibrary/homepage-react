@@ -13,6 +13,7 @@ import {
 import Immutable from 'immutable';
 
 import locale from '../../../testTag.locale';
+import { within } from '@testing-library/dom';
 
 const actions = {
     clearUserListError: jest.fn(),
@@ -170,6 +171,23 @@ describe('Manage Users', () => {
             ).toBeInTheDocument();
         });
         expect(actions.loadUserList).rejects.toEqual('Testing Error');
+    });
+
+    it('displays dup licence error', async () => {
+        const licenceUpdates = 123456;
+        const expectedError = `user_licence_number '${licenceUpdates}' is already associated with another user.`;
+        actions.updateUser = jest.fn(() => Promise.reject(expectedError));
+        const { getByText, getByTestId, findByTestId } = setup({ actions: actions });
+        expect(getByText('uqjsmit')).toBeInTheDocument();
+        await act(async () => await fireEvent.click(getByTestId('action_cell-1-edit-button')));
+        await expect(await findByTestId('user_uid-input')).toBeInTheDocument();
+        await userEvent.type(getByTestId('user_licence_number-input'), licenceUpdates);
+        // commit changes
+        await userEvent.click(getByTestId('update_dialog-action-button'));
+        // assert error message
+        expect(
+            within(await findByTestId('confirmation_alert-error')).getByText(new RegExp(expectedError, 'i')),
+        ).toBeInTheDocument();
     });
 
     it('Add User functions correctly', async () => {
