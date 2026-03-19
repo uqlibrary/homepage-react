@@ -8,50 +8,58 @@ import { Lock, LockOpen } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import PropTypes from 'prop-types';
+import { isEmptyStr } from '../../../helpers/helpers';
 
-const Licence = ({ data, row, ...props }) => {
-    const isNew = data?.user_id === 'Auto';
+const Licence = ({ data, onChange: parentOnChange, ...props }) => {
+    const userId = data?.user_id;
+    const isNew = userId === 'Auto';
     const canInspect = !!data?.can_inspect_cb;
     const required = canInspect;
-
-    const initialValue = useRef(props.value);
-    const [value, setValue] = useState(props.value);
-    const [disabled, setDisabled] = useState(!canInspect);
-    const [locked, setLocked] = useState(!isNew);
-
-    const currentValue = value ?? props.value;
-    const isDirty = initialValue.current !== currentValue;
     const helperText =
         required && props.error
             ? locale.pages.manage.users.helperText.user_licence_number
             : locale.pages.general.helperText.maxChars(45);
 
-    // update value's local and parent state
-    const handleChange = (newValue) => {
-        console.log(newValue);
+    const [value, setValue] = useState(props.value ?? '');
+    const initialValue = useRef(props.value ?? '');
+    const [disabled, setDisabled] = useState(!canInspect);
+    const [locked, setLocked] = useState(!isNew);
+    const [isDirty, setDirty] = useState(initialValue.current !== value);
+
+    const onChange = newValue => {
+        setDirty(newValue !== initialValue.current);
         setValue(newValue);
-        props.onChange?.({
-            target: {
-                name: props.name,
-                value: newValue,
-            },
-        });
+        parentOnChange({ target: { name: props.name, value: newValue } });
     };
 
-    // handles canInspect changes
+    const toggleLock = () => setLocked(prev => !prev);
+
+    // Handles user changes
+    useEffect(() => {
+        setValue(props.value ?? '');
+        initialValue.current = props.value ?? '';
+    }, [userId]);
+
+    // Handles canInspect changes
     useEffect(() => {
         setDisabled(!canInspect);
         if (isNew) return;
-
-        // revert licence changes to avoid undesired updates
-        handleChange(initialValue.current);
         setLocked(true);
-    }, [isNew, canInspect]);
+    }, [canInspect]);
 
-    if (isNew || disabled) {
+    // Handles disable, lock changes
+    useEffect(() => {
+        if (isNew || !isDirty) return;
+        // reset changes
+        onChange(initialValue.current);
+    }, [disabled, locked]);
+
+    if (isNew || disabled || isEmptyStr(initialValue.current)) {
         return (
             <TextField
                 {...props}
+                onChange={e => onChange(e.target.value)}
+                value={value}
                 variant="standard"
                 disabled={disabled}
                 required={required}
@@ -61,24 +69,11 @@ const Licence = ({ data, row, ...props }) => {
         );
     }
 
-    const toggleLock = () => {
-        setLocked((prev) => {
-            const next = !prev;
-
-            if (next || isDirty) {
-                // revert value if user locks the field again
-                handleChange(initialValue.current);
-            }
-
-            return next;
-        });
-    };
-
     return (
         <TextField
             {...props}
-            value={currentValue}
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
+            value={value}
             variant="standard"
             disabled={locked}
             required={required}
@@ -117,7 +112,6 @@ const Licence = ({ data, row, ...props }) => {
 
 Licence.propTypes = {
     data: PropTypes.object,
-    row: PropTypes.object,
     name: PropTypes.string,
     value: PropTypes.any,
     error: PropTypes.any,

@@ -53,7 +53,7 @@ describe('Licence', () => {
             expect(queryByText(locale.pages.manage.users.helperText.user_licence_number)).toBeNull();
         });
 
-        test('should render as unlockd', () => {
+        test('should render as unlocked', () => {
             const { getByTestId, getByText, queryByText } = setup({
                 data: { can_inspect_cb: true },
             });
@@ -82,10 +82,22 @@ describe('Licence', () => {
     });
 
     describe('update mode', () => {
+        test('should not render locked when licence is empty', async () => {
+            const { getByTestId, queryByTestId } = setup({
+                data: { user_id: 123, can_inspect_cb: true },
+            });
+
+            const input = getByTestId('test-input');
+            expect(input).not.toBeDisabled();
+
+            expect(queryByTestId('test-unlock-button')).not.toBeInTheDocument();
+            expect(queryByTestId('test-lock-button')).not.toBeInTheDocument();
+        });
+
         test('should allow to toggle input lock state', async () => {
             const { getByTestId } = setup({
                 data: { user_id: 123, can_inspect_cb: true },
-                row: { test: 'ABC123' },
+                value: 'ORIGINAL',
             });
 
             const input = getByTestId('test-input');
