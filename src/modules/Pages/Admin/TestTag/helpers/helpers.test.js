@@ -5,7 +5,11 @@ import {
     createLocationString,
     isInvalidUUID,
     isInvalidTeamSlug,
+    isValidDateRange,
 } from './helpers';
+
+import moment from 'moment';
+
 describe('helpers', () => {
     it('capitaliseLeadingChar operates correctly', () => {
         expect(capitaliseLeadingChar('test')).toEqual('Test');
@@ -49,5 +53,31 @@ describe('helpers', () => {
         expect(isInvalidTeamSlug(undefined)).toEqual(true);
         expect(isInvalidTeamSlug('abcdefghijk')).toEqual(true); // 11 chars, exceeds 10
         expect(isInvalidTeamSlug('abcdefghij')).toEqual(false); // exactly 10 chars
+    });
+
+    describe('isValidDateRange', () => {
+        const format = 'YYYY-MM-DD';
+        const min = moment('2020-01-01');
+        const max = moment('2025-12-31');
+
+        it('validates dates correctly', () => {
+            // valid + within range
+            expect(isValidDateRange('2023-06-15', format, min, max)).toBe(true);
+            // inclusive boundaries
+            expect(isValidDateRange('2020-01-01', format, min, max)).toBe(true);
+            expect(isValidDateRange('2025-12-31', format, min, max)).toBe(true);
+            // out of range
+            expect(isValidDateRange('2019-12-31', format, min, max)).toBe(false);
+            expect(isValidDateRange('2026-01-01', format, min, max)).toBe(false);
+            // invalid date
+            expect(isValidDateRange('2023-02-30', format, min, max)).toBe(false);
+        });
+
+        it('handles invalid or non-standard input as valid (by design)', () => {
+            expect(isValidDateRange('', format, min, max)).toBe(true);
+            expect(isValidDateRange(null, format, min, max)).toBe(true);
+            expect(isValidDateRange('15/06/2023', format, min, max)).toBe(true);
+            expect(isValidDateRange('2023-6-1', format, min, max)).toBe(true);
+        });
     });
 });

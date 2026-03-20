@@ -5,11 +5,15 @@ import React from 'react';
 import moment from 'moment';
 import TextField from '@mui/material/TextField';
 
-import { isEmptyStr } from '../../../helpers/helpers';
+import { isEmptyStr, isValidDateRange } from '../../../helpers/helpers';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { WarningOutlined } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 const dateFormat = locale.config.format.dateFormatNoTime;
+
+const now = moment();
+const lastYear = moment().subtract(1, 'year');
+const nextYear = moment().add(1, 'year');
 
 // Note: sortable values are set wholesale in the container components of
 // manage/InspectionDevices and report/RecalibrationsDue
@@ -62,7 +66,7 @@ export default {
                     required
                 />
             ),
-            validate: value => isEmptyStr(value), // should return true if a validation error exists
+            validate: value => !isValidDateRange(value, locale.pages.inspect.config.dateFormatNoTime, now, nextYear),
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
             fieldParams: {
                 canEdit: true,
@@ -99,7 +103,7 @@ export default {
                     required
                 />
             ),
-            validate: value => isEmptyStr(value), // should return true if a validation error exists
+            validate: value => !isValidDateRange(value, locale.pages.inspect.config.dateFormatNoTime, lastYear, now),
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
             fieldParams: { canEdit: true, minWidth: 180 },
         },
