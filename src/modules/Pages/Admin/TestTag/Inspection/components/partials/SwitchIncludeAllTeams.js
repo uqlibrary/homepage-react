@@ -5,14 +5,20 @@ import { useCookies } from 'react-cookie';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 
+import { COOKIE_INCLUDE_ALL_TEAMS } from '../config';
+
+const rootId = 'all-teams-switch';
 const SwitchIncludeAllTeams = ({
     locale,
     onChange,
     defaultValue = false,
     withCookie = true,
-    cookieName = 'TNT_ALL_TEAMS',
+    cookieName = COOKIE_INCLUDE_ALL_TEAMS,
     fireOnChangeOnMount = true,
+    id = '',
+    ...props
 }) => {
+    const componentIdLower = `${id.toLocaleLowerCase()}-${rootId}`;
     const [cookies, setCookie] = useCookies();
     const init = () => {
         return withCookie ? Boolean(cookies[cookieName]) : defaultValue;
@@ -35,13 +41,24 @@ const SwitchIncludeAllTeams = ({
 
     return (
         <FormControlLabel
-            control={<Switch checked={checked} onChange={_onChange} name="includeAllTeams" color="primary" />}
+            control={
+                <Switch
+                    checked={checked}
+                    onChange={_onChange}
+                    name="includeAllTeams"
+                    color="primary"
+                    id={componentIdLower}
+                    {...props}
+                    inputProps={{ 'data-testid': componentIdLower }}
+                />
+            }
             label={locale.includeAllTeams}
         />
     );
 };
 
 SwitchIncludeAllTeams.propTypes = {
+    id: PropTypes.string,
     defaultValue: PropTypes.bool,
     onChange: PropTypes.func,
     withCookie: PropTypes.bool,

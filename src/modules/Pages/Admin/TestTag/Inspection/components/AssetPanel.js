@@ -58,7 +58,6 @@ const AssetPanel = ({
     }, []);
 
     const onClear = React.useCallback(() => {
-        console.log('Clearing asset selection'); // --- IGNORE ---
         setSearchTerm(undefined);
     }, []);
 
@@ -118,24 +117,20 @@ const AssetPanel = ({
     };
 
     const createFilter = value => {
-        console.log('Creating filter for all teams value:', value); // --- IGNORE ---
         const retval = value ? { all_teams: true } : {};
         retval.key = Date.now(); // Force re-mount of AssetSelector when toggling all teams to reset its internal state
         return retval;
     };
 
     const onAllTeamsChange = value => {
-        console.log('Toggling all teams filter. New value:', value); // --- IGNORE ---
         setAllTeams(value);
         if (value === false && selectedAsset?.asset_team_slug !== user.user_team) {
             // only reset the asset list when disabling the 'all' option, and when
             // the user already selected an asset that is outside their team
             actions.clearAssets();
         }
-        console.log(value, searchTerm);
         if (searchTerm !== undefined) {
             const filters = createFilter(value);
-            console.log('Applying all teams filter to current search term:', filters); // --- IGNORE ---
             actions.loadAssetsFiltered(searchTerm, filters);
         }
     };
@@ -143,8 +138,6 @@ const AssetPanel = ({
     const includeAllTeams = React.useMemo(() => {
         return createFilter(allTeams);
     }, [allTeams]);
-
-    console.log(includeAllTeams);
 
     return (
         <StandardCard
@@ -212,7 +205,7 @@ const AssetPanel = ({
             </Grid>
             <Grid container spacing={3}>
                 <Grid xs={12} item>
-                    <SwitchIncludeAllTeams locale={pageLocale} onChange={onAllTeamsChange} />
+                    <SwitchIncludeAllTeams id={componentIdLower} locale={pageLocale} onChange={onAllTeamsChange} />
                     {!!allTeams &&
                         Object.keys(selectedAsset ?? {}).length > 0 &&
                         selectedAsset?.asset_team_slug !== user.user_team && (

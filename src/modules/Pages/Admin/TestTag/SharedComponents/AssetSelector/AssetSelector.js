@@ -42,7 +42,6 @@ const AssetSelector = ({
     validateAssetId,
     filter,
 }) => {
-    console.log('AssetSelector render', filter);
     const componentId = `${rootId}-${id}`;
     const previousValueRef = React.useRef(null);
     const inputRef = React.useRef();
@@ -57,7 +56,7 @@ const AssetSelector = ({
     React.useEffect(() => {
         filterRef.current = filter;
     }, [filter]);
-    console.log('>', assetsList, formAssetList);
+
     const clearInput = reason => {
         setCurrentValue(null);
         setFormAssetList([]);
@@ -73,7 +72,6 @@ const AssetSelector = ({
             /* istanbul ignore else */
             if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
                 onSearch?.(assetPartial);
-                console.log('debounce', assetPartial, filterRef.current);
                 dispatch(
                     !!filterRef.current
                         ? actions.loadAssetsFiltered(assetPartial, filterRef.current)
@@ -123,10 +121,6 @@ const AssetSelector = ({
                 open={!headless && isOpen}
                 value={currentValue ?? previousValueRef.current ?? ''}
                 onChange={(event, newValue, reason) => {
-                    if (reason === 'clear') {
-                        clearInput(reason);
-                        return;
-                    }
                     if (newValue && newValue.inputValue) {
                         // Create a new value from the user input
                         onChange?.({
@@ -136,7 +130,7 @@ const AssetSelector = ({
                         onChange?.(newValue);
                     }
                     setIsOpen(false);
-                    clearOnSelect && clearInput(reason);
+                    (clearOnSelect || reason === 'clear') && clearInput(reason);
                 }}
                 filterOptions={(options, params) => {
                     const filtered = filterOptions(options, params);

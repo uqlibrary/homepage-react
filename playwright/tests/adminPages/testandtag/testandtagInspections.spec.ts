@@ -1,5 +1,6 @@
 import { test, expect, Page } from '@uq/pw/test';
 import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
+import { COOKIE_INCLUDE_ALL_TEAMS } from '../../../../src/modules/Pages/Admin/TestTag/Inspection/components/config';
 import moment from 'moment';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
@@ -257,6 +258,68 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('UQL310000');
                 await expect(page.getByTestId('asset_type_selector-asset-panel-input')).not.toBeDisabled();
                 await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toHaveValue('Power Cord - C13');
+            });
+
+            test('should not show other teams assets when all teams switch is off', async ({ page, context }) => {
+                await context.clearCookies({ name: COOKIE_INCLUDE_ALL_TEAMS });
+                await page.reload();
+
+                await expect(page.getByTestId('asset_panel-all-teams-switch')).not.toBeChecked();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 });
+                await page.getByTestId('asset_selector-asset-panel-input').fill('UQL00');
+                await expect(page.getByRole('option').filter({ hasText: 'UQL00SP' })).toHaveCount(0);
+                await page.getByTestId('asset_panel-all-teams-switch').click();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 }); // bring back up the options list
+                await expect(page.getByRole('option').filter({ hasText: 'UQL00SP' })).toHaveCount(3);
+            });
+
+            test('should auto show other teams assets when all teams switch is on', async ({ page, context }) => {
+                await context.addCookies([
+                    { name: COOKIE_INCLUDE_ALL_TEAMS, value: 'true', domain: 'localhost', path: '/' },
+                ]);
+                await page.reload();
+                await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled();
+
+                await expect(page.getByTestId('asset_panel-all-teams-switch')).toBeChecked();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 });
+                await page.getByTestId('asset_selector-asset-panel-input').fill('UQL00');
+                await expect(page.getByRole('option').filter({ hasText: 'UQL00SP' })).toHaveCount(3);
+                await page.getByTestId('asset_panel-all-teams-switch').click();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 }); // bring back up the options list
+                await expect(page.getByRole('option').filter({ hasText: 'UQL00SP' })).toHaveCount(0);
+            });
+
+            test('should show alert if selected asset is from another team, then hide', async ({ page, context }) => {
+                await context.addCookies([
+                    { name: COOKIE_INCLUDE_ALL_TEAMS, value: 'true', domain: 'localhost', path: '/' },
+                ]);
+                await page.reload();
+                await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled();
+
+                await expect(page.getByTestId('asset_panel-all-teams-switch')).toBeChecked();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 });
+                await page.getByTestId('asset_selector-asset-panel-input').fill('UQL00');
+                await page
+                    .getByRole('option')
+                    .filter({ hasText: 'UQL00SP' })
+                    .first()
+                    .click();
+
+                await expect(
+                    page
+                        .getByTestId('asset_panel-all-teams-warning-text')
+                        .getByText('The "Spaces" team owns this asset. '),
+                ).toBeVisible();
+
+                // flip the all teams switch, which show remove the alert
+                await page.getByTestId('asset_panel-all-teams-switch').click();
+                await expect(
+                    page
+                        .getByTestId('asset_panel-all-teams-warning-text')
+                        .getByText('The "Spaces" team owns this asset. '),
+                ).not.toBeVisible();
+
+                await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('');
             });
 
             test('should show passed Previous Inspection panel', async ({ page }) => {
