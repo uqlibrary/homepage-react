@@ -530,7 +530,27 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
         });
         test('can filter for open spaces', async ({ page }) => {
-            // we have hacked the "opening hours" data so only one record is "currently_open"
+            // Stabilise this test by forcing exactly one location to be currently open.
+            await page.route('**/bookable_spaces/weekly_hours*', async route => {
+                const response = await route.fetch();
+                const weeklyHoursData = await response.json();
+                const updatedWeeklyHoursData = JSON.parse(JSON.stringify(weeklyHoursData));
+
+                updatedWeeklyHoursData.locations?.forEach((location, locationIndex) => {
+                    location.departments?.forEach(department => {
+                        department.weeks?.forEach(week => {
+                            Object.values(week || {}).forEach(day => {
+                                if (day?.times && 'currently_open' in day.times) {
+                                    day.times.currently_open = locationIndex === 0;
+                                }
+                            });
+                        });
+                    });
+                });
+
+                await route.fulfill({ response, json: updatedWeeklyHoursData });
+            });
+
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
@@ -551,9 +571,9 @@ test.describe('Spaces', () => {
 
             // only one space shows now
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
-            await expect(page.getByTestId('space-space-count')).toContainText('4');
+            await expect(page.getByTestId('space-space-count')).toContainText('1');
         });
         test('can OR on filters in the same group', async ({ page }) => {
             await page.goto('');
