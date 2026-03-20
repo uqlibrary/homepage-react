@@ -1906,13 +1906,13 @@ export default {
                         "times": {
                             "status": "open",
                             "hours": [{
-                                "from": "7am",
+                                "from": "10:15pm", // times so it will always be closed for test
                                 "to": "10:30pm"
                             }],
-                            "currently_open": true
+                            "currently_open": false
                         },
-                        "rendered": "7am - 10:30pm",
-                        "open": "07:00:00",
+                        "rendered": "10:15pm - 10:30pm",
+                        "open": "22:15:00",
                         "close": "22:30:00"
                     },
                     "Tuesday": {
@@ -1920,13 +1920,13 @@ export default {
                         "times": {
                             "status": "open",
                             "hours": [{
-                                "from": "7am",
+                                "from": "10:15pm",
                                 "to": "10:30pm"
                             }],
                             "currently_open": false
                         },
-                        "rendered": "7am - 10:30pm",
-                        "open": "07:00:00",
+                        "rendered": "10:15pm - 10:30pm",
+                        "open": "22:15:00",
                         "close": "22:30:00"
                     },
                     "Wednesday": {
@@ -1934,13 +1934,13 @@ export default {
                         "times": {
                             "status": "open",
                             "hours": [{
-                                "from": "7am",
+                                "from": "10:15pm",
                                 "to": "10:30pm"
                             }],
                             "currently_open": false
                         },
-                        "rendered": "7am - 10:30pm",
-                        "open": "07:00:00",
+                        "rendered": "10:15pm - 10:30pm",
+                        "open": "22:15:00",
                         "close": "22:30:00"
                     },
                     "Thursday": {
@@ -1948,13 +1948,13 @@ export default {
                         "times": {
                             "status": "open",
                             "hours": [{
-                                "from": "7am",
+                                "from": "10:15pm",
                                 "to": "10:30pm"
                             }],
                             "currently_open": false
                         },
-                        "rendered": "7am - 10:30pm",
-                        "open": "07:00:00",
+                        "rendered": "10:15pm - 10:30pm",
+                        "open": "22:15:00",
                         "close": "22:30:00"
                     },
                     "Friday": {
@@ -1962,13 +1962,13 @@ export default {
                         "times": {
                             "status": "open",
                             "hours": [{
-                                "from": "7am",
+                                "from": "10:15pm",
                                 "to": "10:30pm"
                             }],
                             "currently_open": false
                         },
-                        "rendered": "7am - 10:30pm",
-                        "open": "07:00:00",
+                        "rendered": "10:15pm - 10:30pm",
+                        "open": "22:15:00",
                         "close": "22:30:00"
                     },
                     "Saturday": {
@@ -1994,13 +1994,13 @@ export default {
                             "times": {
                                 "status": "open",
                                 "hours": [{
-                                    "from": "7am",
+                                    "from": "10:15pm",
                                     "to": "10:30pm"
                                 }],
                                 "currently_open": false
                             },
-                            "rendered": "7am - 10:30pm",
-                            "open": "07:00:00",
+                            "rendered": "10:15pm - 10:30pm",
+                            "open": "22:15:00",
                             "close": "22:30:00"
                         },
                         "Tuesday": {
@@ -2008,13 +2008,13 @@ export default {
                             "times": {
                                 "status": "open",
                                 "hours": [{
-                                    "from": "7am",
+                                    "from": "10:15pm",
                                     "to": "10:30pm"
                                 }],
                                 "currently_open": false
                             },
-                            "rendered": "7am - 10:30pm",
-                            "open": "07:00:00",
+                            "rendered": "10:15pm - 10:30pm",
+                            "open": "22:15:00",
                             "close": "22:30:00"
                         },
                         "Wednesday": {
@@ -2022,13 +2022,13 @@ export default {
                             "times": {
                                 "status": "open",
                                 "hours": [{
-                                    "from": "7am",
+                                    "from": "10:15pm",
                                     "to": "10:30pm"
                                 }],
                                 "currently_open": false
                             },
-                            "rendered": "7am - 10:30pm",
-                            "open": "07:00:00",
+                            "rendered": "10:15pm - 10:30pm",
+                            "open": "22:15:00",
                             "close": "22:30:00"
                         },
                         "Thursday": {
@@ -2036,13 +2036,13 @@ export default {
                             "times": {
                                 "status": "open",
                                 "hours": [{
-                                    "from": "7am",
+                                    "from": "10:15pm",
                                     "to": "10:30pm"
                                 }],
                                 "currently_open": false
                             },
-                            "rendered": "7am - 10:30pm",
-                            "open": "07:00:00",
+                            "rendered": "10:15pm - 10:30pm",
+                            "open": "22:15:00",
                             "close": "22:30:00"
                         },
                         "Friday": {
@@ -2050,13 +2050,13 @@ export default {
                             "times": {
                                 "status": "open",
                                 "hours": [{
-                                    "from": "7am",
+                                    "from": "10:15pm",
                                     "to": "10:30pm"
                                 }],
                                 "currently_open": false
                             },
-                            "rendered": "7am - 10:30pm",
-                            "open": "07:00:00",
+                            "rendered": "10:15pm - 10:30pm",
+                            "open": "22:15:00",
                             "close": "22:30:00"
                         },
                         "Saturday": {

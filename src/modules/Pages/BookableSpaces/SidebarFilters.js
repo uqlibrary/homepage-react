@@ -263,7 +263,6 @@ export const SidebarFilters = ({
     capacityFilterValue,
     setCapacityFilterValue,
 }) => {
-    // console.log('SidebarFilters', minimumSpaceCapacity, maximumSpaceCapacity, capacityFilterValue);
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
 
     function sortedUsedGroups() {
@@ -273,12 +272,7 @@ export const SidebarFilters = ({
         ) {
             return [];
         }
-        console.log(
-            'sortedUsedGroups filteredFacilityTypeList?.data?.facility_type_groups=',
-            filteredFacilityTypeList?.data?.facility_type_groups,
-        );
         const usedFilterList = [...filteredFacilityTypeList?.data?.facility_type_groups];
-        console.log('sortedUsedGroups usedFilterLists=', usedFilterList);
 
         return usedFilterList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order);
     }
@@ -394,15 +388,9 @@ export const SidebarFilters = ({
         const parts = idInput?.split('-');
         const facilityTypeId =
             !!parts && parts.length === 3 ? parseInt(parts.pop(), 10) : /* istanbul ignore next */ -999;
-        console.log(' capacity handleCapacityFilterChange e=', e || 'not found');
-        console.log(' capacity handleCapacityFilterChange facilityTypeId=', facilityTypeId);
-        console.log(' capacity handleCapacityFilterChange newValue=', newValue);
 
-        console.log(' capacity handleCapacityFilterChange selectedFacilityTypes=', selectedFacilityTypes);
         const capacityFilterType = selectedFacilityTypes?.find(ft => ft.facility_type_id === facilityTypeId);
-        console.log(' capacity handleCapacityFilterChange capacityFilterType=', capacityFilterType);
         const isCapacityDefaultValues = newValue[0] === minimumSpaceCapacity && newValue[1] === maximumSpaceCapacity;
-        console.log(' capacity handleCapacityFilterChange isCapacityDefaultValues=', isCapacityDefaultValues);
         if (isCapacityDefaultValues) {
             handleFilterRejection(false, facilityTypeId, capacityFilterType?.facility_special_action);
         } else {
@@ -410,12 +398,10 @@ export const SidebarFilters = ({
         }
     };
     const handleCapacityMinInputChange = e => {
-        console.log(' capacity handleCapacityMinInputChange  e=', e?.target?.value, e || 'not found');
         const newMin = e?.target?.value === '' ? '' : Number(e?.target?.value);
         handleCapacityFilterChange(e, [newMin, capacityFilterValue[1]]);
     };
     const handleCapacityMinInputBlur = e => {
-        console.log(' capacity handleCapacityInputBlur e=', e?.target?.value, e || 'not found');
         const value = e?.target?.value;
         if (value < 0) {
             handleCapacityFilterChange(e, [minimumSpaceCapacity, capacityFilterValue[1]]);
@@ -424,12 +410,10 @@ export const SidebarFilters = ({
         }
     };
     const handleCapacityMaxInputChange = e => {
-        console.log(' capacity handleCapacityMaxInputChange  e=', e?.target?.value, e || 'not found');
         const newMax = e?.target?.value === '' ? '' : Number(e?.target?.value);
         handleCapacityFilterChange(e, [capacityFilterValue[0], newMax]);
     };
     const handleCapacityMaxInputBlur = e => {
-        console.log(' capacity handleCapacityMaxInputBlur e=', e);
         const value = e.target.value;
         if (value < 0) {
             handleCapacityFilterChange(e, [minimumSpaceCapacity, capacityFilterValue[1]]);
@@ -467,7 +451,6 @@ export const SidebarFilters = ({
                 facility_type: ft?.facility_type,
             };
         });
-        console.log('setSelectedFacilityTypes deSelectAll');
         setSelectedFacilityTypes(newFacilityTypes);
 
         setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
@@ -573,32 +556,36 @@ export const SidebarFilters = ({
                             />
                             <span>{facilityType?.facility_type_name}</span>
                         </InputLabel>
-                        <input
-                            type="checkbox"
-                            id={`reject-filtertype-${facilityType?.facility_type_id}`}
-                            data-testid={`reject-filtertype-${facilityType?.facility_type_id}`}
-                            className="rejectedFilterType"
-                            onChange={e =>
-                                handleFilterRejection(
-                                    e?.target?.checked,
-                                    facilityType?.facility_type_id,
-                                    facilityType?.facility_special_action,
-                                )
-                            }
-                            aria-label={`Exclude Spaces with ${facilityType?.facility_type_name}`}
-                            checked={
-                                selectedFacilityTypes?.find(
-                                    f1 => f1?.facility_type_id === facilityType?.facility_type_id,
-                                )?.unselected || false
-                            }
-                        />
-                        <label
-                            htmlFor={`reject-filtertype-${facilityType?.facility_type_id}`}
-                            className="rejectedFacilityTypeLabel"
-                            data-testid={`reject-filtertype-label-${facilityType?.facility_type_id}`}
-                            title={`Exclude Spaces with ${facilityType?.facility_type_name}`}
-                        />
-                        <span className="fortestfocus" style={{ width: '10px' }} />
+                        {facilityType?.filterRejectAvailable !== false && (
+                            <>
+                                <input
+                                    type="checkbox"
+                                    id={`reject-filtertype-${facilityType?.facility_type_id}`}
+                                    data-testid={`reject-filtertype-${facilityType?.facility_type_id}`}
+                                    className="rejectedFilterType"
+                                    onChange={e =>
+                                        handleFilterRejection(
+                                            e?.target?.checked,
+                                            facilityType?.facility_type_id,
+                                            facilityType?.facility_special_action,
+                                        )
+                                    }
+                                    aria-label={`Exclude Spaces with ${facilityType?.facility_type_name}`}
+                                    checked={
+                                        selectedFacilityTypes?.find(
+                                            f1 => f1?.facility_type_id === facilityType?.facility_type_id,
+                                        )?.unselected || false
+                                    }
+                                />
+                                <label
+                                    htmlFor={`reject-filtertype-${facilityType?.facility_type_id}`}
+                                    className="rejectedFacilityTypeLabel"
+                                    data-testid={`reject-filtertype-label-${facilityType?.facility_type_id}`}
+                                    title={`Exclude Spaces with ${facilityType?.facility_type_name}`}
+                                />
+                                <span className="fortestfocus" style={{ width: '10px' }} />
+                            </>
+                        )}
                     </>
                 )}
             </StyledInputListItem>
@@ -707,14 +694,6 @@ export const SidebarFilters = ({
                 <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
                     Filter Spaces
                 </Typography>
-                {/* <StyledFacilityGroup data-testid={'filter-group-block-open'}>*/}
-                {/*    <StyledFilterSpaceList id={'filter-group-list-open'}>*/}
-                {/*        {getStyledInputListItem({*/}
-                {/*            facility_type_id: 'open',*/}
-                {/*            facility_type_name: 'Currently open',*/}
-                {/*        })}*/}
-                {/*    </StyledFilterSpaceList>*/}
-                {/* </StyledFacilityGroup>*/}
                 {!!hasActiveFilters && (
                     <>
                         <Typography component={'h3'} variant={'h6'}>

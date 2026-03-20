@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { useAccountContext } from 'context';
 
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import FormControl from '@mui/material/FormControl';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
@@ -19,6 +24,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -526,6 +532,26 @@ export const BookableSpacesManageSpaces = ({
         !spaceuuid && console.log('no valid button clicked');
     };
 
+    const [deleteCandidate, setDeleteCandidate] = useState(null);
+
+    const openDeleteConfirmation = space => {
+        setDeleteCandidate(space);
+    };
+
+    const closeDeleteConfirmation = () => {
+        setDeleteCandidate(null);
+    };
+
+    const confirmDeleteSpace = () => {
+        if (!deleteCandidate) {
+            return;
+        }
+        actions.deleteBookableSpace(deleteCandidate.spaceId).then(() => {
+            actions.loadAllBookableSpacesRooms();
+        });
+        setDeleteCandidate(null);
+    };
+
     const selectFilter = prop => e => {
         console.log('selectFilter', prop, e);
         resetSelectedFilters(prop, e?.target?.value);
@@ -771,6 +797,7 @@ export const BookableSpacesManageSpaces = ({
                                                         style={{ paddingBlock: '0.5rem' }}
                                                     >
                                                         <div>
+                                                            {bookableSpace?.space_name}
                                                             <IconButton
                                                                 color="primary"
                                                                 data-testid={`edit-space-${bookableSpace?.space_id}-button`}
@@ -780,7 +807,20 @@ export const BookableSpacesManageSpaces = ({
                                                             >
                                                                 <EditIcon style={{ width: '1rem' }} />
                                                             </IconButton>
-                                                            {bookableSpace?.space_name}
+                                                            <IconButton
+                                                                color="error"
+                                                                data-testid={`delete-space-${bookableSpace?.space_id}-button`}
+                                                                onClick={() =>
+                                                                    openDeleteConfirmation({
+                                                                        spaceId: bookableSpace?.space_id,
+                                                                        spaceUuid: bookableSpace?.space_uuid,
+                                                                        spaceName: bookableSpace?.space_name,
+                                                                    })
+                                                                }
+                                                                aria-label={`Delete ${bookableSpace?.space_name}`}
+                                                            >
+                                                                <DeleteOutlineIcon style={{ width: '1rem' }} />
+                                                            </IconButton>
                                                         </div>
                                                         <div className="spaceDescription">
                                                             {bookableSpace?.space_type}
@@ -923,6 +963,26 @@ export const BookableSpacesManageSpaces = ({
                     }
                 })()}
             </Grid>
+            <Dialog open={!!deleteCandidate} onClose={closeDeleteConfirmation} data-testid="spaces-delete-dialog">
+                <DialogContent>
+                    <DialogContentText data-testid="spaces-delete-dialog-message">
+                        Do you wish to delete this space?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions data-testid="spaces-delete-dialog-actions">
+                    <Button onClick={closeDeleteConfirmation} data-testid="spaces-delete-cancel-button">
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={confirmDeleteSpace}
+                        color="error"
+                        variant="contained"
+                        data-testid="spaces-delete-confirm-button"
+                    >
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </SpacesAdminPage>
     );
 };

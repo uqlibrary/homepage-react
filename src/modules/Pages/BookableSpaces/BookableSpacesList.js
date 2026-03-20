@@ -208,7 +208,6 @@ export const BookableSpacesList = ({
     const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
     const isTabletView = isMobileView ? false : _isTabletViewJust;
     const isDesktopView = !isTabletView && !isMobileView;
-    // console.log('BookableSpacesList width', isMobileView, isTabletView, isDesktopView);
 
     const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
     const FACILITY_TYPE_NAME_CAPACITY = 'Capacity';
@@ -269,7 +268,12 @@ export const BookableSpacesList = ({
         }
     }, [bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
 
+    // this will need to be passed space.space_opening_hours_override later when AD-797 is done
     function isLocationOpen(locationId, hoursData) {
+        if (!locationId) {
+            return false;
+            // this needs more work - see AD-797
+        }
         function getDateStringInTimezone(offsetHours = 10) {
             const date = new Date();
             const offsetMs = offsetHours * 60 * 60 * 1000;
@@ -285,7 +289,6 @@ export const BookableSpacesList = ({
 
         // Find matching location by lid (springshare library id)
         const openingHoursLocationData = hoursData?.locations?.find(loc => loc?.lid === locationId) || {};
-        console.log('isLocationOpen openingHoursLocationData', openingHoursLocationData);
 
         const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
         if (!!openingHoursLocationData?.departments) {
@@ -344,20 +347,14 @@ export const BookableSpacesList = ({
                 rejectedFilters?.push(filter?.facility_type_id);
             }
         });
-        console.log('showSpace selectedFiltersByGroup', selectedFiltersByGroup);
 
         // check if space should be excluded due to rejected facility types
         if (rejectedFilters?.length > 0) {
             const hasRejectedFacility = rejectedFilters?.some(rejectedId => {
-                const filter = selectedFacilityTypes?.find(ft => ft?.facility_type_id === rejectedId);
-                if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
-                    return !!space?.space_opening_hours_id
-                        ? !isLocationOpen(space?.space_opening_hours_id, weeklyHours)
-                        : false;
-                }
+                // we have no "don't include" for currently-open
+                // we have no "don't include" for capacity
                 return spaceFacilityTypes?.includes(rejectedId);
             });
-            console.log('rejectedFilters=', hasRejectedFacility, rejectedFilters);
             if (hasRejectedFacility) {
                 return false;
             }
@@ -376,19 +373,16 @@ export const BookableSpacesList = ({
                 // OR within group
                 const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
                     const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                    if (filter?.facility_special_action && filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
-                        return !!space?.space_opening_hours_id
-                            ? isLocationOpen(space?.space_opening_hours_id, weeklyHours)
-                            : false;
-                    } else if (
-                        filter?.facility_special_action &&
-                        filter?.facility_special_action === FILTER_SPACE_CAPACITY
-                    ) {
-                        return (
-                            !!space?.space_capacity &&
-                            space?.space_capacity >= capacityFilterValue[0] &&
-                            space?.space_capacity <= capacityFilterValue[1]
-                        );
+                    if (filter?.facility_special_action) {
+                        if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
+                            return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
+                        } else if (filter?.facility_special_action === FILTER_SPACE_CAPACITY) {
+                            return (
+                                !!space?.space_capacity &&
+                                space?.space_capacity >= capacityFilterValue[0] &&
+                                space?.space_capacity <= capacityFilterValue[1]
+                            );
+                        }
                     } else {
                         return spaceFacilityTypes?.includes(filterId);
                     }
@@ -401,7 +395,7 @@ export const BookableSpacesList = ({
         return true;
     }
 
-    const nextFacilityTypeid = filteredFacilityTypeList => {
+    const nextFacilityTypeId = filteredFacilityTypeList => {
         return (
             Math.max(...filteredFacilityTypeList?.data?.facility_type_groups?.map(g => g?.facility_type_group_id)) + 1
         );
@@ -432,16 +426,17 @@ export const BookableSpacesList = ({
 
         // manually add a "Currently Open" filter
         const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
-            facility_type_group_id: nextFacilityTypeid(filteredFacilityTypeList),
+            facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
             facility_type_group_name: FACILITY_TYPE_NAME_CURRENTLY_OPEN,
-            facility_type_group_order: -999,
+            facility_type_group_order: -999, // force to top of list
             facility_type_group_loads_open: 1,
             facility_type_group_type: 'choose-many',
-            filterType: FACILITY_TYPE_CHECKBOX, // is default, for clarity only
+            filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
             facility_type_children: [
                 {
                     facility_type_id: 9999, // must be unique!
                     facility_type_name: 'Currently open',
+                    filterRejectAvailable: false, // do not show a "filter-reject" orange checkbox
                     facility_special_action: FILTER_CURRENTLY_OPEN,
                     facility_type: FACILITY_TYPE_CHECKBOX,
                 },
@@ -451,16 +446,17 @@ export const BookableSpacesList = ({
 
         // manually add a "Choose number of people" filter
         const filterCapacityFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
-            facility_type_group_id: nextFacilityTypeid(filteredFacilityTypeList),
+            facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
             facility_type_group_name: FACILITY_TYPE_NAME_CAPACITY,
-            facility_type_group_order: -999,
+            facility_type_group_order: -998, // force to second inlist
             facility_type_group_loads_open: 1,
             facility_type_group_type: 'choose-many',
-            filterType: FACILITY_TYPE_SLIDER,
+            filterType: FACILITY_TYPE_SLIDER, // what sort of filter is this? checkbox and slider available
             facility_type_children: [
                 {
                     facility_type_id: 9998, // must be unique!
                     facility_type_name: 'Space capacity',
+                    filterRejectAvailable: false, // do not show a "filter-reject" orange checkbox
                     facility_special_action: FILTER_SPACE_CAPACITY,
                     facility_type: FACILITY_TYPE_SLIDER,
                 },
@@ -562,7 +558,6 @@ export const BookableSpacesList = ({
             setPreviousToggledSpaceButton(toggleSpaceButton);
         }
     };
-    console.log('BookableSpacesList filteredSpaceLocations=', filteredSpaceLocations);
     const showMap = () => {
         return (
             <StyledMapWrapperDiv>
@@ -582,13 +577,6 @@ export const BookableSpacesList = ({
                             ?.filter(m => !!m?.space_latitude && !!m?.space_longitude)
                             ?.map(mapPoint => {
                                 // show the filtered Spaces on the map
-                                // console.log(
-                                //     'map point:',
-                                //     mapPoint.space_name,
-                                //     mapPoint.space_library_name,
-                                //     mapPoint.space_latitude,
-                                //     mapPoint.space_longitude,
-                                // );
                                 const locationKey = `mappoint-space-${mapPoint?.space_id}`;
                                 return (
                                     <Marker

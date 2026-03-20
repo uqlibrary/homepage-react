@@ -30,7 +30,11 @@ import DoneIcon from '@mui/icons-material/Done';
 
 import { addClass, removeClass, standardText } from 'helpers/general';
 
-import { addBreadcrumbsToSiteHeader } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
+import {
+    addBreadcrumbsToSiteHeader,
+    displayToastMessage,
+    displayToastErrorMessage,
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
@@ -247,13 +251,21 @@ export const BookableSpacesManageSpaceTypes = ({
                 spaceTypeDescription,
             },
         }));
-        actions.updateBookableSpaceType(
-            {
-                space_type_name: spaceTypeName,
-                space_type_description: spaceTypeDescription,
-            },
-            editingSpaceTypeId,
-        );
+        actions
+            .updateBookableSpaceType(
+                {
+                    space_type_name: spaceTypeName,
+                    space_type_description: spaceTypeDescription,
+                },
+                editingSpaceTypeId,
+            )
+            .then(() => {
+                displayToastMessage('Space type updated');
+            })
+            .catch(e => {
+                console.error('Error updating space type', e);
+                displayToastErrorMessage('Sorry, an error occurred - updating the Space type failed.');
+            });
 
         setEditingSpaceTypeId(null);
     };
@@ -274,9 +286,16 @@ export const BookableSpacesManageSpaceTypes = ({
         console.log('Delete space type confirmed', {
             spaceTypeId: deleteCandidate.spaceTypeId,
         });
-        actions.deleteBookableSpaceType(deleteCandidate.spaceTypeId).then(() => {
-            actions.loadAllBookableSpacesRooms();
-        });
+        actions
+            .deleteBookableSpaceType(deleteCandidate.spaceTypeId)
+            .then(() => {
+                displayToastMessage('Space type deleted');
+                actions.loadAllBookableSpacesRooms();
+            })
+            .catch(e => {
+                console.error('Error deleting space type', e);
+                displayToastErrorMessage('Sorry, an error occurred - the Space type was not deleted.');
+            });
         setDeleteCandidate(null);
     };
 
@@ -307,10 +326,12 @@ export const BookableSpacesManageSpaceTypes = ({
         actions
             .createBookableSpaceType(request)
             .then(() => {
+                displayToastMessage('Space type created');
                 actions.loadAllBookableSpacesRooms();
             })
             .catch(err => {
                 console.error('Error creating space type', err);
+                displayToastErrorMessage('Sorry, an error occurred - the Space type was not created.');
             })
             .finally(() => {
                 closeAddSpaceTypeDialog();

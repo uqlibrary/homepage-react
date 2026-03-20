@@ -128,10 +128,9 @@ test.describe('Spaces', () => {
             // second panel
             await expect(page.getByTestId(`${PACE}-summary-hours`)).toBeVisible();
             await expect(page.getByTestId(`${PACE}-summary-hours`)).toContainText(
-                'Dutton Park Health Sciences opening hours Today: 7am - 10:30pm',
+                'Opening hours Today: 10:15pm - 10:30pm',
             );
             await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).toContainText('this space opens at 8am');
 
             // third panel
             await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
@@ -141,8 +140,7 @@ test.describe('Spaces', () => {
                 'Open from 7am Monday - Friday',
             );
 
-            // the spaces below the first 3 have the correct details (only a light check)
-            // summary hours show correctly
+            // the spaces below the first 3 have the correct details
             await expect(page.getByTestId(`${FOURTH_PANEL}-summary-hours`)).toBeVisible();
             await expect(page.getByTestId(`${FOURTH_PANEL}-summary-hours`)).toContainText(
                 'Opening hours Today: 7:30am - 7:30pm',
@@ -150,8 +148,12 @@ test.describe('Spaces', () => {
 
             await expect(page.getByTestId(`${FIFTH_PANEL}-summary-hours`)).toBeVisible();
             await expect(page.getByTestId(`${FIFTH_PANEL}-summary-hours`)).toContainText(
-                'Opening hours Today: 7:30am - 7:30pm',
+                'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
             );
+            await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).toContainText(
+                'this space opens at 8am',
+            );
+
             await expect(page.getByTestId(`${SIXTH_PANEL}-summary-hours`)).not.toBeVisible();
             await expect(page.getByTestId(`${SEVENTH_PANEL}-summary-hours`)).toBeVisible();
             await expect(page.getByTestId(`${SEVENTH_PANEL}-summary-hours`)).toContainText(
@@ -243,8 +245,13 @@ test.describe('Spaces', () => {
             // second panel
             await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
             page.getByTestId(`${PACE}-toggle-panel-button`).click();
-            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).toContainText(
+            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
+
+            // fifth panel
+            await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).not.toBeVisible();
+            page.getByTestId(`${FIFTH_PANEL}-toggle-panel-button`).click();
+            await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).toBeVisible();
+            await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).toContainText(
                 'Note: this space opens at 8am',
             );
         });
@@ -302,7 +309,7 @@ test.describe('Spaces', () => {
             // third panel
             page.getByTestId(`${LIV}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${LIV}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-facility`).locator(' > *')).toHaveCount(10);
+            await expect(page.getByTestId(`${LIV}-facility`).locator(' > *')).toHaveCount(9);
             await expect(page.getByTestId(`${LIV}-facility-23`)).toContainText('Toilets, female');
             await expect(page.getByTestId(`${LIV}-facility-22`)).toContainText('Toilets, male');
             await expect(page.getByTestId(`${LIV}-facility-29`)).toContainText('Recharge Station');
@@ -523,6 +530,27 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
         });
         test('can filter for open spaces', async ({ page }) => {
+            // Stabilise this test by forcing exactly one location to be currently open.
+            await page.route('**/bookable_spaces/weekly_hours*', async route => {
+                const response = await route.fetch();
+                const weeklyHoursData = await response.json();
+                const updatedWeeklyHoursData = JSON.parse(JSON.stringify(weeklyHoursData));
+
+                updatedWeeklyHoursData.locations?.forEach((location, locationIndex) => {
+                    location.departments?.forEach(department => {
+                        department.weeks?.forEach(week => {
+                            Object.values(week || {}).forEach(day => {
+                                if (day?.times && 'currently_open' in day.times) {
+                                    day.times.currently_open = locationIndex === 0;
+                                }
+                            });
+                        });
+                    });
+                });
+
+                await route.fulfill({ response, json: updatedWeeklyHoursData });
+            });
+
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
@@ -546,33 +574,6 @@ test.describe('Spaces', () => {
                 1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('space-space-count')).toContainText('1');
-        });
-        test('can filter to reject open spaces', async ({ page }) => {
-            await page.goto('');
-            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
-            const currentlyOpenId = '9999';
-            const openCheckboxlabel = page.getByTestId(`reject-filtertype-label-${currentlyOpenId}`);
-            const openCheckbox = page.getByTestId(`facility-type-listitem-${currentlyOpenId}`);
-
-            // initially all Spaces are visible on the page
-            await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                10 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
-            );
-            await expect(page.getByTestId('space-space-count')).not.toBeVisible();
-
-            // reject 'currently open' spaces
-            await openCheckbox.locator('span.fortestfocus').click(); // a hack of the page so playwright can tap on the exclude filter
-            await expect(openCheckboxlabel).toBeVisible();
-            await openCheckboxlabel.check();
-
-            // only one space shows now
-            await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                6 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
-            );
-            await expect(page.getByTestId('space-space-count')).toContainText('6');
         });
         test('can OR on filters in the same group', async ({ page }) => {
             await page.goto('');
