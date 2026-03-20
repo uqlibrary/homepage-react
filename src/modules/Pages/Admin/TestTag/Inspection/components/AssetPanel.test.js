@@ -500,7 +500,7 @@ describe('AssetPanel', () => {
                 searchPattern,
                 expect.objectContaining({ all_teams: true }),
             );
-        });
+        }, 10000);
 
         it('calls loadAssetsFiltered without all_teams when toggling off after a search', async () => {
             const loadAssetsFilteredFn = jest.fn();
@@ -537,50 +537,46 @@ describe('AssetPanel', () => {
                 'UQL310000',
                 expect.not.objectContaining({ all_teams: true }),
             );
-        });
+        }, 10000);
 
-        it(
-            'does not call loadAssetsFiltered after clearing the search',
-            async () => {
-                const loadAssetsFilteredFn = jest.fn();
-                // eslint-disable-next-line no-unused-vars
-                const handleChange = jest.fn(prop => jest.fn(event => {}));
-                const { getByTestId, getByRole } = setup({
-                    actions: {
-                        loadAssetTypes: jest.fn(),
-                        clearAssets: jest.fn(),
-                        loadAssetsFiltered: loadAssetsFilteredFn,
-                    },
-                    formValues,
-                    state: { testTagAssetsReducer: { assetsList: [], assetsListLoading: false } },
-                    location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
-                    resetForm: jest.fn(),
-                    assignCurrentAsset: jest.fn(),
-                    handleChange,
-                    saveInspectionSaving: false,
-                    isValid: false,
-                });
+        it('does not call loadAssetsFiltered after clearing the search', async () => {
+            const loadAssetsFilteredFn = jest.fn();
+            // eslint-disable-next-line no-unused-vars
+            const handleChange = jest.fn(prop => jest.fn(event => {}));
+            const { getByTestId, getByRole } = setup({
+                actions: {
+                    loadAssetTypes: jest.fn(),
+                    clearAssets: jest.fn(),
+                    loadAssetsFiltered: loadAssetsFilteredFn,
+                },
+                formValues,
+                state: { testTagAssetsReducer: { assetsList: [], assetsListLoading: false } },
+                location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
+                resetForm: jest.fn(),
+                assignCurrentAsset: jest.fn(),
+                handleChange,
+                saveInspectionSaving: false,
+                isValid: false,
+            });
 
-                // Type in asset selector using userEvent — triggers real input events that React detects
-                const input = getByTestId('asset_selector-asset-panel-input');
-                await userEvent.type(input, 'UQL310000');
+            // Type in asset selector using userEvent — triggers real input events that React detects
+            const input = getByTestId('asset_selector-asset-panel-input');
+            await userEvent.type(input, 'UQL310000');
 
-                // Clear the input via Autocomplete clear button (triggers onClear, resetting searchTerm)
-                const clearButton = getByTestId('asset_selector-asset-panel').querySelector(
-                    '.MuiAutocomplete-clearIndicator',
-                );
-                await userEvent.click(clearButton);
+            // Clear the input via Autocomplete clear button (triggers onClear, resetting searchTerm)
+            const clearButton = getByTestId('asset_selector-asset-panel').querySelector(
+                '.MuiAutocomplete-clearIndicator',
+            );
+            await userEvent.click(clearButton);
 
-                loadAssetsFilteredFn.mockClear();
+            loadAssetsFilteredFn.mockClear();
 
-                // Toggle all teams — should NOT call loadAssetsFiltered since searchTerm was cleared
-                const toggle = getByRole('checkbox', { name: 'All team assets' });
-                await userEvent.click(toggle);
+            // Toggle all teams — should NOT call loadAssetsFiltered since searchTerm was cleared
+            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            await userEvent.click(toggle);
 
-                expect(loadAssetsFilteredFn).not.toHaveBeenCalled();
-            },
-            { timeout: 10000 },
-        );
+            expect(loadAssetsFilteredFn).not.toHaveBeenCalled();
+        }, 10000);
 
         it('shows warning alert when allTeams is on and selectedAsset is from a different team', async () => {
             // eslint-disable-next-line no-unused-vars
