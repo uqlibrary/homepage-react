@@ -339,6 +339,7 @@ export default {
                     noneLabel: 'None',
                     repairDetailsLabel: 'Repair details: ',
                     discardReasonLabel: 'Discard reason: ',
+                    lastTestedByLabel: 'Last tested by: ',
                 },
                 inspection: {
                     title: 'Test details',

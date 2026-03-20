@@ -199,6 +199,19 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                             {!!lastTest?.inspect_date && moment(lastTest.inspect_date).format(dateFormatPattern)}
                         </Typography>
                     </Grid>
+                    <Grid item xs={12}>
+                        <Typography component={'span'} className={'pastTestLabel'}>
+                            {formLocale.lastTestedByLabel}
+                        </Typography>
+                        <Typography
+                            component={'span'}
+                            id={`${componentId}-last-tested-by-info`}
+                            data-testid={`${componentId}-last-tested-by-info`}
+                        >
+                            {lastTest?.user_name} ({lastTest?.user_team_display_name})
+                        </Typography>
+                    </Grid>
+
                     <Grid container item xs={12}>
                         <Grid item xs={12} sm={6}>
                             <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
