@@ -1,6 +1,6 @@
 import React from 'react';
 import AssetPanel from './AssetPanel';
-import { render, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
+import { render, act, fireEvent, WithReduxStore, waitFor, userEvent } from 'test-utils';
 import Immutable from 'immutable';
 
 import assetData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
@@ -8,6 +8,15 @@ import assetData from '../../../../../../data/mock/data/testing/testAndTag/testT
 import assetTypeData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssetTypes';
 import configData from '../../../../../../data/mock/data/testing/testAndTag/testTagOnLoadInspection';
 import locale from '../../testTag.locale.js';
+
+jest.mock('throttle-debounce', () => ({
+    debounce: jest.fn((_delay, fn) => fn),
+    throttle: jest.fn((_delay, fn) => fn),
+}));
+
+jest.mock('react-cookie', () => ({
+    useCookies: jest.fn(() => [{}, jest.fn(), jest.fn()]),
+}));
 
 const currentRetestList = [
     { value: '3', label: '3 months' },
@@ -46,6 +55,24 @@ function setup(testProps = {}, renderer = render) {
             assetTypesList: assetTypeData,
             assetTypesListLoading: false,
             assetTypesListError: null,
+        },
+        accountReducer: {
+            account: {
+                tnt: {
+                    user_team: 'WSS',
+                    user_id: 3,
+                    user_uid: 'uqtesttag',
+                    user_name: 'TnT Admin',
+                    user_department: 'UQL',
+                    privileges: {
+                        can_admin: 1,
+                        can_inspect: 1,
+                        can_alter: 1,
+                        can_see_reports: 1,
+                    },
+                },
+            },
+            accountLoading: false,
         },
         ...state,
     };
@@ -93,7 +120,7 @@ describe('AssetPanel', () => {
         const handleChange = jest.fn(prop => jest.fn(event => {}));
         const actionFn = jest.fn();
         const { getByText, getByTestId } = setup({
-            actions: { loadAssetTypes: actionFn },
+            actions: { loadAssetTypes: actionFn, clearAssets: jest.fn() },
             formValues,
             location,
             resetForm,
@@ -119,7 +146,7 @@ describe('AssetPanel', () => {
         newValues.asset_id_displayed = undefined;
         const actionFn = jest.fn();
         const { getByText } = setup({
-            actions: { loadAssetTypes: actionFn },
+            actions: { loadAssetTypes: actionFn, clearAssets: jest.fn() },
             formValues: newValues,
             location,
             resetForm,
@@ -140,7 +167,7 @@ describe('AssetPanel', () => {
         const handleChange = jest.fn(prop => jest.fn(event => {}));
         const actionFn = jest.fn();
         const { getByTestId, rerender } = setup({
-            actions: { loadAssetTypes: actionFn },
+            actions: { loadAssetTypes: actionFn, clearAssets: jest.fn() },
             formValues: {},
             location,
             resetForm,
@@ -157,7 +184,7 @@ describe('AssetPanel', () => {
         expect(getByTestId('asset_type_selector-asset-panel-progress')).toBeInTheDocument();
         setup(
             {
-                actions: { loadAssetTypes: actionFn },
+                actions: { loadAssetTypes: actionFn, clearAssets: jest.fn() },
                 formValues: {},
                 location,
                 resetForm,
@@ -193,7 +220,11 @@ describe('AssetPanel', () => {
         });
 
         const { getByText, getByTestId, getByRole, getAllByRole, queryByTestId } = setup({
-            actions: { saveAssetTypeAndReload: addNewAssetTypeFn, loadAssetTypes: loadAssetTypesFn },
+            actions: {
+                saveAssetTypeAndReload: addNewAssetTypeFn,
+                loadAssetTypes: loadAssetTypesFn,
+                clearAssets: jest.fn(),
+            },
             formValues,
             location,
             resetForm,
@@ -252,7 +283,11 @@ describe('AssetPanel', () => {
             return Promise.resolve({ data: [{ asset_type_id: 99999 }] });
         });
         const { getByText, getByTestId, getByRole, getAllByRole, queryByTestId } = setup({
-            actions: { saveAssetTypeAndReload: addNewAssetTypeFn, loadAssetTypes: loadAssetTypesFn },
+            actions: {
+                saveAssetTypeAndReload: addNewAssetTypeFn,
+                loadAssetTypes: loadAssetTypesFn,
+                clearAssets: jest.fn(),
+            },
             formValues,
             location,
             resetForm,
@@ -298,6 +333,70 @@ describe('AssetPanel', () => {
         expect(openConfirmationAlertFn).toHaveBeenCalledWith(expect.stringContaining('Operation failed'), 'error');
     });
 
+    it('does not call clearAssets when toggling all teams off and selectedAsset matches user team', () => {
+        const clearAssetsFn = jest.fn();
+        // eslint-disable-next-line no-unused-vars
+        const handleChange = jest.fn(prop => jest.fn(event => {}));
+        const { getByRole } = setup({
+            actions: { loadAssetTypes: jest.fn(), clearAssets: clearAssetsFn },
+            formValues,
+            selectedAsset: { asset_team_slug: 'WSS' },
+            location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
+            resetForm: jest.fn(),
+            assignCurrentAsset: jest.fn(),
+            handleChange,
+            saveInspectionSaving: false,
+            isValid: false,
+        });
+
+        clearAssetsFn.mockClear();
+
+        const toggle = getByRole('checkbox', { name: 'All team assets' });
+        // Toggle on
+        act(() => {
+            fireEvent.click(toggle);
+        });
+        expect(clearAssetsFn).not.toHaveBeenCalled();
+
+        // Toggle off — asset team matches user team, so clearAssets should NOT be called
+        act(() => {
+            fireEvent.click(toggle);
+        });
+        expect(clearAssetsFn).not.toHaveBeenCalled();
+    });
+
+    it('calls clearAssets when toggling all teams off and selectedAsset does not match user team', () => {
+        const clearAssetsFn = jest.fn();
+        // eslint-disable-next-line no-unused-vars
+        const handleChange = jest.fn(prop => jest.fn(event => {}));
+        const { getByRole } = setup({
+            actions: { loadAssetTypes: jest.fn(), clearAssets: clearAssetsFn },
+            formValues,
+            selectedAsset: { asset_team_slug: 'SPACES' },
+            location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
+            resetForm: jest.fn(),
+            assignCurrentAsset: jest.fn(),
+            handleChange,
+            saveInspectionSaving: false,
+            isValid: false,
+        });
+
+        clearAssetsFn.mockClear();
+
+        const toggle = getByRole('checkbox', { name: 'All team assets' });
+        // Toggle on
+        act(() => {
+            fireEvent.click(toggle);
+        });
+        expect(clearAssetsFn).not.toHaveBeenCalled();
+
+        // Toggle off — asset team ('SPACES') does not match user team ('WSS'), so clearAssets IS called
+        act(() => {
+            fireEvent.click(toggle);
+        });
+        expect(clearAssetsFn).toHaveBeenCalledTimes(1);
+    });
+
     it('(coverage) handles loading asset types failure', async () => {
         const resetForm = jest.fn();
         const assignCurrentAsset = jest.fn();
@@ -313,7 +412,11 @@ describe('AssetPanel', () => {
             return Promise.reject('error');
         });
         const { getByText, getByTestId, getByRole, getAllByRole, queryByTestId } = setup({
-            actions: { saveAssetTypeAndReload: addNewAssetTypeFn, loadAssetTypes: loadAssetTypesFn },
+            actions: {
+                saveAssetTypeAndReload: addNewAssetTypeFn,
+                loadAssetTypes: loadAssetTypesFn,
+                clearAssets: jest.fn(),
+            },
             formValues,
             location,
             resetForm,
@@ -362,66 +465,161 @@ describe('AssetPanel', () => {
         );
     });
 
-    // MOVE FOLLOWING TESTS TO ASSETSELECTOR TEST
-    // it('can search for asset ids', async () => {
-    //     const resetForm = jest.fn();
-    //     const assignCurrentAsset = jest.fn();
-    //     const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+    describe('all teams switch', () => {
+        it('calls loadAssetsFiltered when toggling all teams after a search', async () => {
+            const searchPattern = 'UQL310000';
+            const loadAssetsFilteredFn = jest.fn();
+            // eslint-disable-next-line no-unused-vars
+            const handleChange = jest.fn(prop => jest.fn(event => {}));
+            const { getByTestId, getByRole } = setup({
+                actions: {
+                    loadAssetTypes: jest.fn(),
+                    clearAssets: jest.fn(),
+                    loadAssetsFiltered: loadAssetsFilteredFn,
+                },
+                formValues,
+                location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
+                resetForm: jest.fn(),
+                assignCurrentAsset: jest.fn(),
+                handleChange,
+                saveInspectionSaving: false,
+                isValid: false,
+            });
 
-    //     const wontTriggerValue = 'UQL3'; // not a long enough text
-    //     const willTriggerValue = 'UQL31';
+            // Type in asset selector using userEvent — triggers real input events that React detects
+            const input = getByTestId('asset_selector-asset-panel-input');
+            await userEvent.type(input, searchPattern);
 
-    //     // eslint-disable-next-line no-unused-vars
-    //     const handleChange = jest.fn(prop => jest.fn(event => {}));
-    //     const actionFn = jest.fn();
+            loadAssetsFilteredFn.mockClear();
 
-    //     const { getByTestId } = setup({
-    //         actions: { loadAssets: actionFn },
-    //         formValues,
-    //         location,
-    //         resetForm,
-    //         assignCurrentAsset,
-    //         handleChange,
-    //         saveInspectionSaving: false,
-    //         isValid: false,
-    //     });
+            // Toggle all teams on — should call loadAssetsFiltered since searchTerm is set
+            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            await userEvent.click(toggle);
 
-    //     // screen.debug(undefined, 100000);
+            expect(loadAssetsFilteredFn).toHaveBeenCalledWith(
+                searchPattern,
+                expect.objectContaining({ all_teams: true }),
+            );
+        });
 
-    //     act(() => {
-    //         fireEvent.change(getByTestId('testntagFormAssetId-input'), { target: { value: wontTriggerValue } });
-    //     });
-    //     await waitFor(() => expect(actionFn).not.toHaveBeenCalledWith(wontTriggerValue));
+        it('calls loadAssetsFiltered without all_teams when toggling off after a search', async () => {
+            const loadAssetsFilteredFn = jest.fn();
+            // eslint-disable-next-line no-unused-vars
+            const handleChange = jest.fn(prop => jest.fn(event => {}));
+            const { getByTestId, getByRole } = setup({
+                actions: {
+                    loadAssetTypes: jest.fn(),
+                    clearAssets: jest.fn(),
+                    loadAssetsFiltered: loadAssetsFilteredFn,
+                },
+                formValues,
+                location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
+                resetForm: jest.fn(),
+                assignCurrentAsset: jest.fn(),
+                handleChange,
+                saveInspectionSaving: false,
+                isValid: false,
+            });
 
-    //     act(() => {
-    //         fireEvent.change(getByTestId('testntagFormAssetId-input'), { target: { value: willTriggerValue } });
-    //     });
-    //     await waitFor(() => expect(actionFn).toHaveBeenCalledWith(willTriggerValue));
-    // });
+            const input = getByTestId('asset_selector-asset-panel-input');
+            await userEvent.type(input, 'UQL310000');
 
-    // it('should auto assign the current asset if returned list only contains one entry', () => {
-    //     const resetForm = jest.fn();
-    //     const assignCurrentAsset = jest.fn();
-    //     const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
-    //     // eslint-disable-next-line no-unused-vars
-    //     const handleChange = jest.fn(prop => jest.fn(event => {}));
+            // Ensure toggle is ON before testing the OFF toggle
+            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            await userEvent.click(toggle);
 
-    //     const setStateMock = jest.fn();
-    //     const spyState = useState => [useState, setStateMock];
-    //     jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
+            loadAssetsFilteredFn.mockClear();
 
-    //     setup({
-    //         formValues,
-    //         location,
-    //         resetForm,
-    //         assignCurrentAsset,
-    //         handleChange,
-    //         saveInspectionSaving: false,
-    //         isValid: false,
-    //         state: { testTagAssetsReducer: { assetsList: [{ ...assetData[0] }], assetsListLoading: false } },
-    //     });
+            // Toggle off — should call loadAssetsFiltered with empty filter (no all_teams)
+            await userEvent.click(toggle);
 
-    //     expect(assignCurrentAsset).toHaveBeenCalledWith({ ...assetData[0] });
-    //     expect(setStateMock).toHaveBeenCalledWith(false); // auto closes the autocomplete popup
-    // });
+            expect(loadAssetsFilteredFn).toHaveBeenCalledWith(
+                'UQL310000',
+                expect.not.objectContaining({ all_teams: true }),
+            );
+        });
+
+        it('does not call loadAssetsFiltered after clearing the search', async () => {
+            const loadAssetsFilteredFn = jest.fn();
+            // eslint-disable-next-line no-unused-vars
+            const handleChange = jest.fn(prop => jest.fn(event => {}));
+            const { getByTestId, getByRole } = setup({
+                actions: {
+                    loadAssetTypes: jest.fn(),
+                    clearAssets: jest.fn(),
+                    loadAssetsFiltered: loadAssetsFilteredFn,
+                },
+                formValues,
+                state: { testTagAssetsReducer: { assetsList: [], assetsListLoading: false } },
+                location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
+                resetForm: jest.fn(),
+                assignCurrentAsset: jest.fn(),
+                handleChange,
+                saveInspectionSaving: false,
+                isValid: false,
+            });
+
+            // Type in asset selector using userEvent — triggers real input events that React detects
+            const input = getByTestId('asset_selector-asset-panel-input');
+            await userEvent.type(input, 'UQL310000');
+
+            // Clear the input via Autocomplete clear button (triggers onClear, resetting searchTerm)
+            const clearButton = getByTestId('asset_selector-asset-panel').querySelector(
+                '.MuiAutocomplete-clearIndicator',
+            );
+            await userEvent.click(clearButton);
+
+            loadAssetsFilteredFn.mockClear();
+
+            // Toggle all teams — should NOT call loadAssetsFiltered since searchTerm was cleared
+            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            await userEvent.click(toggle);
+
+            expect(loadAssetsFilteredFn).not.toHaveBeenCalled();
+        });
+
+        it('shows warning alert when allTeams is on and selectedAsset is from a different team', async () => {
+            // eslint-disable-next-line no-unused-vars
+            const handleChange = jest.fn(prop => jest.fn(event => {}));
+            const { getByTestId, getByRole } = setup({
+                actions: { loadAssetTypes: jest.fn(), clearAssets: jest.fn() },
+                formValues,
+                selectedAsset: { asset_team_slug: 'SPACES', asset_team_display_name: 'Spaces Team' },
+                location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
+                resetForm: jest.fn(),
+                assignCurrentAsset: jest.fn(),
+                handleChange,
+                saveInspectionSaving: false,
+                isValid: false,
+            });
+
+            // Toggle all teams on
+            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            await userEvent.click(toggle);
+
+            expect(getByTestId('asset_panel-all-teams-warning-text')).toBeInTheDocument();
+        });
+
+        it('does not show warning alert when allTeams is on and selectedAsset is from same team', async () => {
+            // eslint-disable-next-line no-unused-vars
+            const handleChange = jest.fn(prop => jest.fn(event => {}));
+            const { queryByTestId, getByRole } = setup({
+                actions: { loadAssetTypes: jest.fn(), clearAssets: jest.fn() },
+                formValues,
+                selectedAsset: { asset_team_slug: 'WSS', asset_team_display_name: 'Work Station Support' },
+                location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
+                resetForm: jest.fn(),
+                assignCurrentAsset: jest.fn(),
+                handleChange,
+                saveInspectionSaving: false,
+                isValid: false,
+            });
+
+            // Toggle all teams on
+            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            await userEvent.click(toggle);
+
+            expect(queryByTestId('asset_panel-all-teams-warning-text')).not.toBeInTheDocument();
+        });
+    });
 });
