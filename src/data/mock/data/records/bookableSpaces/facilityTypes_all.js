@@ -30,7 +30,7 @@ export default {
         {
             "facility_type_group_id": 8,
             "facility_type_group_name": "EDIA filters",
-            "facility_type_group_order": 1,
+            "facility_type_group_order": 2,
             "facility_type_group_loads_open": 1,
             "facility_type_group_type": "choose-many",
             "facility_type_children": [
@@ -43,7 +43,7 @@ export default {
         {
             "facility_type_group_id": 1,
             "facility_type_group_name": "Space\/Room Type",
-            "facility_type_group_order": 2,
+            "facility_type_group_order": 1,
             "facility_type_group_loads_open": 1,
             "facility_type_group_type": "choose-many",
             "facility_type_children": [
