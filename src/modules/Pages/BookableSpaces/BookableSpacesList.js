@@ -210,7 +210,7 @@ export const BookableSpacesList = ({
     const isDesktopView = !isTabletView && !isMobileView;
 
     const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
-    const FACILITY_TYPE_NAME_CAPACITY = 'Capacity';
+    const FACILITY_TYPE_NAME_CAPACITY = 'Bookable Capacity';
 
     const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
