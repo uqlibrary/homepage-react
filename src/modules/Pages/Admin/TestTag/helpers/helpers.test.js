@@ -6,6 +6,7 @@ import {
     isInvalidUUID,
     isInvalidTeamSlug,
 } from './helpers';
+
 describe('helpers', () => {
     it('capitaliseLeadingChar operates correctly', () => {
         expect(capitaliseLeadingChar('test')).toEqual('Test');
