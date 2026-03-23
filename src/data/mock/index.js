@@ -82,6 +82,7 @@ import hours_weekly from './data/records/bookableSpaces/hours_weekly_2';
 import facilityTypes_all from './data/records/bookableSpaces/facilityTypes_all';
 import location_sites_all from './data/records/bookableSpaces/location_sites_all';
 import newSpace from './data/records/bookableSpaces/newSpace';
+import spaces_favourites from './data/records/bookableSpaces/spaces_favourites';
 import { dlorDashboardSiteUsage } from './data/dlor/dlorDashboardSiteUsage';
 
 const moment = require('moment');
@@ -1588,23 +1589,7 @@ mock.onGet('exams/course/FREN1010/summary')
     // SPACES_FAVOURITES_API
     .onGet('bookable_spaces/favourites')
     .reply(() => {
-        return [
-            200,
-            {
-                data: [
-                    {
-                        favourite_id: 1,
-                        space_id: 1,
-                        favourite_username: 'libSpaces',
-                    },
-                    {
-                        favourite_id: 2,
-                        space_id: 2,
-                        favourite_username: 'libSpaces',
-                    },
-                ],
-            },
-        ];
+        return [200, spaces_favourites];
     })
     .onPost('bookable_spaces/favourites')
     .reply(config => {
@@ -1613,13 +1598,9 @@ mock.onGet('exams/course/FREN1010/summary')
             200,
             {
                 data: [
+                    ...spaces_favourites.data.filter(favourite => favourite.space_id !== body.space_id),
                     {
-                        favourite_id: 1,
-                        space_id: 1,
-                        favourite_username: 'libSpaces',
-                    },
-                    {
-                        favourite_id: 2,
+                        favourite_id: spaces_favourites.data.length + 1,
                         space_id: body.space_id,
                         favourite_username: 'libSpaces',
                     },
