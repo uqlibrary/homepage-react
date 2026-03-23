@@ -27,6 +27,7 @@ import {
     FILTER_CURRENTLY_OPEN,
     FILTER_SPACE_CAPACITY,
 } from './spacesHelpers';
+import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -510,9 +511,17 @@ export const BookableSpacesList = ({
     const handleFavouriteAction = async (action, spaceId) => {
         /* istanbul ignore next */
         if (isFavouriteActionInProgress) return;
+        const isAddFavouriteAction = action === 'addSpaceFavourite';
         setIsFavouriteActionInProgress(true);
         try {
             await actions[action](spaceId);
+            displayToastMessage(isAddFavouriteAction ? 'Space added to favourites' : 'Space removed from favourites');
+        } catch {
+            displayToastErrorMessage(
+                isAddFavouriteAction
+                    ? 'Sorry, an error occurred - the space was not added to favourites.'
+                    : 'Sorry, an error occurred - the space was not removed from favourites.',
+            );
         } finally {
             setTimeout(() => {
                 setIsFavouriteActionInProgress(false);

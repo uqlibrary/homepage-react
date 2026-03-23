@@ -1585,6 +1585,52 @@ mock.onGet('exams/course/FREN1010/summary')
             return [200, { data: result }];
         }
     })
+    // SPACES_FAVOURITES_API
+    .onGet('bookable_spaces/favourites')
+    .reply(() => {
+        return [
+            200,
+            {
+                data: [
+                    {
+                        favourite_id: 1,
+                        space_id: 1,
+                        favourite_username: 'libSpaces',
+                    },
+                    {
+                        favourite_id: 2,
+                        space_id: 2,
+                        favourite_username: 'libSpaces',
+                    },
+                ],
+            },
+        ];
+    })
+    .onPost('bookable_spaces/favourites')
+    .reply(config => {
+        const body = JSON.parse(config.data);
+        return [
+            200,
+            {
+                data: [
+                    {
+                        favourite_id: 1,
+                        space_id: 1,
+                        favourite_username: 'libSpaces',
+                    },
+                    {
+                        favourite_id: 2,
+                        space_id: body.space_id,
+                        favourite_username: 'libSpaces',
+                    },
+                ],
+            },
+        ];
+    })
+    .onDelete('bookable_spaces/favourites')
+    .reply(() => {
+        return [200, { data: [] }];
+    })
     .onGet(routes.WEEKLYHOURS_API().apiUrl)
     .reply(() => {
         if (responseType === 'weeklyHoursError') {
