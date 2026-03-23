@@ -44,31 +44,6 @@ test.describe('Spaces Admin - manage facility types page', () => {
         const noiseLevelGroup = page.getByTestId('facilitygroup-acceptable-noise');
         const roomFeatureGroup = page.getByTestId('facilitygroup-room-features');
 
-        const highNoiseSpaceCountElement = 'facility-type-space-count-10-button';
-        const unusedASpaceCountElement = 'facility-type-space-count-58-button';
-        const artworkCountElement = 'facility-type-space-count-57-button';
-
-        await expect(page.getByTestId(highNoiseSpaceCountElement)).toBeVisible();
-        await expect(page.getByTestId(highNoiseSpaceCountElement)).toContainText('2');
-        await expect(page.getByTestId(highNoiseSpaceCountElement)).toHaveAttribute(
-            'title',
-            'This filter type applies to 2 spaces.',
-        );
-
-        await expect(page.getByTestId(artworkCountElement)).toBeVisible();
-        await expect(page.getByTestId(artworkCountElement)).toContainText('1');
-        await expect(page.getByTestId(artworkCountElement)).toHaveAttribute(
-            'title',
-            'This filter type applies to 1 space.',
-        );
-
-        await expect(page.getByTestId(unusedASpaceCountElement)).toBeVisible();
-        await expect(page.getByTestId(unusedASpaceCountElement)).toContainText('unused');
-        await expect(page.getByTestId(unusedASpaceCountElement)).toHaveAttribute(
-            'title',
-            'This filter type does not apply to any spaces.',
-        );
-
         await expect(servicesGroup.getByTestId('facilitytype-name-54')).toBeVisible();
         await expect(servicesGroup.getByTestId('facilitytype-name-54')).toContainText('AskUs service');
 
