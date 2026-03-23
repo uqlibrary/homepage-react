@@ -73,7 +73,11 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
                 })
                 .catch(error => {
                     console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.addFail), 'error');
+                    let reason = pageLocale.snackbar.addFail;
+                    if (error?.match?.(/licence.*associated.*another user/i)) {
+                        reason = error;
+                    }
+                    openConfirmationAlert(reason, 'error');
                 })
                 .finally(() => {
                     setDialogueBusy(false);
