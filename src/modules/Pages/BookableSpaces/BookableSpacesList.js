@@ -17,6 +17,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { addClass, removeClass, standardText } from 'helpers/general';
+import { useAccountContext } from 'context';
 
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
@@ -188,7 +189,10 @@ export const BookableSpacesList = ({
     facilityTypeList,
     facilityTypeListLoading,
     facilityTypeListError,
+    spacesFavouritesList,
 }) => {
+    const { account } = useAccountContext();
+    const isLoggedIn = !!account?.id;
     console.log(
         'BookableSpacesList load facilityTypeList:',
         facilityTypeListLoading,
@@ -216,6 +220,7 @@ export const BookableSpacesList = ({
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
+    const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
 
     const minimumSpaceCapacity = 1;
     const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
@@ -244,6 +249,13 @@ export const BookableSpacesList = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    React.useEffect(() => {
+        if (isLoggedIn && spacesFavouritesList === null) {
+            actions.loadSpacesFavourites();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLoggedIn]);
 
     React.useEffect(() => {
         if (
@@ -495,6 +507,23 @@ export const BookableSpacesList = ({
         </svg>
     );
 
+    const handleFavouriteAction = async (action, spaceId) => {
+        /* istanbul ignore next */
+        if (isFavouriteActionInProgress) return;
+        setIsFavouriteActionInProgress(true);
+        try {
+            await actions[action](spaceId);
+        } finally {
+            setTimeout(() => {
+                setIsFavouriteActionInProgress(false);
+            }, 1000);
+        }
+    };
+
+    function isSpaceFavourited(space) {
+        return spacesFavouritesList?.some(fav => fav.space_id === space?.space_id);
+    }
+
     const facilityTypeToGroup = {};
     getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList)?.data?.facility_type_groups?.forEach(
         group => {
@@ -506,11 +535,22 @@ export const BookableSpacesList = ({
     const filteredSpaceLocations = bookableSpacesRoomList?.data?.locations?.filter(space => {
         return showSpace(space, facilityTypeToGroup, selectedFacilityTypes);
     });
+
+    const sortedSpaceLocations = filteredSpaceLocations
+        ? [...filteredSpaceLocations].sort((a, b) => {
+              const aFav = isSpaceFavourited(a);
+              const bFav = isSpaceFavourited(b);
+              if (aFav && !bFav) return -1;
+              /* istanbul ignore next */
+              if (!aFav && bFav) return 1;
+              return 0;
+          })
+        : filteredSpaceLocations;
     const visibleSpacesCountBadge = () => {
-        return filteredSpaceLocations?.length > 0 &&
-            filteredSpaceLocations?.length < bookableSpacesRoomList?.data?.locations?.length ? (
+        return sortedSpaceLocations?.length > 0 &&
+            sortedSpaceLocations?.length < bookableSpacesRoomList?.data?.locations?.length ? (
             <Badge
-                badgeContent={filteredSpaceLocations?.length}
+                badgeContent={sortedSpaceLocations?.length}
                 max={bookableSpacesRoomList?.data?.locations?.length}
                 color="primary"
                 style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
@@ -572,8 +612,8 @@ export const BookableSpacesList = ({
                         maxNativeZoom={19}
                         maxZoom={25}
                     />
-                    {filteredSpaceLocations.length > 0 &&
-                        filteredSpaceLocations
+                    {sortedSpaceLocations?.length > 0 &&
+                        sortedSpaceLocations
                             ?.filter(m => !!m?.space_latitude && !!m?.space_longitude)
                             ?.map(mapPoint => {
                                 // show the filtered Spaces on the map
@@ -689,7 +729,7 @@ export const BookableSpacesList = ({
                                     >
                                         <span
                                             style={{
-                                                paddingRight: filteredSpaceLocations?.length > 10 ? '1rem' : '0.5rem',
+                                                paddingRight: sortedSpaceLocations?.length > 10 ? '1rem' : '0.5rem',
                                                 // covers 1 and 2 digit
                                                 // will need more ifs when we have more data: > 100, > 1000
                                             }}
@@ -708,13 +748,17 @@ export const BookableSpacesList = ({
                                         }
                                     >
                                         <SidebarSpacesList
-                                            filteredSpaceLocations={filteredSpaceLocations}
+                                            filteredSpaceLocations={sortedSpaceLocations}
                                             weeklyHours={weeklyHours}
                                             weeklyHoursLoading={weeklyHoursLoading}
                                             weeklyHoursError={weeklyHoursError}
                                             StyledStandardCard={StyledStandardCard}
                                             showAllData={!isMobileView}
                                             suppliedClassName={showSpacesSelectorPopup ? 'popupSpacesList' : 'hide'}
+                                            spacesFavouritesList={spacesFavouritesList}
+                                            isLoggedIn={isLoggedIn}
+                                            onFavouriteToggle={handleFavouriteAction}
+                                            isFavouriteActionInProgress={isFavouriteActionInProgress}
                                         />
                                     </div>
                                 </>
@@ -742,6 +786,7 @@ BookableSpacesList.propTypes = {
     facilityTypeList: PropTypes.any,
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
+    spacesFavouritesList: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesList);

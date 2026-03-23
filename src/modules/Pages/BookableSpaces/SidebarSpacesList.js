@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid, Typography } from '@mui/material';
+import { Grid, Tooltip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
 
@@ -62,6 +64,10 @@ const SidebarSpacesList = ({
     StyledStandardCard,
     showAllData = false,
     suppliedClassName = null,
+    spacesFavouritesList = null,
+    isLoggedIn = false,
+    onFavouriteToggle = null,
+    isFavouriteActionInProgress = false,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -110,7 +116,56 @@ const SidebarSpacesList = ({
                             >
                                 <StyledStandardCard
                                     fullHeight
-                                    title={bookableSpace?.space_type_details?.space_type_name}
+                                    title={
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            {!!isLoggedIn && !!onFavouriteToggle ? (
+                                                spacesFavouritesList?.some(
+                                                    fav => fav.space_id === bookableSpace?.space_id,
+                                                ) ? (
+                                                    <Tooltip title="Remove from Favourites" arrow>
+                                                        <StarIcon
+                                                            onClick={() =>
+                                                                onFavouriteToggle(
+                                                                    'removeSpaceFavourite',
+                                                                    bookableSpace?.space_id,
+                                                                )
+                                                            }
+                                                            sx={{
+                                                                fill: '#FFD700',
+                                                                cursor: isFavouriteActionInProgress
+                                                                    ? 'not-allowed'
+                                                                    : 'pointer',
+                                                                fontSize: '1.5rem',
+                                                                flexShrink: 0,
+                                                            }}
+                                                            data-testid={`favourite-star-${bookableSpace?.space_id}`}
+                                                        />
+                                                    </Tooltip>
+                                                ) : (
+                                                    <Tooltip title="Add to Favourites" arrow>
+                                                        <StarBorderIcon
+                                                            onClick={() =>
+                                                                onFavouriteToggle(
+                                                                    'addSpaceFavourite',
+                                                                    bookableSpace?.space_id,
+                                                                )
+                                                            }
+                                                            sx={{
+                                                                fill: '#666',
+                                                                cursor: isFavouriteActionInProgress
+                                                                    ? 'not-allowed'
+                                                                    : 'pointer',
+                                                                fontSize: '1.5rem',
+                                                                flexShrink: 0,
+                                                            }}
+                                                            data-testid={`favourite-star-outline-${bookableSpace?.space_id}`}
+                                                        />
+                                                    </Tooltip>
+                                                )
+                                            ) : null}
+                                            {bookableSpace?.space_type_details?.space_type_name}
+                                        </span>
+                                    }
                                     style={{ marginRight: '0.5rem' }}
                                     squareTop
                                     subCard
@@ -140,6 +195,10 @@ SidebarSpacesList.propTypes = {
     StyledStandardCard: PropTypes.any,
     showAllData: PropTypes.bool,
     suppliedClassName: PropTypes.string,
+    spacesFavouritesList: PropTypes.any,
+    isLoggedIn: PropTypes.bool,
+    onFavouriteToggle: PropTypes.func,
+    isFavouriteActionInProgress: PropTypes.bool,
 };
 
 export default React.memo(SidebarSpacesList);
