@@ -868,6 +868,16 @@ export const BookableSpacesManageFacilities = ({
 
                 {group?.facility_type_children?.map(facilityType => {
                     const facilityTypeId = facilityType?.facility_type_id;
+                    const spacesWithThisFacilityType = bookableSpacesRoomList?.data?.locations?.filter(location => {
+                        return location?.facility_types?.some(
+                            facilityType => facilityType?.facility_type_id === facilityTypeId,
+                        );
+                    });
+                    const hovertext = `This filter type is set on ${spacesWithThisFacilityType.length} ${pluralise(
+                        'space',
+                        spacesWithThisFacilityType.length,
+                    )}`;
+
                     return (
                         <div key={`facilitytype-list-${facilityTypeId}`}>
                             <StyledEditIconButton
@@ -894,6 +904,15 @@ export const BookableSpacesManageFacilities = ({
                                     f => f?.facility_type_id === facilityType?.facility_type_id,
                                 )?.facility_type_name || facilityType?.facility_type_name}
                             </Typography>
+                            {' ('}
+                            <span
+                                style={{ textDecoration: 'underline dotted' }}
+                                title={hovertext}
+                                data-testid={`facility-type-space-count-${facilityTypeId}-button`}
+                            >
+                                {spacesWithThisFacilityType.length || 'unused'}
+                            </span>
+                            )
                         </div>
                     );
                 })}
