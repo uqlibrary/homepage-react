@@ -873,10 +873,16 @@ export const BookableSpacesManageFacilities = ({
                             facilityType => facilityType?.facility_type_id === facilityTypeId,
                         );
                     });
-                    const hovertext = `This filter type is set on ${spacesWithThisFacilityType.length} ${pluralise(
-                        'space',
-                        spacesWithThisFacilityType.length,
-                    )}`;
+                    const numberofSpacesDisplayed =
+                        !!spacesWithThisFacilityType && spacesWithThisFacilityType.length === 0
+                            ? 'unused'
+                            : spacesWithThisFacilityType.length + ''; // cast to string;
+
+                    const pluralSpaceCount = pluralise('space', spacesWithThisFacilityType.length);
+                    const hovertext =
+                        spacesWithThisFacilityType.length === 0
+                            ? 'This filter type does not apply to any spaces.'
+                            : `This filter type applies to ${numberofSpacesDisplayed} ${pluralSpaceCount}.`;
 
                     return (
                         <div key={`facilitytype-list-${facilityTypeId}`}>
@@ -906,11 +912,11 @@ export const BookableSpacesManageFacilities = ({
                             </Typography>
                             {' ('}
                             <span
-                                style={{ textDecoration: 'underline dotted' }}
+                                style={{ textDecoration: '1px underline dotted' }}
                                 title={hovertext}
                                 data-testid={`facility-type-space-count-${facilityTypeId}-button`}
                             >
-                                {spacesWithThisFacilityType.length || 'unused'}
+                                {numberofSpacesDisplayed}
                             </span>
                             )
                         </div>
