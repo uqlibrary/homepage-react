@@ -149,19 +149,6 @@ describe('InspectionDevices', () => {
         await userEvent.type(getByTestId('device_serial_number-input'), 'TEST SNX');
         await userEvent.type(getByTestId('device_calibrated_by_last-input'), 'PersonX');
 
-        // date range validation
-        userEvent.clear(getByTestId('device_calibration_due_date-input'));
-        await userEvent.type(getByTestId('device_calibration_due_date-input'), '2027-01-02');
-        userEvent.clear(getByTestId('device_calibrated_date_last-input'));
-        await userEvent.type(getByTestId('device_calibrated_date_last-input'), '2024-12-31');
-        expect(addButton).toBeDisabled();
-        userEvent.clear(getByTestId('device_calibration_due_date-input'));
-        await userEvent.type(getByTestId('device_calibration_due_date-input'), '2027-01-01');
-        expect(addButton).toBeDisabled();
-        userEvent.clear(getByTestId('device_calibrated_date_last-input'));
-        await userEvent.type(getByTestId('device_calibrated_date_last-input'), '2025-01-01');
-        expect(addButton).not.toBeDisabled();
-
         await act(async () => {
             await userEvent.click(addButton);
         });
@@ -189,25 +176,45 @@ describe('InspectionDevices', () => {
         await userEvent.type(getByTestId('device_serial_number-input'), 'EDIT SN');
         userEvent.clear(getByTestId('device_calibrated_by_last-input'));
         await userEvent.type(getByTestId('device_calibrated_by_last-input'), 'EDIT PERSON');
-        userEvent.clear(getByTestId('device_calibration_due_date-input'));
-        await userEvent.type(getByTestId('device_calibration_due_date-input'), '2027-01-01');
-        userEvent.clear(getByTestId('device_calibrated_date_last-input'));
-        await userEvent.type(getByTestId('device_calibrated_date_last-input'), '2025-01-01');
+        // dates will be update below - this is to make sure data range validation work for unchanged dates
 
-        // // commit the change
+        // commit the change
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
         });
-        expect(actions.updateInspectionDevice).toHaveBeenCalledWith(1, {
+        expect(actions.updateInspectionDevice).toHaveBeenLastCalledWith(1, {
             device_calibrated_by_last: 'EDIT PERSON',
-            device_calibrated_date_last: '2025-01-01 00:00:00',
-            device_calibration_due_date: '2027-01-01 00:00:00',
+            device_calibrated_date_last: '2022-10-17 00:00:00',
+            device_calibration_due_date: '2023-10-17 00:00:00',
             device_department: 'UQL',
             device_id: 1,
             device_model_name: 'EDIT NAME',
             device_serial_number: 'EDIT SN',
             has_inspections: 1,
         });
+
+        // test date range validation
+        await act(async () => {
+            await fireEvent.click(getByTestId('action_cell-1-edit-button'));
+        });
+        await waitFor(() => {
+            expect(getByTestId('device_model_name-input')).toBeInTheDocument();
+        });
+        userEvent.clear(getByTestId('device_calibration_due_date-input'));
+        await userEvent.type(getByTestId('device_calibration_due_date-input'), '2027-01-01');
+        userEvent.clear(getByTestId('device_calibrated_date_last-input'));
+        await userEvent.type(getByTestId('device_calibrated_date_last-input'), '2026-01-01');
+        await act(async () => {
+            await fireEvent.click(getByTestId('update_dialog-action-button'));
+        });
+        expect(actions.updateInspectionDevice).toHaveBeenLastCalledWith(
+            1,
+            expect.objectContaining({
+                device_calibrated_date_last: '2026-01-01 00:00:00',
+                device_calibration_due_date: '2027-01-01 00:00:00',
+            }),
+        );
+
         // Check Save Asset Types fail on save.
         actions.updateInspectionDevice = jest.fn(() => Promise.reject('Testing Update 1'));
         await act(async () => {
