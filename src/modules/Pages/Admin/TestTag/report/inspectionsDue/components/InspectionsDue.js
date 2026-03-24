@@ -15,7 +15,7 @@ import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelec
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config from './config';
@@ -68,6 +68,8 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     const pageLocale = locale.pages.report.inspectionsDue;
     const monthsOptions = locale.config.monthsOptions;
 
+    const { user } = useAccountUser();
+
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
     const { lastSelectedLocation, selectedLocation } = useSelectLocation({
@@ -85,9 +87,21 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
 
-    const prevSearchRef = useRef({ locationStr: '', monthRange });
+    const teamList = React.useMemo(() => {
+        const list =
+            user?.department_teams?.map(team => ({
+                id: team.id,
+                team_slug: team.team_slug,
+                label: team.team_display_name,
+            })) ?? [];
+        return [{ id: -1, label: 'All teams' }, ...list];
+    }, [user]);
+
+    const prevSearchRef = useRef({ locationStr: '', monthRange, team: '' });
 
     const [filterModel, setFilterModel] = useState({ items: [] });
+    const [selectedTeam, setSelectedTeam] = useState({ items: [] });
+
     const uniqueAssetTypeList = React.useMemo(() => extractAssetTypeData(inspectionsDue), [inspectionsDue]);
 
     const onCloseConfirmationAlert = () => actions.clearInspectionsDueError();
@@ -106,10 +120,23 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
 
     useEffect(() => {
         const locationStr = JSON.stringify(location);
-        if (prevSearchRef.current.locationStr === locationStr && prevSearchRef.current.monthRange === monthRange) {
+        const team =
+            selectedTeam.items.length > 0
+                ? teamList.find(team => team.id === parseInt(selectedTeam.items[0].value[0], 10))?.team_slug
+                : '';
+
+        if (
+            prevSearchRef.current.locationStr === locationStr &&
+            prevSearchRef.current.monthRange === monthRange &&
+            prevSearchRef.current.team === team
+        ) {
             return;
         }
-        prevSearchRef.current = { locationStr, monthRange };
+        prevSearchRef.current = {
+            locationStr,
+            monthRange,
+            team,
+        };
 
         // const locationId = location[selectedLocation];
         const newLocation = getLastLocationWithId(location);
@@ -117,8 +144,9 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
             period: monthRange,
             periodType: 'month',
             ...newLocation,
+            teamSlug: team,
         });
-    }, [actions, lastSelectedLocation, location, monthRange, selectedLocation]);
+    }, [actions, lastSelectedLocation, location, monthRange, selectedLocation, selectedTeam, teamList]);
 
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
@@ -145,7 +173,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                         />
                     </Grid>
                     <Grid container spacing={3}>
-                        <GridWrapper withGrid divisor={2}>
+                        <GridWrapper withGrid divisor={3}>
                             <MonthsSelector
                                 id={componentId}
                                 label={pageLocale.form.filterToDateLabel}
@@ -161,7 +189,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                                 classNames={{ formControl: 'formControl', select: 'formSelect' }}
                             />
                         </GridWrapper>
-                        <GridWrapper withGrid divisor={2}>
+                        <GridWrapper withGrid divisor={3}>
                             <SelectField
                                 field="asset_type_id"
                                 options={uniqueAssetTypeList}
@@ -169,6 +197,15 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                                 filterModel={filterModel}
                                 setFilterModel={setFilterModel}
                                 multiple
+                            />
+                        </GridWrapper>
+                        <GridWrapper withGrid divisor={3}>
+                            <SelectField
+                                field="team_display_name"
+                                options={teamList}
+                                locale={{ all: 'All teams', label: 'Teams' }}
+                                filterModel={selectedTeam}
+                                setFilterModel={setSelectedTeam}
                             />
                         </GridWrapper>
                     </Grid>

@@ -1318,6 +1318,16 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({ period: '3', periodType: 'month' }).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({ period: '3', periodType: 'month', teamSlug: 'WSS' }).apiUrl)
+    .reply(() => [
+        200,
+        { data: test_tag_pending_inspections.data.filter(inspection => inspection.asset_team_owned_by === 'WSS') },
+    ])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({ period: '3', periodType: 'month', teamSlug: 'SPACES' }).apiUrl)
+    .reply(() => [
+        200,
+        { data: test_tag_pending_inspections.data.filter(inspection => inspection.asset_team_owned_by === 'SPACES') },
+    ])
     .onGet(
         routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({
             period: '3',

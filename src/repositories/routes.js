@@ -157,10 +157,11 @@ export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test-and
 export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test-and-tag/asset-type/${id}` });
 
 /** TEST AND TAG INSPECTIONS REPORT */
-export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, period, periodType }) => {
+export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, period, periodType, teamSlug }) => {
     const urlParams = {
         ...(!!locationId && !!locationType ? { [`${locationType}_id`]: locationId } : {}),
         ...(!!period && !!periodType ? { period_length: period, period_type: periodType } : {}),
+        ...(!!teamSlug ? { team_slug: teamSlug } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
