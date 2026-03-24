@@ -13,6 +13,7 @@ import {
 import Immutable from 'immutable';
 
 import locale from '../../../testTag.locale';
+import { within } from '@testing-library/dom';
 
 const actions = {
     clearUserListError: jest.fn(),
@@ -170,6 +171,64 @@ describe('Manage Users', () => {
             ).toBeInTheDocument();
         });
         expect(actions.loadUserList).rejects.toEqual('Testing Error');
+    });
+
+    it('should displays dup licence error when adding new user', async () => {
+        const newLicence = 123456;
+        const expectedError = `user_licence_number '${newLicence}' is already associated with another user.`;
+        actions.addUser = jest.fn(() => Promise.reject(expectedError));
+        actions.loadUserList = jest.fn(() => {
+            return Promise.resolve();
+        });
+        actions.loadTeamList = jest.fn(() => {
+            return Promise.resolve();
+        });
+        const { getByText, getByTestId } = setup({ actions: actions });
+
+        expect(
+            getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
+        expect(getByText('uqjsmit')).toBeInTheDocument();
+        expect(getByTestId('user-management-data-table-toolbar-export-menu')).toBeInTheDocument();
+
+        await act(async () => {
+            await fireEvent.click(getByTestId('user-management-data-table-toolbar-add-button'));
+        });
+
+        await waitFor(() => {
+            expect(getByTestId('user_uid-input')).toBeInTheDocument();
+        });
+        await act(async () => {
+            await fireEvent.change(getByTestId('user_uid-input'), { target: { value: 'uqtestuser' } });
+            await fireEvent.change(getByTestId('user_name-input'), { target: { value: 'TEST USER' } });
+        });
+
+        await userEvent.click(getByTestId('user_team-input'));
+        selectOptionFromListByIndex(0);
+
+        // Check the disabled fields
+        expect(getByTestId('user_licence_number-input')).toHaveAttribute('disabled');
+        await act(async () => {
+            await fireEvent.click(getByTestId('can_inspect_cb-input'));
+            await fireEvent.change(getByTestId('user_licence_number-input'), { target: { value: newLicence } });
+        });
+        expect(actions.addUser).rejects.toEqual(expectedError);
+    });
+    it('should displays dup licence error when editing user', async () => {
+        const newLicence = 123456;
+        const expectedError = `user_licence_number '${newLicence}' is already associated with another user.`;
+        actions.updateUser = jest.fn(() => Promise.reject(expectedError));
+        const { getByText, getByTestId, findByTestId } = setup({ actions: actions });
+        expect(getByText('uqjsmit')).toBeInTheDocument();
+        await act(async () => await fireEvent.click(getByTestId('action_cell-1-edit-button')));
+        await expect(await findByTestId('user_uid-input')).toBeInTheDocument();
+        await userEvent.type(getByTestId('user_licence_number-input'), newLicence);
+        // commit changes
+        await userEvent.click(getByTestId('update_dialog-action-button'));
+        // assert error message
+        expect(
+            within(await findByTestId('confirmation_alert-error')).getByText(new RegExp(expectedError, 'i')),
+        ).toBeInTheDocument();
     });
 
     it('Add User functions correctly', async () => {
