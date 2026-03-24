@@ -8,7 +8,8 @@ export default [
         "site_id_displayed": "St Lucia",
         "building_id_displayed": "Hawken Engineering Building",
         "floor_id_displayed": "4",
-        "room_id_displayed": "L412"
+        "room_id_displayed": "L412",
+        "asset_team_owned_by": "WSS",
     },
     {
         "asset_barcode": "UQL000008",
@@ -19,7 +20,8 @@ export default [
         "site_id_displayed": "St Lucia",
         "building_id_displayed": "Hawken Engineering Building",
         "floor_id_displayed": "4",
-        "room_id_displayed": "L412"
+        "room_id_displayed": "L412",
+        "asset_team_owned_by": "WSS",
     },
     {
         "asset_barcode": "UQL000009",
@@ -30,7 +32,8 @@ export default [
         "site_id_displayed": "St Lucia",
         "building_id_displayed": "Hawken Engineering Building",
         "floor_id_displayed": "4",
-        "room_id_displayed": "L412"
+        "room_id_displayed": "L412",
+        "asset_team_owned_by": "WSS",
     },
     {
         "asset_barcode": "UQL000010",
@@ -41,7 +44,8 @@ export default [
         "site_id_displayed": "St Lucia",
         "building_id_displayed": "Hawken Engineering Building",
         "floor_id_displayed": "4",
-        "room_id_displayed": "L412"
+        "room_id_displayed": "L412",
+        "asset_team_owned_by": "WSS",
     },
     {
         "asset_barcode": "UQL000011",
@@ -52,7 +56,8 @@ export default [
         "site_id_displayed": "St Lucia",
         "building_id_displayed": "Hawken Engineering Building",
         "floor_id_displayed": "4",
-        "room_id_displayed": "L412"
+        "room_id_displayed": "L412",
+        "asset_team_owned_by": "WSS"
     },
     {
         "asset_barcode": "UQL000012",
@@ -63,7 +68,8 @@ export default [
         "site_id_displayed": "St Lucia",
         "building_id_displayed": "Hawken Engineering Building",
         "floor_id_displayed": "4",
-        "room_id_displayed": "L412"
+        "room_id_displayed": "L412",
+        "asset_team_owned_by": "WSS"
     },
     {
         "asset_barcode": "UQL000013",
@@ -74,7 +80,8 @@ export default [
         "site_id_displayed": "St Lucia",
         "building_id_displayed": "Hawken Engineering Building",
         "floor_id_displayed": "4",
-        "room_id_displayed": "L412"
+        "room_id_displayed": "L412",
+        "asset_team_owned_by": "SPACES"
     },
     {
         "asset_barcode": "UQL000014",
@@ -85,7 +92,8 @@ export default [
         "site_id_displayed": "St Lucia",
         "building_id_displayed": "Hawken Engineering Building",
         "floor_id_displayed": "4",
-        "room_id_displayed": "L412"
+        "room_id_displayed": "L412",
+        "asset_team_owned_by": "SPACES"
     },
     {
         "asset_barcode": "UQL000015",
@@ -96,17 +104,19 @@ export default [
         "site_id_displayed": "St Lucia",
         "building_id_displayed": "Hawken Engineering Building",
         "floor_id_displayed": "4",
-        "room_id_displayed": "L412"
+        "room_id_displayed": "L412",
+        "asset_team_owned_by": "SPACES"
     },
     {
         "asset_barcode": "UQL000016",
-        "asset_type_id": 2,
-        "asset_type_name": "Power Cord - C6",
+        "asset_type_id": 1,
+        "asset_type_name": "Power Cord - C5",
         "asset_test_date": "2022-11-08",
         "asset_next_test_due_date": "2023-05-08",
         "site_id_displayed": "St Lucia",
         "building_id_displayed": "Hawken Engineering Building",
         "floor_id_displayed": "4",
-        "room_id_displayed": "L412"
+        "room_id_displayed": "L412",
+        "asset_team_owned_by": "SPACES"
     },
 ];

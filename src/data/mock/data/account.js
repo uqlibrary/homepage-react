@@ -96,6 +96,10 @@ export const accounts = {
                 "can_alter": 1,
                 "can_see_reports": 1
             },
+            "department_teams": [
+                {"id":1, "team_slug": 'WSS', "team_display_name": 'Work Station Support'}, 
+                {"id":2, "team_slug": 'SPACES', "team_display_name": 'Spaces'}
+            ],
         },
     },
     uqpf: {
@@ -134,6 +138,9 @@ export const accounts = {
                 "can_alter": 1,
                 "can_see_reports": 0
             },
+            "department_teams": [
+                {"id":1, "team_slug": 'PF', "team_display_name": 'Property and Facilities'}, 
+            ],
         },
     },
     uqttadmin: {
@@ -172,6 +179,10 @@ export const accounts = {
                 "can_alter": 0,
                 "can_see_reports": 0
             },
+            "department_teams": [
+                {"id":1, "team_slug": 'WSS', "team_display_name": 'Work Station Support'}, 
+                {"id":2, "team_slug": 'SPACES', "team_display_name": 'Spaces'}
+            ],
         },
     },
     uqttreport: {
@@ -210,6 +221,10 @@ export const accounts = {
                 "can_alter": 0,
                 "can_see_reports": 1
             },
+            "department_teams": [
+                {"id":1, "team_slug": 'WSS', "team_display_name": 'Work Station Support'}, 
+                {"id":2, "team_slug": 'SPACES', "team_display_name": 'Spaces'}
+            ],
         },
     },
     uqttinspect: {
@@ -248,6 +263,10 @@ export const accounts = {
                 "can_alter": 0,
                 "can_see_reports": 0
             },
+            "department_teams": [
+                {"id":1, "team_slug": 'WSS', "team_display_name": 'Work Station Support'}, 
+                {"id":2, "team_slug": 'SPACES', "team_display_name": 'Spaces'}
+            ],
         },
     },
     uqttalter: {
@@ -286,6 +305,10 @@ export const accounts = {
                 "can_alter": 1,
                 "can_see_reports": 0
             },
+            "department_teams": [
+                {"id":1, "team_slug": 'WSS', "team_display_name": 'Work Station Support'}, 
+                {"id":2, "team_slug": 'SPACES', "team_display_name": 'Spaces'}
+            ],
         },
     },
     uqstaffnonpriv: {

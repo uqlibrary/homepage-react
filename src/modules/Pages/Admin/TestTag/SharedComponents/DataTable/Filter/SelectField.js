@@ -114,6 +114,7 @@ const SelectField = ({ field, options, locale, filterModel, setFilterModel, ...r
                         </InputAdornment>
                     ) : null
                 }
+                inputProps={{ id: `${id}-select-filter-input`, 'data-testid': `${id}-select-filter-input` }}
                 {...rest}
             >
                 {options.map(o => (

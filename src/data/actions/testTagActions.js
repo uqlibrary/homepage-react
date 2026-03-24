@@ -725,10 +725,10 @@ export function updateInspectionDetails(id, request) {
 
 /* REPORT INSPECTIONS DUE */
 
-export function getInspectionsDue({ locationId, locationType, period, periodType }) {
+export function getInspectionsDue({ locationId, locationType, period, periodType, teamSlug }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_DUE_LOADING });
-        return get(TEST_TAG_REPORT_INSPECTIONS_DUE_API({ locationId, locationType, period, periodType }))
+        return get(TEST_TAG_REPORT_INSPECTIONS_DUE_API({ locationId, locationType, period, periodType, teamSlug }))
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_INSPECTIONS_DUE_LOADED,
