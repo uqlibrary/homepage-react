@@ -101,7 +101,7 @@ export const UpdateDialogue = ({
 
     const handleChange = (event, value) => {
         const isCheckbox = event.target.type === 'checkbox';
-        const isOption = event.target.getAttribute('role') === 'option';
+        const isOption = event.target.getAttribute?.('role') === 'option';
         const dataKey = isOption ? event.target.id.split('-')[0] : event.target.name;
         const optionKey = fields?.[dataKey]?.fieldParams?.optionKey;
         // eslint-disable-next-line no-nested-ternary
