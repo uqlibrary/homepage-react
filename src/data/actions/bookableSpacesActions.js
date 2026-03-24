@@ -10,6 +10,7 @@ import {
     SPACES_SPACETYPE_CREATE_API,
     SPACES_SPACETYPE_UPDATE_API,
     SPACES_SPACETYPE_DELETE_API,
+    SPACES_FAVOURITES_API,
 } from 'repositories/routes';
 import { API_URL } from 'config';
 
@@ -475,6 +476,67 @@ export function deleteBookableSpaceType(spaceTypeId) {
                 });
                 checkExpireSession(dispatch, error);
                 return Promise.reject(error);
+            });
+    };
+}
+
+export function loadSpacesFavourites() {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_FAVOURITES_LOADING });
+        return get(SPACES_FAVOURITES_API())
+            .then(response => {
+                dispatch({
+                    type: actions.SPACES_FAVOURITES_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_FAVOURITES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function addSpaceFavourite(spaceId) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_FAVOURITES_LOADING });
+        return post(SPACES_FAVOURITES_API(), { space_id: spaceId })
+            .then(response => {
+                const payload = Array.isArray(response.data) ? response.data : [response.data];
+                dispatch({
+                    type: actions.SPACES_FAVOURITES_LOADED,
+                    payload,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_FAVOURITES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function removeSpaceFavourite(spaceId) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_FAVOURITES_LOADING });
+        return destroy(SPACES_FAVOURITES_API(), { space_id: spaceId })
+            .then(response => {
+                dispatch({
+                    type: actions.SPACES_FAVOURITES_LOADED,
+                    payload: response.data || [],
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_FAVOURITES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
             });
     };
 }
