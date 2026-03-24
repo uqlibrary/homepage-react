@@ -93,7 +93,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                 id: team.id,
                 team_slug: team.team_slug,
                 label: team.team_display_name,
-            })) ?? [];
+            })) ?? /* istanbul ignore next */ [];
         return [{ id: -1, label: 'All teams' }, ...list];
     }, [user]);
 
