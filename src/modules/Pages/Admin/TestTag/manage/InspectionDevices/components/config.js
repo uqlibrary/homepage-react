@@ -57,7 +57,6 @@ const makeNextCalibrateDateField = () => {
             if (deviceId !== data.device_id) {
                 deviceId = data.device_id;
                 initialValue = data.device_calibration_due_date;
-
                 // existing entries valid date range: BETWEEN [now] AND [+1 year]
                 lowerRange = moment();
                 upperRange = moment().add(1, 'year');
@@ -69,7 +68,6 @@ const makeNextCalibrateDateField = () => {
                         .format(dateFormat);
                 }
             }
-
             return !(
                 value === initialValue || // allow existing unchanged values
                 (isValidaDate(value) && isValidDateRange(value, lowerRange, upperRange))
