@@ -344,3 +344,4 @@ export const SPACES_SITE_API = () => ({ apiUrl: 'bookable_spaces/campus/all' });
 export const SPACES_SPACETYPE_CREATE_API = () => ({ apiUrl: 'bookable_spaces/space_type' });
 export const SPACES_SPACETYPE_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });
 export const SPACES_SPACETYPE_DELETE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });
+export const SPACES_FAVOURITES_API = () => ({ apiUrl: 'bookable_spaces/favourites' });

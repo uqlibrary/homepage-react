@@ -473,7 +473,7 @@ export const SidebarFilters = ({
             >
                 {facilityType.facility_type === FACILITY_TYPE_SLIDER ? (
                     <>
-                        <p>Our largest space can fit {maximumSpaceCapacity} people.</p>
+                        <p>Our largest bookable space can fit {maximumSpaceCapacity} people.</p>
                         <InputLabel
                             title={`Filter in Spaces with ${facilityType?.facility_type_name}`}
                             htmlFor={`filtertype-${facilityType?.facility_type_id}`}

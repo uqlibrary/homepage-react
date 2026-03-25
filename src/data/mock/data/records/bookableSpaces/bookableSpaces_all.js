@@ -6,7 +6,7 @@ export default {
                 "space_type_id": 1,
                 "space_type_name": "Communal space",
                 "space_type_description": "Designed for communal activities, these spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement.",
-                "spaces_count": 3
+                "spaces_count": 1
             },
             {
                 "space_type_id": 2,
@@ -18,13 +18,13 @@ export default {
                 "space_type_id": 3,
                 "space_type_name": "Meeting room",
                 "space_type_description": "Designed for meetings and collaborative work, these spaces typically include seating areas, tables, and other amenities to support discussions and group activities.",
-                "spaces_count": 2
+                "spaces_count": 1
             },
             {
                 "space_type_id": 4,
                 "space_type_name": "Individual study",
                 "space_type_description": "Designed for individual study, these spaces typically include seating areas, tables, and other amenities to support focused, independent work.",
-                "spaces_count": 2
+                "spaces_count": 5
             },
             {
                 "space_type_id": 5,
@@ -36,7 +36,7 @@ export default {
                 "space_type_id": 6,
                 "space_type_name": "An unallocated space type",
                 "space_type_description": "A space type that has not yet been allocated to any spaces. This is used to test the display of space types with no spaces allocated to them.",
-                "spaces_count": 0
+                "spaces_count": 1
             }
         ],
         "locations": [{
@@ -55,7 +55,7 @@ export default {
             "space_capacity": null,
             space_latitude: "-27.49718",
             space_longitude: "153.01214",
-            space_type: 'Collaborative space',
+            space_type: 'Communal space',
             space_floor_id: 1,
             space_floor_name: "2",
             space_is_ground_floor: 0,
@@ -67,8 +67,8 @@ export default {
             space_type_id: 1,
             space_type_details: {
                 "space_type_id": 1,
-                "space_type_name": "Collaborative space",
-                "space_type_description": "A space type for spaces designed for group work and collaboration. These spaces may include features such as larger tables, whiteboards, and AV equipment to facilitate group work."
+                "space_type_name": "Communal space",
+                "space_type_description": "Designed for communal activities, these spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
             },
             space_campus_name: "St Lucia",
             "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/111',
@@ -142,8 +142,8 @@ export default {
             space_type_id: 2,
             space_type_details: {
                 "space_type_id": 2,
-                "space_type_name": "Group Study Room",
-                "space_type_description": "A space type designed for group study and collaboration. These rooms typically include features such as larger tables, whiteboards, and AV equipment to facilitate group work."
+                "space_type_name": "Training room",
+                "space_type_description": "Designed for training and educational activities, these spaces typically include seating areas, tables, and other amenities to support learning and group activities."
             },
             space_services_page: "https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library",
             "space_opening_hours_override": null,
@@ -219,7 +219,7 @@ export default {
                     "facility_type_name": "Bookable"
                 }
             ],
-            space_type: 'Group Study Room',
+            space_type: 'Training room',
             space_floor_id: 65,
             space_floor_name: "1",
             space_is_ground_floor: 1,
@@ -249,8 +249,8 @@ export default {
             space_type_id: 3,
             space_type_details: {
                 "space_type_id": 3,
-                "space_type_name": "Computer room",
-                "space_type_description": "A space type designed for computer-based work. These rooms typically include multiple computer stations, high-speed internet access, and other technology resources to support individual or group work."
+                "space_type_name": "Meeting room",
+                "space_type_description": "Designed for meetings and collaborative work, these spaces typically include seating areas, tables, and other amenities to support discussions and group activities."
             },
             facility_types: [
                 {
@@ -290,7 +290,7 @@ export default {
                     "facility_type_name": "Undergrad spaces"
                 }
             ],
-            space_type: 'Computer room',
+            space_type: 'Meeting room',
             space_floor_id: 72,
             space_floor_name: "2A",
             space_is_ground_floor: 0,
@@ -316,7 +316,7 @@ export default {
             "space_capacity": 6,
             "space_latitude": -27.49904,
             "space_longitude": 153.01453,
-            "space_type": "Communal space",
+            "space_type": "Individual study",
             "space_floor_id": 3,
             "space_floor_name": "3",
             "space_is_ground_floor": false,
@@ -334,8 +334,8 @@ export default {
             space_type_id: 4,
             space_type_details: {
                 "space_type_id": 4,
-                "space_type_name": "Communal space",
-                "space_type_description": "A space type designed for communal activities and interactions. These spaces typically include seating areas, tables, and other amenities to support socializing and group activities."
+                "space_type_name": "Individual study",
+                "space_type_description": "Designed for individual study, these spaces typically include seating areas, tables, and other amenities to support focused, independent work."
             },
             "facility_types": [
                 {
@@ -416,7 +416,7 @@ export default {
                 "space_capacity": 8,
                 "space_latitude": -27.49893,
                 "space_longitude": 153.01465,
-                "space_type": "Communal space",
+                "space_type": "Individual study",
                 "space_floor_id": 3,
                 "space_floor_name": "3",
                 "space_is_ground_floor": false,
@@ -434,8 +434,8 @@ export default {
                 space_type_id: 4,
                 space_type_details: {
                     "space_type_id": 4,
-                    "space_type_name": "Communal space",
-                    "space_type_description": "A space type designed for communal activities and interactions. These spaces typically include seating areas, tables, and other amenities to support socializing and group activities."
+                    "space_type_name": "Individual study",
+                    "space_type_description": "Designed for individual study, these spaces typically include seating areas, tables, and other amenities to support focused, independent work."
                 },
                 "facility_types": [
                     {
@@ -508,7 +508,7 @@ export default {
                 "space_capacity": 12,
                 "space_latitude": null,
                 "space_longitude": null,
-                "space_type": "Training room",
+                "space_type": "Individual study pod",
                 "space_floor_id": 3,
                 "space_floor_name": "3",
                 "space_is_ground_floor": false,
@@ -527,8 +527,8 @@ export default {
                 space_type_id: 5,
                 space_type_details: {
                     "space_type_id": 5,
-                    "space_type_name": "Training room",
-                    "space_type_description": "A space type designed for training and educational activities. These spaces typically include seating areas, tables, and other amenities to support learning and group activities."
+                    "space_type_name": "Individual study pod",
+                    "space_type_description": "Designed for individual study, these spaces typically include local, isolated areas and amenities to support focused, independent work."
                 },
             },
             {
@@ -547,7 +547,7 @@ export default {
                 "space_capacity": 20,
                 "space_latitude": -27.49893,
                 "space_longitude": 153.01457,
-                "space_type": "Meeting room",
+                "space_type": "An unallocated space type",
                 "space_floor_id": 3,
                 "space_floor_name": "3",
                 "space_is_ground_floor": false,
@@ -565,8 +565,8 @@ export default {
                 space_type_id: 6,
                 space_type_details: {
                     "space_type_id": 6,
-                    "space_type_name": "Meeting room",
-                    "space_type_description": "A space type designed for meetings and collaborative work. These spaces typically include seating areas, tables, and other amenities to support discussions and group activities."
+                    "space_type_name": "An unallocated space type",
+                    "space_type_description": "A space type that has not yet been allocated to any spaces. This is used to test the display of space types with no spaces allocated to them."
                 },
                 "facility_types": [
                     {
@@ -627,7 +627,7 @@ export default {
                 "space_capacity": 22,
                 "space_latitude": -27.49905,
                 "space_longitude": 153.01453,
-                "space_type": "Individual Study",
+                "space_type": "Individual study",
                 "space_floor_id": 3,
                 "space_floor_name": "3",
                 "space_is_ground_floor": false,
@@ -642,11 +642,11 @@ export default {
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/555',
-                "space_type_id": 7,
+                "space_type_id": 4,
                 "space_type_details": {
-                    "space_type_id": 7,
-                    "space_type_name": "Individual Study",
-                    "space_type_description": "A space type designed for individual study. These spaces typically include seating areas, tables, and other amenities to support focused, independent work."
+                    "space_type_id": 4,
+                    "space_type_name": "Individual study",
+                    "space_type_description": "Designed for individual study, these spaces typically include seating areas, tables, and other amenities to support focused, independent work."
                 },
                 "facility_types": [
                     {
@@ -703,7 +703,7 @@ export default {
                 "space_capacity": 24,
                 "space_latitude": -27.49905,
                 "space_longitude": 153.01453,
-                "space_type": "Individual Study",
+                "space_type": "Individual study",
                 "space_floor_id": 3,
                 "space_floor_name": "3",
                 "space_is_ground_floor": false,
@@ -718,11 +718,11 @@ export default {
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
                 "space_external_book_url": null,
-                "space_type_id": 7,
+                "space_type_id": 4,
                 "space_type_details": {
-                    "space_type_id": 7,
-                    "space_type_name": "Individual Study",
-                    "space_type_description": "A space type designed for individual study. These spaces typically include seating areas, tables, and other amenities to support focused, independent work."
+                    "space_type_id": 4,
+                    "space_type_name": "Individual study",
+                    "space_type_description": "Designed for individual study, these spaces typically include seating areas, tables, and other amenities to support focused, independent work."
                 },
                 "facility_types": [
                     {

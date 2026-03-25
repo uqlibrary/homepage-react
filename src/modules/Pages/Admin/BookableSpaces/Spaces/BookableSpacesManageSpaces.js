@@ -186,6 +186,7 @@ const StyledExpandCollapseTableIconButton = styled(IconButton)(({ theme }) => ({
 const CAMPUS_ID_UNSELECTED = '';
 const LIBRARY_ID_UNSELECTED = '';
 const FLOOR_ID_UNSELECTED = '';
+const SPACE_TYPE_ID_UNSELECTED = '';
 
 export const BookableSpacesManageSpaces = ({
     actions,
@@ -321,6 +322,7 @@ export const BookableSpacesManageSpaces = ({
         { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
         { filterType: 'library', filterValue: LIBRARY_ID_UNSELECTED },
         { filterType: 'floor', filterValue: FLOOR_ID_UNSELECTED },
+        { filterType: 'spaceType', filterValue: SPACE_TYPE_ID_UNSELECTED },
     ]);
     const setSelectedFilters = newFilter => {
         console.log('setSelectedFilters', newFilter);
@@ -341,6 +343,17 @@ export const BookableSpacesManageSpaces = ({
             } else if (f?.filterType === 'floor') {
                 if (f?.filterValue !== FLOOR_ID_UNSELECTED && space?.space_floor_id !== f?.filterValue) {
                     showSpaceByFilter = false;
+                }
+            } else if (f?.filterType === 'spaceType') {
+                if (f?.filterValue !== SPACE_TYPE_ID_UNSELECTED) {
+                    const spaceTypeId = space?.space_type_id;
+                    if (!!spaceTypeId) {
+                        if (String(spaceTypeId) !== String(f?.filterValue)) {
+                            showSpaceByFilter = false;
+                        }
+                    } else if (String(space?.space_type || '') !== String(f?.filterValue)) {
+                        showSpaceByFilter = false;
+                    }
                 }
             }
         });
@@ -572,6 +585,34 @@ export const BookableSpacesManageSpaces = ({
         const selectedLibraryId = selectedFilters?.find(f => f?.filterType === 'library')?.filterValue;
         const selectedLibrary =
             !!selectedCampus && selectedCampus?.libraries?.find(library => library?.library_id === selectedLibraryId);
+        const selectedSpaceType = selectedFilters?.find(f => f?.filterType === 'spaceType')?.filterValue;
+        const knownSpaceTypes =
+            bookableSpacesRoomList?.data?.known_space_types
+                ?.map(spaceType => ({
+                    id: String(spaceType?.space_type_id),
+                    label: spaceType?.space_type_name,
+                }))
+                ?.filter(spaceType => !!spaceType?.id && !!spaceType?.label) || [];
+        const fallbackSpaceTypes = [
+            ...new Map(
+                (bookableSpacesRoomList?.data?.locations || [])
+                    ?.map(space => {
+                        const id = !!space?.space_type_id
+                            ? String(space?.space_type_id)
+                            : String(space?.space_type || '');
+                        const label = space?.space_type || id;
+                        return [id, { id, label }];
+                    })
+                    ?.filter(([id, spaceType]) => !!id && !!spaceType?.label),
+            ).values(),
+        ];
+        const spaceTypeFilterTypes =
+            (knownSpaceTypes?.length > 0 ? knownSpaceTypes : fallbackSpaceTypes)
+                ?.sort((a, b) => a?.label?.localeCompare(b?.label))
+                ?.map(spaceType => ({
+                    ...spaceType,
+                    id: String(spaceType?.id),
+                })) || [];
         return (
             <>
                 <StyledTableWrapperDiv
@@ -707,6 +748,29 @@ export const BookableSpacesManageSpaces = ({
                                                 {floor?.floor_name}
                                             </MenuItem>
                                         ))}
+                                </Select>
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel id="filter-by-space-type-label" htmlFor="filter-by-space-type-input">
+                                    By space type
+                                </InputLabel>
+                                <Select
+                                    id="filter-by-space-type"
+                                    labelId="filter-by-space-type-label"
+                                    data-testid="filter-by-space-type"
+                                    value={selectedSpaceType || SPACE_TYPE_ID_UNSELECTED}
+                                    onChange={selectFilter('spaceType')}
+                                    inputProps={{
+                                        id: 'filter-by-space-type-input',
+                                        title: 'Filter the displayed Spaces by space type',
+                                    }}
+                                >
+                                    <MenuItem value={SPACE_TYPE_ID_UNSELECTED}>Show all space types</MenuItem>
+                                    {spaceTypeFilterTypes?.map((spaceType, index) => (
+                                        <MenuItem value={spaceType?.id} key={`filter-by-space-type-menuitem-${index}`}>
+                                            {spaceType?.label}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </StyledFilterWrapperDiv>

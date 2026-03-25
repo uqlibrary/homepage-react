@@ -46,6 +46,7 @@ export { default as dlorAdminNotesReducer } from './dlorAdminNotesReducer';
 export { default as dlorKeywordsReducer } from './dlorKeywordsReducer';
 export { default as dlorStatisticsReducer } from './dlorStatisticsReducer';
 export { default as bookableSpacesRoomListReducer } from './bookableSpacesRoomListReducer';
+export { default as bookableSpacesFavouritesReducer } from './bookableSpacesFavouritesReducer';
 export { default as weeklyHoursReducer } from './weeklyHoursReducer';
 export { default as bookablespacesFacilityTypeReducer } from './bookablespacesFacilityTypeReducer';
 export { default as bookableSpaceLocationReducer } from './bookableSpaceLocationReducer';
