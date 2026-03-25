@@ -119,6 +119,7 @@ describe('AssetPanel', () => {
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
         const actionFn = jest.fn();
+        const openConfirmationAlertFn = jest.fn();
         const { getByText, getByTestId } = setup({
             actions: { loadAssetTypes: actionFn, clearAssets: jest.fn() },
             formValues,
@@ -128,11 +129,13 @@ describe('AssetPanel', () => {
             handleChange,
             saveInspectionSaving: false,
             isValid: false,
+            openConfirmationAlert: openConfirmationAlertFn,
         });
 
         expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
         expect(getByTestId('asset_selector-asset-panel')).toBeInTheDocument();
         expect(getByTestId('asset_type_selector-asset-panel')).toBeInTheDocument();
+        expect(openConfirmationAlertFn).not.toHaveBeenCalled();
     });
 
     it('renders component without certain params', () => {
@@ -145,6 +148,7 @@ describe('AssetPanel', () => {
         const newValues = { ...formValues };
         newValues.asset_id_displayed = undefined;
         const actionFn = jest.fn();
+        const openConfirmationAlertFn = jest.fn();
         const { getByText } = setup({
             actions: { loadAssetTypes: actionFn, clearAssets: jest.fn() },
             formValues: newValues,
@@ -154,9 +158,11 @@ describe('AssetPanel', () => {
             handleChange,
             saveInspectionSaving: false,
             isValid: false,
+            openConfirmationAlert: openConfirmationAlertFn,
         });
 
         expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
+        expect(openConfirmationAlertFn).not.toHaveBeenCalled();
     });
 
     it('renders loading spinners', () => {
@@ -465,6 +471,71 @@ describe('AssetPanel', () => {
         );
     });
 
+    describe('useNoResultsAlert', () => {
+        it('calls openConfirmationAlert when assets list is loaded and empty', () => {
+            const openConfirmationAlertFn = jest.fn();
+            // eslint-disable-next-line no-unused-vars
+            const handleChange = jest.fn(prop => jest.fn(event => {}));
+            setup({
+                actions: { loadAssetTypes: jest.fn(), clearAssets: jest.fn() },
+                formValues,
+                location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
+                resetForm: jest.fn(),
+                assignCurrentAsset: jest.fn(),
+                handleChange,
+                openConfirmationAlert: openConfirmationAlertFn,
+                state: {
+                    testTagAssetsReducer: { assetsList: [], assetsListLoaded: true, assetsListLoading: false },
+                },
+            });
+
+            expect(openConfirmationAlertFn).toHaveBeenCalledWith(
+                expect.stringContaining('No matching asset found'),
+                'error',
+            );
+        });
+
+        it('does not call openConfirmationAlert when assets list is loaded and non-empty', () => {
+            const openConfirmationAlertFn = jest.fn();
+            // eslint-disable-next-line no-unused-vars
+            const handleChange = jest.fn(prop => jest.fn(event => {}));
+            setup({
+                actions: { loadAssetTypes: jest.fn(), clearAssets: jest.fn() },
+                formValues,
+                location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
+                resetForm: jest.fn(),
+                assignCurrentAsset: jest.fn(),
+                handleChange,
+                openConfirmationAlert: openConfirmationAlertFn,
+                state: {
+                    testTagAssetsReducer: { assetsList: assetData, assetsListLoaded: true, assetsListLoading: false },
+                },
+            });
+
+            expect(openConfirmationAlertFn).not.toHaveBeenCalled();
+        });
+
+        it('does not call openConfirmationAlert when assets list is not yet loaded', () => {
+            const openConfirmationAlertFn = jest.fn();
+            // eslint-disable-next-line no-unused-vars
+            const handleChange = jest.fn(prop => jest.fn(event => {}));
+            setup({
+                actions: { loadAssetTypes: jest.fn(), clearAssets: jest.fn() },
+                formValues,
+                location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
+                resetForm: jest.fn(),
+                assignCurrentAsset: jest.fn(),
+                handleChange,
+                openConfirmationAlert: openConfirmationAlertFn,
+                state: {
+                    testTagAssetsReducer: { assetsList: [], assetsListLoaded: false, assetsListLoading: true },
+                },
+            });
+
+            expect(openConfirmationAlertFn).not.toHaveBeenCalled();
+        });
+    });
+
     describe('all teams switch', () => {
         it('calls loadAssetsFiltered when toggling all teams after a search', async () => {
             const searchPattern = 'UQL310000';
@@ -513,6 +584,7 @@ describe('AssetPanel', () => {
                     loadAssetsFiltered: loadAssetsFilteredFn,
                 },
                 formValues,
+                selectedAsset: { asset_team_slug: 'WSS' },
                 location: { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 },
                 resetForm: jest.fn(),
                 assignCurrentAsset: jest.fn(),
@@ -527,6 +599,7 @@ describe('AssetPanel', () => {
             // Ensure toggle is ON before testing the OFF toggle
             const toggle = getByRole('checkbox', { name: 'All team assets' });
             await userEvent.click(toggle);
+            await expect(getByTestId('asset_panel-all-teams-switch')).toBeChecked();
 
             loadAssetsFilteredFn.mockClear();
 

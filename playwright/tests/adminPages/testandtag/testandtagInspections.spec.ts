@@ -260,6 +260,17 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toHaveValue('Power Cord - C13');
             });
 
+            test('should show error alert if no matching assets are found', async ({ page, context }) => {
+                await context.clearCookies({ name: COOKIE_INCLUDE_ALL_TEAMS });
+                await page.reload();
+
+                await expect(page.getByTestId('asset_panel-all-teams-switch')).not.toBeChecked();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 });
+                await page.getByTestId('asset_selector-asset-panel-input').fill('UQL00SP29');
+                await expect(page.getByTestId('confirmation_alert-error-alert')).toContainText(
+                    'No matching asset found.',
+                );
+            });
             test('should not show other teams assets when all teams switch is off', async ({ page, context }) => {
                 await context.clearCookies({ name: COOKIE_INCLUDE_ALL_TEAMS });
                 await page.reload();

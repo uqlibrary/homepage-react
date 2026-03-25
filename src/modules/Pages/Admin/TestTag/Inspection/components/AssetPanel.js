@@ -27,6 +27,16 @@ const componentIdLower = 'asset_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
+export const useNoResultsAlert = (message, openConfirmationAlert) => {
+    const { assetsList, assetsListLoaded } = useSelector(state => state.get?.('testTagAssetsReducer'));
+    React.useEffect(() => {
+        if (assetsListLoaded && assetsList.length === 0) {
+            openConfirmationAlert(message, 'error');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [assetsListLoaded, assetsList.length]);
+};
+
 const AssetPanel = ({
     actions,
     formValues,
@@ -46,6 +56,8 @@ const AssetPanel = ({
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
     const { inspectionConfigLoading } = useSelector(state => state.get?.('testTagOnLoadInspectionReducer'));
+
+    useNoResultsAlert(pageLocale.noMatchingAssets, openConfirmationAlert);
 
     const { user } = useAccountUser();
 
@@ -128,8 +140,7 @@ const AssetPanel = ({
             // only reset the asset list when disabling the 'all' option, and when
             // the user already selected an asset that is outside their team
             actions.clearAssets();
-        }
-        if (searchTerm !== undefined) {
+        } else if (searchTerm !== undefined) {
             const filters = createFilter(value);
             actions.loadAssetsFiltered(searchTerm, filters);
         }
