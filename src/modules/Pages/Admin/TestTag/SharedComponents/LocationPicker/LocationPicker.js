@@ -7,6 +7,9 @@ import FormControl from '@mui/material/FormControl';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import Popper from '@mui/material/Popper';
+import InputAdornment from '@mui/material/InputAdornment';
+import MapIcon from '@mui/icons-material/Map';
+import IconButton from '@mui/material/IconButton';
 
 const rootId = 'location_picker';
 const inputLabelProps = { shrink: true };
@@ -273,7 +276,27 @@ const LocationPicker = ({
                                                         id={`${componentId}-floor-progress`}
                                                         data-testid={`${componentId}-floor-progress`}
                                                     />
-                                                ) : null}
+                                                ) : (
+                                                    floorList?.find(floor => floor.floor_id === location.floor)
+                                                        ?.floor_plan_url && (
+                                                        <InputAdornment position="end">
+                                                            <IconButton
+                                                                component="a"
+                                                                href={
+                                                                    floorList.find(
+                                                                        floor => floor.floor_id === location.floor,
+                                                                    )?.floor_plan_url
+                                                                }
+                                                                title="click to open floor plan"
+                                                                target="_blank"
+                                                                edge="end"
+                                                                size="small"
+                                                            >
+                                                                <MapIcon fontSize="small" />
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    )
+                                                )}
                                                 {params.InputProps.endAdornment}
                                             </React.Fragment>
                                         ),
