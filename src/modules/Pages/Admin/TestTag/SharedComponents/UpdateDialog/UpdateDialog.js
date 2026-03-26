@@ -155,8 +155,7 @@ export const UpdateDialogue = ({
                                                         id: `${field}-input`,
                                                         name: field,
                                                         label: dataColumns[field].label,
-                                                        error:
-                                                            dataFields[field]?.validate?.(data?.[field], data) ?? false,
+                                                        error: dataFields[field]?.validate?.(data?.[field], data),
                                                         checked: !!data?.[field],
                                                         onChange: handleChange,
                                                         onClick: _onClickAction,
