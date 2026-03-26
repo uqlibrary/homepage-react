@@ -7,9 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import Popper from '@mui/material/Popper';
-import InputAdornment from '@mui/material/InputAdornment';
-import MapIcon from '@mui/icons-material/Map';
-import IconButton from '@mui/material/IconButton';
+import FloorMapAdornment from './FloorMapAdornment';
 
 const rootId = 'location_picker';
 const inputLabelProps = { shrink: true };
@@ -277,25 +275,9 @@ const LocationPicker = ({
                                                         data-testid={`${componentId}-floor-progress`}
                                                     />
                                                 ) : (
-                                                    floorList?.find(floor => floor.floor_id === location.floor)
-                                                        ?.floor_plan_url && (
-                                                        <InputAdornment position="end">
-                                                            <IconButton
-                                                                component="a"
-                                                                href={
-                                                                    floorList.find(
-                                                                        floor => floor.floor_id === location.floor,
-                                                                    )?.floor_plan_url
-                                                                }
-                                                                title="click to open floor plan"
-                                                                target="_blank"
-                                                                edge="end"
-                                                                size="small"
-                                                            >
-                                                                <MapIcon fontSize="small" />
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    )
+                                                    <FloorMapAdornment
+                                                        {...floorList?.find(floor => floor.floor_id === location.floor)}
+                                                    />
                                                 )}
                                                 {params.InputProps.endAdornment}
                                             </React.Fragment>
