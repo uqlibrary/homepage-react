@@ -71,6 +71,7 @@ export default {
                 "space_type_description": "Designed for communal activities, these spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
             },
             space_campus_name: "St Lucia",
+            space_draftmode: true,
             "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/111',
             facility_types: [
                 {

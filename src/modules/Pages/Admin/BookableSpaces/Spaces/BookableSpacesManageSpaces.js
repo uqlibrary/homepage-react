@@ -26,6 +26,7 @@ import Typography from '@mui/material/Typography';
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -861,7 +862,21 @@ export const BookableSpacesManageSpaces = ({
                                                         style={{ paddingBlock: '0.5rem' }}
                                                     >
                                                         <div>
-                                                            {bookableSpace?.space_name}
+                                                            {!!bookableSpace?.space_draftmode && (
+                                                                <WarningAmberIcon
+                                                                    style={{
+                                                                        width: '1rem',
+                                                                        marginRight: '0.35rem',
+                                                                        color: '#ed6c02',
+                                                                        verticalAlign: 'text-bottom',
+                                                                    }}
+                                                                    titleAccess="This Space is currently in draft mode"
+                                                                    data-testid={`space-${bookableSpace?.space_id}-draftmode-icon`}
+                                                                />
+                                                            )}
+                                                            <span data-testid={`space-${bookableSpace?.space_id}-name`}>
+                                                                {bookableSpace?.space_name}
+                                                            </span>
                                                             <IconButton
                                                                 color="primary"
                                                                 data-testid={`edit-space-${bookableSpace?.space_id}-button`}

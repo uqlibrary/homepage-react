@@ -122,6 +122,7 @@ export const BookableSpacesEditSpace = ({
                 campus_id: bookableSpaceGetResult?.data?.space_campus_id,
                 space_description: bookableSpaceGetResult?.data?.space_description,
                 space_capacity: bookableSpaceGetResult?.data?.space_capacity || 1,
+                space_draftmode: !!bookableSpaceGetResult?.data?.space_draftmode,
                 space_external_book_url: bookableSpaceGetResult?.data?.space_external_book_url,
                 space_id: bookableSpaceGetResult?.data?.space_id,
                 space_is_ground_floor: bookableSpaceGetResult?.data?.space_is_ground_floor,
