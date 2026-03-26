@@ -133,6 +133,7 @@ export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
     const apiUrl = `/test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
+    console.log(1, apiUrl);
     return {
         apiUrl,
     };
@@ -194,6 +195,7 @@ export const TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST = ({
     locationId,
     inspectionDateFrom,
     inspectionDateTo,
+    teamSlug,
 }) => {
     const urlParams = {
         ...(!!assetStatus ? { asset_status: assetStatus } : {}),
@@ -201,10 +203,13 @@ export const TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST = ({
         ...(!!locationId ? { location_id: locationId } : {}),
         ...(!!inspectionDateFrom ? { inspection_date_from: inspectionDateFrom } : {}),
         ...(!!inspectionDateTo ? { inspection_date_to: inspectionDateTo } : {}),
+        ...(!!teamSlug ? { team_slug: teamSlug } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = Object.keys(urlParams).length > 0;
     const apiUrl = `test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
+    console.log(2, apiUrl);
+
     return {
         apiUrl,
     };

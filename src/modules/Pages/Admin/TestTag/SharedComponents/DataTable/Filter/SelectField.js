@@ -1,4 +1,8 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+
+import _ from 'lodash';
+
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -6,9 +10,6 @@ import Select from '@mui/material/Select';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import ClearIcon from '@mui/icons-material/Clear';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import { useEffect } from 'react';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -19,6 +20,13 @@ const MenuProps = {
         },
     },
 };
+
+export const createFilter = (field, ids) => ({
+    columnField: field,
+    operatorValue: 'isAnyOf',
+    operator: 'isAnyOf',
+    value: ids.map(v => String(v)),
+});
 
 /**
  * @param {string} field
@@ -34,15 +42,7 @@ const updateFilter = (field, setFilterModel, ids) =>
 
         return {
             ...prev,
-            items: [
-                ...rest,
-                {
-                    columnField: field,
-                    operatorValue: 'isAnyOf',
-                    operator: 'isAnyOf',
-                    value: ids.map(v => String(v)),
-                },
-            ],
+            items: [...rest, createFilter(field, ids)],
         };
     });
 
@@ -63,7 +63,6 @@ const SelectField = ({ field, options, locale, filterModel, setFilterModel, ...r
             /* istanbul ignore next */ [],
         [activeFilterValues, options],
     );
-
     // handles filter values that were once active but are no longer available within the current options
     /* istanbul ignore next */
     useEffect(() => {

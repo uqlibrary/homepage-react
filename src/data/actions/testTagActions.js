@@ -861,6 +861,7 @@ export function loadAssetReportByFilters({
     locationId,
     inspectionDateFrom,
     inspectionDateTo,
+    teamSlug,
 }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_REPORT_LOADING });
@@ -871,6 +872,7 @@ export function loadAssetReportByFilters({
                 locationId,
                 inspectionDateFrom,
                 inspectionDateTo,
+                teamSlug,
             }),
         )
             .then(response => {

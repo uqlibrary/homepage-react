@@ -26,6 +26,9 @@ import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 import * as _ from 'lodash';
 import { GridWrapper } from '../../../SharedComponents/LocationPicker/LocationPicker';
 import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+
+import { useUserTeams } from '../../../helpers/teams';
+
 const moment = require('moment');
 
 const componentId = 'inspections-due';
@@ -67,7 +70,6 @@ export const getLastLocationWithId = location => {
 const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspectionsDueError }) => {
     const pageLocale = locale.pages.report.inspectionsDue;
     const monthsOptions = locale.config.monthsOptions;
-
     const { user } = useAccountUser();
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
@@ -87,20 +89,12 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
 
-    const teamList = React.useMemo(() => {
-        const list =
-            user?.department_teams?.map(team => ({
-                id: team.id,
-                team_slug: team.team_slug,
-                label: team.team_display_name,
-            })) ?? /* istanbul ignore next */ [];
-        return [{ id: -1, label: 'All teams' }, ...list];
-    }, [user]);
-
     const prevSearchRef = useRef({ locationStr: '', monthRange, team: '' });
 
     const [filterModel, setFilterModel] = useState({ items: [] });
-    const [selectedTeam, setSelectedTeam] = useState({ items: [] });
+
+    const { userTeamList, selectedTeam, selectedTeamSlug, teamSelectFieldName, setSelectedTeam } = useUserTeams(user);
+    console.log(selectedTeam, selectedTeamSlug);
 
     const uniqueAssetTypeList = React.useMemo(() => extractAssetTypeData(inspectionsDue), [inspectionsDue]);
 
@@ -120,22 +114,18 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
 
     useEffect(() => {
         const locationStr = JSON.stringify(location);
-        const team =
-            selectedTeam.items.length > 0
-                ? teamList.find(team => team.id === parseInt(selectedTeam.items[0].value[0], 10))?.team_slug
-                : '';
 
         if (
             prevSearchRef.current.locationStr === locationStr &&
             prevSearchRef.current.monthRange === monthRange &&
-            prevSearchRef.current.team === team
+            prevSearchRef.current.team === selectedTeamSlug
         ) {
             return;
         }
         prevSearchRef.current = {
             locationStr,
             monthRange,
-            team,
+            selectedTeamSlug,
         };
 
         // const locationId = location[selectedLocation];
@@ -144,9 +134,18 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
             period: monthRange,
             periodType: 'month',
             ...newLocation,
-            teamSlug: team,
+            teamSlug: selectedTeamSlug,
         });
-    }, [actions, lastSelectedLocation, location, monthRange, selectedLocation, selectedTeam, teamList]);
+    }, [
+        actions,
+        lastSelectedLocation,
+        location,
+        monthRange,
+        selectedLocation,
+        selectedTeam,
+        selectedTeamSlug,
+        userTeamList,
+    ]);
 
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
@@ -163,6 +162,17 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
             <StyledWrapper>
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
+                        <GridWrapper withGrid divisor={2}>
+                            <SelectField
+                                field={teamSelectFieldName}
+                                options={userTeamList}
+                                locale={{ all: 'All teams', label: 'Team' }}
+                                filterModel={selectedTeam}
+                                setFilterModel={setSelectedTeam}
+                            />
+                        </GridWrapper>
+                    </Grid>
+                    <Grid container spacing={3}>
                         <AutoLocationPicker
                             id={componentId}
                             actions={actions}
@@ -173,7 +183,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                         />
                     </Grid>
                     <Grid container spacing={3}>
-                        <GridWrapper withGrid divisor={3}>
+                        <GridWrapper withGrid divisor={2}>
                             <MonthsSelector
                                 id={componentId}
                                 label={pageLocale.form.filterToDateLabel}
@@ -189,7 +199,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                                 classNames={{ formControl: 'formControl', select: 'formSelect' }}
                             />
                         </GridWrapper>
-                        <GridWrapper withGrid divisor={3}>
+                        <GridWrapper withGrid divisor={2}>
                             <SelectField
                                 field="asset_type_id"
                                 options={uniqueAssetTypeList}
@@ -197,15 +207,6 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                                 filterModel={filterModel}
                                 setFilterModel={setFilterModel}
                                 multiple
-                            />
-                        </GridWrapper>
-                        <GridWrapper withGrid divisor={3}>
-                            <SelectField
-                                field="team_display_name"
-                                options={teamList}
-                                locale={{ all: 'All teams', label: 'Teams' }}
-                                filterModel={selectedTeam}
-                                setFilterModel={setSelectedTeam}
                             />
                         </GridWrapper>
                     </Grid>
