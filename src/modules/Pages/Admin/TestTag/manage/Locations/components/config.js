@@ -7,6 +7,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { createLocationString } from '../../../helpers/helpers';
 import { isEmptyStr } from '../../../helpers/helpers';
+import { isValidUrl } from '../../../../Alerts/Form/AlertForm';
+import Link from '@mui/material/Link';
+import MapIcon from '@mui/icons-material/Map';
 
 export default {
     site: {
@@ -149,6 +152,57 @@ export default {
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
+            },
+            floor_plan_url: {
+                component: props => (
+                    <TextField
+                        variant="standard"
+                        {...props}
+                        inputProps={{ ...props.inputProps, maxLength: 255 }}
+                        helperText={locale.pages.general.helperText.maxChars(255)}
+                        required={false}
+                    />
+                ),
+                validate: v => !!v?.trim?.().length && !isValidUrl(v),
+                fieldParams: {
+                    canEdit: true,
+                    renderInTable: true,
+                    renderInAdd: true,
+                    renderInUpdate: true,
+                    flex: 2,
+                    minWidth: 150,
+                    renderCell: params => {
+                        const href = params?.value?.trim();
+                        if (!href) return null;
+
+                        return (
+                            <Link
+                                href={href}
+                                title={href}
+                                target="_blank"
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 6,
+                                    width: '100%',
+                                    overflow: 'hidden',
+                                    textDecoration: 'none',
+                                }}
+                            >
+                                <MapIcon style={{ flexShrink: 0 }} />
+                                <span
+                                    style={{
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                    }}
+                                >
+                                    {href}
+                                </span>
+                            </Link>
+                        );
+                    },
+                },
             },
             asset_count: {
                 fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 140 },

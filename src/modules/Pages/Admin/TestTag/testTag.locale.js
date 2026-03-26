@@ -573,6 +573,9 @@ export default {
                             floor_id: {
                                 label: 'Floor ID',
                             },
+                            floor_plan_url: {
+                                label: 'Floor plan URL',
+                            },
                             floor_location: {
                                 label: 'Floor name',
                             },
