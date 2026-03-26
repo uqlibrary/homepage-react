@@ -550,6 +550,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_floor_id: 1,
             space_name: '01-W431', // required field
             space_type_id: 1, // required field
+            space_draftmode: true,
             facility_types: [],
             space_capacity: 1,
             space_precise: '',
@@ -871,6 +872,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_floor_id: 32,
             space_name: 'New space name', // required field
             space_type_id: selectedSpaceTypeId, // required field
+            space_draftmode: true,
             facility_types: finalFilters,
             space_precise: 'somewhere deep in the bowels of the warehouse',
             space_description: '<p>a long description that has a number of words</p>',
@@ -1017,6 +1019,7 @@ test.describe('booking link controller works properly', () => {
         const expectedValues = {
             ...originalMockData('f98g_fwas_5g33'),
             // space_type_id: 1,
+            space_draftmode: true,
             space_capacity: 1,
             space_external_book_url: null,
         };
@@ -1054,6 +1057,7 @@ test.describe('booking link controller works properly', () => {
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
             space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
+            space_draftmode: false,
             space_opening_hours_id: -1, // might need to look into this?
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1117,6 +1121,7 @@ test.describe('booking link controller works properly', () => {
         const expectedValues = {
             ...originalMockData('97fd5_nm39_gh29'),
             space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
+            space_draftmode: false,
             space_opening_hours_id: -1, // might need to look into this?
             space_external_book_url: 'http://example.com',
         };
