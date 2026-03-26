@@ -1000,7 +1000,7 @@ export const EditSpaceForm = ({
                     <FormControlLabel
                         label={
                             <span data-testid="space-draftmode-label">
-                                Draft mode (this Space will not be displayed until draft mode is disabled and it is
+                                Draft mode (this Space will not be displayed until draft mode is disabled, and it is
                                 ready to publish)
                             </span>
                         }
