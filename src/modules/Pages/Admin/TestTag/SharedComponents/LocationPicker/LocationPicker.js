@@ -7,7 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import Popper from '@mui/material/Popper';
-import FloorMapAdornment from './FloorMapAdornment';
+import FloorPlanAdornment from './FloorPlanAdornment';
 
 const rootId = 'location_picker';
 const inputLabelProps = { shrink: true };
@@ -275,7 +275,7 @@ const LocationPicker = ({
                                                         data-testid={`${componentId}-floor-progress`}
                                                     />
                                                 ) : (
-                                                    <FloorMapAdornment
+                                                    <FloorPlanAdornment
                                                         {...floorList?.find(floor => floor.floor_id === location.floor)}
                                                     />
                                                 )}

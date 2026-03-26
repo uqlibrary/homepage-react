@@ -1,10 +1,10 @@
 import React from 'react';
-import FloorMapAdornment from './FloorMapAdornment';
+import FloorPlanAdornment from './FloorPlanAdornment';
 import { render, screen } from '@testing-library/react';
 
-const setup = floor => render(<FloorMapAdornment {...floor} />);
+const setup = floor => render(<FloorPlanAdornment {...floor} />);
 
-describe('FloorMapAdornment', () => {
+describe('FloorPlanAdornment', () => {
     it('should not render link when url is not available', () => {
         const { container } = setup({ floor_id: 1 });
         expect(container.firstChild).toBeNull();

@@ -5,7 +5,7 @@ import MapIcon from '@mui/icons-material/Map';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { Tooltip } from '@mui/material';
 
-const FloorMapAdornment = floor => {
+const FloorPlanAdornment = floor => {
     const url = floor?.floor_plan_url?.trim?.();
     if (!url) return null;
 
@@ -13,6 +13,7 @@ const FloorMapAdornment = floor => {
         <InputAdornment position="end">
             <Tooltip title={locale.pages.inspect.form.event.location.floor.floorPlanTooltip}>
                 <IconButton
+                    data-testid="floor-plan-adornment"
                     component="a"
                     href={url}
                     target="_blank"
@@ -31,4 +32,4 @@ const FloorMapAdornment = floor => {
     );
 };
 
-export default React.memo(FloorMapAdornment);
+export default React.memo(FloorPlanAdornment);
