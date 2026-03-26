@@ -182,6 +182,7 @@ const StyledMapWrapperDiv = styled('div')(({ theme }) => ({
 export const BookableSpacesList = ({
     actions,
     bookableSpacesRoomList,
+    bookableSpacesRoomListIncludesDrafts,
     bookableSpacesRoomListLoading,
     bookableSpacesRoomListError,
     weeklyHours,
@@ -236,9 +237,13 @@ export const BookableSpacesList = ({
             !!breadcrumbs?.bookablespaces?.title &&
             siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
         if (
-            bookableSpacesRoomListError === null &&
-            bookableSpacesRoomListLoading === null &&
-            bookableSpacesRoomList === null
+            (bookableSpacesRoomListError === null &&
+                bookableSpacesRoomListLoading === null &&
+                bookableSpacesRoomList === null) ||
+            (bookableSpacesRoomListLoading === false &&
+                bookableSpacesRoomListError === false &&
+                !!bookableSpacesRoomList &&
+                bookableSpacesRoomListIncludesDrafts === true)
         ) {
             actions.loadAllBookableSpacesRooms();
         }
@@ -787,6 +792,7 @@ export const BookableSpacesList = ({
 BookableSpacesList.propTypes = {
     actions: PropTypes.any,
     bookableSpacesRoomList: PropTypes.any,
+    bookableSpacesRoomListIncludesDrafts: PropTypes.bool,
     bookableSpacesRoomListLoading: PropTypes.bool,
     bookableSpacesRoomListError: PropTypes.any,
     weeklyHours: PropTypes.any,
