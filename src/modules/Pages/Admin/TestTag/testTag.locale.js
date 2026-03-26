@@ -289,7 +289,7 @@ export default {
                     location: {
                         title: 'Location',
                         floor: {
-                            floorPlanButtonTitle: 'click to see floor plan',
+                            floorPlanTooltip: 'click to open floor plan in a new tab',
                         },
                     },
                 },
