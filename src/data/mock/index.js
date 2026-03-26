@@ -1558,7 +1558,7 @@ mock.onGet('exams/course/FREN1010/summary')
         }
     })
     .onGet(routes.SPACES_ALL_API().apiUrl)
-    .reply(() => {
+    .reply(config => {
         if (responseType === 'error-spaces') {
             return [500, {}];
         } else if (responseType === 'empty-spaces') {
@@ -1566,7 +1566,25 @@ mock.onGet('exams/course/FREN1010/summary')
         } else if (responseType === '404-spaces') {
             return [404, {}];
         } else {
-            return [200, bookableSpaces_all];
+            const includeDrafts =
+                config?.params?.include_drafts === true ||
+                config?.params?.include_drafts === 'true' ||
+                (config?.url || '').includes('include_drafts=true');
+
+            if (includeDrafts) {
+                return [200, bookableSpaces_all];
+            }
+
+            return [
+                200,
+                {
+                    ...bookableSpaces_all,
+                    data: {
+                        ...bookableSpaces_all?.data,
+                        locations: (bookableSpaces_all?.data?.locations || []).filter(space => !space?.space_draftmode),
+                    },
+                },
+            ];
         }
     })
     // SPACES_SINGLE_API
