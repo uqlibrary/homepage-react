@@ -305,9 +305,14 @@ export const LOANS_API = () => ({
 });
 
 // Spaces APIs
-export const SPACES_ALL_API = () => ({
+export const SPACES_ALL_API = ({ includeDrafts } = {}) => ({
     apiUrl: 'bookable_spaces/spaces/all',
-    options: { params: { ts: `${new Date().getTime()}` } },
+    options: {
+        params: {
+            ...(includeDrafts === true ? { include_drafts: true } : {}),
+            ts: `${new Date().getTime()}`,
+        },
+    },
 });
 export const SPACES_SINGLE_API = ({ uuid }) => ({ apiUrl: `bookable_spaces/space/${uuid}` });
 
