@@ -1099,6 +1099,7 @@ export default {
                 helperText: {
                     user_uid: 'A user ID must contain only lower case letters and numbers',
                     user_licence_number: 'A licence number is required for inspect privilege',
+                    licence_update_warning: 'Updating this field will associate a new LIC with the user.',
                     user_name: 'A user name is required',
                     user_team: 'A user team is required',
                 },

@@ -207,7 +207,7 @@ apiClient.interceptors.response.use(
         }
 
         if (!!errorMessage) {
-            return Promise.reject({ ...errorMessage });
+            return Promise.reject(typeof errorMessage === 'string' ? errorMessage : { ...errorMessage });
         } else {
             return Promise.reject(error);
         }
