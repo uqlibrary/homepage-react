@@ -286,9 +286,11 @@ export default {
                             maxLength: 17,
                         },
                     },
-
                     location: {
                         title: 'Location',
+                        floor: {
+                            floorPlanButtonTitle: 'click to see floor plan',
+                        },
                     },
                 },
                 asset: {
