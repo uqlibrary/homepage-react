@@ -61,6 +61,7 @@ export default [
       "floors": [
         {
           "floor_id": 29,
+          "floor_plan_url": "http://29.a",
           "floor_id_displayed": "29",
           "asset_count": 1,
           "floor_excluded": true,
@@ -68,6 +69,7 @@ export default [
         },
         {
           "floor_id": 30,
+          "floor_plan_url": null,
           "floor_id_displayed": "30",
           "asset_count": 0,
           "floor_excluded": false,
