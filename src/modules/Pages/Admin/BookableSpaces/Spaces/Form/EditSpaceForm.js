@@ -105,6 +105,16 @@ const StyledAttentionMessageDiv = styled('div')(() => ({
     paddingTop: '1rem',
 }));
 
+const StyledDraftModeNotice = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: '0.5rem',
+    backgroundColor: '#fffde7',
+    border: `1px solid ${theme.palette.warning.light}`,
+    borderRadius: '4px',
+    padding: '0.6rem 0.8rem',
+}));
+
 const StyledUqTightLink = styled('a')(({ theme }) => ({
     color: theme.palette.primary.main,
     fontWeight: 500,
@@ -762,6 +772,7 @@ export const EditSpaceForm = ({
         valuesToSend.space_external_book_url = !!formValues?.space_external_book_url
             ? formValues?.space_external_book_url
             : null;
+        valuesToSend.space_draftmode = !!formValues?.space_draftmode;
         valuesToSend.facility_types = formValues?.facility_types?.map(ft => ft?.facility_type_id);
         valuesToSend.space_id = formValues?.space_id;
         valuesToSend.uploadedFile = formValues.uploadedFile;
@@ -984,6 +995,25 @@ export const EditSpaceForm = ({
                             </StyledErrorMessageTypography>
                         </FormControl>
                     </div>
+                </Grid>
+                <Grid item xs={12}>
+                    <FormControlLabel
+                        label={
+                            <span data-testid="space-draftmode-label">
+                                Draft mode (this Space will not be displayed until draft mode is disabled and it is
+                                ready to publish)
+                            </span>
+                        }
+                        data-testid="space-draftmode-checkbox"
+                        control={
+                            <Checkbox
+                                checked={!!formValues?.space_draftmode}
+                                data-testid="space_draftmode"
+                                className={'checkbox'}
+                                onChange={handleChange('space_draftmode')}
+                            />
+                        }
+                    />
                 </Grid>
             </Grid>
         );
@@ -1438,6 +1468,24 @@ export const EditSpaceForm = ({
                                         })}
                                     </Stepper>
                                 </Grid>
+                                {!!formValues?.space_draftmode && (
+                                    <Grid item xs={12} data-testid="space-draftmode-notice">
+                                        <StyledDraftModeNotice data-testid="space-draftmode-notice-stepper-panel">
+                                            <WarningAmberIcon
+                                                style={{ color: theme?.palette.warning.dark }}
+                                                data-testid="space-draftmode-notice-stepper-icon"
+                                            />
+                                            <Typography
+                                                component={'p'}
+                                                variant={'body2'}
+                                                data-testid="space-draftmode-notice-stepper-text"
+                                            >
+                                                This Space is currently in draft mode and will not be displayed until
+                                                draft mode is turned off.
+                                            </Typography>
+                                        </StyledDraftModeNotice>
+                                    </Grid>
+                                )}
                                 {activeStep === firstTabId && aboutPanel()}
                                 {activeStep === secondTabId && facilityTypePanel()}
                                 {activeStep === thirdTabId && locationPanel()}
@@ -1496,6 +1544,24 @@ export const EditSpaceForm = ({
                                         })}
                                     </StyledTabs>
                                 </Box>
+                                {!!formValues?.space_draftmode && (
+                                    <Box sx={{ mt: 2 }} data-testid="space-draftmode-notice">
+                                        <StyledDraftModeNotice data-testid="space-draftmode-notice-tabs-panel">
+                                            <WarningAmberIcon
+                                                style={{ color: theme?.palette.warning.dark }}
+                                                data-testid="space-draftmode-notice-tabs-icon"
+                                            />
+                                            <Typography
+                                                component={'p'}
+                                                variant={'body2'}
+                                                data-testid="space-draftmode-notice-tabs-text"
+                                            >
+                                                This Space is currently in draft mode and will not be displayed in the
+                                                spaces list until draft mode is turned off.
+                                            </Typography>
+                                        </StyledDraftModeNotice>
+                                    </Box>
+                                )}
                                 <CustomTabPanel value={panelId} index={firstTabId}>
                                     {aboutPanel()}
                                 </CustomTabPanel>

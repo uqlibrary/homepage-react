@@ -138,6 +138,7 @@ export const BookableSpacesAddSpace = ({
                 ['space_latitude']: _mostRecentSpace?.space_latitude,
                 ['space_longitude']: _mostRecentSpace?.space_longitude,
                 ['space_capacity']: 1, // default value
+                ['space_draftmode']: false,
             };
             console.log('set form values 0', newValues);
             setFormValues(newValues);

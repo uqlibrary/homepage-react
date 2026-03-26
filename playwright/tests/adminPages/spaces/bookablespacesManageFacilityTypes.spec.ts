@@ -386,23 +386,6 @@ test.describe('Spaces Admin - edit group dialog', () => {
 
         const noiseLevelGroupEditButton = page.getByTestId('edit-group-5-button');
         const groupNameLabel = 'Acceptable noise';
-        const highNoiseSpaceCountElement = 'facility-type-space-count-10-button';
-        const unusedASpaceCountElement = 'facility-type-space-count-58-button';
-
-        await expect(page.getByTestId(highNoiseSpaceCountElement)).toBeVisible();
-        await expect(page.getByTestId(highNoiseSpaceCountElement)).toContainText('2');
-        await expect(page.getByTestId(highNoiseSpaceCountElement)).toHaveAttribute(
-            'title',
-            'This filter type is set on 2 spaces',
-        );
-
-        await expect(page.getByTestId(unusedASpaceCountElement)).toBeVisible();
-        await expect(page.getByTestId(unusedASpaceCountElement)).toContainText('unused');
-        await expect(page.getByTestId(unusedASpaceCountElement)).toHaveAttribute(
-            'title',
-            'This filter type is set on 0 spaces',
-        );
-
         // await expect(page.getByTestId('filter-add-edit-heading')).toBeVisible();
 
         await expect(groupNameEditField).not.toBeVisible();

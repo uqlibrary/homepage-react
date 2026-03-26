@@ -16,7 +16,7 @@ A repo for the Library of The University of Queensland website homepage
 - E2E tests: `Playwright`
 - WCAG tests: `@axe-core-npm/playwright`
 
-This project is using `npm` for dependency management. Make sure `npm` is installed on your machine.
+This project is using `npm` for dependency management. Make sure `npm` is installed on your machine
 
 ## Installation
 
