@@ -398,7 +398,8 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('room_description-input'), ' update');
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            queryByTestId('update_dialog-locations') &&
+                (await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations')));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
