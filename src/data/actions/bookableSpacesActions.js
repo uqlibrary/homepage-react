@@ -46,17 +46,19 @@ export function loadABookableSpacesRoom(spacesUuid) {
     };
 }
 
-export function loadAllBookableSpacesRooms() {
+export function loadAllBookableSpacesRooms({ includeDrafts } = {}) {
     return dispatch => {
         // dispatch({ type: actions.SPACES_ROOM_LIST_CLEAR });
         dispatch({ type: actions.SPACES_ROOM_LIST_LOADING });
-        console.log('loadAllBookableSpacesRooms start', SPACES_ALL_API());
-        return get(SPACES_ALL_API())
+        const request = SPACES_ALL_API({ includeDrafts });
+        console.log('loadAllBookableSpacesRooms start', request);
+        return get(request)
             .then(response => {
                 console.log('loadAllBookableSpacesRooms loaded', response);
                 dispatch({
                     type: actions.SPACES_ROOM_LIST_LOADED,
                     payload: response,
+                    includeDrafts: includeDrafts === true,
                 });
             })
             .catch(error => {

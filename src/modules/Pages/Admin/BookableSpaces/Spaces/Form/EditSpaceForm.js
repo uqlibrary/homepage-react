@@ -606,7 +606,7 @@ export const EditSpaceForm = ({
 
     function navigateToPage(spacesPath) {
         // reload spaces to get new one
-        actions.loadAllBookableSpacesRooms().then(() => {
+        actions.loadAllBookableSpacesRooms({ includeDrafts: true }).then(() => {
             window.location.href = spacesAdminLink(spacesPath, account);
         });
     }
@@ -1000,7 +1000,7 @@ export const EditSpaceForm = ({
                     <FormControlLabel
                         label={
                             <span data-testid="space-draftmode-label">
-                                Draft mode (this Space will not be displayed until draft mode is disabled and it is
+                                Draft mode (this Space will not be displayed until draft mode is disabled, and it is
                                 ready to publish)
                             </span>
                         }

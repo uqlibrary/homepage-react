@@ -8,7 +8,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
@@ -192,6 +194,7 @@ const SPACE_TYPE_ID_UNSELECTED = '';
 export const BookableSpacesManageSpaces = ({
     actions,
     bookableSpacesRoomList,
+    bookableSpacesRoomListIncludesDrafts,
     bookableSpacesRoomListLoading,
     bookableSpacesRoomListError,
     weeklyHours,
@@ -272,11 +275,15 @@ export const BookableSpacesManageSpaces = ({
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Manage Spaces</span></li>',
         ]);
         if (
-            bookableSpacesRoomListError === null &&
-            bookableSpacesRoomListLoading === null &&
-            bookableSpacesRoomList === null
+            (bookableSpacesRoomListError === null &&
+                bookableSpacesRoomListLoading === null &&
+                bookableSpacesRoomList === null) ||
+            (bookableSpacesRoomListLoading === false &&
+                bookableSpacesRoomListError === false &&
+                !!bookableSpacesRoomList &&
+                bookableSpacesRoomListIncludesDrafts !== true)
         ) {
-            actions.loadAllBookableSpacesRooms();
+            actions.loadAllBookableSpacesRooms({ includeDrafts: true });
         }
         if (weeklyHoursError === null && weeklyHoursLoading === null && weeklyHours === null) {
             actions.loadWeeklyHours();
@@ -324,6 +331,7 @@ export const BookableSpacesManageSpaces = ({
         { filterType: 'library', filterValue: LIBRARY_ID_UNSELECTED },
         { filterType: 'floor', filterValue: FLOOR_ID_UNSELECTED },
         { filterType: 'spaceType', filterValue: SPACE_TYPE_ID_UNSELECTED },
+        { filterType: 'draftOnly', filterValue: false },
     ]);
     const setSelectedFilters = newFilter => {
         console.log('setSelectedFilters', newFilter);
@@ -355,6 +363,10 @@ export const BookableSpacesManageSpaces = ({
                     } else if (String(space?.space_type || '') !== String(f?.filterValue)) {
                         showSpaceByFilter = false;
                     }
+                }
+            } else if (f?.filterType === 'draftOnly' && f?.filterValue === true) {
+                if (!space?.space_draftmode) {
+                    showSpaceByFilter = false;
                 }
             }
         });
@@ -561,14 +573,15 @@ export const BookableSpacesManageSpaces = ({
             return;
         }
         actions.deleteBookableSpace(deleteCandidate.spaceId).then(() => {
-            actions.loadAllBookableSpacesRooms();
+            actions.loadAllBookableSpacesRooms({ includeDrafts: true });
         });
         setDeleteCandidate(null);
     };
 
     const selectFilter = prop => e => {
         console.log('selectFilter', prop, e);
-        resetSelectedFilters(prop, e?.target?.value);
+        const filterValue = e?.target?.hasOwnProperty('checked') ? e?.target?.checked : e?.target?.value;
+        resetSelectedFilters(prop, filterValue);
     };
 
     function displayListOfBookableSpaces() {
@@ -775,6 +788,21 @@ export const BookableSpacesManageSpaces = ({
                                 </Select>
                             </FormControl>
                         </StyledFilterWrapperDiv>
+                        <div data-testid="filter-by-draftmode-wrapper">
+                            <FormControlLabel
+                                label="Show drafts only"
+                                control={
+                                    <Checkbox
+                                        checked={
+                                            selectedFilters?.find(f => f?.filterType === 'draftOnly')?.filterValue ||
+                                            false
+                                        }
+                                        onChange={selectFilter('draftOnly')}
+                                        data-testid="filter-by-draftmode"
+                                    />
+                                }
+                            />
+                        </div>
                     </div>
                     <StyledTableContainer className="tableContainer">
                         <Table
@@ -1069,6 +1097,7 @@ export const BookableSpacesManageSpaces = ({
 BookableSpacesManageSpaces.propTypes = {
     actions: PropTypes.any,
     bookableSpacesRoomList: PropTypes.any,
+    bookableSpacesRoomListIncludesDrafts: PropTypes.bool,
     bookableSpacesRoomListLoading: PropTypes.bool,
     bookableSpacesRoomListError: PropTypes.any,
     weeklyHours: PropTypes.any,

@@ -235,13 +235,7 @@ export const BookableSpacesList = ({
         !!siteHeader &&
             !!breadcrumbs?.bookablespaces?.title &&
             siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
-        if (
-            bookableSpacesRoomListError === null &&
-            bookableSpacesRoomListLoading === null &&
-            bookableSpacesRoomList === null
-        ) {
-            actions.loadAllBookableSpacesRooms();
-        }
+        actions.loadAllBookableSpacesRooms();
         if (weeklyHoursError === null && weeklyHoursLoading === null && weeklyHours === null) {
             actions.loadWeeklyHours();
         }
@@ -337,6 +331,10 @@ export const BookableSpacesList = ({
     }
 
     function showSpace(space, facilityTypeToGroup, selectedFacilityTypes) {
+        if (space?.space_draftmode) {
+            return false;
+        }
+
         const spaceFacilityTypes = space?.facility_types?.map(item => item?.facility_type_id);
 
         // Create a map of facility_type_id to group_id for quick lookup
