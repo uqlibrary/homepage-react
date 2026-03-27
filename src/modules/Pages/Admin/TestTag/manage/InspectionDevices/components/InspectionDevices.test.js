@@ -153,6 +153,43 @@ describe('InspectionDevices', () => {
         });
         expect(actions.addInspectionDevice).rejects.toEqual('Testing 2');
     });
+    it('displays error alert when Add Inspection Device fails', async () => {
+        actions.loadInspectionDevices = jest.fn(() => Promise.resolve());
+        actions.addInspectionDevice = jest.fn(() => Promise.reject('Add error'));
+
+        const { getByText, getByTestId } = setup({ actions: actions });
+
+        expect(
+            getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
+
+        await act(async () => {
+            await fireEvent.click(getByTestId('test-data-table-toolbar-add-button'));
+        });
+
+        await waitFor(() => {
+            expect(getByTestId('device_model_name-input')).toBeInTheDocument();
+        });
+
+        fireEvent.change(getByTestId('device_model_name-input'), { target: { value: 'FAIL MODEL' } });
+        fireEvent.change(getByTestId('device_serial_number-input'), { target: { value: 'FAIL SN' } });
+        fireEvent.change(getByTestId('device_calibrated_by_last-input'), { target: { value: 'FAIL PERSON' } });
+        fireEvent.change(getByTestId('device_calibration_due_date-input'), { target: { value: '2026-06-01' } });
+        fireEvent.change(getByTestId('device_calibrated_date_last-input'), { target: { value: '2026-01-01' } });
+
+        await act(async () => {
+            await fireEvent.click(getByTestId('update_dialog-action-button'));
+        });
+
+        await waitFor(() => {
+            expect(console.error).toHaveBeenCalledWith('Add error');
+        });
+        await waitFor(() => {
+            expect(
+                getByText(locale.config.alerts.failed(locale.pages.manage.inspectiondevices.snackbar.addFail)),
+            ).toBeInTheDocument();
+        });
+    });
     it('Edit Inspection Device functions correctly', async () => {
         const { getByText, getByTestId } = setup({
             actions: actions,
@@ -218,6 +255,41 @@ describe('InspectionDevices', () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
         });
         expect(actions.updateInspectionDevice).rejects.toEqual('Testing Update 1');
+    });
+    it('displays error alert when Edit Inspection Device fails', async () => {
+        actions.loadInspectionDevices = jest.fn(() => Promise.resolve());
+        actions.updateInspectionDevice = jest.fn(() => Promise.reject('Edit error'));
+
+        const { getByText, getByTestId } = setup({ actions: actions });
+
+        expect(
+            getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
+        await waitFor(() => {
+            expect(getByText('AV 025')).toBeVisible();
+        });
+
+        await act(async () => {
+            await fireEvent.click(getByTestId('action_cell-1-edit-button'));
+        });
+        await waitFor(() => {
+            expect(getByTestId('device_model_name-input')).toBeInTheDocument();
+        });
+
+        fireEvent.change(getByTestId('device_model_name-input'), { target: { value: 'FAIL EDIT' } });
+
+        await act(async () => {
+            await fireEvent.click(getByTestId('update_dialog-action-button'));
+        });
+
+        await waitFor(() => {
+            expect(console.error).toHaveBeenCalledWith('Edit error');
+        });
+        await waitFor(() => {
+            expect(
+                getByText(locale.config.alerts.failed(locale.pages.manage.inspectiondevices.snackbar.updateFail)),
+            ).toBeInTheDocument();
+        });
     });
 
     it('Delete Inspection Device functions correctly', async () => {
