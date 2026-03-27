@@ -278,8 +278,8 @@ where all sorts of detailed inspections are possible - network, DOM elements, et
 ###### CI
 
 The above also applies to tests that fail on CI. In this case, the trace files need to be downloaded locally first. They
-are part of the artifacts uploaded to S3 as output of each test stage - please refer to the "Artifacts" section on
-the "Build Details" tab.
+are part of the artifacts uploaded to S3 as the output of each test stage - please refer to the "Artifacts" section on
+the "Build Details" tab in the Build run page.
 
 #### Standardised selectors to target elements
 
@@ -297,7 +297,7 @@ before the component reaches its final state.
 
 ### Code Coverage
 
-We require 100% coverage, but untestable/ unvaluable sections can be exlcude with istanbul (search the code base for examples)
+We require 100% coverage, but untestable/ invaluable sections can be exclude with istanbul (search the code base for examples)
 
 To run the complete test suite and get code coverage, run `npm run test:cc`
 
@@ -307,7 +307,17 @@ This will wipe previous coverage file.
 
 On the server, coverage is checked on these branches: production, master, staging and any branch whose name includes the string 'coverage'
 
-AWS Coverage checking is split between the two pipelines, both to make the run quicker, and because it reduces test flakiness. The package,json has a group of `!` lines in the nyc exclude section. The `bin/codebuild-test.sh` script will reverse some of these for each pipeline (but they are _not excluded_ in a local run, meaning we can split in pipeline on AWS and still check coverage locally!).  
+AWS Coverage checking is split between the different pipelines, both to make the run quicker, and because it reduces test flakiness. The package,json has a group of `!` lines in the nyc exclude section. The `bin/codebuild-test.sh` script will reverse some of these for each pipeline (but they are _not excluded_ in a local run, meaning we can split in pipeline on AWS and still check coverage locally!).
+
+#### Debugging
+
+##### CI
+
+The coverage files are part of the artifacts uploaded to S3 as the output of the last test stage, where the threshold check happens - please refer to the "Artifacts" section on
+the "Build Details" tab in the Build run page.
+
+Once downloaded and extracted to project's root dir, the root path of the files inside the `coverage` dir has to be fixed before they are useful. This can be done by running `npn run debug:cc:fix-path`.
+To recreate the merged report, please refer to how is used `nyc` in `bin/codebuild-coverage.sh`.
 
 ## Mocking
 
