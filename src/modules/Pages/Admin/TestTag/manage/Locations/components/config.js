@@ -163,8 +163,7 @@ export default {
                         required={false}
                     />
                 ),
-                /* istanbul ignore next */
-                validate: v => !!v?.trim?.().length && !isValidUrl(v),
+                validate: v => !!v?.trim?.().length && /* istanbul ignore next */ !isValidUrl(v),
                 fieldParams: {
                     canEdit: true,
                     renderInTable: true,
@@ -174,7 +173,8 @@ export default {
                     minWidth: 150,
                     renderCell: params => {
                         const href = params?.value?.trim();
-                        if (!href) /* istanbul ignore next */ return null;
+                        /* istanbul ignore else */
+                        if (!href) return null;
 
                         /* istanbul ignore next */
                         return (
