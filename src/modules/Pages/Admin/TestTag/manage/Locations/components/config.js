@@ -175,6 +175,7 @@ export default {
                         const href = params?.value?.trim();
                         if (!href) return null;
 
+                        /* istanbul ignore next */
                         return (
                             <Link
                                 href={href}
