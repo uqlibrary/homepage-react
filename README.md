@@ -317,7 +317,7 @@ The coverage files are part of the artifacts uploaded to S3 as the output of the
 the "Build Details" tab in the Build run page.
 
 Once downloaded and extracted to project's root dir, the root path of the files inside the `coverage` dir has to be fixed before they are useful. This can be done by running `npn run debug:cc:fix-path`.
-To recreate the merged report, please refer to how is used `nyc` in `bin/codebuild-coverage.sh`.
+To recreate the merged report, please refer to how `nyc` is used in `bin/codebuild-coverage.sh`.
 
 ## Mocking
 
