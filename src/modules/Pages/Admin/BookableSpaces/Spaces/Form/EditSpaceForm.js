@@ -606,7 +606,7 @@ export const EditSpaceForm = ({
 
     function navigateToPage(spacesPath) {
         // reload spaces to get new one
-        actions.loadAllBookableSpacesRooms().then(() => {
+        actions.loadAllBookableSpacesRooms({ includeDrafts: true }).then(() => {
             window.location.href = spacesAdminLink(spacesPath, account);
         });
     }

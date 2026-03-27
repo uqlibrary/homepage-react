@@ -87,7 +87,7 @@ export const BookableSpacesAddSpace = ({
         if (campusListLoading === null && campusListError === null && campusList === null) {
             actions.loadBookableSpaceCampusChildren(); // get list of campuses, buildings and floors
             console.log('should start bookableSpacesRoomListReducer');
-            actions.loadAllBookableSpacesRooms(); // get list of Spaces
+            actions.loadAllBookableSpacesRooms({ includeDrafts: true }); // get list of Spaces
             actions.loadWeeklyHours(); // get weeklyHours for each library from springshare
             actions.loadAllFacilityTypes(); // get list of facility types
         }

@@ -573,7 +573,7 @@ export const BookableSpacesManageSpaces = ({
             return;
         }
         actions.deleteBookableSpace(deleteCandidate.spaceId).then(() => {
-            actions.loadAllBookableSpacesRooms();
+            actions.loadAllBookableSpacesRooms({ includeDrafts: true });
         });
         setDeleteCandidate(null);
     };
