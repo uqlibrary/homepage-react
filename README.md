@@ -316,7 +316,7 @@ AWS Coverage checking is split between the different pipelines, both to make the
 The coverage files are part of the artifacts uploaded to S3 as the output of the last test stage, where the threshold check happens - please refer to the "Artifacts" section on
 the "Build Details" tab in the Build run page.
 
-Once downloaded and extracted to project's root dir, the root path of the files inside the `coverage` dir has to be fixed before they are useful. This can be done by running `npn run debug:cc:fix-path`.
+Once downloaded and extracted to project's root dir, the root path of the files inside the `coverage` dir have to be fixed before they are useful. This can be done by running either `npm run debug:cc:linux-fix-path` or `npm run debug:cc:macos-fix-path` depending on your OS.
 To recreate the merged report, please refer to how `nyc` is used in `bin/codebuild-coverage.sh`.
 
 ## Mocking

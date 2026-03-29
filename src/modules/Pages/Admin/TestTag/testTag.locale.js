@@ -315,6 +315,11 @@ export default {
                             'Unable to save your new asset type. Please ensure the asset type name you have entered does not already exist in your department',
                     },
                     ownerLabel: 'Asset owner',
+                    includeAllTeams: 'All team assets',
+                    allTeamsAlert: team =>
+                        `Note: The "${team}" team owns this asset. Switching off the "All team assets" option will reset the asset list.`,
+                    noMatchingAssets:
+                        'No matching asset found. This may be due to a misspelling, or because the asset does not belong to your team.',
                 },
                 lastInspectionPanel: {
                     title: suffix => `Previous test ${suffix}`,
@@ -336,6 +341,7 @@ export default {
                     noneLabel: 'None',
                     repairDetailsLabel: 'Repair details: ',
                     discardReasonLabel: 'Discard reason: ',
+                    lastTestedByLabel: 'Last tested by: ',
                 },
                 inspection: {
                     title: 'Test details',
