@@ -758,10 +758,10 @@ export function clearInspectionsDue() {
 }
 
 /* REPORT INSPECTIONS BY LICENCED USER */
-export function getInspectionsByLicencedUser({ startDate, endDate, userRange }) {
+export function getInspectionsByLicencedUser({ startDate, endDate, userRange, teamSlug }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_LOADING });
-        return get(TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({ startDate, endDate, userRange }))
+        return get(TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({ startDate, endDate, userRange, teamSlug }))
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_LOADED,

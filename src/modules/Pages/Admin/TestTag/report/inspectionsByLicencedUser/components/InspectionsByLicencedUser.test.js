@@ -1,5 +1,5 @@
 import React from 'react';
-import { rtlRender, WithRouter, WithReduxStore, waitFor, act, fireEvent, userEvent } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, waitFor, act, fireEvent, userEvent, within } from 'test-utils';
 import Immutable from 'immutable';
 
 import * as actions from '../../../../../../../data/actions/actionTypes';
@@ -127,6 +127,7 @@ describe('InspectionsByLicencedUser', () => {
                     endDate: null,
                     startDate: null,
                     userRange: '5',
+                    teamSlug: 'WSS',
                 }),
             );
             await mockActionsStore.dispatch(tntActions.getInspectionsByLicencedUser({ userRange: [5] }));
@@ -156,6 +157,7 @@ describe('InspectionsByLicencedUser', () => {
                     endDate: '2022-12-31',
                     startDate: '2021-01-01',
                     userRange: '',
+                    teamSlug: 'WSS',
                 }),
             );
             await mockActionsStore.dispatch(
@@ -192,6 +194,36 @@ describe('InspectionsByLicencedUser', () => {
 
             expect(getByText('A start date is required to search by date')).toBeInTheDocument();
         });
+    });
+
+    it('fires action when team filter changes', async () => {
+        const getInspectionsByLicencedUserFn = jest.fn(() => Promise.resolve());
+        const { getByText, findByRole, getByTestId } = setup({
+            actions: { getInspectionsByLicencedUser: getInspectionsByLicencedUserFn },
+        });
+        expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
+
+        expect(getInspectionsByLicencedUserFn).toHaveBeenCalledWith({
+            endDate: null,
+            startDate: null,
+            userRange: '',
+            teamSlug: 'WSS',
+        });
+
+        // open team selector and select WSS team
+        const teamSelect = within(getByTestId('team-display-name-select-filter')).getByRole('combobox');
+        await userEvent.click(teamSelect);
+        const listbox = await findByRole('listbox');
+        await userEvent.click(within(listbox).getByText('Spaces'));
+
+        await waitFor(() =>
+            expect(getInspectionsByLicencedUserFn).toHaveBeenLastCalledWith({
+                endDate: null,
+                startDate: null,
+                userRange: '',
+                teamSlug: 'SPACES',
+            }),
+        );
     });
 
     describe('coverage', () => {

@@ -139,4 +139,28 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
             `${currentYear}-${currentMonth}-12`,
         );
     });
+
+    test('team selector functions as expected', async ({ page }) => {
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await assertTitles(
+            page,
+            locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Work Station Support', 'Library'),
+        );
+        await forcePageRefresh(page);
+        await expect(
+            page.getByTestId('team-display-name-select-filter').getByText('Work Station Support'),
+        ).toBeVisible();
+
+        await expect(page.getByText('uqtest7')).toBeVisible();
+        await expect(page.getByText('uqtest15')).not.toBeVisible();
+
+        await page.getByTestId('team-display-name-select-filter').click();
+        await page.getByRole('option', { name: 'Spaces' }).click();
+
+        await expect(page.getByText('uqtest7')).not.toBeVisible();
+        await expect(page.getByText('uqtest15')).toBeVisible();
+        await page.getByTestId('team-display-name-select-filter-clear-button').click();
+        await expect(page.getByText('uqtest7')).toBeVisible();
+        await expect(page.getByText('uqtest15')).toBeVisible();
+    });
 });

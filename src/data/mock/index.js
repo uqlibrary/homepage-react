@@ -1418,13 +1418,56 @@ mock.onGet('exams/course/FREN1010/summary')
     //         },
     //     ];
     // })
+
     .onGet(
         new RegExp(
-            panelRegExp(
+            escapeRegExp(
                 routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
                     startDate: null,
                     endDate: null,
                     userRange: null,
+                    teamSlug: 'WSS',
+                }).apiUrl,
+            ),
+        ),
+    )
+    .reply(() => [
+        200,
+        {
+            data: {
+                user_inspections: test_tag_inspections_by_licenced_user.data.user_inspections.filter(
+                    user => user.user_team === 'WSS',
+                ),
+            },
+        },
+    ])
+    .onGet(
+        new RegExp(
+            escapeRegExp(
+                routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
+                    teamSlug: 'SPACES',
+                }).apiUrl,
+            ),
+        ),
+    )
+    .reply(() => [
+        200,
+        {
+            data: {
+                user_inspections: test_tag_inspections_by_licenced_user.data.user_inspections.filter(
+                    user => user.user_team === 'SPACES',
+                ),
+            },
+        },
+    ])
+    .onGet(
+        new RegExp(
+            escapeRegExp(
+                routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
+                    startDate: null,
+                    endDate: null,
+                    userRange: null,
+                    teamSlug: null,
                 }).apiUrl,
             ),
         ),

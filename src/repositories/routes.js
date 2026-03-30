@@ -1,5 +1,5 @@
 export const zeroPaddedYear = value => (value ? ('0000' + value).substr(-4) : '*');
-import { API_URL } from '../config';
+import { api, API_URL } from '../config';
 
 export const CURRENT_ACCOUNT_API = () => ({
     apiUrl: 'account',
@@ -135,7 +135,6 @@ export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
     const apiUrl = `/test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
-    console.log(1, apiUrl);
     return {
         apiUrl,
     };
@@ -174,10 +173,11 @@ export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, 
     };
 };
 /* TEST AND TAG INSPECTIONS BY LICENCED USER */
-export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({ startDate, endDate, userRange }) => {
+export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({ startDate, endDate, userRange, teamSlug }) => {
     const urlParams = {
         ...(!!startDate && !!endDate ? { start_date: startDate, end_date: endDate } : {}),
         ...(!!userRange ? { user_range: userRange } : {}),
+        ...(!!teamSlug ? { team_slug: teamSlug } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = Object.keys(urlParams).length > 0;
@@ -210,7 +210,6 @@ export const TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST = ({
     const qs = new URLSearchParams(urlParams);
     const hasParams = Object.keys(urlParams).length > 0;
     const apiUrl = `test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
-    console.log(2, apiUrl);
 
     return {
         apiUrl,
