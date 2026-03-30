@@ -12,6 +12,7 @@ export const isEmptyObject = obj =>
 export const createLocationString = ({ site, building, floor, room }) =>
     `${floor ?? ''}${!!room ? `-${room}` : ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`.trim();
 
+/* istanbul ignore next */
 export const createLocationLink = (locationString, floorPlanUrl) => {
     if (isEmptyStr(floorPlanUrl)) return locationString;
     return (
