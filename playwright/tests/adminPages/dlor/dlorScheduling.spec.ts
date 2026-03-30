@@ -4,31 +4,22 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 
 import moment from 'moment-timezone';
 
+const TEST_TIMEZONE = 'Australia/Brisbane';
+
 function getTomorrowDate() {
-    const tomorrow = new Date();
-    // Move the date forward by 1 day
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrow = moment()
+        .tz(TEST_TIMEZONE)
+        .add(1, 'day');
+    const expectedDateString = tomorrow.format('DD/MM/YYYY');
 
-    // Get the day number (e.g., '9', '15')
-    const dayOfMonth = tomorrow.getDate().toString();
-
-    // Format the date string as DD/MM/YYYY for assertion (e.g., '09/12/2025')
-    const day = dayOfMonth.padStart(2, '0');
-    // JavaScript months are 0-indexed, so add 1
-    const month = (tomorrow.getMonth() + 1).toString().padStart(2, '0');
-    const year = tomorrow.getFullYear();
-    const expectedDateString = `${day}/${month}/${year}`;
-
-    return { dayOfMonth, expectedDateString, tomorrow };
+    return { expectedDateString, tomorrow };
 }
 
 function getPastDate(daysInPast: moment.DurationInputArg1) {
-    const timezone = 'Australia/Brisbane';
     const pastDate = moment()
-        .tz(timezone)
+        .tz(TEST_TIMEZONE)
         .subtract(daysInPast, 'days');
 
-    // The format that your input field expects (e.g., "23/11/2025")
     const expectedDateString = pastDate.format('DD/MM/YYYY');
 
     return { expectedDateString };
@@ -40,6 +31,8 @@ test.describe('Digital Learning Hub', () => {
     });
 
     test.describe('scheduling', () => {
+        test.use({ timezoneId: TEST_TIMEZONE });
+
         test.beforeEach(async ({ page }) => {
             await page.goto(`http://localhost:2020/admin/dlor/schedule?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
@@ -55,31 +48,29 @@ test.describe('Digital Learning Hub', () => {
             await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['button-name'] });
         });
         test('should set the schedule end date to tomorrow', async ({ page }) => {
-            // --- 1. Setup ---
-            const { dayOfMonth, expectedDateString, tomorrow } = getTomorrowDate();
+            const { expectedDateString, tomorrow } = getTomorrowDate();
 
-            // Your working locator for the input element
             const endDateInput = page.locator('[data-testid="schedule-end-date"] input');
             const endDateInputButton = page.locator('[data-testid="schedule-end-date"] button');
 
             await page.getByTestId('schedule_name').fill('Test Schedule for Tomorrow Date');
-            // --- 2. Action: Open the Picker and Select the Day ---
 
-            // Click the input field to open the calendar dialog
             await endDateInputButton.click();
 
-            // Use a robust selector for the day button within the MUI picker.
-            // It targets an element with the class MuiPickersDay-root that contains the day number as text.
-            //
-            const tomorrowButton = page.locator(`.MuiPickersDay-root >> text=\"${dayOfMonth}\"`);
+            const now = moment().tz(TEST_TIMEZONE);
+            if (tomorrow.month() !== now.month() || tomorrow.year() !== now.year()) {
+                await page.getByRole('button', { name: 'Next month' }).click();
+            }
 
-            // Wait for the calendar to be visible and click the calculated day
+            const tomorrowTimestamp = tomorrow
+                .clone()
+                .startOf('day')
+                .valueOf();
+            const tomorrowButton = page.locator(`.MuiPickersDay-root[data-timestamp="${tomorrowTimestamp}"]`);
+
             await tomorrowButton.waitFor({ state: 'visible' });
             await tomorrowButton.click();
 
-            // --- 3. Assertion: Verify the input value is correct ---
-
-            // The value of the input field should now match the expected formatted string (DD/MM/YYYY)
             await expect(endDateInput).toHaveValue(expectedDateString);
             await page.getByTestId('schedule-add-items').click();
             await page.getByTestId('add-schedule-item-0').click();
