@@ -120,8 +120,34 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         await page.locator('.MuiDataGrid-columnHeader--sorted .MuiDataGrid-iconButtonContainer button').click();
-        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL001993')).toBeVisible();
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL001992')).toBeVisible();
         await page.locator('.MuiDataGrid-columnHeader--sorted .MuiDataGrid-iconButtonContainer button').click();
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
+    });
+
+    test('team selector functions as expected', async ({ page }) => {
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await assertTitles(
+            page,
+            locale.pages.report.assetReportByFilters.header.pageSubtitle('Work Station Support', 'Library'),
+        );
+        await forcePageRefresh(page);
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
+
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–4 of 4')).toBeVisible();
+
+        await expect(page.getByTestId('asset_status_selector-assets-inspected-input')).toHaveValue('All');
+        await expect(
+            page.getByTestId('team-display-name-select-filter').getByText('Work Station Support'),
+        ).toBeVisible();
+
+        await page.getByTestId('team-display-name-select-filter').click();
+        await page.getByRole('option', { name: 'Spaces' }).click();
+
+        // Check if number of results are correct
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–1 of 1')).toBeVisible();
+
+        await page.getByTestId('team-display-name-select-filter-clear-button').click();
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–5 of 5')).toBeVisible();
     });
 });

@@ -94,7 +94,6 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     const [filterModel, setFilterModel] = useState({ items: [] });
 
     const { userTeamList, selectedTeam, selectedTeamSlug, teamSelectFieldName, setSelectedTeam } = useUserTeams(user);
-    console.log(selectedTeam, selectedTeamSlug);
 
     const uniqueAssetTypeList = React.useMemo(() => extractAssetTypeData(inspectionsDue), [inspectionsDue]);
 
@@ -115,6 +114,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     useEffect(() => {
         const locationStr = JSON.stringify(location);
 
+        /* istanbul ignore if */
         if (
             prevSearchRef.current.locationStr === locationStr &&
             prevSearchRef.current.monthRange === monthRange &&

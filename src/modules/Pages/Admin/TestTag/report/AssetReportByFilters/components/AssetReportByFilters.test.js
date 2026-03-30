@@ -157,6 +157,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
 
@@ -171,6 +172,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
         // select Out for Repair status
@@ -184,6 +186,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
     });
@@ -212,6 +215,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: 11,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
     });
@@ -238,6 +242,46 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: '2023-01-01',
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
+            }),
+        );
+    });
+
+    it('fires action when team filter changes', async () => {
+        const clearDateErrorsFn = jest.fn();
+        const loadAssetReportByFiltersFn = jest.fn();
+        const { getByText, getByTestId, findByRole } = setup({
+            actions: {
+                clearDateErrors: clearDateErrorsFn,
+                loadAssetReportByFilters: loadAssetReportByFiltersFn,
+                loadTaggedBuildingList: jest.fn(),
+            },
+        });
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
+
+        expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
+            assetStatus: null,
+            inspectionDateFrom: null,
+            inspectionDateTo: null,
+            locationId: null,
+            locationType: 'building',
+            teamSlug: 'WSS',
+        });
+
+        // open team selector and select WSS team
+        const teamSelect = within(getByTestId('team-display-name-select-filter')).getByRole('combobox');
+        await userEvent.click(teamSelect);
+        const listbox = await findByRole('listbox');
+        await userEvent.click(within(listbox).getByText('Spaces'));
+
+        await waitFor(() =>
+            expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
+                assetStatus: null,
+                inspectionDateFrom: null,
+                inspectionDateTo: null,
+                locationId: null,
+                locationType: 'building',
+                teamSlug: 'SPACES',
             }),
         );
     });
@@ -264,6 +308,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null, // invalid dates wont fire an api request
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
 
@@ -287,6 +332,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: '2020-01-01', // new request should fire as one date is supplied and valid
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
 
@@ -299,6 +345,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
     });

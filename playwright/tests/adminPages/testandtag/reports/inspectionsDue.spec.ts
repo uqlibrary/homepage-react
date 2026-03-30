@@ -18,7 +18,9 @@ test.describe('Test and Tag Report - Inspections due', () => {
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000007')).toBeVisible();
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
         await expect(page.getByTestId('months_selector-inspections-due-select').getByText('3 months')).toBeVisible();
-        await expect(page.getByTestId('team-display-name-select-filter').getByText('All teams')).toBeVisible();
+        await expect(
+            page.getByTestId('team-display-name-select-filter').getByText('Work Station Support'),
+        ).toBeVisible();
         // Default states of other selectors
         await expect(page.getByTestId('location_picker-inspections-due-building-input')).toBeDisabled();
         await expect(page.getByTestId('location_picker-inspections-due-floor-input')).toBeDisabled();
@@ -36,7 +38,15 @@ test.describe('Test and Tag Report - Inspections due', () => {
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000007')).toBeVisible();
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
         await expect(page.getByTestId('months_selector-inspections-due-select').getByText('3 months')).toBeVisible();
+        await expect(
+            page.getByTestId('team-display-name-select-filter').getByText('Work Station Support'),
+        ).toBeVisible();
+
+        // show all teams
+        await page.getByTestId('team-display-name-select-filter-clear-button').click();
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–10 of 10')).toBeVisible();
         await expect(page.getByTestId('team-display-name-select-filter').getByText('All teams')).toBeVisible();
+
         // Change Site
         await page.getByTestId('location_picker-inspections-due-site-input').click();
         await page.locator('#location_picker-inspections-due-site-option-1').click();
@@ -80,11 +90,13 @@ test.describe('Test and Tag Report - Inspections due', () => {
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000007')).toBeVisible();
 
-        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–10 of 10')).toBeVisible();
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–6 of 6')).toBeVisible();
 
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
         await expect(page.getByTestId('months_selector-inspections-due-select').getByText('3 months')).toBeVisible();
-        await expect(page.getByTestId('team-display-name-select-filter').getByText('All teams')).toBeVisible();
+        await expect(
+            page.getByTestId('team-display-name-select-filter').getByText('Work Station Support'),
+        ).toBeVisible();
 
         await page.getByTestId('team-display-name-select-filter').click();
         await page.getByRole('option', { name: 'Spaces' }).click();
