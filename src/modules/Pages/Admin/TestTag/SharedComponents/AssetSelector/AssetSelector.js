@@ -38,6 +38,7 @@ const AssetSelector = ({
     onChange,
     onReset,
     onSearch,
+    onClear,
     validateAssetId,
     filter,
 }) => {
@@ -51,11 +52,17 @@ const AssetSelector = ({
     const [formAssetList, setFormAssetList] = useState(assetsList);
 
     const [isOpen, setIsOpen] = React.useState(false);
+    const filterRef = React.useRef(filter);
+    React.useEffect(() => {
+        filterRef.current = filter;
+    }, [filter]);
 
-    const clearInput = () => {
+    const clearInput = reason => {
         setCurrentValue(null);
+        setFormAssetList([]);
         previousValueRef.current = null;
         dispatch(actions.clearAssets());
+        onClear?.(reason);
     };
 
     const debounceAssetsSearch = React.useRef(
@@ -66,7 +73,9 @@ const AssetSelector = ({
             if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
                 onSearch?.(assetPartial);
                 dispatch(
-                    !!filter ? actions.loadAssetsFiltered(assetPartial, filter) : actions.loadAssets(assetPartial),
+                    !!filterRef.current
+                        ? actions.loadAssetsFiltered(assetPartial, filterRef.current)
+                        : actions.loadAssets(assetPartial),
                 );
             }
         }),
@@ -111,7 +120,7 @@ const AssetSelector = ({
                 fullWidth
                 open={!headless && isOpen}
                 value={currentValue ?? previousValueRef.current ?? ''}
-                onChange={(event, newValue) => {
+                onChange={(event, newValue, reason) => {
                     if (newValue && newValue.inputValue) {
                         // Create a new value from the user input
                         onChange?.({
@@ -121,7 +130,7 @@ const AssetSelector = ({
                         onChange?.(newValue);
                     }
                     setIsOpen(false);
-                    clearOnSelect && clearInput();
+                    (clearOnSelect || reason === 'clear') && clearInput(reason);
                 }}
                 filterOptions={(options, params) => {
                     const filtered = filterOptions(options, params);
@@ -224,6 +233,7 @@ AssetSelector.propTypes = {
     clearOnSelect: PropTypes.bool,
     user: PropTypes.object,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
+    onClear: PropTypes.func,
     onChange: PropTypes.func,
     onSearch: PropTypes.func,
     onReset: PropTypes.func,

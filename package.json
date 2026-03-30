@@ -42,7 +42,9 @@
         "test:unit:watch": "npm run test:unit -- --watch --onlyChanged",
         "postinstall": "vendor-copy",
         "tsc": "./node_modules/typescript/bin/tsc",
-        "tsc:watch": "./node_modules/typescript/bin/tsc --watch"
+        "tsc:watch": "./node_modules/typescript/bin/tsc --watch",
+        "debug:cc:linux-fix-path": "find \"${PWD}/coverage\" -type f -exec sed -i 's|/src/|'\"${PWD}\"'/src/|g' {} +",
+        "debug:cc:macos-fix-path": "LC_ALL=C find \"${PWD}/coverage\" -type f -exec sed -i '' 's|/src/|'\"${PWD}\"'/src/|g' {} +"
     },
     "devDependencies": {
         "@axe-core/playwright": "^4.11.0",

@@ -18,6 +18,7 @@ describe('testTagAssetsReducer reducer', () => {
             ...emptyState,
             assetsList: [],
             assetsListLoading: true,
+            assetsListLoaded: false,
             assetsListError: false,
         });
     });
@@ -31,6 +32,7 @@ describe('testTagAssetsReducer reducer', () => {
             ...emptyState,
             assetsList: mockTestTagList,
             assetsListLoading: false,
+            assetsListLoaded: true,
             assetsListError: false,
         });
     });
@@ -44,6 +46,7 @@ describe('testTagAssetsReducer reducer', () => {
             ...emptyState,
             assetsList: [],
             assetsListLoading: false,
+            assetsListLoaded: false,
             assetsListError: 'failed!',
         });
     });
