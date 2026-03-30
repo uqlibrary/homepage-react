@@ -995,8 +995,19 @@ test.describe('booking link controller works properly', () => {
         // bookable is checked
         await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
         await expect(page.getByTestId('booking-link-details')).toBeVisible();
-        await expect(page.getByTestId('spaces-check-reminder-icon')).toBeVisible();
+        await expect(page.getByTestId('spaces-check-reminder-icon')).not.toBeVisible();
         await expect(bookingUrlField).toHaveValue('https://uqbookit.uq.edu.au/#/app/booking-types/111');
+
+        const bookableFacilityTypeCheckbox = page
+            .getByTestId('facility-type-checkbox-list')
+            .getByRole('checkbox', { name: 'Bookable' });
+
+        // The reminder appears only when the "Bookable" facility type is not selected.
+        await expect(bookableFacilityTypeCheckbox).toBeChecked();
+        await bookableFacilityTypeCheckbox.uncheck();
+        await expect(page.getByTestId('spaces-check-reminder-icon')).toBeVisible();
+        await bookableFacilityTypeCheckbox.check();
+        await expect(page.getByTestId('spaces-check-reminder-icon')).not.toBeVisible();
 
         // remove booking url (uncheck box)
         await page
