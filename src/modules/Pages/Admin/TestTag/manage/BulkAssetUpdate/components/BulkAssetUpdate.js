@@ -132,7 +132,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
             requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
             inclusive={false}
         >
-            <StyledWrapper>
+            <StyledWrapper id="bulk-asset-update-wrapper">
                 <ConfirmationBox
                     actionButtonColor="primary"
                     actionButtonVariant="contained"

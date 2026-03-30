@@ -14,9 +14,9 @@ export const createLocationString = ({ site, building, floor, room }) =>
 
 /* istanbul ignore next */
 export const createLocationLink = (locationString, floorPlanUrl) => {
-    if (isEmptyStr(floorPlanUrl)) return locationString;
+    if (isEmptyStr(locationString) || isEmptyStr(floorPlanUrl)) return locationString;
     return (
-        <a href={floorPlanUrl} target="_blank" title="click to open floor plan in a new tab">
+        <a href={floorPlanUrl} target="_blank" title="click to open floor plan in a new tab" className="location-link">
             {locationString}
         </a>
     );

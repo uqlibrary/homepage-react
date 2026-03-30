@@ -64,15 +64,13 @@ export default {
                     }),
                 renderCell: params =>
                     createLocationLink(
-                        createLocationString(
-                            {
-                                site: params.row.site_name,
-                                building: params.row.building_name,
-                                floor: params.row.floor_id_displayed,
-                                room: params.row.room_id_displayed,
-                            },
-                            params.row.floor_plan_url,
-                        ),
+                        createLocationString({
+                            site: params.row.site_name,
+                            building: params.row.building_name,
+                            floor: params.row.floor_id_displayed,
+                            room: params.row.room_id_displayed,
+                        }),
+                        params.row.floor_plan_url,
                     ),
             },
         },
