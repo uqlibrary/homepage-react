@@ -105,6 +105,17 @@ const StyledAttentionMessageDiv = styled('div')(() => ({
     paddingTop: '1rem',
 }));
 
+const StyledErrorAttentionMessageDiv = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: '0.5rem',
+    marginTop: '0.75rem',
+    backgroundColor: '#fff2f2',
+    border: `1px solid ${theme.palette.error.light}`,
+    borderRadius: '4px',
+    padding: '0.6rem 0.8rem',
+}));
+
 const StyledDraftModeNotice = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -196,6 +207,23 @@ const StyledErrorCountBadge = styled(Badge)(() => ({
         right: -12,
     },
 }));
+const StyledWarningListBox = styled('div')(({ theme }) => ({
+    marginTop: '0.75rem',
+    padding: '0.75rem',
+    borderRadius: '4px',
+    backgroundColor: '#fffde7',
+    border: `1px solid ${theme.palette.warning.light}`,
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: '0.5rem',
+    '& p': {
+        margin: 0,
+    },
+    '& svg': {
+        flexShrink: 0,
+    },
+}));
+
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -472,6 +500,34 @@ export const EditSpaceForm = ({
 
     const reportErrorMessage = fieldName => {
         return errorMessages?.find(m => m?.field === fieldName)?.message;
+    };
+
+    const getBookingUrlQuerystringWarning = spaceExternalBookUrl => {
+        if (!spaceExternalBookUrl) {
+            return null;
+        }
+
+        try {
+            const parsedUrl = new URL(spaceExternalBookUrl);
+            const isUqBookitDomain = parsedUrl?.hostname?.toLowerCase() === 'uqbookit.uq.edu.au';
+            const hasStandardQueryString = !!parsedUrl?.search && parsedUrl?.search !== '?';
+
+            // UQ Bookit routes commonly use hash fragments (e.g. #/app/booking-types/111?x=y).
+            // In those cases, URL.search is empty, so we also inspect the fragment for query params.
+            const hashValue = parsedUrl?.hash || '';
+            const hashWithoutPrefix = hashValue.startsWith('#') ? hashValue.slice(1) : hashValue;
+            const hasHashQueryString = hashWithoutPrefix.includes('?') && !hashWithoutPrefix.endsWith('?');
+
+            const hasQueryString = hasStandardQueryString || hasHashQueryString;
+
+            if (isUqBookitDomain && hasQueryString) {
+                return 'For uqbookit.uq.edu.au links, remove query string parameters (everything after "?").';
+            }
+        } catch {
+            // Ignore invalid URLs here; this is only a domain-specific warning.
+        }
+
+        return null;
     };
 
     const handleChange = _prop => e => {
@@ -1019,6 +1075,31 @@ export const EditSpaceForm = ({
         );
     };
     const facilityTypePanel = () => {
+        const bookingUrlQuerystringWarning = getBookingUrlQuerystringWarning(formValues?.space_external_book_url);
+        const selectedFacilityTypes = formValues?.facility_types || [];
+        const selectedFacilityTypeIds = selectedFacilityTypes
+            .map(ft => ft?.facility_type_id)
+            .filter(id => id !== null && id !== undefined);
+        const selectedFacilityTypeIdsAsString = selectedFacilityTypeIds.map(id => String(id));
+        const selectedFacilityTypeNames = selectedFacilityTypes
+            .map(ft => (ft?.facility_type_name || '').trim().toLowerCase())
+            .filter(Boolean);
+
+        const knownBookableFacilityType = getFlatFacilityTypeList(facilityTypeList)?.find(
+            ft => (ft?.facility_type_name || '').trim().toLowerCase() === 'bookable',
+        );
+        const knownBookableFacilityTypeId =
+            knownBookableFacilityType?.facility_type_id !== null &&
+            knownBookableFacilityType?.facility_type_id !== undefined
+                ? String(knownBookableFacilityType?.facility_type_id)
+                : null;
+        const isBookableFacilityTypeSelectedById =
+            !!knownBookableFacilityTypeId && selectedFacilityTypeIdsAsString.includes(knownBookableFacilityTypeId);
+        const isBookableFacilityTypeSelectedByName = selectedFacilityTypeNames.includes('bookable');
+        const isBookableFacilityTypeSelected =
+            isBookableFacilityTypeSelectedById || isBookableFacilityTypeSelectedByName;
+        const shouldShowBookableReminder = !!isBookable && !isBookableFacilityTypeSelected;
+
         return (
             <Grid container spacing={3}>
                 <StyledHighlightedGrid item xs={12}>
@@ -1055,13 +1136,21 @@ export const EditSpaceForm = ({
                                     {reportErrorMessage('space_external_book_url')}
                                 </StyledErrorMessageTypography>
                             </FormControl>
-                            <StyledAttentionMessageDiv>
-                                <WarningAmberIcon
-                                    style={{ color: theme?.palette.error.light }}
-                                    data-testid="spaces-check-reminder-icon"
-                                />
-                                Also select the "Bookable" checkbox below!!
-                            </StyledAttentionMessageDiv>
+                            {!!bookingUrlQuerystringWarning && (
+                                <StyledWarningListBox data-testid="spaces-booking-url-warning-list">
+                                    <WarningAmberIcon style={{ color: theme?.palette.warning.dark }} />
+                                    <p>{bookingUrlQuerystringWarning}</p>
+                                </StyledWarningListBox>
+                            )}
+                            {shouldShowBookableReminder && (
+                                <StyledErrorAttentionMessageDiv>
+                                    <WarningAmberIcon
+                                        style={{ color: theme?.palette.error.light }}
+                                        data-testid="spaces-check-reminder-icon"
+                                    />
+                                    Also select the "Bookable" checkbox below!!
+                                </StyledErrorAttentionMessageDiv>
+                            )}
                         </div>
                     )}
                     {!isBookable && (

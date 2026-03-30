@@ -452,11 +452,9 @@ export const BookableSpacesManageLocations = ({
                 .then(newFloor => {
                     if (!!data?.isGroundFloor && data?.isGroundFloor === 'Y') {
                         const libraryData = {
-                            locationType: 'library',
-                            libraryId: data?.libraryId,
                             ground_floor_id: newFloor?.data?.floor_id,
                         };
-                        return actions.updateBookableSpaceLocation(libraryData, locationType);
+                        return actions.updateBookableSpaceLocation(libraryData, 'library', data?.libraryId);
                     } else {
                         return true;
                     }

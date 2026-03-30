@@ -104,7 +104,28 @@ export function addBookableSpaceLocation(request, locationType) {
 
 export function updateBookableSpaceLocation(request, locationType, _locationId = null) {
     console.log('updateBookableSpace Location', locationType, _locationId, request);
-    const locationId = !!_locationId ? _locationId : request[`${locationType}Id`];
+    const requestLocationType = request?.locationType;
+    const locationId =
+        _locationId ??
+        request?.locationId ??
+        request?.location_id ??
+        request?.[`${locationType}Id`] ??
+        request?.[`${locationType}_id`] ??
+        request?.[`${requestLocationType}Id`] ??
+        request?.[`${requestLocationType}_id`];
+
+    if (!locationId) {
+        return dispatch => {
+            const message = `Missing location id for type "${locationType}"`;
+            console.log('updateBookableSpace Location bad input', message, request);
+            dispatch({
+                type: actions.SPACES_LOCATION_UPDATE_FAILED,
+                payload: message,
+            });
+            return Promise.reject(new Error(message));
+        };
+    }
+
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_UPDATING });
         const url = SPACES_MODIFY_LOCATION_API({ type: locationType, id: locationId });
