@@ -1,3 +1,6 @@
+import React from 'react';
+import FloorPlanAdornment from '../SharedComponents/LocationPicker/FloorPlanAdornment';
+
 export const capitaliseLeadingChar = text =>
     text?.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, match => match?.toUpperCase());
 
@@ -9,6 +12,15 @@ export const isEmptyObject = obj =>
 
 export const createLocationString = ({ site, building, floor, room }) =>
     `${floor ?? ''}${!!room ? `-${room}` : ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`.trim();
+
+export const createLocation = ({ site, building, floor, floorPlanUrl, room }) => {
+    return (
+        <>
+            <span>{createLocationString({ site, building, floor, room })}</span>
+            <FloorPlanAdornment {...{ floor_plan_url: floorPlanUrl }} />
+        </>
+    );
+};
 
 export const isInvalidUUID = str => str?.length > 20 || !/^[a-z0-9]*$/.test(str);
 
