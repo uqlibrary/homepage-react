@@ -1,12 +1,12 @@
 import React from 'react';
-import FloorPlanAdornment from './FloorPlanAdornment';
+import FloorPlanLink from './FloorPlanLink';
 import { render, screen } from '@testing-library/react';
 
-const setup = floor => render(<FloorPlanAdornment {...floor} />);
+const setup = (props = {}) => render(<FloorPlanLink {...props} />);
 
-describe('FloorPlanAdornment', () => {
+describe('FloorPlanLink', () => {
     it('should not render link when url is not available', () => {
-        const { container } = setup({ floor_id: 1 });
+        const { container } = setup();
         expect(container.firstChild).toBeNull();
     });
 
@@ -17,7 +17,7 @@ describe('FloorPlanAdornment', () => {
 
     it('should render link to floor plan', () => {
         const url = 'https://example.com/floor.pdf';
-        setup({ floor_id: 1, floor_plan_url: url });
+        setup({ url });
         const link = screen.getByRole('link', { name: /click to open floor plan/i });
         expect(link).toHaveAttribute('href', url);
         expect(link).toHaveAttribute('target', '_blank');

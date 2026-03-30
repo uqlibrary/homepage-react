@@ -3,7 +3,7 @@ import React from 'react';
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import { createLocation, createLocationString } from '../../../helpers/helpers';
+import { locationCell, createLocationString } from '../../../helpers/helpers';
 const moment = require('moment');
 
 export default {
@@ -63,13 +63,17 @@ export default {
                         room: params.row.room_id_displayed,
                     }),
                 renderCell: params =>
-                    createLocation({
-                        site: params.row.site_name,
-                        building: params.row.building_name,
-                        floor: params.row.floor_id_displayed,
-                        floorPlanUrl: params.row.floor_plan_url,
-                        room: params.row.room_id_displayed,
-                    }),
+                    locationCell(
+                        createLocationString(
+                            {
+                                site: params.row.site_name,
+                                building: params.row.building_name,
+                                floor: params.row.floor_id_displayed,
+                                room: params.row.room_id_displayed,
+                            },
+                            params.row.floor_plan_url,
+                        ),
+                    ),
             },
         },
     },
