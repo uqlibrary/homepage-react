@@ -1,5 +1,4 @@
 import React from 'react';
-import FloorPlanLink from '../SharedComponents/LocationPicker/FloorPlanLink';
 
 export const capitaliseLeadingChar = text =>
     text?.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, match => match?.toUpperCase());
@@ -13,12 +12,12 @@ export const isEmptyObject = obj =>
 export const createLocationString = ({ site, building, floor, room }) =>
     `${floor ?? ''}${!!room ? `-${room}` : ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`.trim();
 
-export const locationCell = (locationString, floorPlanUrl) => {
+export const createLocationLink = (locationString, floorPlanUrl) => {
+    if (isEmptyStr(floorPlanUrl)) return locationString;
     return (
-        <>
-            <span>{locationString}</span>
-            <FloorPlanLink url={floorPlanUrl} sx={{ ml: 1 }} />
-        </>
+        <a href={floorPlanUrl} target="_blank" title="click to open floor plan in a new tab">
+            {locationString}
+        </a>
     );
 };
 

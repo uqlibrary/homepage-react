@@ -3,7 +3,7 @@ import React from 'react';
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import { locationCell } from '../../../helpers/helpers';
+import { createLocationLink } from '../../../helpers/helpers';
 const moment = require('moment');
 
 /**
@@ -38,7 +38,7 @@ export default {
                 minWidth: 200,
                 flex: 1,
                 valueGetter: params => renderLocation(params.row),
-                renderCell: params => locationCell(renderLocation(params.row), params.row.floor_plan_url),
+                renderCell: params => createLocationLink(renderLocation(params.row), params.row.floor_plan_url),
             },
         },
         asset_type_name: { fieldParams: { minWidth: 200, flex: 1 } },

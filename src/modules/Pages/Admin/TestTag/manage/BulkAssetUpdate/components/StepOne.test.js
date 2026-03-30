@@ -18,8 +18,6 @@ import floorList from '../../../../../../../data/mock/data/testing/testAndTag/te
 import roomList from '../../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
 import assetTypeData from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetTypes';
 
-import { transformRow } from './utils';
-
 import { useObjectList } from '../../../helpers/hooks';
 
 import StepOne from './StepOne';
@@ -91,7 +89,7 @@ describe('StepOne', () => {
     });
 
     it('renders component', async () => {
-        const list = renderHook(() => useObjectList([], transformRow)).result.current;
+        const list = renderHook(() => useObjectList([])).result.current;
 
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
@@ -117,7 +115,7 @@ describe('StepOne', () => {
     it('adds row items from filterDialog popup', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const list = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList([])).result;
 
         const { getByText, getByTestId, getAllByRole, findByTestId, rerender } = setup({
             isFilterDialogOpen: true,
