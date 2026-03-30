@@ -419,7 +419,7 @@ const Inspection = ({
                     id={componentId}
                     actions={actions}
                     location={location}
-                    resetForm={() => resetForm()}
+                    resetForm={resetForm}
                     formValues={formValues}
                     selectedAsset={selectedAsset}
                     assignCurrentAsset={assignCurrentAsset}

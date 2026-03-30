@@ -115,11 +115,13 @@ export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test-and-tag/asset/se
 export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
     const urlParams = {
         ...(filter?.status?.discarded === false ? { without_discards: 1 } : {}),
+        ...(filter?.all_teams ? { all_teams: 1 } : {}),
         // TODO: add more filters as required
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
     const apiUrl = `test-and-tag/asset/search/current/${pattern}${hasParams ? `?${qs.toString()}` : ''}`;
+
     return {
         apiUrl,
     };

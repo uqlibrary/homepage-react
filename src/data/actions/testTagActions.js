@@ -329,6 +329,7 @@ export function loadAssetsFiltered(pattern, filter) {
                 });
             })
             .catch(error => {
+                console.error(error);
                 dispatch({
                     type: actions.TESTTAG_ASSETS_FAILED,
                     payload: error.message,
