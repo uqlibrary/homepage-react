@@ -3,6 +3,7 @@ import * as actions from 'data/actions/actionTypes';
 export const initialState = {
     assetsList: [],
     assetsListLoading: false,
+    assetsListLoaded: false,
     assetsListError: null,
     assetsMineList: [],
     assetsMineListLoading: false,
@@ -14,6 +15,7 @@ const handlers = {
         ...initialState,
         ...state,
         assetsListLoading: true,
+        assetsListLoaded: false,
         assetsListError: false,
     }),
     [actions.TESTTAG_ASSETS_LOADED]: (state, action) => {
@@ -21,6 +23,7 @@ const handlers = {
             ...initialState,
             ...state,
             assetsListLoading: false,
+            assetsListLoaded: true,
             assetsListError: false,
             assetsList: action.payload,
         };
@@ -29,6 +32,7 @@ const handlers = {
         ...initialState,
         ...state,
         assetsListLoading: false,
+        assetsListLoaded: false,
         assetsListError: action.payload,
     }),
     [actions.TESTTAG_ASSETS_CLEAR_ERROR]: state => ({

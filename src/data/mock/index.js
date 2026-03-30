@@ -42,6 +42,7 @@ import testTag_floorList from './data/records/testAndTag/test_tag_floors';
 import testTag_roomList from './data/records/testAndTag/test_tag_rooms';
 import testTag_inspectionDevices from './data/records/testAndTag/test_tag_inspection_devices';
 import testTag_assets from './data/records/testAndTag/test_tag_assets';
+import testTag_assets_all from './data/records/testAndTag/test_tag_assets_all';
 import test_tag_asset_types from './data/records/testAndTag/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/testAndTag/test_tag_pending_inspections';
 import test_tag_pending_inspections_site from './data/records/testAndTag/test_tag_pending_inspections_site';
@@ -1220,6 +1221,21 @@ mock.onGet('exams/course/FREN1010/summary')
                     asset =>
                         asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()) &&
                         asset.asset_status !== 'DISCARDED',
+                ),
+            },
+        ];
+    })
+    .onGet(/test-and-tag\/asset\/search\/current\/.*[?]all_teams=1/)
+    .reply(config => {
+        const patternTmp = config.url.split('/').pop();
+        const pattern = patternTmp.split('?')[0];
+        const allAssets = [...testTag_assets.data, ...testTag_assets_all.data];
+        // filter array to matching asset id's
+        return [
+            200,
+            {
+                data: allAssets.filter(asset =>
+                    asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()),
                 ),
             },
         ];

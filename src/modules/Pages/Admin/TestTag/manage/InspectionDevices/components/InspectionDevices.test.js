@@ -1,6 +1,6 @@
 import React from 'react';
 import InspectionDevices from './InspectionDevices';
-import { rtlRender, WithRouter, act, fireEvent, waitFor, WithReduxStore, userEvent } from 'test-utils';
+import { rtlRender, WithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 import { PERMISSIONS } from '../../../config/auth';
 
@@ -62,6 +62,8 @@ function setup(testProps = {}, renderer = rtlRender) {
     );
 }
 describe('InspectionDevices', () => {
+    jest.useFakeTimers();
+
     beforeEach(() => {
         jest.spyOn(console, 'error');
         console.error.mockImplementation(() => null);
@@ -110,15 +112,12 @@ describe('InspectionDevices', () => {
         });
 
         const addButton = getByTestId('update_dialog-action-button');
-        await userEvent.type(getByTestId('device_model_name-input'), 'TEST MODELX');
-        await userEvent.type(getByTestId('device_serial_number-input'), 'TEST SNX');
-        await userEvent.type(getByTestId('device_calibrated_by_last-input'), 'PersonX');
+        fireEvent.change(getByTestId('device_model_name-input'), { target: { value: 'TEST MODELX' } });
+        fireEvent.change(getByTestId('device_serial_number-input'), { target: { value: 'TEST SNX' } });
+        fireEvent.change(getByTestId('device_calibrated_by_last-input'), { target: { value: 'PersonX' } });
 
-        userEvent.clear(getByTestId('device_calibration_due_date-input'));
-        await userEvent.type(getByTestId('device_calibration_due_date-input'), '2026-02-01');
-        userEvent.clear(getByTestId('device_calibrated_date_last-input'));
-        // max="2017-06-30"
-        await userEvent.type(getByTestId('device_calibrated_date_last-input'), '2025-02-01');
+        fireEvent.change(getByTestId('device_calibration_due_date-input'), { target: { value: '2026-02-01' } });
+        fireEvent.change(getByTestId('device_calibrated_date_last-input'), { target: { value: '2025-02-01' } });
 
         // commit the change
         await act(async () => {
@@ -145,14 +144,51 @@ describe('InspectionDevices', () => {
             expect(getByTestId('device_model_name-input')).toBeInTheDocument();
         });
 
-        await userEvent.type(getByTestId('device_model_name-input'), 'TEST MODELX');
-        await userEvent.type(getByTestId('device_serial_number-input'), 'TEST SNX');
-        await userEvent.type(getByTestId('device_calibrated_by_last-input'), 'PersonX');
+        fireEvent.change(getByTestId('device_model_name-input'), { target: { value: 'TEST MODELX' } });
+        fireEvent.change(getByTestId('device_serial_number-input'), { target: { value: 'TEST SNX' } });
+        fireEvent.change(getByTestId('device_calibrated_by_last-input'), { target: { value: 'PersonX' } });
 
         await act(async () => {
-            await userEvent.click(addButton);
+            fireEvent.click(addButton);
         });
         expect(actions.addInspectionDevice).rejects.toEqual('Testing 2');
+    });
+    it('displays error alert when Add Inspection Device fails', async () => {
+        actions.loadInspectionDevices = jest.fn(() => Promise.resolve());
+        actions.addInspectionDevice = jest.fn(() => Promise.reject('Add error'));
+
+        const { getByText, getByTestId } = setup({ actions: actions });
+
+        expect(
+            getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
+
+        await act(async () => {
+            await fireEvent.click(getByTestId('test-data-table-toolbar-add-button'));
+        });
+
+        await waitFor(() => {
+            expect(getByTestId('device_model_name-input')).toBeInTheDocument();
+        });
+
+        fireEvent.change(getByTestId('device_model_name-input'), { target: { value: 'FAIL MODEL' } });
+        fireEvent.change(getByTestId('device_serial_number-input'), { target: { value: 'FAIL SN' } });
+        fireEvent.change(getByTestId('device_calibrated_by_last-input'), { target: { value: 'FAIL PERSON' } });
+        fireEvent.change(getByTestId('device_calibration_due_date-input'), { target: { value: '2026-06-01' } });
+        fireEvent.change(getByTestId('device_calibrated_date_last-input'), { target: { value: '2026-01-01' } });
+
+        await act(async () => {
+            await fireEvent.click(getByTestId('update_dialog-action-button'));
+        });
+
+        await waitFor(() => {
+            expect(console.error).toHaveBeenCalledWith('Add error');
+        });
+        await waitFor(() => {
+            expect(
+                getByText(locale.config.alerts.failed(locale.pages.manage.inspectiondevices.snackbar.addFail)),
+            ).toBeInTheDocument();
+        });
     });
     it('Edit Inspection Device functions correctly', async () => {
         const { getByText, getByTestId } = setup({
@@ -170,12 +206,9 @@ describe('InspectionDevices', () => {
         await waitFor(() => {
             expect(getByTestId('device_model_name-input')).toBeInTheDocument();
         });
-        userEvent.clear(getByTestId('device_model_name-input'));
-        await userEvent.type(getByTestId('device_model_name-input'), 'EDIT NAME');
-        userEvent.clear(getByTestId('device_serial_number-input'));
-        await userEvent.type(getByTestId('device_serial_number-input'), 'EDIT SN');
-        userEvent.clear(getByTestId('device_calibrated_by_last-input'));
-        await userEvent.type(getByTestId('device_calibrated_by_last-input'), 'EDIT PERSON');
+        fireEvent.change(getByTestId('device_model_name-input'), { target: { value: 'EDIT NAME' } });
+        fireEvent.change(getByTestId('device_serial_number-input'), { target: { value: 'EDIT SN' } });
+        fireEvent.change(getByTestId('device_calibrated_by_last-input'), { target: { value: 'EDIT PERSON' } });
         // dates will be update below - this is to make sure data range validation work for unchanged dates
 
         // commit the change
@@ -200,10 +233,8 @@ describe('InspectionDevices', () => {
         await waitFor(() => {
             expect(getByTestId('device_model_name-input')).toBeInTheDocument();
         });
-        userEvent.clear(getByTestId('device_calibration_due_date-input'));
-        await userEvent.type(getByTestId('device_calibration_due_date-input'), '2027-01-01');
-        userEvent.clear(getByTestId('device_calibrated_date_last-input'));
-        await userEvent.type(getByTestId('device_calibrated_date_last-input'), '2026-01-01');
+        fireEvent.change(getByTestId('device_calibration_due_date-input'), { target: { value: '2027-01-01' } });
+        fireEvent.change(getByTestId('device_calibrated_date_last-input'), { target: { value: '2026-01-01' } });
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
         });
@@ -225,6 +256,41 @@ describe('InspectionDevices', () => {
         });
         expect(actions.updateInspectionDevice).rejects.toEqual('Testing Update 1');
     });
+    it('displays error alert when Edit Inspection Device fails', async () => {
+        actions.loadInspectionDevices = jest.fn(() => Promise.resolve());
+        actions.updateInspectionDevice = jest.fn(() => Promise.reject('Edit error'));
+
+        const { getByText, getByTestId } = setup({ actions: actions });
+
+        expect(
+            getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
+        await waitFor(() => {
+            expect(getByText('AV 025')).toBeVisible();
+        });
+
+        await act(async () => {
+            await fireEvent.click(getByTestId('action_cell-1-edit-button'));
+        });
+        await waitFor(() => {
+            expect(getByTestId('device_model_name-input')).toBeInTheDocument();
+        });
+
+        fireEvent.change(getByTestId('device_model_name-input'), { target: { value: 'FAIL EDIT' } });
+
+        await act(async () => {
+            await fireEvent.click(getByTestId('update_dialog-action-button'));
+        });
+
+        await waitFor(() => {
+            expect(console.error).toHaveBeenCalledWith('Edit error');
+        });
+        await waitFor(() => {
+            expect(
+                getByText(locale.config.alerts.failed(locale.pages.manage.inspectiondevices.snackbar.updateFail)),
+            ).toBeInTheDocument();
+        });
+    });
 
     it('Delete Inspection Device functions correctly', async () => {
         // Deletion of device with existing tests
@@ -237,17 +303,15 @@ describe('InspectionDevices', () => {
         await waitFor(() => {
             expect(getByText('AV 025')).toBeVisible();
         });
-        await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-1-delete-button'));
-        });
+        fireEvent.click(getByTestId('action_cell-1-delete-button'));
         expect(getByTestId('confirm-test')).toHaveAttribute('disabled');
-        // delay inherit in the system before attr removal
-        await new Promise(resolve => setTimeout(resolve, 3100));
-        await waitFor(() => {
-            expect(getByTestId('confirm-test')).not.toHaveAttribute('disabled');
+        // advance past the 3000ms delay in handleDeleteClick
+        act(() => {
+            jest.advanceTimersByTime(3100);
         });
+        expect(getByTestId('confirm-test')).not.toHaveAttribute('disabled');
         await act(async () => {
-            await userEvent.click(getByTestId('confirm-test'));
+            fireEvent.click(getByTestId('confirm-test'));
         });
 
         expect(actions.deleteInspectionDevice).toHaveBeenCalledWith(1);
@@ -265,18 +329,16 @@ describe('InspectionDevices', () => {
         });
         // Simulate an error
         actions.deleteInspectionDevice = jest.fn(() => Promise.reject('Error Delete'));
-        await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-1-delete-button'));
-        });
+        fireEvent.click(getByTestId('action_cell-1-delete-button'));
         expect(getByTestId('confirm-test')).toHaveAttribute('disabled');
-        // delay inherit in the system before attr removal
-        await new Promise(resolve => setTimeout(resolve, 3100));
-        await waitFor(() => {
-            expect(getByTestId('confirm-test')).not.toHaveAttribute('disabled');
+        // advance past the 3000ms delay in handleDeleteClick
+        act(() => {
+            jest.advanceTimersByTime(3100);
         });
+        expect(getByTestId('confirm-test')).not.toHaveAttribute('disabled');
 
         await act(async () => {
-            await fireEvent.click(getByTestId('confirm-test'));
+            fireEvent.click(getByTestId('confirm-test'));
         });
         await waitFor(() => {
             expect(actions.deleteInspectionDevice).rejects.toEqual('Error Delete');

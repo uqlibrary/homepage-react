@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import Alert from '@mui/material/Alert';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import InspectionPanel from './InspectionPanel';
@@ -11,6 +13,7 @@ import LastInspectionPanel from './LastInspectionPanel';
 import AssetSelector from '../../SharedComponents/AssetSelector/AssetSelector';
 import UpdateDialog from '../../SharedComponents/UpdateDialog/UpdateDialog';
 import AssetTypeSelector, { ADD_NEW_ID } from '../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
+import SwitchIncludeAllTeams from './partials/SwitchIncludeAllTeams';
 
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
 import { transformAddAssetTypeRequest } from '../utils/transformers';
@@ -23,6 +26,16 @@ const componentId = 'asset-panel';
 const componentIdLower = 'asset_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
+
+export const useNoResultsAlert = (message, openConfirmationAlert) => {
+    const { assetsList, assetsListLoaded } = useSelector(state => state.get?.('testTagAssetsReducer'));
+    React.useEffect(() => {
+        if (assetsListLoaded && assetsList.length === 0) {
+            openConfirmationAlert(message, 'error');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [assetsListLoaded, assetsList.length]);
+};
 
 const AssetPanel = ({
     actions,
@@ -38,15 +51,27 @@ const AssetPanel = ({
     canAddAssetType,
     openConfirmationAlert,
 }) => {
+    const [allTeams, setAllTeams] = React.useState();
     const pageLocale = locale.pages.inspect.form.asset;
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
     const { inspectionConfigLoading } = useSelector(state => state.get?.('testTagOnLoadInspectionReducer'));
 
+    useNoResultsAlert(pageLocale.noMatchingAssets, openConfirmationAlert);
+
     const { user } = useAccountUser();
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [shouldAutoFocus, setShouldAutoFocus] = React.useState(false);
+    const [searchTerm, setSearchTerm] = React.useState();
+
+    const onSearch = React.useCallback(term => {
+        setSearchTerm(term);
+    }, []);
+
+    const onClear = React.useCallback(() => {
+        setSearchTerm(undefined);
+    }, []);
 
     React.useLayoutEffect(() => {
         setShouldAutoFocus(
@@ -103,6 +128,28 @@ const AssetPanel = ({
         } else handleChange('asset_type_id')(assetType.asset_type_id);
     };
 
+    const createFilter = value => {
+        const retval = value ? { all_teams: true } : {};
+        retval.key = Date.now(); // Force re-mount of AssetSelector when toggling all teams to reset its internal state
+        return retval;
+    };
+
+    const onAllTeamsChange = value => {
+        setAllTeams(value);
+        if (value === false && selectedAsset?.asset_team_slug !== user.user_team) {
+            // only reset the asset list when disabling the 'all' option, and when
+            // the user already selected an asset that is outside their team
+            actions.clearAssets();
+        } else if (searchTerm !== undefined) {
+            const filters = createFilter(value);
+            actions.loadAssetsFiltered(searchTerm, filters);
+        }
+    };
+
+    const includeAllTeams = React.useMemo(() => {
+        return createFilter(allTeams);
+    }, [allTeams]);
+
     return (
         <StandardCard
             standardCardId={componentIdLower}
@@ -129,17 +176,22 @@ const AssetPanel = ({
             />
             <Grid container spacing={3}>
                 <Grid xs={12} item sm={6} md={3}>
-                    <AssetSelector
-                        id={componentId}
-                        locale={pageLocale}
-                        user={user}
-                        classNames={{ formControl: 'formControl' }}
-                        autoFocus={shouldAutoFocus}
-                        onChange={assignCurrentAsset}
-                        onReset={resetForm}
-                        validateAssetId={isValidAssetId}
-                        selectedAsset={formValues?.asset_id_displayed}
-                    />
+                    <FormGroup>
+                        <AssetSelector
+                            id={componentId}
+                            locale={pageLocale}
+                            user={user}
+                            classNames={{ formControl: 'formControl' }}
+                            autoFocus={shouldAutoFocus}
+                            onClear={onClear}
+                            onChange={assignCurrentAsset}
+                            onReset={resetForm}
+                            validateAssetId={isValidAssetId}
+                            selectedAsset={formValues?.asset_id_displayed}
+                            filter={includeAllTeams}
+                            onSearch={onSearch}
+                        />
+                    </FormGroup>
                 </Grid>
                 <Grid xs={12} item sm={6}>
                     <FormControl variant="standard" className={'formControl'} fullWidth>
@@ -160,6 +212,22 @@ const AssetPanel = ({
                             autoSelect={false}
                         />
                     </FormControl>
+                </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+                <Grid xs={12} item>
+                    <SwitchIncludeAllTeams id={componentIdLower} locale={pageLocale} onChange={onAllTeamsChange} />
+                    {!!allTeams &&
+                        Object.keys(selectedAsset ?? {}).length > 0 &&
+                        selectedAsset?.asset_team_slug !== user.user_team && (
+                            <Alert
+                                severity="warning"
+                                id={`${componentIdLower}-all-teams-warning-text`}
+                                data-testid={`${componentIdLower}-all-teams-warning-text`}
+                            >
+                                {pageLocale.allTeamsAlert(selectedAsset?.asset_team_display_name)}
+                            </Alert>
+                        )}
                 </Grid>
             </Grid>
             <LastInspectionPanel
