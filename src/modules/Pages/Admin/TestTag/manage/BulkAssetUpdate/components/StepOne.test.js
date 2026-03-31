@@ -23,6 +23,7 @@ import { useObjectList } from '../../../helpers/hooks';
 import StepOne from './StepOne';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
+import { assertLocationLink, assertLocationLinkless } from '../../../helpers/helpers.test';
 
 const defaultLocationState = {
     siteList,
@@ -168,13 +169,13 @@ describe('StepOne', () => {
         const row1 = within(getAllByRole('row')[1]);
         expect(row1.getByText('UQL000001')).toBeInTheDocument();
         expect(row1.getByText('BRK-DELL')).toBeInTheDocument();
-        expect(row1.getByText('1-W212 Forgan Smith Building, St Lucia')).toBeInTheDocument();
+        assertLocationLinkless(row1.getByText('1-W212 Forgan Smith Building, St Lucia'));
         expect(row1.getByText('AWAITINGTEST')).toBeInTheDocument();
 
         const row2 = within(getAllByRole('row')[2]);
         expect(row2.getByText('UQL000002')).toBeInTheDocument();
         expect(row2.getByText('PWRC13-10')).toBeInTheDocument();
-        expect(row2.getByText('1-W212 Forgan Smith Building, St Lucia')).toBeInTheDocument();
+        assertLocationLink(row2.getByText('2-W212 Forgan Smith Building, St Lucia'));
         expect(row2.getByText('CURRENT')).toBeInTheDocument();
 
         // delete 1 item from the list
