@@ -17,6 +17,7 @@ export const createLocationLink = (text, url) => {
     if (isEmptyStr(text) || isEmptyStr(url)) return text;
     return (
         <a
+            data-testid="location-link"
             href={url}
             target="_blank"
             title="click to open floor plan in a new tab"
