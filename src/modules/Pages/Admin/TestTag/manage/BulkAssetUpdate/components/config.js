@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import { createLocationString, createLocationLinkGridCell } from '../../../helpers/helpers';
+import { createLocationString, createLocationFloorPlanLink } from '../../../helpers/helpers';
 
 export const MAXEXCLUDEDMOREITEMS = 10;
 
@@ -24,7 +24,7 @@ export default {
                     minWidth: 200,
                     renderCell: params => {
                         const row = params.row.last_location ?? params.row;
-                        return createLocationLinkGridCell(
+                        return createLocationFloorPlanLink(
                             createLocationString({
                                 site: row?.site_name,
                                 building: row?.building_name,
@@ -53,7 +53,7 @@ export default {
                     flex: 1,
                     minWidth: 200,
                     renderCell: params =>
-                        createLocationLinkGridCell(
+                        createLocationFloorPlanLink(
                             createLocationString({
                                 site: params.row.site_name,
                                 building: params.row.building_name,

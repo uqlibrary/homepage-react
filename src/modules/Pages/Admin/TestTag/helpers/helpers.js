@@ -13,11 +13,16 @@ export const createLocationString = ({ site, building, floor, room }) =>
     `${floor ?? ''}${!!room ? `-${room}` : ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`.trim();
 
 /* istanbul ignore next */
-export const createLocationLinkGridCell = (locationString, floorPlanUrl) => {
-    if (isEmptyStr(locationString) || isEmptyStr(floorPlanUrl)) return locationString;
+export const createLocationFloorPlanLink = (text, url) => {
+    if (isEmptyStr(text) || isEmptyStr(url)) return null;
     return (
-        <a href={floorPlanUrl} target="_blank" title="click to open floor plan in a new tab" className="location-link">
-            {locationString}
+        <a
+            href={url}
+            target="_blank"
+            title="click to open floor plan in a new tab"
+            className="location-floor-plan-link"
+        >
+            {text}
         </a>
     );
 };

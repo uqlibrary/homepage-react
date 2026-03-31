@@ -5,7 +5,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import { createLocationString } from '../../../helpers/helpers';
+import { createLocationFloorPlanLink, createLocationString } from '../../../helpers/helpers';
 import { isEmptyStr } from '../../../helpers/helpers';
 import { isValidUrl } from '../../../../Alerts/Form/AlertForm';
 import Link from '@mui/material/Link';
@@ -171,39 +171,7 @@ export default {
                     renderInUpdate: true,
                     flex: 2,
                     minWidth: 150,
-                    renderCell: params => {
-                        const href = params?.value?.trim();
-                        /* istanbul ignore else */
-                        if (!href) return null;
-
-                        /* istanbul ignore next */
-                        return (
-                            <Link
-                                href={href}
-                                title={href}
-                                target="_blank"
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 6,
-                                    width: '100%',
-                                    overflow: 'hidden',
-                                    textDecoration: 'none',
-                                }}
-                            >
-                                <MapIcon style={{ flexShrink: 0 }} />
-                                <span
-                                    style={{
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                    }}
-                                >
-                                    {href}
-                                </span>
-                            </Link>
-                        );
-                    },
+                    renderCell: params => createLocationFloorPlanLink(params.value, params.value),
                 },
             },
             asset_count: {
