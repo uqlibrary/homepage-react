@@ -1,5 +1,5 @@
 export const zeroPaddedYear = value => (value ? ('0000' + value).substr(-4) : '*');
-import { api, API_URL } from '../config';
+import { API_URL } from '../config';
 
 export const CURRENT_ACCOUNT_API = () => ({
     apiUrl: 'account',

@@ -111,6 +111,15 @@ describe('InspectionsByLicencedUser', () => {
             expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
             expect(getByTestId('user_inspections-user-name-select')).toBeInTheDocument();
 
+            await waitFor(() =>
+                expect(getInspectionsByLicencedUserFn).toHaveBeenLastCalledWith({
+                    endDate: null,
+                    startDate: null,
+                    userRange: null,
+                    teamSlug: 'WSS',
+                }),
+            );
+
             await userEvent.click(getByTestId('user_inspections-user-name-select'));
 
             selectOptionFromListByIndex(1, { getByRole, getAllByRole });
@@ -127,7 +136,7 @@ describe('InspectionsByLicencedUser', () => {
                     endDate: null,
                     startDate: null,
                     userRange: '5',
-                    teamSlug: 'WSS',
+                    teamSlug: null,
                 }),
             );
             await mockActionsStore.dispatch(tntActions.getInspectionsByLicencedUser({ userRange: [5] }));
@@ -156,7 +165,7 @@ describe('InspectionsByLicencedUser', () => {
                 expect(getInspectionsByLicencedUserFn).toHaveBeenLastCalledWith({
                     endDate: '2022-12-31',
                     startDate: '2021-01-01',
-                    userRange: '',
+                    userRange: null,
                     teamSlug: 'WSS',
                 }),
             );
@@ -194,36 +203,55 @@ describe('InspectionsByLicencedUser', () => {
 
             expect(getByText('A start date is required to search by date')).toBeInTheDocument();
         });
-    });
 
-    it('fires action when team filter changes', async () => {
-        const getInspectionsByLicencedUserFn = jest.fn(() => Promise.resolve());
-        const { getByText, findByRole, getByTestId } = setup({
-            actions: { getInspectionsByLicencedUser: getInspectionsByLicencedUserFn },
-        });
-        expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
+        it('fires action when team filter changes', async () => {
+            const getInspectionsByLicencedUserFn = jest.fn(() => Promise.resolve());
+            const { getByText, findByRole, getByTestId, getByRole, getAllByRole } = setup({
+                actions: { getInspectionsByLicencedUser: getInspectionsByLicencedUserFn },
+            });
+            expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
 
-        expect(getInspectionsByLicencedUserFn).toHaveBeenCalledWith({
-            endDate: null,
-            startDate: null,
-            userRange: '',
-            teamSlug: 'WSS',
-        });
-
-        // open team selector and select WSS team
-        const teamSelect = within(getByTestId('team-display-name-select-filter')).getByRole('combobox');
-        await userEvent.click(teamSelect);
-        const listbox = await findByRole('listbox');
-        await userEvent.click(within(listbox).getByText('Spaces'));
-
-        await waitFor(() =>
-            expect(getInspectionsByLicencedUserFn).toHaveBeenLastCalledWith({
+            expect(getInspectionsByLicencedUserFn).toHaveBeenCalledWith({
                 endDate: null,
                 startDate: null,
-                userRange: '',
-                teamSlug: 'SPACES',
-            }),
-        );
+                userRange: null,
+                teamSlug: 'WSS',
+            });
+
+            await userEvent.click(getByTestId('user_inspections-user-name-select'));
+            selectOptionFromListByIndex(1, { getByRole, getAllByRole });
+
+            expect(getByTestId('user_inspections-user-name-input')).toHaveAttribute('value', '5');
+
+            await waitFor(() =>
+                expect(getInspectionsByLicencedUserFn).toHaveBeenLastCalledWith({
+                    endDate: null,
+                    startDate: null,
+                    userRange: '5',
+                    teamSlug: null,
+                }),
+            );
+
+            const backdrop = document.querySelector('.MuiBackdrop-root');
+            if (backdrop) await userEvent.click(backdrop);
+
+            // open team selector and select all teams
+            const teamSelect = within(getByTestId('team-display-name-select-filter')).getByRole('combobox');
+            await userEvent.click(teamSelect);
+            const listbox = await findByRole('listbox');
+            await userEvent.click(within(listbox).getByText('All teams'));
+
+            expect(getByTestId('user_inspections-user-name-input')).toHaveAttribute('value', '');
+
+            await waitFor(() =>
+                expect(getInspectionsByLicencedUserFn).toHaveBeenLastCalledWith({
+                    endDate: null,
+                    startDate: null,
+                    userRange: null,
+                    teamSlug: null,
+                }),
+            );
+        });
     });
 
     describe('coverage', () => {

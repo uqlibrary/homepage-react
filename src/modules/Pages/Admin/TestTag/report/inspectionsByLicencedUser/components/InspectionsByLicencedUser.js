@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
@@ -87,7 +87,15 @@ const InspectionsByLicencedUser = ({
     });
     const { row } = useDataTableRow(userInspections, transformRow);
 
-    const clearDateErrors = () => {
+    const onTeamChange = useCallback(
+        team => {
+            setSelectedTeam(team);
+            setInspectorName([]);
+        },
+        [setSelectedTeam],
+    );
+
+    const clearDateErrors = useCallback(() => {
         setStartDateError({
             error: false,
             message: '',
@@ -96,23 +104,23 @@ const InspectionsByLicencedUser = ({
             error: false,
             message: '',
         });
-    };
+    }, []);
 
-    const handleStartDateChange = date => {
+    const handleStartDateChange = useCallback(date => {
         setSelectedStartDate({
             date: date,
             dateFormatted: !!date ? date.format(locale.config.format.dateFormatNoTime) : null,
         });
-    };
-    const handleEndDateChange = date => {
+    }, []);
+    const handleEndDateChange = useCallback(date => {
         setSelectedEndDate({
             date: date,
             dateFormatted: !!date ? date.format(locale.config.format.dateFormatNoTime) : null,
         });
-    };
-    const handleInspectorChange = event => {
+    }, []);
+    const handleInspectorChange = useCallback(event => {
         setInspectorName(event.target.value);
-    };
+    }, []);
 
     useEffect(() => {
         let shouldCallReport = true;
@@ -151,11 +159,12 @@ const InspectionsByLicencedUser = ({
             }
         }
         if (shouldCallReport) {
+            const userRange = inspectorName.length > 0 ? inspectorName.toString() : null;
             actions.getInspectionsByLicencedUser({
                 startDate: selectedStartDate.dateFormatted,
                 endDate: selectedEndDate.dateFormatted,
-                userRange: inspectorName.toString(),
-                teamSlug: selectedTeamSlug !== '' ? selectedTeamSlug : null,
+                userRange,
+                teamSlug: !userRange && selectedTeamSlug ? selectedTeamSlug : null,
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -187,13 +196,12 @@ const InspectionsByLicencedUser = ({
                                 options={userTeamList}
                                 locale={{ all: 'All teams', label: 'Team' }}
                                 filterModel={selectedTeam}
-                                setFilterModel={setSelectedTeam}
+                                setFilterModel={onTeamChange}
                             />
                         </Grid>
                     </Grid>
                     <Grid container spacing={3}>
                         <Grid xs={12} md={4}>
-                            {/* Date Pickers go here */}
                             <FormControl variant="standard" fullWidth className={'formControl'}>
                                 <InputLabel>Inspector Name</InputLabel>
                                 <Select
@@ -223,6 +231,11 @@ const InspectionsByLicencedUser = ({
                                             <div className={'chips'}>
                                                 {!!selected &&
                                                     licencedUsers
+                                                        .filter(user =>
+                                                            selectedTeamSlug
+                                                                ? user.user_team === selectedTeamSlug
+                                                                : true,
+                                                        )
                                                         .filter(user => selected.includes(user.user_id))
                                                         .slice(0, 2) // Extract the first two users
                                                         .map(value => value.user_name)
@@ -236,22 +249,25 @@ const InspectionsByLicencedUser = ({
                                         );
                                     }}
                                 >
-                                    {licencedUsers?.map((user, index) => (
-                                        <MenuItem
-                                            key={user.user_id}
-                                            value={user.user_id}
-                                            style={getNameStyles(user, inspectorName, theme)}
-                                            id={`${componentIdLower}-user-name-option-${index}`}
-                                            data-testid={`${componentIdLower}-user-name-option-${index}`}
-                                        >
-                                            {user.user_name}
-                                        </MenuItem>
-                                    ))}
+                                    {licencedUsers
+                                        ?.filter(user =>
+                                            selectedTeamSlug ? user.user_team === selectedTeamSlug : true,
+                                        )
+                                        .map((user, index) => (
+                                            <MenuItem
+                                                key={user.user_id}
+                                                value={user.user_id}
+                                                style={getNameStyles(user, inspectorName, theme)}
+                                                id={`${componentIdLower}-user-name-option-${index}`}
+                                                data-testid={`${componentIdLower}-user-name-option-${index}`}
+                                            >
+                                                {user.user_name}
+                                            </MenuItem>
+                                        ))}
                                 </Select>
                             </FormControl>
                         </Grid>
                         <Grid xs={12} md={4}>
-                            {/* Start Date */}
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
@@ -287,7 +303,6 @@ const InspectionsByLicencedUser = ({
                             />
                         </Grid>
                         <Grid xs={12} md={4}>
-                            {/* End Date */}
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
