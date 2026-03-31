@@ -121,7 +121,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await expect(page.locator('#event_panel-event-date-input-helper-text')).not.toBeVisible();
             });
 
-            test('should allow selection of location', async ({ page, context }) => {
+            test('should allow selection of location', async ({ page }) => {
                 // Site
                 await expect(page.getByTestId('location_picker-event-panel-site-input')).toHaveValue('St Lucia');
                 await page.getByTestId('location_picker-event-panel-site').click();
