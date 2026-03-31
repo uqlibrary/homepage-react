@@ -132,6 +132,11 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
             locale.pages.report.assetReportByFilters.header.pageSubtitle('Work Station Support', 'Library'),
         );
         await forcePageRefresh(page);
+
+        await expect(page.getByTestId('location_picker-assets_inspected-building-input')).toHaveValue(
+            'All - All buildings',
+        );
+
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
 
         await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–4 of 4')).toBeVisible();
