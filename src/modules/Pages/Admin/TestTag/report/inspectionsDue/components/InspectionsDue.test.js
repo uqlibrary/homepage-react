@@ -18,6 +18,7 @@ import userData from '../../../../../../../data/mock/data/testing/testAndTag/tes
 import siteList from '../../../../../../../data/mock/data/testing/testAndTag/testTagSites';
 import floorList from '../../../../../../../data/mock/data/testing/testAndTag/testTagFloors';
 import roomList from '../../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
+import { assertLocationLink } from '../../../helpers/helpers.test';
 
 const defaultLocationState = {
     siteList,
@@ -100,14 +101,12 @@ describe('InspectionsDue', () => {
         const row = within(getAllByRole('row')[1]);
         expect(row.getByText('UQL000007')).toBeInTheDocument();
         expect(row.getByText('Power Cord - C5')).toBeInTheDocument();
-
         // expect a red cell with alert icon
         expect(row.getAllByRole('cell')[2]).toHaveStyle('background-color: #951126');
         expect(row.getByText('2010-04-25')).toBeInTheDocument();
         expect(row.getByTestId('tooltip-overdue')).toBeInTheDocument();
-
         expect(row.getByText('2022-10-25')).toBeInTheDocument();
-        expect(row.getByText('4-L412')).toBeInTheDocument();
+        assertLocationLink(row.getByText('4-L412'), 'http://4.a');
 
         // check pagination counter shows expected number of rows
         expect(getByText('1–10 of 10')).toBeInTheDocument();
