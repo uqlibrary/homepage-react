@@ -16,7 +16,13 @@ export const createLocationString = ({ site, building, floor, room }) =>
 export const createLocationLink = (text, url) => {
     if (isEmptyStr(text) || isEmptyStr(url)) return text;
     return (
-        <a href={url} target="_blank" title="click to open floor plan in a new tab" className="location-link">
+        <a
+            href={url}
+            target="_blank"
+            title="click to open floor plan in a new tab"
+            className="location-link"
+            onClick={e => e.stopPropagation()}
+        >
             {text}
         </a>
     );
