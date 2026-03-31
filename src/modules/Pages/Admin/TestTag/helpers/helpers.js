@@ -12,8 +12,7 @@ export const isEmptyObject = obj =>
 export const createLocationString = ({ site, building, floor, room }) =>
     `${floor ?? ''}${!!room ? `-${room}` : ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`.trim();
 
-/* istanbul ignore next */
-export const createLocationLink = (locationString, floorPlanUrl) => {
+export const createLocationLinkGridCell = (locationString, floorPlanUrl) => {
     if (isEmptyStr(locationString) || isEmptyStr(floorPlanUrl)) return locationString;
     return (
         <a href={floorPlanUrl} target="_blank" title="click to open floor plan in a new tab" className="location-link">
