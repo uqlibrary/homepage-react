@@ -1004,6 +1004,14 @@ export const EditSpaceForm = ({
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
+
+                            const editableElement = editor.ui.getEditableElement();
+                            editableElement?.addEventListener('click', event => {
+                                const anchorElement = event?.target?.closest?.('a');
+                                if (!!anchorElement) {
+                                    event.preventDefault();
+                                }
+                            });
                         }}
                         onChange={(event, editor) => {
                             const htmlData = editor.getData();
