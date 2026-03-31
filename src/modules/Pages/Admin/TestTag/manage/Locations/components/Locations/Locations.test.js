@@ -1,5 +1,12 @@
 import React from 'react';
-import { rtlRender, WithRouter, WithReduxStore, waitForElementToBeRemoved, userEvent, waitFor } from 'test-utils';
+import {
+    rtlRender,
+    WithRouter,
+    WithReduxStore,
+    waitForElementToBeRemovedIfPresent,
+    userEvent,
+    waitFor,
+} from 'test-utils';
 import Immutable from 'immutable';
 
 import siteList from '../../../../../../../../data/mock/data/testing/testAndTag/testTagSites';
@@ -79,7 +86,7 @@ describe('Locations', () => {
 
             userEvent.click(getByTestId('update_dialog-cancel-button'));
 
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
             expect(addLocationFn).not.toHaveBeenCalled();
         });
         it('handles Add action promise rejection', async () => {
