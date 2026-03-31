@@ -12,7 +12,11 @@ export const isEmptyObject = obj =>
 export const createLocationString = ({ site, building, floor, room }) =>
     `${floor ?? ''}${!!room ? `-${room}` : ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`.trim();
 
-/* istanbul ignore next */
+/**
+ * @param {string} text
+ * @param {string} url
+ * @return {React.JSX.Element|*}
+ */
 export const createLocationLink = (text, url) => {
     if (isEmptyStr(text) || isEmptyStr(url)) return text;
     return (
