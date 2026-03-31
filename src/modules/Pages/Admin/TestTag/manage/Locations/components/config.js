@@ -5,11 +5,9 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import { createLocationFloorPlanLink, createLocationString } from '../../../helpers/helpers';
+import { createLocationLink, createLocationString } from '../../../helpers/helpers';
 import { isEmptyStr } from '../../../helpers/helpers';
 import { isValidUrl } from '../../../../Alerts/Form/AlertForm';
-import Link from '@mui/material/Link';
-import MapIcon from '@mui/icons-material/Map';
 
 export default {
     site: {
@@ -171,7 +169,7 @@ export default {
                     renderInUpdate: true,
                     flex: 2,
                     minWidth: 150,
-                    renderCell: params => createLocationFloorPlanLink(params.value, params.value),
+                    renderCell: params => createLocationLink(params.value, params.value),
                 },
             },
             asset_count: {

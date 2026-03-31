@@ -13,15 +13,10 @@ export const createLocationString = ({ site, building, floor, room }) =>
     `${floor ?? ''}${!!room ? `-${room}` : ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`.trim();
 
 /* istanbul ignore next */
-export const createLocationFloorPlanLink = (text, url) => {
+export const createLocationLink = (text, url) => {
     if (isEmptyStr(text) || isEmptyStr(url)) return null;
     return (
-        <a
-            href={url}
-            target="_blank"
-            title="click to open floor plan in a new tab"
-            className="location-floor-plan-link"
-        >
+        <a href={url} target="_blank" title="click to open floor plan in a new tab" className="location-link">
             {text}
         </a>
     );
