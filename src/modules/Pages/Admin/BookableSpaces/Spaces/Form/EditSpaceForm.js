@@ -577,6 +577,11 @@ export const EditSpaceForm = ({
             };
 
             setFormValues(newValues);
+
+            // Clear the field-level validation error as soon as a valid type is selected.
+            if (!!theNewValue) {
+                setErrorMessages(errorMessages?.filter(m => m?.field !== 'space_type_id') || []);
+            }
             return;
         } else if (prop === 'space_opening_hours_id') {
             const springshareElement = document.querySelector('.asLoaded');
