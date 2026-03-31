@@ -26,7 +26,7 @@ export const createLocationLink = (text, url) => {
             target="_blank"
             title="click to open floor plan in a new tab"
             className="location-link"
-            onClick={e => e.stopPropagation()}
+            onClick={/* istanbul ignore next */ e => e.stopPropagation()}
         >
             {text}
         </a>
