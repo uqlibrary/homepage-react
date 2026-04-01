@@ -27,7 +27,7 @@ describe('middleware saveReducerOnSessionExpired', () => {
 
         const nullAction = {};
         saveReducerOnSessionExpired(store)(next)(nullAction);
-        expect(next).toHaveBeenCalledWith(nullAction);
+        expect(next).toBeCalledWith(nullAction);
     });
 
     it('should save give reducer in action payload to a local storage', () => {

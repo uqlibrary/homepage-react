@@ -4,7 +4,6 @@ import {
     WithRouter,
     WithReduxStore,
     waitForElementToBeRemoved,
-    waitForElementToBeRemovedIfPresent,
     userEvent,
     within,
     act,
@@ -151,7 +150,7 @@ describe('Locations', () => {
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
 
-            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(addLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -178,7 +177,7 @@ describe('Locations', () => {
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
 
-            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(addLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -231,7 +230,7 @@ describe('Locations', () => {
             await userEvent.click(getByTestId('building_excluded_cb-input'));
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -282,7 +281,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('building_name-input'), ' update');
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
+            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {

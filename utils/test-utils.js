@@ -14,7 +14,6 @@ import userEvent from '@testing-library/user-event';
 
 import { getStore } from '../src/config/store';
 import Immutable from 'immutable';
-import { waitForElementToBeRemoved } from '@testing-library/dom';
 
 const domTestingLib = require('@testing-library/dom');
 const reactTestingLib = require('@testing-library/react');
@@ -60,13 +59,6 @@ const selectOptionFromListByIndex = index => {
     });
 };
 
-/**
- * @param {string} testId
- * @return {Promise<void>}
- */
-const waitForElementToBeRemovedIfPresent = async testId =>
-    screen.queryByTestId(testId) && (await waitForElementToBeRemoved(() => screen.queryByTestId(testId)));
-
 module.exports = {
     ...domTestingLib,
     ...reactTestingLib,
@@ -77,5 +69,4 @@ module.exports = {
     preview,
     enableJestPreviewOnTestFailure,
     selectOptionFromListByIndex,
-    waitForElementToBeRemovedIfPresent,
 };

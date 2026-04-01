@@ -41,6 +41,6 @@ describe('Edit Form Tests', () => {
         });
         fireEvent.change(getByLabelText('End date'), { target: { value: '2055-07-02T18:30:00' } });
         await userEvent.click(getByRole('button', { name: 'Save' }));
-        expect(saveAlertChangeMock).toHaveBeenCalledWith({ ...alert, end: '2055-07-02 18:30:00' });
+        expect(saveAlertChangeMock).toBeCalledWith({ ...alert, end: '2055-07-02 18:30:00' });
     });
 });

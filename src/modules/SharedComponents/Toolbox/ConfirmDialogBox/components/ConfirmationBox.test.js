@@ -63,8 +63,8 @@ describe('ConfirmationBox component', () => {
         const onCloseFn = jest.fn();
         const { getByTestId } = setup({ isOpen: true, onAction: onActionFn, onClose: onCloseFn });
         fireEvent.click(getByTestId('confirm-confirmation-box'));
-        expect(onActionFn).toHaveBeenCalled();
-        expect(onCloseFn).toHaveBeenCalled();
+        expect(onActionFn).toBeCalled();
+        expect(onCloseFn).toBeCalled();
     });
 
     it('should call cancel action', () => {
@@ -72,8 +72,8 @@ describe('ConfirmationBox component', () => {
         const onCloseFn = jest.fn();
         const { getByTestId } = setup({ isOpen: true, onCancelAction: onCancelActionFn, onClose: onCloseFn });
         fireEvent.click(getByTestId('cancel-confirmation-box'));
-        expect(onCancelActionFn).toHaveBeenCalled();
-        expect(onCloseFn).toHaveBeenCalled();
+        expect(onCancelActionFn).toBeCalled();
+        expect(onCloseFn).toBeCalled();
     });
 
     it('should call alternate action', () => {
@@ -86,8 +86,8 @@ describe('ConfirmationBox component', () => {
             showAlternateActionButton: true,
         });
         fireEvent.click(getByTestId('confirm-alternate-confirmation-box'));
-        expect(onAlternateActionFn).toHaveBeenCalled();
-        expect(onCloseFn).toHaveBeenCalled();
+        expect(onAlternateActionFn).toBeCalled();
+        expect(onCloseFn).toBeCalled();
     });
 
     it('should set busy if busy prop is passed', () => {

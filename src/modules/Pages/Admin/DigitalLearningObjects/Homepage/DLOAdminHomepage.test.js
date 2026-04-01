@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { useNavigate } from 'react-router-dom';
 import DLOAdminHomepage from './DLOAdminHomepage';
 import {
     exportDemographicsToCSV,
@@ -8,11 +7,6 @@ import {
     fetchAndExportFavouritesToCSV,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { useAccountContext } from 'context';
-
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useNavigate: jest.fn(),
-}));
 
 jest.mock('context', () => ({
     useAccountContext: jest.fn(),
@@ -77,12 +71,8 @@ const baseProps = {
 };
 
 describe('DLOAdminHomepage menu', () => {
-    let mockNavigate;
-
     beforeEach(() => {
         jest.clearAllMocks();
-        mockNavigate = jest.fn();
-        useNavigate.mockReturnValue(mockNavigate);
         useAccountContext.mockReturnValue({ account: { id: 'uqauthor1' } });
     });
 
@@ -137,11 +127,20 @@ describe('DLOAdminHomepage menu', () => {
     });
 
     it('navigates to dashboard from menu item', async () => {
+        const originalLocation = window.location;
+        delete window.location;
+        window.location = {
+            ...originalLocation,
+            href: 'http://localhost/',
+        };
+
         render(<DLOAdminHomepage {...baseProps} />);
 
         fireEvent.click(screen.getByTestId('admin-dlor-menu-button'));
         fireEvent.click(await screen.findByTestId('dlor-admin-dashboard--button'));
 
-        expect(mockNavigate).toHaveBeenCalledWith('/digital-learning-hub/dashboard');
+        expect(window.location.href).toBe('/digital-learning-hub/dashboard');
+
+        window.location = originalLocation;
     });
 });
