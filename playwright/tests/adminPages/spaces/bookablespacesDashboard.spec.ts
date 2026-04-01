@@ -24,6 +24,8 @@ test.describe('Spaces Admin - manage locations', () => {
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
+        await expect(page.getByTestId('spaces-sort-button')).toContainText('Sort by name');
+        await page.getByTestId('admin-spaces-list-paginator-select').selectOption('10');
 
         const greenTick = (id: string) =>
             page.getByTestId(`${id}`).locator('svg path[d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"]');
@@ -538,14 +540,17 @@ test.describe('Spaces Admin - manage locations', () => {
             await page.goto('/admin/spaces?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
+            await expect(page.getByTestId('spaces-sort-button')).toContainText('Sort by name');
 
-            // initially paginator limit of 5 is visible
+            // initially paginator limit of 5 is visible and sorted by name
             await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
             await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
-            await expect(page.getByTestId(`space-${PACE}`)).toBeVisible();
-            await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
-            await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${PACE}`)).not.toBeVisible();
+            await expect(page.getByTestId(`space-${LIVERIS}`)).not.toBeVisible();
             await expect(page.getByTestId(`space-${ARMUS2}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${ARMUS3}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${ARMUS4}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${ARMUS5}`)).toBeVisible();
 
             await expect(campusSelector.locator('input')).not.toBeDisabled();
             await expect(librarySelector.locator('input')).toBeDisabled();
@@ -562,16 +567,17 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(librarySelector.locator('input')).not.toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
 
-            // only St Lucia spaces display
+            // only St Lucia spaces display on the first page, still sorted by name
             await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
             await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
-            await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
-            await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${LIVERIS}`)).not.toBeVisible();
             await expect(page.getByTestId(`space-${ARMUS2}`)).toBeVisible();
             await expect(page.getByTestId(`space-${ARMUS3}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${ARMUS4}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${ARMUS5}`)).toBeVisible();
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).not.toBeVisible();
-            await expect(liverisSpace).toBeVisible();
+            await expect(liverisSpace).not.toBeVisible();
 
             // open campus selector
             await campusSelector.click();
@@ -624,8 +630,9 @@ test.describe('Spaces Admin - manage locations', () => {
             await page.goto('/admin/spaces?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
+            await expect(page.getByTestId('spaces-sort-button')).toContainText('Sort by name');
 
-            // initially all first page space rows are visible
+            // initially all first page space rows are visible in name order
             await expect(
                 page
                     .getByTestId('space-table')
@@ -633,8 +640,8 @@ test.describe('Spaces Admin - manage locations', () => {
                     .locator(':scope > tr'),
             ).toHaveCount(PAGINATE_TO_SHOW_5);
             await expect(lawSpace).toBeVisible();
-            await expect(paceSpace).toBeVisible();
-            await expect(liverisSpace).toBeVisible();
+            await expect(paceSpace).not.toBeVisible();
+            await expect(liverisSpace).not.toBeVisible();
 
             await expect(campusSelector.locator('input')).not.toBeDisabled();
             await expect(librarySelector.locator('input')).toBeDisabled();
@@ -668,10 +675,10 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(campusSelector.locator('div')).toContainText('St Lucia');
             await expect(librarySelector.locator('input')).not.toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
-            await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5); // only one page of St Lucia spaces display
+            await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5); // first page of St Lucia spaces display
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).not.toBeVisible();
-            await expect(liverisSpace).toBeVisible();
+            await expect(liverisSpace).not.toBeVisible();
 
             await expect(campusSelector.locator('input')).not.toBeDisabled();
             await expect(librarySelector.locator('input')).not.toBeDisabled();
@@ -736,8 +743,8 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(librarySelector.locator('input')).toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
             await expect(lawSpace).toBeVisible();
-            await expect(paceSpace).toBeVisible();
-            await expect(liverisSpace).toBeVisible();
+            await expect(paceSpace).not.toBeVisible();
+            await expect(liverisSpace).not.toBeVisible();
         });
     });
     test('can navigate from dashboard to homepage', async ({ page }) => {
@@ -798,6 +805,8 @@ test.describe('Spaces Admin - manage locations', () => {
 
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+        await expect(page.getByTestId('spaces-sort-button')).toContainText('Sort by name');
+        await page.getByTestId('admin-spaces-list-paginator-select').selectOption('10');
 
         const descriptionPanel = page.getByTestId(`space-description-${LIVERIS}`);
         const expandButton = page.getByTestId(`space-${LIVERIS}-expand-button`);
@@ -844,13 +853,16 @@ test.describe('Spaces Admin - manage locations', () => {
 
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+        await expect(page.getByTestId('spaces-sort-button')).toContainText('Sort by name');
 
         await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
         await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
-        await expect(page.getByTestId(`space-${PACE}`)).toBeVisible();
-        await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
-        await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${PACE}`)).not.toBeVisible();
+        await expect(page.getByTestId(`space-${LIVERIS}`)).not.toBeVisible();
         await expect(page.getByTestId(`space-${ARMUS2}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS3}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS4}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS5}`)).toBeVisible();
 
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
@@ -864,11 +876,11 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(pageCountDisplay).toBeVisible();
         await expect(pageCountDisplay).toContainText('6–10 of 10');
         await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
-        await expect(page.getByTestId(`space-${ARMUS3}`)).toBeVisible();
-        await expect(page.getByTestId(`space-${ARMUS4}`)).toBeVisible();
-        await expect(page.getByTestId(`space-${ARMUS5}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
         await expect(page.getByTestId(`space-${ARMUS6}`)).toBeVisible();
         await expect(page.getByTestId(`space-${ARMUS7}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${PACE}`)).toBeVisible();
 
         // go to back to first page of pagination, 1-5 of 10
         const previousPaginationButton = paginationBlock.locator('[aria-label="Go to previous page"]');
@@ -878,10 +890,12 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(pageCountDisplay).toContainText('1–5 of 10');
         await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
         await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
-        await expect(page.getByTestId(`space-${PACE}`)).toBeVisible();
-        await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
-        await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${PACE}`)).not.toBeVisible();
+        await expect(page.getByTestId(`space-${LIVERIS}`)).not.toBeVisible();
         await expect(page.getByTestId(`space-${ARMUS2}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS3}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS4}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS5}`)).toBeVisible();
 
         await expect(campusSelector.locator('input')).not.toBeDisabled();
         await campusSelector.click();
@@ -894,14 +908,15 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(librarySelector.locator('input')).not.toBeDisabled();
         await expect(floorSelector.locator('input')).toBeDisabled();
 
-        // only St Lucia spaces display
+        // only St Lucia spaces display on the first page, still sorted by name
         await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
         await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
         await expect(page.getByTestId(`space-${PACE}`)).not.toBeVisible();
-        await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
-        await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${LIVERIS}`)).not.toBeVisible();
         await expect(page.getByTestId(`space-${ARMUS2}`)).toBeVisible();
         await expect(page.getByTestId(`space-${ARMUS3}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS4}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS5}`)).toBeVisible();
 
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
@@ -910,14 +925,14 @@ test.describe('Spaces Admin - manage locations', () => {
         // paginate
         const nextPageButton = page.locator('[aria-label="Go to next page"]');
         await expect(nextPageButton).toBeVisible();
-        nextPageButton.click();
+        await nextPageButton.click();
 
         // next page of St Lucia spaces display
         await expect(visibleSpaces).toHaveCount(4); // the second page of a set of 9
-        await expect(page.getByTestId('space-4')).toBeVisible();
-        await expect(page.getByTestId('space-5')).toBeVisible();
-        await expect(page.getByTestId('space-6')).toBeVisible();
-        await expect(page.getByTestId('space-7')).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS7}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS6}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
 
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
