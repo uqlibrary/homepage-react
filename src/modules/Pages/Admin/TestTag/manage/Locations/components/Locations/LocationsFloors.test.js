@@ -4,6 +4,7 @@ import {
     WithRouter,
     WithReduxStore,
     waitForElementToBeRemoved,
+    waitForElementToBeRemovedIfPresent,
     userEvent,
     within,
     act,
@@ -183,7 +184,7 @@ describe('Locations', () => {
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
 
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(addLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -211,7 +212,7 @@ describe('Locations', () => {
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
 
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(addLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -273,7 +274,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -301,7 +302,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -364,7 +365,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -392,7 +393,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
