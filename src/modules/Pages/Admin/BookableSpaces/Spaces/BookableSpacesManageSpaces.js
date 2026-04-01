@@ -14,6 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
@@ -38,6 +39,8 @@ import DoneIcon from '@mui/icons-material/Done';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
+import SouthIcon from '@mui/icons-material/South';
+import NorthIcon from '@mui/icons-material/North';
 
 import { addClass, removeClass, slugifyName, standardText } from 'helpers/general';
 
@@ -190,6 +193,11 @@ const CAMPUS_ID_UNSELECTED = '';
 const LIBRARY_ID_UNSELECTED = '';
 const FLOOR_ID_UNSELECTED = '';
 const SPACE_TYPE_ID_UNSELECTED = '';
+const SPACE_SORT_NAME = 'name';
+const SPACE_SORT_CREATED = 'created';
+const SPACE_SORT_UPDATED = 'updated';
+const SPACE_SORT_DIRECTION_ASC = 'asc';
+const SPACE_SORT_DIRECTION_DESC = 'desc';
 
 export const BookableSpacesManageSpaces = ({
     actions,
@@ -231,6 +239,49 @@ export const BookableSpacesManageSpaces = ({
         !!cookies[paginatorCookieName] ? parseInt(cookies[paginatorCookieName], 10) : 5,
     );
     const [pageNum, setPageNum] = React.useState(0);
+    const [sortType, setSortType] = useState(SPACE_SORT_NAME);
+    const [sortDirection, setSortDirection] = useState(SPACE_SORT_DIRECTION_ASC);
+    const [sortMenuAnchor, setSortMenuAnchor] = useState(null);
+
+    const sortTypeLabelMap = {
+        [SPACE_SORT_NAME]: 'Sort by name',
+        [SPACE_SORT_CREATED]: 'Sort by creation date',
+        [SPACE_SORT_UPDATED]: 'Sort by last changed',
+    };
+
+    const getDateEpoch = dateString => {
+        if (!dateString) {
+            return 0;
+        }
+        const timestamp = Date.parse(dateString);
+        return Number.isNaN(timestamp) ? 0 : timestamp;
+    };
+
+    const getSortedSpaces = (spaces, sortingType = sortType, sortingDirection = sortDirection) => {
+        const sourceSpaces = [...(spaces || [])];
+        const compareByName = (a, b) => (a?.space_name || '').localeCompare(b?.space_name || '');
+        const directionMultiplier = sortingDirection === SPACE_SORT_DIRECTION_DESC ? -1 : 1;
+
+        if (sortingType === SPACE_SORT_CREATED) {
+            return sourceSpaces.sort((a, b) => {
+                const dateDiff = getDateEpoch(a?.created_at) - getDateEpoch(b?.created_at);
+                if (dateDiff !== 0) {
+                    return dateDiff * directionMultiplier;
+                }
+                return compareByName(a, b);
+            });
+        }
+        if (sortingType === SPACE_SORT_UPDATED) {
+            return sourceSpaces.sort((a, b) => {
+                const dateDiff = getDateEpoch(a?.updated_at) - getDateEpoch(b?.updated_at);
+                if (dateDiff !== 0) {
+                    return dateDiff * directionMultiplier;
+                }
+                return compareByName(a, b);
+            });
+        }
+        return sourceSpaces.sort((a, b) => compareByName(a, b) * directionMultiplier);
+    };
 
     // the filters we will show on the page
     const [availableFilters, setAvailableFilters2] = useState([
@@ -268,6 +319,7 @@ export const BookableSpacesManageSpaces = ({
 
             resetAvailableFilters('campus', availableCampusList);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [campusListError, campusListLoading, campusList, bookableSpacesRoomList?.data?.locations]);
 
     React.useEffect(() => {
@@ -295,7 +347,7 @@ export const BookableSpacesManageSpaces = ({
     }, []);
 
     const showSpaceByPagination = (index, pageNumLocal, rowsPerPageLocal) => {
-        return index >= pageNumLocal * rowsPerPage && index < (pageNumLocal + 1) * rowsPerPageLocal;
+        return index >= pageNumLocal * rowsPerPageLocal && index < (pageNumLocal + 1) * rowsPerPageLocal;
     };
     React.useEffect(() => {
         if (
@@ -309,7 +361,7 @@ export const BookableSpacesManageSpaces = ({
             }
             // initialise the shown rows to the first N according to the paginator widget
             const usableRows = [];
-            bookableSpacesRoomList?.data?.locations?.map((space, index) => {
+            getSortedSpaces(bookableSpacesRoomList?.data?.locations, sortType, sortDirection)?.map((space, index) => {
                 usableRows?.push({
                     spaceId: space?.space_id,
                     showSpace: showSpaceByPagination(index, pageNum, rowsPerPage),
@@ -317,6 +369,7 @@ export const BookableSpacesManageSpaces = ({
             });
             setDisplayedRows(usableRows);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         bookableSpacesRoomListError,
         bookableSpacesRoomListLoading,
@@ -324,6 +377,8 @@ export const BookableSpacesManageSpaces = ({
         campusListError,
         campusListLoading,
         campusList,
+        sortType,
+        sortDirection,
     ]);
 
     const [selectedFilters, setSelectedFilters2] = useState([
@@ -377,6 +432,8 @@ export const BookableSpacesManageSpaces = ({
         console.log('resetDisplayedRows latestUpdate=', latestUpdate);
         // if we have just set data to UseState, they aren't available yet - weird! :(
         const usedFilters = latestUpdate?.location ? latestUpdate?.location : selectedFilters;
+        const usedSortType = latestUpdate?.sortingType || sortType;
+        const usedSortDirection = latestUpdate?.sortingDirection || sortDirection;
         let suppliedPageNum = 'pagination' in latestUpdate ? latestUpdate?.pagination : pageNum;
         let suppliedRowsPerPage = rowsPerPage;
         if (latestUpdate?.rowsPerPage) {
@@ -386,7 +443,7 @@ export const BookableSpacesManageSpaces = ({
 
         let numRow = 0;
         let displayedRowsLocal = [...displayedRows];
-        bookableSpacesRoomList?.data?.locations?.forEach(space => {
+        getSortedSpaces(bookableSpacesRoomList?.data?.locations, usedSortType, usedSortDirection)?.forEach(space => {
             const showSpaceByFilter = doesSpaceShow(space, usedFilters);
 
             displayedRowsLocal = displayedRowsLocal?.filter(r => {
@@ -479,6 +536,31 @@ export const BookableSpacesManageSpaces = ({
         resetDisplayedRows({ rowsPerPage: newRowsPerPage });
     };
 
+    const openSortMenu = event => {
+        setSortMenuAnchor(event?.currentTarget);
+    };
+
+    const closeSortMenu = () => {
+        setSortMenuAnchor(null);
+    };
+
+    const handleSortSelection = selectedSortType => {
+        const nextSortDirection =
+            selectedSortType === sortType && sortDirection === SPACE_SORT_DIRECTION_ASC
+                ? SPACE_SORT_DIRECTION_DESC
+                : SPACE_SORT_DIRECTION_ASC;
+
+        setSortType(selectedSortType);
+        setSortDirection(nextSortDirection);
+        setPageNum(0);
+        resetDisplayedRows({
+            pagination: 0,
+            sortingType: selectedSortType,
+            sortingDirection: nextSortDirection,
+        });
+        closeSortMenu();
+    };
+
     const expandButtonElementId = spaceId => `expand-button-space-${spaceId}`;
     const collapseButtonElementId = spaceId => `collapse-button-space-${spaceId}`;
     // const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
@@ -528,7 +610,7 @@ export const BookableSpacesManageSpaces = ({
         });
     }
 
-    const expandTable = e => {
+    const expandTable = () => {
         const thisButton = document.getElementById('table-pushout-button');
         !!thisButton && (thisButton.style.display = 'none');
 
@@ -539,7 +621,7 @@ export const BookableSpacesManageSpaces = ({
         addClass(tableEtc, 'expanded');
     };
 
-    const collapseTable = e => {
+    const collapseTable = () => {
         const thisButton = document.getElementById('table-pushin-button');
         !!thisButton && (thisButton.style.display = 'none');
 
@@ -588,6 +670,7 @@ export const BookableSpacesManageSpaces = ({
         const tableDescription = 'Manage Spaces';
 
         const sortedFacilityTypeGroups = prefilterFacilityData(facilityTypeList?.data);
+        const sortedSpaces = getSortedSpaces(bookableSpacesRoomList?.data?.locations, sortType, sortDirection);
 
         const campusFilterTypes = availableFilters?.find(ft => ft?.filterType === 'campus')?.filterValue;
         const selectedCampusId = selectedFilters?.find(f => f?.filterType === 'campus')?.filterValue;
@@ -851,7 +934,101 @@ export const BookableSpacesManageSpaces = ({
                                         component="th"
                                         sx={{ backgroundColor: { backgroundColorColumn }, verticalAlign: 'bottom' }}
                                     >
-                                        Spaces:
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'flex-start',
+                                            }}
+                                        >
+                                            <Button
+                                                variant="outlined"
+                                                onClick={openSortMenu}
+                                                data-testid="spaces-sort-button"
+                                                aria-controls={sortMenuAnchor ? 'spaces-sort-menu' : undefined}
+                                                aria-haspopup="true"
+                                                aria-expanded={sortMenuAnchor ? 'true' : undefined}
+                                                sx={{
+                                                    textTransform: 'none',
+                                                    marginBottom: '0.35rem',
+                                                    backgroundColor: '#fff',
+                                                }}
+                                                endIcon={
+                                                    sortDirection === SPACE_SORT_DIRECTION_ASC ? (
+                                                        <NorthIcon fontSize="small" />
+                                                    ) : (
+                                                        <SouthIcon fontSize="small" />
+                                                    )
+                                                }
+                                            >
+                                                {sortTypeLabelMap[sortType]}
+                                            </Button>
+                                            <Menu
+                                                id="spaces-sort-menu"
+                                                anchorEl={sortMenuAnchor}
+                                                open={!!sortMenuAnchor}
+                                                onClose={closeSortMenu}
+                                                MenuListProps={{
+                                                    'aria-labelledby': 'spaces-sort-button',
+                                                }}
+                                            >
+                                                <MenuItem
+                                                    selected={sortType === SPACE_SORT_NAME}
+                                                    onClick={() => handleSortSelection(SPACE_SORT_NAME)}
+                                                >
+                                                    Sort by name
+                                                    {sortType === SPACE_SORT_NAME &&
+                                                        (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
+                                                            <NorthIcon
+                                                                fontSize="small"
+                                                                style={{ marginLeft: '0.4rem' }}
+                                                            />
+                                                        ) : (
+                                                            <SouthIcon
+                                                                fontSize="small"
+                                                                style={{ marginLeft: '0.4rem' }}
+                                                            />
+                                                        ))}
+                                                </MenuItem>
+                                                <MenuItem
+                                                    selected={sortType === SPACE_SORT_CREATED}
+                                                    onClick={() => handleSortSelection(SPACE_SORT_CREATED)}
+                                                >
+                                                    Sort by creation date
+                                                    {sortType === SPACE_SORT_CREATED &&
+                                                        (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
+                                                            <NorthIcon
+                                                                fontSize="small"
+                                                                style={{ marginLeft: '0.4rem' }}
+                                                            />
+                                                        ) : (
+                                                            <SouthIcon
+                                                                fontSize="small"
+                                                                style={{ marginLeft: '0.4rem' }}
+                                                            />
+                                                        ))}
+                                                </MenuItem>
+                                                <MenuItem
+                                                    selected={sortType === SPACE_SORT_UPDATED}
+                                                    onClick={() => handleSortSelection(SPACE_SORT_UPDATED)}
+                                                >
+                                                    Sort by last changed
+                                                    {sortType === SPACE_SORT_UPDATED &&
+                                                        (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
+                                                            <NorthIcon
+                                                                fontSize="small"
+                                                                style={{ marginLeft: '0.4rem' }}
+                                                            />
+                                                        ) : (
+                                                            <SouthIcon
+                                                                fontSize="small"
+                                                                style={{ marginLeft: '0.4rem' }}
+                                                            />
+                                                        ))}
+                                                </MenuItem>
+                                            </Menu>
+                                            <div>Spaces:</div>
+                                        </div>
                                     </StyledStickyTableCell>
                                     {sortedFacilityTypeGroups?.map(group =>
                                         group?.facility_type_children?.map(facilityType => (
@@ -873,7 +1050,7 @@ export const BookableSpacesManageSpaces = ({
                             </StyledTableHead>
                             <TableBody>
                                 {displayedRows?.length > 0 &&
-                                    bookableSpacesRoomList?.data?.locations
+                                    sortedSpaces
                                         ?.filter(space =>
                                             displayedRows?.find(u => u?.spaceId === space?.space_id && !!u?.showSpace),
                                         )
@@ -1010,10 +1187,7 @@ export const BookableSpacesManageSpaces = ({
                         // in the list. Nor do we want them loading vast numbers of records - they
                         // can jump to the next page
                         rowsPerPageOptions={[5, 10, 25, 100]}
-                        count={
-                            bookableSpacesRoomList?.data?.locations?.filter(s => doesSpaceShow(s, selectedFilters))
-                                ?.length
-                        }
+                        count={sortedSpaces?.filter(s => doesSpaceShow(s, selectedFilters))?.length}
                         rowsPerPage={rowsPerPage}
                         page={pageNum}
                         SelectProps={{
