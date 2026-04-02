@@ -498,11 +498,12 @@ export const BookableSpacesManageSpaces = ({
             });
         }
         setSelectedFilters(newFilterTypes);
+        setPageNum(0);
         console.log('resetSelectedFilters newFilterTypes=', newFilterTypes);
 
         // show-hide Spaces according to selected filters
 
-        resetDisplayedRows({ location: newFilterTypes });
+        resetDisplayedRows({ location: newFilterTypes, pagination: 0 });
     };
     const isCampusSelected =
         selectedFilters?.find(f => f?.filterType === 'campus')?.filterValue !== CAMPUS_ID_UNSELECTED;

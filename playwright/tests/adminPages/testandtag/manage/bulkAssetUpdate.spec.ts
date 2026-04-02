@@ -10,9 +10,9 @@ const assertAlert = async (page: Page, text: string) => {
 
 test.describe('Test and Tag bulk asset update', () => {
     test.beforeEach(async ({ page }) => {
-        await page.goto('http://localhost:2020/admin/testntag/manage/bulkassetupdate?user=uqtesttag');
         const fixedDate = new Date('2025-01-01T09:00:00Z'); // Example: January 1, 2024, 9:00 AM UTC
         await page.clock.setFixedTime(fixedDate);
+        await page.goto('http://localhost:2020/admin/testntag/manage/bulkassetupdate?user=uqtesttag');
     });
 
     const selectAllRows = async (page: Page) => {
