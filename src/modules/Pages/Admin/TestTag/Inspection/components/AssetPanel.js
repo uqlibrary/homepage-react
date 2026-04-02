@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -13,7 +13,7 @@ import LastInspectionPanel from './LastInspectionPanel';
 import AssetSelector from '../../SharedComponents/AssetSelector/AssetSelector';
 import UpdateDialog from '../../SharedComponents/UpdateDialog/UpdateDialog';
 import AssetTypeSelector, { ADD_NEW_ID } from '../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
-import SwitchIncludeAllTeams from './partials/SwitchIncludeAllTeams';
+import { SwitchIncludeAllTeams, useTeams } from '../../SharedComponents/SwitchIncludeAllTeams';
 
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
 import { transformAddAssetTypeRequest } from '../utils/transformers';
@@ -51,7 +51,6 @@ const AssetPanel = ({
     canAddAssetType,
     openConfirmationAlert,
 }) => {
-    const [allTeams, setAllTeams] = React.useState();
     const pageLocale = locale.pages.inspect.form.asset;
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
@@ -64,6 +63,20 @@ const AssetPanel = ({
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [shouldAutoFocus, setShouldAutoFocus] = React.useState(false);
     const [searchTerm, setSearchTerm] = React.useState();
+
+    const teamActions = useMemo(
+        () => ({
+            loadAssets: actions.loadAssetsFiltered,
+            clearAssets: actions.clearAssets,
+        }),
+        [actions],
+    );
+
+    const { includeAllTeams, allTeams, onAllTeamsChange } = useTeams({
+        assetTeamSlug: selectedAsset?.asset_team_slug,
+        searchTerm,
+        actions: teamActions,
+    });
 
     const onSearch = React.useCallback(term => {
         setSearchTerm(term);
@@ -127,28 +140,6 @@ const AssetPanel = ({
             handleAddClick();
         } else handleChange('asset_type_id')(assetType.asset_type_id);
     };
-
-    const createFilter = value => {
-        const retval = value ? { all_teams: true } : {};
-        retval.key = Date.now(); // Force re-mount of AssetSelector when toggling all teams to reset its internal state
-        return retval;
-    };
-
-    const onAllTeamsChange = value => {
-        setAllTeams(value);
-        if (value === false && selectedAsset?.asset_team_slug !== user.user_team) {
-            // only reset the asset list when disabling the 'all' option, and when
-            // the user already selected an asset that is outside their team
-            actions.clearAssets();
-        } else if (searchTerm !== undefined) {
-            const filters = createFilter(value);
-            actions.loadAssetsFiltered(searchTerm, filters);
-        }
-    };
-
-    const includeAllTeams = React.useMemo(() => {
-        return createFilter(allTeams);
-    }, [allTeams]);
 
     return (
         <StandardCard

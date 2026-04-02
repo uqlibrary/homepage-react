@@ -901,6 +901,7 @@ export default {
                             previous: 'Back',
                             submit: 'Bulk Update',
                         },
+                        includeAllTeams: 'All team assets',
                         one: {
                             title: 'Step 1: Choose assets to update in bulk',
                             addText: 'ADD NEW ASSET',

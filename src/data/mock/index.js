@@ -1203,6 +1203,23 @@ mock.onGet('exams/course/FREN1010/summary')
     .onDelete(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)))
     .reply(() => [200, { status: 'OK' }])
 
+    .onGet(/test-and-tag\/asset\/search\/current\/.*[?]without_discards=1&all_teams=1/)
+    .reply(config => {
+        const patternTmp = config.url.split('/').pop();
+        const pattern = patternTmp.split('?')[0];
+        const allAssets = [...testTag_assets.data, ...testTag_assets_all.data];
+        // filter array to matching asset id's
+        return [
+            200,
+            {
+                data: allAssets.filter(
+                    asset =>
+                        asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()) &&
+                        asset.asset_status !== 'DISCARDED',
+                ),
+            },
+        ];
+    })
     .onGet(/test-and-tag\/asset\/search\/current\/.*[?]without_discards=1/)
     .reply(config => {
         const patternTmp = config.url.split('/').pop();

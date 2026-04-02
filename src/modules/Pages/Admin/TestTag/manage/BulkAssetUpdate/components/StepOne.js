@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
@@ -14,6 +14,7 @@ import { useDataTableColumns } from '../../../SharedComponents/DataTable/DataTab
 import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector';
 import FooterBar from '../../../SharedComponents/DataTable/FooterBar';
 import FilterDialog from './FilterDialog';
+import { SwitchIncludeAllTeams, useTeams } from '../../../SharedComponents/SwitchIncludeAllTeams';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
@@ -21,6 +22,8 @@ import config from './config';
 import { isValidAssetId } from '../../../Inspection/utils/helpers';
 import { isEmptyObject } from '../../../helpers/helpers';
 import { useAccountUser } from '../../../helpers/hooks';
+
+const filterWithoutDiscards = { status: { discarded: false } };
 
 const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen, resetForm, nextStep }) => {
     const componentId = `${id}-step-one`;
@@ -33,6 +36,28 @@ const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen,
 
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('md')) || false;
+
+    const [searchTerm, setSearchTerm] = React.useState();
+    const teamActions = useMemo(
+        () => ({
+            loadAssets: actions?.loadAssetsFiltered,
+            clearAssets: actions?.clearAssets,
+        }),
+        [actions],
+    );
+
+    const { includeAllTeams, onAllTeamsChange } = useTeams({
+        searchTerm,
+        actions: teamActions,
+    });
+
+    const onSearch = React.useCallback(term => {
+        setSearchTerm(term);
+    }, []);
+
+    const onClear = React.useCallback(() => {
+        setSearchTerm(undefined);
+    }, []);
 
     const handleDeleteClick = useCallback(
         ({ id, api }) => {
@@ -66,6 +91,10 @@ const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen,
         closeFilterDialog();
         list.addStart(data);
     };
+
+    const handleAllTeamsChange = value => {
+        onAllTeamsChange?.(value, { additionalFilters: filterWithoutDiscards, disableAssetClearing: true });
+    };
     return (
         <StandardCard title={stepOneLocale.title} standardCardId={`standard_card-${componentId}-step-1`}>
             <Grid container spacing={3}>
@@ -80,7 +109,9 @@ const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen,
                         canAddNew={false}
                         required={false}
                         clearOnSelect
-                        filter={{ status: { discarded: false } }}
+                        filter={{ ...includeAllTeams, ...filterWithoutDiscards }}
+                        onSearch={onSearch}
+                        onClear={onClear}
                     />
                 </Grid>
                 <Grid xs={12} md={2} className={'centredGrid'}>
@@ -97,6 +128,15 @@ const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen,
                     >
                         {stepOneLocale.button.findAndAdd}
                     </Button>
+                </Grid>
+            </Grid>
+            <Grid container>
+                <Grid xs={12}>
+                    <SwitchIncludeAllTeams
+                        id={componentIdLower}
+                        locale={pageLocale.form.step}
+                        onChange={handleAllTeamsChange}
+                    />
                 </Grid>
             </Grid>
             {list.data.length > 0 && (
