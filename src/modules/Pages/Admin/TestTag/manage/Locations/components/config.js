@@ -5,8 +5,9 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import { createLocationString } from '../../../helpers/helpers';
+import { createLocationLink, createLocationString } from '../../../helpers/helpers';
 import { isEmptyStr } from '../../../helpers/helpers';
+import { isValidUrl } from '../../../../Alerts/Form/AlertForm';
 
 export default {
     site: {
@@ -149,6 +150,27 @@ export default {
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
+            },
+            floor_plan_url: {
+                component: props => (
+                    <TextField
+                        variant="standard"
+                        {...props}
+                        inputProps={{ ...props.inputProps, maxLength: 255 }}
+                        helperText={locale.pages.general.helperText.maxChars(255)}
+                        required={false}
+                    />
+                ),
+                validate: v => !!v?.trim?.().length && /* istanbul ignore next */ !isValidUrl(v),
+                fieldParams: {
+                    canEdit: true,
+                    renderInTable: true,
+                    renderInAdd: true,
+                    renderInUpdate: true,
+                    flex: 2,
+                    minWidth: 150,
+                    renderCell: params => createLocationLink(params.value, params.value),
+                },
             },
             asset_count: {
                 fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 140 },
