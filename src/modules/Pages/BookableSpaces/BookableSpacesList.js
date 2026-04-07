@@ -574,28 +574,34 @@ export const BookableSpacesList = ({
         return spacesFavouritesList?.some(fav => fav.space_id === space?.space_id);
     }
 
-    const facilityTypeToGroup = {};
-    getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList)?.data?.facility_type_groups?.forEach(
-        group => {
-            group?.facility_type_children?.forEach(child => {
-                facilityTypeToGroup[child?.facility_type_id] = group?.facility_type_group_id;
-            });
-        },
-    );
-    const filteredSpaceLocations = bookableSpacesRoomList?.data?.locations?.filter(space => {
-        return showSpace(space, facilityTypeToGroup, selectedFacilityTypes);
-    });
-
-    const sortedSpaceLocations = filteredSpaceLocations
-        ? [...filteredSpaceLocations].sort((a, b) => {
-              const aFav = isSpaceFavourited(a);
-              const bFav = isSpaceFavourited(b);
-              if (aFav && !bFav) return -1;
-              /* istanbul ignore next */
-              if (!aFav && bFav) return 1;
-              return 0;
-          })
-        : filteredSpaceLocations;
+    // Memoize so that MazeMaps state changes (isMazeMapScriptReady, isMazeMapReady, mapContainer)
+    // don't cause SidebarSpacesList to receive a new array reference and re-render unnecessarily.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const sortedSpaceLocations = React.useMemo(() => {
+        const ftg = {};
+        getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList)?.data?.facility_type_groups?.forEach(
+            group => {
+                group?.facility_type_children?.forEach(child => {
+                    ftg[child?.facility_type_id] = group?.facility_type_group_id;
+                });
+            },
+        );
+        const filtered = bookableSpacesRoomList?.data?.locations?.filter(space =>
+            showSpace(space, ftg, selectedFacilityTypes),
+        );
+        if (!filtered) return filtered;
+        return [...filtered].sort((a, b) => {
+            const aFav = spacesFavouritesList?.some(fav => fav.space_id === a?.space_id);
+            const bFav = spacesFavouritesList?.some(fav => fav.space_id === b?.space_id);
+            if (aFav && !bFav) return -1;
+            /* istanbul ignore next */
+            if (!aFav && bFav) return 1;
+            return 0;
+        });
+        // capacityFilterValue is read inside showSpace via closure; include it so the list
+        // recomputes when the slider changes even though it is not a direct parameter.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [bookableSpacesRoomList, facilityTypeList, selectedFacilityTypes, capacityFilterValue, spacesFavouritesList]);
     const visibleSpacesCountBadge = () => {
         return sortedSpaceLocations?.length > 0 &&
             sortedSpaceLocations?.length < bookableSpacesRoomList?.data?.locations?.length ? (

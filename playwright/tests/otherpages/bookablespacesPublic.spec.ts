@@ -27,6 +27,10 @@ test.describe('Spaces', () => {
     });
     test.describe('Shows a basic page for Spaces', () => {
         test.beforeEach(async ({ page }) => {
+            // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
+            // which would otherwise cause BookableSpacesList to re-render and destabilise the toggle
+            // buttons enough for Playwright's actionability check to time out in CI.
+            await page.route('**/vendor/mazemap/**', route => route.abort());
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
