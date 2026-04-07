@@ -408,7 +408,7 @@ test.describe('Spaces', () => {
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
 
         // the lower sub-panel is visible
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).not.toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).toBeVisible();
         // the other blocks have not appeared (are unaffected by this button click)
         await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
         await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
@@ -438,7 +438,7 @@ test.describe('Spaces', () => {
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
 
         // and the lower sub-panel details are hidden again
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).not.toBeVisible();
         // the other blocks have not appeared (button only affects one space)
         await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
         await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();

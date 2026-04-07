@@ -653,7 +653,9 @@ export const BookableSpacesList = ({
                     .setLngLat([mapPoint.space_longitude, mapPoint.space_latitude])
                     .addTo(mazeMapInstanceRef.current);
 
-                marker.getElement().addEventListener('click', e => {
+                const markerEl = marker.getElement();
+                markerEl.setAttribute('role', 'img');
+                markerEl.addEventListener('click', e => {
                     handleMarkerClick(e, mapPoint); // mapPoint captured via closure
                 });
 
