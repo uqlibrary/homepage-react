@@ -193,7 +193,7 @@ test.describe('Spaces', () => {
         });
 
         test('friendly location appears correctly when panel expands', async ({ page }) => {
-            page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
+            await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${ARCH_REFERENCE}-friendly-location`).first()).toBeVisible();
             await expect(
                 page.getByTestId(`${ARCH_REFERENCE}-friendly-location`).locator('.location-precise'),
@@ -212,7 +212,7 @@ test.describe('Spaces', () => {
             ).toContainText('St Lucia');
 
             // second panel
-            page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${PACE}-friendly-location`).first()).toBeVisible();
             await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
             await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).toContainText(
@@ -229,7 +229,7 @@ test.describe('Spaces', () => {
             );
 
             // third panel
-            page.getByTestId(`${LIV}-toggle-panel-button`).click();
+            await page.getByTestId(`${LIV}-toggle-panel-button`).click();
 
             await expect(page.getByTestId(`${LIV}-friendly-location`).first()).toBeVisible();
             await expect(page.getByTestId(`${LIV}-friendly-location`).locator('.location-precise')).toContainText(
@@ -250,7 +250,7 @@ test.describe('Spaces', () => {
         });
 
         test('opening hours appear correct when panel expands', async ({ page }) => {
-            page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
+            await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
 
             await expect(page.getByTestId(`${ARCH_REFERENCE}-openingHours-0`)).toBeVisible();
             await expect(page.getByTestId(`${ARCH_REFERENCE}-openingHours-0`)).toContainText('Today');
@@ -258,12 +258,12 @@ test.describe('Spaces', () => {
 
             // second panel
             await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
-            page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
 
             // fifth panel
             await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).not.toBeVisible();
-            page.getByTestId(`${FIFTH_PANEL}-toggle-panel-button`).click();
+            await page.getByTestId(`${FIFTH_PANEL}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).toBeVisible();
             await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).toContainText(
                 'Note: this space opens at 8am',
@@ -271,7 +271,7 @@ test.describe('Spaces', () => {
         });
 
         test('facilities appear correctly when panel expands', async ({ page }) => {
-            page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
+            await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
 
             await page.getByTestId(`${ARCH_BOOKABLE}-facility`).scrollIntoViewIfNeeded();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
@@ -293,11 +293,11 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-19`)).toContainText('Bookable');
 
             // close first panel
-            page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
+            await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).not.toBeVisible();
 
             // second panel
-            page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${PACE}-facility`)).toBeVisible();
             await expect(page.getByTestId(`${PACE}-facility`).locator(' > *')).toHaveCount(16);
             await expect(page.getByTestId(`${PACE}-facility-23`)).toContainText('Toilets, female');
@@ -318,11 +318,11 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${PACE}-facility-19`)).toContainText('Bookable');
 
             // close second panel
-            page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
 
             // third panel
-            page.getByTestId(`${LIV}-toggle-panel-button`).click();
+            await page.getByTestId(`${LIV}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${LIV}-facility`)).toBeVisible();
             await expect(page.getByTestId(`${LIV}-facility`).locator(' > *')).toHaveCount(9);
             await expect(page.getByTestId(`${LIV}-facility-23`)).toContainText('Toilets, female');
@@ -336,7 +336,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-facility-14`)).toContainText('Undergrad spaces');
 
             // close third panel
-            page.getByTestId(`${LIV}-toggle-panel-button`).click();
+            await page.getByTestId(`${LIV}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
         });
     });
@@ -357,7 +357,7 @@ test.describe('Spaces', () => {
 
             const panelOpenerButton = `${ARCH_REFERENCE}-toggle-panel-button`;
             await expect(page.getByTestId(panelOpenerButton)).toBeVisible();
-            page.getByTestId(panelOpenerButton).click();
+            await page.getByTestId(panelOpenerButton).click();
 
             await assertAccessibility(page, '[data-testid="library-spaces"]');
         });
@@ -405,7 +405,7 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toHaveClass(/truncated/);
 
         // expand the bottom sub-panel
-        page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
+        await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
 
         // the lower sub-panel is visible
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).not.toBeVisible();
@@ -435,7 +435,7 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
 
         // collapse the bottom sub-panel
-        page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
+        await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
 
         // and the lower sub-panel details are hidden again
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).toBeVisible();
@@ -849,7 +849,7 @@ test.describe('Spaces', () => {
 
             // click deselect-all-cartouches
             await expect(page.getByTestId('button-deselect-all-filters')).toBeVisible();
-            page.getByTestId('button-deselect-all-filters').click();
+            await page.getByTestId('button-deselect-all-filters').click();
 
             // all panels visible
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
@@ -918,7 +918,7 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // clear the capacity filters
-            page.getByTestId('button-deselect-all-filters').click();
+            await page.getByTestId('button-deselect-all-filters').click();
 
             // the page is reset
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
@@ -1324,7 +1324,7 @@ test.describe('Spaces errors', () => {
         await page.goto('spaces?responseType=weeklyHoursError');
         await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
-        page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
+        await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-weekly-hours-error`)).toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-weekly-hours-error`)).toContainText(
             'General opening hours currently unavailable - please try again later.',
