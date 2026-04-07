@@ -1,16 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Badge, Button, Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import { MapContainer, Marker, TileLayer } from 'react-leaflet';
-import L from 'leaflet';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import 'leaflet/dist/leaflet.css';
 import { breadcrumbs } from 'config/routes';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -29,12 +23,6 @@ import {
 } from './spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: markerIcon2x,
-    iconUrl: markerIcon,
-    shadowUrl: markerShadow,
-});
 const uqStLuciaDefaultLocation = {
     latitude: -27.497975,
     longitude: 153.012385,
@@ -160,23 +148,14 @@ const StyledFilterOpenButton = styled(Button)(({ theme }) => ({
         fontSize: '1rem',
     },
 }));
-const StyledMapWrapperDiv = styled('div')(({ theme }) => ({
+const StyledMapWrapperDiv = styled('div')(() => ({
     position: 'absolute',
     // left: '28%',
     width: '100%',
     height: '100%',
-    overflow: 'hidden',
     // maxWidth: '71.6665%',
-
-    backgroundColor: 'white',
     flexDirection: 'row',
     flexGrow: 0,
-    '& .leaflet-popup-content': {
-        ...standardText(theme),
-    },
-    '& .mapPopup': {
-        overflowY: 'auto',
-    },
 }));
 
 export const BookableSpacesList = ({
@@ -222,6 +201,12 @@ export const BookableSpacesList = ({
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
+
+    const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
+    const [isMazeMapReady, setIsMazeMapReady] = React.useState(false);
+    const [mapContainer, setMapContainer] = React.useState(null);
+    const mazeMapInstanceRef = useRef(null);
+    const mazeMarkersRef = useRef([]);
 
     const minimumSpaceCapacity = 1;
     const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
@@ -274,6 +259,53 @@ export const BookableSpacesList = ({
             setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
         }
     }, [bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
+
+    // Load MazeMaps assets
+    React.useEffect(() => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/vendor/mazemap/mazemap.min.css';
+        document.head.appendChild(link);
+
+        const script = document.createElement('script');
+        script.src = '/vendor/mazemap/mazemap.min.js';
+        script.type = 'text/javascript';
+        script.async = true;
+        script.onload = () => setIsMazeMapScriptReady(true);
+        document.body.appendChild(script);
+
+        return () => {
+            document.head.removeChild(link);
+            document.body.removeChild(script);
+        };
+    }, []);
+
+    // Initialise MazeMaps map once script has loaded and container div is mounted
+    React.useEffect(() => {
+        if (!isMazeMapScriptReady || !mapContainer) return;
+
+        mazeMapInstanceRef.current = new window.Mazemap.Map({
+            container: 'mazemap-container',
+            campuses: 406, // UQ St Lucia campus ID
+            center: { lng: uqStLuciaDefaultLocation.longitude, lat: uqStLuciaDefaultLocation.latitude },
+            zoom: 18,
+            zLevel: 1,
+            RTLTextPlugin: null,
+        });
+
+        mazeMapInstanceRef.current.on('load', () => {
+            mazeMapInstanceRef.current.resize();
+            setIsMazeMapReady(true);
+        });
+
+        // eslint-disable-next-line consistent-return
+        return () => {
+            mazeMapInstanceRef.current?.remove();
+            mazeMapInstanceRef.current = null;
+            setIsMazeMapReady(false);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMazeMapScriptReady, mapContainer]);
 
     // this will need to be passed space.space_opening_hours_override later when AD-797 is done
     function isLocationOpen(locationId, hoursData) {
@@ -605,43 +637,32 @@ export const BookableSpacesList = ({
             setPreviousToggledSpaceButton(toggleSpaceButton);
         }
     };
+    // Add/update markers whenever the filtered spaces list or map readiness changes
+    // eslint-disable-next-line consistent-return
+    React.useEffect(() => {
+        if (!isMazeMapReady || !mazeMapInstanceRef.current) return;
+
+        // Remove previous markers
+        mazeMarkersRef.current.forEach(marker => marker.remove());
+        mazeMarkersRef.current = [];
+
+        sortedSpaceLocations
+            ?.filter(m => !!m?.space_latitude && !!m?.space_longitude)
+            ?.forEach(mapPoint => {
+                const marker = new window.Mazemap.MazeMarker({ color: '#51247a' })
+                    .setLngLat([mapPoint.space_longitude, mapPoint.space_latitude])
+                    .addTo(mazeMapInstanceRef.current);
+
+                marker.getElement().addEventListener('click', e => {
+                    handleMarkerClick(e, mapPoint); // mapPoint captured via closure
+                });
+
+                mazeMarkersRef.current.push(marker);
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sortedSpaceLocations, isMazeMapReady]);
     const showMap = () => {
-        return (
-            <StyledMapWrapperDiv>
-                <MapContainer
-                    center={[uqStLuciaDefaultLocation?.latitude, uqStLuciaDefaultLocation?.longitude]}
-                    zoom={18}
-                    style={{ width: '100%', height: '100%' }}
-                >
-                    <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        maxNativeZoom={19}
-                        maxZoom={25}
-                    />
-                    {sortedSpaceLocations?.length > 0 &&
-                        sortedSpaceLocations
-                            ?.filter(m => !!m?.space_latitude && !!m?.space_longitude)
-                            ?.map(mapPoint => {
-                                // show the filtered Spaces on the map
-                                const locationKey = `mappoint-space-${mapPoint?.space_id}`;
-                                return (
-                                    <Marker
-                                        key={locationKey}
-                                        id={locationKey}
-                                        position={[mapPoint?.space_latitude, mapPoint?.space_longitude]}
-                                        eventHandlers={{
-                                            click(e) {
-                                                handleMarkerClick(e, mapPoint); // mapPoint is captured via closure
-                                            },
-                                        }}
-                                        // eventHandlers: react-leaflet v3+ way to attach Leaflet event listeners
-                                    />
-                                );
-                            })}
-                </MapContainer>
-            </StyledMapWrapperDiv>
-        );
+        return <StyledMapWrapperDiv id="mazemap-container" ref={setMapContainer} />;
     };
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
     const activeFilterCountBadge = () => {
@@ -766,12 +787,22 @@ export const BookableSpacesList = ({
                                             isLoggedIn={isLoggedIn}
                                             onFavouriteToggle={handleFavouriteAction}
                                             isFavouriteActionInProgress={isFavouriteActionInProgress}
+                                            onSpaceExpand={space => {
+                                                const map = mazeMapInstanceRef.current;
+                                                if (!map || !space?.space_longitude || !space?.space_latitude) return;
+                                                map.flyTo({
+                                                    center: [space.space_longitude, space.space_latitude],
+                                                    zoom: 20,
+                                                    curve: 0.5,
+                                                    speed: 1.6,
+                                                });
+                                            }}
                                         />
                                     </div>
                                 </>
                             )}
 
-                            <div id="mapWrapper" className="mapHolder">
+                            <div id="mapWrapper" className="mapHolder" style={{ height: '100%' }}>
                                 {showMap()}
                             </div>
                         </StyledLayoutWrapper>

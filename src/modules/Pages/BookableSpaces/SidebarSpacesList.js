@@ -68,6 +68,7 @@ const SidebarSpacesList = ({
     isLoggedIn = false,
     onFavouriteToggle = null,
     isFavouriteActionInProgress = false,
+    onSpaceExpand = null,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -163,7 +164,13 @@ const SidebarSpacesList = ({
                                                     </Tooltip>
                                                 )
                                             ) : null}
-                                            {bookableSpace?.space_type_details?.space_type_name}
+                                            <span
+                                                onClick={() => onSpaceExpand?.(bookableSpace)}
+                                                style={onSpaceExpand ? { cursor: 'pointer' } : undefined}
+                                                title="Show on map"
+                                            >
+                                                {bookableSpace?.space_type_details?.space_type_name}
+                                            </span>
                                         </span>
                                     }
                                     style={{ marginRight: '0.5rem' }}
@@ -177,6 +184,7 @@ const SidebarSpacesList = ({
                                         bookableSpace={bookableSpace}
                                         collapsed
                                         showAllData
+                                        onExpand={onSpaceExpand}
                                     />
                                 </StyledStandardCard>
                             </StyledBookableSpaceGridItem>
@@ -199,6 +207,7 @@ SidebarSpacesList.propTypes = {
     isLoggedIn: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
     isFavouriteActionInProgress: PropTypes.bool,
+    onSpaceExpand: PropTypes.func,
 };
 
 export default React.memo(SidebarSpacesList);

@@ -120,6 +120,10 @@ const webpackConfig = {
                     from: resolve(__dirname, 'public', '404.js'),
                     to: resolve(__dirname, './dist/', config.basePath),
                 },
+                {
+                    from: resolve(__dirname, 'public', 'vendor', 'mazemap'),
+                    to: resolve(__dirname, './dist/', config.basePath, 'vendor', 'mazemap'),
+                },
             ],
         }),
         new ProgressBarPlugin({

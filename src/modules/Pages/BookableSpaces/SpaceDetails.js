@@ -113,6 +113,7 @@ const SpaceDetails = ({
     collapsed = false,
     // collapsed=true: called by sidebar, has open-close icon;
     // collapsed=false: opens from icon in map, no open-close icon
+    onExpand = null,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -154,6 +155,7 @@ const SpaceDetails = ({
             !!toggleButtonCollapseIcon && (toggleButtonCollapseIcon.style.display = 'block');
 
             setIsCollapsed(false);
+            onExpand?.(bookableSpace);
         };
         const collapseSpace = (spaceId, spaceName) => {
             showPanel(summaryPanelElementId(spaceId));
@@ -365,6 +367,7 @@ SpaceDetails.propTypes = {
     weeklyHoursError: PropTypes.any,
     bookableSpace: PropTypes.any,
     collapsed: PropTypes.bool,
+    onExpand: PropTypes.func,
 };
 
 export default React.memo(SpaceDetails);
