@@ -264,11 +264,11 @@ export const BookableSpacesList = ({
     React.useEffect(() => {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = '/vendor/mazemap/mazemap.min.css';
+        link.href = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.css`;
         document.head.appendChild(link);
 
         const script = document.createElement('script');
-        script.src = '/vendor/mazemap/mazemap.min.js';
+        script.src = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.js`;
         script.type = 'text/javascript';
         script.async = true;
         script.onload = () => setIsMazeMapScriptReady(true);
