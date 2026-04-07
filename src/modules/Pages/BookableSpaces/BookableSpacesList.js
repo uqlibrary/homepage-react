@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Badge, Button, Grid, useTheme } from '@mui/material';
@@ -207,6 +207,17 @@ export const BookableSpacesList = ({
     const [mapContainer, setMapContainer] = React.useState(null);
     const mazeMapInstanceRef = useRef(null);
     const mazeMarkersRef = useRef([]);
+
+    const handleSpaceExpand = useCallback(space => {
+        const map = mazeMapInstanceRef.current;
+        if (!map || !space?.space_longitude || !space?.space_latitude) return;
+        map.flyTo({
+            center: [space.space_longitude, space.space_latitude],
+            zoom: 20,
+            curve: 0.5,
+            speed: 1.6,
+        });
+    }, []);
 
     const minimumSpaceCapacity = 1;
     const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
@@ -789,16 +800,7 @@ export const BookableSpacesList = ({
                                             isLoggedIn={isLoggedIn}
                                             onFavouriteToggle={handleFavouriteAction}
                                             isFavouriteActionInProgress={isFavouriteActionInProgress}
-                                            onSpaceExpand={space => {
-                                                const map = mazeMapInstanceRef.current;
-                                                if (!map || !space?.space_longitude || !space?.space_latitude) return;
-                                                map.flyTo({
-                                                    center: [space.space_longitude, space.space_latitude],
-                                                    zoom: 20,
-                                                    curve: 0.5,
-                                                    speed: 1.6,
-                                                });
-                                            }}
+                                            onSpaceExpand={handleSpaceExpand}
                                         />
                                     </div>
                                 </>
