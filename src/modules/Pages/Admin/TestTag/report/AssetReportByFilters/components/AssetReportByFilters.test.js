@@ -7,6 +7,7 @@ import AssetReportByFilters from './AssetReportByFilters';
 import assetData from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetsReportAssets';
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import buildingList from '../../../../../../../data/mock/data/testing/testAndTag/testTagTaggedBuildingList';
+import { assertLocationLink, assertLocationLinkless } from '../../../helpers/helpers.test';
 
 function setup(testProps = {}, renderer = rtlRender) {
     const {
@@ -80,16 +81,16 @@ describe('AssetReportByFilters', () => {
         // check first row is as expected
         const row = within(getAllByRole('row')[1]);
         expect(row.getByText('UQL000004')).toBeInTheDocument();
-        expect(row.getByText('Gatton / 8102 / 1 / 102')).toBeInTheDocument();
+        assertLocationLink(row.getByText('Gatton / 8102 / 1 / 102'), 'http://29.a');
         expect(row.getByText('PowerBoard')).toBeInTheDocument();
         expect(row.getByText('2015-10-01')).toBeInTheDocument();
-
         // expect a red cell with alert icon
         expect(row.getAllByRole('cell')[5]).toHaveStyle('background-color: #951126');
         expect(row.getByText('2016-10-01')).toBeInTheDocument();
         expect(row.getByTestId('tooltip-overdue')).toBeInTheDocument();
-
         expect(row.getByText('CURRENT')).toBeInTheDocument();
+        // assert 2nd row's location string
+        assertLocationLinkless(within(getAllByRole('row')[2]).getByText('St Lucia / 0001 / 2 / W212'));
 
         // check pagination counter shows expected number of rows
         expect(getByText('1–6 of 6')).toBeInTheDocument();

@@ -11,8 +11,6 @@ import assetTypeData from '../../../../../../../data/mock/data/testing/testAndTa
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
-import { transformRow } from './utils';
-
 import { useObjectList, FormContext } from '../../../helpers/hooks';
 
 import StepTwo from './StepTwo';
@@ -259,8 +257,8 @@ describe('StepTwo', () => {
     it('renders component', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
-        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
 
         const { getByText, getByTestId } = setup({
             isFilterDialogOpen: true,
@@ -300,8 +298,8 @@ describe('StepTwo', () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const prevStepFn = jest.fn();
-        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
-        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
 
         const { getByText, getByTestId } = setup({
             isFilterDialogOpen: true,
@@ -332,8 +330,8 @@ describe('StepTwo', () => {
         const loadSitesFn = jest.fn();
         const handleChangeInnerFn = jest.fn();
         const handleChangeFn = jest.fn(() => handleChangeInnerFn);
-        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
-        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
 
         const { getByText } = setup({
             isFilterDialogOpen: true,
@@ -368,8 +366,8 @@ describe('StepTwo', () => {
     it('location options with asset status', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
-        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
 
         const { getByText } = setup({
             isFilterDialogOpen: true,
@@ -409,8 +407,8 @@ describe('StepTwo', () => {
         const loadSitesFn = jest.fn();
         const handleChangeInnerFn = jest.fn();
         const handleChangeFn = jest.fn(() => handleChangeInnerFn);
-        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
-        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
 
         const assetStatusValue = { label: 'IN STORAGE', value: 'INSTORAGE' };
         const { getByText } = setup({
@@ -457,8 +455,8 @@ describe('StepTwo', () => {
         const loadSitesFn = jest.fn();
         const handleChangeInnerFn = jest.fn();
         const handleChangeFn = jest.fn(() => handleChangeInnerFn);
-        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
-        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
 
         const { getByText } = setup({
             isFilterDialogOpen: true,
@@ -496,8 +494,8 @@ describe('StepTwo', () => {
         const loadSitesFn = jest.fn();
         const handleChangeInnerFn = jest.fn();
         const handleChangeFn = jest.fn(() => handleChangeInnerFn);
-        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
-        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
 
         const { getByText } = setup({
             isFilterDialogOpen: true,
@@ -533,8 +531,8 @@ describe('StepTwo', () => {
     it('clear notes', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
-        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
 
         const { getByText } = setup({
             isFilterDialogOpen: true,
@@ -571,8 +569,8 @@ describe('StepTwo', () => {
     it('invalid options 1', () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
-        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
 
         const { getByText } = setup({
             isFilterDialogOpen: true,
@@ -602,8 +600,8 @@ describe('StepTwo', () => {
     it('invalid options 2', () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
-        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
 
         const { getByText } = setup({
             isFilterDialogOpen: true,

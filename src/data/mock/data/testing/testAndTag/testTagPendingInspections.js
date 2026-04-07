@@ -8,6 +8,7 @@ export default [
         "site_id_displayed": "St Lucia",
         "building_id_displayed": "Hawken Engineering Building",
         "floor_id_displayed": "4",
+        "floor_plan_url": "http://4.a",
         "room_id_displayed": "L412"
     },
     {
