@@ -8,11 +8,12 @@ export default [
       "site_name": "St Lucia",
       "floors": [
         {
-          "floor_id": 1,
-          "floor_id_displayed": "2",
-          "asset_count": 1,
-          "floor_excluded": false,
-          "parent_excluded": false,
+            "floor_id": 1,
+            "floor_id_displayed": "2",
+            'floor_plan_url': 'http://1.a',
+            "asset_count": 1,
+            "floor_excluded": false,
+            "parent_excluded": false,
         },
         {
           "floor_id": 2,
@@ -61,6 +62,7 @@ export default [
       "floors": [
         {
           "floor_id": 29,
+          "floor_plan_url": "http://29.a",
           "floor_id_displayed": "29",
           "asset_count": 1,
           "floor_excluded": true,
@@ -68,6 +70,7 @@ export default [
         },
         {
           "floor_id": 30,
+          "floor_plan_url": null,
           "floor_id_displayed": "30",
           "asset_count": 0,
           "floor_excluded": false,

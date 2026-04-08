@@ -10,6 +10,7 @@ export default [
         "floor_id_displayed": "4",
         "room_id_displayed": "L412",
         "asset_team_owned_by": "WSS",
+        "floor_plan_url": "http://4.a",
     },
     {
         "asset_barcode": "UQL000008",

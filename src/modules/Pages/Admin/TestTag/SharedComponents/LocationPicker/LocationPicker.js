@@ -7,6 +7,8 @@ import FormControl from '@mui/material/FormControl';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import Popper from '@mui/material/Popper';
+import FloorPlanLink from './FloorPlanLink';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const rootId = 'location_picker';
 const inputLabelProps = { shrink: true };
@@ -273,7 +275,17 @@ const LocationPicker = ({
                                                         id={`${componentId}-floor-progress`}
                                                         data-testid={`${componentId}-floor-progress`}
                                                     />
-                                                ) : null}
+                                                ) : (
+                                                    <InputAdornment position="end">
+                                                        <FloorPlanLink
+                                                            url={
+                                                                floorList?.find(
+                                                                    floor => floor.floor_id === location.floor,
+                                                                )?.floor_plan_url
+                                                            }
+                                                        />
+                                                    </InputAdornment>
+                                                )}
                                                 {params.InputProps.endAdornment}
                                             </React.Fragment>
                                         ),
