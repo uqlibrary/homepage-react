@@ -18,13 +18,12 @@ import floorList from '../../../../../../../data/mock/data/testing/testAndTag/te
 import roomList from '../../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
 import assetTypeData from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetTypes';
 
-import { transformRow } from './utils';
-
 import { useObjectList } from '../../../helpers/hooks';
 
 import StepOne from './StepOne';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
+import { assertLocationLink, assertLocationLinkless } from '../../../helpers/helpers.test';
 
 jest.mock('react-cookie', () => ({
     useCookies: jest.fn(() => [{}, jest.fn(), jest.fn()]),
@@ -99,7 +98,7 @@ describe('StepOne', () => {
     });
 
     it('renders component', async () => {
-        const list = renderHook(() => useObjectList([], transformRow)).result.current;
+        const list = renderHook(() => useObjectList([])).result.current;
 
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
@@ -125,7 +124,7 @@ describe('StepOne', () => {
     it('adds row items from filterDialog popup', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const list = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList([])).result;
 
         const { getByText, getByTestId, getAllByRole, findByTestId, rerender } = setup({
             isFilterDialogOpen: true,
@@ -178,13 +177,13 @@ describe('StepOne', () => {
         const row1 = within(getAllByRole('row')[1]);
         expect(row1.getByText('UQL000001')).toBeInTheDocument();
         expect(row1.getByText('BRK-DELL')).toBeInTheDocument();
-        expect(row1.getByText('1-W212 Forgan Smith Building, St Lucia')).toBeInTheDocument();
+        assertLocationLinkless(row1.getByText('1-W212 Forgan Smith Building, St Lucia'));
         expect(row1.getByText('AWAITINGTEST')).toBeInTheDocument();
 
         const row2 = within(getAllByRole('row')[2]);
         expect(row2.getByText('UQL000002')).toBeInTheDocument();
         expect(row2.getByText('PWRC13-10')).toBeInTheDocument();
-        expect(row2.getByText('1-W212 Forgan Smith Building, St Lucia')).toBeInTheDocument();
+        assertLocationLink(row2.getByText('2-W212 Forgan Smith Building, St Lucia'));
         expect(row2.getByText('CURRENT')).toBeInTheDocument();
 
         // delete 1 item from the list

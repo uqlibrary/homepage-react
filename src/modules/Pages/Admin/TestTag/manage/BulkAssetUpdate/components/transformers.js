@@ -1,23 +1,3 @@
-import { createLocationString } from '../../../helpers/helpers';
-
-export const transformRow = row => {
-    return row.map(line => {
-        if (!!line?.asset_location) return line;
-        return {
-            ...line,
-            asset_type_name: line?.asset_type?.asset_type_name ?? '',
-            asset_location: !!line?.last_location
-                ? createLocationString({
-                      site: line.last_location.site_name,
-                      building: line.last_location.building_name,
-                      floor: line.last_location.floor_id_displayed,
-                      room: line.last_location.room_id_displayed,
-                  })
-                : '',
-        };
-    });
-};
-
 export const transformRequest = formValues => {
     if (!!formValues.hasLocation) {
         formValues.hasAssetType = false;
@@ -62,12 +42,6 @@ export const transformFilterRow = row => {
         return {
             ...line,
             asset_id_displayed: line?.asset_barcode ?? '',
-            asset_location: createLocationString({
-                site: line.site_name,
-                building: line.building_name,
-                floor: line.floor_id_displayed,
-                room: line.room_id_displayed,
-            }),
         };
     });
 };

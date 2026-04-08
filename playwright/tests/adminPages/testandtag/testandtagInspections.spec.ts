@@ -144,6 +144,17 @@ test.describe('Test and Tag Admin Inspection page', () => {
                     await page.getByTestId('location_picker-event-panel-floor').click({ timeout: 2000 });
                     await page.locator('#location_picker-event-panel-floor-option-0').click({ timeout: 2000 });
                     await expect(page.getByTestId('location_picker-event-panel-floor-input')).toHaveValue('1');
+                    // floor plan
+                    const button = page.getByTestId('floor-plan-adornment');
+                    // tooltip
+                    await button.hover();
+                    await expect(page.getByRole('tooltip')).toBeVisible();
+                    await expect(page.getByRole('tooltip')).toHaveText(
+                        locale.pages.inspect.form.event.location.floor.floorPlanTooltip,
+                    );
+                    // link
+                    await expect(button).toHaveAttribute('href', 'http://29.a');
+                    await expect(button).toHaveAttribute('target', '_blank');
                 }).toPass();
 
                 // Room

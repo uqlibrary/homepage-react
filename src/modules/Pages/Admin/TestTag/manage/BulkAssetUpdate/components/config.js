@@ -1,5 +1,7 @@
 /* istanbul ignore file */
 
+import { createLocationString, createLocationLink } from '../../../helpers/helpers';
+
 export const MAXEXCLUDEDMOREITEMS = 10;
 
 export default {
@@ -13,8 +15,27 @@ export default {
         fields: {
             asset_id: { fieldParams: { renderInTable: false } },
             asset_id_displayed: { fieldParams: { minWidth: 120 } },
-            asset_type_name: { fieldParams: { flex: 1, minWidth: 140 } },
-            asset_location: { fieldParams: { minWidth: 200, flex: 1 } },
+            asset_type_name: {
+                fieldParams: { flex: 1, minWidth: 140, renderCell: params => params.row?.asset_type?.asset_type_name },
+            },
+            asset_location: {
+                fieldParams: {
+                    flex: 1,
+                    minWidth: 200,
+                    renderCell: params => {
+                        const row = params.row.last_location ?? params.row;
+                        return createLocationLink(
+                            createLocationString({
+                                site: row?.site_name,
+                                building: row?.building_name,
+                                floor: row?.floor_id_displayed,
+                                room: row?.room_id_displayed,
+                            }),
+                            row?.floor_plan_url,
+                        );
+                    },
+                },
+            },
             asset_status: { fieldParams: { sortable: false } },
         },
     },
@@ -27,7 +48,22 @@ export default {
             asset_barcode: { fieldParams: { minWidth: 120 } },
             asset_type_name: { fieldParams: { flex: 1, minWidth: 150 } },
             inspect_comment: { fieldParams: { minWidth: 100, flex: 1 } },
-            asset_location: { fieldParams: { flex: 1, minWidth: 200 } },
+            asset_location: {
+                fieldParams: {
+                    flex: 1,
+                    minWidth: 200,
+                    renderCell: params =>
+                        createLocationLink(
+                            createLocationString({
+                                site: params.row.site_name,
+                                building: params.row.building_name,
+                                floor: params.row.floor_id_displayed,
+                                room: params.row.room_id_displayed,
+                            }),
+                            params.row.floor_plan_url,
+                        ),
+                },
+            },
             asset_status: { fieldParams: { minWidth: 150 } },
         },
     },

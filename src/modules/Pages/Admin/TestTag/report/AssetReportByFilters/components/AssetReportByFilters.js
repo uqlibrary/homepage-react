@@ -16,7 +16,7 @@ import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPic
 import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import config, { transformRow } from './config';
+import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
 import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
@@ -99,7 +99,7 @@ const AssetReportByFilters = ({
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
-    const { row } = useDataTableRow(assetList, transformRow);
+    const { row } = useDataTableRow(assetList);
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,

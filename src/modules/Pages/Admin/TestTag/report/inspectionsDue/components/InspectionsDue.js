@@ -20,7 +20,6 @@ import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
-import { transformRow } from './utils';
 import { breadcrumbs } from 'config/routes';
 import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 import * as _ from 'lodash';
@@ -85,7 +84,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
         locale: pageLocale.form.columns,
         withActions: false,
     });
-    const { row } = useDataTableRow(inspectionsDue, transformRow);
+    const { row } = useDataTableRow(inspectionsDue);
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
 
