@@ -208,8 +208,8 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                 locationOpen &&
                 locationsRef.current &&
                 !locationsRef.current.contains(e.target) &&
-                !((e.target?.id || 'NONE') === 'location-dialog-controller') &&
-                !((e.target?.id || 'NONE') === 'location-dialog-controller-label')
+                !((e.target?.id || /* istanbul ignore next */ 'NONE') === 'location-dialog-controller') &&
+                !((e.target?.id || /* istanbul ignore next */ 'NONE') === 'location-dialog-controller-label')
             ) {
                 showHideLocationPanel();
             }

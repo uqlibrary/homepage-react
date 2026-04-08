@@ -1,6 +1,5 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-
 const openCloseWorks = async () => {
     test.describe('tests', async () => {
         test('can click away to close the dialog', async ({ page }) => {
@@ -15,8 +14,8 @@ const openCloseWorks = async () => {
                 ).toBeVisible({ timeout: 2000 });
             }).toPass();
 
-            // click elsewhere on the screen
-            await page.locator('body').click();
+            // click elsewhere on the screen (top-left corner, safely outside the panel)
+            await page.mouse.click(10, 10);
             // dialog is closed
             await expect(page.getByTestId('locations-wrapper')).toHaveAttribute('aria-live', 'off');
         });

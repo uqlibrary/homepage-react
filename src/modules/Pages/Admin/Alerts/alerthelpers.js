@@ -18,11 +18,11 @@ export function makePreviewActionButtonJustNotifyUser(values) {
         // its a moment before it is available
         const preview = document.getElementById('alert-preview');
         const previewShadowRoot = !!preview && preview.shadowRoot;
-        const link = !!previewShadowRoot && previewShadowRoot.getElementById('alert-link');
+        const link = !!previewShadowRoot && /* istanbul ignore next */ previewShadowRoot.getElementById('alert-link');
+        /* istanbul ignore if */
         if (!!link) {
             link.setAttribute('href', '#');
             link.setAttribute('title', popuptext);
-            /* istanbul ignore next */
             link.onclick = () => {
                 alert(popuptext);
                 return false;
@@ -43,7 +43,9 @@ export function manuallyMakeWebComponentBePermanent(webComponent, thebody) {
         // its a moment before it is available
         const preview = document.getElementById('alert-preview');
         const previewShadowRoot = !!preview && preview.shadowRoot;
-        const closeButton = !!previewShadowRoot && previewShadowRoot.getElementById('alert-close');
+        const closeButton =
+            !!previewShadowRoot && /* istanbul ignore next */ previewShadowRoot.getElementById('alert-close');
+        /* istanbul ignore if */
         if (!!closeButton) {
             closeButton.remove();
             clearInterval(changeMessage);

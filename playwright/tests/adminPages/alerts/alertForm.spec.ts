@@ -2,7 +2,6 @@ import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { dateHasValue, hasAWorkingHelpButton } from './helpers';
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
-
 async function selectPriorityType(page: Page, type: string) {
     // open the select
     await page.getByTestId('admin-alerts-form-select-prioritytype').click();

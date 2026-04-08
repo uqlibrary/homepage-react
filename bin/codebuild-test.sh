@@ -107,12 +107,20 @@ function run_pw_test_shard() {
 
 case "$PIPE_NUM" in
 "1")
-    npm run start:mock &
+    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
+        npm run start:mock:cc &
+    else
+        npm run start:mock:test &
+    fi
     install_pw_deps
     run_pw_tests 1 3
 ;;
 "2")
-    npm run start:mock &
+    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
+        npm run start:mock:cc &
+    else
+        npm run start:mock:test &
+    fi
     install_pw_deps
     run_pw_tests 4 7
 ;;
@@ -136,7 +144,11 @@ case "$PIPE_NUM" in
         npm run test:unit:ci:nocoverage
     fi
 
-    npm run start:mock &
+    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
+        npm run start:mock:cc &
+    else
+        npm run start:mock:test &
+    fi
     install_pw_deps
     run_pw_tests 8 10
 ;;

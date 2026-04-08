@@ -116,7 +116,10 @@ module.exports = {
         new HtmlWebpackPlugin({
             favicon: join(__dirname, 'public', 'favicon.ico'),
             filename: 'index.html',
-            reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
+            reusablejs:
+                process.env.NODE_ENV === 'cc' || process.env.NODE_ENV === 'test'
+                    ? null
+                    : 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
             // reusablejs: 'http://localhost:8080/uq-lib-reusable.min.js', // swap if needed in dev
             inject: true,
             template: join(__dirname, 'public', 'index.html'),

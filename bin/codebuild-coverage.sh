@@ -13,36 +13,22 @@ fi
 
 printf "\n coverage required\n"
 
-printf "\n\n--- INSTALL NYC ---\n"
-echo "$ npm install -g nyc"
-npm install -g nyc
-
 # Copy output artifact test reports into common location
-mkdir -p coverage/all
-cp "${CODEBUILD_SRC_DIR_TestArtifact1}/coverage/playwright/coverage-final.json" coverage/all/playwright-1.json
-cp "${CODEBUILD_SRC_DIR_TestArtifact2}/coverage/playwright/coverage-final.json" coverage/all/playwright-2.json
-cp "${CODEBUILD_SRC_DIR_TestArtifact3}/coverage/playwright/coverage-final.json" coverage/all/playwright-3.json
-cp "${CODEBUILD_SRC_DIR_TestArtifact3}/coverage/jest/coverage-final.json" coverage/all/jest.json
+mkdir -p coverage/playwright coverage/jest
+cp "${CODEBUILD_SRC_DIR_TestArtifact1}/coverage/playwright/coverage-final.json" coverage/playwright/coverage-final-1.json
+cp "${CODEBUILD_SRC_DIR_TestArtifact2}/coverage/playwright/coverage-final.json" coverage/playwright/coverage-final-2.json
+cp "${CODEBUILD_SRC_DIR_TestArtifact3}/coverage/playwright/coverage-final.json" coverage/playwright/coverage-final-3.json
+cp "${CODEBUILD_SRC_DIR_TestArtifact3}/coverage/jest/coverage-final.json" coverage/jest/coverage-final.json
 
-# Combine reports into single json file
-nyc merge coverage/all coverage/merged-coverage.json
+# Merge reports and generate HTML, JSON, text-summary and cobertura output under coverage/
+npm run cc:reportAll
 
-# Report
-nyc report \
-  --reporter html \
-  --reporter text \
-  --reporter text-summary \
-  --reporter cobertura \
-  --report-dir coverage/html \
-  --temp-dir coverage \
-  --exclude-after-remap false
-
-cp coverage/html/cobertura-coverage.xml coverage/cobertura-coverage.xml
+cp coverage/cobertura-coverage.xml coverage/cobertura-coverage.xml
 
 # four instances of `<span class="strong">100% </span>` indicates 100% code coverage
-grep -c class=\"strong\"\>100\% coverage/html/index.html
+grep -c class=\"strong\"\>100\% coverage/index.html
 
-NUM_FULL_COVERAGE=$(grep -c class=\"strong\"\>100\% coverage/html/index.html)
+NUM_FULL_COVERAGE=$(grep -c class=\"strong\"\>100\% coverage/index.html)
 echo "full coverage count = ${NUM_FULL_COVERAGE} (wanted: 4)"
 if [[ $NUM_FULL_COVERAGE == 4 ]]; then
     echo "Coverage 100%";
@@ -78,7 +64,7 @@ else
      echo "                             \__/"
      echo "Human, your code coverage was found to be lacking... Do not commit again until it is fixed."
      # show actual coverage numbers
-     grep -A 2 class=\"strong\"\> coverage/html/index.html
+     grep -A 2 class=\"strong\"\> coverage/index.html
      echo "Run your tests locally with npm run test:cc then load coverage/index.html to determine where the coverage gaps are"
      exit 1;
 fi;

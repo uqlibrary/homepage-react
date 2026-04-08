@@ -49,7 +49,7 @@ export default defineConfig({
         },
     ],
     webServer: {
-        command: 'npm run start:mock',
+        command: process.env.NODE_ENV === 'cc' ? 'npm run start:mock:cc' : 'npm run start:mock:test',
         url: baseURL,
         timeout: 5 * 60 * 1000,
         reuseExistingServer: true,

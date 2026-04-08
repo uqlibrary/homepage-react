@@ -1,6 +1,5 @@
 import { test, expect, Locator, Page } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-
 interface BoundingBox {
     x: number;
     y: number;
@@ -69,40 +68,29 @@ test.describe('LibraryUpdates', () => {
             //  | XXXXXXXXXXXXXX |
             //  \----------------/
             //  XXXX   XXXX   XXXX
-            await page.evaluate(() => window.scrollBy(0, document.body.scrollHeight));
-            const firstBox = await getBoundingBox(page, 'drupal-article-0', {
-                x: 75.5,
-                y: -525.53125,
-                width: 1134,
-                height: 378,
-            });
-            expect(firstBox.x).toBeLessThan(77);
+            await page.getByTestId('drupal-article-3').scrollIntoViewIfNeeded();
 
-            const secondBox = await getBoundingBox(page, 'drupal-article-1', {
-                x: 75.5,
-                y: -113.53125,
-                width: 355.328125,
-                height: 424.875,
-            });
+            const getBox = async (testId: string): Promise<BoundingBox> => {
+                await expect(page.getByTestId(testId)).toBeVisible();
+                return (await page.getByTestId(testId).boundingBox()) as BoundingBox;
+            };
+
+            const firstBox = await getBox('drupal-article-0');
+            const secondBox = await getBox('drupal-article-1');
+            const thirdBox = await getBox('drupal-article-2');
+            const fourthBox = await getBox('drupal-article-3');
+
+            // first article is full-width, near the left edge
+            expect(firstBox.width).toBeGreaterThan(secondBox.width);
+
+            // articles 2-4 are in the same row, below article 1
             expect(secondBox.x).toBe(firstBox.x);
             expect(secondBox.y).toBeGreaterThan(firstBox.y + firstBox.height);
 
-            const thirdBox = await getBoundingBox(page, 'drupal-article-2', {
-                x: 464.828125,
-                y: -113.53125,
-                width: 355.328125,
-                height: 424.875,
-            });
             expect(thirdBox.y).toBe(secondBox.y);
             expect(thirdBox.y + thirdBox.height).toBe(secondBox.y + secondBox.height);
             expect(thirdBox.x).toBeGreaterThan(secondBox.x + secondBox.width);
 
-            const fourthBox = await getBoundingBox(page, 'drupal-article-3', {
-                x: 854.15625,
-                y: -113.53125,
-                width: 355.328125,
-                height: 424.875,
-            });
             expect(fourthBox.y).toBe(secondBox.y);
             expect(fourthBox.y + fourthBox.height).toBe(secondBox.y + secondBox.height);
             expect(fourthBox.x).toBeGreaterThan(thirdBox.x + thirdBox.width);

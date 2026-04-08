@@ -83,7 +83,9 @@ Mock data is provided for all pages and actions under `src/mock/`.
 
 #### Reusable components
 
-`standardText` 
+> **Note:** `uq-lib-reusable.min.js` is intentionally excluded when running under `NODE_ENV=test` or `NODE_ENV=cc` (coverage mode). Dev and production builds load it as normal.
+
+`standardText`
 
 Apply the standard DS styles to any item. Can be used like this:
 
@@ -246,8 +248,7 @@ We use [Playwright](https://playwright.dev/docs/writing-tests) for our E2E testi
 
 To run tests, simply use `npm run test:e2e`.
 
-To run all tests, including unit tests, use `npm run test:all`.\
-Then, to generate a combined code coverage report, use `npm run cc:reportAll`.\
+To run all tests including unit tests and generate a combined code coverage report, use `npm run test:cc`.\
 This workflow is useful for confidently pushing changes upstream.
 
 #### Parallelism
@@ -285,6 +286,11 @@ the "Build Details" tab in the Build run page.
 
 - We are following the best practice recommended by playwright to target elements using `data-testid` attribute
 
+#### Reusable webcomponents in E2E tests
+
+`uq-lib-reusable.min.js` is excluded from the webpack dev server when running under `NODE_ENV=test` or `NODE_ENV=cc`
+(coverage mode). This keeps tests isolated – reusable has its own test suite. Dev and production builds load it as normal.
+
 #### Gotchas
 
 Unlike Jest, Playwright test assertions are based on [actionability checks](https://playwright.dev/docs/actionability),
@@ -297,27 +303,63 @@ before the component reaches its final state.
 
 ### Code Coverage
 
-We require 100% coverage, but untestable/ invaluable sections can be exclude with istanbul (search the code base for examples)
+We require 100% coverage. Sections that are genuinely untestable (e.g. shadow DOM interactions, browser-only APIs)
+can be suppressed with Istanbul ignore comments, search the codebase for examples. Prefer writing tests over ignoring.
 
-To run the complete test suite and get code coverage, run `npm run test:cc`
+Coverage is collected from two sources and merged into a single report:
 
-This will run unit tests (jest) and e2e tests (playwright) and then merge the coverage of the 2 to give complete coverage. Coverage reports are at `coverage/index.html` after the run.
+- **Jest** uses `babel-plugin-istanbul` to instrument source files at transpile time (via the `cc` Babel env)
+- **Playwright** the webpack bundle is instrumented by `babel-plugin-istanbul` at build time (via `NODE_ENV=cc`).
+  After each test, `playwright/lib/coverage/istanbul/collectCoverageAsync.ts` scrapes `window.__coverage__` from the
+  browser and writes Istanbul JSON partials to disk. `ReportMerger.ts` then merges those partials into a single report.
 
-This will wipe previous coverage file.
+To run the complete test suite and generate a merged coverage report:
 
-On the server, coverage is checked on these branches: production, master, staging and any branch whose name includes the string 'coverage'
+```sh
+npm run test:cc
+```
 
-AWS Coverage checking is split between the different pipelines, both to make the run quicker, and because it reduces test flakiness. The package,json has a group of `!` lines in the nyc exclude section. The `bin/codebuild-test.sh` script will reverse some of these for each pipeline (but they are _not excluded_ in a local run, meaning we can split in pipeline on AWS and still check coverage locally!).
+This runs Jest (`test:unit:ci`), then Playwright (`test:e2e:cc`), then merges both reports and generates HTML/JSON 
+output under `coverage/`. Open `coverage/index.html` to view results. Any previous `coverage/` directory is wiped at 
+the start of the run.
+
+To regenerate the merged report from existing coverage data without re-running tests:
+
+```sh
+npm run cc:reportAll
+```
+
+#### Configuration
+
+Coverage include/exclude patterns and output reporters are configured in `coverage.config.ts` (project root).
+Exclude patterns prefixed with `!` are negation overrides, they force-include files that would otherwise be excluded
+by a regular exclude pattern. This is used to split coverage checking across CI pipelines while still allowing a full
+local run (the `bin/codebuild-test.sh` script activates the relevant negation overrides per pipeline).
+
+#### CI
+
+Coverage is checked on these branches: `production`, `master`, `staging`, and any branch whose name includes `coverage`.
+
+AWS coverage checking is split across pipelines to reduce runtime and flakiness. The `bin/codebuild-test.sh` script
+activates the relevant `!`-prefixed negation overrides in `coverage.config.ts` per pipeline — but these are
+_not excluded_ in a local run, meaning full coverage can still be verified locally.
 
 #### Debugging
 
 ##### CI
 
-The coverage files are part of the artifacts uploaded to S3 as the output of the last test stage, where the threshold check happens - please refer to the "Artifacts" section on
-the "Build Details" tab in the Build run page.
+Coverage files are part of the artifacts uploaded to S3 at the end of the last test stage — refer to the "Artifacts"
+section on the "Build Details" tab in the build run page.
 
-Once downloaded and extracted to project's root dir, the root path of the files inside the `coverage` dir have to be fixed before they are useful. This can be done by running either `npm run debug:cc:linux-fix-path` or `npm run debug:cc:macos-fix-path` depending on your OS.
-To recreate the merged report, please refer to how `nyc` is used in `bin/codebuild-coverage.sh`.
+Once downloaded and extracted to the project root, the absolute paths inside the `coverage/` directory need to be fixed
+before the report is useful. Run either:
+
+```sh
+npm run debug:cc:linux-fix-path
+npm run debug:cc:macos-fix-path
+```
+
+Then regenerate the merged report with `npm run cc:reportAll`.
 
 ## Mocking
 

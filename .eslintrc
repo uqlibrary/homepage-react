@@ -240,7 +240,7 @@
   "extends": ["plugin:prettier/recommended"],
   "overrides": [
     {
-      "files": ["playwright.config.ts", "playwright/**/*.ts"],
+      "files": ["playwright.config.ts", "playwright/**/*.ts", "scripts/**/*.ts", "coverage.config.ts"],
       "parser": "@typescript-eslint/parser",
       "plugins": ["@typescript-eslint"],
       "extends": [

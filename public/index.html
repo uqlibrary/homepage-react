@@ -77,6 +77,6 @@
                 </p>
             </div>
         </div>
-        <script type="text/javascript" src="<%= htmlWebpackPlugin.options.reusablejs %>" defer></script>
+        <% if (htmlWebpackPlugin.options.reusablejs) { %><script type="text/javascript" src="<%= htmlWebpackPlugin.options.reusablejs %>" defer></script><% } %>
     </body>
 </html>

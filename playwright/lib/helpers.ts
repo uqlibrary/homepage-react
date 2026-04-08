@@ -1,5 +1,4 @@
 import { BrowserContext, Page, Locator, expect } from '@uq/pw/test';
-
 /**
  * Helper to set input value.
  *
