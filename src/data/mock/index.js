@@ -1539,6 +1539,10 @@ mock.onGet('exams/course/FREN1010/summary')
     //         asset[location] === (locationId ?? asset[location]) &&
     //         asset.inspect_comment.indexOf(params.get('inspect_comment') ?? asset.inspect_comment) > -1)}]
     // })
+    .onGet(new RegExp(escapeRegExp(routes.TEST_TAG_ASSETS_MINE_API({ teamSlug: 'WSS' }).apiUrl)))
+    .reply(() => [200, { data: test_tag_assets_mine.data.filter(asset => asset.asset_team_owned_by === 'WSS') }])
+    .onGet(new RegExp(escapeRegExp(routes.TEST_TAG_ASSETS_MINE_API({ teamSlug: 'SPACES' }).apiUrl)))
+    .reply(() => [200, { data: test_tag_assets_mine.data.filter(asset => asset.asset_team_owned_by === 'SPACES') }])
     .onGet(/test-and-tag\/asset\/search\/mine.*/)
     .reply(() => [200, test_tag_assets_mine])
     .onPut(routes.TEST_TAG_BULK_UPDATE_API().apiUrl)

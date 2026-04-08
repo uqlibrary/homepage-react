@@ -18,10 +18,12 @@ import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLoc
 import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/DebouncedTextField';
+import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
 
 import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import { transformFilterRow } from './transformers';
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useConfirmationAlert, useAccountUser } from '../../../helpers/hooks';
+import { useUserTeams } from '../../../helpers/teams';
 
 const rootId = 'filter-dialog';
 const rootIdLower = 'filter_dialog';
@@ -42,6 +44,8 @@ const FilterDialog = ({
     onAction,
 }) => {
     const componentId = `${rootIdLower}-${id}`;
+    const { user } = useAccountUser();
+
     const { row, setRow } = useDataTableRow([], transformFilterRow);
     const [assetTypeId, setAssetTypeId] = useState('');
     const [searchNotes, setSearchNotes] = useState('');
@@ -73,6 +77,9 @@ const FilterDialog = ({
         locale: locale.form.columns,
         withActions: false,
     });
+
+    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams(user);
+
     useEffect(() => {
         /* istanbul ignore else */
         if (!assetsMineListLoading && isOpen) {
@@ -106,9 +113,10 @@ const FilterDialog = ({
                     : {}),
                 ...(!!assetTypeId ? { assetTypeId } : {}),
                 textSearch: searchNotes,
+                teamSlug: selectedTeamSlug !== '' ? selectedTeamSlug : null,
             });
         }
-    }, [lastSelectedLocation, location, assetTypeId, searchNotes, isOpen, isBusy, actions]);
+    }, [lastSelectedLocation, location, assetTypeId, searchNotes, selectedTeamSlug, isOpen, isBusy, actions]);
 
     const handleCancelAction = () => {
         onCancel?.();
@@ -144,6 +152,17 @@ const FilterDialog = ({
                 </DialogTitle>
                 <DialogContent sx={{ overflowX: 'hidden' }}>
                     <Grid container spacing={3}>
+                        <Grid xs={12} sm={3}>
+                            <SelectField
+                                field={teamSelectFieldName}
+                                options={userTeamList}
+                                locale={{ all: 'All teams', label: 'Team' }}
+                                filterModel={selectedTeam}
+                                setFilterModel={setSelectedTeam}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={3}>
                         <AutoLocationPicker
                             id={rootId}
                             actions={actions}
@@ -154,7 +173,7 @@ const FilterDialog = ({
                         />
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid xs={12} sm={6} md={4}>
+                        <Grid xs={12} sm={6} md={3}>
                             <AssetTypeSelector
                                 id={rootId}
                                 locale={assetTypeLocale}
@@ -170,7 +189,7 @@ const FilterDialog = ({
                                 disableClearable={false}
                             />
                         </Grid>
-                        <Grid xs={12} sm={6} md={4}>
+                        <Grid xs={12} sm={6} md={6}>
                             <DebouncedTextField
                                 id={`${componentId}-search-notes`}
                                 inputProps={{
