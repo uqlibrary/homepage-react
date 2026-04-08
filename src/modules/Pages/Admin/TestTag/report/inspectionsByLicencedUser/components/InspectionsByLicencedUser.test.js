@@ -1,5 +1,5 @@
 import React from 'react';
-import { rtlRender, WithRouter, WithReduxStore, waitFor, act, fireEvent, userEvent } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, waitFor, act, fireEvent, userEvent, within } from 'test-utils';
 import Immutable from 'immutable';
 
 import * as actions from '../../../../../../../data/actions/actionTypes';
@@ -111,6 +111,15 @@ describe('InspectionsByLicencedUser', () => {
             expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
             expect(getByTestId('user_inspections-user-name-select')).toBeInTheDocument();
 
+            await waitFor(() =>
+                expect(getInspectionsByLicencedUserFn).toHaveBeenLastCalledWith({
+                    endDate: null,
+                    startDate: null,
+                    userRange: null,
+                    teamSlug: 'WSS',
+                }),
+            );
+
             await userEvent.click(getByTestId('user_inspections-user-name-select'));
 
             selectOptionFromListByIndex(1, { getByRole, getAllByRole });
@@ -127,6 +136,7 @@ describe('InspectionsByLicencedUser', () => {
                     endDate: null,
                     startDate: null,
                     userRange: '5',
+                    teamSlug: null,
                 }),
             );
             await mockActionsStore.dispatch(tntActions.getInspectionsByLicencedUser({ userRange: [5] }));
@@ -155,7 +165,8 @@ describe('InspectionsByLicencedUser', () => {
                 expect(getInspectionsByLicencedUserFn).toHaveBeenLastCalledWith({
                     endDate: '2022-12-31',
                     startDate: '2021-01-01',
-                    userRange: '',
+                    userRange: null,
+                    teamSlug: 'WSS',
                 }),
             );
             await mockActionsStore.dispatch(
@@ -191,6 +202,55 @@ describe('InspectionsByLicencedUser', () => {
             await userEvent.clear(getByTestId('user_inspections-tagged-start-input'));
 
             expect(getByText('A start date is required to search by date')).toBeInTheDocument();
+        });
+
+        it('fires action when team filter changes', async () => {
+            const getInspectionsByLicencedUserFn = jest.fn(() => Promise.resolve());
+            const { getByText, findByRole, getByTestId, getByRole, getAllByRole } = setup({
+                actions: { getInspectionsByLicencedUser: getInspectionsByLicencedUserFn },
+            });
+            expect(getByText('Tests by licenced users report for Work Station Support (Library)')).toBeInTheDocument();
+
+            expect(getInspectionsByLicencedUserFn).toHaveBeenCalledWith({
+                endDate: null,
+                startDate: null,
+                userRange: null,
+                teamSlug: 'WSS',
+            });
+
+            await userEvent.click(getByTestId('user_inspections-user-name-select'));
+            selectOptionFromListByIndex(1, { getByRole, getAllByRole });
+
+            expect(getByTestId('user_inspections-user-name-input')).toHaveAttribute('value', '5');
+
+            await waitFor(() =>
+                expect(getInspectionsByLicencedUserFn).toHaveBeenLastCalledWith({
+                    endDate: null,
+                    startDate: null,
+                    userRange: '5',
+                    teamSlug: null,
+                }),
+            );
+
+            const backdrop = document.querySelector('.MuiBackdrop-root');
+            if (backdrop) await userEvent.click(backdrop);
+
+            // open team selector and select all teams
+            const teamSelect = within(getByTestId('team-display-name-select-filter')).getByRole('combobox');
+            await userEvent.click(teamSelect);
+            const listbox = await findByRole('listbox');
+            await userEvent.click(within(listbox).getByText('All teams'));
+
+            expect(getByTestId('user_inspections-user-name-input')).toHaveAttribute('value', '');
+
+            await waitFor(() =>
+                expect(getInspectionsByLicencedUserFn).toHaveBeenLastCalledWith({
+                    endDate: null,
+                    startDate: null,
+                    userRange: null,
+                    teamSlug: null,
+                }),
+            );
         });
     });
 
