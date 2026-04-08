@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
@@ -73,7 +73,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
-    const { lastSelectedLocation, selectedLocation } = useSelectLocation({
+    useSelectLocation({
         location,
         setLocation,
         actions,
@@ -88,11 +88,18 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
 
-    const prevSearchRef = useRef({ locationStr: '', monthRange, team: '' });
+    const {
+        userTeamList,
+        selectedTeam,
+        selectedTeamSlug,
+        teamSelectFieldName,
+        setSelectedTeam,
+        getSelectedTeamSlug,
+    } = useUserTeams(user);
+
+    // const prevSearchRef = useRef({ locationStr: '', monthRange, selectedTeamSlug });
 
     const [filterModel, setFilterModel] = useState({ items: [] });
-
-    const { userTeamList, selectedTeam, selectedTeamSlug, teamSelectFieldName, setSelectedTeam } = useUserTeams(user);
 
     const uniqueAssetTypeList = React.useMemo(() => extractAssetTypeData(inspectionsDue), [inspectionsDue]);
 
@@ -110,47 +117,52 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
     }, []);
 
-    useEffect(() => {
-        const locationStr = JSON.stringify(location);
-
-        /* istanbul ignore if */
-        if (
-            prevSearchRef.current.locationStr === locationStr &&
-            prevSearchRef.current.monthRange === monthRange &&
-            prevSearchRef.current.team === selectedTeamSlug
-        ) {
-            return;
-        }
-        prevSearchRef.current = {
-            locationStr,
-            monthRange,
-            selectedTeamSlug,
-        };
-
-        // const locationId = location[selectedLocation];
-        const newLocation = getLastLocationWithId(location);
-        actions.getInspectionsDue({
-            period: monthRange,
-            periodType: 'month',
-            ...newLocation,
-            teamSlug: selectedTeamSlug,
-        });
-    }, [
-        actions,
-        lastSelectedLocation,
-        location,
-        monthRange,
-        selectedLocation,
-        selectedTeam,
-        selectedTeamSlug,
-        userTeamList,
-    ]);
-
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
-    const onMonthRangeChange = value => {
-        setMonthRange(value);
-    };
+    const getInspectionsDue = useCallback(
+        values => {
+            const newLocation = getLastLocationWithId(location);
+            actions.getInspectionsDue({
+                period: monthRange,
+                periodType: 'month',
+                teamSlug: selectedTeamSlug,
+                ...newLocation,
+                ...values,
+            });
+        },
+        [actions, location, monthRange, selectedTeamSlug],
+    );
+
+    const onMonthRangeChange = useCallback(
+        value => {
+            setMonthRange(value);
+            getInspectionsDue({ period: value, periodType: 'month' });
+        },
+        [getInspectionsDue],
+    );
+
+    const handleSelectedTeam = useCallback(
+        updater => {
+            const newState = updater(selectedTeam);
+            setSelectedTeam(newState);
+            const newSlug = getSelectedTeamSlug(newState);
+            getInspectionsDue({ teamSlug: newSlug });
+        },
+        [selectedTeam, setSelectedTeam, getSelectedTeamSlug, getInspectionsDue],
+    );
+    const handleSelectedLocation = useCallback(
+        value => {
+            const newLocation = getLastLocationWithId(value);
+            setLocation(value);
+            getInspectionsDue({ ...newLocation });
+        },
+        [setLocation, getInspectionsDue],
+    );
+
+    useEffect(() => {
+        getInspectionsDue({});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <StandardAuthPage
@@ -167,7 +179,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                                 options={userTeamList}
                                 locale={{ all: 'All teams', label: 'Team' }}
                                 filterModel={selectedTeam}
-                                setFilterModel={setSelectedTeam}
+                                setFilterModel={handleSelectedTeam}
                             />
                         </GridWrapper>
                     </Grid>
@@ -176,7 +188,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                             id={componentId}
                             actions={actions}
                             location={location}
-                            setLocation={setLocation}
+                            setLocation={handleSelectedLocation}
                             hasAllOption
                             locale={locale.pages.general.locationPicker}
                         />

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 import { useAccountUser } from './hooks';
 import { createFilter } from '../SharedComponents/DataTable/Filter/SelectField';
@@ -37,11 +37,18 @@ export const useUserTeams = (user, teamSelectFieldName = 'team_display_name', se
         : { items: [] };
     const [selectedTeam, setSelectedTeam] = useState(getDefaultSelectedTeam);
 
+    const getSelectedTeamSlug = useCallback(
+        team => {
+            return team.items.length > 0
+                ? teamList.find(t => t.id === parseInt(team.items[0].value[0], 10))?.team_slug
+                : '';
+        },
+        [teamList],
+    );
+
     const selectedTeamSlug = useMemo(() => {
-        return selectedTeam.items.length > 0
-            ? teamList.find(team => team.id === parseInt(selectedTeam.items[0].value[0], 10))?.team_slug
-            : '';
-    }, [selectedTeam.items, teamList]);
+        return getSelectedTeamSlug(selectedTeam);
+    }, [selectedTeam, getSelectedTeamSlug]);
 
     return {
         userTeamList: teamList,
@@ -51,5 +58,6 @@ export const useUserTeams = (user, teamSelectFieldName = 'team_display_name', se
         teamSelectFieldName,
         setSelectedTeam,
         createDefaultSelectedTeam,
+        getSelectedTeamSlug,
     };
 };

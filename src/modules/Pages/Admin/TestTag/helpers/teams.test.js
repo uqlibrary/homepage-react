@@ -183,5 +183,32 @@ describe('teams', () => {
                 ],
             });
         });
+
+        describe('getSelectedTeamSlug', () => {
+            it('should return the team slug for a valid selected team', () => {
+                const { result } = renderHook(() => useUserTeams(mockUser));
+
+                const slug = result.current.getSelectedTeamSlug({
+                    items: [{ value: ['2'] }],
+                });
+                expect(slug).toBe('team-beta');
+            });
+
+            it('should return empty string when items array is empty', () => {
+                const { result } = renderHook(() => useUserTeams(mockUser));
+
+                const slug = result.current.getSelectedTeamSlug({ items: [] });
+                expect(slug).toBe('');
+            });
+
+            it('should return undefined when team id does not match any team', () => {
+                const { result } = renderHook(() => useUserTeams(mockUser));
+
+                const slug = result.current.getSelectedTeamSlug({
+                    items: [{ value: ['999'] }],
+                });
+                expect(slug).toBeUndefined();
+            });
+        });
     });
 });
