@@ -91,7 +91,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqtest1')).toBeVisible();
         // Add a start date
         await page.getByTestId('user_inspections-tagged-start-button').click();
-        await page.locator('.MuiPickersDay-root:has-text("11")').click();
+        await page.locator('.MuiPickersDay-root:text("11")').click();
         await page.locator('body').click();
         // Should require an end date here
         await expect(
@@ -102,14 +102,14 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
             `${currentYear}-${currentMonth}-11`,
         );
         await page.getByTestId('user_inspections-tagged-end-button').click();
-        await page.locator('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root:has-text("12")').click();
+        await page.locator('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root:text("12")').click();
         await page.locator('body').click();
         await expect(page.getByTestId('user_inspections-tagged-end-input')).toHaveValue(
             `${currentYear}-${currentMonth}-12`,
         );
         // Set up an incorrect date for the end
         await page.getByTestId('user_inspections-tagged-end-button').click();
-        await page.locator('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root:has-text("10")').click();
+        await page.locator('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root:text("10")').click();
         await page.locator('body').click();
         await expect(
             page
