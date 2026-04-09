@@ -1355,7 +1355,7 @@ export const EditSpaceForm = ({
                         </StyledErrorMessageTypography>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6} style={{ width: '100%' }}>
+                <Grid item xs={12}>
                     <SpaceLocationMap
                         formValues={formValues}
                         setFormValues={setFormValues}
