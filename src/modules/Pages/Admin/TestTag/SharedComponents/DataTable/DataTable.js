@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
+import { isTest } from '../../../../../../helpers/general';
 
 const rootId = 'data_table';
 
@@ -92,9 +93,7 @@ const DataTable = ({
                     disableSelectionOnClick
                     hideFooterRowCount
                     hideFooterSelectedRowCount
-                    disableVirtualization={
-                        !!process?.env ?? /* istanbul ignore next */ false
-                    } /* required for jest tests */
+                    disableVirtualization={isTest()}
                     getRowId={row => row?.[rowId]}
                     autoHeight
                     rowsPerPageOptions={[10, 25, 50, 100]}

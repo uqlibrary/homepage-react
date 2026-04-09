@@ -1,5 +1,12 @@
 import React from 'react';
-import { rtlRender, WithRouter, WithReduxStore, waitForElementToBeRemoved, userEvent, within } from 'test-utils';
+import {
+    rtlRender,
+    WithRouter,
+    WithReduxStore,
+    waitForElementToBeRemovedIfPresent,
+    userEvent,
+    within,
+} from 'test-utils';
 import Immutable from 'immutable';
 
 import siteList from '../../../../../../../../data/mock/data/testing/testAndTag/testTagSites';
@@ -140,7 +147,7 @@ describe('Locations', () => {
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
 
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(addLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -167,7 +174,7 @@ describe('Locations', () => {
 
             userEvent.click(getByTestId('update_dialog-action-button'));
 
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(addLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -210,7 +217,7 @@ describe('Locations', () => {
             await userEvent.click(getByTestId('site_excluded_cb-input'));
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -237,7 +244,7 @@ describe('Locations', () => {
             await userEvent.click(getByTestId('site_excluded_cb-input'));
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {

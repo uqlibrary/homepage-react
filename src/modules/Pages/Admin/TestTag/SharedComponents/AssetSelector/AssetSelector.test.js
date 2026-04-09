@@ -1,5 +1,5 @@
 import React from 'react';
-import AssetSelector from './AssetSelector';
+import AssetSelector, { maskNumber } from './AssetSelector';
 import { render, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
@@ -10,27 +10,6 @@ import * as repositories from 'repositories';
 import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import assetData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
 import locale from '../../testTag.locale.js';
-
-/*
-
-    id,
-    locale,
-    selectedAsset,
-    masked = true,
-    required = true,
-    canAddNew = true,
-    clearOnSelect = false,
-    headless = false, // if true, no popup is shown and the calling component is expected to intercept the Redux store
-    minAssetIdLength = MINIMUM_ASSET_ID_PATTERN_LENGTH,
-    user,
-    classNames,
-    inputRef,
-    onChange,
-    onReset,
-    onSearch,
-    validateAssetId,
-    filter,
-    */
 
 const selectOptionFromListByIndex = (index, actions) => {
     expect(actions.getByRole('listbox')).not.toEqual(null);
@@ -321,6 +300,153 @@ describe('AssetSelector', () => {
                 actions.TESTTAG_ASSETS_CLEAR,
             ]);
             expect(getByTestId('asset_selector-test-input')).toHaveAttribute('value', patternExact);
+        });
+    });
+
+    it('should clear input when clear button is clicked', async () => {
+        const onClearFn = jest.fn();
+        const onChangeFn = jest.fn();
+        const { getByTestId, getByRole, getAllByRole } = setup({
+            id: 'test',
+            state: { testTagAssetsReducer: { assetsList: [] } },
+            onClear: onClearFn,
+            onChange: onChangeFn,
+        });
+        expect(getByTestId('asset_selector-test')).toBeInTheDocument();
+
+        // Click to open, select the ADD NEW option
+        act(() => {
+            fireEvent.click(getByTestId('asset_selector-test-input'));
+        });
+        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+        expect(getByTestId('asset_selector-test-input')).toHaveAttribute('value', 'NEW ASSET');
+
+        // Now click the clear button rendered by Autocomplete
+        const clearButton = getByTestId('asset_selector-test').querySelector('.MuiAutocomplete-clearIndicator');
+        act(() => {
+            fireEvent.click(clearButton);
+        });
+
+        await waitFor(() => expect(onClearFn).toHaveBeenCalledWith('clear'));
+        expect(getByTestId('asset_selector-test-input')).toHaveAttribute('value', '');
+    });
+
+    it('should apply autoFocus when prop is set', () => {
+        const { getByTestId } = setup({
+            state: { testTagAssetsReducer: { assetsList: [] } },
+            id: 'test',
+            autoFocus: true,
+        });
+        expect(getByTestId('asset_selector-test-input')).toHaveFocus();
+    });
+
+    it('should render as not required when required is false', () => {
+        const { getByTestId } = setup({
+            state: { testTagAssetsReducer: { assetsList: [] } },
+            id: 'test',
+            required: false,
+        });
+        expect(getByTestId('asset_selector-test-input')).not.toBeRequired();
+    });
+
+    it('should call onChange with the selected asset object', async () => {
+        const onChangeFn = jest.fn();
+        const { getByTestId, getAllByRole } = setup({
+            id: 'test',
+            onChange: onChangeFn,
+        });
+        expect(getByTestId('asset_selector-test')).toBeInTheDocument();
+
+        act(() => {
+            fireEvent.click(getByTestId('asset_selector-test-input'));
+        });
+
+        // The last option should be "ADD NEW ASSET", the first real options are from assetData
+        const options = getAllByRole('option');
+        // First option is from assetData
+        act(() => {
+            fireEvent.mouseDown(options[0]);
+            options[0].click();
+        });
+
+        expect(onChangeFn).toHaveBeenCalledWith(assetData[0]);
+    });
+
+    it('should call onChange with inputValue when ADD NEW is selected', () => {
+        const onChangeFn = jest.fn();
+        const { getByTestId, getByRole, getAllByRole } = setup({
+            state: { testTagAssetsReducer: { assetsList: [] } },
+            id: 'test',
+            onChange: onChangeFn,
+        });
+
+        act(() => {
+            fireEvent.click(getByTestId('asset_selector-test-input'));
+        });
+        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+
+        expect(onChangeFn).toHaveBeenCalledWith({ asset_id_displayed: 'NEW ASSET' });
+    });
+
+    it('should not search when input length is below minAssetIdLength', async () => {
+        const onSearchFn = jest.fn();
+        setup({
+            state: { testTagAssetsReducer: { assetsList: [] } },
+            id: 'test',
+            onSearch: onSearchFn,
+            minAssetIdLength: 10,
+        });
+
+        act(() => {
+            fireEvent.change(document.querySelector('[data-testid="asset_selector-test-input"]'), {
+                target: { value: 'UQL31' },
+            });
+        });
+
+        // Wait for debounce (500ms)
+        await act(async () => {
+            await new Promise(resolve => setTimeout(resolve, 600));
+        });
+
+        expect(onSearchFn).not.toHaveBeenCalled();
+    });
+
+    describe('coverage', () => {
+        it('should close popup on blur', () => {
+            const { getByTestId, queryByRole } = setup({
+                state: { testTagAssetsReducer: { assetsList: assetData } },
+                id: 'test',
+            });
+
+            act(() => {
+                fireEvent.focus(getByTestId('asset_selector-test-input'));
+            });
+
+            act(() => {
+                fireEvent.blur(getByTestId('asset_selector-test-input'));
+            });
+            expect(queryByRole('listbox')).toEqual(null);
+        });
+
+        it('should apply classNames to form control and autocomplete', () => {
+            const { getByTestId, container } = setup({
+                state: { testTagAssetsReducer: { assetsList: [] } },
+                id: 'test',
+                classNames: { formControl: 'custom-form-control', autocomplete: 'custom-autocomplete' },
+            });
+            expect(container.querySelector('.custom-form-control')).toBeInTheDocument();
+            expect(getByTestId('asset_selector-test')).toHaveClass('custom-autocomplete');
+        });
+    });
+    describe('maskNumber', () => {
+        it('should prepend department and zero-pad when input is purely numeric', () => {
+            expect(maskNumber('310000', 'UQL')).toBe('UQL310000');
+        });
+        it('should zero-pad short numeric input', () => {
+            expect(maskNumber('123', 'UQL')).toBe('UQL000123');
+        });
+        it('should return as-is when input already has a prefix', () => {
+            expect(maskNumber('UQL310000', 'UQL')).toBe('UQL310000');
         });
     });
 });

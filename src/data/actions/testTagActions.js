@@ -329,6 +329,7 @@ export function loadAssetsFiltered(pattern, filter) {
                 });
             })
             .catch(error => {
+                console.error(error);
                 dispatch({
                     type: actions.TESTTAG_ASSETS_FAILED,
                     payload: error.message,
@@ -724,10 +725,10 @@ export function updateInspectionDetails(id, request) {
 
 /* REPORT INSPECTIONS DUE */
 
-export function getInspectionsDue({ locationId, locationType, period, periodType }) {
+export function getInspectionsDue({ locationId, locationType, period, periodType, teamSlug }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_DUE_LOADING });
-        return get(TEST_TAG_REPORT_INSPECTIONS_DUE_API({ locationId, locationType, period, periodType }))
+        return get(TEST_TAG_REPORT_INSPECTIONS_DUE_API({ locationId, locationType, period, periodType, teamSlug }))
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_INSPECTIONS_DUE_LOADED,
@@ -757,10 +758,10 @@ export function clearInspectionsDue() {
 }
 
 /* REPORT INSPECTIONS BY LICENCED USER */
-export function getInspectionsByLicencedUser({ startDate, endDate, userRange }) {
+export function getInspectionsByLicencedUser({ startDate, endDate, userRange, teamSlug }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_LOADING });
-        return get(TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({ startDate, endDate, userRange }))
+        return get(TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({ startDate, endDate, userRange, teamSlug }))
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_LOADED,
@@ -861,6 +862,7 @@ export function loadAssetReportByFilters({
     locationId,
     inspectionDateFrom,
     inspectionDateTo,
+    teamSlug,
 }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_REPORT_LOADING });
@@ -871,6 +873,7 @@ export function loadAssetReportByFilters({
                 locationId,
                 inspectionDateFrom,
                 inspectionDateTo,
+                teamSlug,
             }),
         )
             .then(response => {

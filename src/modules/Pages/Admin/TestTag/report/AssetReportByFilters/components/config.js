@@ -3,10 +3,13 @@ import React from 'react';
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
+import { createLocationLink } from '../../../helpers/helpers';
 const moment = require('moment');
 
 /**
- * @param {{site_name: string, building_id_displayed: string, floor_id_displayed: number, room_id_displayed: number}} row
+ * @param {
+ *     {site_name: string, building_id_displayed: string, floor_id_displayed: number, room_id_displayed: number}
+ * } row
  * @return {string}
  */
 export const renderLocation = row => {
@@ -16,17 +19,6 @@ export const renderLocation = row => {
     const roomNum = row?.room_id_displayed || /* istanbul ignore next */ '';
     return locale.pages.report.assetReportByFilters.form.formattedLocation(siteName, buildingNum, floorNum, roomNum);
 };
-
-/**
- *
- * @param {Object[]} row
- * @return {*}
- */
-export const transformRow = row =>
-    row.map(line => ({
-        ...line,
-        location: renderLocation(line),
-    }));
 
 export default {
     defaults: {
@@ -45,6 +37,8 @@ export default {
             fieldParams: {
                 minWidth: 200,
                 flex: 1,
+                valueGetter: params => renderLocation(params.row),
+                renderCell: params => createLocationLink(renderLocation(params.row), params.row.floor_plan_url),
             },
         },
         asset_type_name: { fieldParams: { minWidth: 200, flex: 1 } },
