@@ -113,15 +113,12 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
     },
 }));
 const StyledSidebarDiv = styled('div')(() => ({
-    position: 'sticky',
-    top: 0,
+    position: 'relative',
     height: '100%',
     overflowY: 'auto',
-    left: 0,
 
-    paddingTop: '3.5rem',
+    paddingTop: '0.5rem',
     paddingRight: 0,
-    marginBlock: '1em',
     marginRight: 0,
     marginLeft: 0,
     flexBasis: '10%',

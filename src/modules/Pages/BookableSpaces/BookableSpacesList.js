@@ -1,9 +1,11 @@
 import React, { useCallback, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-import { Badge, Button, Grid, useTheme } from '@mui/material';
+import { Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { breadcrumbs } from 'config/routes';
 
@@ -73,75 +75,74 @@ const StyledLayoutWrapper = styled('div')(() => ({
     position: 'relative',
     height: '99vh',
     marginInline: '2rem',
-    '& .popupSpacesList, .popupFilterList': {
+    overflow: 'hidden',
+    '& .popupFilterList': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        height: '100%',
+        width: '20rem',
+        maxWidth: '50%',
+        zIndex: 997,
+    },
+    '& .popupSpacesList': {
         position: 'absolute',
         top: 0,
         right: 0,
-        height: 'calc(100% - 56px)',
         width: '20rem',
         maxWidth: '50%',
         zIndex: 997,
         paddingLeft: '0.5rem',
-        marginTop: 0,
+    },
+    '& .popupSpacesSidebar': {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: '20rem',
+        maxWidth: '50%',
+        zIndex: 997,
+        paddingLeft: '0.5rem',
+        height: 'fit-content',
     },
     '& .hide': {
         display: 'none',
     },
 }));
-const schoolBuildingBackgroundimage =
-    'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M5.48 14.29H1.71v-4.6c0-.46.38-.83.83-.83h2.94m5.04-.03h2.94c.45 0 .83.37.83.83v4.63h-3.77m-1.69-2.2a.79.79 0 0 0-.83-.75.79.79 0 0 0-.83.75v2.2h1.69v-2.2zM8 5.06V1.7m0 .01h2.23a.3.3 0 0 1 .29.29v1.11c0 .15-.12.29-.29.29H8zm0 5.06a.83.83 0 0 1 0 1.66.83.83 0 0 1 0-1.66zm0 0%27%3e%3c/path%3e%3cpath d=%27M10.52 7.52A2.47 2.47 0 0 0 8 5.09a2.49 2.49 0 0 0-2.52 2.43v6.77h5.04zm-7.12 3h.43M3.4 12.6h.43m8.37-2.08h.43m-.43 2.08h.43%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
-const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
+const StyledSidebarTab = styled('button')(({ theme }) => ({
     position: 'absolute',
-    top: '0.25rem',
-    right: '1rem',
+    top: '50%',
+    transform: 'translateY(-50%)',
     zIndex: 998,
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: '0.25rem',
-    '& span': {
-        marginLeft: '0.25rem',
-        textTransform: 'capitalize',
-        fontSize: '1rem',
-    },
+    width: '1.5rem',
+    height: '4.5rem',
+    padding: 0,
+    border: `1px solid ${theme.palette.primary.light}`,
     backgroundColor: '#fff',
-    textDecoration: 'underline',
-    '&:hover, :focus': {
-        backgroundColor: '#fff',
-        '& > span:first-of-type > span': {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-        },
-    },
-
-    backgroundImage: schoolBuildingBackgroundimage,
-    paddingLeft: '40px',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: '35px 35px',
-    minHeight: '50px',
-    backgroundPosition: 'left center',
-}));
-const StyledFilterOpenButton = styled(Button)(({ theme }) => ({
-    position: 'absolute',
-    top: '0.25rem',
-    left: '11rem', // have the button sit on the right of the filter sidebar, so the labels slide inside it
-    zIndex: 998,
-    backgroundColor: '#fff',
+    cursor: 'pointer',
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    columnGap: '0.25rem',
-    paddingLeft: 0,
-    marginLeft: '-0.5rem',
-    textDecoration: 'underline',
-    '&:hover, :focus': {
-        backgroundColor: '#fff',
-        '& > span:first-of-type > span': {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-        },
+    justifyContent: 'center',
+    gap: '2px',
+    color: theme.palette.primary.main,
+    '&:hover, &:focus-visible': {
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+        outline: `2px solid ${theme.palette.primary.dark}`,
+        outlineOffset: '1px',
     },
-    '& span': {
-        textTransform: 'capitalize',
-        fontSize: '1rem',
+    '& .tab-count': {
+        fontSize: '0.6rem',
+        fontWeight: 'bold',
+        lineHeight: 1,
+    },
+    '&.filterTab': {
+        borderRadius: '0 6px 6px 0',
+        borderLeft: 'none',
+    },
+    '&.spacesTab': {
+        borderRadius: '6px 0 0 6px',
+        borderRight: 'none',
     },
 }));
 
@@ -456,28 +457,6 @@ export const BookableSpacesList = ({
     const toggleSpacesListPopupVisibility = e => {
         setShowSpacesSelectorPopup(!showSpacesSelectorPopup);
     };
-    const filterToggleButtonIcon = (
-        // https://www.streamlinehq.com/icons/ultimate-regular-free?search=filter&icon=ico_lPqwMEdpHFHOBRpU
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            height="24"
-            width="24"
-            aria-hidden="true"
-            focusable="false"
-        >
-            <desc>Open and close the filter sidebar</desc>
-            <path
-                stroke="#51247a"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M23.2 2.05391c0.0067 -0.10242 -0.0077 -0.20512 -0.0422 -0.30176 -0.0346 -0.09665 -0.0886 -0.18519 -0.1587 -0.26015 -0.0701 -0.07497 -0.1548 -0.13478 -0.2489 -0.17573 -0.0941 -0.04095 -0.1956 -0.06217 -0.2982 -0.06236H1.49997c-0.10267 0.00004 -0.20424 0.02117 -0.29842 0.06207 -0.09418 0.0409 -0.17896 0.1007 -0.249081 0.1757 -0.070124 0.075 -0.124102 0.1636 -0.158589 0.26031 -0.034488 0.09671 -0.048751 0.19947 -0.041906 0.30192 0.175881 2.449 1.147846 4.7733 2.767696 6.61847 1.61985 1.84512 3.7987 3.10992 6.2043 3.60152v9.875c0.00006 0.1425 0.04071 0.2821 0.11721 0.4023 0.07649 0.1202 0.18562 0.2162 0.31472 0.2766 0.1291 0.0605 0.2727 0.0829 0.414 0.0647 0.1414 -0.0183 0.2746 -0.0764 0.3841 -0.1676l3 -2.5c0.0845 -0.0703 0.1526 -0.1583 0.1993 -0.2579 0.0466 -0.0995 0.0708 -0.2081 0.0707 -0.3181v-7.375c2.4064 -0.4906 4.5862 -1.755 6.2069 -3.60031C22.0515 6.82832 23.024 4.50352 23.2 2.05391Z"
-                strokeWidth="1.5"
-            />
-        </svg>
-    );
-
     const handleFavouriteAction = async (action, spaceId) => {
         /* istanbul ignore next */
         if (isFavouriteActionInProgress) return;
@@ -531,19 +510,6 @@ export const BookableSpacesList = ({
         // recomputes when the slider changes even though it is not a direct parameter.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [bookableSpacesRoomList, facilityTypeList, selectedFacilityTypes, capacityFilterValue, spacesFavouritesList]);
-    const visibleSpacesCountBadge = () => {
-        return sortedSpaceLocations?.length > 0 &&
-            sortedSpaceLocations?.length < bookableSpacesRoomList?.data?.locations?.length ? (
-            <Badge
-                badgeContent={sortedSpaceLocations?.length}
-                max={bookableSpacesRoomList?.data?.locations?.length}
-                color="primary"
-                style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
-                data-testid="space-space-count"
-            />
-        ) : null;
-    };
-
     const handleMarkerClick = (e, space) => {
         // Stop the click from opening the popup
         e?.originalEvent?.stopPropagation();
@@ -585,26 +551,6 @@ export const BookableSpacesList = ({
     };
 
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
-    const activeFilterCountBadge = () => {
-        return activeFilterCount === 0 ? null : (
-            <Badge
-                badgeContent={activeFilterCount}
-                max={selectedFacilityTypes?.length}
-                color="primary"
-                style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
-                data-testid="space-filter-count"
-            />
-        );
-    };
-    function neededPaddingRight() {
-        if (activeFilterCount === 0) {
-            return 0;
-        }
-        if (activeFilterCount > 9) {
-            return '1rem';
-        }
-        return '0.75rem';
-    }
     return (
         <BookableSpacesListWrapperDiv>
             {(() => {
@@ -637,18 +583,23 @@ export const BookableSpacesList = ({
                     return (
                         <StyledLayoutWrapper data-testid="library-spaces">
                             <div>
-                                <StyledFilterOpenButton
+                                <StyledSidebarTab
                                     id="toggleFilterButton"
                                     data-testid="spaces-open-filter-button"
                                     onClick={() => toggleFilterPopupVisibility()}
-                                    title="Open and close the filter sidebar"
+                                    title={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
+                                    aria-expanded={showFilterSelectorPopup}
+                                    aria-label={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
+                                    className="filterTab"
+                                    style={{ left: showFilterSelectorPopup ? 'min(20rem, 50%)' : '0' }}
                                 >
-                                    {filterToggleButtonIcon}{' '}
-                                    <span style={{ paddingRight: neededPaddingRight() }}>
-                                        <span>{!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}</span>
-                                    </span>
-                                    {activeFilterCountBadge()}
-                                </StyledFilterOpenButton>
+                                    {showFilterSelectorPopup ? (
+                                        <ChevronLeftIcon fontSize="small" />
+                                    ) : (
+                                        <ChevronRightIcon fontSize="small" />
+                                    )}
+                                    {activeFilterCount > 0 && <span className="tab-count">{activeFilterCount}</span>}
+                                </StyledSidebarTab>
                                 <SidebarFilters
                                     facilityTypeList={facilityTypeList}
                                     facilityTypeListLoading={facilityTypeListLoading}
@@ -668,26 +619,27 @@ export const BookableSpacesList = ({
                             </div>
                             {isDesktopView && (
                                 <>
-                                    <StyledSpaceListOpenButton
+                                    <StyledSidebarTab
                                         id="toggleSpacesListButton"
-                                        // className="controlSpacesListButton"
                                         data-testid="spaces-open-spaces-list-button"
                                         onClick={() => toggleSpacesListPopupVisibility()}
-                                        title="Open and close the spaces sidebar"
+                                        title={showSpacesSelectorPopup ? 'Hide spaces list' : 'Show spaces list'}
+                                        aria-expanded={showSpacesSelectorPopup}
+                                        aria-label={showSpacesSelectorPopup ? 'Hide spaces list' : 'Show spaces list'}
+                                        className="spacesTab"
+                                        style={{ right: showSpacesSelectorPopup ? '20rem' : '0' }}
                                     >
-                                        <span
-                                            style={{
-                                                paddingRight: sortedSpaceLocations?.length > 10 ? '1rem' : '0.5rem',
-                                                // covers 1 and 2 digit
-                                                // will need more ifs when we have more data: > 100, > 1000
-                                            }}
-                                        >
-                                            <span>
-                                                {!!showSpacesSelectorPopup ? 'Hide Spaces list' : 'Show Spaces list'}
-                                            </span>
-                                        </span>
-                                        {visibleSpacesCountBadge()}
-                                    </StyledSpaceListOpenButton>
+                                        {showSpacesSelectorPopup ? (
+                                            <ChevronRightIcon fontSize="small" />
+                                        ) : (
+                                            <ChevronLeftIcon fontSize="small" />
+                                        )}
+                                        {sortedSpaceLocations?.length > 0 &&
+                                            sortedSpaceLocations?.length <
+                                                bookableSpacesRoomList?.data?.locations?.length && (
+                                                <span className="tab-count">{sortedSpaceLocations.length}</span>
+                                            )}
+                                    </StyledSidebarTab>
                                     <div
                                         className={
                                             showSpacesSelectorPopup
@@ -702,7 +654,7 @@ export const BookableSpacesList = ({
                                             weeklyHoursError={weeklyHoursError}
                                             StyledStandardCard={StyledStandardCard}
                                             showAllData={!isMobileView}
-                                            suppliedClassName={showSpacesSelectorPopup ? 'popupSpacesList' : 'hide'}
+                                            suppliedClassName={showSpacesSelectorPopup ? 'popupSpacesSidebar' : 'hide'}
                                             spacesFavouritesList={spacesFavouritesList}
                                             isLoggedIn={isLoggedIn}
                                             onFavouriteToggle={handleFavouriteAction}

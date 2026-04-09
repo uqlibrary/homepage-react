@@ -104,6 +104,9 @@ const BookableSpacesMap = React.forwardRef(({ sortedSpaceLocations, spacesFavour
         flyToSpace(space) {
             const map = mazeMapInstanceRef.current;
             if (!map || !space?.space_longitude || !space?.space_latitude) return;
+            if (space?.space_mazemap_zlevel != null) {
+                map.setZLevel(space.space_mazemap_zlevel);
+            }
             map.flyTo({
                 center: [space.space_longitude, space.space_latitude],
                 zoom: 20,
@@ -214,6 +217,9 @@ const BookableSpacesMap = React.forwardRef(({ sortedSpaceLocations, spacesFavour
                     markerEl.dataset.baseZindex = '';
                 }
                 markerEl.addEventListener('click', e => {
+                    if (mapPoint?.space_mazemap_zlevel != null) {
+                        mazeMapInstanceRef.current?.setZLevel(mapPoint.space_mazemap_zlevel);
+                    }
                     setSelectedMarker(markerEl, mapPoint);
                     onMarkerClick(e, mapPoint, markerEl);
                 });
