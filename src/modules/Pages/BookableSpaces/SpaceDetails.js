@@ -91,6 +91,7 @@ const StyledCollapsableSection = styled('div')(({ theme }) => ({
         visibility: 'hidden',
         height: 0,
         opacity: 0,
+        overflow: 'hidden',
     },
     'ul.facilityTypeList li': {
         [theme.breakpoints.down('sm')]: {
