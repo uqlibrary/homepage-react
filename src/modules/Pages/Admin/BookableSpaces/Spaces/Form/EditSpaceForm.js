@@ -816,7 +816,6 @@ export const EditSpaceForm = ({
     };
 
     const handleSaveClick = () => {
-        console.log('handleSaveClick — space_zlevel at time of save:', formValues?.space_zlevel);
         const valuesToSend = {};
         valuesToSend.space_name = formValues?.space_name;
         valuesToSend.space_type_id = formValues?.space_type_id || selectedSpaceType?.space_type_id || null;
@@ -831,6 +830,7 @@ export const EditSpaceForm = ({
         valuesToSend.space_opening_hours_override = formValues?.space_opening_hours_override;
         valuesToSend.space_latitude = formValues?.space_latitude?.toString();
         valuesToSend.space_longitude = formValues?.space_longitude?.toString();
+        valuesToSend.space_zlevel = formValues?.space_zlevel;
         valuesToSend.space_external_book_url = !!formValues?.space_external_book_url
             ? formValues?.space_external_book_url
             : null;

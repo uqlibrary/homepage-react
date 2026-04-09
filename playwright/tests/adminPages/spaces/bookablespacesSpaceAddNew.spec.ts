@@ -164,6 +164,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_opening_hours_id: 3967,
             space_latitude: PACE_DEFAULT_LATITUDE,
             space_longitude: PACE_DEFAULT_LONGITUDE,
+            space_zlevel: 1,
             space_external_book_url: null,
             space_draftmode: false,
             space_capacity: '2',
@@ -315,6 +316,7 @@ test.describe('Spaces Admin - add new space', () => {
             facility_types: [ASKUS_FILTER_TYPE, MICROWAVE_FILTER_TYPE],
             space_latitude: PACE_DEFAULT_LATITUDE, // TODO add drag and drop test
             space_longitude: PACE_DEFAULT_LONGITUDE,
+            space_zlevel: 1,
             space_draftmode: false,
             space_capacity: '8',
         };

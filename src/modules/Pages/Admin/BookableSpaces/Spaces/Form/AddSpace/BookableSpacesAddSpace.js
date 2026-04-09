@@ -137,6 +137,7 @@ export const BookableSpacesAddSpace = ({
                 ['space_opening_hours_id']: _mostRecentSpace?.space_opening_hours_id,
                 ['space_latitude']: _mostRecentSpace?.space_latitude,
                 ['space_longitude']: _mostRecentSpace?.space_longitude,
+                ['space_zlevel']: _mostRecentSpace?.space_zlevel,
                 ['space_capacity']: 1, // default value
                 ['space_draftmode']: false,
             };

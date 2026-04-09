@@ -86,6 +86,7 @@ const originalMockData = (spaceUud: string) => {
         space_opening_hours_override: currentData?.space_opening_hours_override,
         space_latitude: currentData?.space_latitude,
         space_longitude: currentData?.space_longitude,
+        space_zlevel: currentData?.space_zlevel,
         space_external_book_url: currentData?.space_external_book_url,
     };
 };
@@ -563,6 +564,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_opening_hours_override: null,
             space_latitude: LAW_DEFAULT_LATITUDE, // can't clear map fields
             space_longitude: LAW_DEFAULT_LONGITUDE,
+            space_zlevel: 1,
             uploadedFile: [],
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -885,6 +887,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_opening_hours_override: 'space is open from 7am',
             space_latitude: LAW_DEFAULT_LATITUDE, // TODO: drag an drop to change these
             space_longitude: LAW_DEFAULT_LONGITUDE,
+            space_zlevel: 1,
             space_capacity: '32',
         };
         await assertExpectedDataSentToServer(page, expectedValues);

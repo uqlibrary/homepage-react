@@ -54,6 +54,7 @@ const CampusLocationMap = (campusCentre = null) => {
 
             const el = document.createElement('div');
             el.style.cssText = 'width: 24px; height: 40px; cursor: grab;';
+            el.setAttribute('role', 'img');
             el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 149 178">
                 <path fill="#51247a" stroke="#FFF" stroke-width="6" stroke-miterlimit="10" d="M126 23l-6-6A69 69 0 0 0 74 1a69 69 0 0 0-51 22A70 70 0 0 0 1 74c0 21 7 38 22 52l43 47c6 6 11 6 16 0l48-51c12-13 18-29 18-48 0-20-8-37-22-51z"/>
                 <circle fill="#fff" cx="74" cy="75" r="48"/>
