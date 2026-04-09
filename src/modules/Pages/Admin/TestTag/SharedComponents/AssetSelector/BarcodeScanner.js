@@ -58,7 +58,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
 
     if (!isScanning) {
         return (
-            <IconButton onClick={() => setIsScanning(!isScanning)}>
+            <IconButton aria-label="Open scanner" onClick={() => setIsScanning(true)}>
                 <QrCodeScanner />
             </IconButton>
         );
@@ -66,7 +66,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
 
     return (
         <Dialog fullScreen open={isScanning} onClose={() => setIsScanning(false)}>
-            <DialogTitle sx={{ m: 0, p: 2 }}>
+            <DialogTitle sx={{ p: 2 }}>
                 <Box
                     sx={{
                         display: 'flex',
@@ -92,7 +92,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
                     </FormControl>
 
                     <IconButton
-                        aria-label="close"
+                        title="close scanner"
                         onClick={closeScanner}
                         sx={{ color: theme => theme.palette.grey[500] }}
                     >
