@@ -226,6 +226,13 @@ const StyledWarningListBox = styled('div')(({ theme }) => ({
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
+    // Once a tab has been shown, keep it mounted (just hidden) so that
+    // widgets like MazeMap are never destroyed and recreated on tab switch,
+    // which causes marker DOM elements to escape the map container.
+    const [hasBeenActive, setHasBeenActive] = React.useState(value === index);
+    React.useEffect(() => {
+        if (value === index) setHasBeenActive(true);
+    }, [value, index]);
 
     return (
         <div
@@ -235,7 +242,7 @@ function CustomTabPanel(props) {
             aria-labelledby={`spacesform-tab-${index}`}
             {...other}
         >
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+            {hasBeenActive && <Box sx={{ p: 3 }}>{children}</Box>}
         </div>
     );
 }
