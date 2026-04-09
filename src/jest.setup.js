@@ -10,6 +10,7 @@ jest.mock('@yudiel/react-qr-scanner', () => {
     const React = require('react');
     return {
         __esModule: true,
+        prepareZXingModule: jest.fn(),
         useDevices: jest.fn(() => [{ deviceId: 'mock-device-1', label: 'Mock Camera 1' }]),
         Scanner: () => <span style={{ display: 'none' }}>ReactQRScanner mock</span>,
     };
