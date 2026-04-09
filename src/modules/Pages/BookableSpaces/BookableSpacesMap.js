@@ -104,6 +104,9 @@ const BookableSpacesMap = React.forwardRef(({ sortedSpaceLocations, spacesFavour
         flyToSpace(space) {
             const map = mazeMapInstanceRef.current;
             if (!map || !space?.space_longitude || !space?.space_latitude) return;
+            if (space?.space_zlevel != null) {
+                map.setZLevel(parseFloat(space.space_zlevel));
+            }
             map.flyTo({
                 center: [space.space_longitude, space.space_latitude],
                 zoom: 20,

@@ -1,80 +1,95 @@
-import React, { useState } from 'react';
-
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import React from 'react';
 
 import Typography from '@mui/material/Typography';
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 
-const markerIcon = require('../../../../../../public/images/spaces/marker-icon.png');
-const markerIcon2x = require('../../../../../../public/images/spaces/marker-icon-2x.png');
-const markerShadow = require('../../../../../../public/images/spaces/marker-shadow.png');
-
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: markerIcon2x,
-    iconUrl: markerIcon,
-    shadowUrl: markerShadow,
-});
-
 const CampusLocationMap = (campusCentre = null) => {
-    const initialCentre =
-        campusCentre?.space_latitude && campusCentre?.space_longitude
-            ? [campusCentre?.space_latitude, campusCentre?.space_longitude]
-            : locale?.locations?.greatCourtCoordinates;
+    const defaultCoords = locale?.locations?.greatCourtCoordinates;
+    const initialLat = campusCentre?.space_latitude ?? defaultCoords[0];
+    const initialLng = campusCentre?.space_longitude ?? defaultCoords[1];
 
-    const [position, setPosition2] = useState(locale?.locations?.greatCourtCoordinates);
-    const setPosition = p => {
-        const campusLatitudeField = document.getElementById('campus_latitude');
-        !!campusLatitudeField && (campusLatitudeField.value = p?.lat);
-        console.log('set campus_latitude to ', p?.lat);
-        const campusLongitudeField = document.getElementById('campus_longitude');
-        !!campusLongitudeField && (campusLongitudeField.value = p?.lng);
-        console.log('set campus_longitude to ', p?.lng);
-        setPosition2(p);
-    };
-
+    const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
+    const [mapContainer, setMapContainer] = React.useState(null);
+    const mazeMapInstanceRef = React.useRef(null);
     const markerRef = React.useRef(null);
-    function DraggableMarker() {
-        const draggable = true;
-        const eventHandlers = React.useMemo(
-            () => ({
-                dragend() {
-                    const marker = markerRef.current;
-                    if (marker !== null) {
-                        setPosition(marker?.getLatLng());
-                    }
-                },
-            }),
-            [],
-        );
 
-        return (
-            <Marker draggable={draggable} eventHandlers={eventHandlers} position={position} ref={markerRef}>
-                <Popup minWidth={90}>Centre the campus</Popup>
-            </Marker>
-        );
-    }
+    React.useEffect(() => {
+        if (window.Mazemap) {
+            setIsMazeMapScriptReady(true);
+            return;
+        }
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.css`;
+        document.head.appendChild(link);
+
+        const script = document.createElement('script');
+        script.src = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.js`;
+        script.type = 'text/javascript';
+        script.async = true;
+        script.onload = () => setIsMazeMapScriptReady(true);
+        document.body.appendChild(script);
+
+        return () => {
+            document.head.removeChild(link);
+            document.body.removeChild(script);
+        };
+    }, []);
+
+    React.useEffect(() => {
+        if (!isMazeMapScriptReady || !mapContainer) return;
+
+        mazeMapInstanceRef.current = new window.Mazemap.Map({
+            container: 'campus-location-mazemap',
+            campuses: 406,
+            center: { lng: initialLng, lat: initialLat },
+            zoom: 15,
+            zLevel: 1,
+            RTLTextPlugin: null,
+        });
+
+        mazeMapInstanceRef.current.on('load', () => {
+            mazeMapInstanceRef.current.resize();
+
+            const el = document.createElement('div');
+            el.style.cssText = 'width: 24px; height: 40px; cursor: grab;';
+            el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 149 178">
+                <path fill="#51247a" stroke="#FFF" stroke-width="6" stroke-miterlimit="10" d="M126 23l-6-6A69 69 0 0 0 74 1a69 69 0 0 0-51 22A70 70 0 0 0 1 74c0 21 7 38 22 52l43 47c6 6 11 6 16 0l48-51c12-13 18-29 18-48 0-20-8-37-22-51z"/>
+                <circle fill="#fff" cx="74" cy="75" r="48"/>
+            </svg>`;
+
+            markerRef.current = new window.Mazemap.ZLevelMarker(el, { offset: [0, -20] })
+                .setLngLat([initialLng, initialLat])
+                .addTo(mazeMapInstanceRef.current);
+
+            mazeMapInstanceRef.current.on('click', e => {
+                const { lng, lat } = e.lngLat;
+                const zLevel = mazeMapInstanceRef.current.zLevel;
+                console.log('CampusLocationMap click — lat:', lat, 'lng:', lng, 'zLevel:', zLevel);
+                markerRef.current.setLngLat([lng, lat]);
+                const campusLatitudeField = document.getElementById('campus_latitude');
+                if (campusLatitudeField) campusLatitudeField.value = lat;
+                const campusLongitudeField = document.getElementById('campus_longitude');
+                if (campusLongitudeField) campusLongitudeField.value = lng;
+            });
+        });
+
+        return () => {
+            markerRef.current?.remove();
+            markerRef.current = null;
+            mazeMapInstanceRef.current?.remove();
+            mazeMapInstanceRef.current = null;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMazeMapScriptReady, mapContainer]);
 
     return (
         <>
-            <MapContainer
-                center={initialCentre}
-                zoom={15}
-                // scrollWheelZoom={false}
-                style={{ width: '100%', height: '300px' }}
-            >
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    maxNativeZoom={19}
-                    maxZoom={25}
-                />
-                <DraggableMarker position={locale?.locations?.greatCourtCoordinates} />
-            </MapContainer>
+            <div id="campus-location-mazemap" ref={setMapContainer} style={{ width: '100%', height: '300px' }} />
             <Typography component={'p'}>
-                Drill out on the map to find the campus, then drag the blue icon to roughly the centre of the campus.
+                Drill out on the map to find the campus, then click to place the pin at roughly the centre of the
+                campus.
                 <br />
                 This will be used to help you find locations of Spaces on creation and edit.
             </Typography>

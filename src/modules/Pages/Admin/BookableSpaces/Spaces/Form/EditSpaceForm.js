@@ -816,6 +816,7 @@ export const EditSpaceForm = ({
     };
 
     const handleSaveClick = () => {
+        console.log('handleSaveClick — space_zlevel at time of save:', formValues?.space_zlevel);
         const valuesToSend = {};
         valuesToSend.space_name = formValues?.space_name;
         valuesToSend.space_type_id = formValues?.space_type_id || selectedSpaceType?.space_type_id || null;
