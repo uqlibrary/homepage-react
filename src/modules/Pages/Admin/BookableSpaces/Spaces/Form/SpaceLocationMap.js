@@ -56,11 +56,9 @@ const SpaceLocationMap = ({
     const [mapCampusId, setMapCampusId] = useState(0);
 
     React.useEffect(() => {
-        if (window.Mazemap) {
-            setIsMazeMapScriptReady(true);
-            return;
-        }
-
+        // Always reload the script rather than reusing window.Mazemap — after
+        // map.remove() the internal Mapbox GL/MazeMap state can be left dirty,
+        // and reusing it on the next mount causes markers to appear off-map.
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.css`;
@@ -76,6 +74,7 @@ const SpaceLocationMap = ({
         return () => {
             document.head.removeChild(link);
             document.body.removeChild(script);
+            delete window.Mazemap;
         };
     }, []);
 
