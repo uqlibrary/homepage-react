@@ -85,7 +85,7 @@ const SpaceLocationMap = ({
         const { lng, lat } = getInitialLngLat();
 
         mazeMapInstanceRef.current = new window.Mazemap.Map({
-            container: 'space-location-mazemap',
+            container: mapContainer,
             campuses: 406,
             center: { lng, lat },
             zoom: 17,

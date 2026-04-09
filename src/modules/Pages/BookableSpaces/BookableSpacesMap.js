@@ -152,7 +152,7 @@ const BookableSpacesMap = React.forwardRef(({ sortedSpaceLocations, spacesFavour
         if (!isMazeMapScriptReady || !mapContainer) return;
 
         mazeMapInstanceRef.current = new window.Mazemap.Map({
-            container: 'mazemap-container',
+            container: mapContainer,
             campuses: 406,
             center: { lng: uqStLuciaDefaultLocation.longitude, lat: uqStLuciaDefaultLocation.latitude },
             zoom: 18,
