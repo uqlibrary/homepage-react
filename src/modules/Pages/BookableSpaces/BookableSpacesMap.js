@@ -104,17 +104,28 @@ const BookableSpacesMap = React.forwardRef(({ sortedSpaceLocations, spacesFavour
         flyToSpace(space) {
             const map = mazeMapInstanceRef.current;
             if (!map || !space?.space_longitude || !space?.space_latitude) return;
-            if (space?.space_zlevel != null) {
-                map.setZLevel(parseFloat(space.space_zlevel));
+
+            const doFly = () => {
+                map.flyTo({
+                    center: [space.space_longitude, space.space_latitude],
+                    zoom: 20,
+                    curve: 0.5,
+                    speed: 1.6,
+                });
+                const entry = mazeMarkersRef.current.get(space?.space_id);
+                if (entry?.markerEl) setSelectedMarker(entry.markerEl, space);
+            };
+
+            const targetZLevel = space?.space_zlevel != null ? parseFloat(space.space_zlevel) : null;
+            if (targetZLevel !== null) {
+                // Stop any in-progress camera animation before changing floor,
+                // otherwise MazeMap ignores setZLevel while a flyTo is winding down.
+                map.stop();
+                map.setZLevel(targetZLevel);
+                setTimeout(doFly, 300);
+            } else {
+                doFly();
             }
-            map.flyTo({
-                center: [space.space_longitude, space.space_latitude],
-                zoom: 20,
-                curve: 0.5,
-                speed: 1.6,
-            });
-            const entry = mazeMarkersRef.current.get(space?.space_id);
-            if (entry?.markerEl) setSelectedMarker(entry.markerEl, space);
         },
     }));
 
@@ -217,6 +228,11 @@ const BookableSpacesMap = React.forwardRef(({ sortedSpaceLocations, spacesFavour
                     markerEl.dataset.baseZindex = '';
                 }
                 markerEl.addEventListener('click', e => {
+                    const targetZLevel = mapPoint?.space_zlevel != null ? parseFloat(mapPoint.space_zlevel) : null;
+                    if (targetZLevel !== null) {
+                        mazeMapInstanceRef.current?.stop();
+                        mazeMapInstanceRef.current?.setZLevel(targetZLevel);
+                    }
                     setSelectedMarker(markerEl, mapPoint);
                     onMarkerClick(e, mapPoint, markerEl);
                 });

@@ -248,7 +248,7 @@ export default {
             "space_capacity": 1,
             space_latitude: "-27.49928",
             space_longitude: "153.01344",
-            space_zlevel: 1,
+            space_zlevel: 3,
             "space_external_book_url": null,
             space_type_id: 3,
             space_type_details: {
