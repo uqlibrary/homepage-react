@@ -18,7 +18,7 @@
         "eslint": "eslint '**/*.js' --quiet",
         "eslint:fix": "eslint '**/*.js' --quiet --fix",
         "start": "webpack-dev-server",
-        "start:build": "cross-env NODE_ENV=production URL=dev-homepage.library.uq.edu.au NODE_OPTIONS='--max-old-space-size=2048' webpack-dev-server --config=./webpack-dist.config --disable-host-check",
+        "start:build": "cross-env NODE_ENV=production URL=dev-homepage.library.uq.edu.au NODE_OPTIONS='--max-old-space-size=2048' webpack-dev-server --config=./webpack-dist.config --allowed-hosts=all",
         "start:build:e2e": "cross-env NODE_ENV=production URL=localhost USE_MOCK=true NODE_OPTIONS='--max-old-space-size=2048' webpack-dev-server --config=./webpack-dist.config",
         "start:mock": "cross-env USE_MOCK=true FULL_PATH=http://localhost:2020 NODE_OPTIONS='--max-old-space-size=2048' webpack-dev-server",
         "start:devapi": "cross-env FULL_PATH=http://localhost:2020 NODE_OPTIONS='--max-old-space-size=2048' webpack-dev-server",
@@ -222,26 +222,18 @@
             "@babel/react"
         ],
         "env": {
-            "development": {
-                "presets": [
-                    "@babel/env",
-                    "@babel/react"
-                ]
-            },
             "production": {
                 "presets": [
                     [
-                        "env",
+                        "@babel/preset-env",
                         {
-                            "es2015": {
-                                "modules": false
-                            },
+                            "modules": false,
                             "targets": {
-                                "ie": 11,
-                                "terser": true
+                                "ie": "11"
                             }
                         }
-                    ]
+                    ],
+                    "@babel/react"
                 ],
                 "plugins": [
                     "@babel/plugin-transform-react-constant-elements",
@@ -250,10 +242,6 @@
                 ]
             },
             "test": {
-                "presets": [
-                    "@babel/env",
-                    "@babel/react"
-                ],
                 "plugins": [
                     [
                         "dynamic-import-node",
@@ -273,10 +261,6 @@
                 ]
             },
             "cc": {
-                "presets": [
-                    "@babel/env",
-                    "@babel/react"
-                ],
                 "plugins": [
                     [
                         "dynamic-import-node",
