@@ -89,7 +89,7 @@ const SpaceLocationMap = ({
             campuses: 406,
             center: { lng, lat },
             zoom: 17,
-            zLevel: 1,
+            zLevel: formValues?.space_zlevel ?? 1,
             RTLTextPlugin: null,
         });
 
