@@ -93,18 +93,27 @@ module.exports = {
                 },
             },
             {
-                test: /\.json$/,
-                exclude: [/node_modules/, /custom_modules/],
-                use: ['json-loader'],
-            },
-            {
                 test: /\.css/,
                 use: ['style-loader', 'css-loader'],
             },
             {
                 test: /\.scss|\.styl/,
                 include: [resolve(__dirname, 'src')],
-                use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'postcss-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true,
+                            sassOptions: {
+                                includePaths: [resolve(__dirname, './src')],
+                                outputStyle: 'expanded',
+                            },
+                        },
+                    },
+                ],
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
@@ -135,23 +144,6 @@ module.exports = {
         enableFastRefresh && new ReactRefreshWebpackPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        // new webpack.NamedModulesPlugin(),
-        new webpack.LoaderOptionsPlugin({
-            options: {
-                sassLoader: {
-                    includePaths: [resolve(__dirname, './src')],
-                    outputStyle: 'expanded',
-                    sourceMap: true,
-                },
-                eslint: {
-                    configFile: '.eslintrc',
-                    failOnWarning: false,
-                    failOnError: true,
-                },
-                postcss: {},
-                context: join(__dirname),
-            },
-        }),
         new webpack.DefinePlugin({
             __DEVELOPMENT__: true,
             'process.env.NODE_ENV': JSON.stringify('development'),
