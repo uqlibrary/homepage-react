@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { QrCodeScanner } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
-import { Scanner, useDevices } from '@yudiel/react-qr-scanner';
+import { Scanner, useDevices, prepareZXingModule } from '@yudiel/react-qr-scanner';
 import Dialog from '@mui/material/Dialog';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
@@ -13,6 +13,18 @@ import DialogContent from '@mui/material/DialogContent';
 import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
+
+// override use our own copy of the external dependency
+prepareZXingModule({
+    overrides: {
+        locateFile: (path, prefix) => {
+            // local copy of https://fastly.jsdelivr.net/npm/zxing-wasm@2.2.4/dist/reader/zxing_reader.wasm
+            // source: https://github.com/Sec-ant/zxing-wasm
+            if (path.endsWith('.wasm')) return 'vendor/zxing_reader-v2.2.4.wasm';
+            return prefix + path;
+        },
+    },
+});
 
 /**
  * @param {Array<string>} detectedCodes
