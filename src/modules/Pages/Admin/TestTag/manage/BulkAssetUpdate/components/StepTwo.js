@@ -23,17 +23,19 @@ import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/A
 import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelector';
 import AuthWrapper from '../../../SharedComponents/AuthWrapper/AuthWrapper';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
-import { isEmptyStr } from '../../../helpers/helpers';
 import { PERMISSIONS } from '../../../config/auth';
 import { AccordionWithCheckbox } from './AccordionWithCheckbox';
-import { FormContext } from '../../../helpers/hooks';
 import { makeAssetExcludedMessage } from './utils';
 import { validateFormValues, validateAssetLists } from './validation';
 import { assetStatusOptionExcludes } from './rules';
+import { isEmptyStr } from '../../../helpers/helpers';
+import { useAccountUser, FormContext } from '../../../helpers/hooks';
+import { useUserTeams } from '../../../helpers/teams';
 
 const moment = require('moment');
 
@@ -45,6 +47,7 @@ const validAssetStatusWithLocationOptions =
 const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep, onSubmit }) => {
     const componentId = `${id}-step-two`;
     const componentIdLower = componentId.replace(/-/g, '_');
+    const { user } = useAccountUser();
 
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('md')) || false;
@@ -72,6 +75,16 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
         condition: () => !isFilterDialogOpen,
     });
 
+    const { userTeamList, selectedTeam, teamSelectFieldName, getTeamIdBySlug, setSelectedTeam } = useUserTeams({
+        user,
+        allTeamsOption: false,
+    });
+
+    const defaultUserTeamId = useMemo(() => getTeamIdBySlug(user.user_team), [getTeamIdBySlug, user.user_team]);
+    const teamIdsToDisable = useMemo(() => {
+        return [defaultUserTeamId];
+    }, [defaultUserTeamId]);
+
     // Validate and update lists when formValueSignature changes
     useEffect(() => {
         const { validAssets, excludedAssets } = validateAssetLists(formValues, list.data, excludedList.data);
@@ -95,6 +108,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
 
     const isLocationDisabled = formValues.hasAssetType || formValues.hasDiscardStatus;
     const isAssetStatusDisabled = formValues.hasAssetType || formValues.hasDiscardStatus;
+    const isAssetTeamDisabled = formValues.hasDiscardStatus;
     const isAssetTypeDisabled = formValues.hasLocation || formValues.hasDiscardStatus || formValues.hasAssetStatus;
     const isDiscardedDisabled =
         formValues.hasAssetType || formValues.hasLocation || formValues.hasClearNotes || formValues.hasAssetStatus;
@@ -125,6 +139,11 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
         // formvalue variable being set (hasLocation etc)
         const checked = e.target.checked;
         handleChange(e.target.name)(checked);
+    };
+
+    const handleTeamChange = teamId => {
+        setSelectedTeam(teamId);
+        handleChange('asset_team')(teamId);
     };
 
     return (
@@ -242,6 +261,36 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             </Grid>
                         </Grid>
                     </AccordionWithCheckbox>
+                    <AuthWrapper requiredPermissions={[PERMISSIONS.can_alter]}>
+                        <AccordionWithCheckbox
+                            id="assetTeam"
+                            label={stepTwoLocale.checkbox.assetTeam}
+                            disabled={isAssetTeamDisabled}
+                            slotProps={{
+                                accordion: {
+                                    expanded: formValues.hasAssetTeam,
+                                },
+                                checkbox: {
+                                    name: 'hasAssetTeam',
+                                    checked: formValues.hasAssetTeam,
+                                    onClick: handleCheckboxChange,
+                                },
+                            }}
+                        >
+                            <Grid container spacing={3}>
+                                <Grid xs={12} sm={6}>
+                                    <TeamSelector
+                                        id={teamSelectFieldName}
+                                        options={userTeamList}
+                                        label={'Team'}
+                                        currentValue={selectedTeam}
+                                        onChange={handleTeamChange}
+                                        teamOptionsToDisable={teamIdsToDisable}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </AccordionWithCheckbox>
+                    </AuthWrapper>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_alter]}>
                         <AccordionWithCheckbox
                             id="assetStatus"

@@ -14,7 +14,7 @@ import { useDataTableColumns } from '../../../SharedComponents/DataTable/DataTab
 import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector';
 import FooterBar from '../../../SharedComponents/DataTable/FooterBar';
 import FilterDialog from './FilterDialog';
-import { SwitchIncludeAllTeams, useTeams } from '../../../SharedComponents/SwitchIncludeAllTeams';
+import { SwitchIncludeAllTeams, useTeams } from '../../../SharedComponents/Teams';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 

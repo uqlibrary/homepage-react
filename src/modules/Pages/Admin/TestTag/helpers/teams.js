@@ -29,7 +29,10 @@ export const useUserTeams = ({
     const teamList = useUserDepartmentTeamList(user, allTeamsOption);
 
     const getTeamSlug = useCallback(teamId => teamList?.find?.(t => t.value === teamId)?.team_slug ?? '', [teamList]);
-    const getDefaultTeamId = () => (setDefaultTeam ? teamList?.find?.(t => t.team_slug === user.user_team)?.value : '');
+    const getTeamIdBySlug = useCallback(teamSlug => teamList?.find?.(t => t.team_slug === teamSlug)?.value ?? '', [
+        teamList,
+    ]);
+    const getDefaultTeamId = () => (setDefaultTeam ? getTeamIdBySlug(user.user_team) : '');
 
     const [selectedTeam, setSelectedTeam] = useState(getDefaultTeamId);
 
@@ -44,6 +47,7 @@ export const useUserTeams = ({
         selectedTeamSlug,
         teamSelectFieldName,
         getTeamSlug,
+        getTeamIdBySlug,
         setSelectedTeam,
     };
 };

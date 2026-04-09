@@ -18,7 +18,7 @@ import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLoc
 import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/DebouncedTextField';
-import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
 
 import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import { transformFilterRow } from './transformers';
@@ -71,14 +71,22 @@ const FilterDialog = ({
         store: locationStore,
         condition: () => isOpen,
     });
-    const searchParamsRef = React.useRef({ lastSelectedLocation, location: '{}', searchNotes, assetTypeId });
+    const searchParamsRef = React.useRef({
+        lastSelectedLocation,
+        location: '{}',
+        searchNotes,
+        assetTypeId,
+        selectedTeamSlug: '',
+    });
     const { columns } = useDataTableColumns({
         config,
         locale: locale.form.columns,
         withActions: false,
     });
 
-    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams(user);
+    const { userTeamList, teamSelectFieldName, selectedTeamSlug, selectedTeam, setSelectedTeam } = useUserTeams({
+        user,
+    });
 
     useEffect(() => {
         /* istanbul ignore else */
@@ -96,11 +104,18 @@ const FilterDialog = ({
                 searchParamsRef.current.lastSelectedLocation === lastSelectedLocation &&
                 searchParamsRef.current.location === locationStr &&
                 searchParamsRef.current.searchNotes === searchNotes &&
-                searchParamsRef.current.assetTypeId === assetTypeId
+                searchParamsRef.current.assetTypeId === assetTypeId &&
+                searchParamsRef.current.selectedTeamSlug === selectedTeamSlug
             ) {
                 return;
             }
-            searchParamsRef.current = { lastSelectedLocation, location: locationStr, searchNotes, assetTypeId };
+            searchParamsRef.current = {
+                lastSelectedLocation,
+                location: locationStr,
+                searchNotes,
+                assetTypeId,
+                selectedTeamSlug,
+            };
             actions.loadAssetsMine({
                 ...((lastSelectedLocation === 'floor' && location.floor !== -1) ||
                 (lastSelectedLocation === 'room' && location.room !== -1) ||
@@ -153,12 +168,12 @@ const FilterDialog = ({
                 <DialogContent sx={{ overflowX: 'hidden' }}>
                     <Grid container spacing={3}>
                         <Grid xs={12} sm={3}>
-                            <SelectField
-                                field={teamSelectFieldName}
+                            <TeamSelector
+                                id={teamSelectFieldName}
                                 options={userTeamList}
-                                locale={{ all: 'All teams', label: 'Team' }}
-                                filterModel={selectedTeam}
-                                setFilterModel={setSelectedTeam}
+                                label={'Team'}
+                                currentValue={selectedTeam}
+                                onChange={setSelectedTeam}
                             />
                         </Grid>
                     </Grid>

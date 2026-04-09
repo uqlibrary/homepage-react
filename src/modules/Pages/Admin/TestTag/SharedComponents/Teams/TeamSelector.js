@@ -21,6 +21,7 @@ const TeamSelector = ({
     responsive = true,
     disabled = false,
     hasAllOption = false,
+    teamOptionsToDisable,
     classNames,
     ...props
 }) => {
@@ -77,6 +78,7 @@ const TeamSelector = ({
                         key={option.value}
                         id={`${componentId}-option-${index}`}
                         data-testid={`${componentId}-option-${index}`}
+                        disabled={teamOptionsToDisable?.includes(option.value)}
                     >
                         {option.label}
                     </MenuItem>
@@ -101,6 +103,7 @@ TeamSelector.propTypes = {
     responsive: PropTypes.bool,
     disabled: PropTypes.bool,
     hasAllOption: PropTypes.bool,
+    teamOptionsToDisable: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
     classNames: PropTypes.shape({
         formControl: PropTypes.string,
         select: PropTypes.string,

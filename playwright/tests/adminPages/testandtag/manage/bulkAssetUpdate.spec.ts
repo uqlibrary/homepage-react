@@ -79,6 +79,25 @@ test.describe('Test and Tag bulk asset update', () => {
             await page.getByTestId('asset_selector-bulk-asset-update-step-one-input').click();
         });
 
+        test('Asset id search functions correctly when all teams selected', async ({ page }) => {
+            await checkBaseline(page);
+
+            // Search for an exact asset
+            await page.getByTestId('asset_selector-bulk-asset-update-step-one-input').fill('UQL00SP29');
+            await expect(
+                page.getByTestId('asset_selector-bulk-asset-update-step-one').locator('.MuiCircularProgress-svg'),
+            ).not.toBeVisible();
+            await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL00SP29')).not.toBeVisible();
+
+            await page.getByTestId('bulk_asset_update-step-one-all-teams-switch').click();
+            await expect(page.getByTestId('bulk_asset_update-step-one-all-teams-switch')).toBeChecked();
+            await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL00SP29')).toBeVisible();
+
+            await expect(page.getByTestId('bulk_asset_update-step-one-count-alert')).toBeVisible();
+            await page.getByTestId('bulk_asset_update-step-one-all-teams-switch').click();
+            await expect(page.getByTestId('bulk_asset_update-step-one-all-teams-switch')).not.toBeChecked();
+        });
+
         test.describe('filter dialog', () => {
             test('all components respond to user input', async ({ page }) => {
                 await page.getByTestId('bulk_asset_update-step-one-feature-button').click();
@@ -87,6 +106,11 @@ test.describe('Test and Tag bulk asset update', () => {
                         .getByTestId('filter_dialog-bulk-asset-update-step-one-title')
                         .getByText(locale.pages.manage.bulkassetupdate.form.filterDialog.title),
                 ).toBeVisible();
+
+                // team
+                await page.getByTestId('team-display-name-select-filter').click();
+                await page.getByRole('option', { name: 'All teams' }).click();
+                await expect(page.getByTestId('team-display-name-select-filter-input')).toHaveValue('-1');
 
                 // site
                 await page.getByTestId('location_picker-filter-dialog-site-input').click();

@@ -935,6 +935,7 @@ export default {
                                 assetType: 'Update Asset Type',
                                 notes: 'Clear test notes',
                                 assetStatus: 'Update Asset Status',
+                                assetTeam: 'Update Asset Team',
                             },
                             locationType: {
                                 title: 'Location',
