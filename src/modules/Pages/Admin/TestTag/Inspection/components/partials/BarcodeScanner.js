@@ -37,7 +37,7 @@ const tracker = (detectedCodes, ctx) => {
     });
 };
 
-const BarcodeScanner = ({ onScan }) => {
+const BarcodeScanner = ({ onScan, formats }) => {
     const devices = useDevices();
     const [isScanning, setIsScanning] = useState(false);
     const [selectedDeviceId, setSelectedDeviceId] = useState();
