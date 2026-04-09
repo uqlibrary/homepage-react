@@ -24,23 +24,6 @@ import {
     getFlatFacilityTypeList,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
-const svgOrangeCheckbox =
-    "data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid meet' focusable='false'%3E%3Cpath fill='%23c13e2a' d='M22.2,20.9l-1.3-1.3C21,19.4,21,19.2,21,19v-8h-2v6.7l-4.6-4.6l6-6l-1.4-1.4l-6,6L6.3,5H15V3H5C4.8,3,4.6,3,4.4,3.1L3,1.7L1.8,2.9l1.3,1.3C3.1,4.4,3,4.7,3,5v14c0,1.1,0.9,2,2,2h14c0.3,0,0.6-0.1,0.8-0.2l1.2,1.2L22.2,20.9z M5,19V6l6.9,6.9l-1.4,1.4l-3.1-3.1L6,12.6l4.5,4.5l2.8-2.8L18,19H5z'%3E%3C/path%3E%3C/svg%3E";
-const visibleRejectedCheckbox = {
-    backgroundImage: `url("${svgOrangeCheckbox}")`,
-    backgroundRepeat: 'no-repeat',
-    display: 'inline-block',
-    padding: 0,
-    height: '40px',
-    width: '40px',
-    backgroundSize: '50%',
-    paddingLeft: '6px',
-    marginTop: '8px',
-    marginBottom: '-8px',
-    marginLeft: '5px',
-    cursor: 'pointer',
-};
-
 const StyledSlider = styled(Slider)(() => ({
     marginTop: '1rem', // space for tooltips to appear in
     '& .MuiSlider-track': {
@@ -88,18 +71,6 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
         },
-    },
-    // when we hover or focus on the reject-checkbox, style the label to be orange
-    '&:hover label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
-    '&:focus label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
-    '&:has(> input:checked) label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
-    '&:has(> input:inline-focus) label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
-    '@media (pointer:coarse)': {
-        // show the reject checkbox on mobile, as they can't hover
-        'label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
-    },
-    '& input.rejectedFilterType': {
-        display: 'none',
     },
     '& span:not(.fortestfocus)': {
         cursor: 'pointer',
@@ -362,10 +333,10 @@ export const SidebarFilters = ({
         !!topOfSidebar && topOfSidebar?.focus();
     };
 
-    const handleFilterRejection = (isChecked, facilityTypeId, facilitySpecialAction) => {
-        showHideActiveFilterListItems(facilityTypeId, isChecked);
+    const clearSpecialFilter = (facilityTypeId, facilitySpecialAction) => {
+        showHideActiveFilterListItems(facilityTypeId, false);
 
-        setFilters(facilityTypeId, false, isChecked, facilitySpecialAction);
+        setFilters(facilityTypeId, false, false, facilitySpecialAction);
 
         scrollToTopOfContent();
     };
@@ -392,7 +363,7 @@ export const SidebarFilters = ({
         const capacityFilterType = selectedFacilityTypes?.find(ft => ft.facility_type_id === facilityTypeId);
         const isCapacityDefaultValues = newValue[0] === minimumSpaceCapacity && newValue[1] === maximumSpaceCapacity;
         if (isCapacityDefaultValues) {
-            handleFilterRejection(false, facilityTypeId, capacityFilterType?.facility_special_action);
+            clearSpecialFilter(facilityTypeId, capacityFilterType?.facility_special_action);
         } else {
             handleFilterSelection(true, capacityFilterType);
         }
@@ -556,36 +527,6 @@ export const SidebarFilters = ({
                             />
                             <span>{facilityType?.facility_type_name}</span>
                         </InputLabel>
-                        {facilityType?.filterRejectAvailable !== false && (
-                            <>
-                                <input
-                                    type="checkbox"
-                                    id={`reject-filtertype-${facilityType?.facility_type_id}`}
-                                    data-testid={`reject-filtertype-${facilityType?.facility_type_id}`}
-                                    className="rejectedFilterType"
-                                    onChange={e =>
-                                        handleFilterRejection(
-                                            e?.target?.checked,
-                                            facilityType?.facility_type_id,
-                                            facilityType?.facility_special_action,
-                                        )
-                                    }
-                                    aria-label={`Exclude Spaces with ${facilityType?.facility_type_name}`}
-                                    checked={
-                                        selectedFacilityTypes?.find(
-                                            f1 => f1?.facility_type_id === facilityType?.facility_type_id,
-                                        )?.unselected || false
-                                    }
-                                />
-                                <label
-                                    htmlFor={`reject-filtertype-${facilityType?.facility_type_id}`}
-                                    className="rejectedFacilityTypeLabel"
-                                    data-testid={`reject-filtertype-label-${facilityType?.facility_type_id}`}
-                                    title={`Exclude Spaces with ${facilityType?.facility_type_name}`}
-                                />
-                                <span className="fortestfocus" style={{ width: '10px' }} />
-                            </>
-                        )}
                     </>
                 )}
             </StyledInputListItem>
