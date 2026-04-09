@@ -236,8 +236,7 @@ describe('InspectionsByLicencedUser', () => {
             if (backdrop) await userEvent.click(backdrop);
 
             // open team selector and select all teams
-            const teamSelect = within(getByTestId('team-display-name-select-filter')).getByRole('combobox');
-            await userEvent.click(teamSelect);
+            await userEvent.click(getByTestId('team_selector-team_display_name-select'));
             const listbox = await findByRole('listbox');
             await userEvent.click(within(listbox).getByText('All teams'));
 

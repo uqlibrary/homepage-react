@@ -13,7 +13,7 @@ import LastInspectionPanel from './LastInspectionPanel';
 import AssetSelector from '../../SharedComponents/AssetSelector/AssetSelector';
 import UpdateDialog from '../../SharedComponents/UpdateDialog/UpdateDialog';
 import AssetTypeSelector, { ADD_NEW_ID } from '../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
-import { SwitchIncludeAllTeams, useTeams } from '../../SharedComponents/SwitchIncludeAllTeams';
+import { SwitchIncludeAllTeams, useTeams } from '../../SharedComponents/Teams';
 
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
 import { transformAddAssetTypeRequest } from '../utils/transformers';
