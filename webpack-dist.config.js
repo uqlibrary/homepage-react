@@ -155,6 +155,7 @@ const webpackConfig = {
             ),
             'process.env.TITLE_SUFFIX': JSON.stringify(config.titleSuffix),
             'process.env.GIT_SHA': JSON.stringify(process.env.CI_COMMIT_ID),
+            'process.env.ZXING_WASM_URL': JSON.stringify(process.env.ZXING_WASM_URL),
         }),
         new webpack.IgnorePlugin({
             resourceRegExp: /^\.\/locale$/,

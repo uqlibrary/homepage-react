@@ -14,13 +14,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
 
-// override use our own copy of the external dependency
+// override to use our own copy of the wasm file
 prepareZXingModule({
     overrides: {
         locateFile: (path, prefix) => {
-            // local copy of https://fastly.jsdelivr.net/npm/zxing-wasm@2.2.4/dist/reader/zxing_reader.wasm
-            // source: https://github.com/Sec-ant/zxing-wasm
-            if (path.endsWith('.wasm')) return 'vendor/zxing_reader-v2.2.4.wasm';
+            // source: https://fastly.jsdelivr.net/npm/zxing-wasm@2.2.4/dist/reader/zxing_reader.wasm
+            // project: https://github.com/Sec-ant/zxing-wasm
+            if (path.endsWith('.wasm')) return process.env.ZXING_WASM_URL;
             return prefix + path;
         },
     },
