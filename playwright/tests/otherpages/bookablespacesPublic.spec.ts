@@ -115,13 +115,22 @@ test.describe('Spaces', () => {
 
         test('capacity loads correctly', async ({ page }) => {
             // public Architecture and Music Library example
-            await expect(page.getByTestId(`${ARCH_REFERENCE}-capacity`)).toContainText('Space for 6 people.');
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-capacity`)).not.toBeVisible();
 
             // second panel
-            await expect(page.getByTestId(`${PACE}-capacity`)).toContainText('Space for 5 people.');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-capacity`)).toContainText('Space for 8 people.');
 
             // third panel
-            await expect(page.getByTestId(`${LIV}-capacity`)).toContainText('Space for 1 person.');
+            await expect(page.getByTestId(`${PACE}-capacity`)).toContainText('Space for 5 people.');
+
+            // fourth panel
+            await expect(page.getByTestId(`${LIV}-capacity`)).not.toBeVisible();
+
+            await expect(page.getByTestId(`${SIXTH_PANEL}-capacity`)).not.toBeVisible();
+            await expect(page.getByTestId(`${SEVENTH_PANEL}-capacity`)).toContainText('Space for 20 people.');
+            await expect(page.getByTestId(`${EIGHTH_PANEL}-capacity`)).toContainText('Space for 1 person.');
+            await expect(page.getByTestId(`${NINTH_PANEL}-capacity`)).not.toBeVisible();
+            await expect(page.getByTestId(`${TENTH_PANEL}-capacity`)).toContainText('Space for 22 people.');
         });
 
         test('description loads correctly', async ({ page }) => {
