@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import React, { useEffect, useState } from 'react';
-import { QrCodeScanner } from '@mui/icons-material';
+import React, { useEffect, useRef, useState } from 'react';
+import { QrCodeScanner, VolumeOff, VolumeUp } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import { Scanner, useDevices, prepareZXingModule } from '@yudiel/react-qr-scanner';
 import Dialog from '@mui/material/Dialog';
@@ -13,6 +13,14 @@ import DialogContent from '@mui/material/DialogContent';
 import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Cookies from 'js-cookie';
+
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+});
 
 // override to use our own copy of the wasm file
 prepareZXingModule({
@@ -20,11 +28,13 @@ prepareZXingModule({
         locateFile: (path, prefix) => {
             // source: https://fastly.jsdelivr.net/npm/zxing-wasm@2.2.4/dist/reader/zxing_reader.wasm
             // project: https://github.com/Sec-ant/zxing-wasm
-            if (path.endsWith('.wasm')) return process.env.ZXING_WASM_URL;
+            if (path.endsWith('.wasm')) return process.env.ZXING_WASM_PATH;
             return prefix + path;
         },
     },
 });
+
+const BARCODE_SCANNER_SOUND_PREF_COOKIE = 'TNT_BARCODE_SCANNER_SOUND_PREF';
 
 /**
  * @param {Array<string>} detectedCodes
@@ -52,7 +62,11 @@ const tracker = (detectedCodes, ctx) => {
 const BarcodeScanner = ({ onScan, formats }) => {
     const devices = useDevices();
     const [isScanning, setIsScanning] = useState(false);
+    const [isBeepSoundEnabled, setIsBeepSoundEnabled] = useState(
+        Cookies.get(BARCODE_SCANNER_SOUND_PREF_COOKIE) !== 'false',
+    );
     const [selectedDeviceId, setSelectedDeviceId] = useState();
+    const overflowStyleRef = useRef(document.body.style.overflow);
 
     useEffect(() => {
         const firstDeviceId = devices?.[0]?.deviceId;
@@ -60,6 +74,12 @@ const BarcodeScanner = ({ onScan, formats }) => {
         setSelectedDeviceId(firstDeviceId);
     }, [devices, selectedDeviceId]);
 
+    const pauseBodyScroll = () => document.body.style.setProperty('overflow', 'hidden', 'important');
+    const resumeBodyScroll = () => document.body.style.setProperty('overflow', overflowStyleRef.current || '');
+    const toggleBeep = () => {
+        Cookies.set(BARCODE_SCANNER_SOUND_PREF_COOKIE, !isBeepSoundEnabled);
+        setIsBeepSoundEnabled(prev => !prev);
+    };
     const closeScanner = () => setIsScanning(false);
     const handleScan = scannedCodes => {
         const firstScannedCode = scannedCodes?.[0]?.rawValue;
@@ -70,70 +90,88 @@ const BarcodeScanner = ({ onScan, formats }) => {
 
     if (!isScanning) {
         return (
-            <IconButton aria-label="Open scanner" onClick={() => setIsScanning(true)}>
+            <IconButton size="small" aria-label="Open scanner" onClick={() => setIsScanning(true)}>
                 <QrCodeScanner />
             </IconButton>
         );
     }
 
     return (
-        <Dialog fullScreen open={isScanning} onClose={() => setIsScanning(false)}>
-            <DialogTitle sx={{ p: 2 }}>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 2,
-                    }}
-                >
-                    <FormControl sx={{ flexGrow: 1 }}>
-                        <InputLabel id="deviceId-label">Camera</InputLabel>
-                        <Select
-                            disabled={devices.length <= 1}
-                            label="Camera"
-                            labelId="deviceId-label"
-                            value={selectedDeviceId ?? ''}
-                            onChange={e => setSelectedDeviceId(e.target.value)}
-                        >
-                            {devices.map(device => (
-                                <MenuItem key={device.deviceId} value={device.deviceId}>
-                                    {device.label || `Camera ${device.deviceId}`}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-
-                    <IconButton
-                        title="close scanner"
-                        onClick={closeScanner}
-                        sx={{ color: theme => theme.palette.grey[500] }}
+        <ThemeProvider theme={darkTheme}>
+            <Dialog
+                fullScreen
+                disableScrollLock={false}
+                open={isScanning}
+                TransitionProps={{
+                    onEnter: pauseBodyScroll,
+                    onExited: resumeBodyScroll,
+                }}
+            >
+                <DialogTitle>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 2,
+                        }}
                     >
-                        <CloseIcon />
-                    </IconButton>
-                </Box>
-            </DialogTitle>
-            <DialogContent dividers sx={{ p: 2 }}>
-                <Scanner
-                    onScan={handleScan}
-                    formats={formats}
-                    components={{
-                        audio: true,
-                        torch: true,
-                        zoom: true,
-                        finder: true,
-                        onOff: false,
-                        tracker,
-                    }}
-                    constraints={{
-                        deviceId: selectedDeviceId,
-                        facingMode: 'environment',
-                        aspectRatio: 1,
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 },
-                    }}
-                />
-            </DialogContent>
-        </Dialog>
+                        <FormControl sx={{ flexGrow: 1 }}>
+                            <InputLabel id="deviceId-label">Camera</InputLabel>
+                            <Select
+                                disabled={devices.length <= 1}
+                                label="Camera"
+                                labelId="deviceId-label"
+                                value={selectedDeviceId ?? ''}
+                                onChange={e => setSelectedDeviceId(e.target.value)}
+                            >
+                                {devices.map(device => (
+                                    <MenuItem key={device.deviceId} value={device.deviceId}>
+                                        {device.label || `Camera ${device.deviceId}`}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        <IconButton
+                            title="toggle beep"
+                            onClick={toggleBeep}
+                            sx={{ color: theme => theme.palette.grey[500] }}
+                        >
+                            {isBeepSoundEnabled ? <VolumeUp /> : <VolumeOff />}
+                        </IconButton>
+
+                        <IconButton
+                            title="close scanner"
+                            onClick={closeScanner}
+                            sx={{ color: theme => theme.palette.grey[500] }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                </DialogTitle>
+                <DialogContent dividers sx={{ m: 0, p: 0 }}>
+                    <Scanner
+                        onScan={handleScan}
+                        formats={formats}
+                        sound={isBeepSoundEnabled}
+                        components={{
+                            torch: true,
+                            finder: true,
+                            zoom: false,
+                            onOff: false,
+                            tracker,
+                        }}
+                        constraints={{
+                            deviceId: selectedDeviceId,
+                            facingMode: 'environment',
+                            aspectRatio: 1,
+                            width: { ideal: 1920 },
+                            height: { ideal: 1080 },
+                        }}
+                    />
+                </DialogContent>
+            </Dialog>
+        </ThemeProvider>
     );
 };
 
