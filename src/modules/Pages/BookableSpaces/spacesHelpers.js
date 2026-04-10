@@ -1,7 +1,11 @@
 import React from 'react';
 
-export const FILTER_CURRENTLY_OPEN = 'open';
-export const FILTER_SPACE_CAPACITY = 'capacity';
+export const FILTER_BOOKABLE_TYPE_ID = 9002;
+export const FILTER_CAPACITY_TYPE_ID = 9003;
+
+export const FILTER_BOOKABLE_ACTION_NAME = 'bookable';
+export const FILTER_CURRENTLY_OPEN_ACTION_NAME = 'open';
+export const FILTER_SPACE_CAPACITY_ACTION_NAME = 'capacity';
 
 export const FACILITY_TYPE_CHECKBOX = 'checkbox';
 export const FACILITY_TYPE_SLIDER = 'slider';

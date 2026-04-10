@@ -59,9 +59,6 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(ediaGroup.getByTestId('facilitytype-name-57')).toBeVisible();
         await expect(ediaGroup.getByTestId('facilitytype-name-57')).toContainText('Contains Artwork');
 
-        await expect(spaceTypeGroup.getByTestId('facilitytype-name-19')).toBeVisible();
-        await expect(spaceTypeGroup.getByTestId('facilitytype-name-19')).toContainText('Bookable');
-
         await expect(floorGroup.getByTestId('facilitytype-name-30')).toBeVisible();
         await expect(floorGroup.getByTestId('facilitytype-name-30')).toContainText('Energy pod');
 
@@ -794,11 +791,9 @@ test.describe('Spaces Admin - adding new facility types', () => {
     });
     test('add new group dialog is accessible', async ({ page }) => {
         await expect(page.getByTestId('add-facility-type-heading')).not.toBeVisible();
-        await page.getByTestId('add-group-1-button').click();
+        await page.getByTestId('add-group-8-button').click();
         await expect(page.getByTestId('add-facility-type-heading')).toBeVisible();
-        await expect(page.getByTestId('add-facility-type-heading')).toHaveText(
-            'Add a Facility Type to Space/Room Type',
-        );
+        await expect(page.getByTestId('add-facility-type-heading')).toHaveText('Add a Facility Type to EDIA filters');
 
         await assertAccessibility(page, '[data-testid="main-dialog"]');
     });

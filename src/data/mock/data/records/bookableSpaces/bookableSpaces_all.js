@@ -125,10 +125,6 @@ export default {
                 {
                     "facility_type_id": 57,
                     "facility_type_name": "Contains Artwork"
-                },
-                {
-                    "facility_type_id": 19,
-                    "facility_type_name": "Bookable"
                 }
             ],
         }, {
@@ -214,10 +210,6 @@ export default {
                 {
                     "facility_type_id": 10,
                     "facility_type_name": "High noise level "
-                },
-                {
-                    "facility_type_id": 19,
-                    "facility_type_name": "Bookable"
                 }
             ],
             space_type: 'Training room',
@@ -486,10 +478,6 @@ export default {
                     {
                         "facility_type_id": 14,
                         "facility_type_name": "Undergrad spaces"
-                    },
-                    {
-                        "facility_type_id": 19,
-                        "facility_type_name": "Bookable"
                     }
                 ]
             },
@@ -570,10 +558,6 @@ export default {
                     "space_type_description": "A space type that has not yet been allocated to any spaces. This is used to test the display of space types with no spaces allocated to them."
                 },
                 "facility_types": [
-                    {
-                        "facility_type_id": 19,
-                        "facility_type_name": "Bookable"
-                    },
                     {
                         "facility_type_id": 23,
                         "facility_type_name": "Toilets, female"
@@ -681,10 +665,6 @@ export default {
                     {
                         "facility_type_id": 33,
                         "facility_type_name": "Client accessible power point"
-                    },
-                    {
-                        "facility_type_id": 19,
-                        "facility_type_name": "Bookable"
                     }
                 ]
             },
@@ -817,10 +797,6 @@ export default {
                     {
                         "facility_type_id": 17,
                         "facility_type_name": "Low noise level"
-                    },
-                    {
-                        "facility_type_id": 19,
-                        "facility_type_name": "Bookable"
                     }
                 ]
             }]

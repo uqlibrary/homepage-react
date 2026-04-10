@@ -48,9 +48,6 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-bookable`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-bookable`)).toBeVisible();
-
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-energy-pod`)).toBeVisible();
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-energy-pod`)).not.toBeVisible();
 
@@ -202,9 +199,6 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
         await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-contains-artwork`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-bookable`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-bookable`)).toBeVisible();
-
         await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-energy-pod`)).toBeVisible();
         await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-energy-pod`)).not.toBeVisible();
 
@@ -355,9 +349,6 @@ test.describe('Spaces Admin - manage locations', () => {
 
         await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
         await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-contains-artwork`)).not.toBeVisible();
-
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-bookable`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-bookable`)).not.toBeVisible();
 
         await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-energy-pod`)).toBeVisible();
         await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-energy-pod`)).not.toBeVisible();

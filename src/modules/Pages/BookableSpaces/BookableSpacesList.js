@@ -19,8 +19,11 @@ import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import {
     FACILITY_TYPE_CHECKBOX,
     FACILITY_TYPE_SLIDER,
-    FILTER_CURRENTLY_OPEN,
-    FILTER_SPACE_CAPACITY,
+    FILTER_BOOKABLE_ACTION_NAME,
+    FILTER_BOOKABLE_TYPE_ID,
+    FILTER_CAPACITY_TYPE_ID,
+    FILTER_CURRENTLY_OPEN_ACTION_NAME,
+    FILTER_SPACE_CAPACITY_ACTION_NAME,
 } from './spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
@@ -183,7 +186,11 @@ export const BookableSpacesList = ({
     const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
     const FACILITY_TYPE_NAME_CAPACITY = 'Bookable';
 
-    const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
+    const [selectedFacilityTypes, setSelectedFacilityTypes2] = useState([]);
+    const setSelectedFacilityTypes = x => {
+        console.log('setSelectedFacilityTypes', x);
+        return setSelectedFacilityTypes2(x);
+    };
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
@@ -354,22 +361,46 @@ export const BookableSpacesList = ({
                 const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
                 // OR within group
+                console.log('====');
+                console.log('selectedFiltersInGroup', selectedFiltersInGroup);
                 const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
                     const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                    if (filter?.facility_special_action) {
-                        if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
-                            return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
-                        } else if (filter?.facility_special_action === FILTER_SPACE_CAPACITY) {
-                            return (
-                                !!space?.space_capacity &&
-                                space?.space_capacity >= capacityFilterValue[0] &&
-                                space?.space_capacity <= capacityFilterValue[1]
-                            );
-                        }
+                    console.log(space.space_id, filterId, 'facility_special_action=', filter?.facility_special_action);
+                    if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
+                        console.log('filter: FILTER_CURRENTLY_OPEN_ACTION_NAME');
+                        return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
+                    } else if (
+                        filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME &&
+                        selectedFiltersInGroup.includes(FILTER_BOOKABLE_TYPE_ID)
+                    ) {
+                        console.log(
+                            'filter: FILTER_SPACE_CAPACITY_ACTION_NAME',
+                            space?.space_capacity,
+                            space?.space_external_book_url,
+                            capacityFilterValue[0],
+                            capacityFilterValue[1],
+                        );
+                        return (
+                            space?.space_external_book_url?.startsWith('http') &&
+                            !!space?.space_capacity &&
+                            space?.space_capacity >= capacityFilterValue[0] &&
+                            space?.space_capacity <= capacityFilterValue[1]
+                        );
+                    } else if (
+                        filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME &&
+                        !selectedFiltersInGroup.includes(FILTER_CAPACITY_TYPE_ID)
+                    ) {
+                        // we only check the bookable action if we arent checking the capacity action
+                        console.log('filter: FILTER_BOOKABLE_ACTION_NAME');
+                        return space?.space_external_book_url?.startsWith('http');
                     } else {
+                        // we could specifically exclude FILTER_BOOKABLE_ACTION_NAME here, but we dont need to because it doesnt have a matching filter
+                        console.log('filter: default', spaceFacilityTypes);
+                        // regular checkbox from admin-managed facility-types
                         return spaceFacilityTypes?.includes(filterId);
                     }
                 });
+                console.log('hasMatchInGroup=', hasMatchInGroup);
                 if (!hasMatchInGroup) {
                     return false;
                 }
@@ -417,30 +448,34 @@ export const BookableSpacesList = ({
             filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
             facility_type_children: [
                 {
-                    facility_type_id: 9999, // must be unique!
+                    facility_type_id: 9001, // must be unique!
                     facility_type_name: 'Currently open',
-                    filterRejectAvailable: false, // do not show a "filter-reject" orange checkbox
-                    facility_special_action: FILTER_CURRENTLY_OPEN,
+                    facility_special_action: FILTER_CURRENTLY_OPEN_ACTION_NAME,
                     facility_type: FACILITY_TYPE_CHECKBOX,
                 },
             ],
         };
         !!filterOpenFacilityType && filteredFacilityTypeList?.data?.facility_type_groups?.push(filterOpenFacilityType);
 
-        // manually add a "Choose number of people" filter
+        // manually add a "Bookable/Choose number of people" filter
         const filterCapacityFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
             facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
             facility_type_group_name: FACILITY_TYPE_NAME_CAPACITY,
-            facility_type_group_order: -998, // force to second inlist
+            facility_type_group_order: -998, // force to second in list
             facility_type_group_loads_open: 1,
             facility_type_group_type: 'choose-many',
-            filterType: FACILITY_TYPE_SLIDER, // what sort of filter is this? checkbox and slider available
+            filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
             facility_type_children: [
                 {
-                    facility_type_id: 9998, // must be unique!
+                    facility_type_id: FILTER_BOOKABLE_TYPE_ID, // must be unique!
+                    facility_type_name: 'Bookable',
+                    facility_special_action: FILTER_BOOKABLE_ACTION_NAME,
+                    facility_type: FACILITY_TYPE_CHECKBOX,
+                },
+                {
+                    facility_type_id: FILTER_CAPACITY_TYPE_ID, // must be unique!
                     facility_type_name: 'Space capacity',
-                    filterRejectAvailable: false, // do not show a "filter-reject" orange checkbox
-                    facility_special_action: FILTER_SPACE_CAPACITY,
+                    facility_special_action: FILTER_SPACE_CAPACITY_ACTION_NAME,
                     facility_type: FACILITY_TYPE_SLIDER,
                 },
             ],
@@ -448,6 +483,10 @@ export const BookableSpacesList = ({
         !!filterOpenFacilityType &&
             filteredFacilityTypeList?.data?.facility_type_groups?.push(filterCapacityFacilityType);
 
+        console.log(
+            'getFilteredFacilityTypeList::filteredFacilityTypeList=',
+            filteredFacilityTypeList?.data?.facility_type_groups,
+        );
         return filteredFacilityTypeList;
     };
     const toggleFilterPopupVisibility = e => {
