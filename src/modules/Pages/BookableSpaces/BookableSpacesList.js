@@ -309,6 +309,10 @@ export const BookableSpacesList = ({
         return null; // Date not found in data
     }
 
+    const isBookable = space => {
+        return space?.space_external_book_url?.startsWith('http');
+    };
+
     function showSpace(space, facilityTypeToGroup, selectedFacilityTypes) {
         if (space?.space_draftmode) {
             return false;
@@ -373,31 +377,34 @@ export const BookableSpacesList = ({
                         filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME &&
                         selectedFiltersInGroup.includes(FILTER_BOOKABLE_TYPE_ID)
                     ) {
+                        const capacityResult =
+                            isBookable(space) &&
+                            !!space?.space_capacity &&
+                            space?.space_capacity >= capacityFilterValue[0] &&
+                            space?.space_capacity <= capacityFilterValue[1];
                         console.log(
                             'filter: FILTER_SPACE_CAPACITY_ACTION_NAME',
                             space?.space_capacity,
                             space?.space_external_book_url,
                             capacityFilterValue[0],
                             capacityFilterValue[1],
+                            '=',
+                            capacityResult,
                         );
-                        return (
-                            space?.space_external_book_url?.startsWith('http') &&
-                            !!space?.space_capacity &&
-                            space?.space_capacity >= capacityFilterValue[0] &&
-                            space?.space_capacity <= capacityFilterValue[1]
-                        );
+                        return capacityResult;
                     } else if (
                         filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME &&
                         !selectedFiltersInGroup.includes(FILTER_CAPACITY_TYPE_ID)
                     ) {
-                        // we only check the bookable action if we arent checking the capacity action
+                        // we only check the bookable action on its own if we aren't checking the capacity action
                         console.log('filter: FILTER_BOOKABLE_ACTION_NAME');
-                        return space?.space_external_book_url?.startsWith('http');
+                        return isBookable(space);
                     } else {
                         // we could specifically exclude FILTER_BOOKABLE_ACTION_NAME here, but we dont need to because it doesnt have a matching filter
-                        console.log('filter: default', spaceFacilityTypes);
                         // regular checkbox from admin-managed facility-types
-                        return spaceFacilityTypes?.includes(filterId);
+                        const result = spaceFacilityTypes?.includes(filterId);
+                        console.log('filter: default - check', filterId, 'is in', spaceFacilityTypes, '=', result);
+                        return result;
                     }
                 });
                 console.log('hasMatchInGroup=', hasMatchInGroup);
