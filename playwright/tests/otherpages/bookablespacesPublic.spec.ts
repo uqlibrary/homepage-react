@@ -350,6 +350,25 @@ test.describe('Spaces', () => {
             await page.getByTestId(`${LIV}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
         });
+
+        test('there is a gap either side of the Spaces widget so the user is able to scroll the page when needed', async ({
+            page,
+        }) => {
+            const librarySpaces = page.getByTestId('library-spaces');
+
+            const marginLeft = await librarySpaces.evaluate(el => {
+                return window.getComputedStyle(el).marginLeft;
+            });
+            const marginRight = await librarySpaces.evaluate(el => {
+                return window.getComputedStyle(el).marginRight;
+            });
+
+            const numericMargin = (marginString: string) => Number(marginString.replace('px', ''));
+            // we don't care about the specific width (at the time of writing it was 2rem)
+            // we just need to ensure there is a gap to left and right of the page for the user to be able to scroll the page around the page-filling Spaces widget
+            expect(numericMargin(marginLeft)).toBeGreaterThan(16);
+            expect(numericMargin(marginRight)).toBeGreaterThan(16);
+        });
     });
     test.describe('accessibility', () => {
         test('homepage is accessible', async ({ page }) => {
