@@ -1055,6 +1055,184 @@ export default {
                         "facility_type_name": "Kitchen"
                     }
                 ]
+            }, {
+                space_id: 13,
+                space_uuid: "f98g_fwas_5g33",
+                space_name: "central-1",
+                space_precise: null,
+                space_description: "<p>Some words about Central library</p>",
+                space_photo_url: null,
+                space_photo_description: null,
+                space_opening_hours_id: 3842,
+                space_services_page: "https://web.library.uq.edu.au/visit/central-library",
+                "space_library_springshare_id": 10457,
+                space_opening_hours_override: null,
+                created_at: "2025-08-01 10:00:00",
+                updated_at: "2025-08-01 11:00:00",
+                "space_capacity": 4,
+                space_latitude: "-27.49603",
+                space_longitude: "153.01354",
+                space_type: 'Communal space',
+                space_floor_id: 3,
+                space_floor_name: "3",
+                space_is_ground_floor: 0,
+                space_library_id: 10457,
+                space_library_name: 'Central Library',
+                space_building_name: "Duhig north Building",
+                space_building_number: "0002",
+                space_campus_id: 1,
+                space_type_id: 1,
+                space_type_details: {
+                    "space_type_id": 1,
+                    "space_type_name": "Communal space",
+                    "space_type_description": "Designed for communal activities, these spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
+                },
+                space_campus_name: "St Lucia",
+                space_draftmode: false,
+                "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/central-1',
+                facility_types: [
+                    {
+                        "facility_type_id": 23,
+                        "facility_type_name": "Toilets, female"
+                    },
+                    {
+                        "facility_type_id": 22,
+                        "facility_type_name": "Toilets, male"
+                    },
+                    {
+                        "facility_type_id": 29,
+                        "facility_type_name": "Recharge Station"
+                    },
+                    {
+                        "facility_type_id": 31,
+                        "facility_type_name": "Self-printing & scanning"
+                    },
+                    {
+                        "facility_type_id": 17,
+                        "facility_type_name": "Low noise level"
+                    },
+                    {
+                        "facility_type_id": 5,
+                        "facility_type_name": "Computer"
+                    },
+                    {
+                        "facility_type_id": 33,
+                        "facility_type_name": "Client accessible power point"
+                    },
+                    {
+                        "facility_type_id": 38,
+                        "facility_type_name": "Whiteboard"
+                    },
+                    {
+                        "facility_type_id": 39,
+                        "facility_type_name": "Adjustable desks"
+                    },
+                    {
+                        "facility_type_id": 8,
+                        "facility_type_name": "AV equipment"
+                    },
+                    {
+                        "facility_type_id": 13,
+                        "facility_type_name": "Postgraduate spaces"
+                    },
+                    {
+                        "facility_type_id": 14,
+                        "facility_type_name": "Undergrad spaces"
+                    },
+                    {
+                        "facility_type_id": 57,
+                        "facility_type_name": "Contains Artwork"
+                    }
+                ],
+            }, {
+                space_id: 14,
+                space_uuid: "f98g_fwas_5g33",
+                space_name: "bsl-1",
+                space_precise: null,
+                space_description: null,
+                space_photo_url: null,
+                space_photo_description: null,
+                space_opening_hours_id: 3842,
+                space_services_page: "https://web.library.uq.edu.au/visit/biological-sciences-libraryy",
+                "space_library_springshare_id": 3829,
+                space_opening_hours_override: null,
+                created_at: "2025-08-01 10:00:00",
+                updated_at: "2025-08-01 11:00:00",
+                "space_capacity": null,
+                space_latitude: "-27.49702",
+                space_longitude: "153.01140",
+                space_type: 'Communal space',
+                space_floor_id: 3,
+                space_floor_name: "3",
+                space_is_ground_floor: 0,
+                space_library_id: 10457,
+                space_library_name: 'Biological Sciences Library',
+                space_building_name: "Biological Sciences Library",
+                space_building_number: "0094",
+                space_campus_id: 1,
+                space_type_id: 1,
+                space_type_details: {
+                    "space_type_id": 1,
+                    "space_type_name": "Communal space",
+                    "space_type_description": "Designed for communal activities, these spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
+                },
+                space_campus_name: "St Lucia",
+                space_draftmode: false,
+                "space_external_book_url": null,
+                facility_types: [
+                    {
+                        "facility_type_id": 23,
+                        "facility_type_name": "Toilets, female"
+                    },
+                    {
+                        "facility_type_id": 22,
+                        "facility_type_name": "Toilets, male"
+                    },
+                    {
+                        "facility_type_id": 29,
+                        "facility_type_name": "Recharge Station"
+                    },
+                    {
+                        "facility_type_id": 31,
+                        "facility_type_name": "Self-printing & scanning"
+                    },
+                    {
+                        "facility_type_id": 17,
+                        "facility_type_name": "Low noise level"
+                    },
+                    {
+                        "facility_type_id": 5,
+                        "facility_type_name": "Computer"
+                    },
+                    {
+                        "facility_type_id": 33,
+                        "facility_type_name": "Client accessible power point"
+                    },
+                    {
+                        "facility_type_id": 38,
+                        "facility_type_name": "Whiteboard"
+                    },
+                    {
+                        "facility_type_id": 39,
+                        "facility_type_name": "Adjustable desks"
+                    },
+                    {
+                        "facility_type_id": 8,
+                        "facility_type_name": "AV equipment"
+                    },
+                    {
+                        "facility_type_id": 13,
+                        "facility_type_name": "Postgraduate spaces"
+                    },
+                    {
+                        "facility_type_id": 14,
+                        "facility_type_name": "Undergrad spaces"
+                    },
+                    {
+                        "facility_type_id": 57,
+                        "facility_type_name": "Contains Artwork"
+                    }
+                ],
             }]
     }
 }
