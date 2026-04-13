@@ -1158,7 +1158,7 @@ test.describe('Spaces', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
 
-            // the group appears as expected
+            // the group loads collapsed, as expected
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)).toBeVisible();
             await expect(
                 filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)

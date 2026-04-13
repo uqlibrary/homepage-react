@@ -275,7 +275,6 @@ const SpaceDetails = ({
                     </StyleCapacityDiv>
                 )}
                 <Typography variant="body2">{bookableSpace?.space_type_details?.space_type_description}</Typography>
-                {console.log('bookableSpace Specific Data', bookableSpace)}
                 {bookableSpace?.space_description?.length > 0 && (
                     <StyledDescriptionDiv
                         id={`space-description-${bookableSpace?.space_id}`}

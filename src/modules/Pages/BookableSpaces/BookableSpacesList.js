@@ -208,10 +208,17 @@ export const BookableSpacesList = ({
     const [selectedCampus, setSelectedCampus2] = React.useState(1);
     const setSelectedCampus = x => {
         console.log('BookableSpacesList campus::setSelectedCampus', x);
-        console.log('BookableSpacesList setSelectedCampus bookableSpacesRoomList=', bookableSpacesRoomList);
+        console.log('BookableSpacesList campus::setSelectedCampus bookableSpacesRoomList=', bookableSpacesRoomList);
         setSelectedCampus2(x);
+    };
+    const handleCampusSelection = e => {
+        const campusId = e?.target?.value;
+        console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
+        console.log('BookableSpacesList campus::handleCampusSelection bookableSpacesRoomList=', bookableSpacesRoomList);
+        setSelectedCampus(campusId);
 
-        const firstSpaceInCampus = bookableSpacesRoomList?.data?.locations?.find(s => s.space_campus_id === x);
+        const firstSpaceInCampus = bookableSpacesRoomList?.data?.locations?.find(s => s.space_campus_id === campusId);
+        console.log('BookableSpacesList campus::handleCampusSelection firstSpaceInCampus=', firstSpaceInCampus);
         !!firstSpaceInCampus && mapRef.current?.flyToSpace(firstSpaceInCampus);
     };
 
@@ -330,6 +337,14 @@ export const BookableSpacesList = ({
     };
 
     function showSpace(space, facilityTypeToGroup, selectedFacilityTypes, selectedCurrentCampus) {
+        console.log(
+            'showSpace',
+            space.space_name,
+            '; campus=',
+            space.space_campus_id,
+            ';selectedCurrentCampus=',
+            selectedCurrentCampus,
+        );
         if (space?.space_draftmode) {
             return false;
         }
@@ -444,9 +459,12 @@ export const BookableSpacesList = ({
     const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
         // get a list of the filters used in spaces
         const spaceFilters = bookableSpacesRoomList?.data?.locations
-            ?.flatMap(location => location?.facility_types || [])
+            ?.filter(space => space.space_campus_id === selectedCampus)
+            ?.flatMap(space => space?.facility_types || [])
             ?.map(facilityType => facilityType?.facility_type_id);
+        console.log('getFilteredFacilityTypeList selectedCampus=', selectedCampus, 'spaceFilters=', spaceFilters);
         const spaceFiltersSet = new Set(spaceFilters);
+        console.log('getFilteredFacilityTypeList spaceFiltersSet=', spaceFiltersSet);
 
         // filter facility types so we only show the checkboxes where there is an associated space
         // (this will remove the group completely if it has no shown checkboxes)
@@ -464,6 +482,7 @@ export const BookableSpacesList = ({
                     ?.filter(group => group?.facility_type_children?.length > 0),
             },
         };
+        console.log('filteredFacilityTypeList=', filteredFacilityTypeList);
 
         // manually add a "Currently Open" filter
         const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
@@ -596,7 +615,14 @@ export const BookableSpacesList = ({
         // capacityFilterValue is read inside showSpace via closure; include it so the list
         // recomputes when the slider changes even though it is not a direct parameter.
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [bookableSpacesRoomList, facilityTypeList, selectedFacilityTypes, capacityFilterValue, spacesFavouritesList]);
+    }, [
+        bookableSpacesRoomList,
+        facilityTypeList,
+        selectedFacilityTypes,
+        capacityFilterValue,
+        spacesFavouritesList,
+        selectedCampus,
+    ]);
     const visibleSpacesCountBadge = () => {
         return sortedSpaceLocations?.length > 0 &&
             sortedSpaceLocations?.length < bookableSpacesRoomList?.data?.locations?.length ? (
@@ -734,7 +760,7 @@ export const BookableSpacesList = ({
                                     campusListLoading={campusListLoading}
                                     campusListError={campusListError}
                                     selectedCampus={selectedCampus}
-                                    setSelectedCampus={setSelectedCampus}
+                                    handleCampusSelection={handleCampusSelection}
                                 />
                             </div>
                             {isDesktopView && (

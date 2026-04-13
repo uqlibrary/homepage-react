@@ -246,7 +246,7 @@ export const SidebarFilters = ({
     setSelectedFacilityTypes,
     filteredFacilityTypeList,
     selectedCampus,
-    setSelectedCampus,
+    handleCampusSelection,
     suppliedClassName,
     minimumSpaceCapacity,
     maximumSpaceCapacity,
@@ -378,11 +378,6 @@ export const SidebarFilters = ({
         setFilters(facilityTypeId, false, false, facilitySpecialAction);
 
         scrollToTopOfContent();
-    };
-
-    const handleCampusSelection = e => {
-        console.log('campus:: handleCampusSelection e=', e.target.value, e);
-        setSelectedCampus(e.target.value);
     };
 
     const handleFilterSelection = (isChecked, facilityType) => {
@@ -836,8 +831,8 @@ SidebarFilters.propTypes = {
     filteredFacilityTypeList: PropTypes.any,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
-    selectedCampus: PropTypes.array,
-    setSelectedCampus: PropTypes.func,
+    selectedCampus: PropTypes.any,
+    handleCampusSelection: PropTypes.func,
     minimumSpaceCapacity: PropTypes.number,
     maximumSpaceCapacity: PropTypes.number,
     capacityFilterValue: PropTypes.array,

@@ -682,8 +682,8 @@ export default {
                 "created_at": "2025-11-07T01:46:32.000000Z",
                 "updated_at": "2025-11-07T01:46:32.000000Z",
                 "space_capacity": 24,
-                "space_latitude": -27.49905,
-                "space_longitude": 153.01453,
+                "space_latitude": -27.49896,
+                "space_longitude": 153.01442,
                 "space_type": "Individual study",
                 "space_floor_id": 3,
                 "space_floor_name": "3",
@@ -750,7 +750,7 @@ export default {
                 "created_at": "2025-12-02T04:33:04.000000Z",
                 "updated_at": "2025-12-02T04:33:04.000000Z",
                 "space_capacity": 22,
-                "space_latitude": -27.49905,
+                "space_latitude": -27.49914,
                 "space_longitude": 153.01453,
                 "space_type": "Communal space",
                 "space_floor_id": 3,
@@ -797,6 +797,262 @@ export default {
                     {
                         "facility_type_id": 17,
                         "facility_type_name": "Low noise level"
+                    }
+                ]
+            },
+            {
+                "space_id": 8,
+                "space_uuid": "09007a2a-c315-4209-813f-bb4843fbf7ff",
+                "space_name": "Gatton 112",
+                "space_precise": null,
+                "space_description": null,
+                "space_photo_url": null,
+                "space_photo_description": null,
+                "space_opening_hours_id": null,
+                "space_services_page": null,
+                "space_opening_hours_override": null,
+                "created_at": "2025-12-02T04:33:04.000000Z",
+                "updated_at": "2025-12-02T04:33:04.000000Z",
+                "space_capacity": null,
+                "space_latitude": -27.55375,
+                "space_longitude": 152.33575,
+                "space_type": "Training room",
+                "space_floor_id": 1,
+                "space_floor_name": "1",
+                "space_is_ground_floor": false,
+                "space_library_id": 41,
+                "space_library_name": "J.K. Murray Library",
+                "space_building_number": "8",
+                "space_building_name": "J.K. Murray Building",
+                "space_building_ground_floor_id": null,
+                "space_library_about_page_default": "https:\/\/web.library.uq.edu.au\/visit\/jk-murray-library-uq-gatton",
+                "space_library_springshare_id": 8867,
+                "space_campus_id": 2,
+                "space_campus_name": "Gatton",
+                "space_campus_number": "29",
+                "space_external_book_url": null,
+                "space_type_id": 2,
+                "space_type_details": {
+                    "space_type_id": 2,
+                    "space_type_name": "Training room",
+                    "space_type_description": "A space type designed for communal activities. These spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
+                },
+                "facility_types": [
+                    {
+                        "facility_type_id": 23,
+                        "facility_type_name": "Toilets, female"
+                    },
+                    {
+                        "facility_type_id": 22,
+                        "facility_type_name": "Toilets, male"
+                    },
+                    {
+                        "facility_type_id": 54,
+                        "facility_type_name": "AskUs service"
+                    },
+                    {
+                        "facility_type_id": 31,
+                        "facility_type_name": "Self-printing & scanning"
+                    },
+                    {
+                        "facility_type_id": 42,
+                        "facility_type_name": "General Collections"
+                    },
+                    {
+                        "facility_type_id": 17,
+                        "facility_type_name": "Low noise level"
+                    }
+                ]
+            },
+            {
+                "space_id": 9,
+                "space_uuid": "06ab68a9-1702-4886-af5f-4c01c4c4acaf",
+                "space_name": "Gatton 123",
+                "space_precise": null,
+                "space_description": null,
+                "space_photo_url": null,
+                "space_photo_description": null,
+                "space_opening_hours_id": null,
+                "space_services_page": null,
+                "space_opening_hours_override": null,
+                "created_at": "2025-12-02T04:33:04.000000Z",
+                "updated_at": "2025-12-02T04:33:04.000000Z",
+                "space_capacity": 4,
+                "space_latitude": -27.55360,
+                "space_longitude": 152.33585,
+                "space_type": "Individual study",
+                "space_floor_id": 1,
+                "space_floor_name": "1",
+                "space_is_ground_floor": false,
+                "space_library_id": 41,
+                "space_library_name": "J.K. Murray Library",
+                "space_building_number": "8",
+                "space_building_name": "J.K. Murray Building",
+                "space_building_ground_floor_id": null,
+                "space_library_about_page_default": "https:\/\/web.library.uq.edu.au\/visit\/jk-murray-library-uq-gatton",
+                "space_library_springshare_id": 8867,
+                "space_campus_id": 2,
+                "space_campus_name": "Gatton",
+                "space_campus_number": "29",
+                "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/GAT2',
+                "space_type_id": 4,
+                "space_type_details": {
+                    "space_type_id": 4,
+                    "space_type_name": "Individual study",
+                    "space_type_description": "A space type designed for communal activities. These spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
+                },
+                "facility_types": [
+                    {
+                        "facility_type_id": 23,
+                        "facility_type_name": "Toilets, female"
+                    },
+                    {
+                        "facility_type_id": 22,
+                        "facility_type_name": "Toilets, male"
+                    },
+                    {
+                        "facility_type_id": 29,
+                        "facility_type_name": "Recharge Station"
+                    },
+                    {
+                        "facility_type_id": 20,
+                        "facility_type_name": "Fridge"
+                    },
+                    {
+                        "facility_type_id": 42,
+                        "facility_type_name": "General Collections"
+                    },
+                    {
+                        "facility_type_id": 17,
+                        "facility_type_name": "Low noise level"
+                    }
+                ]
+            },
+            {
+                "space_id": 10,
+                "space_uuid": "9a7796e0-b708-45c0-a8de-1183282e0b62",
+                "space_name": "Gatton 124",
+                "space_precise": null,
+                "space_description": null,
+                "space_photo_url": null,
+                "space_photo_description": null,
+                "space_opening_hours_id": null,
+                "space_services_page": null,
+                "space_opening_hours_override": null,
+                "created_at": "2025-12-02T04:33:04.000000Z",
+                "updated_at": "2025-12-02T04:33:04.000000Z",
+                "space_capacity": null,
+                "space_latitude": -27.55370,
+                "space_longitude": 152.33593,
+                "space_type": "Communal space",
+                "space_floor_id": 1,
+                "space_floor_name": "1",
+                "space_is_ground_floor": false,
+                "space_library_id": 41,
+                "space_library_name": "J.K. Murray Library",
+                "space_building_number": "8",
+                "space_building_name": "J.K. Murray Building",
+                "space_building_ground_floor_id": null,
+                "space_library_about_page_default": "https:\/\/web.library.uq.edu.au\/visit\/jk-murray-library-uq-gatton",
+                "space_library_springshare_id": 8867,
+                "space_campus_id": 2,
+                "space_campus_name": "Gatton",
+                "space_campus_number": "29",
+                "space_external_book_url": null,
+                "space_type_id": 1,
+                "space_type_details": {
+                    "space_type_id": 1,
+                    "space_type_name": "Communal space",
+                    "space_type_description": "A space type designed for communal activities. These spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
+                },
+                "facility_types": [
+                    {
+                        "facility_type_id": 23,
+                        "facility_type_name": "Toilets, female"
+                    },
+                    {
+                        "facility_type_id": 22,
+                        "facility_type_name": "Toilets, male"
+                    },
+                    {
+                        "facility_type_id": 29,
+                        "facility_type_name": "Recharge Station"
+                    },
+                    {
+                        "facility_type_id": 31,
+                        "facility_type_name": "Self-printing & scanning"
+                    },
+                    {
+                        "facility_type_id": 39,
+                        "facility_type_name": "Adjustable desks"
+                    },
+                    {
+                        "facility_type_id": 17,
+                        "facility_type_name": "Low noise level"
+                    }
+                ]
+            },
+            {
+                "space_id": 11,
+                "space_uuid": "c0b476f5-3a02-4031-af1c-fbec487080bb",
+                "space_name": "Gatton 104",
+                "space_precise": null,
+                "space_description": null,
+                "space_photo_url": null,
+                "space_photo_description": null,
+                "space_opening_hours_id": null,
+                "space_services_page": null,
+                "space_opening_hours_override": null,
+                "created_at": "2025-12-02T04:33:04.000000Z",
+                "updated_at": "2025-12-02T04:33:04.000000Z",
+                "space_capacity": 23,
+                "space_latitude": -27.55382,
+                "space_longitude": 152.33586,
+                "space_type": "Communal space",
+                "space_floor_id": 1,
+                "space_floor_name": "1",
+                "space_is_ground_floor": false,
+                "space_library_id": 41,
+                "space_library_name": "J.K. Murray Library",
+                "space_building_number": "8",
+                "space_building_name": "J.K. Murray Building",
+                "space_building_ground_floor_id": null,
+                "space_library_about_page_default": "https:\/\/web.library.uq.edu.au\/visit\/jk-murray-library-uq-gatton",
+                "space_library_springshare_id": 8867,
+                "space_campus_id": 2,
+                "space_campus_name": "Gatton",
+                "space_campus_number": "29",
+                "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/GAT4',
+                "space_type_id": 1,
+                "space_type_details": {
+                    "space_type_id": 1,
+                    "space_type_name": "Communal space",
+                    "space_type_description": "A space type designed for communal activities. These spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
+                },
+                "facility_types": [
+                    {
+                        "facility_type_id": 23,
+                        "facility_type_name": "Toilets, female"
+                    },
+                    {
+                        "facility_type_id": 22,
+                        "facility_type_name": "Toilets, male"
+                    },
+                    {
+                        "facility_type_id": 29,
+                        "facility_type_name": "Recharge Station"
+                    },
+                    {
+                        "facility_type_id": 31,
+                        "facility_type_name": "Self-printing & scanning"
+                    },
+                    {
+                        "facility_type_id": 42,
+                        "facility_type_name": "General Collections"
+                    },
+                    {
+                        "facility_type_id": 3,
+                        "facility_type_name": "Kitchen"
                     }
                 ]
             }]
