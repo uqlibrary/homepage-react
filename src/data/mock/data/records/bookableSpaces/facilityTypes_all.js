@@ -41,19 +41,6 @@ export default {
             ]
         },
         {
-            "facility_type_group_id": 1,
-            "facility_type_group_name": "Space\/Room Type",
-            "facility_type_group_order": 1,
-            "facility_type_group_loads_open": 1,
-            "facility_type_group_type": "choose-many",
-            "facility_type_children": [
-                {
-                    "facility_type_id": 19,
-                    "facility_type_name": "Bookable"
-                }
-            ]
-        },
-        {
             "facility_type_group_id": 2,
             "facility_type_group_name": "On this floor",
             "facility_type_group_order": 3,

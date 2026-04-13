@@ -28,8 +28,8 @@ const STEP_IMAGERY = 'tab-imagery';
 
 // const ST_LUCIA_DEFAULT_LATITUDE = '-27.49751';
 // const ST_LUCIA_DEFAULT_LONGITUDE = '153.01329';
-const PACE_DEFAULT_LATITUDE = '-27.49979';
-const PACE_DEFAULT_LONGITUDE = '153.03066';
+const PACE_DEFAULT_LATITUDE = '-27.50008';
+const PACE_DEFAULT_LONGITUDE = '153.03024';
 
 test.describe('Spaces Admin - add new space', () => {
     test('can navigate from dashboard to add new', async ({ page }) => {
@@ -187,6 +187,14 @@ test.describe('Spaces Admin - add new space', () => {
         const descriptionField = page.getByRole('textbox', { name: 'Editor editing area: main' });
         await descriptionField.fill('This is a sunny corner in the Law library where you blah blah blah');
 
+        const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
+        const isBookableCheckbox = page.getByTestId('space-can-book').locator('input');
+        await expect(isBookableCheckbox).not.toBeChecked();
+        await expect(bookingUrlField).not.toBeVisible();
+        await isBookableCheckbox.check();
+        await expect(bookingUrlField).toBeVisible();
+        await bookingUrlField.fill('https://example.com');
+
         // enter a Space capacity
         const capacityNumberField = page.getByTestId('space_capacity').locator('input');
         await expect(capacityNumberField).toBeVisible();
@@ -195,14 +203,6 @@ test.describe('Spaces Admin - add new space', () => {
 
         // change to facility type tab
         await page.getByTestId('spaces-form-next-button').click();
-
-        const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
-        const isBookableCheckbox = page.getByTestId('space-can-book').locator('input');
-        await expect(isBookableCheckbox).not.toBeChecked();
-        await expect(bookingUrlField).not.toBeVisible();
-        await isBookableCheckbox.check();
-        await expect(bookingUrlField).toBeVisible();
-        await bookingUrlField.fill('https://example.com');
 
         await expect(page.getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`).locator('input')).toBeVisible();
         await expect(page.getByTestId(`facility-type-listitem-${ASKUS_FILTER_TYPE}`)).toContainText('AskUs service');

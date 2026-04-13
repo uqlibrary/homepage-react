@@ -935,6 +935,28 @@ export const EditSpaceForm = ({
     const bookableCheckboxLabel = 'This Space is bookable';
     const bookableUrlLabel = { inputProps: { 'aria-label': bookableCheckboxLabel } };
     const aboutPanel = () => {
+        const bookingUrlQuerystringWarning = getBookingUrlQuerystringWarning(formValues?.space_external_book_url);
+        const selectedFacilityTypes = formValues?.facility_types || [];
+        const selectedFacilityTypeIds = selectedFacilityTypes
+            .map(ft => ft?.facility_type_id)
+            .filter(id => id !== null && id !== undefined);
+        const selectedFacilityTypeIdsAsString = selectedFacilityTypeIds.map(id => String(id));
+        const selectedFacilityTypeNames = selectedFacilityTypes
+            .map(ft => (ft?.facility_type_name || '').trim().toLowerCase())
+            .filter(Boolean);
+
+        const knownBookableFacilityType = getFlatFacilityTypeList(facilityTypeList)?.find(
+            ft => (ft?.facility_type_name || '').trim().toLowerCase() === 'bookable',
+        );
+        const knownBookableFacilityTypeId =
+            knownBookableFacilityType?.facility_type_id !== null &&
+            knownBookableFacilityType?.facility_type_id !== undefined
+                ? String(knownBookableFacilityType?.facility_type_id)
+                : null;
+        const isBookableFacilityTypeSelectedById =
+            !!knownBookableFacilityTypeId && selectedFacilityTypeIdsAsString.includes(knownBookableFacilityTypeId);
+        const isBookableFacilityTypeSelectedByName = selectedFacilityTypeNames.includes('bookable');
+
         return (
             <Grid container spacing={3}>
                 <Grid item xs={12}>
@@ -1043,13 +1065,58 @@ export const EditSpaceForm = ({
                     </StyledErrorMessageTypography>
                 </Grid>
                 <Grid item xs={12}>
+                    <StyledHighlightedGrid item xs={12}>
+                        <FormControlLabel
+                            label={bookableCheckboxLabel}
+                            data-testid="contains-bookable-checkbox"
+                            control={
+                                <Checkbox
+                                    {...bookableUrlLabel}
+                                    checked={!!isBookable || false}
+                                    data-testid="space-can-book"
+                                    className={'checkbox'}
+                                    onChange={handleChange('isBookableCheckbox')}
+                                />
+                            }
+                        />
+                        {!!isBookable && (
+                            <div data-testid="booking-link-details">
+                                <Typography component={'h4'} variant={'p'}>
+                                    Provide a booking link
+                                </Typography>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel htmlFor="space_external_book_url">
+                                        Enter the UQ Bookit landing page for this Space *
+                                    </InputLabel>
+                                    <Input
+                                        id="space_external_book_url"
+                                        data-testid="space_external_book_url"
+                                        value={formValues?.space_external_book_url || ''}
+                                        onChange={handleChange('space_external_book_url')}
+                                        onBlur={handleFieldCompletion}
+                                    />
+                                    <StyledErrorMessageTypography component={'div'}>
+                                        {reportErrorMessage('space_external_book_url')}
+                                    </StyledErrorMessageTypography>
+                                </FormControl>
+                                {!!bookingUrlQuerystringWarning && (
+                                    <StyledWarningListBox data-testid="spaces-booking-url-warning-list">
+                                        <WarningAmberIcon style={{ color: theme?.palette.warning.dark }} />
+                                        <p>{bookingUrlQuerystringWarning}</p>
+                                    </StyledWarningListBox>
+                                )}
+                            </div>
+                        )}
+                    </StyledHighlightedGrid>
+                </Grid>
+                <Grid item xs={12}>
                     <div data-testid="capacity-details">
                         <Typography component={'h4'} variant={'p'}>
                             How many people can use this space?
                         </Typography>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="space_capacity">
-                                Enter the number of patrons who can make use of this Space *
+                                Enter the number of patrons who can make use of this Space *<br />
                             </InputLabel>
                             <Input
                                 type="number"
@@ -1067,6 +1134,9 @@ export const EditSpaceForm = ({
                                 }}
                                 required
                             />
+                            <Typography component={'p'} style={{ marginTop: '0.5rem' }}>
+                                (Note: capacity only shows to users if the space is bookable.)
+                            </Typography>
                             <StyledErrorMessageTypography component={'div'}>
                                 {reportErrorMessage('space_capacity')}
                             </StyledErrorMessageTypography>
@@ -1096,94 +1166,8 @@ export const EditSpaceForm = ({
         );
     };
     const facilityTypePanel = () => {
-        const bookingUrlQuerystringWarning = getBookingUrlQuerystringWarning(formValues?.space_external_book_url);
-        const selectedFacilityTypes = formValues?.facility_types || [];
-        const selectedFacilityTypeIds = selectedFacilityTypes
-            .map(ft => ft?.facility_type_id)
-            .filter(id => id !== null && id !== undefined);
-        const selectedFacilityTypeIdsAsString = selectedFacilityTypeIds.map(id => String(id));
-        const selectedFacilityTypeNames = selectedFacilityTypes
-            .map(ft => (ft?.facility_type_name || '').trim().toLowerCase())
-            .filter(Boolean);
-
-        const knownBookableFacilityType = getFlatFacilityTypeList(facilityTypeList)?.find(
-            ft => (ft?.facility_type_name || '').trim().toLowerCase() === 'bookable',
-        );
-        const knownBookableFacilityTypeId =
-            knownBookableFacilityType?.facility_type_id !== null &&
-            knownBookableFacilityType?.facility_type_id !== undefined
-                ? String(knownBookableFacilityType?.facility_type_id)
-                : null;
-        const isBookableFacilityTypeSelectedById =
-            !!knownBookableFacilityTypeId && selectedFacilityTypeIdsAsString.includes(knownBookableFacilityTypeId);
-        const isBookableFacilityTypeSelectedByName = selectedFacilityTypeNames.includes('bookable');
-        const isBookableFacilityTypeSelected =
-            isBookableFacilityTypeSelectedById || isBookableFacilityTypeSelectedByName;
-        const shouldShowBookableReminder = !!isBookable && !isBookableFacilityTypeSelected;
-
         return (
             <Grid container spacing={3}>
-                <StyledHighlightedGrid item xs={12}>
-                    <FormControlLabel
-                        label={bookableCheckboxLabel}
-                        data-testid="contains-bookable-checkbox"
-                        control={
-                            <Checkbox
-                                {...bookableUrlLabel}
-                                checked={!!isBookable || false}
-                                data-testid="space-can-book"
-                                className={'checkbox'}
-                                onChange={handleChange('isBookableCheckbox')}
-                            />
-                        }
-                    />
-                    {!!isBookable && (
-                        <div data-testid="booking-link-details">
-                            <Typography component={'h4'} variant={'p'}>
-                                Provide a booking link
-                            </Typography>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel htmlFor="space_external_book_url">
-                                    Enter the UQ Bookit landing page for this Space *
-                                </InputLabel>
-                                <Input
-                                    id="space_external_book_url"
-                                    data-testid="space_external_book_url"
-                                    value={formValues?.space_external_book_url || ''}
-                                    onChange={handleChange('space_external_book_url')}
-                                    onBlur={handleFieldCompletion}
-                                />
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('space_external_book_url')}
-                                </StyledErrorMessageTypography>
-                            </FormControl>
-                            {!!bookingUrlQuerystringWarning && (
-                                <StyledWarningListBox data-testid="spaces-booking-url-warning-list">
-                                    <WarningAmberIcon style={{ color: theme?.palette.warning.dark }} />
-                                    <p>{bookingUrlQuerystringWarning}</p>
-                                </StyledWarningListBox>
-                            )}
-                            {shouldShowBookableReminder && (
-                                <StyledErrorAttentionMessageDiv>
-                                    <WarningAmberIcon
-                                        style={{ color: theme?.palette.error.light }}
-                                        data-testid="spaces-check-reminder-icon"
-                                    />
-                                    Also select the "Bookable" checkbox below!!
-                                </StyledErrorAttentionMessageDiv>
-                            )}
-                        </div>
-                    )}
-                    {!isBookable && (
-                        <StyledAttentionMessageDiv>
-                            <InfoOutlined
-                                style={{ color: theme?.palette.accent.main }}
-                                data-testid="spaces-skip-reminder-icon"
-                            />
-                            Not bookable? Ensure no "Bookable" checkboxes are checked below!
-                        </StyledAttentionMessageDiv>
-                    )}
-                </StyledHighlightedGrid>
                 <Grid item xs={12}>
                     <Typography component={'h3'} variant={'h6'} style={{ marginBottom: '1rem' }}>
                         Facility types

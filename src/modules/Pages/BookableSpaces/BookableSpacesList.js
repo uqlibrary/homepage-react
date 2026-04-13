@@ -19,8 +19,11 @@ import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import {
     FACILITY_TYPE_CHECKBOX,
     FACILITY_TYPE_SLIDER,
-    FILTER_CURRENTLY_OPEN,
-    FILTER_SPACE_CAPACITY,
+    FILTER_BOOKABLE_ACTION_NAME,
+    FILTER_BOOKABLE_TYPE_ID,
+    FILTER_CAPACITY_TYPE_ID,
+    FILTER_CURRENTLY_OPEN_ACTION_NAME,
+    FILTER_SPACE_CAPACITY_ACTION_NAME,
 } from './spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
@@ -157,6 +160,9 @@ export const BookableSpacesList = ({
     facilityTypeListLoading,
     facilityTypeListError,
     spacesFavouritesList,
+    campusList,
+    campusListLoading,
+    campusListError,
 }) => {
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
@@ -181,9 +187,13 @@ export const BookableSpacesList = ({
     const isDesktopView = !isTabletView && !isMobileView;
 
     const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
-    const FACILITY_TYPE_NAME_CAPACITY = 'Bookable Capacity';
+    const FACILITY_TYPE_NAME_CAPACITY = 'Bookable';
 
-    const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
+    const [selectedFacilityTypes, setSelectedFacilityTypes2] = useState([]);
+    const setSelectedFacilityTypes = x => {
+        console.log('setSelectedFacilityTypes', x);
+        return setSelectedFacilityTypes2(x);
+    };
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
@@ -194,6 +204,23 @@ export const BookableSpacesList = ({
     const handleSpaceExpand = useCallback(space => {
         mapRef.current?.flyToSpace(space);
     }, []);
+
+    const [selectedCampus, setSelectedCampus2] = React.useState(1);
+    const setSelectedCampus = x => {
+        console.log('BookableSpacesList campus::setSelectedCampus', x);
+        console.log('BookableSpacesList campus::setSelectedCampus bookableSpacesRoomList=', bookableSpacesRoomList);
+        setSelectedCampus2(x);
+    };
+    const handleCampusSelection = e => {
+        const campusId = e?.target?.value;
+        console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
+        console.log('BookableSpacesList campus::handleCampusSelection bookableSpacesRoomList=', bookableSpacesRoomList);
+        setSelectedCampus(campusId);
+
+        const firstSpaceInCampus = bookableSpacesRoomList?.data?.locations?.find(s => s.space_campus_id === campusId);
+        console.log('BookableSpacesList campus::handleCampusSelection firstSpaceInCampus=', firstSpaceInCampus);
+        !!firstSpaceInCampus && mapRef.current?.flyToSpace(firstSpaceInCampus);
+    };
 
     const minimumSpaceCapacity = 1;
     const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
@@ -213,6 +240,9 @@ export const BookableSpacesList = ({
         }
         if (facilityTypeListError === null && facilityTypeListLoading === null && facilityTypeList === null) {
             actions.loadAllFacilityTypes();
+        }
+        if (campusListError === null && campusListLoading === null && campusList === null) {
+            actions.loadBookableSpaceCampusChildren();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -302,8 +332,24 @@ export const BookableSpacesList = ({
         return null; // Date not found in data
     }
 
-    function showSpace(space, facilityTypeToGroup, selectedFacilityTypes) {
+    const isBookable = space => {
+        return space?.space_external_book_url?.startsWith('http');
+    };
+
+    function showSpace(space, facilityTypeToGroup, selectedFacilityTypes, selectedCurrentCampus) {
+        console.log(
+            'showSpace',
+            space.space_name,
+            '; campus=',
+            space.space_campus_id,
+            ';selectedCurrentCampus=',
+            selectedCurrentCampus,
+        );
         if (space?.space_draftmode) {
+            return false;
+        }
+
+        if (space.space_campus_id !== selectedCurrentCampus) {
             return false;
         }
 
@@ -354,22 +400,49 @@ export const BookableSpacesList = ({
                 const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
                 // OR within group
+                console.log('====');
+                console.log('selectedFiltersInGroup', selectedFiltersInGroup);
                 const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
                     const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                    if (filter?.facility_special_action) {
-                        if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
-                            return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
-                        } else if (filter?.facility_special_action === FILTER_SPACE_CAPACITY) {
-                            return (
-                                !!space?.space_capacity &&
-                                space?.space_capacity >= capacityFilterValue[0] &&
-                                space?.space_capacity <= capacityFilterValue[1]
-                            );
-                        }
+                    console.log(space.space_id, filterId, 'facility_special_action=', filter?.facility_special_action);
+                    if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
+                        console.log('filter: FILTER_CURRENTLY_OPEN_ACTION_NAME');
+                        return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
+                    } else if (
+                        filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME &&
+                        selectedFiltersInGroup.includes(FILTER_BOOKABLE_TYPE_ID)
+                    ) {
+                        const capacityResult =
+                            isBookable(space) &&
+                            !!space?.space_capacity &&
+                            space?.space_capacity >= capacityFilterValue[0] &&
+                            space?.space_capacity <= capacityFilterValue[1];
+                        console.log(
+                            'filter: FILTER_SPACE_CAPACITY_ACTION_NAME',
+                            space?.space_capacity,
+                            space?.space_external_book_url,
+                            capacityFilterValue[0],
+                            capacityFilterValue[1],
+                            '=',
+                            capacityResult,
+                        );
+                        return capacityResult;
+                    } else if (
+                        filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME &&
+                        !selectedFiltersInGroup.includes(FILTER_CAPACITY_TYPE_ID)
+                    ) {
+                        // we only check the bookable action on its own if we aren't checking the capacity action
+                        console.log('filter: FILTER_BOOKABLE_ACTION_NAME');
+                        return isBookable(space);
                     } else {
-                        return spaceFacilityTypes?.includes(filterId);
+                        // we could specifically exclude FILTER_BOOKABLE_ACTION_NAME here, but we dont need to because it doesnt have a matching filter
+                        // regular checkbox from admin-managed facility-types
+                        const result = spaceFacilityTypes?.includes(filterId);
+                        console.log('filter: default - check', filterId, 'is in', spaceFacilityTypes, '=', result);
+                        return result;
                     }
                 });
+                console.log('hasMatchInGroup=', hasMatchInGroup);
                 if (!hasMatchInGroup) {
                     return false;
                 }
@@ -386,9 +459,12 @@ export const BookableSpacesList = ({
     const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
         // get a list of the filters used in spaces
         const spaceFilters = bookableSpacesRoomList?.data?.locations
-            ?.flatMap(location => location?.facility_types || [])
+            ?.filter(space => space.space_campus_id === selectedCampus)
+            ?.flatMap(space => space?.facility_types || [])
             ?.map(facilityType => facilityType?.facility_type_id);
+        console.log('getFilteredFacilityTypeList selectedCampus=', selectedCampus, 'spaceFilters=', spaceFilters);
         const spaceFiltersSet = new Set(spaceFilters);
+        console.log('getFilteredFacilityTypeList spaceFiltersSet=', spaceFiltersSet);
 
         // filter facility types so we only show the checkboxes where there is an associated space
         // (this will remove the group completely if it has no shown checkboxes)
@@ -406,6 +482,7 @@ export const BookableSpacesList = ({
                     ?.filter(group => group?.facility_type_children?.length > 0),
             },
         };
+        console.log('filteredFacilityTypeList=', filteredFacilityTypeList);
 
         // manually add a "Currently Open" filter
         const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
@@ -417,30 +494,34 @@ export const BookableSpacesList = ({
             filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
             facility_type_children: [
                 {
-                    facility_type_id: 9999, // must be unique!
+                    facility_type_id: 9001, // must be unique!
                     facility_type_name: 'Currently open',
-                    filterRejectAvailable: false, // do not show a "filter-reject" orange checkbox
-                    facility_special_action: FILTER_CURRENTLY_OPEN,
+                    facility_special_action: FILTER_CURRENTLY_OPEN_ACTION_NAME,
                     facility_type: FACILITY_TYPE_CHECKBOX,
                 },
             ],
         };
         !!filterOpenFacilityType && filteredFacilityTypeList?.data?.facility_type_groups?.push(filterOpenFacilityType);
 
-        // manually add a "Choose number of people" filter
+        // manually add a "Bookable/Choose number of people" filter
         const filterCapacityFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
             facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
             facility_type_group_name: FACILITY_TYPE_NAME_CAPACITY,
-            facility_type_group_order: -998, // force to second inlist
+            facility_type_group_order: -998, // force to second in list
             facility_type_group_loads_open: 1,
             facility_type_group_type: 'choose-many',
-            filterType: FACILITY_TYPE_SLIDER, // what sort of filter is this? checkbox and slider available
+            filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
             facility_type_children: [
                 {
-                    facility_type_id: 9998, // must be unique!
+                    facility_type_id: FILTER_BOOKABLE_TYPE_ID, // must be unique!
+                    facility_type_name: 'Bookable',
+                    facility_special_action: FILTER_BOOKABLE_ACTION_NAME,
+                    facility_type: FACILITY_TYPE_CHECKBOX,
+                },
+                {
+                    facility_type_id: FILTER_CAPACITY_TYPE_ID, // must be unique!
                     facility_type_name: 'Space capacity',
-                    filterRejectAvailable: false, // do not show a "filter-reject" orange checkbox
-                    facility_special_action: FILTER_SPACE_CAPACITY,
+                    facility_special_action: FILTER_SPACE_CAPACITY_ACTION_NAME,
                     facility_type: FACILITY_TYPE_SLIDER,
                 },
             ],
@@ -448,6 +529,10 @@ export const BookableSpacesList = ({
         !!filterOpenFacilityType &&
             filteredFacilityTypeList?.data?.facility_type_groups?.push(filterCapacityFacilityType);
 
+        console.log(
+            'getFilteredFacilityTypeList::filteredFacilityTypeList=',
+            filteredFacilityTypeList?.data?.facility_type_groups,
+        );
         return filteredFacilityTypeList;
     };
     const toggleFilterPopupVisibility = e => {
@@ -516,7 +601,7 @@ export const BookableSpacesList = ({
             },
         );
         const filtered = bookableSpacesRoomList?.data?.locations?.filter(space =>
-            showSpace(space, ftg, selectedFacilityTypes),
+            showSpace(space, ftg, selectedFacilityTypes, selectedCampus),
         );
         if (!filtered) return filtered;
         return [...filtered].sort((a, b) => {
@@ -530,7 +615,14 @@ export const BookableSpacesList = ({
         // capacityFilterValue is read inside showSpace via closure; include it so the list
         // recomputes when the slider changes even though it is not a direct parameter.
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [bookableSpacesRoomList, facilityTypeList, selectedFacilityTypes, capacityFilterValue, spacesFavouritesList]);
+    }, [
+        bookableSpacesRoomList,
+        facilityTypeList,
+        selectedFacilityTypes,
+        capacityFilterValue,
+        spacesFavouritesList,
+        selectedCampus,
+    ]);
     const visibleSpacesCountBadge = () => {
         return sortedSpaceLocations?.length > 0 &&
             sortedSpaceLocations?.length < bookableSpacesRoomList?.data?.locations?.length ? (
@@ -664,6 +756,11 @@ export const BookableSpacesList = ({
                                     maximumSpaceCapacity={maximumSpaceCapacity}
                                     capacityFilterValue={capacityFilterValue}
                                     setCapacityFilterValue={setCapacityFilterValue}
+                                    campusList={campusList}
+                                    campusListLoading={campusListLoading}
+                                    campusListError={campusListError}
+                                    selectedCampus={selectedCampus}
+                                    handleCampusSelection={handleCampusSelection}
                                 />
                             </div>
                             {isDesktopView && (
@@ -741,6 +838,9 @@ BookableSpacesList.propTypes = {
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
+    campusList: PropTypes.any,
+    campusListLoading: PropTypes.any,
+    campusListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesList);
