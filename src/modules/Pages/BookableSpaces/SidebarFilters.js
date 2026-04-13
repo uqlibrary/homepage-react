@@ -781,6 +781,7 @@ export const SidebarFilters = ({
                                         value={campus?.campus_id}
                                         key={`filter-by-campus-menuitem-${index}`}
                                         selected={campus?.campus_id === 99999}
+                                        data-testid={`campus-${campus?.campus_id}`}
                                     >
                                         {campus.campus_name}
                                     </MenuItem>

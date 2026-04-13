@@ -1370,6 +1370,145 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
         });
     });
+    test.describe('Can change campuses', () => {
+        test.beforeEach(async ({ page }) => {
+            // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
+            // which would otherwise cause BookableSpacesList to re-render and destabilise the toggle
+            // buttons enough for Playwright's actionability check to time out in CI.
+            await page.route('**/vendor/mazemap/**', route => route.abort());
+            await page.goto('');
+            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
+            await page.goto('spaces');
+            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+
+            // all space panels load visible (using filters changes which appear)
+            await expect(page.getByTestId('space-space-count')).not.toBeVisible();
+            await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+            );
+
+            // change campus
+            await page.getByTestId('filter-by-campus').click(); // open drop down
+            await page.getByTestId('campus-3').click(); // choose dutton park
+            await expect(page.getByTestId('space-1234544')).toBeVisible();
+            await expect(page.getByTestId(`${PACE}-friendly-location-collapsed`)).toContainText(
+                'Dutton Park Health Sciences',
+            );
+        });
+
+        test('friendly location displays correctly on load', async ({ page }) => {
+            // non PACE spaces are not visible
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-friendly-location-collapsed`)).not.toBeVisible();
+
+            await expect(page.getByTestId(`${PACE}-friendly-location-collapsed`)).toBeVisible();
+            // await expect(
+            //     page.getByTestId(`${PACE}-friendly-location-collapsed`).locator('.location-library'),
+            // ).toContainText('Dutton Park Health Sciences');
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-building')).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).not.toBeVisible();
+        });
+
+        test('bookable links appear correct on load', async ({ page }) => {
+            // public bookable Architecture and Music example
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable`)).not.toBeVisible();
+
+            await expect(page.getByTestId(`${PACE}-not-bookable`)).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-booking-link`)).toBeVisible();
+            await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toBeVisible();
+            await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toHaveAttribute(
+                'href',
+                `https://uqbookit.uq.edu.au/#/app/booking-types/222`,
+            );
+        });
+
+        test('capacity loads correctly', async ({ page }) => {
+            // non PACE spaces are not visible
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-capacity`)).not.toBeVisible();
+
+            await expect(page.getByTestId(`${PACE}-capacity`)).toContainText('Space for 5 people.');
+        });
+
+        test('description loads correctly', async ({ page }) => {
+            // non PACE spaces are not visible
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).not.toBeVisible();
+
+            await expect(page.getByTestId(`${PACE}-description`)).toHaveCount(1);
+        });
+
+        test('opening hours appear correct on load', async ({ page }) => {
+            // non PACE spaces are not visible
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).not.toBeVisible();
+
+            await expect(page.getByTestId(`${PACE}-summary-hours`)).toBeVisible();
+            await expect(page.getByTestId(`${PACE}-summary-hours`)).toContainText(
+                'Opening hours Today: 10:15pm - 10:30pm',
+            );
+            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
+        });
+
+        test('facilities are hidden on opening', async ({ page }) => {
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).not.toBeVisible();
+
+            await expect(page.getByTestId(`${PACE}-facility`)).toBeDefined();
+            await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
+        });
+
+        test('friendly location appears correctly when panel expands', async ({ page }) => {
+            // non PACE spaces are not visible
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-friendly-location`)).not.toBeVisible();
+
+            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            await expect(page.getByTestId(`${PACE}-friendly-location`).first()).toBeVisible();
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).toContainText(
+                'Level 6',
+            );
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).toContainText(
+                'Dutton Park Health Sciences',
+            );
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-building')).toContainText(
+                'Pharmacy Australia Centre of Excellence (870)',
+            );
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).toContainText(
+                'Dutton Park',
+            );
+        });
+
+        test('opening hours appear correct when panel expands', async ({ page }) => {
+            // second panel
+            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
+            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
+        });
+
+        test('facilities appear correctly when panel expands', async ({ page }) => {
+            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            await expect(page.getByTestId(`${PACE}-facility`)).toBeVisible();
+            await expect(page.getByTestId(`${PACE}-facility`).locator(' > *')).toHaveCount(15);
+            await expect(page.getByTestId(`${PACE}-facility-23`)).toContainText('Toilets, female');
+            await expect(page.getByTestId(`${PACE}-facility-22`)).toContainText('Toilets, male');
+            await expect(page.getByTestId(`${PACE}-facility-29`)).toContainText('Recharge Station');
+            await expect(page.getByTestId(`${PACE}-facility-31`)).toContainText('Self-printing & scanning');
+            await expect(page.getByTestId(`${PACE}-facility-5`)).toContainText('Computer');
+            await expect(page.getByTestId(`${PACE}-facility-32`)).toContainText('BYOD station');
+            await expect(page.getByTestId(`${PACE}-facility-33`)).toContainText('Client accessible power point');
+            await expect(page.getByTestId(`${PACE}-facility-34`)).toContainText('on-desk USB-A');
+            await expect(page.getByTestId(`${PACE}-facility-35`)).toContainText('Qi chargers');
+            await expect(page.getByTestId(`${PACE}-facility-36`)).toContainText('On-desk USB-C, Low Power');
+            await expect(page.getByTestId(`${PACE}-facility-42`)).toContainText('General Collections');
+            await expect(page.getByTestId(`${PACE}-facility-44`)).toContainText('Requested items');
+            await expect(page.getByTestId(`${PACE}-facility-45`)).toContainText('Lending');
+            await expect(page.getByTestId(`${PACE}-facility-46`)).toContainText('Return station');
+            await expect(page.getByTestId(`${PACE}-facility-10`)).toContainText('High noise level');
+
+            // close second panel
+            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
+        });
+    });
 });
 test.describe('Spaces errors', () => {
     test('spaces list load error', async ({ page }) => {
