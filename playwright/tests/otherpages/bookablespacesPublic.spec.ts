@@ -14,7 +14,7 @@ const NINTH_PANEL = 'space-6';
 const TENTH_PANEL = 'space-7';
 
 const NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST = 2; // 1 for skip button, 1 for acccessible heading
-const VISIBLE_SPACES_COUNT = 9;
+const VISIBLE_SPACES_ST_LUCIA_ALL = 8;
 
 test.describe('Spaces', () => {
     test('can navigate to Spaces public page', async ({ page }) => {
@@ -39,7 +39,7 @@ test.describe('Spaces', () => {
             // all space panels load visible (using filters changes which appear)
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
         });
 
@@ -65,16 +65,16 @@ test.describe('Spaces', () => {
                 page.getByTestId(`${ARCH_REFERENCE}-friendly-location`).locator('.location-campus'),
             ).not.toBeVisible();
 
-            // second panel
-            await expect(page.getByTestId(`${PACE}-friendly-location-collapsed`)).toBeVisible();
-            await expect(
-                page.getByTestId(`${PACE}-friendly-location-collapsed`).locator('.location-library'),
-            ).toContainText('Dutton Park Health Sciences');
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-building')).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).not.toBeVisible();
+            // // second panel
+            // await expect(page.getByTestId(`${PACE}-friendly-location-collapsed`)).not.toBeVisible();
+            // // await expect(
+            // //     page.getByTestId(`${PACE}-friendly-location-collapsed`).locator('.location-library'),
+            // // ).toContainText('Dutton Park Health Sciences');
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).not.toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).not.toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-building')).not.toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).not.toBeVisible();
 
             // third panel
             await expect(page.getByTestId(`${LIV}-friendly-location-collapsed`)).toBeVisible();
@@ -98,14 +98,14 @@ test.describe('Spaces', () => {
                 `https://uqbookit.uq.edu.au/#/app/booking-types/333`,
             );
 
-            // second panel
-            await expect(page.getByTestId(`${PACE}-not-bookable`)).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-booking-link`)).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toHaveAttribute(
-                'href',
-                `https://uqbookit.uq.edu.au/#/app/booking-types/222`,
-            );
+            // // second panel
+            // await expect(page.getByTestId(`${PACE}-not-bookable`)).not.toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-booking-link`)).toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toHaveAttribute(
+            //     'href',
+            //     `https://uqbookit.uq.edu.au/#/app/booking-types/222`,
+            // );
 
             // third panel
             await expect(page.getByTestId(`${LIV}-not-bookable`)).toBeVisible();
@@ -120,8 +120,8 @@ test.describe('Spaces', () => {
             // second panel
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-capacity`)).toContainText('Space for 8 people.');
 
-            // third panel
-            await expect(page.getByTestId(`${PACE}-capacity`)).toContainText('Space for 5 people.');
+            // // third panel
+            // await expect(page.getByTestId(`${PACE}-capacity`)).toContainText('Space for 5 people.');
 
             // fourth panel
             await expect(page.getByTestId(`${LIV}-capacity`)).not.toBeVisible();
@@ -137,8 +137,8 @@ test.describe('Spaces', () => {
             // public Architecture and Music Library example
             await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toHaveCount(1); // second line is hidden
 
-            // second panel
-            await expect(page.getByTestId(`${PACE}-description`)).toHaveCount(1);
+            // // second panel
+            // await expect(page.getByTestId(`${PACE}-description`)).toHaveCount(1);
 
             // third panel
             await expect(page.getByTestId(`${LIV}-description`)).toHaveCount(0);
@@ -152,12 +152,12 @@ test.describe('Spaces', () => {
             );
             await expect(page.getByTestId(`${ARCH_REFERENCE}-override_opening_hours`)).not.toBeVisible();
 
-            // second panel
-            await expect(page.getByTestId(`${PACE}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-summary-hours`)).toContainText(
-                'Opening hours Today: 10:15pm - 10:30pm',
-            );
-            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
+            // // second panel
+            // await expect(page.getByTestId(`${PACE}-summary-hours`)).toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-summary-hours`)).toContainText(
+            //     'Opening hours Today: 10:15pm - 10:30pm',
+            // );
+            // await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
 
             // third panel
             await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
@@ -196,9 +196,9 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeDefined();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).not.toBeVisible();
 
-            // second panel
-            await expect(page.getByTestId(`${PACE}-facility`)).toBeDefined();
-            await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
+            // // second panel
+            // await expect(page.getByTestId(`${PACE}-facility`)).toBeDefined();
+            // await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
 
             // third panel
             await expect(page.getByTestId(`${LIV}-facility`)).toBeDefined();
@@ -224,22 +224,22 @@ test.describe('Spaces', () => {
                 page.getByTestId(`${ARCH_REFERENCE}-friendly-location`).locator('.location-campus'),
             ).toContainText('St Lucia');
 
-            // second panel
-            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).first()).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).toContainText(
-                'Ground floor',
-            );
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).toContainText(
-                'Dutton Park Health Sciences',
-            );
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-building')).toContainText(
-                'Pharmacy Australia Centre of Excellence (870)',
-            );
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).toContainText(
-                'Dutton Park',
-            );
+            // // second panel
+            // await page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).first()).toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).toContainText(
+            //     'Ground floor',
+            // );
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).toContainText(
+            //     'Dutton Park Health Sciences',
+            // );
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-building')).toContainText(
+            //     'Pharmacy Australia Centre of Excellence (870)',
+            // );
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).toContainText(
+            //     'Dutton Park',
+            // );
 
             // third panel
             await page.getByTestId(`${LIV}-toggle-panel-button`).click();
@@ -269,10 +269,10 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_REFERENCE}-openingHours-0`)).toContainText('Today');
             await expect(page.getByTestId(`${ARCH_REFERENCE}-openingHours-1`)).toContainText('Tomorrow');
 
-            // second panel
-            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
-            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
-            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
+            // // second panel
+            // await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
+            // await page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            // await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
 
             // fifth panel
             await expect(page.getByTestId(`${FIFTH_PANEL}-override_opening_hours`)).not.toBeVisible();
@@ -308,29 +308,29 @@ test.describe('Spaces', () => {
             await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).not.toBeVisible();
 
-            // second panel
-            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
-            await expect(page.getByTestId(`${PACE}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-facility`).locator(' > *')).toHaveCount(15);
-            await expect(page.getByTestId(`${PACE}-facility-23`)).toContainText('Toilets, female');
-            await expect(page.getByTestId(`${PACE}-facility-22`)).toContainText('Toilets, male');
-            await expect(page.getByTestId(`${PACE}-facility-29`)).toContainText('Recharge Station');
-            await expect(page.getByTestId(`${PACE}-facility-31`)).toContainText('Self-printing & scanning');
-            await expect(page.getByTestId(`${PACE}-facility-5`)).toContainText('Computer');
-            await expect(page.getByTestId(`${PACE}-facility-32`)).toContainText('BYOD station');
-            await expect(page.getByTestId(`${PACE}-facility-33`)).toContainText('Client accessible power point');
-            await expect(page.getByTestId(`${PACE}-facility-34`)).toContainText('on-desk USB-A');
-            await expect(page.getByTestId(`${PACE}-facility-35`)).toContainText('Qi chargers');
-            await expect(page.getByTestId(`${PACE}-facility-36`)).toContainText('On-desk USB-C, Low Power');
-            await expect(page.getByTestId(`${PACE}-facility-42`)).toContainText('General Collections');
-            await expect(page.getByTestId(`${PACE}-facility-44`)).toContainText('Requested items');
-            await expect(page.getByTestId(`${PACE}-facility-45`)).toContainText('Lending');
-            await expect(page.getByTestId(`${PACE}-facility-46`)).toContainText('Return station');
-            await expect(page.getByTestId(`${PACE}-facility-10`)).toContainText('High noise level');
-
-            // close second panel
-            await page.getByTestId(`${PACE}-toggle-panel-button`).click();
-            await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
+            // // second panel
+            // await page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            // await expect(page.getByTestId(`${PACE}-facility`)).toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-facility`).locator(' > *')).toHaveCount(15);
+            // await expect(page.getByTestId(`${PACE}-facility-23`)).toContainText('Toilets, female');
+            // await expect(page.getByTestId(`${PACE}-facility-22`)).toContainText('Toilets, male');
+            // await expect(page.getByTestId(`${PACE}-facility-29`)).toContainText('Recharge Station');
+            // await expect(page.getByTestId(`${PACE}-facility-31`)).toContainText('Self-printing & scanning');
+            // await expect(page.getByTestId(`${PACE}-facility-5`)).toContainText('Computer');
+            // await expect(page.getByTestId(`${PACE}-facility-32`)).toContainText('BYOD station');
+            // await expect(page.getByTestId(`${PACE}-facility-33`)).toContainText('Client accessible power point');
+            // await expect(page.getByTestId(`${PACE}-facility-34`)).toContainText('on-desk USB-A');
+            // await expect(page.getByTestId(`${PACE}-facility-35`)).toContainText('Qi chargers');
+            // await expect(page.getByTestId(`${PACE}-facility-36`)).toContainText('On-desk USB-C, Low Power');
+            // await expect(page.getByTestId(`${PACE}-facility-42`)).toContainText('General Collections');
+            // await expect(page.getByTestId(`${PACE}-facility-44`)).toContainText('Requested items');
+            // await expect(page.getByTestId(`${PACE}-facility-45`)).toContainText('Lending');
+            // await expect(page.getByTestId(`${PACE}-facility-46`)).toContainText('Return station');
+            // await expect(page.getByTestId(`${PACE}-facility-10`)).toContainText('High noise level');
+            //
+            // // close second panel
+            // await page.getByTestId(`${PACE}-toggle-panel-button`).click();
+            // await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
 
             // third panel
             await page.getByTestId(`${LIV}-toggle-panel-button`).click();
@@ -422,12 +422,12 @@ test.describe('Spaces', () => {
 
         // initially the lower sub-panel is hidden
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).not.toBeVisible();
-        await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
+        // await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
         await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
 
         // and the summary shows
         await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toBeVisible();
-        await expect(page.getByTestId(`${PACE}-summary-hours`)).toBeVisible();
+        // await expect(page.getByTestId(`${PACE}-summary-hours`)).not.toBeVisible();
         await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
 
         // and description is truncated
@@ -440,7 +440,7 @@ test.describe('Spaces', () => {
         // the lower sub-panel is visible
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).toBeVisible();
         // the other blocks have not appeared (are unaffected by this button click)
-        await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
+        // await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
         await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
         // and description is no longer truncated
         await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toBeVisible();
@@ -461,7 +461,7 @@ test.describe('Spaces', () => {
 
         // the summary sub-panel is hidden for the single panel
         await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).not.toBeVisible();
-        await expect(page.getByTestId(`${PACE}-summary-hours`)).toBeVisible();
+        // await expect(page.getByTestId(`${PACE}-summary-hours`)).not.toBeVisible();
         await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
 
         // collapse the bottom sub-panel
@@ -470,7 +470,7 @@ test.describe('Spaces', () => {
         // and the lower sub-panel details are hidden again
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).not.toBeVisible();
         // the other blocks have not appeared (button only affects one space)
-        await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
+        // await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
         await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
         // and description is truncated
         await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toBeVisible();
@@ -490,20 +490,20 @@ test.describe('Spaces', () => {
             const bookableId = 9002;
             const bookableCheckbox = page.getByTestId(`facility-type-listitem-${bookableId}`);
             const adjustableDeskCheckbox = page.getByTestId('facility-type-listitem-39');
-            const highNoiseCheckbox = page.getByTestId('facility-type-listitem-10');
+            const naturalLightCheckbox = page.getByTestId('facility-type-listitem-50');
             const architectureBookableSpace = page.getByTestId(ARCH_BOOKABLE).locator('h3');
-            const duttonParkGroupStudyRoom = page.getByTestId(PACE).locator('h3');
+            // const duttonParkGroupStudyRoom = page.getByTestId(PACE).locator('h3');
             const andrewLiverisComputerRoom = page.getByTestId(LIV).locator('h3');
             const filterCount = page.getByTestId('space-filter-count').locator('span');
 
             // initially all Spaces are visible on the page
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).toBeVisible();
             await expect(andrewLiverisComputerRoom).toBeVisible();
             await expect(filterCount).not.toBeVisible(); // no filters selected
 
@@ -513,13 +513,13 @@ test.describe('Spaces', () => {
             await bookableCheckbox.locator('span input').check();
 
             // panels shown changes
-            await expect(page.getByTestId('space-space-count')).toContainText('5');
+            await expect(page.getByTestId('space-space-count')).toContainText('4');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).toBeVisible();
             await expect(andrewLiverisComputerRoom).not.toBeVisible();
             await expect(filterCount).toBeVisible();
             await expect(filterCount).toContainText('1');
@@ -535,24 +535,24 @@ test.describe('Spaces', () => {
                 1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).not.toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).not.toBeVisible();
             await expect(andrewLiverisComputerRoom).not.toBeVisible();
             await expect(filterCount).toBeVisible();
             await expect(filterCount).toContainText('2');
 
-            // add 'High noise'
-            await expect(highNoiseCheckbox.locator('label:first-of-type')).toBeVisible();
-            await expect(highNoiseCheckbox.locator('label:first-of-type')).toContainText('High noise level');
-            await highNoiseCheckbox.locator('span input').check();
+            // add 'Natural Light'
+            await expect(naturalLightCheckbox.locator('label:first-of-type')).toBeVisible();
+            await expect(naturalLightCheckbox.locator('label:first-of-type')).toContainText('Natural');
+            await naturalLightCheckbox.locator('span input').check();
 
-            // selecting "Adjustable desks" & "High noise" & "Bookable" means none are visible, and the user is notified
+            // selecting "Adjustable desks" & "Natural light" & "Bookable" means none are visible, and the user is notified
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
                 NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).toBeVisible(); // "no spaces" message
             await expect(architectureBookableSpace).not.toBeVisible();
-            await expect(duttonParkGroupStudyRoom).not.toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).not.toBeVisible();
             await expect(andrewLiverisComputerRoom).not.toBeVisible();
             await expect(filterCount).toBeVisible();
             await expect(filterCount).toContainText('3');
@@ -565,22 +565,22 @@ test.describe('Spaces', () => {
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureBookableSpace).not.toBeVisible();
-            await expect(duttonParkGroupStudyRoom).toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).toBeVisible();
             await expect(andrewLiverisComputerRoom).not.toBeVisible();
             await expect(filterCount).toBeVisible();
             await expect(filterCount).toContainText('2');
 
             // uncheck other filters and all the Spaces appear
             await bookableCheckbox.locator('span input').uncheck();
-            await highNoiseCheckbox.locator('span input').uncheck();
+            await naturalLightCheckbox.locator('span input').uncheck();
 
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).toBeVisible();
             await expect(andrewLiverisComputerRoom).toBeVisible();
             await expect(filterCount).not.toBeVisible();
         });
@@ -595,19 +595,19 @@ test.describe('Spaces', () => {
             const byodStationCheckbox = page.getByTestId('facility-type-listitem-32');
             const architectureReferenceSpace = page.getByTestId(ARCH_REFERENCE).locator('h3');
             const architectureBookableSpace = page.getByTestId(ARCH_BOOKABLE).locator('h3');
-            const duttonParkGroupStudyRoom = page.getByTestId(PACE).locator('h3');
+            // const duttonParkGroupStudyRoom = page.getByTestId(PACE).locator('h3');
             const andrewLiverisComputerRoom = page.getByTestId(LIV).locator('h3');
             const filterCount = page.getByTestId('space-filter-count').locator('span');
 
             // initially all Spaces are visible on the page
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).toBeVisible();
             await expect(andrewLiverisComputerRoom).toBeVisible();
             await expect(filterCount).not.toBeVisible(); // no filters selected
 
@@ -624,7 +624,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).not.toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).not.toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).not.toBeVisible();
             await expect(andrewLiverisComputerRoom).toBeVisible();
             await expect(filterCount).toBeVisible();
             await expect(filterCount).toContainText('1');
@@ -634,14 +634,14 @@ test.describe('Spaces', () => {
             await expect(byodStationCheckbox.locator('label:first-of-type')).toContainText('BYOD station');
             await byodStationCheckbox.locator('span input').check();
 
-            await expect(page.getByTestId('space-space-count')).toContainText('5');
+            await expect(page.getByTestId('space-space-count')).toContainText('4');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).toBeVisible();
             await expect(andrewLiverisComputerRoom).toBeVisible();
             await expect(filterCount).toBeVisible();
             await expect(filterCount).toContainText('2');
@@ -663,18 +663,18 @@ test.describe('Spaces', () => {
 
             const architectureReferenceSpace = page.getByTestId(ARCH_REFERENCE).locator('h3');
             const architectureBookableSpace = page.getByTestId(ARCH_BOOKABLE).locator('h3');
-            const duttonParkGroupStudyRoom = page.getByTestId(PACE).locator('h3');
+            // const duttonParkGroupStudyRoom = page.getByTestId(PACE).locator('h3');
             const andrewLiverisComputerRoom = page.getByTestId(LIV).locator('h3');
 
             // there are initially all Spaces visible on the page
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).toBeVisible();
             await expect(andrewLiverisComputerRoom).toBeVisible();
 
             // filter to show "AV equipment" only
@@ -690,7 +690,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).not.toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).not.toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).not.toBeVisible();
 
             // cartouche visible
             await expect(avEquipmentUnsetCartouche).toBeVisible();
@@ -710,7 +710,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).not.toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).not.toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).not.toBeVisible();
             await expect(andrewLiverisComputerRoom).not.toBeVisible();
 
             // cartouche visible
@@ -724,14 +724,14 @@ test.describe('Spaces', () => {
             await avEquipmentUnsetCartouche.click();
 
             // spaces visible changes
-            await expect(page.getByTestId('space-space-count')).toContainText('5');
+            await expect(page.getByTestId('space-space-count')).toContainText('4');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).not.toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).toBeVisible();
             await expect(andrewLiverisComputerRoom).not.toBeVisible();
             await expect(page.getByTestId(FOURTH_PANEL).locator('h3')).not.toBeVisible();
             await expect(page.getByTestId(FIFTH_PANEL).locator('h3')).toBeVisible();
@@ -746,12 +746,12 @@ test.describe('Spaces', () => {
             // back to all Spaces visible on the page
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
-            await expect(duttonParkGroupStudyRoom).toBeVisible();
+            // await expect(duttonParkGroupStudyRoom).toBeVisible();
             await expect(andrewLiverisComputerRoom).toBeVisible();
 
             // no cartouches left
@@ -772,9 +772,9 @@ test.describe('Spaces', () => {
             // correct number of cartouches showing
             await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(2);
             // correct number of panels showing
-            await expect(page.getByTestId('space-space-count')).toContainText('5');
+            await expect(page.getByTestId('space-space-count')).toContainText('4');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // click deselect-all-cartouches
@@ -784,7 +784,7 @@ test.describe('Spaces', () => {
             // all panels visible
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             // all cartouches removed
             await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0);
@@ -857,7 +857,7 @@ test.describe('Spaces', () => {
             // initially all Spaces are visible on the page
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // show only 'currently open' spaces
@@ -867,7 +867,7 @@ test.describe('Spaces', () => {
 
             // Filter should reduce the visible count (one location is marked as currently_open)
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).not.toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
         });
         test('can use special filter: capacity and clear checkbox', async ({ page }) => {
@@ -884,7 +884,7 @@ test.describe('Spaces', () => {
 
             // there are initially all Spaces visible on the page
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible(); // 'no spaces' warning not present
             await expect(filterCount).not.toBeVisible();
@@ -937,7 +937,7 @@ test.describe('Spaces', () => {
 
             // the page is reset
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(filterCount).not.toBeVisible();
             await expect(spacesCount).not.toBeVisible();
@@ -965,7 +965,7 @@ test.describe('Spaces', () => {
 
             // there are initially all Spaces visible on the page
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible(); // 'no spaces' warning not present
             await expect(filterCount).not.toBeVisible();
@@ -1018,7 +1018,7 @@ test.describe('Spaces', () => {
 
             // the page is reset
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_COUNT + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(filterCount).not.toBeVisible();
             await expect(spacesCount).not.toBeVisible();

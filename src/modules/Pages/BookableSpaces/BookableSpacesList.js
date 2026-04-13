@@ -208,9 +208,10 @@ export const BookableSpacesList = ({
     const [selectedCampus, setSelectedCampus2] = React.useState(1);
     const setSelectedCampus = x => {
         console.log('BookableSpacesList campus::setSelectedCampus', x);
+        console.log('BookableSpacesList setSelectedCampus bookableSpacesRoomList=', bookableSpacesRoomList);
         setSelectedCampus2(x);
 
-        const firstSpaceInCampus = bookableSpacesRoomList.find(s => s.space_campus_id === x);
+        const firstSpaceInCampus = bookableSpacesRoomList?.data?.locations?.find(s => s.space_campus_id === x);
         !!firstSpaceInCampus && mapRef.current?.flyToSpace(firstSpaceInCampus);
     };
 

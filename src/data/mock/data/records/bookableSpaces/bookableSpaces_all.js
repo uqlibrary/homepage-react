@@ -147,8 +147,8 @@ export default {
             created_at: "2025-08-01 10:00:00",
             updated_at: "2025-08-01 11:00:00",
             "space_capacity": 5,
-            space_latitude: "-27.49979",
-            space_longitude: "153.03066",
+            space_latitude: "-27.50008",
+            space_longitude: "153.03024",
             "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/222',
             facility_types: [
                 {
@@ -214,8 +214,8 @@ export default {
             ],
             space_type: 'Training room',
             space_floor_id: 65,
-            space_floor_name: "1",
-            space_is_ground_floor: 1,
+            space_floor_name: "6",
+            space_is_ground_floor: 0,
             space_library_id: 10,
             space_library_name: 'Dutton Park Health Sciences',
             space_building_name: "Pharmacy Australia Centre of Excellence",

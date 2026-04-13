@@ -762,7 +762,9 @@ export const SidebarFilters = ({
                 )}
                 {!campusListLoading && !campusListError && campusList?.length > 0 && (
                     <StyledCampusWrapperDiv>
-                        <h3>Choose campus</h3>
+                        <h3 id="filter-by-campus-label" htmlFor="filter-by-campus-input">
+                            Choose campus
+                        </h3>
                         <Select
                             className="campusSelector"
                             id="filter-by-campus"

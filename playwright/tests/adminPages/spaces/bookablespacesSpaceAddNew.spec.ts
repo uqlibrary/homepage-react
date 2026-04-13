@@ -28,8 +28,8 @@ const STEP_IMAGERY = 'tab-imagery';
 
 // const ST_LUCIA_DEFAULT_LATITUDE = '-27.49751';
 // const ST_LUCIA_DEFAULT_LONGITUDE = '153.01329';
-const PACE_DEFAULT_LATITUDE = '-27.49979';
-const PACE_DEFAULT_LONGITUDE = '153.03066';
+const PACE_DEFAULT_LATITUDE = '-27.50008';
+const PACE_DEFAULT_LONGITUDE = '153.03024';
 
 test.describe('Spaces Admin - add new space', () => {
     test('can navigate from dashboard to add new', async ({ page }) => {
