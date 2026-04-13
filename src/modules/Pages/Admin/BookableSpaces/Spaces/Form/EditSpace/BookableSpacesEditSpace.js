@@ -14,6 +14,7 @@ import { EditSpaceForm } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/Ed
 import {
     addBreadcrumbsToSiteHeader,
     initialisedSpringshareList,
+    safeCampusIndex,
     spacesAdminLink,
     validCampusList,
     weeklyHoursLoaded,
@@ -93,7 +94,7 @@ export const BookableSpacesEditSpace = ({
         }
     }, [actions, spaceUuid]);
 
-    const [currentCampusList, setCurrentCampusList] = useState({});
+    const [currentCampusList, setCurrentCampusList] = useState([]);
     useEffect(() => {
         if (campusListLoading === false && campusListError === false && campusList?.length > 0) {
             const _currentCampusList = validCampusList(campusList);
@@ -263,7 +264,7 @@ export const BookableSpacesEditSpace = ({
                 bookableSpaceGetError={bookableSpaceGetError}
                 springshareList={springshareList}
                 currentCampusList={currentCampusList}
-                initialCampus={currentCampusList?.findIndex(c => c?.campus_id === formValues?.campus_id)}
+                initialCampus={safeCampusIndex(currentCampusList, formValues?.campus_id)}
                 mode="edit"
             />
         );

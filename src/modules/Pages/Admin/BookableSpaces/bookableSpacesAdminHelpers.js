@@ -285,4 +285,10 @@ export const initialisedSpringshareList = (locale, weeklyHours) => [
 ];
 
 export const validCampusList = campusList => campusList?.filter(c => c?.libraries?.length > 0) || [];
+export const safeCampusIndex = (campusList, campusId) => {
+    if (!Array.isArray(campusList)) {
+        return -1;
+    }
+    return campusList.findIndex(c => c?.campus_id === campusId);
+};
 export const validLibraryList = libraryList => libraryList?.filter(l => l?.floors.length > 0) || [];
