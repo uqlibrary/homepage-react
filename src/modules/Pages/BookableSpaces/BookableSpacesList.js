@@ -194,6 +194,11 @@ export const BookableSpacesList = ({
         console.log('setSelectedFacilityTypes', x);
         return setSelectedFacilityTypes2(x);
     };
+    const [selectedCampus, setSelectedCampus2] = React.useState(1);
+    const setSelectedCampus = x => {
+        console.log('BookableSpacesList campus::setSelectedCampus', x);
+        setSelectedCampus2(x);
+    };
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
@@ -319,8 +324,12 @@ export const BookableSpacesList = ({
         return space?.space_external_book_url?.startsWith('http');
     };
 
-    function showSpace(space, facilityTypeToGroup, selectedFacilityTypes) {
+    function showSpace(space, facilityTypeToGroup, selectedFacilityTypes, selectedCurrentCampus) {
         if (space?.space_draftmode) {
+            return false;
+        }
+
+        if (space.space_campus_id !== selectedCurrentCampus) {
             return false;
         }
 
@@ -568,7 +577,7 @@ export const BookableSpacesList = ({
             },
         );
         const filtered = bookableSpacesRoomList?.data?.locations?.filter(space =>
-            showSpace(space, ftg, selectedFacilityTypes),
+            showSpace(space, ftg, selectedFacilityTypes, selectedCampus),
         );
         if (!filtered) return filtered;
         return [...filtered].sort((a, b) => {
@@ -719,6 +728,8 @@ export const BookableSpacesList = ({
                                     campusList={campusList}
                                     campusListLoading={campusListLoading}
                                     campusListError={campusListError}
+                                    selectedCampus={selectedCampus}
+                                    setSelectedCampus={setSelectedCampus}
                                 />
                             </div>
                             {isDesktopView && (

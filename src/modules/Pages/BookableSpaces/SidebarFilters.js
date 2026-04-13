@@ -245,6 +245,8 @@ export const SidebarFilters = ({
     selectedFacilityTypes,
     setSelectedFacilityTypes,
     filteredFacilityTypeList,
+    selectedCampus,
+    setSelectedCampus,
     suppliedClassName,
     minimumSpaceCapacity,
     maximumSpaceCapacity,
@@ -259,11 +261,6 @@ export const SidebarFilters = ({
     const setDefaultCampus = x => {
         console.log('campus::setDefaultCampus', x);
         setDefaultCampus2(x);
-    };
-    const [selectedCampus, setSelectedCampus2] = React.useState(1);
-    const setSelectedCampus = x => {
-        console.log('campus::setSelectedCampus', x);
-        setSelectedCampus2(x);
     };
 
     function sortedUsedGroups() {
@@ -837,7 +834,8 @@ SidebarFilters.propTypes = {
     filteredFacilityTypeList: PropTypes.any,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
-    suppliedClassName: PropTypes.string,
+    selectedCampus: PropTypes.array,
+    setSelectedCampus: PropTypes.func,
     minimumSpaceCapacity: PropTypes.number,
     maximumSpaceCapacity: PropTypes.number,
     capacityFilterValue: PropTypes.array,
