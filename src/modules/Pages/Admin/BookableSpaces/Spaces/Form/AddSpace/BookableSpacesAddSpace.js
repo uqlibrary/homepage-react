@@ -12,6 +12,7 @@ import { EditSpaceForm } from '../EditSpaceForm';
 import {
     addBreadcrumbsToSiteHeader,
     initialisedSpringshareList,
+    safeCampusIndex,
     spacesAdminLink,
     validCampusList,
     weeklyHoursLoaded,
@@ -94,16 +95,11 @@ export const BookableSpacesAddSpace = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const [currentCampusList, setCurrentCampusList2] = useState({});
-    const setCurrentCampusList = x => {
-        console.log(setCurrentCampusList, x);
-        setCurrentCampusList2(x);
-    };
-    const [mostRecentSpace, setMostRecentSpace] = useState(0);
+    const [currentCampusList, setCurrentCampusListState] = useState([]);
     useEffect(() => {
         if (campusListLoading === false && campusListError === false && campusList?.length > 0) {
             const _currentCampusList = validCampusList(campusList);
-            setCurrentCampusList(_currentCampusList);
+            setCurrentCampusListState(_currentCampusList);
         }
     }, [campusList, campusListError, campusListLoading]);
 
@@ -128,7 +124,6 @@ export const BookableSpacesAddSpace = ({
                         return prev;
                     }
                 });
-            setMostRecentSpace(_mostRecentSpace);
             console.log('_mostRecentSpace', _mostRecentSpace);
             const newValues = {
                 ['campus_id']: _mostRecentSpace?.space_campus_id,
@@ -236,8 +231,8 @@ export const BookableSpacesAddSpace = ({
                     springshareList={springshareList}
                     currentCampusList={currentCampusList}
                     initialCampus={
-                        !!currentCampusList && currentCampusList?.length > 0
-                            ? currentCampusList?.findIndex(c => c?.campus_id === formValues?.campus_id)
+                        Array.isArray(currentCampusList) && currentCampusList.length > 0
+                            ? safeCampusIndex(currentCampusList, formValues?.campus_id)
                             : null
                     }
                     mode="add"
