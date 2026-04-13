@@ -4,6 +4,8 @@ import { render, rtlRender, act, fireEvent } from 'test-utils';
 import siteList from '../../../../../../data/mock/data/testing/testAndTag/testTagSites';
 import floorList from '../../../../../../data/mock/data/testing/testAndTag/testTagFloors';
 import roomList from '../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
+import userEvent from '@testing-library/user-event';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 const selectOptionFromListByIndex = (index, actions) => {
     expect(actions.getByRole('listbox')).not.toEqual(null);
@@ -420,5 +422,22 @@ describe('LocationPicker Renders component', () => {
             'value',
             defaultLocale.room.labelAll,
         );
+    });
+
+    test('should display floor plan input adornment with tooltip and correct link', async () => {
+        const { getByTestId, findByRole } = setup({
+            id: 'testLocationPicker',
+            location: { ...defaultLocation, site: 1, building: 1, floor: 1 },
+        });
+
+        const button = getByTestId('floor-plan-adornment');
+        // tooltip
+        await userEvent.hover(button);
+        expect(await findByRole('tooltip')).toHaveTextContent(
+            locale.pages.inspect.form.event.location.floor.floorPlanTooltip,
+        );
+        // link
+        expect(button).toHaveAttribute('href', 'http://1.a');
+        expect(button).toHaveAttribute('target', '_blank');
     });
 });

@@ -1,3 +1,9 @@
+@use "sass:color";
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+@use "charts";
+
 /* Breakpoints */
 
 // Firstly the trivial 0 size (of course), then:
@@ -145,7 +151,7 @@ $space-stretched-uuul: 8.25rem; /* 132px (88px) */
 $space-stretched-uuuul: 15rem; /* 80px (160px) */
 
 /* FS: typography. */
-$font-family: "Roboto", Helvetica, Arial, sans-serif;
+charts.$font-family: "Roboto", Helvetica, Arial, sans-serif;
 $font-family-title: "Montserrat", Helvetica, Arial, sans-serif;
 $font-family-accent: "Merriweather", Georgia, serif;
 
@@ -228,7 +234,7 @@ $uq-darkgrey-light80: #ada9a6; // rgb(173, 169, 166), rgba(153, 148, 144, 0.8)
 $uq-red-dark20: #be1b38; // Consolidated - B80017, D6492A, F04124, F00000, D8481F
 $uq-red-dark40: #9b1129; // Consolidated - CF2A0E
 
-$site-footer-color: mix($uq-white, $uq-purple, 75%);
+$site-footer-color: color.mix($uq-white, $uq-purple, 75%);
 $site-footer-link-color: $uq-white;
 $site-footer-font-size: .875rem;
 
@@ -294,7 +300,7 @@ $light-palette-link-color: $uq-white;
 $light-palette-bg: $uq-white;
 $dark-palette-color: $uq-neutral-dark80; //222;
 $dark-palette-border-color: rgba($uq-black, .1);
-$dark-palette-link-color: lighten($uq-purple, 10%);
+$dark-palette-link-color: color.adjust($uq-purple, $lightness: 10%);
 $dark-palette-bg: $uq-neutral-dark60; //333;
 // Tints
 $dark-tint-bg: $uq-neutral-dark60; //494949;
@@ -460,7 +466,7 @@ $compact-content-color: $uq-neutral-dark40; //767676;
     font-weight: 400;
 
     &:hover {
-      color: darken($light-palette-link-color,10%);
+      color: color.adjust($light-palette-link-color,$lightness: -10%);
     }
   }
 }
@@ -478,7 +484,7 @@ $compact-content-color: $uq-neutral-dark40; //767676;
     color: $dark-palette-link-color;
 
     &:hover {
-      color: darken($dark-palette-link-color,10%);
+      color: color.adjust($dark-palette-link-color,$lightness: -10%);
     }
   }
 }
@@ -495,9 +501,9 @@ $schema: (
         "xl": (12, $space-lg, 9.375rem)
 ) !default;
 
-$schema-base: map-get($map: $schema, $key: "base") !default;
-$schema-md: map-get($map: $schema, $key: "md") !default;
-$schema-xl: map-get($map: $schema, $key: "xl") !default;
+$schema-base: map.get($map: $schema, $key: "base") !default;
+$schema-md: map.get($map: $schema, $key: "md") !default;
+$schema-xl: map.get($map: $schema, $key: "xl") !default;
 
 $shadow-column-count: 24 !default;
 $max-container-width: 71.25rem !default;
@@ -506,8 +512,8 @@ $max-container-width: 71.25rem !default;
  * Layout containment (breakpoint driven)
  */
 @mixin layout-containment {
-  margin-left: nth($schema-base, 3) - calc(nth($schema-base, 2) / 2);
-  margin-right: nth($schema-base, 3) - calc(nth($schema-base, 2) / 2);
+  margin-left: list.nth($schema-base, 3) - calc(list.nth($schema-base, 2) / 2);
+  margin-right: list.nth($schema-base, 3) - calc(list.nth($schema-base, 2) / 2);
 
   // TODO: if we can perform the following checks on the parent element width
   // instead of the viewport width, we can achieve a more friendlier to use
@@ -516,36 +522,36 @@ $max-container-width: 71.25rem !default;
   // nested.
 
   // Ease into larger margin
-  @media (min-width: #{$screen-md + (2 * nth($schema-base, 3)) - (2 * nth($schema-md, 3))}) {
+  @media (min-width: #{$screen-md + (2 * list.nth($schema-base, 3)) - (2 * list.nth($schema-md, 3))}) {
     margin-left: $space-auto;
     margin-right: $space-auto;
-    max-width: $screen-md - (2 * nth($schema-md, 3)) + nth($schema-base, 2);
+    max-width: $screen-md - (2 * list.nth($schema-md, 3)) + list.nth($schema-base, 2);
   }
 
   @media #{$screen-md-up} {
-    margin-left: nth($schema-md, 3) - calc(nth($schema-md, 2) / 2);
-    margin-right: nth($schema-md, 3) - calc(nth($schema-md, 2) / 2);
+    margin-left: list.nth($schema-md, 3) - calc(list.nth($schema-md, 2) / 2);
+    margin-right: list.nth($schema-md, 3) - calc(list.nth($schema-md, 2) / 2);
     max-width: none;
   }
 
   // Ease into larger margin
-  @media (min-width: #{$screen-xl + (2 * nth($schema-md, 3)) - (2 * nth($schema-xl, 3))}) {
+  @media (min-width: #{$screen-xl + (2 * list.nth($schema-md, 3)) - (2 * list.nth($schema-xl, 3))}) {
     margin-left: $space-auto;
     margin-right: $space-auto;
-    max-width: $screen-xl - 2 * nth($schema-xl, 3) + nth($schema-md, 2);
+    max-width: $screen-xl - 2 * list.nth($schema-xl, 3) + list.nth($schema-md, 2);
   }
 
   @media (min-width: #{$screen-xl}) {
-    margin-left: nth($schema-xl, 3) - calc(nth($schema-xl, 2) / 2);
-    margin-right: nth($schema-xl, 3) - calc(nth($schema-xl, 2) / 2);
+    margin-left: list.nth($schema-xl, 3) - calc(list.nth($schema-xl, 2) / 2);
+    margin-right: list.nth($schema-xl, 3) - calc(list.nth($schema-xl, 2) / 2);
     max-width: none;
   }
 
   // Terminal
-  @media (min-width: #{$max-container-width + (2 * nth($schema-xl, 3))}) {
+  @media (min-width: #{$max-container-width + (2 * list.nth($schema-xl, 3))}) {
     margin-left: $space-auto;
     margin-right: $space-auto;
-    max-width: $max-container-width + nth($schema-xl, 2);
+    max-width: $max-container-width + list.nth($schema-xl, 2);
   }
 }
 
@@ -553,18 +559,18 @@ $max-container-width: 71.25rem !default;
  * Full-width container
  */
 @mixin layout-full-width {
-  margin-left: - calc(nth($schema-base, 2) / 2);
-  margin-right: - calc(nth($schema-base, 2) / 2);
+  margin-left: - calc(list.nth($schema-base, 2) / 2);
+  margin-right: - calc(list.nth($schema-base, 2) / 2);
   max-width: none;
 
   @media #{$screen-md-up} {
-    margin-left: - calc(nth($schema-md, 2) / 2);
-    margin-right: - calc(nth($schema-md, 2) / 2);
+    margin-left: - calc(list.nth($schema-md, 2) / 2);
+    margin-right: - calc(list.nth($schema-md, 2) / 2);
   }
 
   @media #{$screen-xl-up} {
-    margin-left: - calc(nth($schema-xl, 2) / 2);
-    margin-right: - calc(nth($schema-xl, 2) / 2);
+    margin-left: - calc(list.nth($schema-xl, 2) / 2);
+    margin-right: - calc(list.nth($schema-xl, 2) / 2);
   }
 }
 
@@ -573,24 +579,24 @@ $max-container-width: 71.25rem !default;
  */
 @function _grid-fraction-to-percent(
   $columns,
-  $column-count: nth($schema-base, 1)) {
+  $column-count: list.nth($schema-base, 1)) {
 
-  @return percentage(calc($columns / $column-count));
+  @return math.percentage(calc($columns / $column-count));
 }
 
 /* Padding to make up gaps/gutters (horizonal) */
 @mixin grid-col-padding {
-  padding-left: calc(nth($schema-base, 2) / 2);
-  padding-right: calc(nth($schema-base, 2) / 2);
+  padding-left: calc(list.nth($schema-base, 2) / 2);
+  padding-right: calc(list.nth($schema-base, 2) / 2);
 
   @media #{$screen-md-up} {
-    padding-left: calc(nth($schema-md, 2) / 2);
-    padding-right: calc(nth($schema-md, 2) / 2);
+    padding-left: calc(list.nth($schema-md, 2) / 2);
+    padding-right: calc(list.nth($schema-md, 2) / 2);
   }
 
   @media #{$screen-xl-up} {
-    padding-left: calc(nth($schema-xl, 2) / 2);
-    padding-right: calc(nth($schema-xl, 2) / 2);
+    padding-left: calc(list.nth($schema-xl, 2) / 2);
+    padding-right: calc(list.nth($schema-xl, 2) / 2);
   }
 }
 
@@ -598,14 +604,14 @@ $max-container-width: 71.25rem !default;
  * Map columns to another base
  */
 @function calc-true-colspan($span, $column-count, $shadow-column-count) {
-  @return round(calc($shadow-column-count / $column-count) * $span);
+  @return math.round(calc($shadow-column-count / $column-count) * $span);
 }
 
 /**
  * Col span classes
  */
 @mixin grid-col-span-classes(
-  $column-count: nth($schema-base, 1),
+  $column-count: list.nth($schema-base, 1),
   $breakpoint-name: null,
   $shadow-column-count: $shadow-column-count) {
 
@@ -640,7 +646,7 @@ $max-container-width: 71.25rem !default;
  * Generate grid classes (CSS Grid implementation)
  */
 @mixin grid-row(
-  $column-count: nth($schema-base, 1),
+  $column-count: list.nth($schema-base, 1),
   $breakpoint-name: null,
   $shadow-column-count: $shadow-column-count) {
 
@@ -655,18 +661,18 @@ $max-container-width: 71.25rem !default;
       // Using the CSS Grid gap/grid-gap property is causing overflow problems
       // with small screens and nested grids. We are using padding to implement
       // horizontal gutters instead.
-      grid-gap: nth($schema-base, 2) 0;
+      grid-gap: list.nth($schema-base, 2) 0;
       margin-top: 0; // required to enable a flexbox fallback
       margin-bottom: 0; // required to enable a flexbox fallback
 
       @media #{$screen-md-up} {
-        grid-row-gap: nth($schema-md, 2);
+        grid-row-gap: list.nth($schema-md, 2);
         margin-top: 0; // required to enable a flexbox fallback
         margin-bottom: 0; // required to enable a flexbox fallback
       }
 
       @media #{$screen-xl-up} {
-        grid-row-gap: nth($schema-xl, 2);
+        grid-row-gap: list.nth($schema-xl, 2);
         margin-top: 0; // required to enable a flexbox fallback
         margin-bottom: 0; // required to enable a flexbox fallback
       }
@@ -711,7 +717,7 @@ $max-container-width: 71.25rem !default;
  * Generate Flex fallback grid classes
  */
 @mixin _grid-row--flex(
-  $column-count: nth($schema-base, 1),
+  $column-count: list.nth($schema-base, 1),
   $breakpoint-name: null) {
 
   $col-span-mod-prefix: "";
@@ -744,45 +750,45 @@ $max-container-width: 71.25rem !default;
  */
 @mixin grid-col-width(
   $columns,
-  $column-count: nth($schema-base, 1)) {
+  $column-count: list.nth($schema-base, 1)) {
   width: _grid-fraction-to-percent($columns, $column-count)
 }
 
 @mixin grid-col-offset(
   $columns,
-  $column-count: nth($schema-base, 1)) {
+  $column-count: list.nth($schema-base, 1)) {
   margin-left: _grid-fraction-to-percent($columns, $column-count);
 }
 
 /* Padding to make up gaps/gutters (vertical) */
 @mixin _grid-col-v-padding {
-  padding-top: calc(nth($schema-base, 2) / 2);
-  padding-bottom: calc(nth($schema-base, 2) / 2);
+  padding-top: calc(list.nth($schema-base, 2) / 2);
+  padding-bottom: calc(list.nth($schema-base, 2) / 2);
 
   @media #{$screen-md-up} {
-    padding-top: calc(nth($schema-md, 2) / 2);
-    padding-bottom: calc(nth($schema-md, 2) / 2);
+    padding-top: calc(list.nth($schema-md, 2) / 2);
+    padding-bottom: calc(list.nth($schema-md, 2) / 2);
   }
 
   @media #{$screen-xl-up} {
-    padding-top: calc(nth($schema-xl, 2) / 2);
-    padding-bottom: calc(nth($schema-xl, 2) / 2);
+    padding-top: calc(list.nth($schema-xl, 2) / 2);
+    padding-bottom: calc(list.nth($schema-xl, 2) / 2);
   }
 }
 
 /* Margins to normalise the gaps/gutter offset (vertical) */
 @mixin _grid-row-v-margins {
-  margin-top: - calc(nth($schema-base, 2) / 2);
-  margin-bottom: - calc(nth($schema-base, 2) / 2);
+  margin-top: - calc(list.nth($schema-base, 2) / 2);
+  margin-bottom: - calc(list.nth($schema-base, 2) / 2);
 
   @media #{$screen-md-up} {
-    margin-top: - calc(nth($schema-md, 2) / 2);
-    margin-bottom: - calc(nth($schema-md, 2) / 2);
+    margin-top: - calc(list.nth($schema-md, 2) / 2);
+    margin-bottom: - calc(list.nth($schema-md, 2) / 2);
   }
 
   @media #{$screen-xl-up} {
-    margin-top: - calc(nth($schema-xl, 2) / 2);
-    margin-bottom: - calc(nth($schema-xl, 2) / 2);
+    margin-top: - calc(list.nth($schema-xl, 2) / 2);
+    margin-bottom: - calc(list.nth($schema-xl, 2) / 2);
   }
 }
 

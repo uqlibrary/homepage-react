@@ -25,6 +25,8 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SearchIcon from '@mui/icons-material/Search';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
+import { useNavigate } from 'react-router-dom';
+
 import { useConfirmationState } from 'hooks';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -82,6 +84,8 @@ export const DLOAdminHomepage = ({
     dlorDemographicsError,
 }) => {
     const { account } = useAccountContext();
+    const navigate = useNavigate();
+
     const statusTypes = [
         {
             type: 'new',
@@ -159,36 +163,14 @@ export const DLOAdminHomepage = ({
         }
     }, [actions, dlorList, dlorListError, dlorListLoading]);
 
-    const navigateToAddPage = () => {
-        window.location.href = dlorAdminLink('/add', account);
-    };
-
-    const navigateToSchedulePage = () => {
-        window.location.href = dlorAdminLink('/schedule', account);
-    };
-
-    const navigateToTeamsListPage = () => {
-        window.location.href = dlorAdminLink('/team/manage', account);
-    };
-
-    const navigateToFilterManagePage = () => {
-        window.location.href = dlorAdminLink('/filters', account);
-    };
-    const navigateToVocabularyManagePage = () => {
-        window.location.href = dlorAdminLink('/vocabulary', account);
-    };
-
-    const navigateToSeriesListPage = () => {
-        window.location.href = dlorAdminLink('/series/manage', account);
-    };
-
-    const navigateToAddSeriesPage = () => {
-        window.location.href = dlorAdminLink('/series/add', account);
-    };
-
-    const navigateToEditPage = uuid => {
-        window.location.href = dlorAdminLink(`/edit/${uuid}`, account);
-    };
+    const navigateToAddPage = () => navigate(dlorAdminLink('/add', account));
+    const navigateToSchedulePage = () => navigate(dlorAdminLink('/schedule', account));
+    const navigateToTeamsListPage = () => navigate(dlorAdminLink('/team/manage', account));
+    const navigateToFilterManagePage = () => navigate(dlorAdminLink('/filters', account));
+    const navigateToVocabularyManagePage = () => navigate(dlorAdminLink('/vocabulary', account));
+    const navigateToSeriesListPage = () => navigate(dlorAdminLink('/series/manage', account));
+    const navigateToAddSeriesPage = () => navigate(dlorAdminLink('/series/add', account));
+    const navigateToEditPage = uuid => navigate(dlorAdminLink(`/edit/${uuid}`, account));
 
     const confirmDelete = objectUuid => {
         setObjectToDelete(objectUuid);
@@ -471,7 +453,7 @@ export const DLOAdminHomepage = ({
                         <Divider />
                         <MenuItem
                             onClick={() => {
-                                window.location.href = '/digital-learning-hub/dashboard';
+                                navigate('/digital-learning-hub/dashboard'); // CHANGED
                                 handleMenuClose();
                             }}
                             data-testid="dlor-admin-dashboard--button"

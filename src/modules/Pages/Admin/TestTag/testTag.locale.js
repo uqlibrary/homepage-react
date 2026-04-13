@@ -286,9 +286,11 @@ export default {
                             maxLength: 17,
                         },
                     },
-
                     location: {
                         title: 'Location',
+                        floor: {
+                            floorPlanTooltip: 'click to open floor plan in a new tab',
+                        },
                     },
                 },
                 asset: {
@@ -578,6 +580,9 @@ export default {
                         floor: {
                             floor_id: {
                                 label: 'Floor ID',
+                            },
+                            floor_plan_url: {
+                                label: 'Floor plan URL',
                             },
                             floor_location: {
                                 label: 'Floor name',
