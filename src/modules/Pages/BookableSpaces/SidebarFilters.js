@@ -5,9 +5,11 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { InputLabel } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
 import MuiInput from '@mui/material/Input';
 import { styled } from '@mui/material/styles';
 import Slider from '@mui/material/Slider';
+import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
@@ -19,7 +21,6 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import { addClass, removeClass, standardText, StyledPrimaryButton } from 'helpers/general';
 
 import {
-    FACILITY_TYPE_SLIDER,
     FILTER_BOOKABLE_TYPE_ID,
     FILTER_CAPACITY_TYPE_ID,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
@@ -185,6 +186,20 @@ const StyledFilterSpaceList = styled('ul')(() => ({
     paddingLeft: 0,
     paddingTop: 0,
 }));
+const StyledCampusWrapperDiv = styled('div')(({ theme }) => ({
+    borderBottom: theme.palette.designSystem.border,
+    '& h3': {
+        marginBottom: 0,
+    },
+    '& .campusSelector': {
+        '& > div': {
+            paddingBlock: '1rem',
+        },
+        '& fieldset': {
+            borderWidth: 0,
+        },
+    },
+}));
 const StyledCartoucheList = styled('ul')(({ theme }) => ({
     listStyle: 'none',
     display: 'block',
@@ -235,8 +250,21 @@ export const SidebarFilters = ({
     maximumSpaceCapacity,
     capacityFilterValue,
     setCapacityFilterValue,
+    campusList,
+    campusListLoading,
+    campusListError,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
+    const [defaultCampus, setDefaultCampus2] = React.useState(1);
+    const setDefaultCampus = x => {
+        console.log('campus::setDefaultCampus', x);
+        setDefaultCampus2(x);
+    };
+    const [selectedCampus, setSelectedCampus2] = React.useState(1);
+    const setSelectedCampus = x => {
+        console.log('campus::setSelectedCampus', x);
+        setSelectedCampus2(x);
+    };
 
     function sortedUsedGroups() {
         if (
@@ -282,6 +310,12 @@ export const SidebarFilters = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    React.useEffect(() => {
+        if (!campusListLoading && !campusListError && campusList?.length > 0) {
+            setDefaultCampus(campusList.at(0).campus_id);
+        }
+    }, [campusList, campusListError, campusListLoading]);
 
     const resetFacilityTypeFilterGroupExpandedness = (filterGroupId, isGroupExpandedInput) => {
         const newExpandedness = facilityTypeFilterGroupExpandedness?.filter(g => {
@@ -342,12 +376,16 @@ export const SidebarFilters = ({
     };
 
     const clearSpecialFilter = (facilityTypeId, facilitySpecialAction) => {
-        console.log('clearSpecialFilter', facilityTypeId, facilitySpecialAction);
         showHideActiveFilterListItems(facilityTypeId, false);
 
         setFilters(facilityTypeId, false, false, facilitySpecialAction);
 
         scrollToTopOfContent();
+    };
+
+    const handleCampusSelection = e => {
+        console.log('campus:: handleCampusSelection e=', e.target.value, e);
+        setSelectedCampus(e.target.value);
     };
 
     const handleFilterSelection = (isChecked, facilityType) => {
@@ -725,6 +763,37 @@ export const SidebarFilters = ({
                         )}
                     </>
                 )}
+                {!campusListLoading && !campusListError && campusList?.length > 0 && (
+                    <StyledCampusWrapperDiv>
+                        <h3>Choose campus</h3>
+                        <Select
+                            className="campusSelector"
+                            id="filter-by-campus"
+                            labelId="filter-by-campus-label"
+                            data-testid="filter-by-campus"
+                            value={
+                                campusList?.find(c => c.campus_id === selectedCampus)?.campus_id || defaultCampus || 1
+                            }
+                            onChange={handleCampusSelection}
+                            inputProps={{
+                                id: 'filter-by-campus-input',
+                                title: 'Filter the displayed Spaces by campus',
+                            }}
+                        >
+                            {campusList
+                                ?.filter(campus => campus.libraries?.length > 0)
+                                .map((campus, index) => (
+                                    <MenuItem
+                                        value={campus?.campus_id}
+                                        key={`filter-by-campus-menuitem-${index}`}
+                                        selected={campus?.campus_id === 99999}
+                                    >
+                                        {campus.campus_name}
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                    </StyledCampusWrapperDiv>
+                )}
                 {sortedUsedGroups()?.map(group => {
                     const filterGroupId = group?.facility_type_group_id;
                     const isGroupExpanded = !!facilityTypeFilterGroupExpandedness?.find(
@@ -773,6 +842,9 @@ SidebarFilters.propTypes = {
     maximumSpaceCapacity: PropTypes.number,
     capacityFilterValue: PropTypes.array,
     setCapacityFilterValue: PropTypes.func,
+    campusList: PropTypes.any,
+    campusListLoading: PropTypes.any,
+    campusListError: PropTypes.any,
 };
 
 export default React.memo(SidebarFilters);

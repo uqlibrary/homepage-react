@@ -160,6 +160,9 @@ export const BookableSpacesList = ({
     facilityTypeListLoading,
     facilityTypeListError,
     spacesFavouritesList,
+    campusList,
+    campusListLoading,
+    campusListError,
 }) => {
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
@@ -220,6 +223,9 @@ export const BookableSpacesList = ({
         }
         if (facilityTypeListError === null && facilityTypeListLoading === null && facilityTypeList === null) {
             actions.loadAllFacilityTypes();
+        }
+        if (campusListError === null && campusListLoading === null && campusList === null) {
+            actions.loadBookableSpaceCampusChildren();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -710,6 +716,9 @@ export const BookableSpacesList = ({
                                     maximumSpaceCapacity={maximumSpaceCapacity}
                                     capacityFilterValue={capacityFilterValue}
                                     setCapacityFilterValue={setCapacityFilterValue}
+                                    campusList={campusList}
+                                    campusListLoading={campusListLoading}
+                                    campusListError={campusListError}
                                 />
                             </div>
                             {isDesktopView && (
@@ -787,6 +796,9 @@ BookableSpacesList.propTypes = {
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
+    campusList: PropTypes.any,
+    campusListLoading: PropTypes.any,
+    campusListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesList);
