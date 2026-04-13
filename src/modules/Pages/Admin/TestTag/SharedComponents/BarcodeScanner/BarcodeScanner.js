@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { useEffect, useRef, useState } from 'react';
 import { QrCodeScanner, VolumeOff, VolumeUp } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
@@ -16,13 +15,10 @@ import PropTypes from 'prop-types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Cookies from 'js-cookie';
 
-const darkTheme = createTheme({
-    palette: {
-        mode: 'dark',
-    },
-});
+export const BARCODE_SCANNER_SOUND_PREF_COOKIE = 'TNT_BARCODE_SCANNER_SOUND_PREF';
 
 // override to use our own copy of the wasm file
+/* istanbul ignore next */
 prepareZXingModule({
     overrides: {
         locateFile: (path, prefix) => {
@@ -34,12 +30,17 @@ prepareZXingModule({
     },
 });
 
-const BARCODE_SCANNER_SOUND_PREF_COOKIE = 'TNT_BARCODE_SCANNER_SOUND_PREF';
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+});
 
 /**
  * @param {Array<string>} detectedCodes
  * @param {object} ctx
  */
+/* istanbul ignore next */
 const tracker = (detectedCodes, ctx) => {
     detectedCodes.forEach(detectedCode => {
         const { boundingBox, cornerPoints } = detectedCode;
@@ -68,29 +69,42 @@ const BarcodeScanner = ({ onScan, formats }) => {
     const [selectedDeviceId, setSelectedDeviceId] = useState();
     const overflowStyleRef = useRef(document.body.style.overflow);
 
+    // auto-select first device
     useEffect(() => {
-        const firstDeviceId = devices?.[0]?.deviceId;
-        if (!firstDeviceId || String(selectedDeviceId) === String(firstDeviceId)) return;
-        setSelectedDeviceId(firstDeviceId);
-    }, [devices, selectedDeviceId]);
+        if (selectedDeviceId || !devices?.length) return;
+        setSelectedDeviceId(devices?.[0]?.deviceId);
+    }, [devices]);
 
-    const pauseBodyScroll = () => document.body.style.setProperty('overflow', 'hidden', 'important');
-    const resumeBodyScroll = () => document.body.style.setProperty('overflow', overflowStyleRef.current || '');
     const toggleBeep = () => {
         Cookies.set(BARCODE_SCANNER_SOUND_PREF_COOKIE, !isBeepSoundEnabled);
         setIsBeepSoundEnabled(prev => !prev);
     };
-    const closeScanner = () => setIsScanning(false);
+    const pauseBodyScroll = () => document.body.style.setProperty('overflow', 'hidden', 'important');
+    const resumeBodyScroll = () =>
+        document.body.style.setProperty('overflow', /* istanbul ignore next */ overflowStyleRef.current || '');
+    const openScanner = () => {
+        pauseBodyScroll();
+        setIsScanning(true);
+    };
+    const closeScanner = () => {
+        resumeBodyScroll();
+        setIsScanning(false);
+    };
     const handleScan = scannedCodes => {
         const firstScannedCode = scannedCodes?.[0]?.rawValue;
-        if (!firstScannedCode) return;
-        onScan(firstScannedCode);
+        if (!firstScannedCode?.trim()) return;
+        onScan(firstScannedCode.trim());
         closeScanner();
     };
 
     if (!isScanning) {
         return (
-            <IconButton size="small" aria-label="Open scanner" onClick={() => setIsScanning(true)}>
+            <IconButton
+                data-testid="barcode-scanner-open-button"
+                size="small"
+                aria-label="Open scanner"
+                onClick={openScanner}
+            >
                 <QrCodeScanner />
             </IconButton>
         );
@@ -98,15 +112,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
 
     return (
         <ThemeProvider theme={darkTheme}>
-            <Dialog
-                fullScreen
-                disableScrollLock={false}
-                open={isScanning}
-                TransitionProps={{
-                    onEnter: pauseBodyScroll,
-                    onExited: resumeBodyScroll,
-                }}
-            >
+            <Dialog fullScreen disableScrollLock={false} open={isScanning}>
                 <DialogTitle>
                     <Box
                         sx={{
@@ -116,11 +122,13 @@ const BarcodeScanner = ({ onScan, formats }) => {
                         }}
                     >
                         <FormControl sx={{ flexGrow: 1 }}>
-                            <InputLabel id="deviceId-label">Camera</InputLabel>
+                            <InputLabel id="device-id-label">Camera</InputLabel>
                             <Select
-                                disabled={devices.length <= 1}
+                                data-testid="barcode-scanner-device-select"
+                                inputProps={{ 'data-testid': 'barcode-scanner-device-select-input' }}
                                 label="Camera"
-                                labelId="deviceId-label"
+                                labelId="device-id-label"
+                                disabled={devices.length <= 1}
                                 value={selectedDeviceId ?? ''}
                                 onChange={e => setSelectedDeviceId(e.target.value)}
                             >
@@ -133,6 +141,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
                         </FormControl>
 
                         <IconButton
+                            data-testid="barcode-scanner-toggle-beep-button"
                             title="toggle beep"
                             onClick={toggleBeep}
                             sx={{ color: theme => theme.palette.grey[500] }}
@@ -141,6 +150,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
                         </IconButton>
 
                         <IconButton
+                            data-testid="barcode-scanner-close-button"
                             title="close scanner"
                             onClick={closeScanner}
                             sx={{ color: theme => theme.palette.grey[500] }}

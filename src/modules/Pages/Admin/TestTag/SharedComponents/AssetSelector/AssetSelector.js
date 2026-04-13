@@ -10,7 +10,7 @@ import Popper from '@mui/material/Popper';
 import { debounce } from 'throttle-debounce';
 import * as actions from 'data/actions';
 import InputAdornment from '@mui/material/InputAdornment';
-import BarcodeScanner from './BarcodeScanner';
+import BarcodeScanner from '../BarcodeScanner/BarcodeScanner';
 
 const rootId = 'asset_selector';
 
