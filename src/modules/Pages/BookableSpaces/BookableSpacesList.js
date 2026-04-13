@@ -194,11 +194,6 @@ export const BookableSpacesList = ({
         console.log('setSelectedFacilityTypes', x);
         return setSelectedFacilityTypes2(x);
     };
-    const [selectedCampus, setSelectedCampus2] = React.useState(1);
-    const setSelectedCampus = x => {
-        console.log('BookableSpacesList campus::setSelectedCampus', x);
-        setSelectedCampus2(x);
-    };
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
@@ -209,6 +204,15 @@ export const BookableSpacesList = ({
     const handleSpaceExpand = useCallback(space => {
         mapRef.current?.flyToSpace(space);
     }, []);
+
+    const [selectedCampus, setSelectedCampus2] = React.useState(1);
+    const setSelectedCampus = x => {
+        console.log('BookableSpacesList campus::setSelectedCampus', x);
+        setSelectedCampus2(x);
+
+        const firstSpaceInCampus = bookableSpacesRoomList.find(s => s.space_campus_id === x);
+        !!firstSpaceInCampus && mapRef.current?.flyToSpace(firstSpaceInCampus);
+    };
 
     const minimumSpaceCapacity = 1;
     const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
