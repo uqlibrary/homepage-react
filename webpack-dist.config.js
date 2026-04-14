@@ -98,6 +98,9 @@ const webpackConfig = {
         compress: true,
         port: port,
         host: '0.0.0.0',
+        client: {
+            overlay: false,
+        },
     },
     plugins: [
         new HtmlWebpackPlugin({

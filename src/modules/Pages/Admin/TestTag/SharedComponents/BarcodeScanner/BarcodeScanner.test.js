@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import { render, screen, waitFor } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import { useDevices } from '@yudiel/react-qr-scanner';
+import locale from './locale';
 
 const scannedCodeMock = 'TEST_CODE';
 const mockScannedCode = jest.fn().mockReturnValue(scannedCodeMock);
@@ -145,40 +146,75 @@ describe('BarcodeScanner', () => {
         expect(Cookies.set).toHaveBeenCalledWith(BARCODE_SCANNER_SOUND_PREF_COOKIE, false);
     });
 
-    it('should call onScan and close the scanner when a code is scanned', async () => {
-        const { props } = setup();
-        assertScannerCloseState();
-        await openScanner();
-        assertScannerOpenState();
-        await mockCodeScan();
+    describe('behaviour', () => {
+        it('should call onScan and close the scanner when a code is scanned', async () => {
+            const { props } = setup();
+            assertScannerCloseState();
+            await openScanner();
+            assertScannerOpenState();
+            await mockCodeScan();
 
-        await waitFor(() => {
-            expect(props.onScan).toHaveBeenCalledWith(scannedCodeMock);
+            await waitFor(() => {
+                expect(props.onScan).toHaveBeenCalledWith(scannedCodeMock);
+            });
+            assertScannerCloseState();
         });
-        assertScannerCloseState();
+
+        it('should not close the scanner if the scanned code is empty', async () => {
+            mockScannedCode.mockReturnValue('');
+            const { props } = setup();
+            assertScannerCloseState();
+            await openScanner();
+            assertScannerOpenState();
+            await mockCodeScan();
+
+            expect(props.onScan).not.toHaveBeenCalled();
+            assertScannerOpenState();
+        });
     });
 
-    it('should not close the scanner if the scanned code is empty', async () => {
-        mockScannedCode.mockReturnValue('');
-        const { props } = setup();
-        assertScannerCloseState();
-        await openScanner();
-        assertScannerOpenState();
-        await mockCodeScan();
+    describe('body scroll state', () => {
+        it('should pause body scroll when scanner opens', async () => {
+            const setPropertySpy = jest.spyOn(document.body.style, 'setProperty');
 
-        expect(props.onScan).not.toHaveBeenCalled();
-        assertScannerOpenState();
+            setup();
+            await openScanner();
+
+            expect(setPropertySpy).toHaveBeenCalledWith('overflow', 'hidden', 'important');
+        });
+
+        it('should restore body scroll when scanner closes', async () => {
+            document.body.style.overflow = 'visible';
+            const setPropertySpy = jest.spyOn(document.body.style, 'setProperty');
+
+            setup();
+            await openScanner();
+            setPropertySpy.mockClear();
+            await closeScanner();
+
+            expect(setPropertySpy).toHaveBeenCalledWith('overflow', 'visible');
+        });
     });
 
-    it('should restore body scroll when scanner closes', async () => {
-        document.body.style.overflow = 'visible';
-        const setPropertySpy = jest.spyOn(document.body.style, 'setProperty');
+    describe('errorHandling', () => {
+        it('should display error message when there are no cameras available', async () => {
+            useDevices.mockReturnValue([]);
 
-        setup();
-        await openScanner();
-        expect(setPropertySpy).toHaveBeenCalledWith('overflow', 'hidden', 'important');
+            const { getByText } = setup();
+            await openScanner();
 
-        await closeScanner();
-        expect(setPropertySpy).toHaveBeenCalledWith('overflow', 'visible');
+            await waitFor(() => expect(getByText(locale.error.noCamera)).toBeInTheDocument());
+        });
+
+        it('should display error message when dependencies fail to load', async () => {
+            setup();
+            await openScanner();
+
+            const event = new Event('unhandledrejection');
+            event.reason = new Error('test error');
+            window.dispatchEvent(event);
+
+            expect(await screen.findByText(locale.error.scanner)).toBeInTheDocument();
+        });
     });
 });
