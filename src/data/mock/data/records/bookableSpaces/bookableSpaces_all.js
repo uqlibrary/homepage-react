@@ -71,6 +71,7 @@ export default {
                 "space_type_description": "Designed for communal activities, these spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
             },
             space_campus_name: "St Lucia",
+            "space_campus_number": "01",
             space_draftmode: true,
             "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/111',
             facility_types: [
@@ -222,6 +223,7 @@ export default {
             space_building_number: "870",
             space_campus_id: 3,
             space_campus_name: "Dutton Park",
+            space_campus_number: "45",
         }, {
             space_id: 43534,
             space_uuid: "97fd5_nm39_gh29",
@@ -293,6 +295,7 @@ export default {
             space_building_number: "0046",
             space_campus_id: 1,
             space_campus_name: "St Lucia",
+            "space_campus_number": "01",
         }, {
             "space_id": 1,
             "space_uuid": "a00de3d4-7e11-47eb-8079-532bdef80def",
@@ -803,7 +806,7 @@ export default {
             {
                 "space_id": 8,
                 "space_uuid": "09007a2a-c315-4209-813f-bb4843fbf7ff",
-                "space_name": "Gatton 112",
+                "space_name": "Gatton 116",
                 "space_precise": null,
                 "space_description": null,
                 "space_photo_url": null,
@@ -867,7 +870,7 @@ export default {
             {
                 "space_id": 9,
                 "space_uuid": "06ab68a9-1702-4886-af5f-4c01c4c4acaf",
-                "space_name": "Gatton 123",
+                "space_name": "Gatton 111",
                 "space_precise": null,
                 "space_description": null,
                 "space_photo_url": null,
@@ -995,7 +998,7 @@ export default {
             {
                 "space_id": 11,
                 "space_uuid": "c0b476f5-3a02-4031-af1c-fbec487080bb",
-                "space_name": "Gatton 104",
+                "space_name": "Gatton 121",
                 "space_precise": null,
                 "space_description": null,
                 "space_photo_url": null,
@@ -1088,6 +1091,7 @@ export default {
                     "space_type_description": "Designed for communal activities, these spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
                 },
                 space_campus_name: "St Lucia",
+                "space_campus_number": "01",
                 space_draftmode: false,
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/central-1',
                 facility_types: [
@@ -1177,6 +1181,7 @@ export default {
                     "space_type_description": "Designed for communal activities, these spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
                 },
                 space_campus_name: "St Lucia",
+                "space_campus_number": "01",
                 space_draftmode: false,
                 "space_external_book_url": null,
                 facility_types: [

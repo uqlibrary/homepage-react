@@ -160,9 +160,6 @@ export const BookableSpacesList = ({
     facilityTypeListLoading,
     facilityTypeListError,
     spacesFavouritesList,
-    campusList,
-    campusListLoading,
-    campusListError,
 }) => {
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
@@ -188,6 +185,8 @@ export const BookableSpacesList = ({
 
     const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
     const FACILITY_TYPE_NAME_CAPACITY = 'Bookable';
+
+    const [campusList, setCampusList] = useState([]);
 
     const [selectedFacilityTypes, setSelectedFacilityTypes2] = useState([]);
     const setSelectedFacilityTypes = x => {
@@ -241,9 +240,6 @@ export const BookableSpacesList = ({
         if (facilityTypeListError === null && facilityTypeListLoading === null && facilityTypeList === null) {
             actions.loadAllFacilityTypes();
         }
-        if (campusListError === null && campusListLoading === null && campusList === null) {
-            actions.loadBookableSpaceCampusChildren();
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -274,6 +270,26 @@ export const BookableSpacesList = ({
             const calculatedMaxCapaity = !!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity;
             setMaximumSpaceCapacity(calculatedMaxCapaity);
             setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
+
+            /* eslint-disable camelcase */
+            const currentCampusList = Object.values(
+                bookableSpacesRoomList?.data?.locations.reduce(
+                    (acc, { space_campus_id, space_campus_name, space_campus_number }) => {
+                        if (!acc[space_campus_id]) {
+                            acc[space_campus_id] = {
+                                campus_id: space_campus_id,
+                                campus_number: space_campus_number,
+                                campus_name: space_campus_name,
+                                campus_space_count: 0,
+                            };
+                        }
+                        acc[space_campus_id].campus_space_count++;
+                        return acc;
+                    },
+                    {},
+                ),
+            );
+            setCampusList(currentCampusList);
         }
     }, [bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
 
@@ -757,8 +773,6 @@ export const BookableSpacesList = ({
                                     capacityFilterValue={capacityFilterValue}
                                     setCapacityFilterValue={setCapacityFilterValue}
                                     campusList={campusList}
-                                    campusListLoading={campusListLoading}
-                                    campusListError={campusListError}
                                     selectedCampus={selectedCampus}
                                     handleCampusSelection={handleCampusSelection}
                                 />
@@ -838,9 +852,6 @@ BookableSpacesList.propTypes = {
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
-    campusList: PropTypes.any,
-    campusListLoading: PropTypes.any,
-    campusListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesList);
