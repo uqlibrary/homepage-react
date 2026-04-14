@@ -1,12 +1,15 @@
 import React from 'react';
 
+import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Popper from '@mui/material/Popper';
 
 import { isEmptyStr, isInvalidUUID } from '../../../helpers/helpers';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
+import Licence from './Licence';
 
 export default {
     sort: {
@@ -44,6 +47,44 @@ export default {
             validate: value => isEmptyStr(value),
             fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
         },
+        user_team: {
+            component: ({ InputLabelProps, inputProps, onClick, error, ...props }) => (
+                <Autocomplete
+                    renderInput={params => (
+                        <TextField
+                            variant="standard"
+                            {...params}
+                            label={locale.pages.manage.users.form.columns.user_team.label}
+                            required
+                            error={error}
+                            helperText={error ? locale.pages.manage.users.helperText.user_team : null}
+                            InputLabelProps={InputLabelProps}
+                            inputProps={{
+                                ...params.inputProps,
+                                ...inputProps,
+                            }}
+                            onClick={onClick}
+                        />
+                    )}
+                    PopperComponent={props => (
+                        <Popper {...props} id={'user_team-users-options'} data-testid={'user_team-users-options'} />
+                    )}
+                    {...props}
+                />
+            ),
+            validate: value => isEmptyStr(value),
+            fieldParams: {
+                canEdit: true,
+                renderInTable: false,
+                minWidth: 200,
+                flex: 1,
+                type: 'autocomplete',
+                optionKey: 'team_slug',
+            },
+        },
+        user_team_display: {
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 200, flex: 1 },
+        },
         can_inspect_cb: {
             component: props => {
                 return (
@@ -59,24 +100,7 @@ export default {
             },
         },
         user_licence_number: {
-            component: (props, data, row) => {
-                return (
-                    <TextField
-                        variant="standard"
-                        required={data?.can_inspect_cb}
-                        disabled={
-                            !data?.can_inspect_cb || (data?.can_inspect_cb && !isEmptyStr(row?.user_licence_number))
-                        }
-                        {...props}
-                        inputProps={{ ...props.inputProps, maxLength: 45 }}
-                        helperText={
-                            props.error
-                                ? locale.pages.manage.users.helperText.user_licence_number
-                                : locale.pages.general.helperText.maxChars(45)
-                        }
-                    />
-                );
-            },
+            component: (props, data, row) => <Licence {...props} data={data} row={row} />,
 
             fieldParams: {
                 canAdd: true,

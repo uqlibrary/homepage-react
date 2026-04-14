@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
@@ -26,6 +25,8 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SearchIcon from '@mui/icons-material/Search';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
+import { useNavigate } from 'react-router-dom';
+
 import { useConfirmationState } from 'hooks';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -33,7 +34,6 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 import { convertSnakeCaseToKebabCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/VisitHomepage';
 import {
     dlorAdminLink,
     exportDemographicsToCSV,
@@ -84,6 +84,8 @@ export const DLOAdminHomepage = ({
     dlorDemographicsError,
 }) => {
     const { account } = useAccountContext();
+    const navigate = useNavigate();
+
     const statusTypes = [
         {
             type: 'new',
@@ -161,32 +163,14 @@ export const DLOAdminHomepage = ({
         }
     }, [actions, dlorList, dlorListError, dlorListLoading]);
 
-    const navigateToAddPage = () => {
-        window.location.href = dlorAdminLink('/add', account);
-    };
-
-    const navigateToTeamsListPage = () => {
-        window.location.href = dlorAdminLink('/team/manage', account);
-    };
-
-    const navigateToFilterManagePage = () => {
-        window.location.href = dlorAdminLink('/filters', account);
-    };
-    const navigateToVocabularyManagePage = () => {
-        window.location.href = dlorAdminLink('/vocabulary', account);
-    };
-
-    const navigateToSeriesListPage = () => {
-        window.location.href = dlorAdminLink('/series/manage', account);
-    };
-
-    const navigateToAddSeriesPage = () => {
-        window.location.href = dlorAdminLink('/series/add', account);
-    };
-
-    const navigateToEditPage = uuid => {
-        window.location.href = dlorAdminLink(`/edit/${uuid}`, account);
-    };
+    const navigateToAddPage = () => navigate(dlorAdminLink('/add', account));
+    const navigateToSchedulePage = () => navigate(dlorAdminLink('/schedule', account));
+    const navigateToTeamsListPage = () => navigate(dlorAdminLink('/team/manage', account));
+    const navigateToFilterManagePage = () => navigate(dlorAdminLink('/filters', account));
+    const navigateToVocabularyManagePage = () => navigate(dlorAdminLink('/vocabulary', account));
+    const navigateToSeriesListPage = () => navigate(dlorAdminLink('/series/manage', account));
+    const navigateToAddSeriesPage = () => navigate(dlorAdminLink('/series/add', account));
+    const navigateToEditPage = uuid => navigate(dlorAdminLink(`/edit/${uuid}`, account));
 
     const confirmDelete = objectUuid => {
         setObjectToDelete(objectUuid);
@@ -420,6 +404,17 @@ export const DLOAdminHomepage = ({
                         <Divider />
                         <MenuItem
                             onClick={() => {
+                                navigateToSchedulePage();
+                                /* istanbul ignore next */
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-schedule-featured-button"
+                        >
+                            Manage featured object scheduling
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem
+                            onClick={() => {
                                 exportDLORDataToCSV(dlorList, 'dlor_data.csv');
                                 /* istanbul ignore next */
                                 handleMenuClose();
@@ -454,6 +449,16 @@ export const DLOAdminHomepage = ({
                             data-testid="admin-dlor-export-favourites-button"
                         >
                             {isExportingFavourites ? 'Exporting...' : 'Export Favourites Data to CSV'}
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem
+                            onClick={() => {
+                                navigate('/digital-learning-hub/dashboard'); // CHANGED
+                                handleMenuClose();
+                            }}
+                            data-testid="dlor-admin-dashboard--button"
+                        >
+                            View Digital Learning Object dashboard
                         </MenuItem>
                         <Divider />
                         <MenuItem

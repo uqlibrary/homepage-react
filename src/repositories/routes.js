@@ -115,11 +115,13 @@ export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test-and-tag/asset/se
 export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
     const urlParams = {
         ...(filter?.status?.discarded === false ? { without_discards: 1 } : {}),
+        ...(filter?.all_teams ? { all_teams: 1 } : {}),
         // TODO: add more filters as required
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
     const apiUrl = `test-and-tag/asset/search/current/${pattern}${hasParams ? `?${qs.toString()}` : ''}`;
+
     return {
         apiUrl,
     };
@@ -157,10 +159,11 @@ export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test-and
 export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test-and-tag/asset-type/${id}` });
 
 /** TEST AND TAG INSPECTIONS REPORT */
-export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, period, periodType }) => {
+export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, period, periodType, teamSlug }) => {
     const urlParams = {
         ...(!!locationId && !!locationType ? { [`${locationType}_id`]: locationId } : {}),
         ...(!!period && !!periodType ? { period_length: period, period_type: periodType } : {}),
+        ...(!!teamSlug ? { team_slug: teamSlug } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
@@ -170,10 +173,11 @@ export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, 
     };
 };
 /* TEST AND TAG INSPECTIONS BY LICENCED USER */
-export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({ startDate, endDate, userRange }) => {
+export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({ startDate, endDate, userRange, teamSlug }) => {
     const urlParams = {
         ...(!!startDate && !!endDate ? { start_date: startDate, end_date: endDate } : {}),
         ...(!!userRange ? { user_range: userRange } : {}),
+        ...(!!teamSlug ? { team_slug: teamSlug } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = Object.keys(urlParams).length > 0;
@@ -193,6 +197,7 @@ export const TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST = ({
     locationId,
     inspectionDateFrom,
     inspectionDateTo,
+    teamSlug,
 }) => {
     const urlParams = {
         ...(!!assetStatus ? { asset_status: assetStatus } : {}),
@@ -200,10 +205,12 @@ export const TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST = ({
         ...(!!locationId ? { location_id: locationId } : {}),
         ...(!!inspectionDateFrom ? { inspection_date_from: inspectionDateFrom } : {}),
         ...(!!inspectionDateTo ? { inspection_date_to: inspectionDateTo } : {}),
+        ...(!!teamSlug ? { team_slug: teamSlug } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = Object.keys(urlParams).length > 0;
     const apiUrl = `test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
+
     return {
         apiUrl,
     };
@@ -218,9 +225,15 @@ export const TEST_TAG_UPDATE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id
 export const TEST_TAG_ADD_USER_API = () => ({ apiUrl: 'test-and-tag/user' });
 export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id}` });
 
+export const TEST_TAG_TEAM_LIST_API = () => ({ apiUrl: 'test-and-tag/teams/all' });
+export const TEST_TAG_UPDATE_TEAM_API = team => ({ apiUrl: `test-and-tag/team/${team}` });
+export const TEST_TAG_ADD_TEAM_API = () => ({ apiUrl: 'test-and-tag/team' });
+export const TEST_TAG_DELETE_TEAM_API = team => ({ apiUrl: `test-and-tag/team/${team}` });
+
 export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' }); // is admin in staging
 export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/public/list/current' });
 export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/public/find/${id}` });
+export const DLOR_AUTHENTICATED_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/auth/find/${id}` });
 export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/public/facet/list' });
 export const DLOR_SERIES_LIST_API = () => ({ apiUrl: 'dlor/public/series/list' });
 export const DLOR_SUBSCRIPTION_CONFIRMATION_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/subscribe` });
@@ -266,7 +279,11 @@ export const DLOR_KEYWORDS_API = () => ({ apiUrl: 'dlor/public/keywords/list' })
 export const DLOR_KEYWORDS_UPDATE_API = () => ({ apiUrl: 'dlor/admin/keywords' });
 export const DLOR_KEYWORDS_DESTROY_API = () => ({ apiUrl: 'dlor/admin/keywords/delete' });
 export const DLOR_STATISTICS_API = () => ({ apiUrl: 'dlor/auth/stats' });
+export const DLOR_SCHEDULE_API = () => ({ apiUrl: 'dlor/admin/schedule' });
+export const DLOR_SCHEDULE_UPDATE_API = id => ({ apiUrl: `dlor/admin/schedule/${id}` });
 export const DLOR_REQUEST_KEYWORD_API = () => ({ apiUrl: 'dlor/auth/keywords/request' });
+
+export const DLOR_DASHBOARD_API = () => ({ apiUrl: 'dlor/auth/dashboard' });
 
 const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';

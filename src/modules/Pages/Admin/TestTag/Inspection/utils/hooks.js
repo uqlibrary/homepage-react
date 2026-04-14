@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 import {
     isValidEventDate,
@@ -9,6 +9,47 @@ import {
     isValidDiscard,
     hasTestOrAction,
 } from './helpers';
+
+import { useCookies } from 'react-cookie';
+
+export const extractCorePrinterName = printerName => {
+    // We assume the printer name is at the start of the full printer string
+    // followed by a whitespace. This will have to be revisited if it changes in the future.
+    const parts = printerName.split(' ');
+    return parts[0];
+};
+
+export const printerToCookieString = printerName => {
+    const printerNameShort = extractCorePrinterName(printerName);
+    return JSON.stringify({ name: printerName, shortName: printerNameShort });
+};
+
+export const parsePrinterFromCookieString = cookieValue => {
+    try {
+        if (typeof cookieValue !== 'string') return cookieValue;
+        const parsed = JSON.parse(cookieValue);
+        return parsed || null;
+    } catch (e) {
+        return null;
+    }
+};
+
+export const useLabelPrinterPreference = cookieName => {
+    const [cookies, setCookie] = useCookies([cookieName]);
+    const setPrinterPreference = useCallback(
+        printerName => {
+            const encodedPrinter = printerToCookieString(printerName);
+            setCookie(cookieName, encodedPrinter, { path: '/' });
+        },
+        [cookieName, setCookie],
+    );
+    const printerPreference = useMemo(() => {
+        const parsed = parsePrinterFromCookieString(cookies[cookieName]);
+        return parsed;
+    }, [cookieName, cookies]);
+
+    return [printerPreference, setPrinterPreference];
+};
 
 export const useValidation = (/* istanbul ignore next */ { testStatusEnum = {}, user = {} } = {}) => {
     const [isValid, setIsValid] = useState(false);
@@ -55,4 +96,24 @@ export const actionReducer = (_, action) => {
         default:
             throw `Unknown action '${action.type}'`;
     }
+};
+
+export const useIncludedLocations = (location, sites, floors, rooms) => {
+    const includedSites = useMemo(() => sites?.filter?.(site => !site.site_excluded) ?? [], [sites]);
+    const includedBuildings = useMemo(
+        () =>
+            (includedSites?.find?.(site => site.site_id === location.site)?.buildings ?? []).filter(
+                building => !building.building_excluded && !building.parent_excluded,
+            ),
+        [includedSites, location.site],
+    );
+    const includedFloors = useMemo(() => floors?.filter?.(floor => !floor.floor_excluded) ?? [], [floors]);
+    const includedRooms = useMemo(() => rooms?.filter?.(room => !room.room_excluded) ?? [], [rooms]);
+
+    return {
+        sites: includedSites,
+        buildings: includedBuildings,
+        floors: includedFloors,
+        rooms: includedRooms,
+    };
 };

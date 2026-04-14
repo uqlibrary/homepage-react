@@ -8,7 +8,6 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -20,15 +19,15 @@ import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionS
 import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import config from './configure';
 import { breadcrumbs } from 'config/routes';
+import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 
 const componentId = 'user-management';
 
-const Users = ({ actions, userListLoading, userList, userListError }) => {
+const Users = ({ actions, userListLoading, userList, userListError, teamListLoading, teamList, teamListError }) => {
     const pageLocale = locale.pages.manage.users;
-
     const { user } = useAccountUser();
 
-    const userDepartment = user?.user_department ?? /* istanbul ignore next */ null;
+    const userTeam = user?.user_team ?? /* istanbul ignore next */ null;
     const userUID = user?.user_uid ?? /* istanbul ignore next */ null;
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
@@ -38,18 +37,33 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
     const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
-        errorMessage: userListError,
+        errorMessage: userListError || teamListError,
         errorMessageFormatter: locale.config.alerts.error,
     });
     const closeDialog = React.useCallback(() => {
         actionDispatch({ type: 'clear' });
     }, []);
 
+    const fieldProps = React.useMemo(
+        () => ({
+            user_team: {
+                options: teamList,
+                getOptionKey: option => option.team_slug,
+                getOptionLabel: option =>
+                    teamList?.find?.(team => team.team_slug === option)?.team_display_name ||
+                    option?.team_display_name ||
+                    '',
+                isOptionEqualToValue: (option, value) => option.team_slug === value,
+            },
+        }),
+        [teamList],
+    );
+
     const onRowAdd = React.useCallback(
         data => {
             setDialogueBusy(true);
             const request = structuredClone(data);
-            const wrappedRequest = transformAddRequest(request, userDepartment);
+            const wrappedRequest = transformAddRequest(request);
             actions
                 .addUser(wrappedRequest)
                 .then(() => {
@@ -59,14 +73,18 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                 })
                 .catch(error => {
                     console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.addFail), 'error');
+                    let reason = pageLocale.snackbar.addFail;
+                    if (error?.match?.(/licence.*associated.*another user/i)) {
+                        reason = error;
+                    }
+                    openConfirmationAlert(reason, 'error');
                 })
                 .finally(() => {
                     setDialogueBusy(false);
                 });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [userDepartment],
+        [userTeam],
     );
 
     const onRowEdit = React.useCallback(data => {
@@ -83,7 +101,11 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
             })
             .catch(error => {
                 console.error(error);
-                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.updateFail), 'error');
+                let reason = pageLocale.snackbar.updateFail;
+                if (error?.match?.(/licence.*associated.*another user/i)) {
+                    reason = error;
+                }
+                openConfirmationAlert(locale.config.alerts.error(reason), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -91,14 +113,24 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const handleAddClick = () => {
+        actionDispatch({
+            type: 'add',
+            title: pageLocale.dialogAdd?.confirmationTitle,
+            fieldProps,
+        });
+    };
+
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
         row.isSelf = row?.user_uid === userUID;
-        actionDispatch({
+        const actionProps = {
             type: 'edit',
             title: pageLocale.dialogEdit?.confirmationTitle,
             row,
-        });
+            fieldProps,
+        };
+        actionDispatch(actionProps);
     };
 
     const handleDeleteClick = ({ id, api }) => {
@@ -129,12 +161,6 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const handleAddClick = () => {
-        actionDispatch({
-            type: 'add',
-            title: pageLocale.dialogAdd?.confirmationTitle,
-        });
-    };
 
     const { row } = useDataTableRow(userList, transformRow);
     const shouldDisableDelete = row => (row?.actions_count ?? 0) > 0 || userUID === row?.user_uid;
@@ -157,10 +183,15 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
     }, []);
 
     React.useEffect(() => {
-        actions.loadUserList().catch(error => {
-            console.error(error);
-            openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.loadFail), 'error');
-        });
+        actions
+            .loadUserList()
+            .then(() => {
+                actions.loadTeamList();
+            })
+            .catch(error => {
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.loadFail), 'error');
+            });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actions]);
 
@@ -236,14 +267,17 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                             rows={row}
                             columns={columns}
                             rowId="user_id"
-                            loading={userListLoading}
-                            components={{ Toolbar: AddToolbar }}
-                            componentsProps={{
-                                toolbar: {
-                                    label: pageLocale.form.addButtonLabel,
-                                    onClick: handleAddClick,
-                                    id: componentId,
-                                },
+                            loading={userListLoading || teamListLoading}
+                            components={{
+                                Toolbar: () => (
+                                    <WithExportMenu id={componentId}>
+                                        <AddButton
+                                            label={pageLocale.form.addButtonLabel}
+                                            onClick={handleAddClick}
+                                            disabled={userListLoading || teamListLoading}
+                                        />
+                                    </WithExportMenu>
+                                ),
                             }}
                             {...(config.sort ?? /* istanbul ignore next */ {})}
                         />
@@ -266,6 +300,9 @@ Users.propTypes = {
     userList: PropTypes.array,
     userListLoading: PropTypes.bool,
     userListError: PropTypes.string,
+    teamList: PropTypes.array,
+    teamListLoading: PropTypes.bool,
+    teamListError: PropTypes.string,
 };
 
 export default React.memo(Users);

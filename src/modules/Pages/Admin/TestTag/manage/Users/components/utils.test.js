@@ -81,6 +81,7 @@ describe('utils', () => {
             can_inspect: 'No',
             can_alter: 'Yes',
             can_see_reports: 'No',
+            user_team: 'WSS',
         };
 
         const expectedOutput = {
@@ -93,17 +94,18 @@ describe('utils', () => {
                 can_see_reports: 0,
             },
             user_current_flag: 1,
-            user_department: 'UQL',
+            user_team: 'WSS',
             user_licence_number: '',
         };
 
-        const transformedRequest = transformAddRequest(inputRequest, 'UQL');
+        const transformedRequest = transformAddRequest(inputRequest);
         expect(transformedRequest).toEqual(expectedOutput);
 
         inputRequest.can_admin_cb = true;
         inputRequest.can_inspect_cb = true;
         inputRequest.can_alter_cb = true;
         inputRequest.can_see_reports_cb = true;
+        inputRequest.user_team = 'PF';
 
         expectedOutput.privileges = {
             can_admin: 1,
@@ -112,8 +114,8 @@ describe('utils', () => {
             can_see_reports: 1,
         };
         expectedOutput.user_current_flag = 0;
-        expectedOutput.user_department = 'PF';
-        const transformedRequest2 = transformAddRequest(inputRequest, 'PF');
+        expectedOutput.user_team = 'PF';
+        const transformedRequest2 = transformAddRequest(inputRequest);
         expect(transformedRequest2).toEqual(expectedOutput);
     });
     it('transforms update request correctly', () => {
@@ -121,6 +123,8 @@ describe('utils', () => {
             actions_count: 5,
             id: 123,
             department_display_name: 'Department A',
+            user_department: 'UQL',
+            user_team: 'SPACES',
             privileges: {
                 can_admin_cb: true,
                 can_inspect_cb: false,
@@ -135,6 +139,7 @@ describe('utils', () => {
         };
 
         const expectedOutput = {
+            user_team: 'SPACES',
             privileges: {
                 can_admin: 0,
                 can_inspect: 0,
@@ -199,6 +204,7 @@ describe('utils', () => {
                 user_id: 'Auto',
                 user_uid: '',
                 user_name: '',
+                user_team: '',
                 user_current_flag_cb: true,
                 user_licence_number: '',
             },

@@ -202,8 +202,9 @@ export const isDlorOwner = (account, object) =>
     isLoggedInUser(account) && object?.owner?.publishing_user_username === account.id;
 
 export const isInDLOROwningTeam = (account, dlorItem, dlorTeamList) => {
-    console.log('isInDLOROwningTeam: account=', account, ' dlorItem=', dlorItem, ' dlorTeamList=', dlorTeamList);
-    if (!account?.id || !dlorItem?.object_owning_team_id || !Array.isArray(dlorTeamList)) return false;
+    if (!account?.id || !dlorItem) return false;
+    if (isDlorOwner(account, dlorItem)) return true;
+    if (!dlorItem?.object_owning_team_id || !Array.isArray(dlorTeamList)) return false;
     const owningTeam = dlorTeamList.find(t => t.team_id === dlorItem.object_owning_team_id);
     return (
         owningTeam &&

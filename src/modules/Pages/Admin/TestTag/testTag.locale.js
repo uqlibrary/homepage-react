@@ -7,6 +7,7 @@ import { pathConfig } from '../../../../config/pathConfig';
 
 import InspectionIcon from '@mui/icons-material/Search';
 import UsersIcon from '@mui/icons-material/People';
+import TeamsIcon from '@mui/icons-material/Groups';
 import AssetTypeIcon from '@mui/icons-material/DevicesOther';
 import LocationIcon from '@mui/icons-material/LocationCity';
 import InspectionDeviceIcon from '@mui/icons-material/Build';
@@ -111,10 +112,23 @@ export default {
                     {count > 1 ? 's' : ''}
                 </>
             ),
+            labelPrinting: {
+                error: {
+                    noPrinterSelected: 'No printer selected to print label.',
+                    noLabelData: 'No label data available to print.',
+                    noLabelTemplate: 'No label template found for the selected printer.',
+                    noConnection:
+                        'Unable to connect to the selected printer. Please check the printer connection and try again.',
+                    printerNotReady: 'The selected printer is not ready. Please check the printer and try again.',
+                    printJobError: 'Unable to send the print job. Please try again.',
+                    uncaughtException: 'An unhandled error occurred during the printing process.',
+                },
+                printJobSent: printerName => `Print job sent to ${printerName}.`,
+            },
         },
         dashboard: {
             header: {
-                pageSubtitle: dept => `Dashboard for ${dept}`,
+                pageSubtitle: (team, dept) => `Dashboard for ${team} (${dept})`,
             },
             panel: {
                 inspections: {
@@ -194,6 +208,13 @@ export default {
                             permissions: [PERMISSIONS.can_admin],
                             path: pathConfig.admin.testntagmanageusers,
                         },
+                        {
+                            id: 'teams',
+                            title: 'Teams',
+                            icon: <TeamsIcon />,
+                            permissions: [PERMISSIONS.can_admin],
+                            path: pathConfig.admin.testntagmanageteams,
+                        },
                     ],
                 },
                 reporting: {
@@ -250,7 +271,7 @@ export default {
                 },
             ],
             header: {
-                pageSubtitle: dept => `Testing assets for ${dept}`,
+                pageSubtitle: (team, dept) => `Testing assets for ${team} (${dept})`,
             },
             form: {
                 event: {
@@ -265,9 +286,11 @@ export default {
                             maxLength: 17,
                         },
                     },
-
                     location: {
                         title: 'Location',
+                        floor: {
+                            floorPlanTooltip: 'click to open floor plan in a new tab',
+                        },
                     },
                 },
                 asset: {
@@ -294,6 +317,11 @@ export default {
                             'Unable to save your new asset type. Please ensure the asset type name you have entered does not already exist in your department',
                     },
                     ownerLabel: 'Asset owner',
+                    includeAllTeams: 'All team assets',
+                    allTeamsAlert: team =>
+                        `Note: The "${team}" team owns this asset. Switching off the "All team assets" option will reset the asset list.`,
+                    noMatchingAssets:
+                        'No matching asset found. This may be due to a misspelling, or because the asset does not belong to your team.',
                 },
                 lastInspectionPanel: {
                     title: suffix => `Previous test ${suffix}`,
@@ -315,6 +343,7 @@ export default {
                     noneLabel: 'None',
                     repairDetailsLabel: 'Repair details: ',
                     discardReasonLabel: 'Discard reason: ',
+                    lastTestedByLabel: 'Last tested by: ',
                 },
                 inspection: {
                     title: 'Test details',
@@ -391,6 +420,11 @@ export default {
                     tagPlacedBy: 'TAG PLACED BY:',
                 },
             },
+            labelPrinting: {
+                unknownPrinter: 'unconfigured',
+                selectPrinter: 'Label printer selection',
+                printButton: 'Print tag',
+            },
         },
         manage: {
             config: {
@@ -404,7 +438,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset type management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Asset type management for ${team} (${dept})`,
                     addButtonLabel: 'Add asset type',
                 },
                 addAsset: {
@@ -492,7 +526,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Locations management for ${dept}`,
+                    pageSubtitle: (_, dept) => `Locations management for ${dept}`,
                 },
                 form: {
                     title: 'Filter',
@@ -512,6 +546,12 @@ export default {
                             asset_count: {
                                 label: 'No. assets',
                             },
+                            site_excluded: {
+                                label: 'Excluded',
+                            },
+                            site_excluded_cb: {
+                                label: 'Exclude',
+                            },
                         },
                         building: {
                             building_id: {
@@ -529,10 +569,20 @@ export default {
                             asset_count: {
                                 label: 'No. assets',
                             },
+                            building_excluded: {
+                                label: 'Excluded',
+                            },
+                            building_excluded_cb: {
+                                label: 'Exclude',
+                                labelAlt: 'Exclude (Site already excluded)',
+                            },
                         },
                         floor: {
                             floor_id: {
                                 label: 'Floor ID',
+                            },
+                            floor_plan_url: {
+                                label: 'Floor plan URL',
                             },
                             floor_location: {
                                 label: 'Floor name',
@@ -542,6 +592,13 @@ export default {
                             },
                             asset_count: {
                                 label: 'No. assets',
+                            },
+                            floor_excluded: {
+                                label: 'Excluded',
+                            },
+                            floor_excluded_cb: {
+                                label: 'Exclude',
+                                labelAlt: 'Exclude (Building already excluded)',
                             },
                         },
                         room: {
@@ -559,6 +616,13 @@ export default {
                             },
                             asset_count: {
                                 label: 'No. assets',
+                            },
+                            room_excluded: {
+                                label: 'Excluded',
+                            },
+                            room_excluded_cb: {
+                                label: 'Exclude',
+                                labelAlt: 'Exclude (Floor already excluded)',
                             },
                         },
                     },
@@ -600,7 +664,7 @@ export default {
                                         deleting a site will also delete all of the site's buildings, floors and rooms.
                                         <br />
                                         <br />
-                                        <strong>THIS ACTION CAN NOT BE UNDONE.</strong>
+                                        <strong>THIS ACTION CANNOT BE UNDONE.</strong>
                                     </Alert>
                                 </>
                             )}
@@ -610,9 +674,9 @@ export default {
                 },
                 snackbar: {
                     addSuccess: 'Added the location successfully',
-                    addFail: 'Unable to save the location',
+                    addFail: 'Unable to save the location. Ensure the ID and/or name do not already exist.',
                     updateSuccess: 'updated successfully',
-                    updateFail: 'Unable to update the location',
+                    updateFail: 'Unable to update the location. Ensure the ID and/or name do not already exist.',
                     deleteSuccess: 'deleted successfully',
                     deleteFail: 'Unable to delete the location',
                 },
@@ -625,7 +689,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Testing device management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Testing device management for ${team} (${dept})`,
                 },
                 form: {
                     actions: 'Actions',
@@ -703,7 +767,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Test note management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Test note management for ${team} (${dept})`,
                 },
                 form: {
                     actions: 'Actions',
@@ -782,7 +846,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Bulk asset management for ${dept}`,
+                    pageSubtitle: (team, dept) => `Bulk asset management for ${team} (${dept})`,
                 },
                 form: {
                     columns: {
@@ -954,7 +1018,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `User management for ${dept}`,
+                    pageSubtitle: (_, dept) => `User management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -968,6 +1032,12 @@ export default {
                         },
                         user_name: {
                             label: 'Name',
+                        },
+                        user_team: {
+                            label: 'Team',
+                        },
+                        user_team_display: {
+                            label: 'Team',
                         },
                         user_licence_number: {
                             label: 'Lic #',
@@ -1009,7 +1079,7 @@ export default {
                     actionTooltips: {
                         edit: 'Edit this user',
                         delete: 'Delete this user',
-                        deleteDisabled: 'This user has recorded tests and can not be deleted',
+                        deleteDisabled: 'This user has recorded tests and cannot be deleted',
                     },
                 },
                 dialogAdd: {
@@ -1040,7 +1110,76 @@ export default {
                 helperText: {
                     user_uid: 'A user ID must contain only lower case letters and numbers',
                     user_licence_number: 'A licence number is required for inspect privilege',
+                    licence_update_warning: 'Updating this field will associate a new LIC with the user.',
                     user_name: 'A user name is required',
+                    user_team: 'A user team is required',
+                },
+            },
+            teams: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage - Teams',
+                        icon: <TeamsIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: (_, dept) => `Team management for ${dept}`,
+                },
+                form: {
+                    actions: 'Actions',
+                    addButtonLabel: 'Add Team',
+                    columns: {
+                        team_slug: {
+                            label: 'Team slug',
+                        },
+                        team_display_name: {
+                            label: 'Display name',
+                        },
+                        team_current_flag: {
+                            label: 'Active',
+                        },
+                        team_current_flag_cb: {
+                            label: 'Active',
+                        },
+                        users_count: {
+                            label: 'Member count',
+                        },
+                    },
+                    actionTooltips: {
+                        edit: 'Edit this team',
+                        delete: 'Delete this team',
+                        deleteDisabled: 'This team has member users and cannot be deleted',
+                    },
+                },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Add new team',
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Edit Team',
+                },
+                snackbar: {
+                    loadFail: 'unable to load team list',
+                    addSuccess: 'Team added successfully',
+                    addFail: 'Unable to add the Team',
+                    updateSuccess: 'Team updated successfully',
+                    updateFail: 'Unable to update the Team',
+                    deleteSuccess: 'Team deleted successfully',
+                    deleteFail: 'Unable to delete the Team',
+                },
+                dialogDeleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage:
+                        'Are you sure you wish to delete this Team? Team members will not be able to log in until reassigned to a different team.',
+                    confirmationTitle: 'Delete Team',
+                },
+                helperText: {
+                    team_slug: 'A team ID must contain only lower case letters and numbers',
+                    team_display_name: 'A team display name is required',
                 },
             },
         },
@@ -1058,7 +1197,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Testing devices due recalibration report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Testing devices due recalibration report for ${team} (${dept})`,
                 },
                 form: {
                     columns: {
@@ -1094,7 +1233,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset tests due report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Asset tests due report for ${team} (${dept})`,
                 },
                 form: {
                     title: 'Filter',
@@ -1102,6 +1241,7 @@ export default {
                         asset_barcode: {
                             label: 'Barcode',
                         },
+                        asset_type_id: { label: 'Asset ID' },
                         asset_type_name: {
                             label: 'Asset type',
                         },
@@ -1130,7 +1270,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Tests by licenced users report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Tests by licenced users report for ${team} (${dept})`,
                 },
                 form: {
                     title: 'Filter',
@@ -1185,7 +1325,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset tests report for ${dept}`,
+                    pageSubtitle: (team, dept) => `Asset tests report for ${team} (${dept})`,
                 },
                 form: {
                     title: 'Filters',
@@ -1210,6 +1350,12 @@ export default {
                         },
                         user_name: {
                             label: 'Last tested by',
+                        },
+                        inspect_comment: {
+                            label: 'Comments',
+                        },
+                        inspect_fail_reason: {
+                            label: 'Fail Reason',
                         },
                     },
                     filterStatusLabel: 'With status',

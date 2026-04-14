@@ -32,6 +32,8 @@ export const pathConfig = {
         testntagreportinspectionsdue: '/admin/testntag/report/inspectionsdue',
         testntagreportrecalibrationssdue: '/admin/testntag/report/recalibrationsdue',
         testntagmanageusers: '/admin/testntag/manage/users',
+        testntagmanageteams: '/admin/testntag/manage/teams',
+        dlorScheduler: '/admin/dlor/schedule',
     },
     bookExamBooth: '/book-exam-booth',
     dlorProtected: '/digital-learning-hub-list',
@@ -47,4 +49,5 @@ export const pathConfig = {
     dlorOwnObjectEdit: dlorId => `/digital-learning-hub/edit/${dlorId}`,
     dlorOwnTeamList: '/digital-learning-hub/team/manage',
     dlorOwnTeamEdit: dlorTeamId => `/digital-learning-hub/team/edit/${dlorTeamId}`,
+    dlorDashboard: '/digital-learning-hub/dashboard',
 };

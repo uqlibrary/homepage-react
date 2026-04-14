@@ -7,6 +7,7 @@ import AssetReportByFilters from './AssetReportByFilters';
 import assetData from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetsReportAssets';
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import buildingList from '../../../../../../../data/mock/data/testing/testAndTag/testTagTaggedBuildingList';
+import { assertLocationLink, assertLocationLinkless } from '../../../helpers/helpers.test';
 
 function setup(testProps = {}, renderer = rtlRender) {
     const {
@@ -63,7 +64,7 @@ describe('AssetReportByFilters', () => {
         });
         expect(loadAssetReportByFiltersFn).toHaveBeenCalled();
         expect(loadTaggedBuildingListFn).toHaveBeenCalled();
-        expect(getByText('Asset tests report for Library')).toBeInTheDocument();
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
         expect(getByTestId('asset_status_selector-assets-inspected')).toBeInTheDocument();
         expect(getByTestId('asset_status_selector-assets-inspected-input')).toHaveAttribute('value', 'All');
         expect(getByTestId('location_picker-assets_inspected-building')).toBeInTheDocument();
@@ -80,19 +81,57 @@ describe('AssetReportByFilters', () => {
         // check first row is as expected
         const row = within(getAllByRole('row')[1]);
         expect(row.getByText('UQL000004')).toBeInTheDocument();
-        expect(row.getByText('Gatton / 8102 / 1 / 102')).toBeInTheDocument();
+        assertLocationLink(row.getByText('Gatton / 8102 / 1 / 102'), 'http://29.a');
         expect(row.getByText('PowerBoard')).toBeInTheDocument();
         expect(row.getByText('2015-10-01')).toBeInTheDocument();
-
         // expect a red cell with alert icon
         expect(row.getAllByRole('cell')[5]).toHaveStyle('background-color: #951126');
         expect(row.getByText('2016-10-01')).toBeInTheDocument();
         expect(row.getByTestId('tooltip-overdue')).toBeInTheDocument();
-
         expect(row.getByText('CURRENT')).toBeInTheDocument();
+        // assert 2nd row's location string
+        assertLocationLinkless(within(getAllByRole('row')[2]).getByText('St Lucia / 0001 / 2 / W212'));
 
         // check pagination counter shows expected number of rows
         expect(getByText('1–6 of 6')).toBeInTheDocument();
+        expect(getByTestId('assets-inspected-data-table-toolbar-export-menu')).toBeInTheDocument();
+    });
+
+    describe('csv export', () => {
+        beforeAll(() => {
+            global.URL.createObjectURL = jest.fn(() => 'blob:mock');
+            global.URL.revokeObjectURL = jest.fn();
+        });
+
+        it('should include hidden columns', async () => {
+            const user = userEvent.setup();
+            const RealBlob = global.Blob;
+            const blobParts = [];
+            jest.spyOn(global, 'Blob').mockImplementation((parts, opts) => {
+                blobParts.push({ parts, opts });
+                return new RealBlob(parts, opts);
+            });
+            const { getByText } = setup({
+                actions: {
+                    loadAssetReportByFilters: jest.fn(),
+                    loadTaggedBuildingList: jest.fn(),
+                },
+            });
+
+            await user.click(getByText('Export'));
+            await user.click(getByText('Download as CSV'));
+
+            expect(global.URL.createObjectURL).toHaveBeenCalled();
+            expect(blobParts.length).toBeGreaterThan(0);
+            const csvText = blobParts[0].parts[1];
+            expect(csvText).toContain(
+                'Barcode,Location (Site/Bld/Flr/Rm),Asset type,Last test,Last tested by,Test due,Status,Comments,Fail Reason',
+            );
+            // should include hidden fields
+            expect(csvText).toContain(
+                'UQL000608,St Lucia / 0001 / 4 / W437,Power Cord - C5,2023-07-05,,,FAILED,not good,broken',
+            );
+        });
     });
 
     it('fires action when status is changed', async () => {
@@ -106,7 +145,7 @@ describe('AssetReportByFilters', () => {
             },
         });
 
-        expect(getByText('Asset tests report for Library')).toBeInTheDocument();
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
 
         // select Out for Repair status
         await userEvent.click(getByTestId('asset_status_selector-assets-inspected-input'));
@@ -119,6 +158,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
 
@@ -133,6 +173,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
         // select Out for Repair status
@@ -146,6 +187,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
     });
@@ -161,7 +203,7 @@ describe('AssetReportByFilters', () => {
             },
         });
 
-        expect(getByText('Asset tests report for Library')).toBeInTheDocument();
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-assets_inspected-building-input'));
@@ -174,6 +216,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: 11,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
     });
@@ -188,7 +231,7 @@ describe('AssetReportByFilters', () => {
                 loadTaggedBuildingList: jest.fn(),
             },
         });
-        expect(getByText('Asset tests report for Library')).toBeInTheDocument();
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
 
         await userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20220101'); // input formats as date is typed
         await userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '20230101'); // input formats as date is typed
@@ -200,6 +243,46 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: '2023-01-01',
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
+            }),
+        );
+    });
+
+    it('fires action when team filter changes', async () => {
+        const clearDateErrorsFn = jest.fn();
+        const loadAssetReportByFiltersFn = jest.fn();
+        const { getByText, getByTestId, findByRole } = setup({
+            actions: {
+                clearDateErrors: clearDateErrorsFn,
+                loadAssetReportByFilters: loadAssetReportByFiltersFn,
+                loadTaggedBuildingList: jest.fn(),
+            },
+        });
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
+
+        expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
+            assetStatus: null,
+            inspectionDateFrom: null,
+            inspectionDateTo: null,
+            locationId: null,
+            locationType: 'building',
+            teamSlug: 'WSS',
+        });
+
+        // open team selector and select WSS team
+        const teamSelect = within(getByTestId('team-display-name-select-filter')).getByRole('combobox');
+        await userEvent.click(teamSelect);
+        const listbox = await findByRole('listbox');
+        await userEvent.click(within(listbox).getByText('Spaces'));
+
+        await waitFor(() =>
+            expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
+                assetStatus: null,
+                inspectionDateFrom: null,
+                inspectionDateTo: null,
+                locationId: null,
+                locationType: 'building',
+                teamSlug: 'SPACES',
             }),
         );
     });
@@ -214,7 +297,7 @@ describe('AssetReportByFilters', () => {
                 loadTaggedBuildingList: jest.fn(),
             },
         });
-        expect(getByText('Asset tests report for Library')).toBeInTheDocument();
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
 
         await userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20210101');
         await userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '20200101');
@@ -226,6 +309,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null, // invalid dates wont fire an api request
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
 
@@ -249,6 +333,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: '2020-01-01', // new request should fire as one date is supplied and valid
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
 
@@ -261,6 +346,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
     });

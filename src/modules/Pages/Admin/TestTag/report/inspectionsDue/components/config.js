@@ -3,6 +3,7 @@ import React from 'react';
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
+import { createLocationLink, createLocationString } from '../../../helpers/helpers';
 const moment = require('moment');
 
 export default {
@@ -14,6 +15,11 @@ export default {
     },
     fields: {
         asset_barcode: { fieldParams: { minWidth: 130 } },
+        asset_type_id: {
+            fieldParams: {
+                hide: true,
+            },
+        },
         asset_type_name: { fieldParams: { minWidth: 250 } },
         asset_next_test_due_date: {
             fieldParams: {
@@ -43,6 +49,30 @@ export default {
             },
         },
         asset_test_date: { fieldParams: { minWidth: 150 } },
-        asset_location: { fieldParams: { flex: 1, minWidth: 400 } },
+        asset_location: {
+            fieldParams: {
+                flex: 1,
+                minWidth: 400,
+                field: 'location',
+                headerName: 'Location',
+                valueGetter: params =>
+                    createLocationString({
+                        site: params.row.site_name,
+                        building: params.row.building_name,
+                        floor: params.row.floor_id_displayed,
+                        room: params.row.room_id_displayed,
+                    }),
+                renderCell: params =>
+                    createLocationLink(
+                        createLocationString({
+                            site: params.row.site_name,
+                            building: params.row.building_name,
+                            floor: params.row.floor_id_displayed,
+                            room: params.row.room_id_displayed,
+                        }),
+                        params.row.floor_plan_url,
+                    ),
+            },
+        },
     },
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
@@ -15,13 +15,19 @@ import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelec
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
-import { transformRow } from './utils';
 import { breadcrumbs } from 'config/routes';
+import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
+import * as _ from 'lodash';
+import { GridWrapper } from '../../../SharedComponents/LocationPicker/LocationPicker';
+import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+
+import { useUserTeams } from '../../../helpers/teams';
+
 const moment = require('moment');
 
 const componentId = 'inspections-due';
@@ -37,19 +43,37 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
 }));
 
-const InspectionsDue = ({
-    actions,
-    inspectionsDue,
-    inspectionsDueLoading,
+/**
+ * @param {Object} data
+ * @return {{id:*, label:*}}
+ */
+const extractAssetTypeData = data =>
+    _.sortBy(
+        _.uniqBy(
+            data.map(i => ({ id: i.asset_type_id, label: i.asset_type_name })),
+            i => i.id,
+        ),
+        i => i.id,
+    );
 
-    inspectionsDueError,
-}) => {
+export const getLastLocationWithId = location => {
+    const newLocation = Object.keys(location).reduce((acc, key) => {
+        if (location[key] && location[key] !== -1) {
+            return { locationType: key, locationId: location[key] };
+        }
+        return acc;
+    }, {});
+    return newLocation;
+};
+
+const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspectionsDueError }) => {
     const pageLocale = locale.pages.report.inspectionsDue;
     const monthsOptions = locale.config.monthsOptions;
+    const { user } = useAccountUser();
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
-    const { lastSelectedLocation } = useSelectLocation({
+    useSelectLocation({
         location,
         setLocation,
         actions,
@@ -60,9 +84,24 @@ const InspectionsDue = ({
         locale: pageLocale.form.columns,
         withActions: false,
     });
-    const { row } = useDataTableRow(inspectionsDue, transformRow);
+    const { row } = useDataTableRow(inspectionsDue);
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
+
+    const {
+        userTeamList,
+        selectedTeam,
+        selectedTeamSlug,
+        teamSelectFieldName,
+        setSelectedTeam,
+        getSelectedTeamSlug,
+    } = useUserTeams(user);
+
+    // const prevSearchRef = useRef({ locationStr: '', monthRange, selectedTeamSlug });
+
+    const [filterModel, setFilterModel] = useState({ items: [] });
+
+    const uniqueAssetTypeList = React.useMemo(() => extractAssetTypeData(inspectionsDue), [inspectionsDue]);
 
     const onCloseConfirmationAlert = () => actions.clearInspectionsDueError();
     const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
@@ -78,23 +117,52 @@ const InspectionsDue = ({
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
     }, []);
 
-    useEffect(() => {
-        const locationId = location[lastSelectedLocation];
-
-        actions.getInspectionsDue({
-            period: monthRange,
-            periodType: 'month',
-            ...(!!locationId && locationId !== -1 ? { locationId, locationType: lastSelectedLocation } : {}),
-        });
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lastSelectedLocation, location, monthRange]);
-
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
-    const onMonthRangeChange = value => {
-        setMonthRange(value);
-    };
+    const getInspectionsDue = useCallback(
+        values => {
+            const newLocation = getLastLocationWithId(location);
+            actions.getInspectionsDue({
+                period: monthRange,
+                periodType: 'month',
+                teamSlug: selectedTeamSlug,
+                ...newLocation,
+                ...values,
+            });
+        },
+        [actions, location, monthRange, selectedTeamSlug],
+    );
+
+    const onMonthRangeChange = useCallback(
+        value => {
+            setMonthRange(value);
+            getInspectionsDue({ period: value, periodType: 'month' });
+        },
+        [getInspectionsDue],
+    );
+
+    const handleSelectedTeam = useCallback(
+        updater => {
+            const newState = updater(selectedTeam);
+            setSelectedTeam(newState);
+            const newSlug = getSelectedTeamSlug(newState);
+            getInspectionsDue({ teamSlug: newSlug });
+        },
+        [selectedTeam, setSelectedTeam, getSelectedTeamSlug, getInspectionsDue],
+    );
+    const handleSelectedLocation = useCallback(
+        value => {
+            const newLocation = getLastLocationWithId(value);
+            setLocation(value);
+            getInspectionsDue({ ...newLocation });
+        },
+        [setLocation, getInspectionsDue],
+    );
+
+    useEffect(() => {
+        getInspectionsDue({});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <StandardAuthPage
@@ -105,15 +173,28 @@ const InspectionsDue = ({
             <StyledWrapper>
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
+                        <GridWrapper withGrid divisor={2}>
+                            <SelectField
+                                field={teamSelectFieldName}
+                                options={userTeamList}
+                                locale={{ all: 'All teams', label: 'Team' }}
+                                filterModel={selectedTeam}
+                                setFilterModel={handleSelectedTeam}
+                            />
+                        </GridWrapper>
+                    </Grid>
+                    <Grid container spacing={3}>
                         <AutoLocationPicker
                             id={componentId}
                             actions={actions}
                             location={location}
-                            setLocation={setLocation}
+                            setLocation={handleSelectedLocation}
                             hasAllOption
                             locale={locale.pages.general.locationPicker}
                         />
-                        <Grid>
+                    </Grid>
+                    <Grid container spacing={3}>
+                        <GridWrapper withGrid divisor={2}>
                             <MonthsSelector
                                 id={componentId}
                                 label={pageLocale.form.filterToDateLabel}
@@ -128,11 +209,23 @@ const InspectionsDue = ({
                                 dateDisplayFormat={locale.pages.report.config.dateFormatDisplay}
                                 classNames={{ formControl: 'formControl', select: 'formSelect' }}
                             />
-                        </Grid>
+                        </GridWrapper>
+                        <GridWrapper withGrid divisor={2}>
+                            <SelectField
+                                field="asset_type_id"
+                                options={uniqueAssetTypeList}
+                                locale={{ all: 'All asset types', label: 'Asset Type' }}
+                                filterModel={filterModel}
+                                setFilterModel={setFilterModel}
+                                multiple
+                            />
+                        </GridWrapper>
                     </Grid>
                     <Grid container spacing={3} className={'tableMarginTop'}>
                         <Grid sx={{ flex: 1 }}>
                             <DataTable
+                                filterModel={filterModel}
+                                onFilterModelChange={setFilterModel}
                                 id={componentId}
                                 rows={row}
                                 columns={columns}
@@ -144,6 +237,9 @@ const InspectionsDue = ({
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
+                                components={{
+                                    Toolbar: () => <WithExportMenu id={componentId} />,
+                                }}
                             />
                         </Grid>
                     </Grid>

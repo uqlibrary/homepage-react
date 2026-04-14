@@ -15,7 +15,7 @@ test.describe('Test and Tag Manage Asset Types', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.assetTypes.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_type_name', 0)).getByText('[E2E_testing] Name')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
@@ -23,7 +23,7 @@ test.describe('Test and Tag Manage Asset Types', () => {
 
     test('Page Pagination functions correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.assetTypes.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_type_name', 0)).getByText('[E2E_testing] Name')).toBeVisible();
 
@@ -42,12 +42,12 @@ test.describe('Test and Tag Manage Asset Types', () => {
 
     test('Add and Edit Asset type functions correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.assetTypes.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_type_name', 0)).getByText('[E2E_testing] Name')).toBeVisible();
 
         // Adding an asset type
-        await page.getByTestId('add_toolbar-asset-types-add-button').click();
+        await page.getByTestId('asset-types-data-table-toolbar-add-button').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
 
         await page.getByTestId('asset_type_name-input').fill('Test Asset');
@@ -71,7 +71,7 @@ test.describe('Test and Tag Manage Asset Types', () => {
         await expect(page.locator('.MuiAlert-message').getByText('Request successfully completed')).toBeVisible();
 
         // Cancel button - Add
-        await page.getByTestId('add_toolbar-asset-types-add-button').click();
+        await page.getByTestId('asset-types-data-table-toolbar-add-button').click();
         await page.getByTestId('update_dialog-cancel-button').click();
         await expect(page.locator('.MuiAlert-message')).not.toBeVisible();
 
@@ -83,7 +83,7 @@ test.describe('Test and Tag Manage Asset Types', () => {
 
     test('Delete and Reassign work correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.assetTypes.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_type_name', 0)).getByText('[E2E_testing] Name')).toBeVisible();
 

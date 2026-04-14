@@ -24,6 +24,7 @@ export { default as testTagAssetsByFiltersReducer } from './testTagAssetsByFilte
 export { default as testTagBulkAssetUpdateReducer } from './testTagBulkAssetUpdateReducer';
 export { default as testTagInspectionDetailsUpdateReducer } from './testTagInspectionDetailsUpdateReducer';
 export { default as testTagUserListReducer } from './testTagUserListReducer';
+export { default as testTagTeamListReducer } from './testTagTeamListReducer';
 export { default as dlorListReducer } from './dlorListReducer';
 export { default as dlorFilterListReducer } from './dlorFilterListReducer';
 export { default as dlorGetSingleReducer } from './dlorGetSingleReducer';
@@ -44,3 +45,5 @@ export { default as dlorFavouritesReducer } from './dlorFavouritesReducer';
 export { default as dlorAdminNotesReducer } from './dlorAdminNotesReducer';
 export { default as dlorKeywordsReducer } from './dlorKeywordsReducer';
 export { default as dlorStatisticsReducer } from './dlorStatisticsReducer';
+export { default as dlorScheduleReducer } from './dlorScheduleReducer';
+export { default as dlorDashboardReducer } from './dlorDashboardReducer';

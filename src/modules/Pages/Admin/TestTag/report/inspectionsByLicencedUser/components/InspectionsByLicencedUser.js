@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
@@ -16,7 +16,7 @@ import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/Standar
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
@@ -25,6 +25,10 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 
 import FooterRow from './FooterRow';
 import { breadcrumbs } from 'config/routes';
+import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
+import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+import { useUserTeams } from '../../../helpers/teams';
+
 const moment = require('moment');
 
 const componentId = 'user-inspections';
@@ -55,12 +59,15 @@ const InspectionsByLicencedUser = ({
 }) => {
     const theme = useTheme();
     const pageLocale = locale.pages.report.inspectionsByLicencedUser;
+    const { user } = useAccountUser();
 
     const [inspectorName, setInspectorName] = React.useState([]);
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, dateFormatted: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, dateFormatted: null });
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
+
+    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams(user);
 
     const onCloseConfirmationAlert = () => {
         if (!!userInspectionsError) actions.clearInspectionsError();
@@ -80,7 +87,15 @@ const InspectionsByLicencedUser = ({
     });
     const { row } = useDataTableRow(userInspections, transformRow);
 
-    const clearDateErrors = () => {
+    const onTeamChange = useCallback(
+        team => {
+            setSelectedTeam(team);
+            setInspectorName([]);
+        },
+        [setSelectedTeam],
+    );
+
+    const clearDateErrors = useCallback(() => {
         setStartDateError({
             error: false,
             message: '',
@@ -89,23 +104,23 @@ const InspectionsByLicencedUser = ({
             error: false,
             message: '',
         });
-    };
+    }, []);
 
-    const handleStartDateChange = date => {
+    const handleStartDateChange = useCallback(date => {
         setSelectedStartDate({
             date: date,
             dateFormatted: !!date ? date.format(locale.config.format.dateFormatNoTime) : null,
         });
-    };
-    const handleEndDateChange = date => {
+    }, []);
+    const handleEndDateChange = useCallback(date => {
         setSelectedEndDate({
             date: date,
             dateFormatted: !!date ? date.format(locale.config.format.dateFormatNoTime) : null,
         });
-    };
-    const handleInspectorChange = event => {
+    }, []);
+    const handleInspectorChange = useCallback(event => {
         setInspectorName(event.target.value);
-    };
+    }, []);
 
     useEffect(() => {
         let shouldCallReport = true;
@@ -144,31 +159,26 @@ const InspectionsByLicencedUser = ({
             }
         }
         if (shouldCallReport) {
+            const userRange = inspectorName.length > 0 ? inspectorName.toString() : null;
             actions.getInspectionsByLicencedUser({
                 startDate: selectedStartDate.dateFormatted,
                 endDate: selectedEndDate.dateFormatted,
-                userRange: inspectorName.toString(),
+                userRange,
+                teamSlug: !userRange && selectedTeamSlug ? selectedTeamSlug : null,
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [inspectorName, selectedStartDate, selectedEndDate]);
-
-    /* EFFECTS */
-    useEffect(() => {
-        if (!!!licencedUsers || licencedUsers.length < 1) {
-            actions.getLicencedUsers();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [licencedUsers, licencedUsersLoaded]);
+    }, [inspectorName, selectedStartDate, selectedEndDate, selectedTeamSlug]);
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
-
-        actions.getInspectionsByLicencedUser({ startDate: null, endDate: null, userRange: null });
+        if (!!!licencedUsers || licencedUsers.length < 1) {
+            actions.getLicencedUsers();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [licencedUsers, licencedUsersLoaded]);
 
     return (
         <StandardAuthPage
@@ -178,9 +188,20 @@ const InspectionsByLicencedUser = ({
         >
             <StyledWrapper>
                 <StandardCard title={pageLocale.form.title}>
+                    <Grid container spacing={1}>
+                        <Grid xs={12} md={4}>
+                            {/* Team Picker */}
+                            <SelectField
+                                field={teamSelectFieldName}
+                                options={userTeamList}
+                                locale={{ all: 'All teams', label: 'Team' }}
+                                filterModel={selectedTeam}
+                                setFilterModel={onTeamChange}
+                            />
+                        </Grid>
+                    </Grid>
                     <Grid container spacing={3}>
                         <Grid xs={12} md={4}>
-                            {/* Date Pickers go here */}
                             <FormControl variant="standard" fullWidth className={'formControl'}>
                                 <InputLabel>Inspector Name</InputLabel>
                                 <Select
@@ -210,6 +231,11 @@ const InspectionsByLicencedUser = ({
                                             <div className={'chips'}>
                                                 {!!selected &&
                                                     licencedUsers
+                                                        .filter(user =>
+                                                            selectedTeamSlug
+                                                                ? user.user_team === selectedTeamSlug
+                                                                : true,
+                                                        )
                                                         .filter(user => selected.includes(user.user_id))
                                                         .slice(0, 2) // Extract the first two users
                                                         .map(value => value.user_name)
@@ -223,22 +249,25 @@ const InspectionsByLicencedUser = ({
                                         );
                                     }}
                                 >
-                                    {licencedUsers?.map((user, index) => (
-                                        <MenuItem
-                                            key={user.user_id}
-                                            value={user.user_id}
-                                            style={getNameStyles(user, inspectorName, theme)}
-                                            id={`${componentIdLower}-user-name-option-${index}`}
-                                            data-testid={`${componentIdLower}-user-name-option-${index}`}
-                                        >
-                                            {user.user_name}
-                                        </MenuItem>
-                                    ))}
+                                    {licencedUsers
+                                        ?.filter(user =>
+                                            selectedTeamSlug ? user.user_team === selectedTeamSlug : true,
+                                        )
+                                        .map((user, index) => (
+                                            <MenuItem
+                                                key={user.user_id}
+                                                value={user.user_id}
+                                                style={getNameStyles(user, inspectorName, theme)}
+                                                id={`${componentIdLower}-user-name-option-${index}`}
+                                                data-testid={`${componentIdLower}-user-name-option-${index}`}
+                                            >
+                                                {user.user_name}
+                                            </MenuItem>
+                                        ))}
                                 </Select>
                             </FormControl>
                         </Grid>
                         <Grid xs={12} md={4}>
-                            {/* Start Date */}
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
@@ -274,7 +303,6 @@ const InspectionsByLicencedUser = ({
                             />
                         </Grid>
                         <Grid xs={12} md={4}>
-                            {/* End Date */}
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
@@ -320,6 +348,7 @@ const InspectionsByLicencedUser = ({
                                 disableColumnFilter
                                 disableColumnMenu
                                 components={{
+                                    Toolbar: () => <WithExportMenu id={componentId} />,
                                     Footer: () => (
                                         <FooterRow count={totalInspections} columns={columns} locale={pageLocale} />
                                     ),

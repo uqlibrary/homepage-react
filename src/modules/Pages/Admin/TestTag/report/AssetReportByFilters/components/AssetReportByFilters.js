@@ -13,12 +13,15 @@ import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/AssetStatusSelector';
 import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
 
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
+import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
+import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+import { useUserTeams } from '../../../helpers/teams';
 
 const moment = require('moment');
 
@@ -52,6 +55,7 @@ const AssetReportByFilters = ({
     /* locale and styles */
     const pageLocale = locale.pages.report.assetReportByFilters;
     const statusTypes = pageLocale.form.statusTypes;
+    const { user } = useAccountUser();
 
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
@@ -60,6 +64,8 @@ const AssetReportByFilters = ({
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, error: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, error: null });
     const [statusType, setStatusType] = React.useState(0);
+
+    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams(user);
 
     const buildingList = useMemo(() => {
         /* istanbul ignore else */
@@ -109,6 +115,7 @@ const AssetReportByFilters = ({
             locationId: taggedBuildingName > 0 ? taggedBuildingName : null,
             inspectionDateFrom: !!selectedStartDate.dateFormatted ? selectedStartDate.dateFormatted : null,
             inspectionDateTo: !!selectedEndDate.dateFormatted ? selectedEndDate.dateFormatted : null,
+            teamSlug: selectedTeamSlug !== '' ? selectedTeamSlug : null,
         };
     };
 
@@ -150,7 +157,7 @@ const AssetReportByFilters = ({
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
 
         actions.loadTaggedBuildingList();
-        buildPayload();
+        // buildPayload();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -180,7 +187,7 @@ const AssetReportByFilters = ({
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [statusType, taggedBuildingName, selectedStartDate, selectedEndDate]);
+    }, [statusType, taggedBuildingName, selectedStartDate, selectedEndDate, selectedTeamSlug]);
 
     return (
         <StandardAuthPage
@@ -190,6 +197,18 @@ const AssetReportByFilters = ({
         >
             <StyledWrapper>
                 <StandardCard title={pageLocale.form.title} id={componentId}>
+                    <Grid container spacing={1}>
+                        <Grid xs={12} md={6} lg={3}>
+                            {/* Team Picker */}
+                            <SelectField
+                                field={teamSelectFieldName}
+                                options={userTeamList}
+                                locale={{ all: 'All teams', label: 'Team' }}
+                                filterModel={selectedTeam}
+                                setFilterModel={setSelectedTeam}
+                            />
+                        </Grid>
+                    </Grid>
                     <Grid container spacing={1}>
                         <Grid xs={12} md={6} lg={3}>
                             {/* Status Picker */}
@@ -314,6 +333,9 @@ const AssetReportByFilters = ({
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
+                                components={{
+                                    Toolbar: () => <WithExportMenu id={componentId} />,
+                                }}
                             />
                         </Grid>
                     </Grid>

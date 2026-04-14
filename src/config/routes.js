@@ -22,10 +22,12 @@ export const flattedPathConfigExact = [
     '/admin/dlor/team/add',
     '/admin/dlor/filters',
     '/admin/dlor/vocabulary',
+    '/admin/dlor/schedule',
     '/admin/masquerade',
     '/admin/masquerade/',
     '/admin/testntag',
     '/admin/testntag/manage/users',
+    '/admin/testntag/manage/teams',
     '/admin/testntag/manage/assettypes',
     '/admin/testntag/manage/locations',
     '/admin/testntag/manage/inspectiondevices',
@@ -41,6 +43,7 @@ export const flattedPathConfigExact = [
     '/digital-learning-hub',
     'https://www.library.uq.edu.au/404.js',
     '/digital-learning-hub-list',
+    '/digital-learning-hub/dashboard',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
@@ -257,6 +260,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: 'Manage Vocabulary',
         },
+        {
+            path: pathConfig.admin.dlorScheduler,
+            element: <components.DLOBulkSchedule />,
+            exact: true,
+            pageTitle: 'Manage feature schedules',
+        },
     ];
     const authenticatedDlorDisplay = [
         {
@@ -269,6 +278,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.dlorViewSecure(dlorId),
             element: <components.DLOView />,
             pageTitle: 'Digital Learning Object Repository - View Object',
+        },
+        {
+            path: pathConfig.dlorDashboard,
+            element: <components.DLODashboard />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository - Dashboard',
         },
     ];
 
@@ -356,6 +371,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.testntagmanageusers,
             element: <components.TestTagManageUsers />,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagmanageteams,
+            element: <components.TestTagManageTeams />,
             exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },

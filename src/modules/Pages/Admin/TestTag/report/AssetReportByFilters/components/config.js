@@ -3,7 +3,22 @@ import React from 'react';
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
+import { createLocationLink } from '../../../helpers/helpers';
 const moment = require('moment');
+
+/**
+ * @param {
+ *     {site_name: string, building_id_displayed: string, floor_id_displayed: number, room_id_displayed: number}
+ * } row
+ * @return {string}
+ */
+export const renderLocation = row => {
+    const siteName = row?.site_name || /* istanbul ignore next */ '';
+    const buildingNum = row?.building_id_displayed || /* istanbul ignore next */ '';
+    const floorNum = row?.floor_id_displayed || /* istanbul ignore next */ '';
+    const roomNum = row?.room_id_displayed || /* istanbul ignore next */ '';
+    return locale.pages.report.assetReportByFilters.form.formattedLocation(siteName, buildingNum, floorNum, roomNum);
+};
 
 export default {
     defaults: {
@@ -20,20 +35,10 @@ export default {
         asset_barcode: { fieldParams: { minWidth: 120 } },
         location: {
             fieldParams: {
-                renderCell: params => {
-                    const siteName = params.row?.site_name || /* istanbul ignore next */ '';
-                    const buildingNum = params.row?.building_id_displayed || /* istanbul ignore next */ '';
-                    const floorNum = params.row?.floor_id_displayed || /* istanbul ignore next */ '';
-                    const roomNum = params.row?.room_id_displayed || /* istanbul ignore next */ '';
-                    return locale.pages.report.assetReportByFilters.form.formattedLocation(
-                        siteName,
-                        buildingNum,
-                        floorNum,
-                        roomNum,
-                    );
-                },
                 minWidth: 200,
                 flex: 1,
+                valueGetter: params => renderLocation(params.row),
+                renderCell: params => createLocationLink(renderLocation(params.row), params.row.floor_plan_url),
             },
         },
         asset_type_name: { fieldParams: { minWidth: 200, flex: 1 } },
@@ -67,5 +72,15 @@ export default {
             },
         },
         asset_status: { fieldParams: { width: 140 } },
+        inspect_comment: {
+            fieldParams: {
+                hide: true,
+            },
+        },
+        inspect_fail_reason: {
+            fieldParams: {
+                hide: true,
+            },
+        },
     },
 };

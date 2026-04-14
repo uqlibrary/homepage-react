@@ -16,6 +16,7 @@ let apiClient = axios.create({
     baseURL: API_URL,
     crossdomain: true,
 });
+
 if (!isDevEnv() && !isTest()) {
     apiClient = setupCache(apiClient, {
         // unfortunately the below doesn't work for tests
@@ -206,7 +207,7 @@ apiClient.interceptors.response.use(
         }
 
         if (!!errorMessage) {
-            return Promise.reject({ ...errorMessage });
+            return Promise.reject(typeof errorMessage === 'string' ? errorMessage : { ...errorMessage });
         } else {
             return Promise.reject(error);
         }

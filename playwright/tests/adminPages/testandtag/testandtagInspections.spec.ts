@@ -1,12 +1,15 @@
 import { test, expect, Page } from '@uq/pw/test';
 import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
+import { COOKIE_INCLUDE_ALL_TEAMS } from '../../../../src/modules/Pages/Admin/TestTag/Inspection/components/config';
 import moment from 'moment';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 test.describe('Test and Tag Admin Inspection page', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('http://localhost:2020/admin/testntag/inspect?user=uqtesttag');
-        await expect.poll(async () => await page.locator(':focus').getAttribute('value')).toBe('St Lucia');
+        await expect
+            .poll(async () => await page.locator(':focus').getAttribute('value'), { timeout: 30_000 })
+            .toBe('St Lucia');
     });
 
     const selectListBox = async (page: Page, pattern: string, timeout: number = 10_000) =>
@@ -82,7 +85,9 @@ test.describe('Test and Tag Admin Inspection page', () => {
     const runAllTests = () => {
         test('page is accessible', async ({ page }) => {
             await expect(page.locator('h1').getByText('UQ Asset Test and Tag')).toBeVisible();
-            await expect(page.locator('h2').getByText('Testing assets for Library')).toBeVisible();
+            await expect(
+                page.locator('h2').getByText('Testing assets for Work Station Support (Library)'),
+            ).toBeVisible();
             await expect(page.getByTestId('location_picker-event-panel-site-input')).toHaveValue('St Lucia');
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
@@ -141,6 +146,17 @@ test.describe('Test and Tag Admin Inspection page', () => {
                     await page.getByTestId('location_picker-event-panel-floor').click({ timeout: 2000 });
                     await page.locator('#location_picker-event-panel-floor-option-0').click({ timeout: 2000 });
                     await expect(page.getByTestId('location_picker-event-panel-floor-input')).toHaveValue('1');
+                    // floor plan
+                    const button = page.getByTestId('floor-plan-adornment');
+                    // tooltip
+                    await button.hover();
+                    await expect(page.getByRole('tooltip')).toBeVisible();
+                    await expect(page.getByRole('tooltip')).toHaveText(
+                        locale.pages.inspect.form.event.location.floor.floorPlanTooltip,
+                    );
+                    // link
+                    await expect(button).toHaveAttribute('href', 'http://29.a');
+                    await expect(button).toHaveAttribute('target', '_blank');
                 }).toPass();
 
                 // Room
@@ -213,7 +229,9 @@ test.describe('Test and Tag Admin Inspection page', () => {
             });
 
             test('should allow selection of new asset and type', async ({ page }) => {
-                await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled();
+                await expect(
+                    async () => await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled(),
+                ).toPass({ timeout: 20_000 });
                 await page.getByTestId('asset_selector-asset-panel-input').click();
                 await page.locator('#asset_selector-asset-panel-option-0').click();
                 await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('NEW ASSET');
@@ -223,6 +241,9 @@ test.describe('Test and Tag Admin Inspection page', () => {
             });
 
             test('should allow creation of new asset type', async ({ page }) => {
+                await expect(
+                    async () => await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled(),
+                ).toPass({ timeout: 20_000 });
                 await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled();
                 await page.getByTestId('asset_selector-asset-panel-input').click();
                 await page.locator('#asset_selector-asset-panel-option-0').click();
@@ -255,6 +276,79 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('UQL310000');
                 await expect(page.getByTestId('asset_type_selector-asset-panel-input')).not.toBeDisabled();
                 await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toHaveValue('Power Cord - C13');
+            });
+
+            test('should show error alert if no matching assets are found', async ({ page, context }) => {
+                await context.clearCookies({ name: COOKIE_INCLUDE_ALL_TEAMS });
+                await page.reload();
+
+                await expect(page.getByTestId('asset_panel-all-teams-switch')).not.toBeChecked();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 });
+                await page.getByTestId('asset_selector-asset-panel-input').fill('UQL00SP29');
+                await expect(page.getByTestId('confirmation_alert-error-alert')).toContainText(
+                    'No matching asset found.',
+                );
+            });
+            test('should not show other teams assets when all teams switch is off', async ({ page, context }) => {
+                await context.clearCookies({ name: COOKIE_INCLUDE_ALL_TEAMS });
+                await page.reload();
+
+                await expect(page.getByTestId('asset_panel-all-teams-switch')).not.toBeChecked();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 });
+                await page.getByTestId('asset_selector-asset-panel-input').fill('UQL00');
+                await expect(page.getByRole('option').filter({ hasText: 'UQL00SP' })).toHaveCount(0);
+                await page.getByTestId('asset_panel-all-teams-switch').click();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 }); // bring back up the options list
+                await expect(page.getByRole('option').filter({ hasText: 'UQL00SP' })).toHaveCount(3);
+            });
+
+            test('should auto show other teams assets when all teams switch is on', async ({ page, context }) => {
+                await context.addCookies([
+                    { name: COOKIE_INCLUDE_ALL_TEAMS, value: 'true', domain: 'localhost', path: '/' },
+                ]);
+                await page.reload();
+                await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled();
+
+                await expect(page.getByTestId('asset_panel-all-teams-switch')).toBeChecked();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 });
+                await page.getByTestId('asset_selector-asset-panel-input').fill('UQL00');
+                await expect(page.getByRole('option').filter({ hasText: 'UQL00SP' })).toHaveCount(3);
+                await page.getByTestId('asset_panel-all-teams-switch').click();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 }); // bring back up the options list
+                await expect(page.getByRole('option').filter({ hasText: 'UQL00SP' })).toHaveCount(0);
+            });
+
+            test('should show alert if selected asset is from another team, then hide', async ({ page, context }) => {
+                await context.addCookies([
+                    { name: COOKIE_INCLUDE_ALL_TEAMS, value: 'true', domain: 'localhost', path: '/' },
+                ]);
+                await page.reload();
+                await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled();
+
+                await expect(page.getByTestId('asset_panel-all-teams-switch')).toBeChecked();
+                await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 });
+                await page.getByTestId('asset_selector-asset-panel-input').fill('UQL00');
+                await page
+                    .getByRole('option')
+                    .filter({ hasText: 'UQL00SP' })
+                    .first()
+                    .click();
+
+                await expect(
+                    page
+                        .getByTestId('asset_panel-all-teams-warning-text')
+                        .getByText('The "Spaces" team owns this asset. '),
+                ).toBeVisible();
+
+                // flip the all teams switch, which show remove the alert
+                await page.getByTestId('asset_panel-all-teams-switch').click();
+                await expect(
+                    page
+                        .getByTestId('asset_panel-all-teams-warning-text')
+                        .getByText('The "Spaces" team owns this asset. '),
+                ).not.toBeVisible();
+
+                await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('');
             });
 
             test('should show passed Previous Inspection panel', async ({ page }) => {
@@ -499,27 +593,99 @@ test.describe('Test and Tag Admin Inspection page', () => {
         });
 
         test.describe('saving values', () => {
-            test('should enable save button and show active saved message', async ({ page }) => {
-                await expect(page.getByTestId('inspection-save-button')).toBeDisabled();
-                await expect(page.getByTestId('location_picker-event-panel-site-input')).toHaveValue('St Lucia');
-                await selectLocation(page, { building: 'Forgan Smith Building', floor: '2', room: 'W212' });
-                await selectAssetId(page, 'NEW ASSET');
-                await selectAssetType(page, 'PowerBoard');
-                await selectTestingDevice(page, 'ITS-PAT-06');
-                await page.getByTestId('inspection_panel-inspection-result-passed-button').click();
-                await page.getByTestId('inspection_panel-inspection-notes-input').fill('Test notes');
-                await expect(page.getByTestId('inspection-save-button')).not.toBeDisabled();
-                await page.getByTestId('inspection-save-button').click();
-                await expect(page.getByTestId('message-title').getByText('Asset saved')).toBeVisible();
-                await expect(
-                    page
-                        .getByTestId('saved-asset-id')
-                        .first()
-                        .getByText('UQL000298'),
-                ).toBeVisible();
-                await page.getByTestId('confirm-inspection-save-success').click();
+            test.describe('with label printing enabled (uqtesttag)', () => {
+                test('should enable save button and show active saved message', async ({ page }) => {
+                    await expect(page.getByTestId('inspection-save-button')).toBeDisabled();
+                    await expect(page.getByTestId('location_picker-event-panel-site-input')).toHaveValue('St Lucia');
+                    await selectLocation(page, { building: 'Forgan Smith Building', floor: '2', room: 'W212' });
+                    await selectAssetId(page, 'NEW ASSET');
+                    await selectAssetType(page, 'PowerBoard');
+                    await selectTestingDevice(page, 'ITS-PAT-06');
+                    await page.getByTestId('inspection_panel-inspection-result-passed-button').click();
+                    await page.getByTestId('inspection_panel-inspection-notes-input').fill('Test notes');
+                    await expect(page.getByTestId('inspection-save-button')).not.toBeDisabled();
+                    await page.getByTestId('inspection-save-button').click();
+                    await expect(page.getByTestId('message-title').getByText('Asset saved')).toBeVisible();
+                    await expect(
+                        page
+                            .getByTestId('saved-asset-id')
+                            .first()
+                            .getByText('UQL000298'),
+                    ).toBeVisible();
+                    await expect(page.getByTestId('confirm-alternate-inspection-printer-save-success')).toBeDisabled();
 
-                await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('');
+                    await page.getByTestId('confirm-inspection-printer-save-success').click();
+
+                    await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('');
+                });
+            });
+            test.describe('without label printing enabled (uqpf)', () => {
+                test.beforeEach(async ({ page }) => {
+                    await page.goto('http://localhost:2020/admin/testntag/inspect?user=uqpf');
+                    await expect.poll(async () => await page.locator(':focus').getAttribute('value')).toBe('St Lucia');
+                });
+                test('should enable save button and show active saved message', async ({ page }) => {
+                    await expect(page.getByTestId('inspection-save-button')).toBeDisabled();
+                    await expect(page.getByTestId('location_picker-event-panel-site-input')).toHaveValue('St Lucia');
+                    await selectLocation(page, { building: 'Forgan Smith Building', floor: '2', room: 'W212' });
+                    await selectAssetId(page, 'NEW ASSET');
+                    await selectAssetType(page, 'PowerBoard');
+                    await selectTestingDevice(page, 'ITS-PAT-06');
+                    await page.getByTestId('inspection_panel-inspection-result-passed-button').click();
+                    await page.getByTestId('inspection_panel-inspection-notes-input').fill('Test notes');
+                    await expect(page.getByTestId('inspection-save-button')).not.toBeDisabled();
+                    await page.getByTestId('inspection-save-button').click();
+                    await expect(page.getByTestId('message-title').getByText('Asset saved')).toBeVisible();
+                    await expect(
+                        page
+                            .getByTestId('saved-asset-id')
+                            .first()
+                            .getByText('UQL000298'),
+                    ).toBeVisible();
+                    await page.getByTestId('confirm-inspection-save-success').click();
+
+                    await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('');
+                });
+            });
+
+            test.describe('label printing', () => {
+                test('should allow selection of printer and to call Emulator print function', async ({ page }) => {
+                    await page.route('http://localhost:9100/**', async route => {
+                        await route.fulfill({ body: 'mocked data' });
+                    });
+
+                    await expect(page.getByTestId('inspection-save-button')).toBeDisabled();
+                    await expect(page.getByTestId('location_picker-event-panel-site-input')).toHaveValue('St Lucia');
+                    await selectLocation(page, { building: 'Forgan Smith Building', floor: '2', room: 'W212' });
+                    await selectAssetId(page, 'NEW ASSET');
+                    await selectAssetType(page, 'PowerBoard');
+                    await selectTestingDevice(page, 'ITS-PAT-06');
+                    await page.getByTestId('inspection_panel-inspection-result-passed-button').click();
+                    await page.getByTestId('inspection_panel-inspection-notes-input').fill('Test notes');
+                    await expect(page.getByTestId('inspection-save-button')).not.toBeDisabled();
+                    await page.getByTestId('inspection-save-button').click();
+                    await expect(page.getByTestId('message-title').getByText('Asset saved')).toBeVisible();
+                    await expect(
+                        page
+                            .getByTestId('saved-asset-id')
+                            .first()
+                            .getByText('UQL000298'),
+                    ).toBeVisible();
+
+                    await expect(page.getByTestId('confirm-alternate-inspection-printer-save-success')).toBeDisabled();
+                    await page.getByTestId('label_printer_selector-inspection-printer-save-success-input').click();
+                    await page.getByRole('option', { name: 'Emulator' }).click();
+                    await expect(
+                        page.getByTestId('label_printer_selector-inspection-printer-save-success-input'),
+                    ).toHaveValue('Emulator');
+
+                    await expect(
+                        page.getByTestId('confirm-alternate-inspection-printer-save-success'),
+                    ).not.toBeDisabled();
+
+                    await page.getByTestId('confirm-alternate-inspection-printer-save-success').click();
+                    await page.getByText('Print job sent to Emulator');
+                });
             });
         });
     };

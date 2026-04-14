@@ -40,6 +40,7 @@ export const TestTagReportInspectionsByLicencedUser = lazy(() => lazyRetry(() =>
 export const TestTagAssetReportByFilters = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/AssetReportByFilters/containers/AssetReportByFilters')));
 export const TestTagManageBulkAssetUpdate = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/BulkAssetUpdate/containers/BulkAssetUpdate')));
 export const TestTagManageUsers = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/Users/containers/Users')));
+export const TestTagManageTeams = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/Teams/containers/Teams')));
 
 export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Masquerade/containers/Masquerade')));
 export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));
@@ -53,6 +54,9 @@ export const DLOVocabularyManage = lazy(() => lazyRetry(() => import('modules/Pa
 // seperate route for team managers
 export const DLOOwnTeamList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamListContainer')));
 export const DLOOwnTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamEditContainer')));
+// Dashboard
+export const DLODashboard = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Dashboard/DashboardContainer')));
+export const DLOBulkSchedule = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/BulkSchedule/DLOBulkScheduleContainer')));
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';

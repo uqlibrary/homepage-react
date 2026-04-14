@@ -186,17 +186,12 @@ describe('LocationPickerHooks', () => {
         });
         it('should set floors row data when building selected', () => {
             const floorList = [{ floor_id: 20 }, { floor_id: 21 }];
-            const siteList = [
-                { site_id: 1, buildings: [{ building_id: 10, floors: floorList }, { building_id: 11 }] },
-                { site_id: 2 },
-            ];
             const mockSetRowFn = jest.fn();
             const mockSetLocationFn = jest.fn();
             const { result } = renderHook(props => useSelectLocation(props), {
                 initialProps: {
                     store: {
                         floorListLoaded: true,
-                        siteList,
                         floorList: { floors: floorList },
                     },
                     location: { ...defaultLocation, site: 1, building: 1 },
@@ -213,13 +208,23 @@ describe('LocationPickerHooks', () => {
             expect(result.current.lastSelectedLocation).toEqual('building');
         });
         it('should set initial state for rooms', () => {
+            const roomList = [{ room_id: 30 }, { room_id: 31 }];
+            const siteList = [
+                {
+                    site_id: 1,
+                    building_id: 10,
+                    floors: [{ floor_id: 20, rooms: roomList }, { floor_id: 21 }],
+                },
+                { site_id: 2 },
+            ];
             const mockSetLocationFn = jest.fn();
             const { result } = renderHook(props => useSelectLocation(props), {
                 initialProps: {
                     store: {
                         roomListLoaded: true,
+                        siteList,
                     },
-                    location: { ...defaultLocation, site: 1, building: 1 },
+                    location: { ...defaultLocation, site: 1, building: 10 },
                     setLocation: mockSetLocationFn,
                 },
             });
@@ -229,10 +234,10 @@ describe('LocationPickerHooks', () => {
             delete expected.floor;
 
             expect(mockSetLocationFn).toHaveBeenCalledWith(expected);
-            expect(result.current.lastSelectedLocation).toEqual('building');
             expect(result.current.selectedLocation).toEqual('room');
+            expect(result.current.lastSelectedLocation).toEqual('building');
         });
-        it('should set row data for rows when floor selected', () => {
+        it('should set room row data when floor selected', () => {
             const roomList = [{ room_id: 30 }, { room_id: 31 }];
             const mockSetRowFn = jest.fn();
             const mockSetLocationFn = jest.fn();
@@ -249,8 +254,8 @@ describe('LocationPickerHooks', () => {
             });
 
             expect(mockSetRowFn).toHaveBeenCalledWith(roomList);
-            expect(result.current.lastSelectedLocation).toEqual('floor');
             expect(result.current.selectedLocation).toEqual('room');
+            expect(result.current.lastSelectedLocation).toEqual('floor');
         });
         it('should set last selected location to room when room selected', () => {
             const { result } = renderHook(props => useSelectLocation(props), {

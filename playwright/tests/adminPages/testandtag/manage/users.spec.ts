@@ -10,7 +10,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
@@ -18,7 +18,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('base page edit controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
 
@@ -54,21 +54,27 @@ test.describe('Test and Tag Manage Users', () => {
         await page.locator('#action_cell-1-edit-button[data-value="uqjsmit"]').click();
         await page.getByTestId('user_uid-input').clear();
         await page.getByTestId('user_uid-input').fill('test');
+
+        await page.getByTestId('user_team-input').click({ clickCount: 2 }); // bug:in edit mode the autocomplete auto closes on first click
+        await page.locator('#user_team-input-option-0').click();
+        await expect(page.getByTestId('user_team-input')).toHaveValue('Spaces');
+
         await page.getByTestId('update_dialog-action-button').click();
         await expect(page.getByTestId('confirmation_alert-success-alert')).toBeVisible();
     });
 
     test('base page add controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         // Add.
-        await page.getByTestId('add_toolbar-user-management-add-button').click();
+        await page.getByTestId('user-management-data-table-toolbar-add-button').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
         // Check default helper texts are in required state
         await expect(page.locator('#user_uid-input-helper-text')).toHaveClass(/Mui-error/);
         await expect(page.locator('#user_name-input-helper-text')).toHaveClass(/Mui-error/);
+        await expect(page.locator('#user_team-input-helper-text')).toHaveClass(/Mui-error/);
         // Check default state of Licence field (disabled)
         await expect(page.getByTestId('user_licence_number-input')).toBeDisabled();
         // Enter content, uid no longer error
@@ -86,18 +92,23 @@ test.describe('Test and Tag Manage Users', () => {
         await expect(page.getByTestId('user_licence_number-input')).toBeDisabled();
         await page.getByTestId('can_inspect_cb-input').click();
         await expect(page.getByTestId('user_licence_number-input')).not.toBeDisabled();
+
+        await page.getByTestId('user_team-input').click();
+        await page.locator('#user_team-input-option-1').click();
+        await expect(page.getByTestId('user_team-input')).toHaveValue('Work Station Support');
+
         // commit the change
         await page.getByTestId('update_dialog-action-button').click();
         await expect(page.getByTestId('confirmation_alert-success-alert')).toBeVisible();
         // Fire an open and close on the edit - no change should occur
-        await page.getByTestId('add_toolbar-user-management-add-button').click();
+        await page.getByTestId('user-management-data-table-toolbar-add-button').click();
         await page.getByTestId('update_dialog-cancel-button').click();
         await expect(page.getByTestId('confirmation_alert-success-alert')).not.toBeVisible();
     });
 
     test('base page delete controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         // Delete

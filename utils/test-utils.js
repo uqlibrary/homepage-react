@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { render } from '@testing-library/react';
+import { render, act, fireEvent, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { mui1theme } from 'config/theme';
 import { Provider } from 'react-redux';
@@ -14,6 +14,7 @@ import userEvent from '@testing-library/user-event';
 
 import { getStore } from '../src/config/store';
 import Immutable from 'immutable';
+import { waitForElementToBeRemoved } from '@testing-library/dom';
 
 const domTestingLib = require('@testing-library/dom');
 const reactTestingLib = require('@testing-library/react');
@@ -50,6 +51,22 @@ const enableJestPreviewOnTestFailure = (options = {}) =>
         ...options,
     });
 
+const selectOptionFromListByIndex = index => {
+    expect(screen.getByRole('listbox')).not.toEqual(null);
+    act(() => {
+        const options = screen.getAllByRole('option');
+        fireEvent.mouseDown(options[index]);
+        options[index].click();
+    });
+};
+
+/**
+ * @param {string} testId
+ * @return {Promise<void>}
+ */
+const waitForElementToBeRemovedIfPresent = async testId =>
+    screen.queryByTestId(testId) && (await waitForElementToBeRemoved(() => screen.queryByTestId(testId)));
+
 module.exports = {
     ...domTestingLib,
     ...reactTestingLib,
@@ -59,4 +76,6 @@ module.exports = {
     userEvent,
     preview,
     enableJestPreviewOnTestFailure,
+    selectOptionFromListByIndex,
+    waitForElementToBeRemovedIfPresent,
 };

@@ -26,7 +26,7 @@ export const ReadPublish = () => {
             fullHeight
             primaryHeader
             standardCardId="readpublish-panel"
-            title="Read and publish"
+            title="Open access publishing"
         >
             <Grid container padding={3} spacing={2}>
                 <Grid item xs={12}>
@@ -38,8 +38,10 @@ export const ReadPublish = () => {
                 <Grid item xs={12}>
                     <StyledBodyCopyDiv>
                         Visit{' '}
-                        <Link to={linkToDrupal('/research-and-publish/open-research/read-and-publish-agreements')}>
-                            Read and Publish Agreements
+                        <Link
+                            to={linkToDrupal('/research-and-publish/open-research/open-access-publishing-agreements')}
+                        >
+                            Open access publishing agreements
                         </Link>{' '}
                         for more information.
                     </StyledBodyCopyDiv>
