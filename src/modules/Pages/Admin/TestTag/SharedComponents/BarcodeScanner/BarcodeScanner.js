@@ -16,6 +16,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Cookies from 'js-cookie';
 
 export const BARCODE_SCANNER_SOUND_PREF_COOKIE = 'TNT_BARCODE_SCANNER_SOUND_PREF';
+export const BARCODE_SCANNER_DEFAULT_DEVICE_ID_COOKIE = 'TNT_BARCODE_SCANNER_DEFAULT_DEVICE_ID_COOKIE';
 
 // override to use our own copy of the wasm file
 /* istanbul ignore next */
@@ -41,7 +42,7 @@ const darkTheme = createTheme({
  * @param {object} ctx
  */
 /* istanbul ignore next */
-const tracker = (detectedCodes, ctx) => {
+const barcodeTracker = (detectedCodes, ctx) => {
     detectedCodes.forEach(detectedCode => {
         const { boundingBox, cornerPoints } = detectedCode;
 
@@ -66,30 +67,48 @@ const BarcodeScanner = ({ onScan, formats }) => {
     const [isBeepSoundEnabled, setIsBeepSoundEnabled] = useState(
         Cookies.get(BARCODE_SCANNER_SOUND_PREF_COOKIE) !== 'false',
     );
-    const [selectedDeviceId, setSelectedDeviceId] = useState();
-    const overflowStyleRef = useRef(document.body.style.overflow);
+    const [selectedDeviceId, setSelectedDeviceId] = useState(Cookies.get(BARCODE_SCANNER_DEFAULT_DEVICE_ID_COOKIE));
+    const bodyOverflowStyleRef = useRef(document.body.style.overflow);
 
-    // auto-select first device
+    // handles auto-selecting first available device
     useEffect(() => {
-        if (selectedDeviceId || !devices?.length) return;
+        // bail if there are no devices or selectedDeviceId is already valid
+        if (
+            !devices?.length ||
+            (selectedDeviceId && devices?.find?.(d => String(d.deviceId) === String(selectedDeviceId)))
+        ) {
+            return;
+        }
+        // default to 1st device
         setSelectedDeviceId(devices?.[0]?.deviceId);
     }, [devices]);
 
+    const handleDeviceChange = e => {
+        // "remember" selected device selection
+        Cookies.set(BARCODE_SCANNER_DEFAULT_DEVICE_ID_COOKIE, e.target.value);
+        setSelectedDeviceId(e.target.value);
+    };
+
     const toggleBeep = () => {
+        // "remember" sound beep pref
         Cookies.set(BARCODE_SCANNER_SOUND_PREF_COOKIE, !isBeepSoundEnabled);
         setIsBeepSoundEnabled(prev => !prev);
     };
+
     const pauseBodyScroll = () => document.body.style.setProperty('overflow', 'hidden', 'important');
     const resumeBodyScroll = () =>
-        document.body.style.setProperty('overflow', /* istanbul ignore next */ overflowStyleRef.current || '');
+        document.body.style.setProperty('overflow', /* istanbul ignore next */ bodyOverflowStyleRef.current || '');
+
     const openScanner = () => {
         pauseBodyScroll();
         setIsScanning(true);
     };
+
     const closeScanner = () => {
         resumeBodyScroll();
         setIsScanning(false);
     };
+
     const handleScan = scannedCodes => {
         const firstScannedCode = scannedCodes?.[0]?.rawValue;
         if (!firstScannedCode?.trim()) return;
@@ -130,7 +149,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
                                 labelId="device-id-label"
                                 disabled={devices.length <= 1}
                                 value={selectedDeviceId ?? ''}
-                                onChange={e => setSelectedDeviceId(e.target.value)}
+                                onChange={handleDeviceChange}
                             >
                                 {devices.map(device => (
                                     <MenuItem key={device.deviceId} value={device.deviceId}>
@@ -169,7 +188,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
                             finder: true,
                             zoom: false,
                             onOff: false,
-                            tracker,
+                            tracker: barcodeTracker,
                         }}
                         constraints={{
                             deviceId: selectedDeviceId,
