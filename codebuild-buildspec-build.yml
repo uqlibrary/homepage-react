@@ -8,6 +8,7 @@ env:
     SENTRY_AUTH_TOKEN: "/CodeBuild/homepage/SENTRY_AUTH_TOKEN"
     SENTRY_ORG: "/CodeBuild/homepage/SENTRY_ORG"
     SENTRY_PROJECT: "/CodeBuild/homepage/SENTRY_PROJECT"
+    BARCODE_SCANNER_WASM_PATH: "/CodeBuild/homepage/BARCODE_SCANNER_WASM_PATH"
 phases:
   install:
     runtime-versions:
