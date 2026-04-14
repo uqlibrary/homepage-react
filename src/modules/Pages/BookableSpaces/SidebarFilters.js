@@ -253,8 +253,6 @@ export const SidebarFilters = ({
     capacityFilterValue,
     setCapacityFilterValue,
     campusList,
-    campusListLoading,
-    campusListError,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
     const [defaultCampus, setDefaultCampus2] = React.useState(1);
@@ -309,10 +307,10 @@ export const SidebarFilters = ({
     }, []);
 
     React.useEffect(() => {
-        if (!campusListLoading && !campusListError && campusList?.length > 0) {
+        if (campusList?.length > 0) {
             setDefaultCampus(campusList.at(0).campus_id);
         }
-    }, [campusList, campusListError, campusListLoading]);
+    }, [campusList]);
 
     const resetFacilityTypeFilterGroupExpandedness = (filterGroupId, isGroupExpandedInput) => {
         const newExpandedness = facilityTypeFilterGroupExpandedness?.filter(g => {
@@ -755,7 +753,7 @@ export const SidebarFilters = ({
                         )}
                     </>
                 )}
-                {!campusListLoading && !campusListError && campusList?.length > 0 && (
+                {campusList?.length > 0 && (
                     <StyledCampusWrapperDiv>
                         <h3 id="filter-by-campus-label" htmlFor="filter-by-campus-input">
                             Choose campus
@@ -775,8 +773,8 @@ export const SidebarFilters = ({
                             }}
                         >
                             {campusList
-                                ?.filter(campus => campus.libraries?.length > 0)
-                                .map((campus, index) => (
+                                ?.filter(campus => campus.campus_space_count > 0)
+                                ?.map((campus, index) => (
                                     <MenuItem
                                         value={campus?.campus_id}
                                         key={`filter-by-campus-menuitem-${index}`}
@@ -839,8 +837,7 @@ SidebarFilters.propTypes = {
     capacityFilterValue: PropTypes.array,
     setCapacityFilterValue: PropTypes.func,
     campusList: PropTypes.any,
-    campusListLoading: PropTypes.any,
-    campusListError: PropTypes.any,
+    suppliedClassName: PropTypes.string,
 };
 
 export default React.memo(SidebarFilters);
