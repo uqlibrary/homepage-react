@@ -8,6 +8,7 @@ import { render, screen, waitFor } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import { useDevices } from '@yudiel/react-qr-scanner';
 import locale from './locale';
+import { act } from '@testing-library/react';
 
 const scannedCodeMock = 'TEST_CODE';
 const mockScannedCode = jest.fn().mockReturnValue(scannedCodeMock);
@@ -170,6 +171,51 @@ describe('BarcodeScanner', () => {
 
             expect(props.onScan).not.toHaveBeenCalled();
             assertScannerOpenState();
+        });
+
+        it("should toggle scanner according to app's visibility events", async () => {
+            setup();
+            await openScanner();
+            assertScannerOpenState();
+
+            // hide via visibilitychange
+            act(() => {
+                Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
+                document.dispatchEvent(new Event('visibilitychange'));
+            });
+            assertScannerCloseState();
+
+            // show via visibilitychange
+            act(() => {
+                Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
+                document.dispatchEvent(new Event('visibilitychange'));
+            });
+            assertScannerOpenState();
+
+            // hide via window blur
+            act(() => {
+                window.dispatchEvent(new Event('blur'));
+            });
+            assertScannerCloseState();
+
+            // show via window focus
+            act(() => {
+                window.dispatchEvent(new Event('focus'));
+            });
+            assertScannerOpenState();
+        });
+
+        it('should remove event listeners on unmount', () => {
+            const removeSpy = jest.spyOn(document, 'removeEventListener');
+            const windowRemoveSpy = jest.spyOn(window, 'removeEventListener');
+
+            const { unmount } = setup();
+            unmount();
+
+            expect(removeSpy).toHaveBeenCalledWith('visibilitychange', expect.any(Function));
+            expect(windowRemoveSpy).toHaveBeenCalledWith('blur', expect.any(Function));
+            expect(windowRemoveSpy).toHaveBeenCalledWith('focus', expect.any(Function));
+            expect(windowRemoveSpy).toHaveBeenCalledWith('unhandledrejection', expect.any(Function));
         });
     });
 

@@ -170,11 +170,27 @@ const BarcodeScanner = ({ onScan, formats }) => {
         setHasError(true);
     };
 
-    // handle dependency library errors
+    // handle app events
     useEffect(() => {
-        // we can't predict the error message in here, so we'll consider all alike error as library errors
+        const handleVisibilityChange = () => setIsScanning(document.visibilityState === 'visible');
+        const handleBlur = () => setIsScanning(false);
+        const handleFocus = () => setIsScanning(true);
+        // handles disable/enable scanner according to app's visibility events
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('blur', handleBlur);
+        window.addEventListener('focus', handleFocus);
+
+        // handles dependency library errors - we can't predict the error message in here, so we'll assume all
+        // unhandledrejection errors to be dependency library errors
         window.addEventListener('unhandledrejection', handleError);
-        return () => window.removeEventListener('unhandledrejection', handleError);
+
+        // cleanup
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('blur', handleBlur);
+            window.removeEventListener('focus', handleFocus);
+            window.removeEventListener('unhandledrejection', handleError);
+        };
     }, []);
 
     // handles auto-selecting first available device
