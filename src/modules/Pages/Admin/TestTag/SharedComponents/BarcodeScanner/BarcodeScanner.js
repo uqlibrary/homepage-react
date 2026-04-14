@@ -27,7 +27,7 @@ prepareZXingModule({
         locateFile: (path, prefix) => {
             // source: https://fastly.jsdelivr.net/npm/zxing-wasm@2.2.4/dist/reader/zxing_reader.wasm
             // project: https://github.com/Sec-ant/zxing-wasm
-            if (path.endsWith('.wasm')) return process.env.ZXING_WASM_PATH;
+            if (path.endsWith('.wasm')) return process.env.BARCODE_SCANNER_WASM_PATH;
             return prefix + path;
         },
     },
