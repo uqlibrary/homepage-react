@@ -61,6 +61,10 @@ const darkTheme = createTheme({
     palette: {
         mode: 'dark',
     },
+    zIndex: {
+        modal: 1_000_000,
+        tooltip: 1_100_000,
+    },
 });
 
 /**
@@ -127,7 +131,9 @@ const BarcodeScanner = ({ onScan, formats }) => {
     const [selectedDeviceId, setSelectedDeviceId] = useState(Cookies.get(BARCODE_SCANNER_DEFAULT_DEVICE_ID_COOKIE));
     const bodyOverflowStyleRef = useRef(document.body.style.overflow);
 
-    const pauseBodyScroll = () => document.body.style.setProperty('overflow', 'hidden', 'important');
+    // using setTimeout to schedule it in the macrotask queue seems to fix edged cases
+    const pauseBodyScroll = () =>
+        setTimeout(() => document.body.style.setProperty('overflow', 'hidden', 'important'), 10);
     const resumeBodyScroll = () =>
         document.body.style.setProperty('overflow', /* istanbul ignore next */ bodyOverflowStyleRef.current || '');
 
@@ -209,7 +215,6 @@ const BarcodeScanner = ({ onScan, formats }) => {
                     // the below can't be easily tested
                     // onExited: resumeBodyScroll
                 }}
-                sx={{ zIndex: 1_000_000 }}
             >
                 <DialogTitle>
                     <Box
