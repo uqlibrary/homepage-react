@@ -1,6 +1,8 @@
 import React, { useCallback, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
+import { useCookies } from 'react-cookie';
+
 import { Badge, Button, Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -204,17 +206,26 @@ export const BookableSpacesList = ({
         mapRef.current?.flyToSpace(space);
     }, []);
 
-    const [selectedCampus, setSelectedCampus2] = React.useState(1);
-    const setSelectedCampus = x => {
-        console.log('BookableSpacesList campus::setSelectedCampus', x);
-        console.log('BookableSpacesList campus::setSelectedCampus bookableSpacesRoomList=', bookableSpacesRoomList);
-        setSelectedCampus2(x);
+    const [cookies, setCookie] = useCookies();
+    const getCampusInitialState = () => {
+        const spacesPreferredCampus = cookies.UQLspacesPreferredCampus;
+        if (!!spacesPreferredCampus) {
+            return parseInt(spacesPreferredCampus, 10);
+        }
+        return 1;
     };
+    const [selectedCampus, setSelectedCampus] = React.useState(getCampusInitialState());
+
     const handleCampusSelection = e => {
         const campusId = e?.target?.value;
         console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
         console.log('BookableSpacesList campus::handleCampusSelection bookableSpacesRoomList=', bookableSpacesRoomList);
         setSelectedCampus(campusId);
+
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(current.getFullYear() + 1);
+        setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear });
 
         const firstSpaceInCampus = bookableSpacesRoomList?.data?.locations?.find(s => s.space_campus_id === campusId);
         console.log('BookableSpacesList campus::handleCampusSelection firstSpaceInCampus=', firstSpaceInCampus);
@@ -830,6 +841,7 @@ export const BookableSpacesList = ({
                                     sortedSpaceLocations={sortedSpaceLocations}
                                     spacesFavouritesList={spacesFavouritesList}
                                     onMarkerClick={handleMarkerClick}
+                                    campusId={selectedCampus}
                                 />
                             </div>
                         </StyledLayoutWrapper>

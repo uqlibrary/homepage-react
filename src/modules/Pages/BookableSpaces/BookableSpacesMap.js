@@ -5,9 +5,32 @@ import { styled } from '@mui/material/styles';
 
 import { addClass, removeClass } from 'helpers/general';
 
-const uqStLuciaDefaultLocation = {
-    latitude: -27.497975,
-    longitude: 153.012385,
+const mapCentre = _campusId => {
+    // these IDs need to match the data coming from bookspacelist api
+    const campuses = {
+        1: {
+            label: 'St Lucia',
+            latitude: -27.497975,
+            longitude: 153.012385,
+        },
+        2: {
+            label: 'Gatton',
+            latitude: -27.55376,
+            longitude: 152.33588,
+        },
+        3: {
+            label: 'Dutton Park',
+            latitude: -27.50008,
+            longitude: 153.03027,
+        },
+        4: {
+            label: 'Herston',
+            latitude: -27.44875165084877,
+            longitude: 153.0277598514768,
+        },
+    };
+
+    return campuses[_campusId ?? 1];
 };
 
 const StyledMapWrapperDiv = styled('div')(() => ({
@@ -33,217 +56,221 @@ const StyledMapWrapperDiv = styled('div')(() => ({
     },
 }));
 
-const BookableSpacesMap = React.forwardRef(({ sortedSpaceLocations, spacesFavouritesList, onMarkerClick }, ref) => {
-    const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
-    const [isMazeMapReady, setIsMazeMapReady] = React.useState(false);
-    const [mapContainer, setMapContainer] = React.useState(null);
-    const mazeMapInstanceRef = useRef(null);
-    const mazeMarkersRef = useRef(new Map());
-    const selectedMarkerElRef = useRef(null);
-    const activePopupRef = useRef(null);
+const BookableSpacesMap = React.forwardRef(
+    ({ sortedSpaceLocations, spacesFavouritesList, onMarkerClick, campusId }, ref) => {
+        const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
+        const [isMazeMapReady, setIsMazeMapReady] = React.useState(false);
+        const [mapContainer, setMapContainer] = React.useState(null);
+        const mazeMapInstanceRef = useRef(null);
+        const mazeMarkersRef = useRef(new Map());
+        const selectedMarkerElRef = useRef(null);
+        const activePopupRef = useRef(null);
 
-    const setSelectedMarker = (markerEl, space) => {
-        if (selectedMarkerElRef.current && selectedMarkerElRef.current !== markerEl) {
-            removeClass(selectedMarkerElRef.current, 'selected-marker');
-            selectedMarkerElRef.current.style.zIndex = selectedMarkerElRef.current.dataset.baseZindex || '';
-        }
-        if (markerEl) {
-            addClass(markerEl, 'selected-marker');
-            markerEl.style.zIndex = '10';
-        }
-        selectedMarkerElRef.current = markerEl ?? null;
-
-        activePopupRef.current?.remove();
-        activePopupRef.current = null;
-
-        if (markerEl && space?.space_longitude && space?.space_latitude && mazeMapInstanceRef.current) {
-            const container = document.createElement('div');
-            container.style.cssText = 'padding: 2px 4px; font-size: 0.85rem; line-height: 1.4;';
-
-            const nameEl = document.createElement('strong');
-            nameEl.textContent = space.space_name ?? '';
-            container.appendChild(nameEl);
-
-            const spaceTypeName = space.space_type_details?.space_type_name ?? space.space_type;
-            if (spaceTypeName) {
-                container.appendChild(document.createElement('br'));
-                const typeEl = document.createElement('strong');
-                typeEl.textContent = spaceTypeName;
-                container.appendChild(typeEl);
+        const setSelectedMarker = (markerEl, space) => {
+            if (selectedMarkerElRef.current && selectedMarkerElRef.current !== markerEl) {
+                removeClass(selectedMarkerElRef.current, 'selected-marker');
+                selectedMarkerElRef.current.style.zIndex = selectedMarkerElRef.current.dataset.baseZindex || '';
             }
-
-            if (space.space_library_name) {
-                container.appendChild(document.createElement('br'));
-                const libraryEl = document.createElement('span');
-                libraryEl.textContent = space.space_library_name;
-                container.appendChild(libraryEl);
+            if (markerEl) {
+                addClass(markerEl, 'selected-marker');
+                markerEl.style.zIndex = '10';
             }
+            selectedMarkerElRef.current = markerEl ?? null;
 
-            const isFavourite = markerEl.classList.contains('star-marker-el');
-            if (isFavourite) {
-                container.appendChild(document.createElement('br'));
-                const favEl = document.createElement('em');
-                favEl.textContent = 'One of your favourite spaces';
-                favEl.style.cssText = 'font-size: 0.8rem; color: #666;';
-                container.appendChild(favEl);
+            activePopupRef.current?.remove();
+            activePopupRef.current = null;
+
+            if (markerEl && space?.space_longitude && space?.space_latitude && mazeMapInstanceRef.current) {
+                const container = document.createElement('div');
+                container.style.cssText = 'padding: 2px 4px; font-size: 0.85rem; line-height: 1.4;';
+
+                const nameEl = document.createElement('strong');
+                nameEl.textContent = space.space_name ?? '';
+                container.appendChild(nameEl);
+
+                const spaceTypeName = space.space_type_details?.space_type_name ?? space.space_type;
+                if (spaceTypeName) {
+                    container.appendChild(document.createElement('br'));
+                    const typeEl = document.createElement('strong');
+                    typeEl.textContent = spaceTypeName;
+                    container.appendChild(typeEl);
+                }
+
+                if (space.space_library_name) {
+                    container.appendChild(document.createElement('br'));
+                    const libraryEl = document.createElement('span');
+                    libraryEl.textContent = space.space_library_name;
+                    container.appendChild(libraryEl);
+                }
+
+                const isFavourite = markerEl.classList.contains('star-marker-el');
+                if (isFavourite) {
+                    container.appendChild(document.createElement('br'));
+                    const favEl = document.createElement('em');
+                    favEl.textContent = 'One of your favourite spaces';
+                    favEl.style.cssText = 'font-size: 0.8rem; color: #666;';
+                    container.appendChild(favEl);
+                }
+
+                activePopupRef.current = new window.Mazemap.Popup({
+                    closeButton: true,
+                    closeOnClick: true,
+                    offset: [0, -40],
+                    maxWidth: '240px',
+                })
+                    .setLngLat([space.space_longitude, space.space_latitude])
+                    .setDOMContent(container)
+                    .addTo(mazeMapInstanceRef.current);
             }
-
-            activePopupRef.current = new window.Mazemap.Popup({
-                closeButton: true,
-                closeOnClick: true,
-                offset: [0, -40],
-                maxWidth: '240px',
-            })
-                .setLngLat([space.space_longitude, space.space_latitude])
-                .setDOMContent(container)
-                .addTo(mazeMapInstanceRef.current);
-        }
-    };
-
-    useImperativeHandle(ref, () => ({
-        flyToSpace(space) {
-            const map = mazeMapInstanceRef.current;
-            if (!map || !space?.space_longitude || !space?.space_latitude) return;
-
-            const doFly = () => {
-                map.flyTo({
-                    center: [space.space_longitude, space.space_latitude],
-                    zoom: 20,
-                    curve: 0.5,
-                    speed: 1.6,
-                });
-                const entry = mazeMarkersRef.current.get(space?.space_id);
-                if (entry?.markerEl) setSelectedMarker(entry.markerEl, space);
-            };
-
-            const targetZLevel = space?.space_zlevel != null ? parseFloat(space.space_zlevel) : null;
-            if (targetZLevel !== null) {
-                // Stop any in-progress camera animation before changing floor,
-                // otherwise MazeMap ignores setZLevel while a flyTo is winding down.
-                map.stop();
-                map.setZLevel(targetZLevel);
-                setTimeout(doFly, 300);
-            } else {
-                doFly();
-            }
-        },
-    }));
-
-    React.useEffect(() => {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.css`;
-        document.head.appendChild(link);
-
-        const script = document.createElement('script');
-        script.src = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.js`;
-        script.type = 'text/javascript';
-        script.async = true;
-        script.onload = () => setIsMazeMapScriptReady(true);
-        document.body.appendChild(script);
-
-        return () => {
-            document.head.removeChild(link);
-            document.body.removeChild(script);
         };
-    }, []);
 
-    React.useEffect(() => {
-        if (!isMazeMapScriptReady || !mapContainer) return;
+        useImperativeHandle(ref, () => ({
+            flyToSpace(space) {
+                const map = mazeMapInstanceRef.current;
+                if (!map || !space?.space_longitude || !space?.space_latitude) return;
 
-        mazeMapInstanceRef.current = new window.Mazemap.Map({
-            container: mapContainer,
-            campuses: 'all',
-            center: { lng: uqStLuciaDefaultLocation.longitude, lat: uqStLuciaDefaultLocation.latitude },
-            zoom: 18,
-            zLevel: 1,
-            RTLTextPlugin: null,
-        });
+                const doFly = () => {
+                    map.flyTo({
+                        center: [space.space_longitude, space.space_latitude],
+                        zoom: 20,
+                        curve: 0.5,
+                        speed: 1.6,
+                    });
+                    const entry = mazeMarkersRef.current.get(space?.space_id);
+                    if (entry?.markerEl) setSelectedMarker(entry.markerEl, space);
+                };
 
-        mazeMapInstanceRef.current.on('load', () => {
-            mazeMapInstanceRef.current.resize();
-            setIsMazeMapReady(true);
-        });
+                const targetZLevel = space?.space_zlevel != null ? parseFloat(space.space_zlevel) : null;
+                if (targetZLevel !== null) {
+                    // Stop any in-progress camera animation before changing floor,
+                    // otherwise MazeMap ignores setZLevel while a flyTo is winding down.
+                    map.stop();
+                    map.setZLevel(targetZLevel);
+                    setTimeout(doFly, 300);
+                } else {
+                    doFly();
+                }
+            },
+        }));
+
+        React.useEffect(() => {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.css`;
+            document.head.appendChild(link);
+
+            const script = document.createElement('script');
+            script.src = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.js`;
+            script.type = 'text/javascript';
+            script.async = true;
+            script.onload = () => setIsMazeMapScriptReady(true);
+            document.body.appendChild(script);
+
+            return () => {
+                document.head.removeChild(link);
+                document.body.removeChild(script);
+            };
+        }, []);
+
+        React.useEffect(() => {
+            if (!isMazeMapScriptReady || !mapContainer) {
+                return;
+            }
+
+            mazeMapInstanceRef.current = new window.Mazemap.Map({
+                container: mapContainer,
+                campuses: 'all',
+                center: { lng: mapCentre(campusId).longitude, lat: mapCentre(campusId).latitude },
+                zoom: 18,
+                zLevel: 1,
+                RTLTextPlugin: null,
+            });
+
+            mazeMapInstanceRef.current.on('load', () => {
+                mazeMapInstanceRef.current.resize();
+                setIsMazeMapReady(true);
+            });
+
+            // eslint-disable-next-line consistent-return
+            return () => {
+                mazeMapInstanceRef.current?.remove();
+                mazeMapInstanceRef.current = null;
+                setIsMazeMapReady(false);
+            };
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [isMazeMapScriptReady, mapContainer]);
 
         // eslint-disable-next-line consistent-return
-        return () => {
-            mazeMapInstanceRef.current?.remove();
-            mazeMapInstanceRef.current = null;
-            setIsMazeMapReady(false);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isMazeMapScriptReady, mapContainer]);
+        React.useEffect(() => {
+            if (!isMazeMapReady || !mazeMapInstanceRef.current) return;
 
-    // eslint-disable-next-line consistent-return
-    React.useEffect(() => {
-        if (!isMazeMapReady || !mazeMapInstanceRef.current) return;
+            mazeMarkersRef.current.forEach(({ marker }) => marker.remove());
+            mazeMarkersRef.current = new Map();
+            selectedMarkerElRef.current = null;
+            activePopupRef.current?.remove();
+            activePopupRef.current = null;
 
-        mazeMarkersRef.current.forEach(({ marker }) => marker.remove());
-        mazeMarkersRef.current = new Map();
-        selectedMarkerElRef.current = null;
-        activePopupRef.current?.remove();
-        activePopupRef.current = null;
+            sortedSpaceLocations
+                ?.filter(m => !!m?.space_latitude && !!m?.space_longitude)
+                ?.forEach(mapPoint => {
+                    const isFavourite = spacesFavouritesList?.some(fav => fav.space_id === mapPoint.space_id);
 
-        sortedSpaceLocations
-            ?.filter(m => !!m?.space_latitude && !!m?.space_longitude)
-            ?.forEach(mapPoint => {
-                const isFavourite = spacesFavouritesList?.some(fav => fav.space_id === mapPoint.space_id);
-
-                let marker;
-                if (isFavourite) {
-                    const starEl = document.createElement('div');
-                    starEl.style.cssText = 'width: 55px; height: 55px; cursor: pointer;';
-                    starEl.classList.add('star-marker-el');
-                    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                    svg.setAttribute('width', '55');
-                    svg.setAttribute('height', '55');
-                    svg.setAttribute('viewBox', '0 0 32 32');
-                    svg.style.cssText = 'display:block;overflow:visible;';
-                    const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-                    poly.setAttribute(
-                        'points',
-                        '16,2 19.23,10.55 28.36,10.98 21.23,16.70 23.64,25.52 16,20.5 8.36,25.52 10.77,16.70 3.64,10.98 12.77,10.55',
-                    );
-                    poly.setAttribute('fill', '#51247a');
-                    poly.setAttribute('stroke', 'white');
-                    poly.setAttribute('stroke-width', '1.5');
-                    poly.setAttribute('stroke-linejoin', 'round');
-                    svg.appendChild(poly);
-                    starEl.appendChild(svg);
-                    marker = new window.Mazemap.ZLevelMarker(starEl, { offset: [0, 0] })
-                        .setLngLat([mapPoint.space_longitude, mapPoint.space_latitude])
-                        .addTo(mazeMapInstanceRef.current);
-                } else {
-                    marker = new window.Mazemap.MazeMarker({ color: '#51247a' })
-                        .setLngLat([mapPoint.space_longitude, mapPoint.space_latitude])
-                        .addTo(mazeMapInstanceRef.current);
-                }
-
-                const markerEl = marker.getElement();
-                markerEl.setAttribute('role', 'img');
-                if (isFavourite) {
-                    markerEl.style.zIndex = '1';
-                    markerEl.dataset.baseZindex = '1';
-                } else {
-                    markerEl.dataset.baseZindex = '';
-                }
-                markerEl.addEventListener('click', e => {
-                    const targetZLevel = mapPoint?.space_zlevel != null ? parseFloat(mapPoint.space_zlevel) : null;
-                    if (targetZLevel !== null) {
-                        mazeMapInstanceRef.current?.stop();
-                        mazeMapInstanceRef.current?.setZLevel(targetZLevel);
+                    let marker;
+                    if (isFavourite) {
+                        const starEl = document.createElement('div');
+                        starEl.style.cssText = 'width: 55px; height: 55px; cursor: pointer;';
+                        starEl.classList.add('star-marker-el');
+                        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                        svg.setAttribute('width', '55');
+                        svg.setAttribute('height', '55');
+                        svg.setAttribute('viewBox', '0 0 32 32');
+                        svg.style.cssText = 'display:block;overflow:visible;';
+                        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                        poly.setAttribute(
+                            'points',
+                            '16,2 19.23,10.55 28.36,10.98 21.23,16.70 23.64,25.52 16,20.5 8.36,25.52 10.77,16.70 3.64,10.98 12.77,10.55',
+                        );
+                        poly.setAttribute('fill', '#51247a');
+                        poly.setAttribute('stroke', 'white');
+                        poly.setAttribute('stroke-width', '1.5');
+                        poly.setAttribute('stroke-linejoin', 'round');
+                        svg.appendChild(poly);
+                        starEl.appendChild(svg);
+                        marker = new window.Mazemap.ZLevelMarker(starEl, { offset: [0, 0] })
+                            .setLngLat([mapPoint.space_longitude, mapPoint.space_latitude])
+                            .addTo(mazeMapInstanceRef.current);
+                    } else {
+                        marker = new window.Mazemap.MazeMarker({ color: '#51247a' })
+                            .setLngLat([mapPoint.space_longitude, mapPoint.space_latitude])
+                            .addTo(mazeMapInstanceRef.current);
                     }
-                    setSelectedMarker(markerEl, mapPoint);
-                    onMarkerClick(e, mapPoint, markerEl);
+
+                    const markerEl = marker.getElement();
+                    markerEl.setAttribute('role', 'img');
+                    if (isFavourite) {
+                        markerEl.style.zIndex = '1';
+                        markerEl.dataset.baseZindex = '1';
+                    } else {
+                        markerEl.dataset.baseZindex = '';
+                    }
+                    markerEl.addEventListener('click', e => {
+                        const targetZLevel = mapPoint?.space_zlevel != null ? parseFloat(mapPoint.space_zlevel) : null;
+                        if (targetZLevel !== null) {
+                            mazeMapInstanceRef.current?.stop();
+                            mazeMapInstanceRef.current?.setZLevel(targetZLevel);
+                        }
+                        setSelectedMarker(markerEl, mapPoint);
+                        onMarkerClick(e, mapPoint, markerEl);
+                    });
+
+                    mazeMarkersRef.current.set(mapPoint.space_id, { marker, markerEl });
                 });
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [sortedSpaceLocations, isMazeMapReady]);
 
-                mazeMarkersRef.current.set(mapPoint.space_id, { marker, markerEl });
-            });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortedSpaceLocations, isMazeMapReady]);
-
-    return <StyledMapWrapperDiv id="mazemap-container" ref={setMapContainer} />;
-});
+        return <StyledMapWrapperDiv id="mazemap-container" ref={setMapContainer} />;
+    },
+);
 
 BookableSpacesMap.displayName = 'BookableSpacesMap';
 
@@ -251,6 +278,7 @@ BookableSpacesMap.propTypes = {
     sortedSpaceLocations: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
     onMarkerClick: PropTypes.func.isRequired,
+    campusId: PropTypes.number,
 };
 
 export default BookableSpacesMap;
