@@ -32,7 +32,7 @@ export const useUserTeams = ({
     const getTeamIdBySlug = useCallback(teamSlug => teamList?.find?.(t => t.team_slug === teamSlug)?.value ?? '', [
         teamList,
     ]);
-    const getDefaultTeamId = () => (setDefaultTeam ? getTeamIdBySlug(user.user_team) : '');
+    const getDefaultTeamId = () => (setDefaultTeam ? getTeamIdBySlug(user?.user_team) : '');
 
     const [selectedTeam, setSelectedTeam] = useState(getDefaultTeamId);
 

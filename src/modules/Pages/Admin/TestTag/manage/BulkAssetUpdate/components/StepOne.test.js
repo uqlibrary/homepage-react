@@ -229,7 +229,7 @@ describe('StepOne', () => {
 
     describe('all teams switch', () => {
         it('calls loadAssetsFiltered when toggling all teams after a search', async () => {
-            const list = renderHook(() => useObjectList([], transformRow)).result.current;
+            const list = renderHook(() => useObjectList([])).result.current;
             const searchPattern = 'UQL310000';
 
             const loadAssetsFilteredFn = jest.fn();

@@ -75,7 +75,12 @@ describe('AccordionWithCheckbox', () => {
     });
 
     it('renders Clear button in accordion actions', () => {
-        const { getByText } = setup();
+        const slotProps = {
+            accordionActions: {
+                onClick: jest.fn(),
+            },
+        };
+        const { getByText } = setup({ slotProps });
 
         expect(getByText('Clear')).toBeInTheDocument();
     });

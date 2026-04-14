@@ -24,16 +24,20 @@ export const validateFormValues = formValues => {
         (!isEmptyObject(formValues.asset_status) &&
             isValidAssetStatus(formValues.asset_status?.value, validAssetStatusOptions));
 
+    const validAssetTeam = !formValues.hasAssetTeam || !isEmptyObject(formValues.asset_team);
+
     const isValid =
         (formValues.hasLocation ||
             formValues.hasDiscardStatus ||
             formValues.hasAssetType ||
             formValues.hasClearNotes ||
-            formValues.hasAssetStatus) &&
+            formValues.hasAssetStatus ||
+            formValues.hasAssetTeam) &&
         validLocation &&
         validDiscardStatus &&
         validAssetType &&
-        validAssetStatus;
+        validAssetStatus &&
+        validAssetTeam;
 
     return isValid;
 };

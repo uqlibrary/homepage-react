@@ -71,21 +71,15 @@ describe('TeamSelector', () => {
         selectOptionFromListByIndex(0, { getByRole, getAllByRole });
         expect(mockOnChangeFn).toHaveBeenCalledWith(1);
     });
-    it('renders component with options and fires nextDateTextFormatter event with calculated date', () => {
-        const mockNextDateTextFormatterFn = jest.fn(value => `Next inspection: ${value}`);
-        const { getByTestId } = setup({
-            fromDate: '2023-07-26',
-            fromDateFormat: 'YYYY-MM-DD',
-            dateDisplayFormat: 'Do MMMM, YYYY',
-            currentValue: '1',
-            nextDateTextFormatter: mockNextDateTextFormatterFn,
-        });
+    it('renders component with hasAllOption prepending "All teams"', () => {
+        const { getByTestId, getAllByRole } = setup({ hasAllOption: true });
         expect(getByTestId('team_selector-test')).toBeInTheDocument();
-        expect(getByTestId('team_selector-test-next-date-label')).toBeInTheDocument();
 
-        expect(mockNextDateTextFormatterFn).toHaveBeenCalledWith('26th August, 2023');
-        expect(getByTestId('team_selector-test-next-date-label')).toHaveTextContent(
-            'Next inspection: 26th August, 2023',
-        );
+        act(() => {
+            fireEvent.mouseDown(getByTestId('team_selector-test-select'));
+        });
+        const options = getAllByRole('option');
+        expect(options).toHaveLength(3);
+        expect(options[0]).toHaveTextContent('All teams');
     });
 });

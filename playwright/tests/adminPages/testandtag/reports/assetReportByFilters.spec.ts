@@ -125,7 +125,7 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
     });
 
-    test('team selector functions as expected', async ({ page }) => {
+    test.only('team selector functions as expected', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(
             page,

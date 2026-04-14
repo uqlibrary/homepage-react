@@ -75,15 +75,10 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
         condition: () => !isFilterDialogOpen,
     });
 
-    const { userTeamList, selectedTeam, teamSelectFieldName, getTeamIdBySlug, setSelectedTeam } = useUserTeams({
+    const { userTeamList, selectedTeam, setSelectedTeam } = useUserTeams({
         user,
         allTeamsOption: false,
     });
-
-    const defaultUserTeamId = useMemo(() => getTeamIdBySlug(user.user_team), [getTeamIdBySlug, user.user_team]);
-    const teamIdsToDisable = useMemo(() => {
-        return [defaultUserTeamId];
-    }, [defaultUserTeamId]);
 
     // Validate and update lists when formValueSignature changes
     useEffect(() => {
@@ -111,7 +106,11 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
     const isAssetTeamDisabled = formValues.hasDiscardStatus;
     const isAssetTypeDisabled = formValues.hasLocation || formValues.hasDiscardStatus || formValues.hasAssetStatus;
     const isDiscardedDisabled =
-        formValues.hasAssetType || formValues.hasLocation || formValues.hasClearNotes || formValues.hasAssetStatus;
+        formValues.hasAssetType ||
+        formValues.hasLocation ||
+        formValues.hasClearNotes ||
+        formValues.hasAssetStatus ||
+        formValues.hasAssetTeam;
     const isClearNotesDisabled =
         isLocationDisabled && isAssetStatusDisabled && isAssetTypeDisabled && isDiscardedDisabled;
 
@@ -143,7 +142,8 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
 
     const handleTeamChange = teamId => {
         setSelectedTeam(teamId);
-        handleChange('asset_team')(teamId);
+        const teamObject = userTeamList.find(t => t.value === teamId);
+        handleChange('asset_team')(teamObject);
     };
 
     return (
@@ -280,12 +280,12 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             <Grid container spacing={3}>
                                 <Grid xs={12} sm={6}>
                                     <TeamSelector
-                                        id={teamSelectFieldName}
+                                        id={componentId}
                                         options={userTeamList}
                                         label={'Team'}
                                         currentValue={selectedTeam}
                                         onChange={handleTeamChange}
-                                        teamOptionsToDisable={teamIdsToDisable}
+                                        disabled={!formValues.hasAssetTeam}
                                     />
                                 </Grid>
                             </Grid>
