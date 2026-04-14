@@ -125,7 +125,7 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
     });
 
-    test.only('team selector functions as expected', async ({ page }) => {
+    test('team selector functions as expected', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(
             page,
@@ -143,16 +143,17 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
 
         await expect(page.getByTestId('asset_status_selector-assets-inspected-input')).toHaveValue('All');
         await expect(
-            page.getByTestId('team-display-name-select-filter').getByText('Work Station Support'),
+            page.getByTestId('team_selector-team_display_name-select').getByText('Work Station Support'),
         ).toBeVisible();
 
-        await page.getByTestId('team-display-name-select-filter').click();
+        await page.getByTestId('team_selector-team_display_name-select').click();
         await page.getByRole('option', { name: 'Spaces' }).click();
 
         // Check if number of results are correct
         await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–1 of 1')).toBeVisible();
 
-        await page.getByTestId('team-display-name-select-filter-clear-button').click();
+        await page.getByTestId('team_selector-team_display_name-select').click();
+        await page.getByRole('option', { name: 'All teams' }).click();
         await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–5 of 5')).toBeVisible();
     });
 });
