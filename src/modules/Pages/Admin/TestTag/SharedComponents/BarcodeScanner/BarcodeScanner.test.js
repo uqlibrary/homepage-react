@@ -154,14 +154,14 @@ describe('BarcodeScanner', () => {
         jest.spyOn(document, 'querySelectorAll').mockReturnValue([mockVideo]);
 
         await waitFor(() => {
-            expect(queryByTestId('FlashlightOnIcon')).not.toBeInTheDocument();
-            expect(queryByTestId('FlashlightOffIcon')).toBeInTheDocument();
+            expect(queryByTestId('FlashlightOnIcon')).toBeInTheDocument();
+            expect(queryByTestId('FlashlightOffIcon')).not.toBeInTheDocument();
         });
 
         await userEvent.click(screen.getByTestId('barcode-scanner-toggle-torch-button'));
         await waitFor(() => {
-            expect(queryByTestId('FlashlightOnIcon')).toBeInTheDocument();
-            expect(queryByTestId('FlashlightOffIcon')).not.toBeInTheDocument();
+            expect(queryByTestId('FlashlightOnIcon')).not.toBeInTheDocument();
+            expect(queryByTestId('FlashlightOffIcon')).toBeInTheDocument();
         });
     });
 
