@@ -1,37 +1,9 @@
-import React, { useRef, useImperativeHandle } from 'react';
+import React, { useImperativeHandle, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { styled } from '@mui/material/styles';
 
 import { addClass, removeClass } from 'helpers/general';
-
-const mapCentre = _campusId => {
-    // these IDs need to match the data coming from bookspacelist api
-    const campuses = {
-        1: {
-            label: 'St Lucia',
-            latitude: -27.497975,
-            longitude: 153.012385,
-        },
-        2: {
-            label: 'Gatton',
-            latitude: -27.55376,
-            longitude: 152.33588,
-        },
-        3: {
-            label: 'Dutton Park',
-            latitude: -27.50008,
-            longitude: 153.03027,
-        },
-        4: {
-            label: 'Herston',
-            latitude: -27.44875165084877,
-            longitude: 153.0277598514768,
-        },
-    };
-
-    return campuses[_campusId ?? 1];
-};
 
 const StyledMapWrapperDiv = styled('div')(() => ({
     position: 'absolute',
@@ -57,7 +29,7 @@ const StyledMapWrapperDiv = styled('div')(() => ({
 }));
 
 const BookableSpacesMap = React.forwardRef(
-    ({ sortedSpaceLocations, spacesFavouritesList, onMarkerClick, campusId }, ref) => {
+    ({ sortedSpaceLocations, spacesFavouritesList, onMarkerClick, centreLatLong, campusId }, ref) => {
         const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
         const [isMazeMapReady, setIsMazeMapReady] = React.useState(false);
         const [mapContainer, setMapContainer] = React.useState(null);
@@ -65,6 +37,21 @@ const BookableSpacesMap = React.forwardRef(
         const mazeMarkersRef = useRef(new Map());
         const selectedMarkerElRef = useRef(null);
         const activePopupRef = useRef(null);
+
+        const ZOOM_CAMPUS_MANY_BUILDINGS = 20;
+        const ZOOM_CAMPUS_ONE_BUILDING = 17;
+        const CAMPUS_ST_LUCIA = 1;
+
+        const zoomOnFlyto = _campusId => {
+            const result = _campusId === CAMPUS_ST_LUCIA ? ZOOM_CAMPUS_ONE_BUILDING : ZOOM_CAMPUS_MANY_BUILDINGS;
+            console.log('## zoomOnFlyto', _campusId, result);
+            return result;
+        };
+        const zoomOnPageLoad = _campusId => {
+            const result = _campusId === CAMPUS_ST_LUCIA ? ZOOM_CAMPUS_ONE_BUILDING : ZOOM_CAMPUS_MANY_BUILDINGS;
+            console.log('## zoomOnPageLoad', _campusId, result);
+            return result;
+        };
 
         const setSelectedMarker = (markerEl, space) => {
             if (selectedMarkerElRef.current && selectedMarkerElRef.current !== markerEl) {
@@ -125,22 +112,27 @@ const BookableSpacesMap = React.forwardRef(
         };
 
         useImperativeHandle(ref, () => ({
-            flyToSpace(space) {
+            flyToSpace(location) {
+                console.log('flyToSpace location.space_campus_id=', location.space_campus_id, location);
+                !location.space_campus_id && alert('CAMPUS ID NOT PROVIDED'); // debug
                 const map = mazeMapInstanceRef.current;
-                if (!map || !space?.space_longitude || !space?.space_latitude) return;
+                if (!map || !location?.space_longitude || !location?.space_latitude) {
+                    console.log('invalid call to flyToSpace', location);
+                    return;
+                }
 
                 const doFly = () => {
                     map.flyTo({
-                        center: [space.space_longitude, space.space_latitude],
-                        zoom: 20,
+                        center: [location.space_longitude, location.space_latitude],
+                        zoom: zoomOnFlyto(location.space_campus_id),
                         curve: 0.5,
                         speed: 1.6,
                     });
-                    const entry = mazeMarkersRef.current.get(space?.space_id);
-                    if (entry?.markerEl) setSelectedMarker(entry.markerEl, space);
+                    const entry = mazeMarkersRef.current.get(location?.space_id);
+                    if (entry?.markerEl) setSelectedMarker(entry.markerEl, location);
                 };
 
-                const targetZLevel = space?.space_zlevel != null ? parseFloat(space.space_zlevel) : null;
+                const targetZLevel = location?.space_zlevel !== null ? parseFloat(location.space_zlevel) : null;
                 if (targetZLevel !== null) {
                     // Stop any in-progress camera animation before changing floor,
                     // otherwise MazeMap ignores setZLevel while a flyTo is winding down.
@@ -176,12 +168,16 @@ const BookableSpacesMap = React.forwardRef(
             if (!isMazeMapScriptReady || !mapContainer) {
                 return;
             }
+            console.log(!!centreLatLong.space_longitude ? 'object' : 'array', centreLatLong);
+            const longitude = !!centreLatLong.space_longitude ? centreLatLong.space_longitude : centreLatLong[1];
+            const latitude = !!centreLatLong.space_longitude ? centreLatLong.space_latitude : centreLatLong[0];
+            console.log('centring at ', latitude, longitude);
 
             mazeMapInstanceRef.current = new window.Mazemap.Map({
-                container: mapContainer,
+                container: 'mazemap-container',
                 campuses: 'all',
-                center: { lng: mapCentre(campusId).longitude, lat: mapCentre(campusId).latitude },
-                zoom: 18,
+                center: { lat: latitude, lng: longitude },
+                zoom: zoomOnPageLoad(campusId),
                 zLevel: 1,
                 RTLTextPlugin: null,
             });
@@ -278,6 +274,7 @@ BookableSpacesMap.propTypes = {
     sortedSpaceLocations: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
     onMarkerClick: PropTypes.func.isRequired,
+    centreLatLong: PropTypes.array,
     campusId: PropTypes.number,
 };
 

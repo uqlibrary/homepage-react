@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { useCookies } from 'react-cookie';
@@ -203,6 +203,7 @@ export const BookableSpacesList = ({
     const mapRef = useRef(null);
 
     const handleSpaceExpand = useCallback(space => {
+        console.log('handleSpaceExpand space=', space);
         mapRef.current?.flyToSpace(space);
     }, []);
 
@@ -216,6 +217,91 @@ export const BookableSpacesList = ({
     };
     const [selectedCampus, setSelectedCampus] = React.useState(getCampusInitialState());
 
+    // based on https://stackoverflow.com/a/42234774
+    // this isn't the formula I am used to, which has much more trig, but it seems good enough
+    function getLatLngCenter(spacesList, selectedCampusId) {
+        function radiansToDegrees(rad) {
+            return (rad * 180) / Math.PI;
+        }
+        function degreesToRadians(degr) {
+            return (degr * Math.PI) / 180;
+        }
+        function formattedGeolocatedLocation(latitude, longitude, campusId) {
+            return {
+                space_latitude: latitude,
+                space_longitude: longitude,
+                space_campus_id: campusId,
+            };
+        }
+
+        const spacesListForCampus = spacesList?.filter(s => s.space_campus_id === selectedCampusId);
+
+        /* eslint-disable camelcase */
+        const buildingsOnCampus = Object.values(
+            // just get one location per building, to stop reweighting of space locations
+            spacesListForCampus?.reduce(
+                (
+                    acc,
+                    { space_building_name, space_building_number, space_latitude, space_longitude, space_campus_id },
+                ) => {
+                    if (!acc[space_building_number]) {
+                        acc[space_building_number] = {
+                            building_number: space_building_number,
+                            building_name: space_building_name,
+                            building_latitude: space_latitude,
+                            building_longitude: space_longitude,
+                            building_campus_id: space_campus_id,
+                        };
+                    }
+                    return acc;
+                },
+                {},
+            ),
+        );
+
+        if (buildingsOnCampus.length === 0) {
+            // this is probably unreachable - there cant be no buildings at this point
+            return null;
+        }
+
+        if (buildingsOnCampus.length === 1) {
+            return formattedGeolocatedLocation(
+                buildingsOnCampus.at(0).building_latitude,
+                buildingsOnCampus.at(0).building_longitude,
+                buildingsOnCampus.at(0).building_campus_id,
+            );
+        }
+
+        const numberOfCoords = buildingsOnCampus.length;
+
+        let X = 0.0;
+        let Y = 0.0;
+        let Z = 0.0;
+
+        buildingsOnCampus?.map(building => {
+            const lat = degreesToRadians(building.building_latitude);
+            const lon = degreesToRadians(building.building_longitude);
+
+            const a = Math.cos(lat) * Math.cos(lon);
+            const b = Math.cos(lat) * Math.sin(lon);
+            const c = Math.sin(lat);
+
+            X += a;
+            Y += b;
+            Z += c;
+        });
+
+        X /= numberOfCoords;
+        Y /= numberOfCoords;
+        Z /= numberOfCoords;
+
+        const lon = Math.atan2(Y, X);
+        const hyp = Math.sqrt(X * X + Y * Y);
+        const lat = Math.atan2(Z, hyp);
+
+        return formattedGeolocatedLocation(radiansToDegrees(lat), radiansToDegrees(lon), selectedCampusId);
+    }
+
     const handleCampusSelection = e => {
         const campusId = e?.target?.value;
         console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
@@ -227,9 +313,9 @@ export const BookableSpacesList = ({
         nextYear.setFullYear(current.getFullYear() + 1);
         setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear });
 
-        const firstSpaceInCampus = bookableSpacesRoomList?.data?.locations?.find(s => s.space_campus_id === campusId);
-        console.log('BookableSpacesList campus::handleCampusSelection firstSpaceInCampus=', firstSpaceInCampus);
-        !!firstSpaceInCampus && mapRef.current?.flyToSpace(firstSpaceInCampus);
+        const selectedCampusCentre = getLatLngCenter(bookableSpacesRoomList?.data?.locations, campusId);
+        console.log('handleCampusSelection flyToSpace selectedCampusCentre=', selectedCampusCentre);
+        !!selectedCampusCentre && mapRef.current?.flyToSpace(selectedCampusCentre);
     };
 
     const minimumSpaceCapacity = 1;
@@ -284,7 +370,7 @@ export const BookableSpacesList = ({
 
             /* eslint-disable camelcase */
             const currentCampusList = Object.values(
-                bookableSpacesRoomList?.data?.locations.reduce(
+                bookableSpacesRoomList?.data?.locations?.reduce(
                     (acc, { space_campus_id, space_campus_name, space_campus_number }) => {
                         if (!acc[space_campus_id]) {
                             acc[space_campus_id] = {
@@ -752,7 +838,6 @@ export const BookableSpacesList = ({
                         </StandardPage>
                     );
                 } else {
-                    // mobile and tablet
                     return (
                         <StyledLayoutWrapper data-testid="library-spaces">
                             <div>
@@ -841,6 +926,10 @@ export const BookableSpacesList = ({
                                     sortedSpaceLocations={sortedSpaceLocations}
                                     spacesFavouritesList={spacesFavouritesList}
                                     onMarkerClick={handleMarkerClick}
+                                    centreLatLong={getLatLngCenter(
+                                        bookableSpacesRoomList?.data?.locations,
+                                        selectedCampus,
+                                    )}
                                     campusId={selectedCampus}
                                 />
                             </div>
