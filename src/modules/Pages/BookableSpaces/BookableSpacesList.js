@@ -30,6 +30,7 @@ import {
     FILTER_SPACE_CAPACITY_ACTION_NAME,
 } from './spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
+import { CAMPUS_DUTTON_PARK } from 'config/locale';
 
 const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     ...standardText(theme),
@@ -250,11 +251,12 @@ export const BookableSpacesList = ({
         function degreesToRadians(degr) {
             return (degr * Math.PI) / 180;
         }
-        function formattedGeolocatedLocation(latitude, longitude, campusId) {
+        function formattedGeolocatedLocation(latitude, longitude, campusId, campusName = null) {
             return {
                 space_latitude: latitude,
                 space_longitude: longitude,
                 space_campus_id: campusId,
+                space_zlevel: campusName === CAMPUS_DUTTON_PARK ? 6 : null,
             };
         }
 
@@ -274,6 +276,7 @@ export const BookableSpacesList = ({
                             space_latitude,
                             space_longitude,
                             space_campus_id,
+                            space_campus_name,
                         },
                     ) => {
                         if (!acc[space_building_number]) {
@@ -283,6 +286,7 @@ export const BookableSpacesList = ({
                                 building_latitude: space_latitude,
                                 building_longitude: space_longitude,
                                 building_campus_id: space_campus_id,
+                                building_campus_name: space_campus_name,
                             };
                         }
                         return acc;
@@ -301,6 +305,7 @@ export const BookableSpacesList = ({
                 buildingsOnCampus.at(0).building_latitude,
                 buildingsOnCampus.at(0).building_longitude,
                 buildingsOnCampus.at(0).building_campus_id,
+                buildingsOnCampus.at(0).building_campus_name,
             );
         }
 

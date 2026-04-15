@@ -163,15 +163,13 @@ const BookableSpacesMap = React.forwardRef(
             if (!isMazeMapScriptReady || !mapContainer) {
                 return;
             }
-            // const longitude = !!centreLatLong.space_longitude ? centreLatLong.space_longitude : centreLatLong[1];
-            // const latitude = !!centreLatLong.space_longitude ? centreLatLong.space_latitude : centreLatLong[0];
 
             mazeMapInstanceRef.current = new window.Mazemap.Map({
                 container: 'mazemap-container',
                 campuses: 'all',
                 center: { lat: centreLatLong.space_latitude, lng: centreLatLong.space_longitude },
                 zoom: zoomLevelForCampus(centreLatLong.space_campus_id),
-                zLevel: 1,
+                zLevel: centreLatLong?.space_zlevel ?? 1,
                 RTLTextPlugin: null,
             });
 
