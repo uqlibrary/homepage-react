@@ -210,6 +210,7 @@ export const BookableSpacesList = ({
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
+    const [activeNavigationSpace, setActiveNavigationSpace] = useState(null);
 
     const mapRef = useRef(null);
 
@@ -229,6 +230,11 @@ export const BookableSpacesList = ({
         highlightPanel(space);
 
         // show space's location on the map
+        mapRef.current?.flyToSpace(space);
+    }, []);
+
+    const handleNavigate = useCallback(space => {
+        setActiveNavigationSpace(current => (current?.space_id === space?.space_id ? null : space));
         mapRef.current?.flyToSpace(space);
     }, []);
 
@@ -260,40 +266,43 @@ export const BookableSpacesList = ({
             };
         }
 
-        const spacesListForCampus = spacesList?.filter(s => s.space_campus_id === selectedCampusId);
+        const normalizedSpacesList = Array.isArray(spacesList) ? spacesList : [];
+        const normalizedCampusId = Number(selectedCampusId);
+
+        const spacesListForCampus = normalizedSpacesList.filter(
+            space => Number(space?.space_campus_id) === normalizedCampusId,
+        );
 
         /* eslint-disable camelcase */
-        const buildingsOnCampus =
-            !!spacesListForCampus &&
-            Object.values(
-                // just get one location per building, to stop reweighting of space locations
-                spacesListForCampus?.reduce(
-                    (
-                        acc,
-                        {
-                            space_building_name,
-                            space_building_number,
-                            space_latitude,
-                            space_longitude,
-                            space_campus_id,
-                            space_campus_name,
-                        },
-                    ) => {
-                        if (!acc[space_building_number]) {
-                            acc[space_building_number] = {
-                                building_number: space_building_number,
-                                building_name: space_building_name,
-                                building_latitude: space_latitude,
-                                building_longitude: space_longitude,
-                                building_campus_id: space_campus_id,
-                                building_campus_name: space_campus_name,
-                            };
-                        }
-                        return acc;
+        const buildingsOnCampus = Object.values(
+            // just get one location per building, to stop reweighting of space locations
+            spacesListForCampus.reduce(
+                (
+                    acc,
+                    {
+                        space_building_name,
+                        space_building_number,
+                        space_latitude,
+                        space_longitude,
+                        space_campus_id,
+                        space_campus_name,
                     },
-                    {},
-                ),
-            );
+                ) => {
+                    if (!acc[space_building_number]) {
+                        acc[space_building_number] = {
+                            building_number: space_building_number,
+                            building_name: space_building_name,
+                            building_latitude: space_latitude,
+                            building_longitude: space_longitude,
+                            building_campus_id: space_campus_id,
+                            building_campus_name: space_campus_name,
+                        };
+                    }
+                    return acc;
+                },
+                {},
+            ),
+        );
 
         if (buildingsOnCampus.length === 0) {
             // this is probably unreachable - there cant be no buildings at this point
@@ -313,7 +322,7 @@ export const BookableSpacesList = ({
         let Y = 0.0;
         let Z = 0.0;
 
-        buildingsOnCampus?.map(building => {
+        buildingsOnCampus.forEach(building => {
             const lat = degreesToRadians(building.building_latitude);
             const lon = degreesToRadians(building.building_longitude);
 
@@ -335,7 +344,7 @@ export const BookableSpacesList = ({
         const hyp = Math.sqrt(X * X + Y * Y);
         const lat = Math.atan2(Z, hyp);
 
-        return formattedGeolocatedLocation(radiansToDegrees(lat), radiansToDegrees(lon), selectedCampusId);
+        return formattedGeolocatedLocation(radiansToDegrees(lat), radiansToDegrees(lon), normalizedCampusId);
     }
 
     const handleCampusSelection = e => {
@@ -797,6 +806,11 @@ export const BookableSpacesList = ({
     };
 
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
+    const campusCentre = React.useMemo(() => getLatLngCenter(bookableSpacesRoomList?.data?.locations, selectedCampus), [
+        bookableSpacesRoomList?.data?.locations,
+        selectedCampus,
+    ]);
+
     return (
         <StyledBookableSpacesListWrapperDiv>
             {(() => {
@@ -911,6 +925,8 @@ export const BookableSpacesList = ({
                                             onFavouriteToggle={handleFavouriteAction}
                                             isFavouriteActionInProgress={isFavouriteActionInProgress}
                                             onSpaceExpand={handleSpaceExpand}
+                                            activeNavigationSpaceId={activeNavigationSpace?.space_id ?? null}
+                                            onNavigate={handleNavigate}
                                         />
                                     </div>
                                 </>
@@ -922,10 +938,10 @@ export const BookableSpacesList = ({
                                     sortedSpaceLocations={sortedSpaceLocations}
                                     spacesFavouritesList={spacesFavouritesList}
                                     onMarkerClick={handleMarkerClick}
-                                    centreLatLong={getLatLngCenter(
-                                        bookableSpacesRoomList?.data?.locations,
-                                        selectedCampus,
-                                    )}
+                                    centreLatLong={campusCentre}
+                                    navigationTarget={activeNavigationSpace}
+                                    navigationOrigin={campusCentre}
+                                    onNavigationClose={() => setActiveNavigationSpace(null)}
                                 />
                             </div>
                         </StyledLayoutWrapper>

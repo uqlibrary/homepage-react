@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid, Tooltip, Typography } from '@mui/material';
+import { Button, Grid, Tooltip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 
@@ -49,13 +47,9 @@ const SidebarSpacesList = ({
     onFavouriteToggle = null,
     isFavouriteActionInProgress = false,
     onSpaceExpand = null,
+    activeNavigationSpaceId = null,
+    onNavigate = null,
 }) => {
-    const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
-    const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
-    const isTabletView = isMobileView ? false : _isTabletViewJust;
-    const isDesktopView = !isTabletView && !isMobileView;
-
     // const markerRefs = React.useRef({});
     //
     // const handleMapOpenButtonClick = id => {
@@ -147,13 +141,21 @@ const SidebarSpacesList = ({
                                 title={
                                     <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                         {renderFavouriteIcon(bookableSpace)}
-                                        <span
+                                        <button
+                                            type="button"
                                             onClick={() => onSpaceExpand?.(bookableSpace)}
-                                            style={onSpaceExpand ? { cursor: 'pointer' } : undefined}
+                                            style={{
+                                                background: 'none',
+                                                border: 0,
+                                                cursor: onSpaceExpand ? 'pointer' : 'default',
+                                                font: 'inherit',
+                                                padding: 0,
+                                                textAlign: 'left',
+                                            }}
                                             title="Show on map"
                                         >
                                             {bookableSpace?.space_type_details?.space_type_name}
-                                        </span>
+                                        </button>
                                     </span>
                                 }
                                 style={{ marginRight: '0.5rem' }}
@@ -166,9 +168,26 @@ const SidebarSpacesList = ({
                                     weeklyHoursError={weeklyHoursError}
                                     bookableSpace={bookableSpace}
                                     collapsed
-                                    showAllData
+                                    showAllData={showAllData}
                                     onExpand={onSpaceExpand}
                                 />
+                                {onNavigate && (
+                                    <Button
+                                        variant={
+                                            activeNavigationSpaceId === bookableSpace?.space_id
+                                                ? 'contained'
+                                                : 'outlined'
+                                        }
+                                        size="small"
+                                        onClick={() => onNavigate(bookableSpace)}
+                                        sx={{ mt: 2 }}
+                                        data-testid={`space-navigate-${bookableSpace?.space_id}`}
+                                    >
+                                        {activeNavigationSpaceId === bookableSpace?.space_id
+                                            ? 'Navigation active'
+                                            : 'Navigate to'}
+                                    </Button>
+                                )}
                             </StyledStandardCard>
                         </StyledBookableSpaceGridItem>
                     );
@@ -192,6 +211,8 @@ SidebarSpacesList.propTypes = {
     onFavouriteToggle: PropTypes.func,
     isFavouriteActionInProgress: PropTypes.bool,
     onSpaceExpand: PropTypes.func,
+    activeNavigationSpaceId: PropTypes.number,
+    onNavigate: PropTypes.func,
 };
 
 export default React.memo(SidebarSpacesList);

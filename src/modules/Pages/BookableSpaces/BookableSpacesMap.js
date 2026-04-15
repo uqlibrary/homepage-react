@@ -1,7 +1,11 @@
 import React, { useImperativeHandle, useRef } from 'react';
 import PropTypes from 'prop-types';
 
+import { CircularProgress, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { addClass, removeClass } from 'helpers/general';
 
@@ -28,17 +32,247 @@ const StyledMapWrapperDiv = styled('div')(() => ({
     },
 }));
 
+const StyledNavigationPanel = styled('div')(() => ({
+    position: 'absolute',
+    right: '1rem',
+    bottom: '1rem',
+    width: 'min(26rem, calc(100% - 2rem))',
+    maxHeight: 'min(36rem, calc(100% - 2rem))',
+    backgroundColor: 'rgba(255, 255, 255, 0.96)',
+    borderRadius: '12px',
+    boxShadow: '0 10px 28px rgba(0, 0, 0, 0.2)',
+    padding: '1rem 0 0',
+    zIndex: 20,
+    overflow: 'hidden',
+    '& .navigation-panel-close': {
+        position: 'absolute',
+        top: '0.5rem',
+        right: '0.5rem',
+        zIndex: 1,
+    },
+    '& .navigation-panel-scroll': {
+        maxHeight: 'calc(min(36rem, calc(100% - 2rem)) - 4.25rem)',
+        overflowY: 'auto',
+        padding: '0 0 0.5rem',
+    },
+    '& .mazemap-gui-route-details-container': {
+        paddingRight: '0.25rem',
+    },
+    '& .navigation-loading, & .navigation-error': {
+        alignItems: 'center',
+        color: '#424445',
+        display: 'flex',
+        fontFamily: 'Open Sans, Geneva, Helvetica, Arial, sans-serif',
+        gap: '0.75rem',
+        minHeight: '7rem',
+        padding: '0 1rem 1rem',
+    },
+    '& .navigation-error': {
+        alignItems: 'flex-start',
+        color: '#6b2f2f',
+        lineHeight: 1.5,
+    },
+    '& .navigation-route-title': {
+        color: '#424445',
+        display: 'block',
+        fontSize: '14px',
+        fontWeight: 600,
+        marginLeft: '47px',
+        marginRight: '20px',
+        marginTop: 0,
+        overflowX: 'hidden',
+        padding: 0,
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+    },
+    '& .navigation-route-detail': {
+        color: '#676464',
+        display: 'block',
+        fontFamily: 'Open Sans, Geneva, Helvetica, Arial, sans-serif',
+        fontSize: '13px',
+        fontWeight: 400,
+        lineHeight: 1.4,
+        marginLeft: '47px',
+        marginRight: '20px',
+        whiteSpace: 'pre-wrap',
+    },
+    '& .navigation-step-button': {
+        appearance: 'none',
+        background: 'transparent',
+        border: 0,
+        color: 'inherit',
+        cursor: 'pointer',
+        display: 'block',
+        font: 'inherit',
+        margin: 0,
+        padding: 0,
+        textAlign: 'left',
+        width: '100%',
+    },
+    '& .navigation-step-distance': {
+        color: '#676464',
+        display: 'block',
+        fontSize: '12px',
+        marginLeft: '16px',
+        marginTop: '0.35rem',
+    },
+    '& .navigation-step-meta': {
+        color: '#676464',
+        display: 'block',
+        fontSize: '12px',
+        marginLeft: '16px',
+        marginTop: '0.35rem',
+    },
+    '& .steps-list li.navigation-active-step': {
+        backgroundColor: '#f4f8fd',
+        borderRadius: '10px',
+    },
+    '& .steps-list li.navigation-active-step .item-inner-spacing': {
+        color: '#0d4c8b',
+        fontWeight: 600,
+    },
+    '& .navigation-step-toolbar': {
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'space-between',
+        margin: '0 25px 8px 52px',
+    },
+    '& .navigation-step-toolbar-copy': {
+        color: '#595959',
+        fontFamily: 'Open Sans, Geneva, Helvetica, Arial, sans-serif',
+        fontSize: '13px',
+        lineHeight: 1.4,
+        marginRight: '0.75rem',
+    },
+    '& .navigation-step-toolbar-buttons': {
+        display: 'flex',
+        flexShrink: 0,
+        gap: '0.25rem',
+    },
+    '& .navigation-step-list': {
+        maxHeight: '14rem',
+        overflowY: 'auto',
+        paddingRight: '0.35rem',
+    },
+    '@media (max-width: 600px)': {
+        left: '1rem',
+        right: '1rem',
+        width: 'auto',
+    },
+}));
+
+const waypointStartIcon = `data:image/svg+xml;utf8,${encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="6" fill="#4b9cf5"/><circle cx="10" cy="10" r="2.5" fill="#ffffff"/></svg>',
+)}`;
+
+const waypointEndIcon = `data:image/svg+xml;utf8,${encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M10 1.75c-3.18 0-5.75 2.57-5.75 5.75 0 4.47 5.75 10.75 5.75 10.75s5.75-6.28 5.75-10.75c0-3.18-2.57-5.75-5.75-5.75Z" fill="#d64242"/><circle cx="10" cy="7.5" r="2.35" fill="#ffffff"/></svg>',
+)}`;
+
+const formatDistance = distanceMeters => {
+    if (!Number.isFinite(distanceMeters)) {
+        return null;
+    }
+
+    if (distanceMeters >= 1000) {
+        return `${(distanceMeters / 1000).toFixed(1)} km`;
+    }
+
+    return `${Math.round(distanceMeters)} m`;
+};
+
+const formatDuration = durationMinutes => {
+    if (!Number.isFinite(durationMinutes) || durationMinutes <= 0) {
+        return null;
+    }
+
+    if (durationMinutes >= 60) {
+        const hours = Math.floor(durationMinutes / 60);
+        const minutes = Math.round(durationMinutes % 60);
+        return minutes > 0 ? `${hours} hr ${minutes} min` : `${hours} hr`;
+    }
+
+    return `${Math.max(1, Math.round(durationMinutes))} min`;
+};
+
+const formatFloorLabel = zLevel => {
+    const numericZLevel = Number(zLevel);
+
+    if (!Number.isFinite(numericZLevel)) {
+        return null;
+    }
+
+    return `Floor ${numericZLevel}`;
+};
+
+const getLngLatZLevel = location => {
+    if (!location?.space_latitude || !location?.space_longitude) {
+        return null;
+    }
+
+    return {
+        lngLat: {
+            lng: Number(location.space_longitude),
+            lat: Number(location.space_latitude),
+        },
+        zLevel: Number.isFinite(Number(location?.space_zlevel)) ? Number(location.space_zlevel) : 1,
+    };
+};
+
+const formatRoutingCoordinate = (lngLat, zLevel, order = 'lng-lat') => {
+    if (order === 'lat-lng') {
+        return `(${lngLat.lat},${lngLat.lng},${zLevel})`;
+    }
+
+    return `(${lngLat.lng},${lngLat.lat},${zLevel})`;
+};
+
+const buildLegacyRoutingParams = (start, destination, options) => ({
+    fromLngLatZ: formatRoutingCoordinate(start.lngLat, start.zLevel),
+    toLngLatZ: formatRoutingCoordinate(destination.lngLat, destination.zLevel),
+    // Keep the older aliases as a compatibility fallback for SDK builds that still expect lat,lng,z.
+    from: formatRoutingCoordinate(start.lngLat, start.zLevel, 'lat-lng'),
+    to: formatRoutingCoordinate(destination.lngLat, destination.zLevel, 'lat-lng'),
+    srid: 4326,
+    accessible: !!options.avoidStairs,
+    mode: options.mode,
+    campusCollectionTag: options.campusCollectionTag,
+});
+
 const BookableSpacesMap = React.forwardRef(
-    ({ sortedSpaceLocations, spacesFavouritesList, onMarkerClick, centreLatLong }, ref) => {
+    (
+        {
+            sortedSpaceLocations,
+            spacesFavouritesList,
+            onMarkerClick,
+            centreLatLong,
+            navigationTarget,
+            navigationOrigin,
+            onNavigationClose,
+        },
+        ref,
+    ) => {
         console.log('BookableSpacesMap load centreLatLong=', centreLatLong);
 
         const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
         const [isMazeMapReady, setIsMazeMapReady] = React.useState(false);
         const [mapContainer, setMapContainer] = React.useState(null);
+        const [navigationState, setNavigationState] = React.useState({
+            status: 'idle',
+            steps: [],
+            currentStepIndex: 0,
+            totalDistanceMeters: null,
+            totalDurationMinutes: null,
+            title: '',
+            error: '',
+        });
         const mazeMapInstanceRef = useRef(null);
         const mazeMarkersRef = useRef(new Map());
         const selectedMarkerElRef = useRef(null);
         const activePopupRef = useRef(null);
+        const routeDrawerRef = useRef(null);
+        const latestRoutingRequestRef = useRef(0);
+        const stepListItemRefs = useRef([]);
 
         const ZOOM_CAMPUS_MANY_BUILDINGS = 20;
         const ZOOM_CAMPUS_ONE_BUILDING = 17;
@@ -174,12 +408,17 @@ const BookableSpacesMap = React.forwardRef(
             });
 
             mazeMapInstanceRef.current.on('load', () => {
+                routeDrawerRef.current = new window.Mazemap.AtoBTripBasicDrawer(mazeMapInstanceRef.current, {
+                    showDirectionArrows: true,
+                });
                 mazeMapInstanceRef.current.resize();
                 setIsMazeMapReady(true);
             });
 
             // eslint-disable-next-line consistent-return
             return () => {
+                routeDrawerRef.current?.remove();
+                routeDrawerRef.current = null;
                 mazeMapInstanceRef.current?.remove();
                 mazeMapInstanceRef.current = null;
                 setIsMazeMapReady(false);
@@ -255,7 +494,349 @@ const BookableSpacesMap = React.forwardRef(
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [sortedSpaceLocations, isMazeMapReady]);
 
-        return <StyledMapWrapperDiv id="mazemap-container" ref={setMapContainer} />;
+        React.useEffect(() => {
+            if (!isMazeMapReady || !mazeMapInstanceRef.current || !routeDrawerRef.current) {
+                return;
+            }
+
+            if (!navigationTarget || !navigationOrigin) {
+                routeDrawerRef.current.clear();
+                setNavigationState({
+                    status: 'idle',
+                    steps: [],
+                    currentStepIndex: 0,
+                    totalDistanceMeters: null,
+                    totalDurationMinutes: null,
+                    title: '',
+                    error: '',
+                });
+                return;
+            }
+
+            const start = getLngLatZLevel(navigationOrigin);
+            const destination = getLngLatZLevel(navigationTarget);
+
+            if (!start || !destination) {
+                setNavigationState({
+                    status: 'error',
+                    steps: [],
+                    currentStepIndex: 0,
+                    totalDistanceMeters: null,
+                    totalDurationMinutes: null,
+                    title: navigationTarget?.space_name || 'Route unavailable',
+                    error: 'This space does not have enough location data for navigation.',
+                });
+                routeDrawerRef.current.clear();
+                return;
+            }
+
+            const requestId = latestRoutingRequestRef.current + 1;
+            latestRoutingRequestRef.current = requestId;
+
+            setNavigationState(current => ({
+                ...current,
+                status: 'loading',
+                steps: [],
+                currentStepIndex: 0,
+                title: navigationTarget?.space_name || '',
+                error: '',
+            }));
+
+            const options = {
+                campusCollectionTag: 'all',
+                connectToStart: true,
+                connectToEnd: true,
+                includeSteps: true,
+                mode: 'PEDESTRIAN',
+            };
+
+            const requestTrip = async () => {
+                const threeArgRouteGetter =
+                    window.Mazemap?.Data?.getAToBTrip ||
+                    window.Mazemap?.getAToBTrip ||
+                    window.Mazemap?.Data?.getRouteTrip;
+
+                if (typeof threeArgRouteGetter === 'function') {
+                    return threeArgRouteGetter(start, destination, options);
+                }
+
+                const singleArgRouteGetter = window.Mazemap?.Data?.getAtoBTrip;
+                if (typeof singleArgRouteGetter === 'function') {
+                    return singleArgRouteGetter(buildLegacyRoutingParams(start, destination, options));
+                }
+
+                throw new Error('MazeMap routing API is unavailable.');
+            };
+
+            requestTrip()
+                .then(trip => {
+                    if (latestRoutingRequestRef.current !== requestId) {
+                        return;
+                    }
+
+                    routeDrawerRef.current?.setAtoBTrip(trip);
+
+                    const turnByTurnSteps = trip.getTurnByTurnSteps?.() || [];
+                    const instructionSteps = trip.getInstructionsSteps?.() || [];
+                    const steps = turnByTurnSteps.map((step, index) => ({
+                        step,
+                        instruction:
+                            step?.asJson?.()?.instruction ||
+                            instructionSteps?.[index]?.instruction ||
+                            instructionSteps?.[index]?.text ||
+                            step?.maneuver?.type?.replaceAll('_', ' ') ||
+                            `Step ${index + 1}`,
+                    }));
+
+                    setNavigationState({
+                        status: 'ready',
+                        steps,
+                        currentStepIndex: 0,
+                        totalDistanceMeters: trip.getTotalDistanceMeters?.() ?? null,
+                        totalDurationMinutes: trip.getTotalDurationMinutes?.() ?? null,
+                        title: navigationTarget?.space_name || '',
+                        error: '',
+                    });
+
+                    const firstStep = steps[0]?.step;
+                    if (firstStep) {
+                        mazeMapInstanceRef.current.setZLevel(firstStep.zLevel ?? destination.zLevel);
+                        mazeMapInstanceRef.current.flyTo({
+                            center: firstStep.getStepStartPointLngLat(),
+                            zoom: zoomLevelForCampus(navigationTarget.space_campus_id),
+                            speed: 1.4,
+                        });
+                    }
+                })
+                .catch(error => {
+                    if (latestRoutingRequestRef.current !== requestId) {
+                        return;
+                    }
+
+                    routeDrawerRef.current?.clear();
+                    setNavigationState({
+                        status: 'error',
+                        steps: [],
+                        currentStepIndex: 0,
+                        totalDistanceMeters: null,
+                        totalDurationMinutes: null,
+                        title: navigationTarget?.space_name || 'Route unavailable',
+                        error: error?.message || 'Unable to load navigation steps for this space.',
+                    });
+                });
+        }, [isMazeMapReady, navigationOrigin, navigationTarget]);
+
+        const startDetail = ['Campus map centre', formatFloorLabel(navigationOrigin?.space_zlevel)]
+            .filter(Boolean)
+            .join(', ');
+        const destinationDetail = [
+            navigationTarget?.space_library_name,
+            formatFloorLabel(navigationTarget?.space_zlevel),
+        ]
+            .filter(Boolean)
+            .join(', ');
+        const routeOverviewCopy = [
+            formatDistance(navigationState.totalDistanceMeters),
+            formatDuration(navigationState.totalDurationMinutes),
+        ]
+            .filter(Boolean)
+            .join(' · ');
+        const currentStepSummary = navigationState.steps.length
+            ? `Step ${navigationState.currentStepIndex + 1} of ${navigationState.steps.length}`
+            : 'Route overview';
+        const currentStepDistance = formatDistance(
+            navigationState.steps[navigationState.currentStepIndex]?.step?.getDistanceMeters?.(),
+        );
+
+        const showNavigationStep = React.useCallback(
+            nextIndex => {
+                const nextStep = navigationState.steps[nextIndex]?.step;
+                if (!nextStep || !mazeMapInstanceRef.current) {
+                    return;
+                }
+
+                setNavigationState(current => ({
+                    ...current,
+                    currentStepIndex: nextIndex,
+                }));
+
+                mazeMapInstanceRef.current.stop();
+                if (Number.isFinite(nextStep?.zLevel)) {
+                    mazeMapInstanceRef.current.setZLevel(nextStep.zLevel);
+                }
+                mazeMapInstanceRef.current.flyTo({
+                    center: nextStep.getStepStartPointLngLat(),
+                    zoom: mazeMapInstanceRef.current.getZoom() < 19 ? 19 : mazeMapInstanceRef.current.getZoom(),
+                    speed: 1.2,
+                });
+            },
+            [navigationState.steps],
+        );
+
+        React.useEffect(() => {
+            if (navigationState.status !== 'ready') {
+                return;
+            }
+
+            const activeStepElement = stepListItemRefs.current[navigationState.currentStepIndex];
+            activeStepElement?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }, [navigationState.currentStepIndex, navigationState.status]);
+
+        return (
+            <StyledMapWrapperDiv id="mazemap-container" ref={setMapContainer}>
+                {navigationState.status !== 'idle' && (
+                    <StyledNavigationPanel data-testid="space-navigation-panel">
+                        <IconButton
+                            className="navigation-panel-close"
+                            size="small"
+                            onClick={onNavigationClose}
+                            aria-label="Close navigation"
+                        >
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+
+                        <div className="navigation-panel-scroll">
+                            {navigationState.status === 'loading' && (
+                                <div className="navigation-loading">
+                                    <CircularProgress size={18} />
+                                    <span>Calculating route…</span>
+                                </div>
+                            )}
+
+                            {navigationState.status === 'error' && (
+                                <div className="navigation-error">{navigationState.error}</div>
+                            )}
+
+                            {navigationState.status === 'ready' && (
+                                <div className="mazemap-gui-route-details-container">
+                                    <div className="mazemap-gui-route-waypoints">
+                                        <div className="waypoint-item">
+                                            <img className="waypoint-icon" src={waypointStartIcon} alt="Start" />
+                                            <h2 className="waypoint-title navigation-route-title">From</h2>
+                                            <span className="waypoint-detail navigation-route-detail">
+                                                {startDetail}
+                                            </span>
+                                        </div>
+                                        <div className="waypoint-item">
+                                            <img className="waypoint-icon" src={waypointEndIcon} alt="Destination" />
+                                            <h2 className="waypoint-title navigation-route-title">
+                                                To {navigationState.title}
+                                            </h2>
+                                            <span className="waypoint-detail navigation-route-detail">
+                                                {destinationDetail || 'Selected bookable space'}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <hr />
+
+                                    <div className="mazemap-gui-route-meta-container">
+                                        <div className="route-metric-info">
+                                            <div>
+                                                <span className="metric-data">
+                                                    {formatDistance(navigationState.totalDistanceMeters) ||
+                                                        'Distance unavailable'}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span className="metric-data">
+                                                    {formatDuration(navigationState.totalDurationMinutes) ||
+                                                        'Time unavailable'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="route-steps-num">
+                                            Walking route from the campus map centre
+                                            {routeOverviewCopy ? ` · ${routeOverviewCopy}` : ''}
+                                        </div>
+                                    </div>
+
+                                    <hr />
+
+                                    <div className="mazemap-route-description-container">
+                                        <h2 id="route-details-steps-header">Detailed instructions</h2>
+                                        <div className="navigation-step-toolbar">
+                                            <div className="navigation-step-toolbar-copy">
+                                                <strong>{currentStepSummary}</strong>
+                                                {currentStepDistance ? ` · ${currentStepDistance}` : ''}
+                                            </div>
+                                            <div className="navigation-step-toolbar-buttons">
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() =>
+                                                        showNavigationStep(navigationState.currentStepIndex - 1)
+                                                    }
+                                                    disabled={navigationState.currentStepIndex === 0}
+                                                    aria-label="Previous step"
+                                                >
+                                                    <ChevronLeftIcon fontSize="small" />
+                                                </IconButton>
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() =>
+                                                        showNavigationStep(navigationState.currentStepIndex + 1)
+                                                    }
+                                                    disabled={
+                                                        navigationState.currentStepIndex >=
+                                                        navigationState.steps.length - 1
+                                                    }
+                                                    aria-label="Next step"
+                                                >
+                                                    <ChevronRightIcon fontSize="small" />
+                                                </IconButton>
+                                            </div>
+                                        </div>
+                                        <div className="navigation-step-list">
+                                            <ol className="steps-list" aria-labelledby="route-details-steps-header">
+                                                {navigationState.steps.map((navigationStep, index) => (
+                                                    <li
+                                                        key={`navigation-step-${index + 1}`}
+                                                        ref={element => {
+                                                            stepListItemRefs.current[index] = element;
+                                                        }}
+                                                        className={
+                                                            index === navigationState.currentStepIndex
+                                                                ? 'navigation-active-step'
+                                                                : ''
+                                                        }
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            className="navigation-step-button"
+                                                            onClick={() => showNavigationStep(index)}
+                                                        >
+                                                            <span className="item-inner-spacing">
+                                                                {navigationStep.instruction}
+                                                                {navigationStep?.step && (
+                                                                    <span className="navigation-step-meta">
+                                                                        Step {index + 1} of{' '}
+                                                                        {navigationState.steps.length}
+                                                                        {' · '}
+                                                                        {formatDistance(
+                                                                            navigationStep.step.getDistanceMeters?.(),
+                                                                        ) || 'Distance unavailable'}
+                                                                        {navigationStep?.step?.maneuver?.type
+                                                                            ? ` · ${navigationStep.step.maneuver.type.replaceAll(
+                                                                                  '_',
+                                                                                  ' ',
+                                                                              )}`
+                                                                            : ''}
+                                                                    </span>
+                                                                )}
+                                                            </span>
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </StyledNavigationPanel>
+                )}
+            </StyledMapWrapperDiv>
+        );
     },
 );
 
@@ -265,7 +846,10 @@ BookableSpacesMap.propTypes = {
     sortedSpaceLocations: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
     onMarkerClick: PropTypes.func.isRequired,
-    centreLatLong: PropTypes.array,
+    centreLatLong: PropTypes.any,
+    navigationTarget: PropTypes.any,
+    navigationOrigin: PropTypes.any,
+    onNavigationClose: PropTypes.func,
 };
 
 export default BookableSpacesMap;
