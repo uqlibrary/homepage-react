@@ -242,35 +242,20 @@ export const SidebarFilters = ({
     selectedFacilityTypes,
     setSelectedFacilityTypes,
     filteredFacilityTypeList,
-    selectedCampus,
-    handleCampusSelection,
     suppliedClassName,
     minimumSpaceCapacity,
     maximumSpaceCapacity,
     capacityFilterValue,
     setCapacityFilterValue,
-    campusList,
     activeFilterCount,
 }) => {
-    console.log(
-        'TOP SidebarFilters facilityTypeList=',
-        facilityTypeListLoading,
-        facilityTypeListError,
-        facilityTypeList,
-    );
-    const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness2] = React.useState([]);
-    const setFacilityTypeFilterGroupExpandedness = x => {
-        console.log('SidebarFilters setFacilityTypeFilterGroupExpandedness=', x);
-        setFacilityTypeFilterGroupExpandedness2(x);
-    };
-    const [defaultCampus, setDefaultCampus] = React.useState(1);
+    const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
 
     function sortedUsedGroups() {
         if (
             !filteredFacilityTypeList?.data?.facility_type_groups ||
             filteredFacilityTypeList?.data?.facility_type_groups?.length === 0
         ) {
-            console.log('SidebarFilters sortedUsedGroups no facility type group data');
             return [];
         }
         const usedFilterList = [...filteredFacilityTypeList?.data?.facility_type_groups];
@@ -310,12 +295,6 @@ export const SidebarFilters = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    React.useEffect(() => {
-        if (campusList?.length > 0) {
-            setDefaultCampus(campusList.at(0).campus_id);
-        }
-    }, [campusList]);
 
     const resetFacilityTypeFilterGroupExpandedness = (filterGroupId, isGroupExpandedInput) => {
         const newExpandedness = facilityTypeFilterGroupExpandedness?.filter(g => {
@@ -758,40 +737,6 @@ export const SidebarFilters = ({
                         )}
                     </>
                 )}
-                {campusList?.length > 0 && (
-                    <StyledCampusWrapperDiv>
-                        <h3 id="filter-by-campus-label" htmlFor="filter-by-campus-input">
-                            Choose campus
-                        </h3>
-                        <Select
-                            className="campusSelector"
-                            id="filter-by-campus"
-                            labelId="filter-by-campus-label"
-                            data-testid="filter-by-campus"
-                            value={
-                                campusList?.find(c => c.campus_id === selectedCampus)?.campus_id || defaultCampus || 1
-                            }
-                            onChange={handleCampusSelection}
-                            inputProps={{
-                                id: 'filter-by-campus-input',
-                                title: 'Filter the displayed Spaces by campus',
-                            }}
-                        >
-                            {campusList
-                                ?.filter(campus => campus.campus_space_count > 0)
-                                ?.map((campus, index) => (
-                                    <MenuItem
-                                        value={campus?.campus_id}
-                                        key={`filter-by-campus-menuitem-${index}`}
-                                        selected={campus?.campus_id === 99999}
-                                        data-testid={`campus-${campus?.campus_id}`}
-                                    >
-                                        {campus.campus_name}
-                                    </MenuItem>
-                                ))}
-                        </Select>
-                    </StyledCampusWrapperDiv>
-                )}
                 {sortedUsedGroups()?.map(group => {
                     const filterGroupId = group?.facility_type_group_id;
                     const isGroupExpanded = !!facilityTypeFilterGroupExpandedness?.find(
@@ -835,13 +780,10 @@ SidebarFilters.propTypes = {
     filteredFacilityTypeList: PropTypes.any,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
-    selectedCampus: PropTypes.any,
-    handleCampusSelection: PropTypes.func,
     minimumSpaceCapacity: PropTypes.number,
     maximumSpaceCapacity: PropTypes.number,
     capacityFilterValue: PropTypes.array,
     setCapacityFilterValue: PropTypes.func,
-    campusList: PropTypes.any,
     suppliedClassName: PropTypes.string,
     activeFilterCount: PropTypes.number,
 };

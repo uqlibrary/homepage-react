@@ -1373,7 +1373,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
         });
     });
-    test.describe('Can change campuses', () => {
+    test.describe.skip('Can change campuses', () => {
         test.beforeEach(async ({ page }) => {
             // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
             // which would otherwise cause BookableSpacesList to re-render and destabilise the toggle
