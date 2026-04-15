@@ -12,6 +12,8 @@ const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 
 const port = 2020;
 const url = process.env.URL || 'localhost';
+const host = process.env.HOST || url;
+const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 const useMock = !!process.env.USE_MOCK || false;
 const publicPath = '';
 
@@ -21,7 +23,7 @@ module.exports = {
     devtool: 'source-map',
     entry: {
         browserUpdate: join(__dirname, 'public', 'browser-update.js'),
-        webpackDevClient: `webpack-dev-server/client?http://${url}:${port}`,
+        webpackDevClient: `webpack-dev-server/client?${protocol}://${url}:${port}`,
         webPackDevServer: 'webpack/hot/only-dev-server',
         index: join(__dirname, 'src', 'index.js'),
     },
@@ -29,7 +31,7 @@ module.exports = {
         filename: '[name].js',
         path: resolve(__dirname),
         pathinfo: true,
-        publicPath: `http://${url}:${port}/${publicPath}`,
+        publicPath: `${protocol}://${url}:${port}/${publicPath}`,
         // assetModuleFilename: 'images/[hash][ext][query]' // TBD
     },
     devServer: {
@@ -44,9 +46,9 @@ module.exports = {
         // },
         headers: { 'X-Custom-Header': 'yes' },
         historyApiFallback: true,
-        host: url,
+        host: host,
         // hot: true,
-        https: false,
+        server: protocol,
         // inline: true,
         // lazy: false,
         // noInfo: true,
@@ -156,7 +158,7 @@ module.exports = {
             __DEVELOPMENT__: true,
             'process.env.NODE_ENV': JSON.stringify('development'),
             'process.env.USE_MOCK': JSON.stringify(useMock),
-            'process.env.APP_URL': JSON.stringify(`http://${url}:${port}/`),
+            'process.env.APP_URL': JSON.stringify(`${protocol}://${url}:${port}/`),
             'process.env.FULL_PATH': JSON.stringify(process.env.FULL_PATH),
             'process.env.TITLE_SUFFIX': JSON.stringify('LOCAL'),
             'process.env.ENABLE_LOG': JSON.stringify(

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Grid, Tooltip, Typography } from '@mui/material';
+import { Grid, Tooltip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
@@ -47,8 +47,6 @@ const SidebarSpacesList = ({
     onFavouriteToggle = null,
     isFavouriteActionInProgress = false,
     onSpaceExpand = null,
-    activeNavigationSpaceId = null,
-    onNavigate = null,
 }) => {
     // const markerRefs = React.useRef({});
     //
@@ -171,23 +169,6 @@ const SidebarSpacesList = ({
                                     showAllData={showAllData}
                                     onExpand={onSpaceExpand}
                                 />
-                                {onNavigate && (
-                                    <Button
-                                        variant={
-                                            activeNavigationSpaceId === bookableSpace?.space_id
-                                                ? 'contained'
-                                                : 'outlined'
-                                        }
-                                        size="small"
-                                        onClick={() => onNavigate(bookableSpace)}
-                                        sx={{ mt: 2 }}
-                                        data-testid={`space-navigate-${bookableSpace?.space_id}`}
-                                    >
-                                        {activeNavigationSpaceId === bookableSpace?.space_id
-                                            ? 'Navigation active'
-                                            : 'Navigate to'}
-                                    </Button>
-                                )}
                             </StyledStandardCard>
                         </StyledBookableSpaceGridItem>
                     );
@@ -211,8 +192,6 @@ SidebarSpacesList.propTypes = {
     onFavouriteToggle: PropTypes.func,
     isFavouriteActionInProgress: PropTypes.bool,
     onSpaceExpand: PropTypes.func,
-    activeNavigationSpaceId: PropTypes.number,
-    onNavigate: PropTypes.func,
 };
 
 export default React.memo(SidebarSpacesList);

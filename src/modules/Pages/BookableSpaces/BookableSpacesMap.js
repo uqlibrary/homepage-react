@@ -7,6 +7,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
+import MinimizeIcon from '@mui/icons-material/Minimize';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 
 import { addClass, removeClass } from 'helpers/general';
 
@@ -49,6 +51,12 @@ const StyledNavigationPanel = styled('div')(() => ({
         position: 'absolute',
         top: '0.4rem',
         right: '0.4rem',
+        zIndex: 1,
+    },
+    '& .navigation-panel-minimize': {
+        position: 'absolute',
+        top: '0.4rem',
+        right: '2.5rem',
         zIndex: 1,
     },
     '& .navigation-panel-scroll': {
@@ -139,6 +147,18 @@ const StyledNavigationPanel = styled('div')(() => ({
         lineHeight: 1.4,
         marginBottom: '0.85rem',
     },
+    '& .navigation-manual-status': {
+        color: '#6b2f2f',
+        fontSize: '0.8rem',
+        lineHeight: 1.4,
+        marginBottom: '0.85rem',
+    },
+    '& .navigation-manual-status-minimized': {
+        color: '#6b2f2f',
+        fontSize: '0.72rem',
+        lineHeight: 1.25,
+        marginBottom: '0.5rem',
+    },
     '& .navigation-orientation-status': {
         color: '#4d6285',
         fontSize: '0.8rem',
@@ -149,6 +169,19 @@ const StyledNavigationPanel = styled('div')(() => ({
         backgroundColor: '#edf3fb',
         color: '#1d2f4b',
         marginBottom: '0.85rem',
+        width: '100%',
+    },
+    '& .navigation-minimized-label': {
+        color: '#4d6285',
+        fontSize: '0.8rem',
+        fontWeight: 700,
+        letterSpacing: '0.04em',
+        marginBottom: '0.65rem',
+        textTransform: 'uppercase',
+    },
+    '& .navigation-expand-button': {
+        backgroundColor: '#edf3fb',
+        color: '#1d2f4b',
         width: '100%',
     },
     '& .navigation-controls': {
@@ -635,6 +668,38 @@ const getDistanceToRouteMeters = (position, steps) => {
     return shortestDistance;
 };
 
+const getDistanceToNavigationStepMeters = (position, navigationStep, fallbackPoint = null) => {
+    if (!position || !navigationStep) {
+        return Number.POSITIVE_INFINITY;
+    }
+
+    const coordinates = getGeometryCoordinates(navigationStep?.step);
+    let shortestDistance = Number.POSITIVE_INFINITY;
+
+    for (let index = 0; index < coordinates.length - 1; index += 1) {
+        const segmentStart = normalizeLngLat(coordinates[index]);
+        const segmentEnd = normalizeLngLat(coordinates[index + 1]);
+
+        if (!segmentStart || !segmentEnd) {
+            continue;
+        }
+
+        shortestDistance = Math.min(shortestDistance, getDistanceToSegmentMeters(position, segmentStart, segmentEnd));
+    }
+
+    if (Number.isFinite(shortestDistance)) {
+        return shortestDistance;
+    }
+
+    const normalizedFallbackPoint = normalizeLngLat(fallbackPoint);
+
+    if (normalizedFallbackPoint) {
+        return haversineDistanceMeters(position, normalizedFallbackPoint);
+    }
+
+    return Number.POSITIVE_INFINITY;
+};
+
 const getLiveRoutingOrigin = (position, zLevel) => {
     if (!position) {
         return null;
@@ -683,12 +748,16 @@ const buildLegacyRoutingParams = (start, destination, options) => ({
     campusCollectionTag: options.campusCollectionTag,
 });
 
+const OFF_ROUTE_REROUTE_DISTANCE_METERS = 20;
+
 const BookableSpacesMap = React.forwardRef(
     (
         {
             sortedSpaceLocations,
             spacesFavouritesList,
             onMarkerClick,
+            onNavigate,
+            activeNavigationSpaceId,
             centreLatLong,
             navigationTarget,
             navigationOrigin,
@@ -710,9 +779,13 @@ const BookableSpacesMap = React.forwardRef(
             title: '',
             error: '',
         });
+        const [isNavigationPanelMinimized, setIsNavigationPanelMinimized] = React.useState(false);
+        const [isManualStepSelectionActive, setIsManualStepSelectionActive] = React.useState(false);
+        const [isAutomaticResumeStatusVisible, setIsAutomaticResumeStatusVisible] = React.useState(false);
         const [liveNavigationState, setLiveNavigationState] = React.useState({
             status: 'idle',
             position: null,
+            accuracy: null,
             error: '',
         });
         const [orientationState, setOrientationState] = React.useState({
@@ -736,6 +809,8 @@ const BookableSpacesMap = React.forwardRef(
         const geolocationWatchIdRef = useRef(null);
         const userLocationMarkerRef = useRef(null);
         const orientationHeadingRef = useRef(null);
+        const automaticResumeStatusTimeoutRef = useRef(null);
+        const pendingInitialLiveRouteRef = useRef(false);
         const rerouteAttemptRef = useRef({
             lastAt: 0,
             lastOrigin: null,
@@ -793,6 +868,32 @@ const BookableSpacesMap = React.forwardRef(
                     favEl.textContent = 'One of your favourite spaces';
                     favEl.style.cssText = 'font-size: 0.8rem; color: #666;';
                     container.appendChild(favEl);
+                }
+
+                if (onNavigate) {
+                    container.appendChild(document.createElement('br'));
+                    const navigateButton = document.createElement('button');
+                    navigateButton.type = 'button';
+                    navigateButton.textContent =
+                        activeNavigationSpaceId === space?.space_id ? 'Navigation active' : 'Navigate to';
+                    navigateButton.disabled = activeNavigationSpaceId === space?.space_id;
+                    navigateButton.setAttribute('data-testid', `space-navigate-${space?.space_id}`);
+                    navigateButton.style.cssText =
+                        'margin-top: 8px; padding: 6px 10px; border-radius: 6px; border: 1px solid #2f72ea; background: ' +
+                        (activeNavigationSpaceId === space?.space_id ? '#2f72ea' : '#ffffff') +
+                        '; color: ' +
+                        (activeNavigationSpaceId === space?.space_id ? '#ffffff' : '#2f72ea') +
+                        '; cursor: ' +
+                        (activeNavigationSpaceId === space?.space_id ? 'default' : 'pointer') +
+                        '; font: inherit;';
+                    navigateButton.addEventListener('click', clickEvent => {
+                        clickEvent.preventDefault();
+                        clickEvent.stopPropagation();
+                        onNavigate(space);
+                        activePopupRef.current?.remove();
+                        activePopupRef.current = null;
+                    });
+                    container.appendChild(navigateButton);
                 }
 
                 activePopupRef.current = new window.Mazemap.Popup({
@@ -1088,6 +1189,7 @@ const BookableSpacesMap = React.forwardRef(
                         title: navigationTarget?.space_name || '',
                         error: '',
                     });
+                    setIsManualStepSelectionActive(false);
 
                     if (rerouteRequest.active) {
                         setRerouteRequest({
@@ -1149,10 +1251,12 @@ const BookableSpacesMap = React.forwardRef(
                 setLiveNavigationState({
                     status: 'idle',
                     position: null,
+                    accuracy: null,
                     error: '',
                 });
                 userLocationMarkerRef.current?.remove();
                 userLocationMarkerRef.current = null;
+                pendingInitialLiveRouteRef.current = false;
                 return clearGeolocationWatch;
             }
 
@@ -1160,10 +1264,20 @@ const BookableSpacesMap = React.forwardRef(
                 setLiveNavigationState({
                     status: 'unsupported',
                     position: null,
+                    accuracy: null,
                     error: 'Live step tracking is not supported in this browser.',
                 });
+                pendingInitialLiveRouteRef.current = false;
                 return clearGeolocationWatch;
             }
+
+            pendingInitialLiveRouteRef.current = true;
+            setLiveNavigationState(current => ({
+                status: current.position ? 'watching' : 'locating',
+                position: current.position,
+                accuracy: current.accuracy ?? null,
+                error: '',
+            }));
 
             const handleSuccess = position => {
                 setLiveNavigationState({
@@ -1172,17 +1286,31 @@ const BookableSpacesMap = React.forwardRef(
                         lat: Number(position.coords.latitude),
                         lng: Number(position.coords.longitude),
                     },
+                    accuracy: Number.isFinite(Number(position.coords.accuracy))
+                        ? Number(position.coords.accuracy)
+                        : null,
                     error: '',
                 });
             };
 
             const handleError = error => {
+                if (error?.code === error?.PERMISSION_DENIED || error?.code === error?.POSITION_UNAVAILABLE) {
+                    pendingInitialLiveRouteRef.current = false;
+                }
+
                 setLiveNavigationState(current => ({
                     status: 'error',
                     position: current.position,
+                    accuracy: current.accuracy ?? null,
                     error: getGeolocationErrorMessage(error),
                 }));
             };
+
+            navigator.geolocation.getCurrentPosition(handleSuccess, handleError, {
+                enableHighAccuracy: true,
+                maximumAge: 0,
+                timeout: 12000,
+            });
 
             geolocationWatchIdRef.current = navigator.geolocation.watchPosition(handleSuccess, handleError, {
                 enableHighAccuracy: true,
@@ -1192,6 +1320,34 @@ const BookableSpacesMap = React.forwardRef(
 
             return clearGeolocationWatch;
         }, [isMazeMapReady, navigationTarget]);
+
+        React.useEffect(() => {
+            if (
+                !pendingInitialLiveRouteRef.current ||
+                !navigationTarget ||
+                !liveNavigationState.position ||
+                rerouteRequest.active
+            ) {
+                return;
+            }
+
+            const fallbackZLevel =
+                mazeMapInstanceRef.current?.getZLevel?.() ??
+                navigationTarget?.space_zlevel ??
+                navigationOrigin?.space_zlevel;
+            const nextOrigin = getLiveRoutingOrigin(liveNavigationState.position, fallbackZLevel);
+
+            if (!nextOrigin) {
+                return;
+            }
+
+            pendingInitialLiveRouteRef.current = false;
+            setRerouteRequest({
+                active: true,
+                origin: nextOrigin,
+                reason: '',
+            });
+        }, [liveNavigationState.position, navigationOrigin?.space_zlevel, navigationTarget, rerouteRequest.active]);
 
         React.useEffect(() => {
             if (!isMazeMapReady || !mazeMapInstanceRef.current) {
@@ -1271,7 +1427,12 @@ const BookableSpacesMap = React.forwardRef(
         }, [isMazeMapReady, orientationState.enabled]);
 
         React.useEffect(() => {
-            if (navigationState.status !== 'ready' || !liveNavigationState.position || !navigationState.steps.length) {
+            if (
+                navigationState.status !== 'ready' ||
+                !liveNavigationState.position ||
+                !navigationState.steps.length ||
+                isManualStepSelectionActive
+            ) {
                 return;
             }
 
@@ -1296,6 +1457,7 @@ const BookableSpacesMap = React.forwardRef(
                 }));
             }
         }, [
+            isManualStepSelectionActive,
             liveNavigationState.position,
             navigationState.currentStepIndex,
             navigationState.status,
@@ -1307,6 +1469,8 @@ const BookableSpacesMap = React.forwardRef(
                 navigationState.status !== 'ready' ||
                 !liveNavigationState.position ||
                 !navigationTarget ||
+                navigationState.currentStepIndex < 1 ||
+                isManualStepSelectionActive ||
                 rerouteRequest.active
             ) {
                 return;
@@ -1317,7 +1481,10 @@ const BookableSpacesMap = React.forwardRef(
                 navigationState.steps,
             );
 
-            if (!Number.isFinite(distanceFromRouteMeters) || distanceFromRouteMeters <= 10) {
+            if (
+                !Number.isFinite(distanceFromRouteMeters) ||
+                distanceFromRouteMeters <= OFF_ROUTE_REROUTE_DISTANCE_METERS
+            ) {
                 return;
             }
 
@@ -1354,6 +1521,7 @@ const BookableSpacesMap = React.forwardRef(
                 reason: 'You moved away from the route. Recalculating from your location.',
             });
         }, [
+            isManualStepSelectionActive,
             liveNavigationState.position,
             navigationOrigin?.space_zlevel,
             navigationState.currentStepIndex,
@@ -1364,16 +1532,78 @@ const BookableSpacesMap = React.forwardRef(
         ]);
 
         React.useEffect(() => {
+            if (!isManualStepSelectionActive || navigationState.status !== 'ready' || !liveNavigationState.position) {
+                return;
+            }
+
+            const activeRouteOrigin = rerouteRequest.origin || getLngLatZLevel(navigationOrigin);
+            const currentStepPoint =
+                navigationState.currentStepIndex === 0
+                    ? normalizeLngLat(activeRouteOrigin?.lngLat)
+                    : normalizeLngLat(
+                          navigationState.steps[navigationState.currentStepIndex]?.step?.getStepStartPointLngLat?.(),
+                      );
+            const distanceToSelectedStep = getDistanceToNavigationStepMeters(
+                liveNavigationState.position,
+                navigationState.steps[navigationState.currentStepIndex],
+                currentStepPoint,
+            );
+
+            const distanceToRouteOrigin =
+                navigationState.currentStepIndex === 0
+                    ? haversineDistanceMeters(liveNavigationState.position, currentStepPoint)
+                    : Number.POSITIVE_INFINITY;
+
+            if (Math.min(distanceToSelectedStep, distanceToRouteOrigin) <= 20) {
+                setIsManualStepSelectionActive(false);
+                setIsAutomaticResumeStatusVisible(true);
+            }
+        }, [
+            isManualStepSelectionActive,
+            liveNavigationState.position,
+            navigationOrigin,
+            navigationState.currentStepIndex,
+            navigationState.status,
+            navigationState.steps,
+            rerouteRequest.origin,
+        ]);
+
+        React.useEffect(() => {
+            if (!isAutomaticResumeStatusVisible) {
+                return undefined;
+            }
+
+            if (automaticResumeStatusTimeoutRef.current) {
+                window.clearTimeout(automaticResumeStatusTimeoutRef.current);
+            }
+
+            automaticResumeStatusTimeoutRef.current = window.setTimeout(() => {
+                setIsAutomaticResumeStatusVisible(false);
+                automaticResumeStatusTimeoutRef.current = null;
+            }, 1800);
+
+            return () => {
+                if (automaticResumeStatusTimeoutRef.current) {
+                    window.clearTimeout(automaticResumeStatusTimeoutRef.current);
+                    automaticResumeStatusTimeoutRef.current = null;
+                }
+            };
+        }, [isAutomaticResumeStatusVisible]);
+
+        React.useEffect(() => {
             return () => {
                 userLocationMarkerRef.current?.remove();
                 userLocationMarkerRef.current = null;
+                if (automaticResumeStatusTimeoutRef.current) {
+                    window.clearTimeout(automaticResumeStatusTimeoutRef.current);
+                    automaticResumeStatusTimeoutRef.current = null;
+                }
             };
         }, []);
 
         const currentNavigationStep = navigationState.steps[navigationState.currentStepIndex];
         const nextNavigationStep = navigationState.steps[navigationState.currentStepIndex + 1];
         const currentStepDistance = formatDistance(currentNavigationStep?.step?.getDistanceMeters?.());
-        const nextStepDistance = formatDistance(nextNavigationStep?.step?.getDistanceMeters?.());
         const remainingDistanceMeters =
             getRemainingDistanceMeters(navigationState.steps, navigationState.currentStepIndex) ||
             navigationState.totalDistanceMeters;
@@ -1385,21 +1615,29 @@ const BookableSpacesMap = React.forwardRef(
         const remainingDurationMinutes = hasRouteTotals
             ? (navigationState.totalDurationMinutes * remainingDistanceMeters) / navigationState.totalDistanceMeters
             : navigationState.totalDurationMinutes;
+        const navigationCardTitle = currentNavigationStep?.maneuverType === 'arrive' ? 'Arrived' : 'On Route';
         const stepTitle = currentNavigationStep?.instruction || 'Continue';
         const displayedTurnType = getDisplayedTurnType(currentNavigationStep, nextNavigationStep);
         const stepTurnRotation = getStepTurnRotation(displayedTurnType);
         let stepSubtitle = `Continue to ${navigationState.title}`;
+        let minimizedStepSubtitle = 'Continue on your route';
 
         if (nextNavigationStep?.instruction) {
-            stepSubtitle = `Then ${lowercaseFirstCharacter(nextNavigationStep.instruction)}${
-                nextStepDistance ? ` in ${nextStepDistance}` : ''
-            }`;
+            stepSubtitle = `Then ${lowercaseFirstCharacter(nextNavigationStep.instruction)}`;
         } else if (currentStepDistance) {
             stepSubtitle = `Continue for ${currentStepDistance}`;
         }
 
+        if (currentStepDistance) {
+            minimizedStepSubtitle = `In ${currentStepDistance}`;
+        }
+
         const liveTrackingError =
             rerouteRequest.reason || (liveNavigationState.status !== 'watching' ? liveNavigationState.error : '');
+        const manualStepStatusMessage = isManualStepSelectionActive
+            ? 'Manual step browsing is active until you reach the selected step.'
+            : '';
+        const automaticResumeStatusMessage = isAutomaticResumeStatusVisible ? 'Returning to automatic tracking.' : '';
         const orientationStatusMessage = orientationState.enabled
             ? 'Compass rotation is on. The map follows your phone orientation.'
             : orientationState.error;
@@ -1478,6 +1716,8 @@ const BookableSpacesMap = React.forwardRef(
                     ...current,
                     currentStepIndex: nextIndex,
                 }));
+                setIsManualStepSelectionActive(true);
+                setIsAutomaticResumeStatusVisible(false);
 
                 mazeMapInstanceRef.current.stop();
                 if (Number.isFinite(nextStep?.zLevel)) {
@@ -1501,10 +1741,33 @@ const BookableSpacesMap = React.forwardRef(
             activeStepElement?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }, [navigationState.currentStepIndex, navigationState.status]);
 
+        React.useEffect(() => {
+            setIsNavigationPanelMinimized(false);
+            setIsManualStepSelectionActive(false);
+            setIsAutomaticResumeStatusVisible(false);
+        }, [navigationTarget?.space_id]);
+
         return (
             <StyledMapWrapperDiv id="mazemap-container" ref={setMapContainer}>
                 {navigationState.status !== 'idle' && (
                     <StyledNavigationPanel data-testid="space-navigation-panel">
+                        {navigationState.status === 'ready' && (
+                            <IconButton
+                                className="navigation-panel-minimize"
+                                size="small"
+                                onClick={() => setIsNavigationPanelMinimized(current => !current)}
+                                aria-label={
+                                    isNavigationPanelMinimized ? 'Expand navigation panel' : 'Minimize navigation panel'
+                                }
+                            >
+                                {isNavigationPanelMinimized ? (
+                                    <OpenInFullIcon fontSize="small" />
+                                ) : (
+                                    <MinimizeIcon fontSize="small" />
+                                )}
+                            </IconButton>
+                        )}
+
                         <IconButton
                             className="navigation-panel-close"
                             size="small"
@@ -1528,76 +1791,143 @@ const BookableSpacesMap = React.forwardRef(
 
                             {navigationState.status === 'ready' && (
                                 <div className="navigation-card">
-                                    <div className="navigation-card-title">On Route</div>
+                                    {isNavigationPanelMinimized ? (
+                                        <>
+                                            <div className="navigation-minimized-label">Current step</div>
+                                            <div className="navigation-active-step-card">
+                                                <div
+                                                    className="navigation-active-step-icon"
+                                                    aria-hidden="true"
+                                                    style={{ transform: `rotate(${stepTurnRotation})` }}
+                                                >
+                                                    <ArrowUpwardIcon fontSize="large" />
+                                                </div>
+                                                <div className="navigation-active-step-copy">
+                                                    <div className="navigation-active-step-title">{stepTitle}</div>
+                                                    <div className="navigation-active-step-subtitle">
+                                                        {minimizedStepSubtitle}
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                    <div className="navigation-metrics">
-                                        <div className="navigation-metric-row">
-                                            <span className="navigation-metric-label">Distance Remaining:</span>
-                                            <span className="navigation-metric-value">
-                                                {formatDistance(remainingDistanceMeters) || 'Unavailable'}
-                                            </span>
-                                        </div>
-                                        <div className="navigation-metric-row">
-                                            <span className="navigation-metric-label">Time Remaining:</span>
-                                            <span className="navigation-metric-value">
-                                                {formatDurationDetailed(remainingDurationMinutes) || 'Unavailable'}
-                                            </span>
-                                        </div>
-                                    </div>
+                                            {manualStepStatusMessage && (
+                                                <div className="navigation-manual-status-minimized">
+                                                    {manualStepStatusMessage}
+                                                </div>
+                                            )}
 
-                                    <div className="navigation-active-step-card">
-                                        <div
-                                            className="navigation-active-step-icon"
-                                            aria-hidden="true"
-                                            style={{ transform: `rotate(${stepTurnRotation})` }}
-                                        >
-                                            <ArrowUpwardIcon fontSize="large" />
-                                        </div>
-                                        <div className="navigation-active-step-copy">
-                                            <div className="navigation-active-step-title">{stepTitle}</div>
-                                            <div className="navigation-active-step-subtitle">{stepSubtitle}</div>
-                                        </div>
-                                    </div>
+                                            {automaticResumeStatusMessage && (
+                                                <div className="navigation-orientation-status">
+                                                    {automaticResumeStatusMessage}
+                                                </div>
+                                            )}
 
-                                    {liveTrackingError && (
-                                        <div className="navigation-live-status">{liveTrackingError}</div>
+                                            <button
+                                                type="button"
+                                                className="navigation-control-button navigation-expand-button"
+                                                onClick={() => setIsNavigationPanelMinimized(false)}
+                                            >
+                                                Show full navigation
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="navigation-card-title">{navigationCardTitle}</div>
+
+                                            <div className="navigation-metrics">
+                                                <div className="navigation-metric-row">
+                                                    <span className="navigation-metric-label">Distance Remaining:</span>
+                                                    <span className="navigation-metric-value">
+                                                        {formatDistance(remainingDistanceMeters) || 'Unavailable'}
+                                                    </span>
+                                                </div>
+                                                <div className="navigation-metric-row">
+                                                    <span className="navigation-metric-label">Time Remaining:</span>
+                                                    <span className="navigation-metric-value">
+                                                        {formatDurationDetailed(remainingDurationMinutes) ||
+                                                            'Unavailable'}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="navigation-active-step-card">
+                                                <div
+                                                    className="navigation-active-step-icon"
+                                                    aria-hidden="true"
+                                                    style={{ transform: `rotate(${stepTurnRotation})` }}
+                                                >
+                                                    <ArrowUpwardIcon fontSize="large" />
+                                                </div>
+                                                <div className="navigation-active-step-copy">
+                                                    <div className="navigation-active-step-title">{stepTitle}</div>
+                                                    <div className="navigation-active-step-subtitle">
+                                                        {stepSubtitle}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {liveTrackingError && (
+                                                <div className="navigation-live-status">{liveTrackingError}</div>
+                                            )}
+
+                                            {manualStepStatusMessage && (
+                                                <div className="navigation-manual-status">
+                                                    {manualStepStatusMessage}
+                                                </div>
+                                            )}
+
+                                            {automaticResumeStatusMessage && (
+                                                <div className="navigation-orientation-status">
+                                                    {automaticResumeStatusMessage}
+                                                </div>
+                                            )}
+
+                                            <button
+                                                type="button"
+                                                className="navigation-control-button navigation-orientation-button"
+                                                onClick={toggleCompassRotation}
+                                                disabled={!orientationState.supported}
+                                            >
+                                                {orientationState.enabled
+                                                    ? 'Disable Compass Rotation'
+                                                    : 'Follow Phone Heading'}
+                                            </button>
+
+                                            {orientationStatusMessage && (
+                                                <div className="navigation-orientation-status">
+                                                    {orientationStatusMessage}
+                                                </div>
+                                            )}
+
+                                            <div className="navigation-controls">
+                                                <button
+                                                    type="button"
+                                                    className="navigation-control-button navigation-control-button-prev"
+                                                    onClick={() =>
+                                                        showNavigationStep(navigationState.currentStepIndex - 1)
+                                                    }
+                                                    disabled={navigationState.currentStepIndex === 0}
+                                                >
+                                                    <ChevronLeftIcon fontSize="small" />
+                                                    Prev
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="navigation-control-button navigation-control-button-next"
+                                                    onClick={() =>
+                                                        showNavigationStep(navigationState.currentStepIndex + 1)
+                                                    }
+                                                    disabled={
+                                                        navigationState.currentStepIndex >=
+                                                        navigationState.steps.length - 1
+                                                    }
+                                                >
+                                                    Next
+                                                    <ChevronRightIcon fontSize="small" />
+                                                </button>
+                                            </div>
+                                        </>
                                     )}
-
-                                    <button
-                                        type="button"
-                                        className="navigation-control-button navigation-orientation-button"
-                                        onClick={toggleCompassRotation}
-                                        disabled={!orientationState.supported}
-                                    >
-                                        {orientationState.enabled ? 'Disable Compass Rotation' : 'Follow Phone Heading'}
-                                    </button>
-
-                                    {orientationStatusMessage && (
-                                        <div className="navigation-orientation-status">{orientationStatusMessage}</div>
-                                    )}
-
-                                    <div className="navigation-controls">
-                                        <button
-                                            type="button"
-                                            className="navigation-control-button navigation-control-button-prev"
-                                            onClick={() => showNavigationStep(navigationState.currentStepIndex - 1)}
-                                            disabled={navigationState.currentStepIndex === 0}
-                                        >
-                                            <ChevronLeftIcon fontSize="small" />
-                                            Prev
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="navigation-control-button navigation-control-button-next"
-                                            onClick={() => showNavigationStep(navigationState.currentStepIndex + 1)}
-                                            disabled={
-                                                navigationState.currentStepIndex >= navigationState.steps.length - 1
-                                            }
-                                        >
-                                            Next
-                                            <ChevronRightIcon fontSize="small" />
-                                        </button>
-                                    </div>
                                 </div>
                             )}
                         </div>
@@ -1614,6 +1944,8 @@ BookableSpacesMap.propTypes = {
     sortedSpaceLocations: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
     onMarkerClick: PropTypes.func.isRequired,
+    onNavigate: PropTypes.func,
+    activeNavigationSpaceId: PropTypes.number,
     centreLatLong: PropTypes.any,
     navigationTarget: PropTypes.any,
     navigationOrigin: PropTypes.any,

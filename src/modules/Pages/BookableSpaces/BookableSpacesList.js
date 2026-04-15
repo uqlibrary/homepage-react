@@ -925,8 +925,6 @@ export const BookableSpacesList = ({
                                             onFavouriteToggle={handleFavouriteAction}
                                             isFavouriteActionInProgress={isFavouriteActionInProgress}
                                             onSpaceExpand={handleSpaceExpand}
-                                            activeNavigationSpaceId={activeNavigationSpace?.space_id ?? null}
-                                            onNavigate={handleNavigate}
                                         />
                                     </div>
                                 </>
@@ -938,6 +936,8 @@ export const BookableSpacesList = ({
                                     sortedSpaceLocations={sortedSpaceLocations}
                                     spacesFavouritesList={spacesFavouritesList}
                                     onMarkerClick={handleMarkerClick}
+                                    onNavigate={handleNavigate}
+                                    activeNavigationSpaceId={activeNavigationSpace?.space_id ?? null}
                                     centreLatLong={campusCentre}
                                     navigationTarget={activeNavigationSpace}
                                     navigationOrigin={campusCentre}
