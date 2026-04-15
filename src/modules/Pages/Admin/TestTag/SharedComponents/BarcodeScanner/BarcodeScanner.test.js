@@ -69,7 +69,33 @@ describe('BarcodeScanner', () => {
 
     const openScanner = async () => await userEvent.click(screen.getByTestId('barcode-scanner-open-button'));
     const closeScanner = async () => await userEvent.click(screen.getByTestId('barcode-scanner-close-button'));
+
     const mockCodeScan = async () => await userEvent.click(screen.getByTestId('trigger-mock-code-scan'));
+    const mockDocumentVisibilityEvent = display => {
+        Object.defineProperty(document, 'visibilityState', {
+            value: display ? 'visible' : 'hidden',
+            configurable: true,
+        });
+        document.dispatchEvent(new Event('visibilitychange'));
+    };
+    const mockAppFocusEvent = () => mockDocumentVisibilityEvent(true);
+    const mockAppBlurEvent = () => mockDocumentVisibilityEvent(false);
+    const mockFocusEvent = () => window.dispatchEvent(new Event('focus'));
+    const mockBlurEvent = () => window.dispatchEvent(new Event('blur'));
+    const mockTorchAvailability = () => {
+        const mockVideo = document.createElement('video');
+        Object.defineProperty(mockVideo, 'srcObject', {
+            value: {
+                getVideoTracks: jest.fn().mockReturnValue([
+                    {
+                        getCapabilities: jest.fn().mockReturnValue({ torch: true }),
+                        applyConstraints: jest.fn().mockResolvedValue(),
+                    },
+                ]),
+            },
+        });
+        jest.spyOn(document, 'querySelectorAll').mockReturnValue([mockVideo]);
+    };
 
     it('should allow device selection', async () => {
         const { useDevices } = require('@yudiel/react-qr-scanner');
@@ -138,20 +164,7 @@ describe('BarcodeScanner', () => {
     it('should allow toggling torch', async () => {
         const { queryByTestId } = setup();
         await openScanner();
-
-        // mock after scanner is open and mounted
-        const mockVideo = document.createElement('video');
-        Object.defineProperty(mockVideo, 'srcObject', {
-            value: {
-                getVideoTracks: jest.fn().mockReturnValue([
-                    {
-                        getCapabilities: jest.fn().mockReturnValue({ torch: true }),
-                        applyConstraints: jest.fn().mockResolvedValue(),
-                    },
-                ]),
-            },
-        });
-        jest.spyOn(document, 'querySelectorAll').mockReturnValue([mockVideo]);
+        mockTorchAvailability();
 
         await waitFor(() => {
             expect(queryByTestId('FlashlightOnIcon')).toBeInTheDocument();
@@ -166,7 +179,7 @@ describe('BarcodeScanner', () => {
     });
 
     it('should allow toggling scanner beep', async () => {
-        Cookies.get.mockReturnValue('true');
+        Cookies.get.mockImplementation(key => (key === BARCODE_SCANNER_SOUND_PREF_COOKIE ? 'true' : null));
 
         const { queryByTestId } = setup();
         expect(Cookies.set).not.toHaveBeenCalled();
@@ -223,30 +236,30 @@ describe('BarcodeScanner', () => {
             assertScannerOpenState();
 
             // hide via visibilitychange
-            act(() => {
-                Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
-                document.dispatchEvent(new Event('visibilitychange'));
-            });
+            await act(mockAppBlurEvent);
             await waitFor(assertScannerCloseState);
 
-            // show via visibilitychange
-            act(() => {
-                Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
-                document.dispatchEvent(new Event('visibilitychange'));
-            });
+            // show via visibilitychange - reopens because isScanningRef.current is still true
+            await act(mockAppFocusEvent);
             await waitFor(assertScannerOpenState);
 
             // hide via window blur
-            act(() => {
-                window.dispatchEvent(new Event('blur'));
-            });
+            await act(mockBlurEvent);
             await waitFor(assertScannerCloseState);
 
-            // show via window focus
-            act(() => {
-                window.dispatchEvent(new Event('focus'));
-            });
+            // show via window focus - reopens because isScanningRef.current is still true
+            await act(mockFocusEvent);
             await waitFor(assertScannerOpenState);
+
+            await closeScanner();
+            // should not re-open scanner when already close
+            await act(mockFocusEvent);
+            await act(mockBlurEvent);
+            await act(mockFocusEvent);
+            await waitFor(assertScannerCloseState);
+            await act(mockAppFocusEvent);
+            await act(mockAppBlurEvent);
+            await waitFor(assertScannerCloseState);
         });
 
         it('should not reopen scanner on focus if it was manually closed', async () => {
@@ -254,24 +267,37 @@ describe('BarcodeScanner', () => {
             await openScanner();
             assertScannerOpenState();
 
-            // manually close
-            act(() => {
-                userEvent.click(screen.getByTestId('barcode-scanner-close-button'));
-            });
+            // manually close - sets isScanningRef.current = false
+            await closeScanner();
             await waitFor(assertScannerCloseState);
 
             // regain focus - should NOT reopen
-            act(() => {
-                window.dispatchEvent(new Event('focus'));
-            });
+            await act(mockFocusEvent);
             await waitFor(assertScannerCloseState);
 
             // visible via visibilitychange - should NOT reopen
-            act(() => {
-                Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
-                document.dispatchEvent(new Event('visibilitychange'));
-            });
+            await act(mockAppFocusEvent);
             await waitFor(assertScannerCloseState);
+        });
+
+        it('should reset torch when scanner is hidden', async () => {
+            setup();
+            await openScanner();
+            // mock track so torch can be toggled on
+            mockTorchAvailability();
+
+            await userEvent.click(screen.getByTestId('barcode-scanner-toggle-torch-button'));
+            await waitFor(() => expect(screen.queryByTestId('FlashlightOffIcon')).toBeInTheDocument());
+
+            // hide - torch should reset
+            await act(mockBlurEvent);
+            assertScannerCloseState();
+
+            // show - torch should be off again
+            await act(mockFocusEvent);
+            assertScannerOpenState();
+            expect(screen.queryByTestId('FlashlightOnIcon')).toBeInTheDocument(); // torch off = FlashlightOn shown
+            expect(screen.queryByTestId('FlashlightOffIcon')).not.toBeInTheDocument();
         });
 
         it('should remove event listeners on unmount', () => {
@@ -325,9 +351,11 @@ describe('BarcodeScanner', () => {
             setup();
             await openScanner();
 
-            const event = new Event('unhandledrejection');
-            event.reason = new Error('test error');
-            window.dispatchEvent(event);
+            await act(async () => {
+                const event = new Event('unhandledrejection');
+                event.reason = new Error('test error');
+                window.dispatchEvent(event);
+            });
 
             expect(await screen.findByText(locale.error.scanner)).toBeInTheDocument();
         });
