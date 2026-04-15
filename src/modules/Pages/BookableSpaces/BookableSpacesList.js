@@ -53,6 +53,12 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
 const StyledBookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
     backgroundColor: 'rgb(243, 243, 244)',
     marginBottom: '-50px',
+
+    /* move the mazemaps floor indicator when the filter sidebar is open */
+    '&:has(.filterSideBar.popupFilterList) .mapboxgl-ctrl-bottom-left': {
+        left: '20rem',
+    },
+
     [theme.breakpoints.up('lg')]: {
         '&:has(.spacesListHolder.hide)': {
             '& .mapHolder': {
@@ -786,8 +792,7 @@ export const BookableSpacesList = ({
 
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
     return (
-        /* mapboxgl-ctrl-bottom-left */
-        <StyledBookableSpacesListWrapperDiv id="bookableSpacesListWrapperDiv">
+        <StyledBookableSpacesListWrapperDiv>
             {(() => {
                 if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                     return (
