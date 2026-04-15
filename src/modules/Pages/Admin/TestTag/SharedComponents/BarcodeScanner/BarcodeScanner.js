@@ -158,11 +158,13 @@ const BarcodeScanner = ({ onScan, formats }) => {
             const track = document.querySelectorAll('video')?.[0]?.srcObject?.getVideoTracks?.()?.[0];
             // just when torch is not available
             /* istanbul ignore next */
-            if (!track || !track.getCapabilities?.()?.torch) return;
+            if (!track || !track.getCapabilities?.()?.torch) {
+                isTorchOn && setIsTorchOn(false);
+                return;
+            }
 
-            const next = !isTorchOn;
-            await track.applyConstraints({ advanced: [{ torch: next }] });
-            setIsTorchOn(next);
+            await track.applyConstraints({ advanced: [{ torch: true }] });
+            setIsTorchOn(true);
         } catch (err) {
             /* istanbul ignore next */
             console.error('Barcode scanner torch error:', err);
@@ -288,7 +290,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
                                 color: theme => theme.palette.grey[500],
                             }}
                         >
-                            {isTorchOn ? <FlashlightOn /> : <FlashlightOff />}
+                            {isTorchOn ? <FlashlightOff /> : <FlashlightOn />}
                         </IconButton>
                         {/* beep toggle button */}
                         <IconButton
