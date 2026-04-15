@@ -1396,7 +1396,7 @@ test.describe('Spaces', () => {
             );
         });
 
-        test('friendly location displays correctly on load', async ({ page }) => {
+        test('friendly location displays correctly on load on change of campus', async ({ page }) => {
             // non PACE spaces are not visible
             await expect(page.getByTestId(`${ARCH_REFERENCE}-friendly-location-collapsed`)).not.toBeVisible();
 
@@ -1411,7 +1411,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).not.toBeVisible();
         });
 
-        test('bookable links appear correct on load', async ({ page }) => {
+        test('bookable links appear correct on load on change of campus', async ({ page }) => {
             // public bookable Architecture and Music example
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable`)).not.toBeVisible();
 
@@ -1424,21 +1424,21 @@ test.describe('Spaces', () => {
             );
         });
 
-        test('capacity loads correctly', async ({ page }) => {
+        test('capacity loads correctly on change of campus', async ({ page }) => {
             // non PACE spaces are not visible
             await expect(page.getByTestId(`${ARCH_REFERENCE}-capacity`)).not.toBeVisible();
 
             await expect(page.getByTestId(`${PACE}-capacity`)).toContainText('Space for 5 people.');
         });
 
-        test('description loads correctly', async ({ page }) => {
+        test('description loads correctly on change of campus', async ({ page }) => {
             // non PACE spaces are not visible
             await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).not.toBeVisible();
 
             await expect(page.getByTestId(`${PACE}-description`)).toHaveCount(1);
         });
 
-        test('opening hours appear correct on load', async ({ page }) => {
+        test('opening hours appear correct on load on change of campus', async ({ page }) => {
             // non PACE spaces are not visible
             await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).not.toBeVisible();
 
@@ -1449,14 +1449,14 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
         });
 
-        test('facilities are hidden on opening', async ({ page }) => {
+        test('facilities are hidden on opening on change of campus', async ({ page }) => {
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).not.toBeVisible();
 
             await expect(page.getByTestId(`${PACE}-facility`)).toBeDefined();
             await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
         });
 
-        test('friendly location appears correctly when panel expands', async ({ page }) => {
+        test('friendly location appears correctly when panel expands on change of campus', async ({ page }) => {
             // non PACE spaces are not visible
             await expect(page.getByTestId(`${ARCH_REFERENCE}-friendly-location`)).not.toBeVisible();
 
@@ -1477,14 +1477,14 @@ test.describe('Spaces', () => {
             );
         });
 
-        test('opening hours appear correct when panel expands', async ({ page }) => {
+        test('opening hours appear correct when panel expands on change of campus', async ({ page }) => {
             // second panel
             await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
             await page.getByTestId(`${PACE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
         });
 
-        test('facilities appear correctly when panel expands', async ({ page }) => {
+        test('facilities appear correctly when panel expands on change of campus', async ({ page }) => {
             await page.getByTestId(`${PACE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${PACE}-facility`)).toBeVisible();
             await expect(page.getByTestId(`${PACE}-facility`).locator(' > *')).toHaveCount(15);
