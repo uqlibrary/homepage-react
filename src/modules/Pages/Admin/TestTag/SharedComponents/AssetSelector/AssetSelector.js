@@ -9,6 +9,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Popper from '@mui/material/Popper';
 import { debounce } from 'throttle-debounce';
 import * as actions from 'data/actions';
+import InputAdornment from '@mui/material/InputAdornment';
+import BarcodeScanner from '../BarcodeScanner/BarcodeScanner';
 
 const rootId = 'asset_selector';
 
@@ -190,6 +192,17 @@ const AssetSelector = ({
                         InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
                             ...params.InputProps,
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <BarcodeScanner
+                                        formats={['code_128']}
+                                        onScan={
+                                            /* istanbul ignore next */ scannedCode =>
+                                                debounceAssetsSearch(scannedCode, user)
+                                        }
+                                    />
+                                </InputAdornment>
+                            ),
                             endAdornment: (
                                 <React.Fragment>
                                     {!!assetsListLoading ? (
