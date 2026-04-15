@@ -33,6 +33,45 @@ const StyledMapWrapperDiv = styled('div')(() => ({
         borderRadius: '8px',
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
     },
+    '& .map-popup-title': {
+        fontSize: '1.1rem',
+        fontWeight: 700,
+        lineHeight: 1.2,
+    },
+    '& .map-popup-navigate-button': {
+        appearance: 'none',
+        backgroundColor: '#2f72ea',
+        border: 0,
+        borderRadius: '4px',
+        boxShadow:
+            '0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12)',
+        color: '#ffffff',
+        cursor: 'pointer',
+        display: 'flex',
+        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+        fontSize: '0.875rem',
+        fontWeight: 500,
+        justifyContent: 'center',
+        letterSpacing: '0.02857em',
+        lineHeight: 1.75,
+        margin: '8px auto 0',
+        minWidth: '64px',
+        padding: '6px 16px',
+        textTransform: 'uppercase',
+        transition:
+            'background-color 200ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+    },
+    '& .map-popup-navigate-button:hover': {
+        backgroundColor: '#1565c0',
+        boxShadow:
+            '0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)',
+    },
+    '& .map-popup-navigate-button:disabled': {
+        backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        boxShadow: 'none',
+        color: 'rgba(0, 0, 0, 0.26)',
+        cursor: 'default',
+    },
 }));
 
 const StyledNavigationPanel = styled('div')(() => ({
@@ -824,7 +863,9 @@ const BookableSpacesMap = React.forwardRef(
             return _campusId === CAMPUS_INDEX_ST_LUCIA ? ZOOM_CAMPUS_ONE_BUILDING : ZOOM_CAMPUS_MANY_BUILDINGS;
         };
 
-        const setSelectedMarker = (markerEl, space) => {
+        const setSelectedMarker = (markerEl, space, options = {}) => {
+            const { suppressPopup = false } = options;
+
             if (selectedMarkerElRef.current && selectedMarkerElRef.current !== markerEl) {
                 removeClass(selectedMarkerElRef.current, 'selected-marker');
                 selectedMarkerElRef.current.style.zIndex = selectedMarkerElRef.current.dataset.baseZindex || '';
@@ -838,11 +879,18 @@ const BookableSpacesMap = React.forwardRef(
             activePopupRef.current?.remove();
             activePopupRef.current = null;
 
-            if (markerEl && space?.space_longitude && space?.space_latitude && mazeMapInstanceRef.current) {
+            if (
+                !suppressPopup &&
+                markerEl &&
+                space?.space_longitude &&
+                space?.space_latitude &&
+                mazeMapInstanceRef.current
+            ) {
                 const container = document.createElement('div');
                 container.style.cssText = 'padding: 2px 4px; font-size: 0.85rem; line-height: 1.4;';
 
                 const nameEl = document.createElement('strong');
+                nameEl.className = 'map-popup-title';
                 nameEl.textContent = space.space_name ?? '';
                 container.appendChild(nameEl);
 
@@ -874,18 +922,11 @@ const BookableSpacesMap = React.forwardRef(
                     container.appendChild(document.createElement('br'));
                     const navigateButton = document.createElement('button');
                     navigateButton.type = 'button';
+                    navigateButton.className = 'map-popup-navigate-button';
                     navigateButton.textContent =
                         activeNavigationSpaceId === space?.space_id ? 'Navigation active' : 'Navigate to';
                     navigateButton.disabled = activeNavigationSpaceId === space?.space_id;
                     navigateButton.setAttribute('data-testid', `space-navigate-${space?.space_id}`);
-                    navigateButton.style.cssText =
-                        'margin-top: 8px; padding: 6px 10px; border-radius: 6px; border: 1px solid #2f72ea; background: ' +
-                        (activeNavigationSpaceId === space?.space_id ? '#2f72ea' : '#ffffff') +
-                        '; color: ' +
-                        (activeNavigationSpaceId === space?.space_id ? '#ffffff' : '#2f72ea') +
-                        '; cursor: ' +
-                        (activeNavigationSpaceId === space?.space_id ? 'default' : 'pointer') +
-                        '; font: inherit;';
                     navigateButton.addEventListener('click', clickEvent => {
                         clickEvent.preventDefault();
                         clickEvent.stopPropagation();
@@ -909,7 +950,7 @@ const BookableSpacesMap = React.forwardRef(
         };
 
         useImperativeHandle(ref, () => ({
-            flyToSpace(location) {
+            flyToSpace(location, options = {}) {
                 console.log('flyToSpace location.space_campus_id=', location.space_campus_id, location);
                 !location?.space_campus_id && alert('CAMPUS ID NOT PROVIDED'); // debug
                 const map = mazeMapInstanceRef.current;
@@ -926,7 +967,7 @@ const BookableSpacesMap = React.forwardRef(
                         speed: 1.6,
                     });
                     const entry = mazeMarkersRef.current.get(location?.space_id);
-                    if (entry?.markerEl) setSelectedMarker(entry.markerEl, location);
+                    if (entry?.markerEl) setSelectedMarker(entry.markerEl, location, options);
                 };
 
                 const targetZLevel = location?.space_zlevel !== null ? parseFloat(location.space_zlevel) : null;
@@ -1204,7 +1245,7 @@ const BookableSpacesMap = React.forwardRef(
                         mazeMapInstanceRef.current.setZLevel(firstStep.zLevel ?? destination.zLevel);
                         mazeMapInstanceRef.current.flyTo({
                             center: firstStep.getStepStartPointLngLat(),
-                            zoom: zoomLevelForCampus(navigationTarget.space_campus_id),
+                            zoom: 19,
                             speed: 1.4,
                         });
                     }
@@ -1745,6 +1786,11 @@ const BookableSpacesMap = React.forwardRef(
             setIsNavigationPanelMinimized(false);
             setIsManualStepSelectionActive(false);
             setIsAutomaticResumeStatusVisible(false);
+
+            if (navigationTarget?.space_id) {
+                activePopupRef.current?.remove();
+                activePopupRef.current = null;
+            }
         }, [navigationTarget?.space_id]);
 
         return (

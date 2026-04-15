@@ -213,6 +213,7 @@ export const BookableSpacesList = ({
     const [activeNavigationSpace, setActiveNavigationSpace] = useState(null);
 
     const mapRef = useRef(null);
+    const mapWrapperRef = useRef(null);
 
     const highlightPanel = space => {
         const spacePanel = document.querySelector(`#space-${space?.space_id} > div:first-of-type`);
@@ -233,10 +234,36 @@ export const BookableSpacesList = ({
         mapRef.current?.flyToSpace(space);
     }, []);
 
-    const handleNavigate = useCallback(space => {
-        setActiveNavigationSpace(current => (current?.space_id === space?.space_id ? null : space));
-        mapRef.current?.flyToSpace(space);
-    }, []);
+    const handleNavigate = useCallback(
+        space => {
+            const isStartingNavigation = activeNavigationSpace?.space_id !== space?.space_id;
+
+            setActiveNavigationSpace(current => (current?.space_id === space?.space_id ? null : space));
+
+            if (!isStartingNavigation) {
+                return;
+            }
+
+            setShowFilterSelectorPopup(false);
+            setShowSpacesSelectorPopup(false);
+
+            window.requestAnimationFrame(() => {
+                const mapWrapperElement = mapWrapperRef.current;
+
+                if (!mapWrapperElement) {
+                    return;
+                }
+
+                const topOffset = mapWrapperElement.getBoundingClientRect().top + window.scrollY;
+
+                window.scrollTo({
+                    top: Math.max(0, topOffset),
+                    behavior: 'smooth',
+                });
+            });
+        },
+        [activeNavigationSpace?.space_id],
+    );
 
     const [cookies, setCookie] = useCookies();
     const getCampusInitialState = () => {
@@ -930,7 +957,7 @@ export const BookableSpacesList = ({
                                 </>
                             )}
 
-                            <div id="mapWrapper" className="mapHolder" style={{ height: '100%' }}>
+                            <div id="mapWrapper" ref={mapWrapperRef} className="mapHolder" style={{ height: '100%' }}>
                                 <BookableSpacesMap
                                     ref={mapRef}
                                     sortedSpaceLocations={sortedSpaceLocations}
