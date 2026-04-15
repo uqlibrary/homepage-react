@@ -21,9 +21,9 @@ const disableMazeMapAssets = async (page: Page) => {
 };
 
 test.describe('Spaces', () => {
-    test.beforeEach(async ({ context, page }) => {
-        await context.clearCookies();
+    test.beforeEach(async ({ page, context }) => {
         await disableMazeMapAssets(page);
+        await context.clearCookies();
     });
     test('can navigate to Spaces public page', async ({ page }) => {
         await page.goto('/?user=s1111111');
@@ -489,6 +489,8 @@ test.describe('Spaces', () => {
     });
     test.describe('filtering', () => {
         test.beforeEach(async ({ page }) => {
+            // things don't redraw fast enough for playwright to work if we load the page then resize.
+            // so instead, load the homepage, resize, then navigate to spaces
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
@@ -595,11 +597,6 @@ test.describe('Spaces', () => {
             await expect(filterCount).not.toBeVisible();
         });
         test('can OR on filters in the same group', async ({ page }) => {
-            await page.goto('');
-            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
             // setup Ids
             const avEquipmentCheckbox = page.getByTestId('facility-type-listitem-8');
             const byodStationCheckbox = page.getByTestId('facility-type-listitem-32');
@@ -659,11 +656,6 @@ test.describe('Spaces', () => {
         test('can unfilter by cartouche', async ({ page }) => {
             // "cartouches" are the buttons that show at the top of the filter sidebar when a checkbox is checked. Clicking them unsets the filter (unchecks the checkbox)
             // they act as both a summary of the filters checked, and a quick way to unselect, without scrolling up and down
-            await page.goto('');
-            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
             const bookableId = 9002;
             const bookableCheckbox = page.getByTestId(`facility-type-listitem-${bookableId}`);
             const bookableUnsetCartouche = page.getByTestId(`button-deselect-selected-${bookableId}`);
@@ -768,10 +760,6 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0);
         });
         test('can clear all filters with one click', async ({ page }) => {
-            await page.goto('spaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
             const avEquipmentCheckbox = page.getByTestId('facility-type-listitem-8');
             const byodStationCheckbox = page.getByTestId('facility-type-listitem-32');
 
@@ -881,10 +869,6 @@ test.describe('Spaces', () => {
             );
         });
         test('can use special filter: capacity and clear checkbox', async ({ page }) => {
-            await page.goto('spaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
             const filterCount = page.getByTestId('space-filter-count').locator('span');
             const spacesCount = page.getByTestId('space-space-count');
             const cartoucheList = page.getByTestId('button-deselect-list'); // buttons at top of the filters to turn them off
@@ -962,10 +946,6 @@ test.describe('Spaces', () => {
             await expect(maximumCapacityField).toHaveValue('24');
         });
         test('can use special filter: capacity and clear all', async ({ page }) => {
-            await page.goto('spaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
             const filterCount = page.getByTestId('space-filter-count').locator('span');
             const spacesCount = page.getByTestId('space-space-count');
             const cartoucheList = page.getByTestId('button-deselect-list'); // buttons at top of the filters to turn them off

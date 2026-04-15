@@ -91,7 +91,14 @@ const originalMockData = (spaceUud: string) => {
     };
 };
 
+const disableMazeMapAssets = async (page: Page) => {
+    await page.route('**/vendor/mazemap/**', route => route.abort());
+};
+
 test.describe('Spaces Admin - edit spaces', () => {
+    test.beforeEach(async ({ page }) => {
+        await disableMazeMapAssets(page);
+    });
     test('can navigate from dashboard to edit page', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -107,6 +114,9 @@ test.describe('Spaces Admin - edit spaces', () => {
     });
 });
 test.describe('Spaces Admin - edit pages load with correct data', () => {
+    test.beforeEach(async ({ page }) => {
+        await disableMazeMapAssets(page);
+    });
     test('Library Space 1 edit page loads correctly', async ({ page }) => {
         await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
         await page.setViewportSize({
@@ -409,6 +419,8 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
 });
 test.describe('Spaces Admin - edit space', () => {
     test.beforeEach(async ({ page }) => {
+        await disableMazeMapAssets(page);
+
         await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         // wait for page to load
@@ -901,6 +913,9 @@ test.describe('Spaces Admin - edit space', () => {
     });
 
     test.describe('Spaces Admin - load errors', () => {
+        test.beforeEach(async ({ page }) => {
+            await disableMazeMapAssets(page);
+        });
         test('edit space - error locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/error?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
@@ -939,6 +954,9 @@ test.describe('Spaces Admin - edit space', () => {
     });
 
     test.describe('Spaces Admin - save errors', () => {
+        test.beforeEach(async ({ page }) => {
+            await disableMazeMapAssets(page);
+        });
         test('edit space - server 500', async ({ page }) => {
             await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces&responseType=spaceUpdate500Error');
             await page.setViewportSize({ width: 1300, height: 1000 });
@@ -971,6 +989,9 @@ test.describe('Spaces Admin - edit space', () => {
     });
 });
 test.describe('booking link controller works properly', () => {
+    test.beforeEach(async ({ page }) => {
+        await disableMazeMapAssets(page);
+    });
     test('can clear booking link', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
