@@ -259,6 +259,7 @@ export const SidebarFilters = ({
     maximumSpaceCapacity,
     capacityFilterValue,
     setCapacityFilterValue,
+    activeFilterCount,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
 
@@ -693,8 +694,8 @@ export const SidebarFilters = ({
                 </Typography>
                 {!!hasActiveFilters && (
                     <>
-                        <Typography component={'h3'} variant={'h6'}>
-                            Active filters
+                        <Typography component={'h3'} variant={'h6'} data-testid="space-filter-count">
+                            Active filters <span>{activeFilterCount}</span>
                         </Typography>
                         <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
                             {showCartoucheList(flatFacilityTypeList)}
@@ -767,6 +768,7 @@ SidebarFilters.propTypes = {
     maximumSpaceCapacity: PropTypes.number,
     capacityFilterValue: PropTypes.array,
     setCapacityFilterValue: PropTypes.func,
+    activeFilterCount: PropTypes.number,
 };
 
 export default React.memo(SidebarFilters);

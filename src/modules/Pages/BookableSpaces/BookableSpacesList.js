@@ -615,6 +615,7 @@ export const BookableSpacesList = ({
                                     maximumSpaceCapacity={maximumSpaceCapacity}
                                     capacityFilterValue={capacityFilterValue}
                                     setCapacityFilterValue={setCapacityFilterValue}
+                                    activeFilterCount={activeFilterCount}
                                 />
                             </div>
                             {isDesktopView && (
@@ -649,6 +650,8 @@ export const BookableSpacesList = ({
                                     >
                                         <SidebarSpacesList
                                             filteredSpaceLocations={sortedSpaceLocations}
+                                            totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}
+                                            activeFilterCount={activeFilterCount}
                                             weeklyHours={weeklyHours}
                                             weeklyHoursLoading={weeklyHoursLoading}
                                             weeklyHoursError={weeklyHoursError}

@@ -36,6 +36,8 @@ const StyledSpaceGridWrapperDiv = styled('div')(() => ({
 
 const SidebarSpacesList = ({
     filteredSpaceLocations,
+    totalSpaceCount,
+    activeFilterCount,
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
@@ -77,8 +79,16 @@ const SidebarSpacesList = ({
                     component={'h2'}
                     variant={'h6'}
                     // className="showsOnlyOnFocus"
+                    data-testid={
+                        !!activeFilterCount && filteredSpaceLocations?.length < totalSpaceCount
+                            ? 'space-space-count'
+                            : undefined
+                    }
                 >
                     Available Spaces
+                    {!!activeFilterCount && filteredSpaceLocations?.length < totalSpaceCount && (
+                        <span> ({filteredSpaceLocations.length})</span>
+                    )}
                 </Typography>
             )}
             {filteredSpaceLocations?.length > 0 &&
@@ -173,6 +183,8 @@ const SidebarSpacesList = ({
 
 SidebarSpacesList.propTypes = {
     filteredSpaceLocations: PropTypes.any,
+    totalSpaceCount: PropTypes.number,
+    activeFilterCount: PropTypes.number,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
