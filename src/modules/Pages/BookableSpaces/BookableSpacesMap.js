@@ -205,6 +205,56 @@ const formatFloorLabel = zLevel => {
     return `Floor ${numericZLevel}`;
 };
 
+const getGeolocationErrorMessage = error => {
+    switch (error?.code) {
+        case 1:
+            return 'Location permission was denied. Live step tracking is unavailable.';
+        case 2:
+            return 'Your location could not be determined. Live step tracking is unavailable.';
+        case 3:
+            return 'Location lookup timed out. Live step tracking is unavailable.';
+        default:
+            return 'Live step tracking is unavailable on this device right now.';
+    }
+};
+
+const haversineDistanceMeters = (pointA, pointB) => {
+    if (!pointA || !pointB) {
+        return Number.POSITIVE_INFINITY;
+    }
+
+    const toRadians = degrees => (degrees * Math.PI) / 180;
+    const earthRadiusMeters = 6371000;
+    const deltaLat = toRadians(pointB.lat - pointA.lat);
+    const deltaLng = toRadians(pointB.lng - pointA.lng);
+    const lat1 = toRadians(pointA.lat);
+    const lat2 = toRadians(pointB.lat);
+
+    const a =
+        Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+        Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
+
+    return earthRadiusMeters * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+};
+
+const normalizeLngLat = lngLatLike => {
+    if (Array.isArray(lngLatLike) && lngLatLike.length >= 2) {
+        return {
+            lng: Number(lngLatLike[0]),
+            lat: Number(lngLatLike[1]),
+        };
+    }
+
+    if (lngLatLike && Number.isFinite(Number(lngLatLike.lng)) && Number.isFinite(Number(lngLatLike.lat))) {
+        return {
+            lng: Number(lngLatLike.lng),
+            lat: Number(lngLatLike.lat),
+        };
+    }
+
+    return null;
+};
+
 const getLngLatZLevel = location => {
     if (!location?.space_latitude || !location?.space_longitude) {
         return null;
@@ -266,6 +316,11 @@ const BookableSpacesMap = React.forwardRef(
             title: '',
             error: '',
         });
+        const [liveNavigationState, setLiveNavigationState] = React.useState({
+            status: 'idle',
+            position: null,
+            error: '',
+        });
         const mazeMapInstanceRef = useRef(null);
         const mazeMarkersRef = useRef(new Map());
         const selectedMarkerElRef = useRef(null);
@@ -273,6 +328,8 @@ const BookableSpacesMap = React.forwardRef(
         const routeDrawerRef = useRef(null);
         const latestRoutingRequestRef = useRef(0);
         const stepListItemRefs = useRef([]);
+        const geolocationWatchIdRef = useRef(null);
+        const userLocationMarkerRef = useRef(null);
 
         const ZOOM_CAMPUS_MANY_BUILDINGS = 20;
         const ZOOM_CAMPUS_ONE_BUILDING = 17;
@@ -374,6 +431,7 @@ const BookableSpacesMap = React.forwardRef(
             },
         }));
 
+        // eslint-disable-next-line consistent-return
         React.useEffect(() => {
             const link = document.createElement('link');
             link.rel = 'stylesheet';
@@ -626,6 +684,136 @@ const BookableSpacesMap = React.forwardRef(
                 });
         }, [isMazeMapReady, navigationOrigin, navigationTarget]);
 
+        React.useEffect(() => {
+            const clearGeolocationWatch = () => {
+                if (geolocationWatchIdRef.current !== null && navigator.geolocation) {
+                    navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
+                    geolocationWatchIdRef.current = null;
+                }
+            };
+
+            if (!isMazeMapReady || !mazeMapInstanceRef.current) {
+                return clearGeolocationWatch;
+            }
+
+            if (!navigationTarget) {
+                clearGeolocationWatch();
+                setLiveNavigationState({
+                    status: 'idle',
+                    position: null,
+                    error: '',
+                });
+                userLocationMarkerRef.current?.remove();
+                userLocationMarkerRef.current = null;
+                return clearGeolocationWatch;
+            }
+
+            if (!navigator.geolocation) {
+                setLiveNavigationState({
+                    status: 'unsupported',
+                    position: null,
+                    error: 'Live step tracking is not supported in this browser.',
+                });
+                return clearGeolocationWatch;
+            }
+
+            const handleSuccess = position => {
+                setLiveNavigationState({
+                    status: 'watching',
+                    position: {
+                        lat: Number(position.coords.latitude),
+                        lng: Number(position.coords.longitude),
+                    },
+                    error: '',
+                });
+            };
+
+            const handleError = error => {
+                setLiveNavigationState(current => ({
+                    status: 'error',
+                    position: current.position,
+                    error: getGeolocationErrorMessage(error),
+                }));
+            };
+
+            geolocationWatchIdRef.current = navigator.geolocation.watchPosition(handleSuccess, handleError, {
+                enableHighAccuracy: true,
+                maximumAge: 5000,
+                timeout: 15000,
+            });
+
+            return clearGeolocationWatch;
+        }, [isMazeMapReady, navigationTarget]);
+
+        React.useEffect(() => {
+            if (!isMazeMapReady || !mazeMapInstanceRef.current) {
+                return;
+            }
+
+            if (!liveNavigationState.position) {
+                userLocationMarkerRef.current?.remove();
+                userLocationMarkerRef.current = null;
+                return;
+            }
+
+            if (!userLocationMarkerRef.current) {
+                userLocationMarkerRef.current = new window.Mazemap.MazeMarker({
+                    color: '#1b78d6',
+                })
+                    .setLngLat([liveNavigationState.position.lng, liveNavigationState.position.lat])
+                    .addTo(mazeMapInstanceRef.current);
+
+                const markerElement = userLocationMarkerRef.current.getElement?.();
+                if (markerElement) {
+                    markerElement.style.zIndex = '11';
+                }
+            } else {
+                userLocationMarkerRef.current.setLngLat([
+                    liveNavigationState.position.lng,
+                    liveNavigationState.position.lat,
+                ]);
+            }
+        }, [isMazeMapReady, liveNavigationState.position]);
+
+        React.useEffect(() => {
+            if (navigationState.status !== 'ready' || !liveNavigationState.position || !navigationState.steps.length) {
+                return;
+            }
+
+            const currentIndex = navigationState.currentStepIndex;
+            let bestIndex = currentIndex;
+            let bestDistance = Number.POSITIVE_INFINITY;
+
+            for (let index = currentIndex; index < navigationState.steps.length; index += 1) {
+                const stepPoint = normalizeLngLat(navigationState.steps[index]?.step?.getStepStartPointLngLat?.());
+                const distance = haversineDistanceMeters(liveNavigationState.position, stepPoint);
+
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    bestIndex = index;
+                }
+            }
+
+            if (bestIndex !== currentIndex && bestDistance <= 35) {
+                setNavigationState(current => ({
+                    ...current,
+                    currentStepIndex: bestIndex,
+                }));
+            }
+        }, [
+            liveNavigationState.position,
+            navigationState.currentStepIndex,
+            navigationState.status,
+            navigationState.steps,
+        ]);
+
+        React.useEffect(() => {
+            return () => {
+                userLocationMarkerRef.current?.remove();
+                userLocationMarkerRef.current = null;
+            };
+        }, []);
+
         const startDetail = ['Campus map centre', formatFloorLabel(navigationOrigin?.space_zlevel)]
             .filter(Boolean)
             .join(', ');
@@ -647,6 +835,10 @@ const BookableSpacesMap = React.forwardRef(
         const currentStepDistance = formatDistance(
             navigationState.steps[navigationState.currentStepIndex]?.step?.getDistanceMeters?.(),
         );
+        const liveTrackingCopy =
+            liveNavigationState.status === 'watching'
+                ? 'Live tracking on'
+                : liveNavigationState.error || 'Live tracking unavailable';
 
         const showNavigationStep = React.useCallback(
             nextIndex => {
@@ -759,6 +951,8 @@ const BookableSpacesMap = React.forwardRef(
                                             <div className="navigation-step-toolbar-copy">
                                                 <strong>{currentStepSummary}</strong>
                                                 {currentStepDistance ? ` · ${currentStepDistance}` : ''}
+                                                <br />
+                                                {liveTrackingCopy}
                                             </div>
                                             <div className="navigation-step-toolbar-buttons">
                                                 <IconButton
