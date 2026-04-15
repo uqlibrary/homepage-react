@@ -51,6 +51,13 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
 const StyledBookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
     backgroundColor: 'rgb(243, 243, 244)',
     marginBottom: '-50px',
+
+    /* move the mazemaps floor indicator when the filter sidebar is open */
+    '&:has(.filterSideBar.popupFilterList) .mapboxgl-ctrl-bottom-left': {
+        left: '20rem',
+        top: 'calc(100% - 470px)',
+    },
+
     [theme.breakpoints.up('lg')]: {
         '&:has(.spacesListHolder.hide)': {
             '& .mapHolder': {
@@ -201,8 +208,20 @@ export const BookableSpacesList = ({
 
     const mapRef = useRef(null);
 
+    const highlightPanel = space => {
+        const spacePanel = document.querySelector(`#space-${space?.space_id} > div:first-of-type`);
+        addClass(spacePanel, 'highlightPanel');
+        addClass(spacePanel, 'mobileHighlightPanel');
+
+        setTimeout(() => {
+            removeClass(spacePanel, 'highlightPanel');
+        }, 3000);
+    };
+
     const handleSpaceExpand = useCallback(space => {
         console.log('handleSpaceExpand space=', space);
+
+        highlightPanel(space);
 
         // show space's location on the map
         mapRef.current?.flyToSpace(space);
@@ -636,14 +655,7 @@ export const BookableSpacesList = ({
                 behavior: 'smooth',
             });
 
-        // highlight it
-        const spacePanel = document.querySelector(`#space-${space?.space_id} > div:first-of-type`);
-        addClass(spacePanel, 'highlightPanel');
-        addClass(spacePanel, 'mobileHighlightPanel');
-
-        setTimeout(() => {
-            removeClass(spacePanel, 'highlightPanel');
-        }, 3000);
+        highlightPanel(space);
 
         !!spaceElement && spaceElement?.focus();
 
