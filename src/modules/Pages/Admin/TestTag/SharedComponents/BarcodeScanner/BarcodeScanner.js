@@ -153,6 +153,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
 
     const updateScannerVisibility = isVisible => {
         if (!isScanningRef.current) return;
+        // we don't care about persisting torch state when app gets restored after loosing focus
         setIsTorchOn(false);
         setIsScanning(isVisible);
     };
@@ -165,16 +166,18 @@ const BarcodeScanner = ({ onScan, formats }) => {
 
     const handleTorchToggle = async () => {
         try {
+            // check if torched can be toggled
             const track = document.querySelectorAll('video')?.[0]?.srcObject?.getVideoTracks?.()?.[0];
-            // just when torch is not available
             /* istanbul ignore next */
             if (!track || !track.getCapabilities?.()?.torch) {
+                // turn off when torch is not available
                 isTorchOn && setIsTorchOn(false);
                 return;
             }
 
-            await track.applyConstraints({ advanced: [{ torch: true }] });
-            setIsTorchOn(true);
+            const next = !isTorchOn;
+            await track.applyConstraints({ advanced: [{ torch: next }] });
+            setIsTorchOn(next);
         } catch (err) {
             /* istanbul ignore next */
             console.error('Barcode scanner torch error:', err);
@@ -201,11 +204,12 @@ const BarcodeScanner = ({ onScan, formats }) => {
 
     // handle app events
     useEffect(() => {
+        // handles disable/enable scanner according to app's visibility events
+        // note: this is to prevent excess battery consumption from camera (and possibly torch) when users switch
+        // to another browser tab or app other while the scanner is on
         const handleDocumentVisibilityChange = () => updateScannerVisibility(document.visibilityState === 'visible');
         const handleBlur = () => updateScannerVisibility(false);
         const handleFocus = () => updateScannerVisibility(true);
-
-        // handles disable/enable scanner according to app's visibility events
         document.addEventListener('visibilitychange', handleDocumentVisibilityChange);
         window.addEventListener('blur', handleBlur);
         window.addEventListener('focus', handleFocus);
