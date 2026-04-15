@@ -254,23 +254,30 @@ export const SidebarFilters = ({
     setCapacityFilterValue,
     campusList,
 }) => {
-    const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
-    const [defaultCampus, setDefaultCampus2] = React.useState(1);
-    const setDefaultCampus = x => {
-        console.log('campus::setDefaultCampus', x);
-        setDefaultCampus2(x);
+    console.log(
+        'TOP SidebarFilters facilityTypeList=',
+        facilityTypeListLoading,
+        facilityTypeListError,
+        facilityTypeList,
+    );
+    const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness2] = React.useState([]);
+    const setFacilityTypeFilterGroupExpandedness = x => {
+        console.log('SidebarFilters setFacilityTypeFilterGroupExpandedness=', x);
+        setFacilityTypeFilterGroupExpandedness2(x);
     };
+    const [defaultCampus, setDefaultCampus] = React.useState(1);
 
     function sortedUsedGroups() {
         if (
             !filteredFacilityTypeList?.data?.facility_type_groups ||
             filteredFacilityTypeList?.data?.facility_type_groups?.length === 0
         ) {
+            console.log('SidebarFilters sortedUsedGroups no facility type group data');
             return [];
         }
         const usedFilterList = [...filteredFacilityTypeList?.data?.facility_type_groups];
 
-        return usedFilterList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order);
+        return usedFilterList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order) || [];
     }
 
     React.useEffect(() => {
