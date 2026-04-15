@@ -176,6 +176,12 @@ describe('BarcodeScanner', () => {
             expect(queryByTestId('FlashlightOnIcon')).not.toBeInTheDocument();
             expect(queryByTestId('FlashlightOffIcon')).toBeInTheDocument();
         });
+
+        await userEvent.click(screen.getByTestId('barcode-scanner-toggle-torch-button'));
+        await waitFor(() => {
+            expect(queryByTestId('FlashlightOnIcon')).toBeInTheDocument();
+            expect(queryByTestId('FlashlightOffIcon')).not.toBeInTheDocument();
+        });
     });
 
     it('should allow toggling scanner beep', async () => {
