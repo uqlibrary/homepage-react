@@ -48,7 +48,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
         transition: 'background-color 1s linear, border 1s linear',
     },
 }));
-const BookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
+const StyledBookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
     backgroundColor: 'rgb(243, 243, 244)',
     marginBottom: '-50px',
     [theme.breakpoints.up('lg')]: {
@@ -827,7 +827,8 @@ export const BookableSpacesList = ({
         return '0.75rem';
     }
     return (
-        <BookableSpacesListWrapperDiv>
+        /* mapboxgl-ctrl-bottom-left */
+        <StyledBookableSpacesListWrapperDiv id="bookableSpacesListWrapperDiv">
             {(() => {
                 if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                     return (
@@ -952,7 +953,7 @@ export const BookableSpacesList = ({
                     );
                 }
             })()}
-        </BookableSpacesListWrapperDiv>
+        </StyledBookableSpacesListWrapperDiv>
     );
 };
 
