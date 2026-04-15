@@ -250,6 +250,7 @@ export const SidebarFilters = ({
     capacityFilterValue,
     setCapacityFilterValue,
     campusList,
+    activeFilterCount,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
     const [defaultCampus, setDefaultCampus2] = React.useState(1);
@@ -724,8 +725,8 @@ export const SidebarFilters = ({
                 </Typography>
                 {!!hasActiveFilters && (
                     <>
-                        <Typography component={'h3'} variant={'h6'}>
-                            Active filters
+                        <Typography component={'h3'} variant={'h6'} data-testid="space-filter-count">
+                            Active filters <span>{activeFilterCount}</span>
                         </Typography>
                         <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
                             {showCartoucheList(flatFacilityTypeList)}
@@ -835,6 +836,7 @@ SidebarFilters.propTypes = {
     setCapacityFilterValue: PropTypes.func,
     campusList: PropTypes.any,
     suppliedClassName: PropTypes.string,
+    activeFilterCount: PropTypes.number,
 };
 
 export default React.memo(SidebarFilters);

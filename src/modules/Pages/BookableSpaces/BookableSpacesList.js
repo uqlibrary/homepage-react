@@ -739,6 +739,7 @@ export const BookableSpacesList = ({
                                     campusList={campusList}
                                     selectedCampus={selectedCampus}
                                     handleCampusSelection={handleCampusSelection}
+                                    activeFilterCount={activeFilterCount}
                                 />
                             </div>
                             {isDesktopView && (
@@ -773,6 +774,8 @@ export const BookableSpacesList = ({
                                     >
                                         <SidebarSpacesList
                                             filteredSpaceLocations={sortedSpaceLocations}
+                                            totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}
+                                            activeFilterCount={activeFilterCount}
                                             weeklyHours={weeklyHours}
                                             weeklyHoursLoading={weeklyHoursLoading}
                                             weeklyHoursError={weeklyHoursError}

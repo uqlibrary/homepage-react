@@ -36,6 +36,8 @@ const StyledSpaceGridWrapperDiv = styled('div')(() => ({
 
 const SidebarSpacesList = ({
     filteredSpaceLocations,
+    totalSpaceCount,
+    activeFilterCount,
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
@@ -62,6 +64,46 @@ const SidebarSpacesList = ({
     //     }
     // };
 
+    const renderFavouriteIcon = bookableSpace => {
+        if (!isLoggedIn || !onFavouriteToggle) {
+            return null;
+        }
+
+        const isFavourite = spacesFavouritesList?.some(fav => fav.space_id === bookableSpace?.space_id);
+
+        if (isFavourite) {
+            return (
+                <Tooltip title="Remove from Favourites" arrow>
+                    <StarIcon
+                        onClick={() => onFavouriteToggle('removeSpaceFavourite', bookableSpace?.space_id)}
+                        sx={{
+                            fill: '#FFD700',
+                            cursor: isFavouriteActionInProgress ? 'not-allowed' : 'pointer',
+                            fontSize: '1.5rem',
+                            flexShrink: 0,
+                        }}
+                        data-testid={`favourite-star-${bookableSpace?.space_id}`}
+                    />
+                </Tooltip>
+            );
+        }
+
+        return (
+            <Tooltip title="Add to Favourites" arrow>
+                <StarBorderIcon
+                    onClick={() => onFavouriteToggle('addSpaceFavourite', bookableSpace?.space_id)}
+                    sx={{
+                        fill: '#666',
+                        cursor: isFavouriteActionInProgress ? 'not-allowed' : 'pointer',
+                        fontSize: '1.5rem',
+                        flexShrink: 0,
+                    }}
+                    data-testid={`favourite-star-outline-${bookableSpace?.space_id}`}
+                />
+            </Tooltip>
+        );
+    };
+
     return (
         <StyledSpaceGridWrapperDiv id="space-wrapper" data-testid="space-wrapper" className={suppliedClassName}>
             <a className="showsOnlyOnFocus" href="#topOfSidebar">
@@ -77,8 +119,16 @@ const SidebarSpacesList = ({
                     component={'h2'}
                     variant={'h6'}
                     // className="showsOnlyOnFocus"
+                    data-testid={
+                        !!activeFilterCount && filteredSpaceLocations?.length < totalSpaceCount
+                            ? 'space-space-count'
+                            : undefined
+                    }
                 >
                     Available Spaces
+                    {!!activeFilterCount && filteredSpaceLocations?.length < totalSpaceCount && (
+                        <span> ({filteredSpaceLocations.length})</span>
+                    )}
                 </Typography>
             )}
             {filteredSpaceLocations?.length > 0 &&
@@ -96,51 +146,7 @@ const SidebarSpacesList = ({
                                 fullHeight
                                 title={
                                     <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        {!!isLoggedIn && !!onFavouriteToggle ? (
-                                            spacesFavouritesList?.some(
-                                                fav => fav.space_id === bookableSpace?.space_id,
-                                            ) ? (
-                                                <Tooltip title="Remove from Favourites" arrow>
-                                                    <StarIcon
-                                                        onClick={() =>
-                                                            onFavouriteToggle(
-                                                                'removeSpaceFavourite',
-                                                                bookableSpace?.space_id,
-                                                            )
-                                                        }
-                                                        sx={{
-                                                            fill: '#FFD700',
-                                                            cursor: isFavouriteActionInProgress
-                                                                ? 'not-allowed'
-                                                                : 'pointer',
-                                                            fontSize: '1.5rem',
-                                                            flexShrink: 0,
-                                                        }}
-                                                        data-testid={`favourite-star-${bookableSpace?.space_id}`}
-                                                    />
-                                                </Tooltip>
-                                            ) : (
-                                                <Tooltip title="Add to Favourites" arrow>
-                                                    <StarBorderIcon
-                                                        onClick={() =>
-                                                            onFavouriteToggle(
-                                                                'addSpaceFavourite',
-                                                                bookableSpace?.space_id,
-                                                            )
-                                                        }
-                                                        sx={{
-                                                            fill: '#666',
-                                                            cursor: isFavouriteActionInProgress
-                                                                ? 'not-allowed'
-                                                                : 'pointer',
-                                                            fontSize: '1.5rem',
-                                                            flexShrink: 0,
-                                                        }}
-                                                        data-testid={`favourite-star-outline-${bookableSpace?.space_id}`}
-                                                    />
-                                                </Tooltip>
-                                            )
-                                        ) : null}
+                                        {renderFavouriteIcon(bookableSpace)}
                                         <span
                                             onClick={() => onSpaceExpand?.(bookableSpace)}
                                             style={onSpaceExpand ? { cursor: 'pointer' } : undefined}
@@ -173,6 +179,8 @@ const SidebarSpacesList = ({
 
 SidebarSpacesList.propTypes = {
     filteredSpaceLocations: PropTypes.any,
+    totalSpaceCount: PropTypes.number,
+    activeFilterCount: PropTypes.number,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
