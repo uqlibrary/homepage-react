@@ -145,9 +145,16 @@ const BarcodeScanner = ({ onScan, formats }) => {
     };
 
     const closeScanner = () => {
-        resumeBodyScroll();
         isScanningRef.current = false;
+        resumeBodyScroll();
+        setIsTorchOn(false);
         setIsScanning(false);
+    };
+
+    const updateScannerVisibility = isVisible => {
+        if (!isScanningRef.current) return;
+        setIsTorchOn(false);
+        setIsScanning(isVisible);
     };
 
     const handleDeviceChange = e => {
@@ -194,12 +201,12 @@ const BarcodeScanner = ({ onScan, formats }) => {
 
     // handle app events
     useEffect(() => {
-        const handleVisibilityChange = () =>
-            setIsScanning(isScanningRef.current && document.visibilityState === 'visible');
-        const handleBlur = () => setIsScanning(false);
-        const handleFocus = () => isScanningRef.current && setIsScanning(true);
+        const handleDocumentVisibilityChange = () => updateScannerVisibility(document.visibilityState === 'visible');
+        const handleBlur = () => updateScannerVisibility(false);
+        const handleFocus = () => updateScannerVisibility(true);
+
         // handles disable/enable scanner according to app's visibility events
-        document.addEventListener('visibilitychange', handleVisibilityChange);
+        document.addEventListener('visibilitychange', handleDocumentVisibilityChange);
         window.addEventListener('blur', handleBlur);
         window.addEventListener('focus', handleFocus);
 
@@ -209,7 +216,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
 
         // cleanup
         return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            document.removeEventListener('visibilitychange', handleDocumentVisibilityChange);
             window.removeEventListener('blur', handleBlur);
             window.removeEventListener('focus', handleFocus);
             window.removeEventListener('unhandledrejection', handleError);
