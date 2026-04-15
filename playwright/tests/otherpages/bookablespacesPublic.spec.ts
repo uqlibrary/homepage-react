@@ -792,59 +792,6 @@ test.describe('Spaces', () => {
             ).toHaveCount(0);
         });
         test('can use special filter: open spaces', async ({ page }) => {
-            // This test dynamically extracts a date from the mock data and uses it for filtering
-            // This makes the test independent of mock data date ranges
-            let dateToMatchForFiltering = '2025-08-25'; // fallback if extraction fails
-
-            await page.route('**/bookable_spaces/weekly_hours*', async route => {
-                const response = await route.fetch();
-                const weeklyHoursData = await response.json();
-
-                // Dynamically extract the first date from the mock data
-                if (weeklyHoursData?.locations && weeklyHoursData.locations.length > 0) {
-                    const firstLocation = weeklyHoursData.locations[0];
-                    if (firstLocation?.departments?.[0]?.weeks?.[0]) {
-                        const firstWeek = firstLocation.departments[0].weeks[0];
-                        // Get the first day's date from the week object
-                        const firstDayData = Object.values(firstWeek)[0] as any;
-                        if (firstDayData?.date) {
-                            dateToMatchForFiltering = firstDayData.date;
-                        }
-                    }
-                }
-
-                // Set exactly one location (lid 3841) to be currently_open for the extracted date
-                if (weeklyHoursData?.locations) {
-                    weeklyHoursData.locations.forEach((location: { lid: number; departments: { weeks: any[] }[] }) => {
-                        const isTargetLocation = location?.lid === 3841; // Walter Harrison Law Library
-                        if (location && location.departments) {
-                            location.departments.forEach(department => {
-                                if (department && department.weeks) {
-                                    department.weeks.forEach(week => {
-                                        Object.entries(week || {}).forEach(([dayName, dayData]) => {
-                                            // Only set currently_open for the extracted date
-                                            if (dayData && dayData.date === dateToMatchForFiltering && dayData.times) {
-                                                dayData.times.currently_open = isTargetLocation;
-                                            } else if (dayData && dayData.times) {
-                                                // Set all other dates to not currently_open
-                                                dayData.times.currently_open = false;
-                                            }
-                                        });
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
-
-                // Send back the modified response
-                await route.fulfill({
-                    status: response.status(),
-                    headers: response.headers(),
-                    body: JSON.stringify(weeklyHoursData),
-                });
-            });
-
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
