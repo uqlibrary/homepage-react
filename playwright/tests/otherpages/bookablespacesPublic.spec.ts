@@ -16,9 +16,14 @@ const TENTH_PANEL = 'space-7';
 const NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST = 2; // 1 for skip button, 1 for acccessible heading
 const VISIBLE_SPACES_ST_LUCIA_ALL = 10;
 
+const disableMazeMapAssets = async (page: Page) => {
+    await page.route('**/vendor/mazemap/**', route => route.abort());
+};
+
 test.describe('Spaces', () => {
-    test.beforeEach(async ({ context }) => {
+    test.beforeEach(async ({ context, page }) => {
         await context.clearCookies();
+        await disableMazeMapAssets(page);
     });
     test('can navigate to Spaces public page', async ({ page }) => {
         await page.goto('/?user=s1111111');
@@ -33,7 +38,7 @@ test.describe('Spaces', () => {
             // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
             // which would otherwise cause BookableSpacesList to re-render and destabilise the toggle
             // buttons enough for Playwright's actionability check to time out in CI.
-            await page.route('**/vendor/mazemap/**', route => route.abort());
+            await disableMazeMapAssets(page);
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
@@ -483,12 +488,14 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId(`${ARCH_REFERENCE}-collapse-button`)).not.toBeVisible();
     });
     test.describe('filtering', () => {
-        test('can filter with sidebar checkboxes', async ({ page }) => {
+        test.beforeEach(async ({ page }) => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
             await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+        });
 
+        test('can filter with sidebar checkboxes', async ({ page }) => {
             // setup Ids
             const bookableId = 9002;
             const bookableCheckbox = page.getByTestId(`facility-type-listitem-${bookableId}`);
@@ -1043,6 +1050,17 @@ test.describe('Spaces', () => {
         const expandIcon = (groupId: number, page: Page) =>
             page.getByTestId(`facility-type-group-${groupId}`).locator('svg.collapsedGroup');
 
+        test.beforeEach(async ({ page }) => {
+            // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
+            // which would otherwise cause BookableSpacesList to re-render and destabilise the filter
+            // group toggles and count assertions enough for Playwright to time out in CI.
+            await disableMazeMapAssets(page);
+            await page.goto('');
+            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
+            await page.goto('spaces');
+            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+        });
+
         test('sidebar filter type group open-collapse loads correctly', async ({ page }) => {
             await page.goto('spaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
@@ -1378,7 +1396,7 @@ test.describe('Spaces', () => {
             // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
             // which would otherwise cause BookableSpacesList to re-render and destabilise the toggle
             // buttons enough for Playwright's actionability check to time out in CI.
-            await page.route('**/vendor/mazemap/**', route => route.abort());
+            await disableMazeMapAssets(page);
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
@@ -1514,6 +1532,10 @@ test.describe('Spaces', () => {
     });
 });
 test.describe('Spaces errors', () => {
+    test.beforeEach(async ({ page }) => {
+        await disableMazeMapAssets(page);
+    });
+
     test('spaces list load error', async ({ page }) => {
         await page.goto('spaces?responseType=error-spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
