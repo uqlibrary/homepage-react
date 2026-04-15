@@ -227,26 +227,51 @@ describe('BarcodeScanner', () => {
                 Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
                 document.dispatchEvent(new Event('visibilitychange'));
             });
-            assertScannerCloseState();
+            await waitFor(assertScannerCloseState);
 
             // show via visibilitychange
             act(() => {
                 Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
                 document.dispatchEvent(new Event('visibilitychange'));
             });
-            assertScannerOpenState();
+            await waitFor(assertScannerOpenState);
 
             // hide via window blur
             act(() => {
                 window.dispatchEvent(new Event('blur'));
             });
-            assertScannerCloseState();
+            await waitFor(assertScannerCloseState);
 
             // show via window focus
             act(() => {
                 window.dispatchEvent(new Event('focus'));
             });
+            await waitFor(assertScannerOpenState);
+        });
+
+        it('should not reopen scanner on focus if it was manually closed', async () => {
+            setup();
+            await openScanner();
             assertScannerOpenState();
+
+            // manually close
+            act(() => {
+                userEvent.click(screen.getByTestId('barcode-scanner-close-button'));
+            });
+            await waitFor(assertScannerCloseState);
+
+            // regain focus - should NOT reopen
+            act(() => {
+                window.dispatchEvent(new Event('focus'));
+            });
+            await waitFor(assertScannerCloseState);
+
+            // visible via visibilitychange - should NOT reopen
+            act(() => {
+                Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
+                document.dispatchEvent(new Event('visibilitychange'));
+            });
+            await waitFor(assertScannerCloseState);
         });
 
         it('should remove event listeners on unmount', () => {
@@ -270,7 +295,7 @@ describe('BarcodeScanner', () => {
             setup();
             await openScanner();
 
-            expect(setPropertySpy).toHaveBeenCalledWith('overflow', 'hidden', 'important');
+            await waitFor(() => expect(setPropertySpy).toHaveBeenCalledWith('overflow', 'hidden', 'important'));
         });
 
         it('should restore body scroll when scanner closes', async () => {
