@@ -91,6 +91,7 @@ const StyledCollapsableSection = styled('div')(({ theme }) => ({
         visibility: 'hidden',
         height: 0,
         opacity: 0,
+        overflow: 'hidden',
     },
     'ul.facilityTypeList li': {
         [theme.breakpoints.down('sm')]: {
@@ -264,7 +265,7 @@ const SpaceDetails = ({
                 {!isBookable && (
                     <div data-testid={`space-${bookableSpace?.space_id}-not-bookable`}>No booking required.</div>
                 )}
-                {!!bookableSpace?.space_capacity && bookableSpace?.space_capacity > 0 && (
+                {isBookable && !!bookableSpace?.space_capacity && bookableSpace?.space_capacity > 0 && (
                     <StyleCapacityDiv data-testid={`space-${bookableSpace?.space_id}-capacity`}>
                         <PeopleOutlineIcon />
                         {`Space for ${bookableSpace?.space_capacity} ${pluralise(
@@ -275,7 +276,6 @@ const SpaceDetails = ({
                     </StyleCapacityDiv>
                 )}
                 <Typography variant="body2">{bookableSpace?.space_type_details?.space_type_description}</Typography>
-                {console.log('bookableSpace Specific Data', bookableSpace)}
                 {bookableSpace?.space_description?.length > 0 && (
                     <StyledDescriptionDiv
                         id={`space-description-${bookableSpace?.space_id}`}

@@ -1,9 +1,11 @@
 import React, { useCallback, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-import { Badge, Button, Grid, useTheme } from '@mui/material';
+import { Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { breadcrumbs } from 'config/routes';
 
@@ -19,8 +21,11 @@ import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import {
     FACILITY_TYPE_CHECKBOX,
     FACILITY_TYPE_SLIDER,
-    FILTER_CURRENTLY_OPEN,
-    FILTER_SPACE_CAPACITY,
+    FILTER_BOOKABLE_ACTION_NAME,
+    FILTER_BOOKABLE_TYPE_ID,
+    FILTER_CAPACITY_TYPE_ID,
+    FILTER_CURRENTLY_OPEN_ACTION_NAME,
+    FILTER_SPACE_CAPACITY_ACTION_NAME,
 } from './spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
@@ -73,75 +78,74 @@ const StyledLayoutWrapper = styled('div')(() => ({
     position: 'relative',
     height: '99vh',
     marginInline: '2rem',
-    '& .popupSpacesList, .popupFilterList': {
+    overflow: 'hidden',
+    '& .popupFilterList': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        height: '100%',
+        width: '20rem',
+        maxWidth: '50%',
+        zIndex: 997,
+    },
+    '& .popupSpacesList': {
         position: 'absolute',
         top: 0,
         right: 0,
-        height: 'calc(100% - 56px)',
         width: '20rem',
         maxWidth: '50%',
         zIndex: 997,
         paddingLeft: '0.5rem',
-        marginTop: 0,
+    },
+    '& .popupSpacesSidebar': {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: '20rem',
+        maxWidth: '50%',
+        zIndex: 997,
+        paddingLeft: '0.5rem',
+        height: 'fit-content',
     },
     '& .hide': {
         display: 'none',
     },
 }));
-const schoolBuildingBackgroundimage =
-    'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M5.48 14.29H1.71v-4.6c0-.46.38-.83.83-.83h2.94m5.04-.03h2.94c.45 0 .83.37.83.83v4.63h-3.77m-1.69-2.2a.79.79 0 0 0-.83-.75.79.79 0 0 0-.83.75v2.2h1.69v-2.2zM8 5.06V1.7m0 .01h2.23a.3.3 0 0 1 .29.29v1.11c0 .15-.12.29-.29.29H8zm0 5.06a.83.83 0 0 1 0 1.66.83.83 0 0 1 0-1.66zm0 0%27%3e%3c/path%3e%3cpath d=%27M10.52 7.52A2.47 2.47 0 0 0 8 5.09a2.49 2.49 0 0 0-2.52 2.43v6.77h5.04zm-7.12 3h.43M3.4 12.6h.43m8.37-2.08h.43m-.43 2.08h.43%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
-const StyledSpaceListOpenButton = styled(Button)(({ theme }) => ({
+const StyledSidebarTab = styled('button')(({ theme }) => ({
     position: 'absolute',
-    top: '0.25rem',
-    right: '1rem',
+    top: '50%',
+    transform: 'translateY(-50%)',
     zIndex: 998,
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: '0.25rem',
-    '& span': {
-        marginLeft: '0.25rem',
-        textTransform: 'capitalize',
-        fontSize: '1rem',
-    },
+    width: '1.5rem',
+    height: '4.5rem',
+    padding: 0,
+    border: `1px solid ${theme.palette.primary.light}`,
     backgroundColor: '#fff',
-    textDecoration: 'underline',
-    '&:hover, :focus': {
-        backgroundColor: '#fff',
-        '& > span:first-of-type > span': {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-        },
-    },
-
-    backgroundImage: schoolBuildingBackgroundimage,
-    paddingLeft: '40px',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: '35px 35px',
-    minHeight: '50px',
-    backgroundPosition: 'left center',
-}));
-const StyledFilterOpenButton = styled(Button)(({ theme }) => ({
-    position: 'absolute',
-    top: '0.25rem',
-    left: '11rem', // have the button sit on the right of the filter sidebar, so the labels slide inside it
-    zIndex: 998,
-    backgroundColor: '#fff',
+    cursor: 'pointer',
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    columnGap: '0.25rem',
-    paddingLeft: 0,
-    marginLeft: '-0.5rem',
-    textDecoration: 'underline',
-    '&:hover, :focus': {
-        backgroundColor: '#fff',
-        '& > span:first-of-type > span': {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-        },
+    justifyContent: 'center',
+    gap: '2px',
+    color: theme.palette.primary.main,
+    '&:hover, &:focus-visible': {
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+        outline: `2px solid ${theme.palette.primary.dark}`,
+        outlineOffset: '1px',
     },
-    '& span': {
-        textTransform: 'capitalize',
-        fontSize: '1rem',
+    '& .tab-count': {
+        fontSize: '0.6rem',
+        fontWeight: 'bold',
+        lineHeight: 1,
+    },
+    '&.filterTab': {
+        borderRadius: '0 6px 6px 0',
+        borderLeft: 'none',
+    },
+    '&.spacesTab': {
+        borderRadius: '6px 0 0 6px',
+        borderRight: 'none',
     },
 }));
 
@@ -181,9 +185,15 @@ export const BookableSpacesList = ({
     const isDesktopView = !isTabletView && !isMobileView;
 
     const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
-    const FACILITY_TYPE_NAME_CAPACITY = 'Bookable Capacity';
+    const FACILITY_TYPE_NAME_CAPACITY = 'Bookable';
 
-    const [selectedFacilityTypes, setSelectedFacilityTypes] = useState([]);
+    const [campusList, setCampusList] = useState([]);
+
+    const [selectedFacilityTypes, setSelectedFacilityTypes2] = useState([]);
+    const setSelectedFacilityTypes = x => {
+        console.log('setSelectedFacilityTypes', x);
+        return setSelectedFacilityTypes2(x);
+    };
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
@@ -194,6 +204,23 @@ export const BookableSpacesList = ({
     const handleSpaceExpand = useCallback(space => {
         mapRef.current?.flyToSpace(space);
     }, []);
+
+    const [selectedCampus, setSelectedCampus2] = React.useState(1);
+    const setSelectedCampus = x => {
+        console.log('BookableSpacesList campus::setSelectedCampus', x);
+        console.log('BookableSpacesList campus::setSelectedCampus bookableSpacesRoomList=', bookableSpacesRoomList);
+        setSelectedCampus2(x);
+    };
+    const handleCampusSelection = e => {
+        const campusId = e?.target?.value;
+        console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
+        console.log('BookableSpacesList campus::handleCampusSelection bookableSpacesRoomList=', bookableSpacesRoomList);
+        setSelectedCampus(campusId);
+
+        const firstSpaceInCampus = bookableSpacesRoomList?.data?.locations?.find(s => s.space_campus_id === campusId);
+        console.log('BookableSpacesList campus::handleCampusSelection firstSpaceInCampus=', firstSpaceInCampus);
+        !!firstSpaceInCampus && mapRef.current?.flyToSpace(firstSpaceInCampus);
+    };
 
     const minimumSpaceCapacity = 1;
     const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
@@ -244,6 +271,26 @@ export const BookableSpacesList = ({
             const calculatedMaxCapaity = !!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity;
             setMaximumSpaceCapacity(calculatedMaxCapaity);
             setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
+
+            /* eslint-disable camelcase */
+            const currentCampusList = Object.values(
+                bookableSpacesRoomList?.data?.locations.reduce(
+                    (acc, { space_campus_id, space_campus_name, space_campus_number }) => {
+                        if (!acc[space_campus_id]) {
+                            acc[space_campus_id] = {
+                                campus_id: space_campus_id,
+                                campus_number: space_campus_number,
+                                campus_name: space_campus_name,
+                                campus_space_count: 0,
+                            };
+                        }
+                        acc[space_campus_id].campus_space_count++;
+                        return acc;
+                    },
+                    {},
+                ),
+            );
+            setCampusList(currentCampusList);
         }
     }, [bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
 
@@ -302,8 +349,24 @@ export const BookableSpacesList = ({
         return null; // Date not found in data
     }
 
-    function showSpace(space, facilityTypeToGroup, selectedFacilityTypes) {
+    const isBookable = space => {
+        return space?.space_external_book_url?.startsWith('http');
+    };
+
+    function showSpace(space, facilityTypeToGroup, selectedFacilityTypes, selectedCurrentCampus) {
+        console.log(
+            'showSpace',
+            space.space_name,
+            '; campus=',
+            space.space_campus_id,
+            ';selectedCurrentCampus=',
+            selectedCurrentCampus,
+        );
         if (space?.space_draftmode) {
+            return false;
+        }
+
+        if (space.space_campus_id !== selectedCurrentCampus) {
             return false;
         }
 
@@ -354,22 +417,49 @@ export const BookableSpacesList = ({
                 const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
                 // OR within group
+                console.log('====');
+                console.log('selectedFiltersInGroup', selectedFiltersInGroup);
                 const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
                     const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                    if (filter?.facility_special_action) {
-                        if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN) {
-                            return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
-                        } else if (filter?.facility_special_action === FILTER_SPACE_CAPACITY) {
-                            return (
-                                !!space?.space_capacity &&
-                                space?.space_capacity >= capacityFilterValue[0] &&
-                                space?.space_capacity <= capacityFilterValue[1]
-                            );
-                        }
+                    console.log(space.space_id, filterId, 'facility_special_action=', filter?.facility_special_action);
+                    if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
+                        console.log('filter: FILTER_CURRENTLY_OPEN_ACTION_NAME');
+                        return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
+                    } else if (
+                        filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME &&
+                        selectedFiltersInGroup.includes(FILTER_BOOKABLE_TYPE_ID)
+                    ) {
+                        const capacityResult =
+                            isBookable(space) &&
+                            !!space?.space_capacity &&
+                            space?.space_capacity >= capacityFilterValue[0] &&
+                            space?.space_capacity <= capacityFilterValue[1];
+                        console.log(
+                            'filter: FILTER_SPACE_CAPACITY_ACTION_NAME',
+                            space?.space_capacity,
+                            space?.space_external_book_url,
+                            capacityFilterValue[0],
+                            capacityFilterValue[1],
+                            '=',
+                            capacityResult,
+                        );
+                        return capacityResult;
+                    } else if (
+                        filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME &&
+                        !selectedFiltersInGroup.includes(FILTER_CAPACITY_TYPE_ID)
+                    ) {
+                        // we only check the bookable action on its own if we aren't checking the capacity action
+                        console.log('filter: FILTER_BOOKABLE_ACTION_NAME');
+                        return isBookable(space);
                     } else {
-                        return spaceFacilityTypes?.includes(filterId);
+                        // we could specifically exclude FILTER_BOOKABLE_ACTION_NAME here, but we dont need to because it doesnt have a matching filter
+                        // regular checkbox from admin-managed facility-types
+                        const result = spaceFacilityTypes?.includes(filterId);
+                        console.log('filter: default - check', filterId, 'is in', spaceFacilityTypes, '=', result);
+                        return result;
                     }
                 });
+                console.log('hasMatchInGroup=', hasMatchInGroup);
                 if (!hasMatchInGroup) {
                     return false;
                 }
@@ -386,9 +476,12 @@ export const BookableSpacesList = ({
     const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
         // get a list of the filters used in spaces
         const spaceFilters = bookableSpacesRoomList?.data?.locations
-            ?.flatMap(location => location?.facility_types || [])
+            ?.filter(space => space.space_campus_id === selectedCampus)
+            ?.flatMap(space => space?.facility_types || [])
             ?.map(facilityType => facilityType?.facility_type_id);
+        console.log('getFilteredFacilityTypeList selectedCampus=', selectedCampus, 'spaceFilters=', spaceFilters);
         const spaceFiltersSet = new Set(spaceFilters);
+        console.log('getFilteredFacilityTypeList spaceFiltersSet=', spaceFiltersSet);
 
         // filter facility types so we only show the checkboxes where there is an associated space
         // (this will remove the group completely if it has no shown checkboxes)
@@ -406,6 +499,7 @@ export const BookableSpacesList = ({
                     ?.filter(group => group?.facility_type_children?.length > 0),
             },
         };
+        console.log('filteredFacilityTypeList=', filteredFacilityTypeList);
 
         // manually add a "Currently Open" filter
         const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
@@ -417,30 +511,34 @@ export const BookableSpacesList = ({
             filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
             facility_type_children: [
                 {
-                    facility_type_id: 9999, // must be unique!
+                    facility_type_id: 9001, // must be unique!
                     facility_type_name: 'Currently open',
-                    filterRejectAvailable: false, // do not show a "filter-reject" orange checkbox
-                    facility_special_action: FILTER_CURRENTLY_OPEN,
+                    facility_special_action: FILTER_CURRENTLY_OPEN_ACTION_NAME,
                     facility_type: FACILITY_TYPE_CHECKBOX,
                 },
             ],
         };
         !!filterOpenFacilityType && filteredFacilityTypeList?.data?.facility_type_groups?.push(filterOpenFacilityType);
 
-        // manually add a "Choose number of people" filter
+        // manually add a "Bookable/Choose number of people" filter
         const filterCapacityFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
             facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
             facility_type_group_name: FACILITY_TYPE_NAME_CAPACITY,
-            facility_type_group_order: -998, // force to second inlist
+            facility_type_group_order: -998, // force to second in list
             facility_type_group_loads_open: 1,
             facility_type_group_type: 'choose-many',
-            filterType: FACILITY_TYPE_SLIDER, // what sort of filter is this? checkbox and slider available
+            filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
             facility_type_children: [
                 {
-                    facility_type_id: 9998, // must be unique!
+                    facility_type_id: FILTER_BOOKABLE_TYPE_ID, // must be unique!
+                    facility_type_name: 'Bookable',
+                    facility_special_action: FILTER_BOOKABLE_ACTION_NAME,
+                    facility_type: FACILITY_TYPE_CHECKBOX,
+                },
+                {
+                    facility_type_id: FILTER_CAPACITY_TYPE_ID, // must be unique!
                     facility_type_name: 'Space capacity',
-                    filterRejectAvailable: false, // do not show a "filter-reject" orange checkbox
-                    facility_special_action: FILTER_SPACE_CAPACITY,
+                    facility_special_action: FILTER_SPACE_CAPACITY_ACTION_NAME,
                     facility_type: FACILITY_TYPE_SLIDER,
                 },
             ],
@@ -448,6 +546,10 @@ export const BookableSpacesList = ({
         !!filterOpenFacilityType &&
             filteredFacilityTypeList?.data?.facility_type_groups?.push(filterCapacityFacilityType);
 
+        console.log(
+            'getFilteredFacilityTypeList::filteredFacilityTypeList=',
+            filteredFacilityTypeList?.data?.facility_type_groups,
+        );
         return filteredFacilityTypeList;
     };
     const toggleFilterPopupVisibility = e => {
@@ -456,28 +558,6 @@ export const BookableSpacesList = ({
     const toggleSpacesListPopupVisibility = e => {
         setShowSpacesSelectorPopup(!showSpacesSelectorPopup);
     };
-    const filterToggleButtonIcon = (
-        // https://www.streamlinehq.com/icons/ultimate-regular-free?search=filter&icon=ico_lPqwMEdpHFHOBRpU
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            height="24"
-            width="24"
-            aria-hidden="true"
-            focusable="false"
-        >
-            <desc>Open and close the filter sidebar</desc>
-            <path
-                stroke="#51247a"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M23.2 2.05391c0.0067 -0.10242 -0.0077 -0.20512 -0.0422 -0.30176 -0.0346 -0.09665 -0.0886 -0.18519 -0.1587 -0.26015 -0.0701 -0.07497 -0.1548 -0.13478 -0.2489 -0.17573 -0.0941 -0.04095 -0.1956 -0.06217 -0.2982 -0.06236H1.49997c-0.10267 0.00004 -0.20424 0.02117 -0.29842 0.06207 -0.09418 0.0409 -0.17896 0.1007 -0.249081 0.1757 -0.070124 0.075 -0.124102 0.1636 -0.158589 0.26031 -0.034488 0.09671 -0.048751 0.19947 -0.041906 0.30192 0.175881 2.449 1.147846 4.7733 2.767696 6.61847 1.61985 1.84512 3.7987 3.10992 6.2043 3.60152v9.875c0.00006 0.1425 0.04071 0.2821 0.11721 0.4023 0.07649 0.1202 0.18562 0.2162 0.31472 0.2766 0.1291 0.0605 0.2727 0.0829 0.414 0.0647 0.1414 -0.0183 0.2746 -0.0764 0.3841 -0.1676l3 -2.5c0.0845 -0.0703 0.1526 -0.1583 0.1993 -0.2579 0.0466 -0.0995 0.0708 -0.2081 0.0707 -0.3181v-7.375c2.4064 -0.4906 4.5862 -1.755 6.2069 -3.60031C22.0515 6.82832 23.024 4.50352 23.2 2.05391Z"
-                strokeWidth="1.5"
-            />
-        </svg>
-    );
-
     const handleFavouriteAction = async (action, spaceId) => {
         /* istanbul ignore next */
         if (isFavouriteActionInProgress) return;
@@ -516,7 +596,7 @@ export const BookableSpacesList = ({
             },
         );
         const filtered = bookableSpacesRoomList?.data?.locations?.filter(space =>
-            showSpace(space, ftg, selectedFacilityTypes),
+            showSpace(space, ftg, selectedFacilityTypes, selectedCampus),
         );
         if (!filtered) return filtered;
         return [...filtered].sort((a, b) => {
@@ -530,7 +610,14 @@ export const BookableSpacesList = ({
         // capacityFilterValue is read inside showSpace via closure; include it so the list
         // recomputes when the slider changes even though it is not a direct parameter.
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [bookableSpacesRoomList, facilityTypeList, selectedFacilityTypes, capacityFilterValue, spacesFavouritesList]);
+    }, [
+        bookableSpacesRoomList,
+        facilityTypeList,
+        selectedFacilityTypes,
+        capacityFilterValue,
+        spacesFavouritesList,
+        selectedCampus,
+    ]);
     const visibleSpacesCountBadge = () => {
         return sortedSpaceLocations?.length > 0 &&
             sortedSpaceLocations?.length < bookableSpacesRoomList?.data?.locations?.length ? (
@@ -585,26 +672,6 @@ export const BookableSpacesList = ({
     };
 
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
-    const activeFilterCountBadge = () => {
-        return activeFilterCount === 0 ? null : (
-            <Badge
-                badgeContent={activeFilterCount}
-                max={selectedFacilityTypes?.length}
-                color="primary"
-                style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
-                data-testid="space-filter-count"
-            />
-        );
-    };
-    function neededPaddingRight() {
-        if (activeFilterCount === 0) {
-            return 0;
-        }
-        if (activeFilterCount > 9) {
-            return '1rem';
-        }
-        return '0.75rem';
-    }
     return (
         <BookableSpacesListWrapperDiv>
             {(() => {
@@ -637,18 +704,23 @@ export const BookableSpacesList = ({
                     return (
                         <StyledLayoutWrapper data-testid="library-spaces">
                             <div>
-                                <StyledFilterOpenButton
+                                <StyledSidebarTab
                                     id="toggleFilterButton"
                                     data-testid="spaces-open-filter-button"
                                     onClick={() => toggleFilterPopupVisibility()}
-                                    title="Open and close the filter sidebar"
+                                    title={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
+                                    aria-expanded={showFilterSelectorPopup}
+                                    aria-label={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
+                                    className="filterTab"
+                                    style={{ left: showFilterSelectorPopup ? 'min(20rem, 50%)' : '0' }}
                                 >
-                                    {filterToggleButtonIcon}{' '}
-                                    <span style={{ paddingRight: neededPaddingRight() }}>
-                                        <span>{!!showFilterSelectorPopup ? 'Hide Filters' : 'Show Filters'}</span>
-                                    </span>
-                                    {activeFilterCountBadge()}
-                                </StyledFilterOpenButton>
+                                    {showFilterSelectorPopup ? (
+                                        <ChevronLeftIcon fontSize="small" />
+                                    ) : (
+                                        <ChevronRightIcon fontSize="small" />
+                                    )}
+                                    {activeFilterCount > 0 && <span className="tab-count">{activeFilterCount}</span>}
+                                </StyledSidebarTab>
                                 <SidebarFilters
                                     facilityTypeList={facilityTypeList}
                                     facilityTypeListLoading={facilityTypeListLoading}
@@ -664,30 +736,35 @@ export const BookableSpacesList = ({
                                     maximumSpaceCapacity={maximumSpaceCapacity}
                                     capacityFilterValue={capacityFilterValue}
                                     setCapacityFilterValue={setCapacityFilterValue}
+                                    campusList={campusList}
+                                    selectedCampus={selectedCampus}
+                                    handleCampusSelection={handleCampusSelection}
+                                    activeFilterCount={activeFilterCount}
                                 />
                             </div>
                             {isDesktopView && (
                                 <>
-                                    <StyledSpaceListOpenButton
+                                    <StyledSidebarTab
                                         id="toggleSpacesListButton"
-                                        // className="controlSpacesListButton"
                                         data-testid="spaces-open-spaces-list-button"
                                         onClick={() => toggleSpacesListPopupVisibility()}
-                                        title="Open and close the spaces sidebar"
+                                        title={showSpacesSelectorPopup ? 'Hide spaces list' : 'Show spaces list'}
+                                        aria-expanded={showSpacesSelectorPopup}
+                                        aria-label={showSpacesSelectorPopup ? 'Hide spaces list' : 'Show spaces list'}
+                                        className="spacesTab"
+                                        style={{ right: showSpacesSelectorPopup ? '20rem' : '0' }}
                                     >
-                                        <span
-                                            style={{
-                                                paddingRight: sortedSpaceLocations?.length > 10 ? '1rem' : '0.5rem',
-                                                // covers 1 and 2 digit
-                                                // will need more ifs when we have more data: > 100, > 1000
-                                            }}
-                                        >
-                                            <span>
-                                                {!!showSpacesSelectorPopup ? 'Hide Spaces list' : 'Show Spaces list'}
-                                            </span>
-                                        </span>
-                                        {visibleSpacesCountBadge()}
-                                    </StyledSpaceListOpenButton>
+                                        {showSpacesSelectorPopup ? (
+                                            <ChevronRightIcon fontSize="small" />
+                                        ) : (
+                                            <ChevronLeftIcon fontSize="small" />
+                                        )}
+                                        {sortedSpaceLocations?.length > 0 &&
+                                            sortedSpaceLocations?.length <
+                                                bookableSpacesRoomList?.data?.locations?.length && (
+                                                <span className="tab-count">{sortedSpaceLocations.length}</span>
+                                            )}
+                                    </StyledSidebarTab>
                                     <div
                                         className={
                                             showSpacesSelectorPopup
@@ -697,12 +774,14 @@ export const BookableSpacesList = ({
                                     >
                                         <SidebarSpacesList
                                             filteredSpaceLocations={sortedSpaceLocations}
+                                            totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}
+                                            activeFilterCount={activeFilterCount}
                                             weeklyHours={weeklyHours}
                                             weeklyHoursLoading={weeklyHoursLoading}
                                             weeklyHoursError={weeklyHoursError}
                                             StyledStandardCard={StyledStandardCard}
                                             showAllData={!isMobileView}
-                                            suppliedClassName={showSpacesSelectorPopup ? 'popupSpacesList' : 'hide'}
+                                            suppliedClassName={showSpacesSelectorPopup ? 'popupSpacesSidebar' : 'hide'}
                                             spacesFavouritesList={spacesFavouritesList}
                                             isLoggedIn={isLoggedIn}
                                             onFavouriteToggle={handleFavouriteAction}

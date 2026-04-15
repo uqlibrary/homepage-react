@@ -5,9 +5,11 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { InputLabel } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
 import MuiInput from '@mui/material/Input';
 import { styled } from '@mui/material/styles';
 import Slider from '@mui/material/Slider';
+import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
@@ -19,27 +21,11 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import { addClass, removeClass, standardText, StyledPrimaryButton } from 'helpers/general';
 
 import {
-    FACILITY_TYPE_SLIDER,
-    FILTER_SPACE_CAPACITY,
+    FILTER_BOOKABLE_TYPE_ID,
+    FILTER_CAPACITY_TYPE_ID,
+    FILTER_SPACE_CAPACITY_ACTION_NAME,
     getFlatFacilityTypeList,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
-
-const svgOrangeCheckbox =
-    "data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid meet' focusable='false'%3E%3Cpath fill='%23c13e2a' d='M22.2,20.9l-1.3-1.3C21,19.4,21,19.2,21,19v-8h-2v6.7l-4.6-4.6l6-6l-1.4-1.4l-6,6L6.3,5H15V3H5C4.8,3,4.6,3,4.4,3.1L3,1.7L1.8,2.9l1.3,1.3C3.1,4.4,3,4.7,3,5v14c0,1.1,0.9,2,2,2h14c0.3,0,0.6-0.1,0.8-0.2l1.2,1.2L22.2,20.9z M5,19V6l6.9,6.9l-1.4,1.4l-3.1-3.1L6,12.6l4.5,4.5l2.8-2.8L18,19H5z'%3E%3C/path%3E%3C/svg%3E";
-const visibleRejectedCheckbox = {
-    backgroundImage: `url("${svgOrangeCheckbox}")`,
-    backgroundRepeat: 'no-repeat',
-    display: 'inline-block',
-    padding: 0,
-    height: '40px',
-    width: '40px',
-    backgroundSize: '50%',
-    paddingLeft: '6px',
-    marginTop: '8px',
-    marginBottom: '-8px',
-    marginLeft: '5px',
-    cursor: 'pointer',
-};
 
 const StyledSlider = styled(Slider)(() => ({
     marginTop: '1rem', // space for tooltips to appear in
@@ -89,18 +75,6 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
             textOverflow: 'ellipsis',
         },
     },
-    // when we hover or focus on the reject-checkbox, style the label to be orange
-    '&:hover label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
-    '&:focus label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
-    '&:has(> input:checked) label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
-    '&:has(> input:inline-focus) label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
-    '@media (pointer:coarse)': {
-        // show the reject checkbox on mobile, as they can't hover
-        'label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
-    },
-    '& input.rejectedFilterType': {
-        display: 'none',
-    },
     '& span:not(.fortestfocus)': {
         cursor: 'pointer',
     },
@@ -113,15 +87,12 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
     },
 }));
 const StyledSidebarDiv = styled('div')(() => ({
-    position: 'sticky',
-    top: 0,
+    position: 'relative',
     height: '100%',
     overflowY: 'auto',
-    left: 0,
 
-    paddingTop: '3.5rem',
+    paddingTop: '0.5rem',
     paddingRight: 0,
-    marginBlock: '1em',
     marginRight: 0,
     marginLeft: 0,
     flexBasis: '10%',
@@ -212,6 +183,20 @@ const StyledFilterSpaceList = styled('ul')(() => ({
     paddingLeft: 0,
     paddingTop: 0,
 }));
+const StyledCampusWrapperDiv = styled('div')(({ theme }) => ({
+    borderBottom: theme.palette.designSystem.border,
+    '& h3': {
+        marginBottom: 0,
+    },
+    '& .campusSelector': {
+        '& > div': {
+            paddingBlock: '1rem',
+        },
+        '& fieldset': {
+            borderWidth: 0,
+        },
+    },
+}));
 const StyledCartoucheList = styled('ul')(({ theme }) => ({
     listStyle: 'none',
     display: 'block',
@@ -257,13 +242,22 @@ export const SidebarFilters = ({
     selectedFacilityTypes,
     setSelectedFacilityTypes,
     filteredFacilityTypeList,
+    selectedCampus,
+    handleCampusSelection,
     suppliedClassName,
     minimumSpaceCapacity,
     maximumSpaceCapacity,
     capacityFilterValue,
     setCapacityFilterValue,
+    campusList,
+    activeFilterCount,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
+    const [defaultCampus, setDefaultCampus2] = React.useState(1);
+    const setDefaultCampus = x => {
+        console.log('campus::setDefaultCampus', x);
+        setDefaultCampus2(x);
+    };
 
     function sortedUsedGroups() {
         if (
@@ -304,10 +298,17 @@ export const SidebarFilters = ({
                     facility_special_action: facilityType?.facility_special_action,
                 };
             });
+            console.log('setSelectedFacilityTypes call 1');
             setSelectedFacilityTypes(newFilters);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    React.useEffect(() => {
+        if (campusList?.length > 0) {
+            setDefaultCampus(campusList.at(0).campus_id);
+        }
+    }, [campusList]);
 
     const resetFacilityTypeFilterGroupExpandedness = (filterGroupId, isGroupExpandedInput) => {
         const newExpandedness = facilityTypeFilterGroupExpandedness?.filter(g => {
@@ -320,21 +321,26 @@ export const SidebarFilters = ({
         setFacilityTypeFilterGroupExpandedness(newExpandedness);
     };
 
+    // TODO remove isUnselected, remove unselected
     const setFilters = (facilityTypeId, isSelected, isUnselected, facilitySpecialAction) => {
-        const removedFilter = selectedFacilityTypes?.find(ftf => {
+        console.log('setFilters =', facilityTypeId, isSelected, isUnselected, facilitySpecialAction);
+        console.log('setFilters selectedFacilityTypes', [...selectedFacilityTypes]);
+        const resetFilter = selectedFacilityTypes?.find(ftf => {
             return ftf?.facility_type_id === facilityTypeId;
         });
         const newFilters = selectedFacilityTypes?.filter(ftf => {
             return ftf?.facility_type_id !== facilityTypeId;
         });
-        !!removedFilter &&
+        !!resetFilter &&
             newFilters?.push({
-                facility_type_group_id: removedFilter?.facility_type_group_id,
+                facility_type_group_id: resetFilter?.facility_type_group_id,
                 facility_type_id: facilityTypeId,
                 selected: isSelected,
                 unselected: isUnselected,
                 facility_special_action: facilitySpecialAction,
             });
+        console.log('setFilters newFilters', newFilters);
+        !!newFilters && console.log('setSelectedFacilityTypes call 2');
         !!newFilters && setSelectedFacilityTypes(newFilters);
     };
 
@@ -362,21 +368,59 @@ export const SidebarFilters = ({
         !!topOfSidebar && topOfSidebar?.focus();
     };
 
-    const handleFilterRejection = (isChecked, facilityTypeId, facilitySpecialAction) => {
-        showHideActiveFilterListItems(facilityTypeId, isChecked);
+    const clearSpecialFilter = (facilityTypeId, facilitySpecialAction) => {
+        showHideActiveFilterListItems(facilityTypeId, false);
 
-        setFilters(facilityTypeId, false, isChecked, facilitySpecialAction);
+        setFilters(facilityTypeId, false, false, facilitySpecialAction);
 
         scrollToTopOfContent();
     };
 
     const handleFilterSelection = (isChecked, facilityType) => {
+        console.log('handleFilterSelection isChecked=', isChecked, 'facilityType=', facilityType);
         const facilityTypeId = facilityType?.facility_type_id;
         const facilitySpecialAction = facilityType?.facility_special_action;
-        showHideActiveFilterListItems(facilityTypeId, isChecked);
+        if (!isChecked && facilityType.facility_type_id === FILTER_BOOKABLE_TYPE_ID) {
+            // when they uncheck the Bookable checkbox, clear the capacity slider
+            showHideActiveFilterListItems(FILTER_CAPACITY_TYPE_ID, isChecked);
 
-        setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
+            // setFilters(FILTER_CAPACITY_TYPE_ID, false, false, FILTER_SPACE_CAPACITY_ACTION_NAME);
 
+            // duplicate setFilters function, but for multiple filters
+            console.log('handleFilterSelection selectedFacilityTypes', selectedFacilityTypes);
+            const resetFilters = selectedFacilityTypes?.filter(ftf => {
+                return (
+                    ftf?.facility_type_id === FILTER_BOOKABLE_TYPE_ID ||
+                    ftf?.facility_type_id === FILTER_CAPACITY_TYPE_ID
+                );
+            });
+            console.log('handleFilterSelection resetFilters', resetFilters);
+            const newFilters = selectedFacilityTypes?.filter(ftf => {
+                return (
+                    ftf?.facility_type_id !== FILTER_BOOKABLE_TYPE_ID &&
+                    ftf?.facility_type_id !== FILTER_CAPACITY_TYPE_ID
+                );
+            });
+            resetFilters?.length > 0 &&
+                resetFilters.forEach(f => {
+                    newFilters?.push({
+                        facility_type_group_id: f?.facility_type_group_id,
+                        facility_type_id: facilityTypeId,
+                        selected: false,
+                        unselected: false,
+                        facility_special_action: facilitySpecialAction,
+                    });
+                });
+            console.log('handleFilterSelection newFilters', newFilters);
+            console.log('setSelectedFacilityTypes call 3');
+            !!newFilters && setSelectedFacilityTypes(newFilters);
+            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
+        } else {
+            console.log('handleFilterSelection either not bookable or is checking bookable');
+            showHideActiveFilterListItems(facilityTypeId, isChecked);
+
+            setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
+        }
         scrollToTopOfContent();
     };
 
@@ -392,7 +436,7 @@ export const SidebarFilters = ({
         const capacityFilterType = selectedFacilityTypes?.find(ft => ft.facility_type_id === facilityTypeId);
         const isCapacityDefaultValues = newValue[0] === minimumSpaceCapacity && newValue[1] === maximumSpaceCapacity;
         if (isCapacityDefaultValues) {
-            handleFilterRejection(false, facilityTypeId, capacityFilterType?.facility_special_action);
+            clearSpecialFilter(facilityTypeId, capacityFilterType?.facility_special_action);
         } else {
             handleFilterSelection(true, capacityFilterType);
         }
@@ -433,7 +477,7 @@ export const SidebarFilters = ({
         const facilityTypeId = parseInt(button?.id?.replace('button-deselect-selected-', ''), 10);
 
         const selectedFacilityType = selectedFacilityTypes.find(ft => ft.facility_type_id === facilityTypeId);
-        if (selectedFacilityType?.facility_special_action === FILTER_SPACE_CAPACITY) {
+        if (selectedFacilityType?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME) {
             setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
         }
         showHideActiveFilterListItems(facilityTypeId, e?.target?.checked);
@@ -451,6 +495,7 @@ export const SidebarFilters = ({
                 facility_type: ft?.facility_type,
             };
         });
+        console.log('setSelectedFacilityTypes call 4');
         setSelectedFacilityTypes(newFacilityTypes);
 
         setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
@@ -464,6 +509,84 @@ export const SidebarFilters = ({
             </Tooltip>
         );
     }
+    const writeCapacitySlider = facilityType => {
+        if (!selectedFacilityTypes?.find(f1 => f1?.facility_type_id === FILTER_BOOKABLE_TYPE_ID)?.selected) {
+            return null;
+        }
+        return (
+            <>
+                <Typography
+                    // class="group-heading"
+                    style={{ fontSize: '1.17em', marginLeft: '1rem' }}
+                    component={'h4'}
+                    variant={'h6'}
+                >
+                    Space capacity
+                </Typography>
+                <InputLabel
+                    title={`Filter in Spaces with ${facilityType?.facility_type_name}`}
+                    htmlFor={`filtertype-${facilityType?.facility_type_id}`}
+                    id={`filtertype-${facilityType?.facility_type_id}-label`}
+                    className="selectedFilterTypeLabel"
+                    style={{ marginLeft: '1rem' }}
+                >
+                    <StyledSliderInput
+                        className="rightSlider"
+                        value={capacityFilterValue[0]}
+                        size="small"
+                        onChange={handleCapacityMinInputChange}
+                        onBlur={handleCapacityMinInputBlur}
+                        inputProps={{
+                            id: `capacitySlider-inputRight-${facilityType?.facility_type_id}`,
+                            'data-testid': 'capacitySlider-inputRight',
+                            step: 1,
+                            min: minimumSpaceCapacity,
+                            max: capacityFilterValue[1] - 1,
+                            type: 'number',
+                            'aria-labelledby': `filtertype-${facilityType?.facility_type_id}-label`,
+                        }}
+                        sx={{ marginRight: '0.5rem' }}
+                    />
+                    <StyledSlider
+                        getAriaLabel={() => 'Space for number of people'} // word choice needs work
+                        value={capacityFilterValue}
+                        onChange={(event, newValue) =>
+                            handleCapacityFilterChange(
+                                event,
+                                newValue,
+                                `capacitySlider-slider-${facilityType?.facility_type_id}`,
+                            )
+                        }
+                        valueLabelDisplay="on"
+                        // getAriaValueText={`${capacityFilterValue} people`}
+                        sx={{ width: 200 }}
+                        min={minimumSpaceCapacity}
+                        max={maximumSpaceCapacity}
+                        step={1}
+                        components={{
+                            ValueLabel: valueLabelComponent,
+                        }}
+                    />
+                    <StyledSliderInput
+                        value={capacityFilterValue[1]}
+                        size="small"
+                        onChange={handleCapacityMaxInputChange}
+                        onBlur={handleCapacityMaxInputBlur}
+                        inputProps={{
+                            id: `capacitySlider-inputLeft-${facilityType?.facility_type_id}`,
+                            'data-testid': 'capacitySlider-inputLeft',
+                            step: 1,
+                            min: capacityFilterValue[0] + 1,
+                            max: maximumSpaceCapacity,
+                            type: 'number',
+                            'aria-labelledby': `filtertype-${facilityType?.facility_type_id}-label`,
+                        }}
+                        sx={{ marginLeft: '0.5rem' }}
+                    />
+                </InputLabel>
+            </>
+        );
+    };
     const getStyledInputListItem = facilityType => {
         return (
             <StyledInputListItem
@@ -471,72 +594,8 @@ export const SidebarFilters = ({
                 id={`facility-type-listitem-${facilityType?.facility_type_id}`}
                 data-testid={`facility-type-listitem-${facilityType?.facility_type_id}`}
             >
-                {facilityType.facility_type === FACILITY_TYPE_SLIDER ? (
-                    <>
-                        <p>Our largest bookable space can fit {maximumSpaceCapacity} people.</p>
-                        <InputLabel
-                            title={`Filter in Spaces with ${facilityType?.facility_type_name}`}
-                            htmlFor={`filtertype-${facilityType?.facility_type_id}`}
-                            id={`filtertype-${facilityType?.facility_type_id}-label`}
-                            className="selectedFilterTypeLabel"
-                            style={{ marginLeft: '1rem' }}
-                        >
-                            <StyledSliderInput
-                                className="rightSlider"
-                                value={capacityFilterValue[0]}
-                                size="small"
-                                onChange={handleCapacityMinInputChange}
-                                onBlur={handleCapacityMinInputBlur}
-                                inputProps={{
-                                    id: `capacitySlider-inputRight-${facilityType?.facility_type_id}`,
-                                    'data-testid': 'capacitySlider-inputRight',
-                                    step: 1,
-                                    min: minimumSpaceCapacity,
-                                    max: capacityFilterValue[1] - 1,
-                                    type: 'number',
-                                    'aria-labelledby': `filtertype-${facilityType?.facility_type_id}-label`,
-                                }}
-                                sx={{ marginRight: '0.5rem' }}
-                            />
-                            <StyledSlider
-                                getAriaLabel={() => 'Space for number of people'} // word choice needs work
-                                value={capacityFilterValue}
-                                onChange={(event, newValue) =>
-                                    handleCapacityFilterChange(
-                                        event,
-                                        newValue,
-                                        `capacitySlider-slider-${facilityType?.facility_type_id}`,
-                                    )
-                                }
-                                valueLabelDisplay="on"
-                                // getAriaValueText={`${capacityFilterValue} people`}
-                                sx={{ width: 200 }}
-                                min={minimumSpaceCapacity}
-                                max={maximumSpaceCapacity}
-                                step={1}
-                                components={{
-                                    ValueLabel: valueLabelComponent,
-                                }}
-                            />
-                            <StyledSliderInput
-                                value={capacityFilterValue[1]}
-                                size="small"
-                                onChange={handleCapacityMaxInputChange}
-                                onBlur={handleCapacityMaxInputBlur}
-                                inputProps={{
-                                    id: `capacitySlider-inputLeft-${facilityType?.facility_type_id}`,
-                                    'data-testid': 'capacitySlider-inputLeft',
-                                    step: 1,
-                                    min: capacityFilterValue[0] + 1,
-                                    max: maximumSpaceCapacity,
-                                    type: 'number',
-                                    'aria-labelledby': `filtertype-${facilityType?.facility_type_id}-label`,
-                                }}
-                                sx={{ marginLeft: '0.5rem' }}
-                            />
-                        </InputLabel>
-                    </>
-                ) : (
+                {facilityType.facility_type_id === FILTER_CAPACITY_TYPE_ID && writeCapacitySlider(facilityType)}
+                {facilityType.facility_type_id !== FILTER_CAPACITY_TYPE_ID && (
                     <>
                         <InputLabel
                             title={`Filter in Spaces with ${facilityType?.facility_type_name}`}
@@ -556,36 +615,6 @@ export const SidebarFilters = ({
                             />
                             <span>{facilityType?.facility_type_name}</span>
                         </InputLabel>
-                        {facilityType?.filterRejectAvailable !== false && (
-                            <>
-                                <input
-                                    type="checkbox"
-                                    id={`reject-filtertype-${facilityType?.facility_type_id}`}
-                                    data-testid={`reject-filtertype-${facilityType?.facility_type_id}`}
-                                    className="rejectedFilterType"
-                                    onChange={e =>
-                                        handleFilterRejection(
-                                            e?.target?.checked,
-                                            facilityType?.facility_type_id,
-                                            facilityType?.facility_special_action,
-                                        )
-                                    }
-                                    aria-label={`Exclude Spaces with ${facilityType?.facility_type_name}`}
-                                    checked={
-                                        selectedFacilityTypes?.find(
-                                            f1 => f1?.facility_type_id === facilityType?.facility_type_id,
-                                        )?.unselected || false
-                                    }
-                                />
-                                <label
-                                    htmlFor={`reject-filtertype-${facilityType?.facility_type_id}`}
-                                    className="rejectedFacilityTypeLabel"
-                                    data-testid={`reject-filtertype-label-${facilityType?.facility_type_id}`}
-                                    title={`Exclude Spaces with ${facilityType?.facility_type_name}`}
-                                />
-                                <span className="fortestfocus" style={{ width: '10px' }} />
-                            </>
-                        )}
                     </>
                 )}
             </StyledInputListItem>
@@ -652,24 +681,24 @@ export const SidebarFilters = ({
                             </li>
                         );
                     }
-                    if (!!f?.unselected) {
-                        const facilityTypeRecord = flatFacilityTypeList?.find(
-                            flat => flat?.facility_type_id === f?.facility_type_id,
-                        );
-                        return (
-                            <li key={`cartouche-unselect-${f?.facility_type_id}`}>
-                                <Button
-                                    id={`button-deselect-selected-${f?.facility_type_id}`}
-                                    data-testid={`button-deselect-unselected-${f?.facility_type_id}`}
-                                    onClick={deSelectSelected}
-                                    className="unselectedFilter"
-                                    aria-label={`${facilityTypeRecord?.facility_type_name} excluded - click to deselect`}
-                                >
-                                    <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
-                                </Button>
-                            </li>
-                        );
-                    }
+                    // if (!!f?.unselected) {
+                    //     const facilityTypeRecord = flatFacilityTypeList?.find(
+                    //         flat => flat?.facility_type_id === f?.facility_type_id,
+                    //     );
+                    //     return (
+                    //         <li key={`cartouche-unselect-${f?.facility_type_id}`}>
+                    //             <Button
+                    //                 id={`button-deselect-selected-${f?.facility_type_id}`}
+                    //                 data-testid={`button-deselect-unselected-${f?.facility_type_id}`}
+                    //                 onClick={deSelectSelected}
+                    //                 className="unselectedFilter"
+                    //                 aria-label={`${facilityTypeRecord?.facility_type_name} excluded - click to deselect`}
+                    //             >
+                    //                 <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
+                    //             </Button>
+                    //         </li>
+                    //     );
+                    // }
                     return null;
                 })}
             </>
@@ -696,8 +725,8 @@ export const SidebarFilters = ({
                 </Typography>
                 {!!hasActiveFilters && (
                     <>
-                        <Typography component={'h3'} variant={'h6'}>
-                            Active filters
+                        <Typography component={'h3'} variant={'h6'} data-testid="space-filter-count">
+                            Active filters <span>{activeFilterCount}</span>
                         </Typography>
                         <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
                             {showCartoucheList(flatFacilityTypeList)}
@@ -721,6 +750,40 @@ export const SidebarFilters = ({
                             </StyledPrimaryButton>
                         )}
                     </>
+                )}
+                {campusList?.length > 0 && (
+                    <StyledCampusWrapperDiv>
+                        <h3 id="filter-by-campus-label" htmlFor="filter-by-campus-input">
+                            Choose campus
+                        </h3>
+                        <Select
+                            className="campusSelector"
+                            id="filter-by-campus"
+                            labelId="filter-by-campus-label"
+                            data-testid="filter-by-campus"
+                            value={
+                                campusList?.find(c => c.campus_id === selectedCampus)?.campus_id || defaultCampus || 1
+                            }
+                            onChange={handleCampusSelection}
+                            inputProps={{
+                                id: 'filter-by-campus-input',
+                                title: 'Filter the displayed Spaces by campus',
+                            }}
+                        >
+                            {campusList
+                                ?.filter(campus => campus.campus_space_count > 0)
+                                ?.map((campus, index) => (
+                                    <MenuItem
+                                        value={campus?.campus_id}
+                                        key={`filter-by-campus-menuitem-${index}`}
+                                        selected={campus?.campus_id === 99999}
+                                        data-testid={`campus-${campus?.campus_id}`}
+                                    >
+                                        {campus.campus_name}
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                    </StyledCampusWrapperDiv>
                 )}
                 {sortedUsedGroups()?.map(group => {
                     const filterGroupId = group?.facility_type_group_id;
@@ -765,11 +828,15 @@ SidebarFilters.propTypes = {
     filteredFacilityTypeList: PropTypes.any,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
-    suppliedClassName: PropTypes.string,
+    selectedCampus: PropTypes.any,
+    handleCampusSelection: PropTypes.func,
     minimumSpaceCapacity: PropTypes.number,
     maximumSpaceCapacity: PropTypes.number,
     capacityFilterValue: PropTypes.array,
     setCapacityFilterValue: PropTypes.func,
+    campusList: PropTypes.any,
+    suppliedClassName: PropTypes.string,
+    activeFilterCount: PropTypes.number,
 };
 
 export default React.memo(SidebarFilters);

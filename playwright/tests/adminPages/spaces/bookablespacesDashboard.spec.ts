@@ -3,7 +3,7 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 
 const CAMPUS_ALL_OPTION = '1';
 const CAMPUS_ST_LUCIA_OPTION = '2';
-const CAMPUS_PACE_OPTION = '3';
+const CAMPUS_PACE_OPTION = '4';
 const ST_LUCIA_RECORD_ID = '1'; // '2' is gatton, which has no Spaces in our mock data
 const PACE_RECORD_ID = '3';
 const PAGINATE_TO_SHOW_5 = 5;
@@ -47,9 +47,6 @@ test.describe('Spaces Admin - manage locations', () => {
 
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
-
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-bookable`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-bookable`)).toBeVisible();
 
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-energy-pod`)).toBeVisible();
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-energy-pod`)).not.toBeVisible();
@@ -202,9 +199,6 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
         await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-contains-artwork`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-bookable`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-bookable`)).toBeVisible();
-
         await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-energy-pod`)).toBeVisible();
         await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-energy-pod`)).not.toBeVisible();
 
@@ -355,9 +349,6 @@ test.describe('Spaces Admin - manage locations', () => {
 
         await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
         await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-contains-artwork`)).not.toBeVisible();
-
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-bookable`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-bookable`)).not.toBeVisible();
 
         await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-energy-pod`)).toBeVisible();
         await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-energy-pod`)).not.toBeVisible();
@@ -866,15 +857,15 @@ test.describe('Spaces Admin - manage locations', () => {
 
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
-        await expect(pageCountDisplay).toContainText('1–5 of 10');
+        await expect(pageCountDisplay).toContainText('1–5 of 16');
 
-        // go to next page of pagination, 6-10 of 10
+        // go to next page of pagination, 6-16 of 16
         const paginationBlock = page.getByTestId('pagination-block');
         const nextPaginationButton = paginationBlock.locator('[aria-label="Go to next page"]');
         await expect(nextPaginationButton).toBeVisible();
         await nextPaginationButton.click();
         await expect(pageCountDisplay).toBeVisible();
-        await expect(pageCountDisplay).toContainText('6–10 of 10');
+        await expect(pageCountDisplay).toContainText('6–10 of 16');
         await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
         await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
         await expect(page.getByTestId(`space-${ARMUS6}`)).toBeVisible();
@@ -882,12 +873,12 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
         await expect(page.getByTestId(`space-${PACE}`)).toBeVisible();
 
-        // go to back to first page of pagination, 1-5 of 10
+        // go to back to first page of pagination, 1-5 of 16
         const previousPaginationButton = paginationBlock.locator('[aria-label="Go to previous page"]');
         await expect(previousPaginationButton).toBeVisible();
         await previousPaginationButton.click();
         await expect(pageCountDisplay).toBeVisible();
-        await expect(pageCountDisplay).toContainText('1–5 of 10');
+        await expect(pageCountDisplay).toContainText('1–5 of 16');
         await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
         await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
         await expect(page.getByTestId(`space-${PACE}`)).not.toBeVisible();
@@ -920,7 +911,7 @@ test.describe('Spaces Admin - manage locations', () => {
 
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
-        await expect(pageCountDisplay).toContainText('1–5 of 9');
+        await expect(pageCountDisplay).toContainText('1–5 of 11');
 
         // paginate
         const nextPageButton = page.locator('[aria-label="Go to next page"]');
@@ -928,7 +919,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await nextPageButton.click();
 
         // next page of St Lucia spaces display
-        await expect(visibleSpaces).toHaveCount(4); // the second page of a set of 9
+        await expect(visibleSpaces).toHaveCount(5); // the second page of a set of 11
         await expect(page.getByTestId(`space-${ARMUS7}`)).toBeVisible();
         await expect(page.getByTestId(`space-${ARMUS6}`)).toBeVisible();
         await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
@@ -936,17 +927,17 @@ test.describe('Spaces Admin - manage locations', () => {
 
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
-        await expect(pageCountDisplay).toContainText('6–9 of 9');
+        await expect(pageCountDisplay).toContainText('6–10 of 11');
 
         // change number of rows displayed
         const rowsperpageSelector = page.getByTestId('admin-spaces-list-paginator-select');
         await expect(rowsperpageSelector).toBeVisible();
         await rowsperpageSelector.selectOption('10'); // choose '10 per page'
-        await expect(visibleSpaces).toHaveCount(9); // all st lucia records
+        await expect(visibleSpaces).toHaveCount(10);
 
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
-        await expect(pageCountDisplay).toContainText('1–9 of 9');
+        await expect(pageCountDisplay).toContainText('1–10 of 11');
     });
     test('remembers pagination', async ({ page, context }) => {
         await page.goto('/admin/spaces?user=libSpaces');
@@ -958,7 +949,7 @@ test.describe('Spaces Admin - manage locations', () => {
         // initally 5 rows showing
         const pageCountDisplay2 = page.locator('.MuiTablePagination-displayedRows');
         await expect(pageCountDisplay2).toBeVisible();
-        await expect(pageCountDisplay2).toContainText('1–5 of 10');
+        await expect(pageCountDisplay2).toContainText('1–5 of 16');
 
         await expect(
             page
@@ -993,7 +984,7 @@ test.describe('Spaces Admin - manage locations', () => {
         // now 10 rows showing
         const pageCountDisplay = page.locator('.MuiTablePagination-displayedRows');
         await expect(pageCountDisplay).toBeVisible();
-        await expect(pageCountDisplay).toContainText('1–10 of 10');
+        await expect(pageCountDisplay).toContainText('1–10 of 16');
 
         await expect(
             page

@@ -85,7 +85,7 @@ const SpaceLocationMap = ({
 
         mazeMapInstanceRef.current = new window.Mazemap.Map({
             container: mapContainer,
-            campuses: 406,
+            campuses: 'all',
             center: { lng, lat },
             zoom: 17,
             zLevel: formValues?.space_zlevel ?? 1,

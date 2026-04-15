@@ -123,7 +123,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 52;
+        const numberFacilityTypesInMockFacilityTypes = 51;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -218,7 +218,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 52;
+        const numberFacilityTypesInMockFacilityTypes = 51;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -301,7 +301,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 52;
+        const numberFacilityTypesInMockFacilityTypes = 51;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -434,7 +434,6 @@ test.describe('Spaces Admin - edit space', () => {
     const LOW_NOISE_LEVEL = 17;
     const POSTGRAD = 13;
     const UNDERGRAD = 14;
-    const BOOKABLE = 19;
     // const SINGLE_OCCUPANCY = 51;
 
     // to test the required fields are the only required fields, we have to clear all the other fields!!! Not a realistic thing a user would do, but it meets the mentioned need
@@ -451,14 +450,14 @@ test.describe('Spaces Admin - edit space', () => {
         await page.getByRole('textbox', { name: 'Editor editing area: main' }).press('ControlOrMeta+a');
         await page.getByRole('textbox', { name: 'Editor editing area: main' }).press('ControlOrMeta+x');
 
-        // change to facility type tab
-        await page.getByTestId(TAB_FACILITY_TYPES).click();
-
         await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
         await page
             .getByTestId('space-can-book')
             .locator('input')
             .click();
+
+        // change to facility type tab
+        await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // clear facility types
         for (const facilityTypeId of [
@@ -475,7 +474,6 @@ test.describe('Spaces Admin - edit space', () => {
             LOW_NOISE_LEVEL,
             POSTGRAD,
             UNDERGRAD,
-            BOOKABLE,
             // SINGLE_OCCUPANCY,
         ]) {
             await expect(page.getByTestId(`filtertype-${facilityTypeId}`).locator('input')).toBeChecked();
@@ -757,6 +755,12 @@ test.describe('Spaces Admin - edit space', () => {
 
         await nameField.click();
 
+        const isBookableCheckbox = page.getByTestId('space-can-book').locator('input');
+        await expect(isBookableCheckbox).toBeChecked();
+        const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
+        await expect(bookingUrlField).toHaveValue('https://uqbookit.uq.edu.au/#/app/booking-types/111');
+        await bookingUrlField.fill('http://example.com');
+
         // enter a Space capacity
         await expect(page.getByTestId('capacity-details')).toBeVisible();
         const capacityNumberField = page.getByTestId('space_capacity').locator('input');
@@ -766,12 +770,6 @@ test.describe('Spaces Admin - edit space', () => {
 
         // change to Facility types tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
-
-        const isBookableCheckbox = page.getByTestId('space-can-book').locator('input');
-        await expect(isBookableCheckbox).toBeChecked();
-        const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
-        await expect(bookingUrlField).toHaveValue('https://uqbookit.uq.edu.au/#/app/booking-types/111');
-        await bookingUrlField.fill('http://example.com');
 
         // confirm current filter types
         const originalFilters = [
@@ -788,7 +786,6 @@ test.describe('Spaces Admin - edit space', () => {
             POSTGRAD,
             UNDERGRAD,
             CONTAINS_ARTWORK,
-            BOOKABLE,
             // SINGLE_OCCUPANCY,
         ];
         for (const facilityTypeId of originalFilters) {
@@ -944,10 +941,7 @@ test.describe('Spaces Admin - edit space', () => {
     test.describe('Spaces Admin - save errors', () => {
         test('edit space - server 500', async ({ page }) => {
             await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces&responseType=spaceUpdate500Error');
-            await page.setViewportSize({
-                width: 1300,
-                height: 1000,
-            });
+            await page.setViewportSize({ width: 1300, height: 1000 });
             // wait for page to load
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
             await ensureSpaceTypeSelected(page);
@@ -983,34 +977,16 @@ test.describe('booking link controller works properly', () => {
         const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
 
         await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
-        await page.setViewportSize({
-            width: 1300,
-            height: 1000,
-        });
+        await page.setViewportSize({ width: 1300, height: 1000 });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
 
         await chooseAnySpaceType(page);
 
-        // change to facility type tab
-        await page.getByTestId(TAB_FACILITY_TYPES).click();
-
         // bookable is checked
         await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
         await expect(page.getByTestId('booking-link-details')).toBeVisible();
-        await expect(page.getByTestId('spaces-check-reminder-icon')).not.toBeVisible();
         await expect(bookingUrlField).toHaveValue('https://uqbookit.uq.edu.au/#/app/booking-types/111');
-
-        const bookableFacilityTypeCheckbox = page
-            .getByTestId('facility-type-checkbox-list')
-            .getByRole('checkbox', { name: 'Bookable' });
-
-        // The reminder appears only when the "Bookable" facility type is not selected.
-        await expect(bookableFacilityTypeCheckbox).toBeChecked();
-        await bookableFacilityTypeCheckbox.uncheck();
-        await expect(page.getByTestId('spaces-check-reminder-icon')).toBeVisible();
-        await bookableFacilityTypeCheckbox.check();
-        await expect(page.getByTestId('spaces-check-reminder-icon')).not.toBeVisible();
 
         // remove booking url (uncheck box)
         await page
@@ -1018,7 +994,6 @@ test.describe('booking link controller works properly', () => {
             .locator('input')
             .uncheck();
         await expect(page.getByTestId('booking-link-details')).not.toBeVisible();
-        await expect(page.getByTestId('spaces-skip-reminder-icon')).toBeVisible();
 
         // save changes
         // click save button
@@ -1051,13 +1026,9 @@ test.describe('booking link controller works properly', () => {
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
         await ensureSpaceTypeSelected(page);
 
-        // change to facility type tab
-        await page.getByTestId(TAB_FACILITY_TYPES).click();
-
         // bookable is checked
         await expect(page.getByTestId('space-can-book').locator('input')).not.toBeChecked();
         await expect(page.getByTestId('booking-link-details')).not.toBeVisible();
-        await expect(page.getByTestId('spaces-skip-reminder-icon')).toBeVisible();
 
         // click save button (there aren't any changes)
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
@@ -1090,13 +1061,9 @@ test.describe('booking link controller works properly', () => {
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
         await ensureSpaceTypeSelected(page);
 
-        // change to facility type tab
-        await page.getByTestId(TAB_FACILITY_TYPES).click();
-
         // bookable is not checked
         await expect(page.getByTestId('space-can-book').locator('input')).not.toBeChecked();
         await expect(page.getByTestId('booking-link-details')).not.toBeVisible();
-        await expect(page.getByTestId('spaces-skip-reminder-icon')).toBeVisible();
 
         // make the space bookable (check box)
         await page
@@ -1104,7 +1071,6 @@ test.describe('booking link controller works properly', () => {
             .locator('input')
             .check();
         await expect(page.getByTestId('booking-link-details')).toBeVisible();
-        await expect(page.getByTestId('spaces-check-reminder-icon')).toBeVisible();
 
         // save now to confirm it throws an error for want of the url
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
