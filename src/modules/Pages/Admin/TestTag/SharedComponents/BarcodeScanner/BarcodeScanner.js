@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { QrCodeScanner, VolumeOff, VolumeUp } from '@mui/icons-material';
+import { FlashlightOff, FlashlightOn, QrCodeScanner, VolumeOff, VolumeUp } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import { Scanner, useDevices, prepareZXingModule } from '@yudiel/react-qr-scanner';
 import Dialog from '@mui/material/Dialog';
@@ -125,6 +125,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
     const hasDevices = !!devices?.length;
     const [hasError, setHasError] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
+    const [isTorchOn, setIsTorchOn] = useState(false);
     const [isBeepSoundEnabled, setIsBeepSoundEnabled] = useState(
         Cookies.get(BARCODE_SCANNER_SOUND_PREF_COOKIE) !== 'false',
     );
@@ -150,6 +151,22 @@ const BarcodeScanner = ({ onScan, formats }) => {
         // "remember" selected device selection
         Cookies.set(BARCODE_SCANNER_DEFAULT_DEVICE_ID_COOKIE, e.target.value);
         setSelectedDeviceId(e.target.value);
+    };
+
+    const handleTorchToggle = async () => {
+        try {
+            const track = document.querySelectorAll('video')?.[0]?.srcObject?.getVideoTracks?.()?.[0];
+            // just when torch is not available
+            /* istanbul ignore next */
+            if (!track || !track.getCapabilities?.()?.torch) return;
+
+            const next = !isTorchOn;
+            await track.applyConstraints({ advanced: [{ torch: next }] });
+            setIsTorchOn(next);
+        } catch (err) {
+            /* istanbul ignore next */
+            console.error('Barcode scanner torch error:', err);
+        }
     };
 
     const handleBeepToggle = () => {
@@ -261,6 +278,18 @@ const BarcodeScanner = ({ onScan, formats }) => {
                                 ))}
                             </Select>
                         </FormControl>
+                        {/* torch toggle button */}
+                        <IconButton
+                            data-testid="barcode-scanner-toggle-torch-button"
+                            title={locale.buttons.toggleTorch}
+                            onClick={handleTorchToggle}
+                            disabled={hasError}
+                            sx={{
+                                color: theme => theme.palette.grey[500],
+                            }}
+                        >
+                            {isTorchOn ? <FlashlightOn /> : <FlashlightOff />}
+                        </IconButton>
                         {/* beep toggle button */}
                         <IconButton
                             data-testid="barcode-scanner-toggle-beep-button"
@@ -296,8 +325,8 @@ const BarcodeScanner = ({ onScan, formats }) => {
                             formats={formats}
                             sound={isBeepSoundEnabled}
                             components={{
-                                torch: true,
                                 finder: true,
+                                torch: false, // flaky, implemented above
                                 zoom: false,
                                 onOff: false,
                                 tracker: barcodeTracker,

@@ -135,16 +135,60 @@ describe('BarcodeScanner', () => {
         );
     });
 
+    it('should allow toggling torch', async () => {
+        const { queryByTestId } = setup();
+        await openScanner();
+
+        // mock after scanner is open and mounted
+        const mockVideo = document.createElement('video');
+        Object.defineProperty(mockVideo, 'srcObject', {
+            value: {
+                getVideoTracks: jest.fn().mockReturnValue([
+                    {
+                        getCapabilities: jest.fn().mockReturnValue({ torch: true }),
+                        applyConstraints: jest.fn().mockResolvedValue(),
+                    },
+                ]),
+            },
+        });
+        jest.spyOn(document, 'querySelectorAll').mockReturnValue([mockVideo]);
+
+        await waitFor(() => {
+            expect(queryByTestId('FlashlightOnIcon')).not.toBeInTheDocument();
+            expect(queryByTestId('FlashlightOffIcon')).toBeInTheDocument();
+        });
+
+        await userEvent.click(screen.getByTestId('barcode-scanner-toggle-torch-button'));
+        await waitFor(() => {
+            expect(queryByTestId('FlashlightOnIcon')).toBeInTheDocument();
+            expect(queryByTestId('FlashlightOffIcon')).not.toBeInTheDocument();
+        });
+    });
+
     it('should allow toggling scanner beep', async () => {
         Cookies.get.mockReturnValue('true');
 
-        setup();
+        const { queryByTestId } = setup();
         expect(Cookies.set).not.toHaveBeenCalled();
-
         await openScanner();
-        await userEvent.click(screen.getByTestId('barcode-scanner-toggle-beep-button'));
+        await waitFor(() => {
+            expect(queryByTestId('VolumeUpIcon')).toBeInTheDocument();
+            expect(queryByTestId('VolumeOffIcon')).not.toBeInTheDocument();
+        });
 
-        expect(Cookies.set).toHaveBeenCalledWith(BARCODE_SCANNER_SOUND_PREF_COOKIE, false);
+        await userEvent.click(screen.getByTestId('barcode-scanner-toggle-beep-button'));
+        await waitFor(() => {
+            expect(queryByTestId('VolumeUpIcon')).not.toBeInTheDocument();
+            expect(queryByTestId('VolumeOffIcon')).toBeInTheDocument();
+            expect(Cookies.set).toHaveBeenCalledWith(BARCODE_SCANNER_SOUND_PREF_COOKIE, false);
+        });
+
+        await userEvent.click(screen.getByTestId('barcode-scanner-toggle-beep-button'));
+        await waitFor(() => {
+            expect(queryByTestId('VolumeUpIcon')).toBeInTheDocument();
+            expect(queryByTestId('VolumeOffIcon')).not.toBeInTheDocument();
+            expect(Cookies.set).toHaveBeenCalledWith(BARCODE_SCANNER_SOUND_PREF_COOKIE, true);
+        });
     });
 
     describe('behaviour', () => {
