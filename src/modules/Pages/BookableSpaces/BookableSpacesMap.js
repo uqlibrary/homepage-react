@@ -243,7 +243,7 @@ const BookableSpacesMap = React.forwardRef(
                         markerEl.dataset.baseZindex = '';
                     }
                     markerEl.addEventListener('click', e => {
-                        const targetZLevel = mapPoint?.space_zlevel != null ? parseFloat(mapPoint.space_zlevel) : null;
+                        const targetZLevel = mapPoint?.space_zlevel !== null ? parseFloat(mapPoint.space_zlevel) : null;
                         if (targetZLevel !== null) {
                             mazeMapInstanceRef.current?.stop();
                             mazeMapInstanceRef.current?.setZLevel(targetZLevel);

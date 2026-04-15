@@ -87,15 +87,12 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
     },
 }));
 const StyledSidebarDiv = styled('div')(() => ({
-    position: 'sticky',
-    top: 0,
+    position: 'relative',
     height: '100%',
     overflowY: 'auto',
-    left: 0,
 
-    paddingTop: '3.5rem',
+    paddingTop: '0.5rem',
     paddingRight: 0,
-    marginBlock: '1em',
     marginRight: 0,
     marginLeft: 0,
     flexBasis: '10%',
@@ -253,6 +250,7 @@ export const SidebarFilters = ({
     capacityFilterValue,
     setCapacityFilterValue,
     campusList,
+    activeFilterCount,
 }) => {
     console.log(
         'TOP SidebarFilters facilityTypeList=',
@@ -724,7 +722,7 @@ export const SidebarFilters = ({
     }
 
     return (
-        <StyledSidebarDiv id="StyledSidebarDivTemp" className={suppliedClassName}>
+        <StyledSidebarDiv id="StyledSidebarDivTemp" className={`filterSideBar ${suppliedClassName}`}>
             <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
                 <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
                     Skip to list of Spaces
@@ -734,8 +732,8 @@ export const SidebarFilters = ({
                 </Typography>
                 {!!hasActiveFilters && (
                     <>
-                        <Typography component={'h3'} variant={'h6'}>
-                            Active filters
+                        <Typography component={'h3'} variant={'h6'} data-testid="space-filter-count">
+                            Active filters <span>{activeFilterCount}</span>
                         </Typography>
                         <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
                             {showCartoucheList(flatFacilityTypeList)}
@@ -845,6 +843,7 @@ SidebarFilters.propTypes = {
     setCapacityFilterValue: PropTypes.func,
     campusList: PropTypes.any,
     suppliedClassName: PropTypes.string,
+    activeFilterCount: PropTypes.number,
 };
 
 export default React.memo(SidebarFilters);
