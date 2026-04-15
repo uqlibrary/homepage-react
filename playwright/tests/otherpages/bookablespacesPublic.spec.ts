@@ -17,6 +17,9 @@ const NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST = 2; // 1 for skip button, 1 for accce
 const VISIBLE_SPACES_ST_LUCIA_ALL = 10;
 
 test.describe('Spaces', () => {
+    test.beforeEach(async ({ context }) => {
+        await context.clearCookies();
+    });
     test('can navigate to Spaces public page', async ({ page }) => {
         await page.goto('/?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
