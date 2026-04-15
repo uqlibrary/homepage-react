@@ -125,6 +125,7 @@ const BarcodeScanner = ({ onScan, formats }) => {
     const hasDevices = !!devices?.length;
     const [hasError, setHasError] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
+    const isScanningRef = useRef(false);
     const [isTorchOn, setIsTorchOn] = useState(false);
     const [isBeepSoundEnabled, setIsBeepSoundEnabled] = useState(
         Cookies.get(BARCODE_SCANNER_SOUND_PREF_COOKIE) !== 'false',
@@ -139,11 +140,13 @@ const BarcodeScanner = ({ onScan, formats }) => {
         document.body.style.setProperty('overflow', /* istanbul ignore next */ bodyOverflowStyleRef.current || '');
 
     const openScanner = () => {
+        isScanningRef.current = true;
         setIsScanning(true);
     };
 
     const closeScanner = () => {
         resumeBodyScroll();
+        isScanningRef.current = false;
         setIsScanning(false);
     };
 
@@ -191,9 +194,10 @@ const BarcodeScanner = ({ onScan, formats }) => {
 
     // handle app events
     useEffect(() => {
-        const handleVisibilityChange = () => setIsScanning(document.visibilityState === 'visible');
+        const handleVisibilityChange = () =>
+            setIsScanning(isScanningRef.current && document.visibilityState === 'visible');
         const handleBlur = () => setIsScanning(false);
-        const handleFocus = () => setIsScanning(true);
+        const handleFocus = () => isScanningRef.current && setIsScanning(true);
         // handles disable/enable scanner according to app's visibility events
         document.addEventListener('visibilitychange', handleVisibilityChange);
         window.addEventListener('blur', handleBlur);
