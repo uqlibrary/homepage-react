@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { CircularProgress, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
@@ -34,29 +35,25 @@ const StyledMapWrapperDiv = styled('div')(() => ({
 
 const StyledNavigationPanel = styled('div')(() => ({
     position: 'absolute',
-    right: '1rem',
     bottom: '1rem',
-    width: 'min(26rem, calc(100% - 2rem))',
-    maxHeight: 'min(36rem, calc(100% - 2rem))',
-    backgroundColor: 'rgba(255, 255, 255, 0.96)',
-    borderRadius: '12px',
-    boxShadow: '0 10px 28px rgba(0, 0, 0, 0.2)',
-    padding: '1rem 0 0',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: 'min(21.5rem, calc(100% - 2rem))',
+    backgroundColor: 'rgba(255, 255, 255, 0.98)',
+    borderRadius: '14px',
+    boxShadow: '0 18px 40px rgba(25, 42, 70, 0.22)',
+    padding: '1.25rem',
     zIndex: 20,
     overflow: 'hidden',
     '& .navigation-panel-close': {
         position: 'absolute',
-        top: '0.5rem',
-        right: '0.5rem',
+        top: '0.4rem',
+        right: '0.4rem',
         zIndex: 1,
     },
     '& .navigation-panel-scroll': {
-        maxHeight: 'calc(min(36rem, calc(100% - 2rem)) - 4.25rem)',
-        overflowY: 'auto',
-        padding: '0 0 0.5rem',
-    },
-    '& .mazemap-gui-route-details-container': {
-        paddingRight: '0.25rem',
+        overflow: 'visible',
+        padding: 0,
     },
     '& .navigation-loading, & .navigation-error': {
         alignItems: 'center',
@@ -72,102 +69,127 @@ const StyledNavigationPanel = styled('div')(() => ({
         color: '#6b2f2f',
         lineHeight: 1.5,
     },
-    '& .navigation-route-title': {
-        color: '#424445',
-        display: 'block',
-        fontSize: '14px',
-        fontWeight: 600,
-        marginLeft: '47px',
-        marginRight: '20px',
-        marginTop: 0,
-        overflowX: 'hidden',
-        padding: 0,
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-    },
-    '& .navigation-route-detail': {
-        color: '#676464',
-        display: 'block',
+    '& .navigation-card': {
+        color: '#1f2f4d',
         fontFamily: 'Open Sans, Geneva, Helvetica, Arial, sans-serif',
-        fontSize: '13px',
-        fontWeight: 400,
-        lineHeight: 1.4,
-        marginLeft: '47px',
-        marginRight: '20px',
-        whiteSpace: 'pre-wrap',
     },
-    '& .navigation-step-button': {
-        appearance: 'none',
-        background: 'transparent',
-        border: 0,
-        color: 'inherit',
-        cursor: 'pointer',
-        display: 'block',
-        font: 'inherit',
-        margin: 0,
-        padding: 0,
-        textAlign: 'left',
-        width: '100%',
+    '& .navigation-card-title': {
+        fontSize: '1.9rem',
+        fontWeight: 700,
+        lineHeight: 1.1,
+        margin: '0 2.5rem 1rem 0',
     },
-    '& .navigation-step-distance': {
-        color: '#676464',
-        display: 'block',
-        fontSize: '12px',
-        marginLeft: '16px',
-        marginTop: '0.35rem',
+    '& .navigation-metrics': {
+        display: 'grid',
+        gap: '0.7rem',
+        marginBottom: '1.1rem',
     },
-    '& .navigation-step-meta': {
-        color: '#676464',
-        display: 'block',
-        fontSize: '12px',
-        marginLeft: '16px',
-        marginTop: '0.35rem',
-    },
-    '& .steps-list li.navigation-active-step': {
-        backgroundColor: '#f4f8fd',
-        borderRadius: '10px',
-    },
-    '& .steps-list li.navigation-active-step .item-inner-spacing': {
-        color: '#0d4c8b',
-        fontWeight: 600,
-    },
-    '& .navigation-step-toolbar': {
-        alignItems: 'center',
+    '& .navigation-metric-row': {
+        alignItems: 'baseline',
         display: 'flex',
         justifyContent: 'space-between',
-        margin: '0 25px 8px 52px',
+        gap: '0.75rem',
     },
-    '& .navigation-step-toolbar-copy': {
-        color: '#595959',
-        fontFamily: 'Open Sans, Geneva, Helvetica, Arial, sans-serif',
-        fontSize: '13px',
-        lineHeight: 1.4,
-        marginRight: '0.75rem',
+    '& .navigation-metric-label': {
+        color: '#24324c',
+        fontSize: '1rem',
+        fontWeight: 700,
     },
-    '& .navigation-step-toolbar-buttons': {
+    '& .navigation-metric-value': {
+        color: '#24324c',
+        fontSize: '0.95rem',
+        fontWeight: 400,
+        textAlign: 'right',
+    },
+    '& .navigation-active-step-card': {
+        alignItems: 'center',
+        display: 'flex',
+        gap: '0.85rem',
+        backgroundColor: '#dfe8f6',
+        borderRadius: '12px',
+        marginBottom: '1rem',
+        padding: '0.9rem 1rem',
+    },
+    '& .navigation-active-step-icon': {
+        alignItems: 'center',
+        color: '#1d2f4b',
         display: 'flex',
         flexShrink: 0,
-        gap: '0.25rem',
+        justifyContent: 'center',
+        transition: 'transform 120ms ease',
     },
-    '& .navigation-step-list': {
-        maxHeight: '14rem',
-        overflowY: 'auto',
-        paddingRight: '0.35rem',
+    '& .navigation-active-step-copy': {
+        minWidth: 0,
+    },
+    '& .navigation-active-step-title': {
+        color: '#1d2f4b',
+        fontSize: '1.05rem',
+        fontWeight: 700,
+        lineHeight: 1.2,
+        marginBottom: '0.25rem',
+    },
+    '& .navigation-active-step-subtitle': {
+        color: '#4d6285',
+        fontSize: '0.95rem',
+        lineHeight: 1.35,
+    },
+    '& .navigation-live-status': {
+        color: '#6b2f2f',
+        fontSize: '0.8rem',
+        lineHeight: 1.4,
+        marginBottom: '0.85rem',
+    },
+    '& .navigation-orientation-status': {
+        color: '#4d6285',
+        fontSize: '0.8rem',
+        lineHeight: 1.4,
+        marginBottom: '0.85rem',
+    },
+    '& .navigation-orientation-button': {
+        backgroundColor: '#edf3fb',
+        color: '#1d2f4b',
+        marginBottom: '0.85rem',
+        width: '100%',
+    },
+    '& .navigation-controls': {
+        display: 'grid',
+        gap: '0.75rem',
+        gridTemplateColumns: '1fr 1fr',
+    },
+    '& .navigation-control-button': {
+        alignItems: 'center',
+        appearance: 'none',
+        border: 0,
+        borderRadius: '8px',
+        cursor: 'pointer',
+        display: 'inline-flex',
+        fontFamily: 'Open Sans, Geneva, Helvetica, Arial, sans-serif',
+        fontSize: '1rem',
+        fontWeight: 700,
+        gap: '0.2rem',
+        justifyContent: 'center',
+        minHeight: '2.7rem',
+        padding: '0.75rem 1rem',
+        transition: 'background-color 120ms ease, color 120ms ease, opacity 120ms ease',
+    },
+    '& .navigation-control-button-prev': {
+        backgroundColor: '#d7dce6',
+        color: '#7e8aa0',
+    },
+    '& .navigation-control-button-next': {
+        backgroundColor: '#2f72ea',
+        color: '#ffffff',
+    },
+    '& .navigation-control-button:disabled': {
+        cursor: 'default',
+        opacity: 0.65,
     },
     '@media (max-width: 600px)': {
         left: '1rem',
-        right: '1rem',
+        transform: 'none',
         width: 'auto',
     },
 }));
-
-const waypointStartIcon = `data:image/svg+xml;utf8,${encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="6" fill="#4b9cf5"/><circle cx="10" cy="10" r="2.5" fill="#ffffff"/></svg>',
-)}`;
-
-const waypointEndIcon = `data:image/svg+xml;utf8,${encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M10 1.75c-3.18 0-5.75 2.57-5.75 5.75 0 4.47 5.75 10.75 5.75 10.75s5.75-6.28 5.75-10.75c0-3.18-2.57-5.75-5.75-5.75Z" fill="#d64242"/><circle cx="10" cy="7.5" r="2.35" fill="#ffffff"/></svg>',
-)}`;
 
 const formatDistance = distanceMeters => {
     if (!Number.isFinite(distanceMeters)) {
@@ -181,28 +203,314 @@ const formatDistance = distanceMeters => {
     return `${Math.round(distanceMeters)} m`;
 };
 
-const formatDuration = durationMinutes => {
+const supportsDeviceOrientation = () =>
+    typeof window !== 'undefined' && typeof window.DeviceOrientationEvent !== 'undefined';
+
+const normalizeAngle = angle => {
+    if (!Number.isFinite(Number(angle))) {
+        return null;
+    }
+
+    const normalizedAngle = Number(angle) % 360;
+
+    return normalizedAngle < 0 ? normalizedAngle + 360 : normalizedAngle;
+};
+
+const getShortestAngleDelta = (fromAngle, toAngle) => {
+    if (!Number.isFinite(Number(fromAngle)) || !Number.isFinite(Number(toAngle))) {
+        return 0;
+    }
+
+    return ((toAngle - fromAngle + 540) % 360) - 180;
+};
+
+const smoothAngle = (currentAngle, targetAngle, factor = 0.22) => {
+    if (!Number.isFinite(Number(targetAngle))) {
+        return null;
+    }
+
+    if (!Number.isFinite(Number(currentAngle))) {
+        return normalizeAngle(targetAngle);
+    }
+
+    return normalizeAngle(currentAngle + getShortestAngleDelta(currentAngle, targetAngle) * factor);
+};
+
+const getScreenOrientationAngle = () => {
+    if (typeof window === 'undefined') {
+        return 0;
+    }
+
+    if (Number.isFinite(Number(window?.screen?.orientation?.angle))) {
+        return Number(window.screen.orientation.angle);
+    }
+
+    if (Number.isFinite(Number(window.orientation))) {
+        return Number(window.orientation);
+    }
+
+    return 0;
+};
+
+const getDeviceHeading = event => {
+    if (Number.isFinite(Number(event?.webkitCompassHeading))) {
+        return normalizeAngle(Number(event.webkitCompassHeading));
+    }
+
+    if (!Number.isFinite(Number(event?.alpha))) {
+        return null;
+    }
+
+    return normalizeAngle(360 - Number(event.alpha) + getScreenOrientationAngle());
+};
+
+const setMapBearing = (mapInstance, bearing) => {
+    const normalizedBearing = normalizeAngle(bearing);
+
+    if (!mapInstance || !Number.isFinite(normalizedBearing)) {
+        return;
+    }
+
+    if (typeof mapInstance.setBearing === 'function') {
+        mapInstance.setBearing(normalizedBearing);
+        return;
+    }
+
+    if (typeof mapInstance.rotateTo === 'function') {
+        mapInstance.rotateTo(normalizedBearing, { duration: 0 });
+    }
+};
+
+const formatStepDistanceLabel = distanceMeters => {
+    const formattedDistance = formatDistance(distanceMeters);
+
+    return formattedDistance ? ` ${formattedDistance}` : '';
+};
+
+const formatDurationDetailed = durationMinutes => {
     if (!Number.isFinite(durationMinutes) || durationMinutes <= 0) {
         return null;
     }
 
-    if (durationMinutes >= 60) {
-        const hours = Math.floor(durationMinutes / 60);
-        const minutes = Math.round(durationMinutes % 60);
-        return minutes > 0 ? `${hours} hr ${minutes} min` : `${hours} hr`;
+    const totalSeconds = Math.max(1, Math.round(durationMinutes * 60));
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+        return `${hours} hr ${minutes} min`;
     }
 
-    return `${Math.max(1, Math.round(durationMinutes))} min`;
+    if (minutes > 0 && seconds > 0) {
+        return `${minutes} min ${seconds} s`;
+    }
+
+    if (minutes > 0) {
+        return `${minutes} min`;
+    }
+
+    return `${seconds} s`;
 };
 
-const formatFloorLabel = zLevel => {
-    const numericZLevel = Number(zLevel);
+const getNormalizedStepTurnType = ({ maneuverType, maneuverModifier, instruction }) => {
+    const normalizedManeuverType = `${maneuverType || ''}`.toLowerCase();
+    const normalizedManeuverModifier = `${maneuverModifier || ''}`.toLowerCase();
+    const normalizedInstruction = `${instruction || ''}`.toLowerCase();
 
-    if (!Number.isFinite(numericZLevel)) {
+    if (normalizedManeuverType === 'turn' && normalizedManeuverModifier) {
+        return normalizedManeuverModifier;
+    }
+
+    if (normalizedManeuverType && normalizedManeuverModifier) {
+        return `${normalizedManeuverType}_${normalizedManeuverModifier}`;
+    }
+
+    if (normalizedManeuverType) {
+        return normalizedManeuverType;
+    }
+
+    if (normalizedInstruction.includes('u-turn') || normalizedInstruction.includes('uturn')) {
+        return 'uturn';
+    }
+
+    if (normalizedInstruction.includes('sharp right')) {
+        return 'sharp_right';
+    }
+
+    if (normalizedInstruction.includes('slight right') || normalizedInstruction.includes('bear right')) {
+        return 'slight_right';
+    }
+
+    if (normalizedInstruction.includes('right')) {
+        return 'right';
+    }
+
+    if (normalizedInstruction.includes('sharp left')) {
+        return 'sharp_left';
+    }
+
+    if (normalizedInstruction.includes('slight left') || normalizedInstruction.includes('bear left')) {
+        return 'slight_left';
+    }
+
+    if (normalizedInstruction.includes('left')) {
+        return 'left';
+    }
+
+    if (
+        normalizedInstruction.includes('straight') ||
+        normalizedInstruction.includes('forward') ||
+        normalizedInstruction.includes('continue')
+    ) {
+        return 'straight';
+    }
+
+    return '';
+};
+
+const buildStepInstruction = ({ maneuverType, maneuverModifier, distanceMeters, destinationName }) => {
+    const normalizedType = `${maneuverType || ''}`.toLowerCase();
+    const normalizedModifier = `${maneuverModifier || ''}`.toLowerCase();
+    const distanceLabel = formatStepDistanceLabel(distanceMeters);
+
+    if (normalizedType === 'turn') {
+        if (normalizedModifier === 'left') {
+            return `Turn left and walk${distanceLabel}`;
+        }
+
+        if (normalizedModifier === 'right') {
+            return `Turn right and walk${distanceLabel}`;
+        }
+
+        if (normalizedModifier === 'slight_left') {
+            return `Turn slightly left and walk${distanceLabel}`;
+        }
+
+        if (normalizedModifier === 'slight_right') {
+            return `Turn slightly right and walk${distanceLabel}`;
+        }
+
+        if (normalizedModifier === 'sharp_left') {
+            return `Turn sharply left and walk${distanceLabel}`;
+        }
+
+        if (normalizedModifier === 'sharp_right') {
+            return `Turn sharply right and walk${distanceLabel}`;
+        }
+
+        if (normalizedModifier === 'uturn') {
+            return `Make a U-turn and walk${distanceLabel}`;
+        }
+
+        return `Continue and walk${distanceLabel}`;
+    }
+
+    if (normalizedType === 'stairs_up') {
+        return 'Take the stairs up';
+    }
+
+    if (normalizedType === 'stairs_down') {
+        return 'Take the stairs down';
+    }
+
+    if (normalizedType === 'stairs_exit') {
+        return 'Exit the stairs';
+    }
+
+    if (normalizedType === 'towards_building') {
+        return `Head to ${destinationName || 'the building'}`;
+    }
+
+    if (normalizedType === 'enter_building') {
+        return `Enter ${destinationName || 'the building'}`;
+    }
+
+    if (normalizedType === 'arrive') {
+        return `Arrive at ${destinationName || 'your destination'}`;
+    }
+
+    return `Continue${distanceLabel ? ` for${distanceLabel}` : ''}`;
+};
+
+const getStepTurnRotation = maneuverType => {
+    const normalizedType = `${maneuverType || ''}`.toLowerCase();
+
+    if (!normalizedType || normalizedType.includes('straight') || normalizedType.includes('forward')) {
+        return '0deg';
+    }
+
+    if (normalizedType.includes('sharp_right')) {
+        return '125deg';
+    }
+
+    if (normalizedType.includes('slight_right') || normalizedType.includes('bear_right')) {
+        return '35deg';
+    }
+
+    if (normalizedType.includes('right')) {
+        return '90deg';
+    }
+
+    if (normalizedType.includes('uturn')) {
+        return '180deg';
+    }
+
+    if (normalizedType.includes('stairs_down')) {
+        return '180deg';
+    }
+
+    if (normalizedType.includes('stairs_up')) {
+        return '0deg';
+    }
+
+    if (normalizedType.includes('sharp_left')) {
+        return '-125deg';
+    }
+
+    if (normalizedType.includes('left')) {
+        return '-90deg';
+    }
+
+    if (normalizedType.includes('slight_left') || normalizedType.includes('bear_left')) {
+        return '-35deg';
+    }
+
+    return '0deg';
+};
+
+const getDisplayedTurnType = (currentStep, nextStep) => {
+    const currentTurnType = `${currentStep?.maneuverType || ''}`.toLowerCase();
+    const nextTurnType = `${nextStep?.maneuverType || ''}`.toLowerCase();
+    const currentIsStraight =
+        !currentTurnType || currentTurnType.includes('straight') || currentTurnType.includes('forward');
+    const nextIsTurn = !!nextTurnType && !nextTurnType.includes('straight') && !nextTurnType.includes('forward');
+
+    if (currentIsStraight && nextIsTurn) {
+        return nextTurnType;
+    }
+
+    return currentTurnType;
+};
+
+const lowercaseFirstCharacter = text => {
+    if (!text) {
+        return '';
+    }
+
+    return `${text.charAt(0).toLowerCase()}${text.slice(1)}`;
+};
+
+const getRemainingDistanceMeters = (steps, currentStepIndex) => {
+    if (!Array.isArray(steps) || !steps.length) {
         return null;
     }
 
-    return `Floor ${numericZLevel}`;
+    const remainingDistance = steps.slice(currentStepIndex).reduce((total, navigationStep) => {
+        const stepDistance = navigationStep?.step?.getDistanceMeters?.();
+        return Number.isFinite(stepDistance) ? total + stepDistance : total;
+    }, 0);
+
+    return remainingDistance > 0 ? remainingDistance : null;
 };
 
 const getGeolocationErrorMessage = error => {
@@ -253,6 +561,92 @@ const normalizeLngLat = lngLatLike => {
     }
 
     return null;
+};
+
+const getGeometryCoordinates = stepLike => {
+    const stepJson = stepLike?.asJson?.() || stepLike || {};
+    return stepJson?.geometry?.coordinates || [];
+};
+
+const getProjectedPoint = (point, referenceLatRadians) => {
+    const earthRadiusMeters = 6371000;
+    const lngRadians = (point.lng * Math.PI) / 180;
+    const latRadians = (point.lat * Math.PI) / 180;
+
+    return {
+        x: earthRadiusMeters * lngRadians * Math.cos(referenceLatRadians),
+        y: earthRadiusMeters * latRadians,
+    };
+};
+
+const getDistanceToSegmentMeters = (point, segmentStart, segmentEnd) => {
+    const referenceLatRadians = (((point.lat + segmentStart.lat + segmentEnd.lat) / 3) * Math.PI) / 180;
+    const pointProjected = getProjectedPoint(point, referenceLatRadians);
+    const startProjected = getProjectedPoint(segmentStart, referenceLatRadians);
+    const endProjected = getProjectedPoint(segmentEnd, referenceLatRadians);
+    const deltaX = endProjected.x - startProjected.x;
+    const deltaY = endProjected.y - startProjected.y;
+    const segmentLengthSquared = deltaX * deltaX + deltaY * deltaY;
+
+    if (segmentLengthSquared === 0) {
+        return Math.hypot(pointProjected.x - startProjected.x, pointProjected.y - startProjected.y);
+    }
+
+    const projection = Math.max(
+        0,
+        Math.min(
+            1,
+            ((pointProjected.x - startProjected.x) * deltaX + (pointProjected.y - startProjected.y) * deltaY) /
+                segmentLengthSquared,
+        ),
+    );
+
+    return Math.hypot(
+        pointProjected.x - (startProjected.x + projection * deltaX),
+        pointProjected.y - (startProjected.y + projection * deltaY),
+    );
+};
+
+const getDistanceToRouteMeters = (position, steps) => {
+    if (!position || !Array.isArray(steps) || !steps.length) {
+        return Number.POSITIVE_INFINITY;
+    }
+
+    let shortestDistance = Number.POSITIVE_INFINITY;
+
+    steps.forEach(navigationStep => {
+        const coordinates = getGeometryCoordinates(navigationStep?.step);
+
+        for (let index = 0; index < coordinates.length - 1; index += 1) {
+            const segmentStart = normalizeLngLat(coordinates[index]);
+            const segmentEnd = normalizeLngLat(coordinates[index + 1]);
+
+            if (!segmentStart || !segmentEnd) {
+                continue;
+            }
+
+            shortestDistance = Math.min(
+                shortestDistance,
+                getDistanceToSegmentMeters(position, segmentStart, segmentEnd),
+            );
+        }
+    });
+
+    return shortestDistance;
+};
+
+const getLiveRoutingOrigin = (position, zLevel) => {
+    if (!position) {
+        return null;
+    }
+
+    return {
+        lngLat: {
+            lng: Number(position.lng),
+            lat: Number(position.lat),
+        },
+        zLevel: Number.isFinite(Number(zLevel)) ? Number(zLevel) : 1,
+    };
 };
 
 const getLngLatZLevel = location => {
@@ -321,6 +715,17 @@ const BookableSpacesMap = React.forwardRef(
             position: null,
             error: '',
         });
+        const [orientationState, setOrientationState] = React.useState({
+            enabled: false,
+            supported: supportsDeviceOrientation(),
+            permission: 'idle',
+            error: '',
+        });
+        const [rerouteRequest, setRerouteRequest] = React.useState({
+            active: false,
+            origin: null,
+            reason: '',
+        });
         const mazeMapInstanceRef = useRef(null);
         const mazeMarkersRef = useRef(new Map());
         const selectedMarkerElRef = useRef(null);
@@ -330,6 +735,11 @@ const BookableSpacesMap = React.forwardRef(
         const stepListItemRefs = useRef([]);
         const geolocationWatchIdRef = useRef(null);
         const userLocationMarkerRef = useRef(null);
+        const orientationHeadingRef = useRef(null);
+        const rerouteAttemptRef = useRef({
+            lastAt: 0,
+            lastOrigin: null,
+        });
 
         const ZOOM_CAMPUS_MANY_BUILDINGS = 20;
         const ZOOM_CAMPUS_ONE_BUILDING = 17;
@@ -568,13 +978,18 @@ const BookableSpacesMap = React.forwardRef(
                     title: '',
                     error: '',
                 });
+                setRerouteRequest({
+                    active: false,
+                    origin: null,
+                    reason: '',
+                });
                 return;
             }
 
-            const start = getLngLatZLevel(navigationOrigin);
+            const activeOrigin = rerouteRequest.origin || getLngLatZLevel(navigationOrigin);
             const destination = getLngLatZLevel(navigationTarget);
 
-            if (!start || !destination) {
+            if (!activeOrigin || !destination) {
                 setNavigationState({
                     status: 'error',
                     steps: [],
@@ -615,12 +1030,12 @@ const BookableSpacesMap = React.forwardRef(
                     window.Mazemap?.Data?.getRouteTrip;
 
                 if (typeof threeArgRouteGetter === 'function') {
-                    return threeArgRouteGetter(start, destination, options);
+                    return threeArgRouteGetter(activeOrigin, destination, options);
                 }
 
                 const singleArgRouteGetter = window.Mazemap?.Data?.getAtoBTrip;
                 if (typeof singleArgRouteGetter === 'function') {
-                    return singleArgRouteGetter(buildLegacyRoutingParams(start, destination, options));
+                    return singleArgRouteGetter(buildLegacyRoutingParams(activeOrigin, destination, options));
                 }
 
                 throw new Error('MazeMap routing API is unavailable.');
@@ -635,16 +1050,34 @@ const BookableSpacesMap = React.forwardRef(
                     routeDrawerRef.current?.setAtoBTrip(trip);
 
                     const turnByTurnSteps = trip.getTurnByTurnSteps?.() || [];
-                    const instructionSteps = trip.getInstructionsSteps?.() || [];
-                    const steps = turnByTurnSteps.map((step, index) => ({
-                        step,
-                        instruction:
-                            step?.asJson?.()?.instruction ||
-                            instructionSteps?.[index]?.instruction ||
-                            instructionSteps?.[index]?.text ||
-                            step?.maneuver?.type?.replaceAll('_', ' ') ||
-                            `Step ${index + 1}`,
-                    }));
+                    const steps = turnByTurnSteps.map((step, index) => {
+                        const stepJson = step?.asJson?.() || {};
+                        const maneuverTypeRaw = step?.maneuver?.type || stepJson?.maneuver?.type;
+                        const maneuverModifierRaw = step?.maneuver?.modifier || stepJson?.maneuver?.modifier;
+                        const stepDistanceMeters =
+                            step?.getDistanceMeters?.() ?? stepJson?.distance ?? step?.distance ?? null;
+                        const instruction =
+                            stepJson?.instruction ||
+                            buildStepInstruction({
+                                maneuverType: maneuverTypeRaw,
+                                maneuverModifier: maneuverModifierRaw,
+                                distanceMeters: stepDistanceMeters,
+                                destinationName: navigationTarget?.space_name,
+                            }) ||
+                            maneuverTypeRaw?.replaceAll('_', ' ') ||
+                            `Step ${index + 1}`;
+                        const maneuverType = getNormalizedStepTurnType({
+                            maneuverType: maneuverTypeRaw,
+                            maneuverModifier: maneuverModifierRaw,
+                            instruction,
+                        });
+
+                        return {
+                            step,
+                            instruction,
+                            maneuverType,
+                        };
+                    });
 
                     setNavigationState({
                         status: 'ready',
@@ -655,6 +1088,14 @@ const BookableSpacesMap = React.forwardRef(
                         title: navigationTarget?.space_name || '',
                         error: '',
                     });
+
+                    if (rerouteRequest.active) {
+                        setRerouteRequest({
+                            active: false,
+                            origin: rerouteRequest.origin,
+                            reason: '',
+                        });
+                    }
 
                     const firstStep = steps[0]?.step;
                     if (firstStep) {
@@ -681,8 +1122,15 @@ const BookableSpacesMap = React.forwardRef(
                         title: navigationTarget?.space_name || 'Route unavailable',
                         error: error?.message || 'Unable to load navigation steps for this space.',
                     });
+
+                    if (rerouteRequest.active) {
+                        setRerouteRequest(current => ({
+                            ...current,
+                            active: false,
+                        }));
+                    }
                 });
-        }, [isMazeMapReady, navigationOrigin, navigationTarget]);
+        }, [isMazeMapReady, navigationOrigin, navigationTarget, rerouteRequest]);
 
         React.useEffect(() => {
             const clearGeolocationWatch = () => {
@@ -776,6 +1224,53 @@ const BookableSpacesMap = React.forwardRef(
         }, [isMazeMapReady, liveNavigationState.position]);
 
         React.useEffect(() => {
+            if (!isMazeMapReady || !mazeMapInstanceRef.current || !orientationState.enabled) {
+                return undefined;
+            }
+
+            const handleDeviceOrientation = event => {
+                const nextHeading = getDeviceHeading(event);
+
+                if (!Number.isFinite(nextHeading)) {
+                    return;
+                }
+
+                const smoothedHeading = smoothAngle(orientationHeadingRef.current, nextHeading);
+
+                if (!Number.isFinite(smoothedHeading)) {
+                    return;
+                }
+
+                const previousHeading = orientationHeadingRef.current;
+                orientationHeadingRef.current = smoothedHeading;
+
+                if (
+                    Number.isFinite(previousHeading) &&
+                    Math.abs(getShortestAngleDelta(previousHeading, smoothedHeading)) < 2
+                ) {
+                    return;
+                }
+
+                setMapBearing(mazeMapInstanceRef.current, smoothedHeading);
+            };
+
+            window.addEventListener('deviceorientation', handleDeviceOrientation, true);
+
+            return () => {
+                window.removeEventListener('deviceorientation', handleDeviceOrientation, true);
+            };
+        }, [isMazeMapReady, orientationState.enabled]);
+
+        React.useEffect(() => {
+            if (!isMazeMapReady || !mazeMapInstanceRef.current || orientationState.enabled) {
+                return;
+            }
+
+            orientationHeadingRef.current = null;
+            setMapBearing(mazeMapInstanceRef.current, 0);
+        }, [isMazeMapReady, orientationState.enabled]);
+
+        React.useEffect(() => {
             if (navigationState.status !== 'ready' || !liveNavigationState.position || !navigationState.steps.length) {
                 return;
             }
@@ -808,37 +1303,169 @@ const BookableSpacesMap = React.forwardRef(
         ]);
 
         React.useEffect(() => {
+            if (
+                navigationState.status !== 'ready' ||
+                !liveNavigationState.position ||
+                !navigationTarget ||
+                rerouteRequest.active
+            ) {
+                return;
+            }
+
+            const distanceFromRouteMeters = getDistanceToRouteMeters(
+                liveNavigationState.position,
+                navigationState.steps,
+            );
+
+            if (!Number.isFinite(distanceFromRouteMeters) || distanceFromRouteMeters <= 10) {
+                return;
+            }
+
+            const now = Date.now();
+            const lastAttemptAt = rerouteAttemptRef.current.lastAt || 0;
+            const lastAttemptOrigin = rerouteAttemptRef.current.lastOrigin;
+            const recentlyRetried = now - lastAttemptAt < 8000;
+            const sameOriginRetry =
+                lastAttemptOrigin && haversineDistanceMeters(lastAttemptOrigin, liveNavigationState.position) < 3;
+
+            if (recentlyRetried && sameOriginRetry) {
+                return;
+            }
+
+            const fallbackZLevel =
+                navigationState.steps[navigationState.currentStepIndex]?.step?.zLevel ??
+                mazeMapInstanceRef.current?.getZLevel?.() ??
+                navigationTarget?.space_zlevel ??
+                navigationOrigin?.space_zlevel;
+            const nextOrigin = getLiveRoutingOrigin(liveNavigationState.position, fallbackZLevel);
+
+            if (!nextOrigin) {
+                return;
+            }
+
+            rerouteAttemptRef.current = {
+                lastAt: now,
+                lastOrigin: liveNavigationState.position,
+            };
+
+            setRerouteRequest({
+                active: true,
+                origin: nextOrigin,
+                reason: 'You moved away from the route. Recalculating from your location.',
+            });
+        }, [
+            liveNavigationState.position,
+            navigationOrigin?.space_zlevel,
+            navigationState.currentStepIndex,
+            navigationState.status,
+            navigationState.steps,
+            navigationTarget,
+            rerouteRequest.active,
+        ]);
+
+        React.useEffect(() => {
             return () => {
                 userLocationMarkerRef.current?.remove();
                 userLocationMarkerRef.current = null;
             };
         }, []);
 
-        const startDetail = ['Campus map centre', formatFloorLabel(navigationOrigin?.space_zlevel)]
-            .filter(Boolean)
-            .join(', ');
-        const destinationDetail = [
-            navigationTarget?.space_library_name,
-            formatFloorLabel(navigationTarget?.space_zlevel),
-        ]
-            .filter(Boolean)
-            .join(', ');
-        const routeOverviewCopy = [
-            formatDistance(navigationState.totalDistanceMeters),
-            formatDuration(navigationState.totalDurationMinutes),
-        ]
-            .filter(Boolean)
-            .join(' · ');
-        const currentStepSummary = navigationState.steps.length
-            ? `Step ${navigationState.currentStepIndex + 1} of ${navigationState.steps.length}`
-            : 'Route overview';
-        const currentStepDistance = formatDistance(
-            navigationState.steps[navigationState.currentStepIndex]?.step?.getDistanceMeters?.(),
-        );
-        const liveTrackingCopy =
-            liveNavigationState.status === 'watching'
-                ? 'Live tracking on'
-                : liveNavigationState.error || 'Live tracking unavailable';
+        const currentNavigationStep = navigationState.steps[navigationState.currentStepIndex];
+        const nextNavigationStep = navigationState.steps[navigationState.currentStepIndex + 1];
+        const currentStepDistance = formatDistance(currentNavigationStep?.step?.getDistanceMeters?.());
+        const nextStepDistance = formatDistance(nextNavigationStep?.step?.getDistanceMeters?.());
+        const remainingDistanceMeters =
+            getRemainingDistanceMeters(navigationState.steps, navigationState.currentStepIndex) ||
+            navigationState.totalDistanceMeters;
+        const hasRouteTotals =
+            Number.isFinite(navigationState.totalDurationMinutes) &&
+            Number.isFinite(navigationState.totalDistanceMeters) &&
+            navigationState.totalDistanceMeters > 0 &&
+            Number.isFinite(remainingDistanceMeters);
+        const remainingDurationMinutes = hasRouteTotals
+            ? (navigationState.totalDurationMinutes * remainingDistanceMeters) / navigationState.totalDistanceMeters
+            : navigationState.totalDurationMinutes;
+        const stepTitle = currentNavigationStep?.instruction || 'Continue';
+        const displayedTurnType = getDisplayedTurnType(currentNavigationStep, nextNavigationStep);
+        const stepTurnRotation = getStepTurnRotation(displayedTurnType);
+        let stepSubtitle = `Continue to ${navigationState.title}`;
+
+        if (nextNavigationStep?.instruction) {
+            stepSubtitle = `Then ${lowercaseFirstCharacter(nextNavigationStep.instruction)}${
+                nextStepDistance ? ` in ${nextStepDistance}` : ''
+            }`;
+        } else if (currentStepDistance) {
+            stepSubtitle = `Continue for ${currentStepDistance}`;
+        }
+
+        const liveTrackingError =
+            rerouteRequest.reason || (liveNavigationState.status !== 'watching' ? liveNavigationState.error : '');
+        const orientationStatusMessage = orientationState.enabled
+            ? 'Compass rotation is on. The map follows your phone orientation.'
+            : orientationState.error;
+
+        const toggleCompassRotation = React.useCallback(async () => {
+            if (orientationState.enabled) {
+                setOrientationState(current => ({
+                    ...current,
+                    enabled: false,
+                    error: '',
+                }));
+                return;
+            }
+
+            if (!supportsDeviceOrientation()) {
+                setOrientationState(current => ({
+                    ...current,
+                    supported: false,
+                    error: 'Compass rotation is not supported on this device.',
+                }));
+                return;
+            }
+
+            try {
+                const requestPermission = window.DeviceOrientationEvent?.requestPermission;
+
+                if (typeof requestPermission === 'function') {
+                    const permissionResult = await requestPermission();
+
+                    if (permissionResult !== 'granted') {
+                        setOrientationState(current => ({
+                            ...current,
+                            supported: true,
+                            enabled: false,
+                            permission: permissionResult,
+                            error: 'Compass permission was denied.',
+                        }));
+                        return;
+                    }
+
+                    setOrientationState(current => ({
+                        ...current,
+                        supported: true,
+                        enabled: true,
+                        permission: permissionResult,
+                        error: '',
+                    }));
+                    return;
+                }
+
+                setOrientationState(current => ({
+                    ...current,
+                    supported: true,
+                    enabled: true,
+                    permission: 'granted',
+                    error: '',
+                }));
+            } catch (error) {
+                setOrientationState(current => ({
+                    ...current,
+                    supported: true,
+                    enabled: false,
+                    error: error?.message || 'Compass rotation could not be enabled.',
+                }));
+            }
+        }, [orientationState.enabled]);
 
         const showNavigationStep = React.useCallback(
             nextIndex => {
@@ -900,129 +1527,76 @@ const BookableSpacesMap = React.forwardRef(
                             )}
 
                             {navigationState.status === 'ready' && (
-                                <div className="mazemap-gui-route-details-container">
-                                    <div className="mazemap-gui-route-waypoints">
-                                        <div className="waypoint-item">
-                                            <img className="waypoint-icon" src={waypointStartIcon} alt="Start" />
-                                            <h2 className="waypoint-title navigation-route-title">From</h2>
-                                            <span className="waypoint-detail navigation-route-detail">
-                                                {startDetail}
+                                <div className="navigation-card">
+                                    <div className="navigation-card-title">On Route</div>
+
+                                    <div className="navigation-metrics">
+                                        <div className="navigation-metric-row">
+                                            <span className="navigation-metric-label">Distance Remaining:</span>
+                                            <span className="navigation-metric-value">
+                                                {formatDistance(remainingDistanceMeters) || 'Unavailable'}
                                             </span>
                                         </div>
-                                        <div className="waypoint-item">
-                                            <img className="waypoint-icon" src={waypointEndIcon} alt="Destination" />
-                                            <h2 className="waypoint-title navigation-route-title">
-                                                To {navigationState.title}
-                                            </h2>
-                                            <span className="waypoint-detail navigation-route-detail">
-                                                {destinationDetail || 'Selected bookable space'}
+                                        <div className="navigation-metric-row">
+                                            <span className="navigation-metric-label">Time Remaining:</span>
+                                            <span className="navigation-metric-value">
+                                                {formatDurationDetailed(remainingDurationMinutes) || 'Unavailable'}
                                             </span>
                                         </div>
                                     </div>
 
-                                    <hr />
-
-                                    <div className="mazemap-gui-route-meta-container">
-                                        <div className="route-metric-info">
-                                            <div>
-                                                <span className="metric-data">
-                                                    {formatDistance(navigationState.totalDistanceMeters) ||
-                                                        'Distance unavailable'}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <span className="metric-data">
-                                                    {formatDuration(navigationState.totalDurationMinutes) ||
-                                                        'Time unavailable'}
-                                                </span>
-                                            </div>
+                                    <div className="navigation-active-step-card">
+                                        <div
+                                            className="navigation-active-step-icon"
+                                            aria-hidden="true"
+                                            style={{ transform: `rotate(${stepTurnRotation})` }}
+                                        >
+                                            <ArrowUpwardIcon fontSize="large" />
                                         </div>
-                                        <div className="route-steps-num">
-                                            Walking route from the campus map centre
-                                            {routeOverviewCopy ? ` · ${routeOverviewCopy}` : ''}
+                                        <div className="navigation-active-step-copy">
+                                            <div className="navigation-active-step-title">{stepTitle}</div>
+                                            <div className="navigation-active-step-subtitle">{stepSubtitle}</div>
                                         </div>
                                     </div>
 
-                                    <hr />
+                                    {liveTrackingError && (
+                                        <div className="navigation-live-status">{liveTrackingError}</div>
+                                    )}
 
-                                    <div className="mazemap-route-description-container">
-                                        <h2 id="route-details-steps-header">Detailed instructions</h2>
-                                        <div className="navigation-step-toolbar">
-                                            <div className="navigation-step-toolbar-copy">
-                                                <strong>{currentStepSummary}</strong>
-                                                {currentStepDistance ? ` · ${currentStepDistance}` : ''}
-                                                <br />
-                                                {liveTrackingCopy}
-                                            </div>
-                                            <div className="navigation-step-toolbar-buttons">
-                                                <IconButton
-                                                    size="small"
-                                                    onClick={() =>
-                                                        showNavigationStep(navigationState.currentStepIndex - 1)
-                                                    }
-                                                    disabled={navigationState.currentStepIndex === 0}
-                                                    aria-label="Previous step"
-                                                >
-                                                    <ChevronLeftIcon fontSize="small" />
-                                                </IconButton>
-                                                <IconButton
-                                                    size="small"
-                                                    onClick={() =>
-                                                        showNavigationStep(navigationState.currentStepIndex + 1)
-                                                    }
-                                                    disabled={
-                                                        navigationState.currentStepIndex >=
-                                                        navigationState.steps.length - 1
-                                                    }
-                                                    aria-label="Next step"
-                                                >
-                                                    <ChevronRightIcon fontSize="small" />
-                                                </IconButton>
-                                            </div>
-                                        </div>
-                                        <div className="navigation-step-list">
-                                            <ol className="steps-list" aria-labelledby="route-details-steps-header">
-                                                {navigationState.steps.map((navigationStep, index) => (
-                                                    <li
-                                                        key={`navigation-step-${index + 1}`}
-                                                        ref={element => {
-                                                            stepListItemRefs.current[index] = element;
-                                                        }}
-                                                        className={
-                                                            index === navigationState.currentStepIndex
-                                                                ? 'navigation-active-step'
-                                                                : ''
-                                                        }
-                                                    >
-                                                        <button
-                                                            type="button"
-                                                            className="navigation-step-button"
-                                                            onClick={() => showNavigationStep(index)}
-                                                        >
-                                                            <span className="item-inner-spacing">
-                                                                {navigationStep.instruction}
-                                                                {navigationStep?.step && (
-                                                                    <span className="navigation-step-meta">
-                                                                        Step {index + 1} of{' '}
-                                                                        {navigationState.steps.length}
-                                                                        {' · '}
-                                                                        {formatDistance(
-                                                                            navigationStep.step.getDistanceMeters?.(),
-                                                                        ) || 'Distance unavailable'}
-                                                                        {navigationStep?.step?.maneuver?.type
-                                                                            ? ` · ${navigationStep.step.maneuver.type.replaceAll(
-                                                                                  '_',
-                                                                                  ' ',
-                                                                              )}`
-                                                                            : ''}
-                                                                    </span>
-                                                                )}
-                                                            </span>
-                                                        </button>
-                                                    </li>
-                                                ))}
-                                            </ol>
-                                        </div>
+                                    <button
+                                        type="button"
+                                        className="navigation-control-button navigation-orientation-button"
+                                        onClick={toggleCompassRotation}
+                                        disabled={!orientationState.supported}
+                                    >
+                                        {orientationState.enabled ? 'Disable Compass Rotation' : 'Follow Phone Heading'}
+                                    </button>
+
+                                    {orientationStatusMessage && (
+                                        <div className="navigation-orientation-status">{orientationStatusMessage}</div>
+                                    )}
+
+                                    <div className="navigation-controls">
+                                        <button
+                                            type="button"
+                                            className="navigation-control-button navigation-control-button-prev"
+                                            onClick={() => showNavigationStep(navigationState.currentStepIndex - 1)}
+                                            disabled={navigationState.currentStepIndex === 0}
+                                        >
+                                            <ChevronLeftIcon fontSize="small" />
+                                            Prev
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="navigation-control-button navigation-control-button-next"
+                                            onClick={() => showNavigationStep(navigationState.currentStepIndex + 1)}
+                                            disabled={
+                                                navigationState.currentStepIndex >= navigationState.steps.length - 1
+                                            }
+                                        >
+                                            Next
+                                            <ChevronRightIcon fontSize="small" />
+                                        </button>
                                     </div>
                                 </div>
                             )}
