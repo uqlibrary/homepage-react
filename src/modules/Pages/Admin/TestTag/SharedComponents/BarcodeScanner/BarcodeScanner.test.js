@@ -8,6 +8,7 @@ import { render, screen, waitFor } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import { useDevices } from '@yudiel/react-qr-scanner';
 import locale from './locale';
+import { act } from '@testing-library/react';
 
 const scannedCodeMock = 'TEST_CODE';
 const mockScannedCode = jest.fn().mockReturnValue(scannedCodeMock);
@@ -134,16 +135,60 @@ describe('BarcodeScanner', () => {
         );
     });
 
+    it('should allow toggling torch', async () => {
+        const { queryByTestId } = setup();
+        await openScanner();
+
+        // mock after scanner is open and mounted
+        const mockVideo = document.createElement('video');
+        Object.defineProperty(mockVideo, 'srcObject', {
+            value: {
+                getVideoTracks: jest.fn().mockReturnValue([
+                    {
+                        getCapabilities: jest.fn().mockReturnValue({ torch: true }),
+                        applyConstraints: jest.fn().mockResolvedValue(),
+                    },
+                ]),
+            },
+        });
+        jest.spyOn(document, 'querySelectorAll').mockReturnValue([mockVideo]);
+
+        await waitFor(() => {
+            expect(queryByTestId('FlashlightOnIcon')).not.toBeInTheDocument();
+            expect(queryByTestId('FlashlightOffIcon')).toBeInTheDocument();
+        });
+
+        await userEvent.click(screen.getByTestId('barcode-scanner-toggle-torch-button'));
+        await waitFor(() => {
+            expect(queryByTestId('FlashlightOnIcon')).toBeInTheDocument();
+            expect(queryByTestId('FlashlightOffIcon')).not.toBeInTheDocument();
+        });
+    });
+
     it('should allow toggling scanner beep', async () => {
         Cookies.get.mockReturnValue('true');
 
-        setup();
+        const { queryByTestId } = setup();
         expect(Cookies.set).not.toHaveBeenCalled();
-
         await openScanner();
-        await userEvent.click(screen.getByTestId('barcode-scanner-toggle-beep-button'));
+        await waitFor(() => {
+            expect(queryByTestId('VolumeUpIcon')).toBeInTheDocument();
+            expect(queryByTestId('VolumeOffIcon')).not.toBeInTheDocument();
+        });
 
-        expect(Cookies.set).toHaveBeenCalledWith(BARCODE_SCANNER_SOUND_PREF_COOKIE, false);
+        await userEvent.click(screen.getByTestId('barcode-scanner-toggle-beep-button'));
+        await waitFor(() => {
+            expect(queryByTestId('VolumeUpIcon')).not.toBeInTheDocument();
+            expect(queryByTestId('VolumeOffIcon')).toBeInTheDocument();
+            expect(Cookies.set).toHaveBeenCalledWith(BARCODE_SCANNER_SOUND_PREF_COOKIE, false);
+        });
+
+        await userEvent.click(screen.getByTestId('barcode-scanner-toggle-beep-button'));
+        await waitFor(() => {
+            expect(queryByTestId('VolumeUpIcon')).toBeInTheDocument();
+            expect(queryByTestId('VolumeOffIcon')).not.toBeInTheDocument();
+            expect(Cookies.set).toHaveBeenCalledWith(BARCODE_SCANNER_SOUND_PREF_COOKIE, true);
+        });
     });
 
     describe('behaviour', () => {
@@ -170,6 +215,51 @@ describe('BarcodeScanner', () => {
 
             expect(props.onScan).not.toHaveBeenCalled();
             assertScannerOpenState();
+        });
+
+        it("should toggle scanner according to app's visibility events", async () => {
+            setup();
+            await openScanner();
+            assertScannerOpenState();
+
+            // hide via visibilitychange
+            act(() => {
+                Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
+                document.dispatchEvent(new Event('visibilitychange'));
+            });
+            assertScannerCloseState();
+
+            // show via visibilitychange
+            act(() => {
+                Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
+                document.dispatchEvent(new Event('visibilitychange'));
+            });
+            assertScannerOpenState();
+
+            // hide via window blur
+            act(() => {
+                window.dispatchEvent(new Event('blur'));
+            });
+            assertScannerCloseState();
+
+            // show via window focus
+            act(() => {
+                window.dispatchEvent(new Event('focus'));
+            });
+            assertScannerOpenState();
+        });
+
+        it('should remove event listeners on unmount', () => {
+            const removeSpy = jest.spyOn(document, 'removeEventListener');
+            const windowRemoveSpy = jest.spyOn(window, 'removeEventListener');
+
+            const { unmount } = setup();
+            unmount();
+
+            expect(removeSpy).toHaveBeenCalledWith('visibilitychange', expect.any(Function));
+            expect(windowRemoveSpy).toHaveBeenCalledWith('blur', expect.any(Function));
+            expect(windowRemoveSpy).toHaveBeenCalledWith('focus', expect.any(Function));
+            expect(windowRemoveSpy).toHaveBeenCalledWith('unhandledrejection', expect.any(Function));
         });
     });
 

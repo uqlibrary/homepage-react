@@ -6,6 +6,7 @@ export default {
     buttons: {
         open: 'Open scanner',
         close: 'Close scanner',
+        toggleTorch: 'Toggle Torch',
         toggleBeep: 'Toggle beep',
     },
     form: {

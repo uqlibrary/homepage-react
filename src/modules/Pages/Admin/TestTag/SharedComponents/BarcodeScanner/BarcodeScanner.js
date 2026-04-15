@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { QrCodeScanner, VolumeOff, VolumeUp } from '@mui/icons-material';
+import { FlashlightOff, FlashlightOn, QrCodeScanner, VolumeOff, VolumeUp } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import { Scanner, useDevices, prepareZXingModule } from '@yudiel/react-qr-scanner';
 import Dialog from '@mui/material/Dialog';
@@ -61,6 +61,10 @@ const darkTheme = createTheme({
     palette: {
         mode: 'dark',
     },
+    zIndex: {
+        modal: 1_000_000,
+        tooltip: 1_100_000,
+    },
 });
 
 /**
@@ -121,13 +125,16 @@ const BarcodeScanner = ({ onScan, formats }) => {
     const hasDevices = !!devices?.length;
     const [hasError, setHasError] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
+    const [isTorchOn, setIsTorchOn] = useState(false);
     const [isBeepSoundEnabled, setIsBeepSoundEnabled] = useState(
         Cookies.get(BARCODE_SCANNER_SOUND_PREF_COOKIE) !== 'false',
     );
     const [selectedDeviceId, setSelectedDeviceId] = useState(Cookies.get(BARCODE_SCANNER_DEFAULT_DEVICE_ID_COOKIE));
     const bodyOverflowStyleRef = useRef(document.body.style.overflow);
 
-    const pauseBodyScroll = () => document.body.style.setProperty('overflow', 'hidden', 'important');
+    // using setTimeout to schedule it in the macrotask queue seems to fix edged cases
+    const pauseBodyScroll = () =>
+        setTimeout(() => document.body.style.setProperty('overflow', 'hidden', 'important'), 10);
     const resumeBodyScroll = () =>
         document.body.style.setProperty('overflow', /* istanbul ignore next */ bodyOverflowStyleRef.current || '');
 
@@ -144,6 +151,22 @@ const BarcodeScanner = ({ onScan, formats }) => {
         // "remember" selected device selection
         Cookies.set(BARCODE_SCANNER_DEFAULT_DEVICE_ID_COOKIE, e.target.value);
         setSelectedDeviceId(e.target.value);
+    };
+
+    const handleTorchToggle = async () => {
+        try {
+            const track = document.querySelectorAll('video')?.[0]?.srcObject?.getVideoTracks?.()?.[0];
+            // just when torch is not available
+            /* istanbul ignore next */
+            if (!track || !track.getCapabilities?.()?.torch) return;
+
+            const next = !isTorchOn;
+            await track.applyConstraints({ advanced: [{ torch: next }] });
+            setIsTorchOn(next);
+        } catch (err) {
+            /* istanbul ignore next */
+            console.error('Barcode scanner torch error:', err);
+        }
     };
 
     const handleBeepToggle = () => {
@@ -164,11 +187,27 @@ const BarcodeScanner = ({ onScan, formats }) => {
         setHasError(true);
     };
 
-    // handle dependency library errors
+    // handle app events
     useEffect(() => {
-        // we can't predict the error message in here, so we'll consider all alike error as library errors
+        const handleVisibilityChange = () => setIsScanning(document.visibilityState === 'visible');
+        const handleBlur = () => setIsScanning(false);
+        const handleFocus = () => setIsScanning(true);
+        // handles disable/enable scanner according to app's visibility events
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('blur', handleBlur);
+        window.addEventListener('focus', handleFocus);
+
+        // handles dependency library errors - we can't predict the error message in here, so we'll assume all
+        // unhandledrejection errors to be dependency library errors
         window.addEventListener('unhandledrejection', handleError);
-        return () => window.removeEventListener('unhandledrejection', handleError);
+
+        // cleanup
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('blur', handleBlur);
+            window.removeEventListener('focus', handleFocus);
+            window.removeEventListener('unhandledrejection', handleError);
+        };
     }, []);
 
     // handles auto-selecting first available device
@@ -209,7 +248,6 @@ const BarcodeScanner = ({ onScan, formats }) => {
                     // the below can't be easily tested
                     // onExited: resumeBodyScroll
                 }}
-                sx={{ zIndex: 1_000_000 }}
             >
                 <DialogTitle>
                     <Box
@@ -240,6 +278,18 @@ const BarcodeScanner = ({ onScan, formats }) => {
                                 ))}
                             </Select>
                         </FormControl>
+                        {/* torch toggle button */}
+                        <IconButton
+                            data-testid="barcode-scanner-toggle-torch-button"
+                            title={locale.buttons.toggleTorch}
+                            onClick={handleTorchToggle}
+                            disabled={hasError}
+                            sx={{
+                                color: theme => theme.palette.grey[500],
+                            }}
+                        >
+                            {isTorchOn ? <FlashlightOn /> : <FlashlightOff />}
+                        </IconButton>
                         {/* beep toggle button */}
                         <IconButton
                             data-testid="barcode-scanner-toggle-beep-button"
@@ -275,8 +325,8 @@ const BarcodeScanner = ({ onScan, formats }) => {
                             formats={formats}
                             sound={isBeepSoundEnabled}
                             components={{
-                                torch: true,
                                 finder: true,
+                                torch: false, // flaky, implemented above
                                 zoom: false,
                                 onOff: false,
                                 tracker: barcodeTracker,
