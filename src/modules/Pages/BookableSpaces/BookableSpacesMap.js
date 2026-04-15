@@ -29,7 +29,9 @@ const StyledMapWrapperDiv = styled('div')(() => ({
 }));
 
 const BookableSpacesMap = React.forwardRef(
-    ({ sortedSpaceLocations, spacesFavouritesList, onMarkerClick, centreLatLong, campusId }, ref) => {
+    ({ sortedSpaceLocations, spacesFavouritesList, onMarkerClick, centreLatLong }, ref) => {
+        console.log('BookableSpacesMap load centreLatLong=', centreLatLong);
+
         const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
         const [isMazeMapReady, setIsMazeMapReady] = React.useState(false);
         const [mapContainer, setMapContainer] = React.useState(null);
@@ -40,17 +42,10 @@ const BookableSpacesMap = React.forwardRef(
 
         const ZOOM_CAMPUS_MANY_BUILDINGS = 20;
         const ZOOM_CAMPUS_ONE_BUILDING = 17;
-        const CAMPUS_ST_LUCIA = 1;
+        const CAMPUS_INDEX_ST_LUCIA = 1;
 
-        const zoomOnFlyto = _campusId => {
-            const result = _campusId === CAMPUS_ST_LUCIA ? ZOOM_CAMPUS_ONE_BUILDING : ZOOM_CAMPUS_MANY_BUILDINGS;
-            console.log('## zoomOnFlyto', _campusId, result);
-            return result;
-        };
-        const zoomOnPageLoad = _campusId => {
-            const result = _campusId === CAMPUS_ST_LUCIA ? ZOOM_CAMPUS_ONE_BUILDING : ZOOM_CAMPUS_MANY_BUILDINGS;
-            console.log('## zoomOnPageLoad', _campusId, result);
-            return result;
+        const zoomLevelForCampus = _campusId => {
+            return _campusId === CAMPUS_INDEX_ST_LUCIA ? ZOOM_CAMPUS_ONE_BUILDING : ZOOM_CAMPUS_MANY_BUILDINGS;
         };
 
         const setSelectedMarker = (markerEl, space) => {
@@ -114,9 +109,9 @@ const BookableSpacesMap = React.forwardRef(
         useImperativeHandle(ref, () => ({
             flyToSpace(location) {
                 console.log('flyToSpace location.space_campus_id=', location.space_campus_id, location);
-                !location.space_campus_id && alert('CAMPUS ID NOT PROVIDED'); // debug
+                !location?.space_campus_id && alert('CAMPUS ID NOT PROVIDED'); // debug
                 const map = mazeMapInstanceRef.current;
-                if (!map || !location?.space_longitude || !location?.space_latitude) {
+                if (!map || !location?.space_longitude || !location?.space_latitude || !location?.space_campus_id) {
                     console.log('invalid call to flyToSpace', location);
                     return;
                 }
@@ -124,7 +119,7 @@ const BookableSpacesMap = React.forwardRef(
                 const doFly = () => {
                     map.flyTo({
                         center: [location.space_longitude, location.space_latitude],
-                        zoom: zoomOnFlyto(location.space_campus_id),
+                        zoom: zoomLevelForCampus(location.space_campus_id),
                         curve: 0.5,
                         speed: 1.6,
                     });
@@ -168,16 +163,14 @@ const BookableSpacesMap = React.forwardRef(
             if (!isMazeMapScriptReady || !mapContainer) {
                 return;
             }
-            console.log(!!centreLatLong.space_longitude ? 'object' : 'array', centreLatLong);
-            const longitude = !!centreLatLong.space_longitude ? centreLatLong.space_longitude : centreLatLong[1];
-            const latitude = !!centreLatLong.space_longitude ? centreLatLong.space_latitude : centreLatLong[0];
-            console.log('centring at ', latitude, longitude);
+            // const longitude = !!centreLatLong.space_longitude ? centreLatLong.space_longitude : centreLatLong[1];
+            // const latitude = !!centreLatLong.space_longitude ? centreLatLong.space_latitude : centreLatLong[0];
 
             mazeMapInstanceRef.current = new window.Mazemap.Map({
                 container: 'mazemap-container',
                 campuses: 'all',
-                center: { lat: latitude, lng: longitude },
-                zoom: zoomOnPageLoad(campusId),
+                center: { lat: centreLatLong.space_latitude, lng: centreLatLong.space_longitude },
+                zoom: zoomLevelForCampus(centreLatLong.space_campus_id),
                 zLevel: 1,
                 RTLTextPlugin: null,
             });
@@ -275,7 +268,6 @@ BookableSpacesMap.propTypes = {
     spacesFavouritesList: PropTypes.any,
     onMarkerClick: PropTypes.func.isRequired,
     centreLatLong: PropTypes.array,
-    campusId: PropTypes.number,
 };
 
 export default BookableSpacesMap;
