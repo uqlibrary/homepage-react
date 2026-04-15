@@ -7,6 +7,7 @@ import AssetReportByFilters from './AssetReportByFilters';
 import assetData from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetsReportAssets';
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import buildingList from '../../../../../../../data/mock/data/testing/testAndTag/testTagTaggedBuildingList';
+import { assertLocationLink, assertLocationLinkless } from '../../../helpers/helpers.test';
 
 function setup(testProps = {}, renderer = rtlRender) {
     const {
@@ -80,16 +81,16 @@ describe('AssetReportByFilters', () => {
         // check first row is as expected
         const row = within(getAllByRole('row')[1]);
         expect(row.getByText('UQL000004')).toBeInTheDocument();
-        expect(row.getByText('Gatton / 8102 / 1 / 102')).toBeInTheDocument();
+        assertLocationLink(row.getByText('Gatton / 8102 / 1 / 102'), 'http://29.a');
         expect(row.getByText('PowerBoard')).toBeInTheDocument();
         expect(row.getByText('2015-10-01')).toBeInTheDocument();
-
         // expect a red cell with alert icon
         expect(row.getAllByRole('cell')[5]).toHaveStyle('background-color: #951126');
         expect(row.getByText('2016-10-01')).toBeInTheDocument();
         expect(row.getByTestId('tooltip-overdue')).toBeInTheDocument();
-
         expect(row.getByText('CURRENT')).toBeInTheDocument();
+        // assert 2nd row's location string
+        assertLocationLinkless(within(getAllByRole('row')[2]).getByText('St Lucia / 0001 / 2 / W212'));
 
         // check pagination counter shows expected number of rows
         expect(getByText('1–6 of 6')).toBeInTheDocument();
@@ -157,6 +158,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
 
@@ -171,6 +173,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
         // select Out for Repair status
@@ -184,6 +187,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
     });
@@ -212,6 +216,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: 11,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
     });
@@ -238,6 +243,46 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: '2023-01-01',
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
+            }),
+        );
+    });
+
+    it('fires action when team filter changes', async () => {
+        const clearDateErrorsFn = jest.fn();
+        const loadAssetReportByFiltersFn = jest.fn();
+        const { getByText, getByTestId, findByRole } = setup({
+            actions: {
+                clearDateErrors: clearDateErrorsFn,
+                loadAssetReportByFilters: loadAssetReportByFiltersFn,
+                loadTaggedBuildingList: jest.fn(),
+            },
+        });
+        expect(getByText('Asset tests report for Work Station Support (Library)')).toBeInTheDocument();
+
+        expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
+            assetStatus: null,
+            inspectionDateFrom: null,
+            inspectionDateTo: null,
+            locationId: null,
+            locationType: 'building',
+            teamSlug: 'WSS',
+        });
+
+        // open team selector and select WSS team
+        const teamSelect = within(getByTestId('team-display-name-select-filter')).getByRole('combobox');
+        await userEvent.click(teamSelect);
+        const listbox = await findByRole('listbox');
+        await userEvent.click(within(listbox).getByText('Spaces'));
+
+        await waitFor(() =>
+            expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
+                assetStatus: null,
+                inspectionDateFrom: null,
+                inspectionDateTo: null,
+                locationId: null,
+                locationType: 'building',
+                teamSlug: 'SPACES',
             }),
         );
     });
@@ -264,6 +309,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null, // invalid dates wont fire an api request
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
 
@@ -287,6 +333,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: '2020-01-01', // new request should fire as one date is supplied and valid
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
 
@@ -299,6 +346,7 @@ describe('AssetReportByFilters', () => {
                 inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
+                teamSlug: 'WSS',
             }),
         );
     });

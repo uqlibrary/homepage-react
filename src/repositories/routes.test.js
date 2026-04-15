@@ -296,6 +296,10 @@ describe('Backend routes method', () => {
             expect(routes.TEST_TAG_ADD_USER_API()).toEqual({ apiUrl: 'test-and-tag/user' });
             expect(routes.TEST_TAG_UPDATE_USER_API(100)).toEqual({ apiUrl: 'test-and-tag/user/100' });
             expect(routes.TEST_TAG_DELETE_USER_API(100)).toEqual({ apiUrl: 'test-and-tag/user/100' });
+            expect(routes.TEST_TAG_TEAM_LIST_API()).toEqual({ apiUrl: 'test-and-tag/teams/all' });
+            expect(routes.TEST_TAG_ADD_TEAM_API()).toEqual({ apiUrl: 'test-and-tag/team' });
+            expect(routes.TEST_TAG_UPDATE_TEAM_API('WSS')).toEqual({ apiUrl: 'test-and-tag/team/WSS' });
+            expect(routes.TEST_TAG_DELETE_TEAM_API('WSS')).toEqual({ apiUrl: 'test-and-tag/team/WSS' });
             expect(routes.TEST_TAG_REPORT_UTILITY_LICENCED_USERS()).toEqual({
                 apiUrl: 'test-and-tag/report/licenced-inspectors',
             });

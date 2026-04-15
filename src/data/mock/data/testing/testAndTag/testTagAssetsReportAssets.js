@@ -20,6 +20,7 @@ export default [
         "room_id_displayed": "102",
         "floor_id": 29,
         "floor_id_displayed": "1",
+        "floor_plan_url": "http://29.a",
         "building_id": 8,
         "building_name": "J.K. Murray Library",
         "building_id_displayed": "8102",

@@ -1,5 +1,12 @@
 import React from 'react';
-import { rtlRender, WithRouter, WithReduxStore, waitForElementToBeRemoved, userEvent, waitFor } from 'test-utils';
+import {
+    rtlRender,
+    WithRouter,
+    WithReduxStore,
+    waitForElementToBeRemovedIfPresent,
+    userEvent,
+    waitFor,
+} from 'test-utils';
 import Immutable from 'immutable';
 
 import siteList from '../../../../../../../../data/mock/data/testing/testAndTag/testTagSites';
@@ -71,7 +78,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
 
             expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
             userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
@@ -79,7 +86,7 @@ describe('Locations', () => {
 
             userEvent.click(getByTestId('update_dialog-cancel-button'));
 
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
             expect(addLocationFn).not.toHaveBeenCalled();
         });
         it('handles Add action promise rejection', async () => {
@@ -95,7 +102,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
 
             expect(getByTestId('locations-data-table-toolbar-export-menu')).toBeInTheDocument();
             userEvent.click(getByTestId('locations-data-table-toolbar-add-button'));
@@ -125,7 +132,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
 
             userEvent.click(getByTestId('action_cell-1-edit-button'));
             await findByTestId('update_dialog-locations');
@@ -153,7 +160,7 @@ describe('Locations', () => {
                 },
             });
 
-            expect(getByText('Locations management for Work Station Support (Library)')).toBeInTheDocument();
+            expect(getByText('Locations management for Library')).toBeInTheDocument();
 
             userEvent.click(getByTestId('action_cell-2-delete-button'));
             await findByTestId('dialogbox-locations');

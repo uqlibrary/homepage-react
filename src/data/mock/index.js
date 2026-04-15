@@ -42,6 +42,7 @@ import testTag_floorList from './data/records/testAndTag/test_tag_floors';
 import testTag_roomList from './data/records/testAndTag/test_tag_rooms';
 import testTag_inspectionDevices from './data/records/testAndTag/test_tag_inspection_devices';
 import testTag_assets from './data/records/testAndTag/test_tag_assets';
+import testTag_assets_all from './data/records/testAndTag/test_tag_assets_all';
 import test_tag_asset_types from './data/records/testAndTag/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/testAndTag/test_tag_pending_inspections';
 import test_tag_pending_inspections_site from './data/records/testAndTag/test_tag_pending_inspections_site';
@@ -54,6 +55,8 @@ import test_tag_tagged_building_list from './data/records/testAndTag/test_tag_ta
 import test_tag_assets_report_assets from './data/records/testAndTag/test_tag_assets_report_assets';
 import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine';
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
+import test_tag_team_list_uql from './data/records/testAndTag/test_tag_team_list_uql';
+import test_tag_team_list_pf from './data/records/testAndTag/test_tag_team_list_pf';
 
 import dlor_all from './data/records/dlor/dlor_all';
 import dlor_filter_list from './data/records/dlor/dlor_filter_list';
@@ -81,7 +84,7 @@ const moment = require('moment');
 
 const mock = new MockAdapter(api, { delayResponse: 1000 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
-const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
+export const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
 
 const queryString = new URLSearchParams(window.location.search);
@@ -860,7 +863,7 @@ mock.onGet(/dlor\/(public|auth)\/find\/.*/)
     })
     .onPut(/dlor\/admin\/schedule\/3/)
     .reply(() => {
-        return [500, {'message': 'Simulated server error on schedule ID 3'}];
+        return [500, { message: 'Simulated server error on schedule ID 3' }];
     })
     .onPut(/dlor\/admin\/schedule\/\d+/)
     .reply(() => {
@@ -868,7 +871,7 @@ mock.onGet(/dlor\/(public|auth)\/find\/.*/)
     })
     .onDelete(/dlor\/admin\/schedule\/3/)
     .reply(() => {
-        return [500, {'message': 'Simulated server error on schedule ID 3'}];
+        return [500, { message: 'Simulated server error on schedule ID 3' }];
     })
     .onDelete(/dlor\/admin\/schedule\/\d+/)
     .reply(() => {
@@ -1216,6 +1219,21 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ];
     })
+    .onGet(/test-and-tag\/asset\/search\/current\/.*[?]all_teams=1/)
+    .reply(config => {
+        const patternTmp = config.url.split('/').pop();
+        const pattern = patternTmp.split('?')[0];
+        const allAssets = [...testTag_assets.data, ...testTag_assets_all.data];
+        // filter array to matching asset id's
+        return [
+            200,
+            {
+                data: allAssets.filter(asset =>
+                    asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()),
+                ),
+            },
+        ];
+    })
 
     // ASSETS (with pattern matching)
     .onGet(/test-and-tag\/asset\/search\/current\/*/)
@@ -1316,6 +1334,16 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({ period: '3', periodType: 'month' }).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({ period: '3', periodType: 'month', teamSlug: 'WSS' }).apiUrl)
+    .reply(() => [
+        200,
+        { data: test_tag_pending_inspections.data.filter(inspection => inspection.asset_team_owned_by === 'WSS') },
+    ])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({ period: '3', periodType: 'month', teamSlug: 'SPACES' }).apiUrl)
+    .reply(() => [
+        200,
+        { data: test_tag_pending_inspections.data.filter(inspection => inspection.asset_team_owned_by === 'SPACES') },
+    ])
     .onGet(
         routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({
             period: '3',
@@ -1390,13 +1418,56 @@ mock.onGet('exams/course/FREN1010/summary')
     //         },
     //     ];
     // })
+
     .onGet(
         new RegExp(
-            panelRegExp(
+            escapeRegExp(
                 routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
                     startDate: null,
                     endDate: null,
                     userRange: null,
+                    teamSlug: 'WSS',
+                }).apiUrl,
+            ),
+        ),
+    )
+    .reply(() => [
+        200,
+        {
+            data: {
+                user_inspections: test_tag_inspections_by_licenced_user.data.user_inspections.filter(
+                    user => user.user_team === 'WSS',
+                ),
+            },
+        },
+    ])
+    .onGet(
+        new RegExp(
+            escapeRegExp(
+                routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
+                    teamSlug: 'SPACES',
+                }).apiUrl,
+            ),
+        ),
+    )
+    .reply(() => [
+        200,
+        {
+            data: {
+                user_inspections: test_tag_inspections_by_licenced_user.data.user_inspections.filter(
+                    user => user.user_team === 'SPACES',
+                ),
+            },
+        },
+    ])
+    .onGet(
+        new RegExp(
+            escapeRegExp(
+                routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
+                    startDate: null,
+                    endDate: null,
+                    userRange: null,
+                    teamSlug: null,
                 }).apiUrl,
             ),
         ),
@@ -1413,9 +1484,32 @@ mock.onGet('exams/course/FREN1010/summary')
             locationId: '4',
             inspectionDateFrom: null,
             inspectionDateTo: null,
+            teamSlug: null,
         }).apiUrl,
     )
     .reply(() => [200, test_tag_assets_report_assets])
+    .onGet(
+        new RegExp(
+            escapeRegExp(
+                routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({
+                    locationType: 'building',
+                    teamSlug: 'WSS',
+                }).apiUrl,
+            ),
+        ),
+    )
+    .reply(() => [200, { data: test_tag_assets_mine.data.filter(asset => asset.asset_team_owned_by === 'WSS') }])
+    .onGet(
+        new RegExp(
+            escapeRegExp(
+                routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({
+                    locationType: '.*',
+                    teamSlug: 'SPACES',
+                }).apiUrl,
+            ),
+        ),
+    )
+    .reply(() => [200, { data: test_tag_assets_mine.data.filter(asset => asset.asset_team_owned_by === 'SPACES') }])
     // .onGet(/test-and-tag\/asset\/search\/mine.*/)
     // .reply(config => {
     //    const url = new URL(`${config.baseURL}${config.url}`);
@@ -1434,6 +1528,8 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DETAILS_API('.*').apiUrl)))
     .reply(() => [200, { status: 'OK' }])
+
+    // users
     .onGet(routes.TEST_TAG_USER_LIST_API().apiUrl)
     .reply(withDelay([200, test_tag_user_list]))
     .onPut(/test-and-tag\/user\/5/)
@@ -1467,6 +1563,42 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ]),
     )
+
+    // teams
+    .onGet(routes.TEST_TAG_TEAM_LIST_API().apiUrl)
+    .reply(withDelay([200, test_tag_team_list_uql]))
+    .onPut(/test-and-tag\/team\/TESTFAIL/)
+    .reply(withDelay([400, {}]))
+    .onPut(/test-and-tag\/team\/[a-zA-Z0-9]+/)
+    .reply(
+        withDelay([
+            200,
+            {
+                status: 'OK',
+            },
+        ]),
+    )
+    .onPost(/test-and-tag\/team/)
+    .reply(
+        withDelay([
+            200,
+            {
+                status: 'OK',
+            },
+        ]),
+    )
+    .onDelete(/test-and-tag\/team\/TESTFAIL/)
+    .reply(withDelay([400, {}]))
+    .onDelete(/test-and-tag\/team\/[a-zA-Z0-9]+/)
+    .reply(
+        withDelay([
+            200,
+            {
+                status: 'OK',
+            },
+        ]),
+    )
+
     .onGet('https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json')
     .reply(() => {
         if (responseType === 'drupalError') {

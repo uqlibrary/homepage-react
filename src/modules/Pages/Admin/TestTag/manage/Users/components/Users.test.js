@@ -1,13 +1,24 @@
 import React from 'react';
 import Users from './Users';
-import { rtlRender, WithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-utils';
+import {
+    rtlRender,
+    WithRouter,
+    act,
+    fireEvent,
+    userEvent,
+    waitFor,
+    WithReduxStore,
+    selectOptionFromListByIndex,
+} from 'test-utils';
 import Immutable from 'immutable';
 
 import locale from '../../../testTag.locale';
+import { within } from '@testing-library/dom';
 
 const actions = {
     clearUserListError: jest.fn(),
     loadUserList: jest.fn(() => Promise.resolve()),
+    loadTeamList: jest.fn(() => Promise.resolve()),
     addUser: jest.fn(() => Promise.resolve()),
     updateUser: jest.fn(() => Promise.resolve()),
     deleteUser: jest.fn(() => Promise.resolve()),
@@ -18,7 +29,7 @@ const userList = [
         department_display_name: 'Library',
         user_current_flag: 1,
         user_team: 'WSS',
-        team_display_name: 'Work Station Support',
+        user_team_display: 'Work Station Support',
         user_id: 1,
         user_licence_number: 'NOT LICENSED',
         user_name: 'WSS Staff who can eg change locations but not inspect',
@@ -34,7 +45,7 @@ const userList = [
         department_display_name: 'Library',
         user_current_flag: 1,
         user_team: 'WSS',
-        team_display_name: 'Work Station Support',
+        user_team_display: 'Work Station Support',
         user_id: 2,
         user_licence_number: '234567',
         user_name: 'JTest user',
@@ -51,7 +62,7 @@ const userList = [
         department_display_name: 'Library',
         user_current_flag: 1,
         user_team: 'WSS',
-        team_display_name: 'Work Station Support',
+        user_team_display: 'Work Station Support',
         user_id: 4,
         user_licence_number: 'NOT LICENSED',
         user_name: 'Reporting User',
@@ -68,7 +79,7 @@ const userList = [
         department_display_name: 'Library',
         user_current_flag: 1,
         user_team: 'WSS',
-        team_display_name: 'Work Station Support',
+        user_team_display: 'Work Station Support',
         user_id: 5,
         user_licence_number: '45678',
         user_name: 'SecondTesting user',
@@ -80,6 +91,27 @@ const userList = [
             can_see_reports: 1,
         },
         actions_count: 0,
+    },
+];
+
+const teamList = [
+    {
+        team_slug: 'SPACES',
+        team_department: 'UQL',
+        team_display_name: 'Spaces',
+        created_at: null,
+        updated_at: '2026-02-26T05:07:59.000000Z',
+        team_current_flag: 1,
+        users_count: 2,
+    },
+    {
+        team_slug: 'WSS',
+        team_department: 'UQL',
+        team_display_name: 'Work Station Support',
+        created_at: null,
+        updated_at: null,
+        team_current_flag: 1,
+        users_count: 14,
     },
 ];
 
@@ -102,6 +134,9 @@ function setup(testProps = {}, renderer = rtlRender) {
                     userListLoading={false}
                     userList={userList}
                     userListError={null}
+                    teamListLoading={false}
+                    teamList={teamList}
+                    teamListError={null}
                     {...props}
                 />
             </WithRouter>
@@ -138,8 +173,14 @@ describe('Manage Users', () => {
         expect(actions.loadUserList).rejects.toEqual('Testing Error');
     });
 
-    it('Add User functions correctly', async () => {
+    it('should displays dup licence error when adding new user', async () => {
+        const newLicence = 123456;
+        const expectedError = `user_licence_number '${newLicence}' is already associated with another user.`;
+        actions.addUser = jest.fn(() => Promise.reject(expectedError));
         actions.loadUserList = jest.fn(() => {
+            return Promise.resolve();
+        });
+        actions.loadTeamList = jest.fn(() => {
             return Promise.resolve();
         });
         const { getByText, getByTestId } = setup({ actions: actions });
@@ -149,6 +190,7 @@ describe('Manage Users', () => {
         ).toBeInTheDocument();
         expect(getByText('uqjsmit')).toBeInTheDocument();
         expect(getByTestId('user-management-data-table-toolbar-export-menu')).toBeInTheDocument();
+
         await act(async () => {
             await fireEvent.click(getByTestId('user-management-data-table-toolbar-add-button'));
         });
@@ -160,6 +202,65 @@ describe('Manage Users', () => {
             await fireEvent.change(getByTestId('user_uid-input'), { target: { value: 'uqtestuser' } });
             await fireEvent.change(getByTestId('user_name-input'), { target: { value: 'TEST USER' } });
         });
+
+        await userEvent.click(getByTestId('user_team-input'));
+        selectOptionFromListByIndex(0);
+
+        // Check the disabled fields
+        expect(getByTestId('user_licence_number-input')).toHaveAttribute('disabled');
+        await act(async () => {
+            await fireEvent.click(getByTestId('can_inspect_cb-input'));
+            await fireEvent.change(getByTestId('user_licence_number-input'), { target: { value: newLicence } });
+        });
+        expect(actions.addUser).rejects.toEqual(expectedError);
+    });
+    it('should displays dup licence error when editing user', async () => {
+        const newLicence = 123456;
+        const expectedError = `user_licence_number '${newLicence}' is already associated with another user.`;
+        actions.updateUser = jest.fn(() => Promise.reject(expectedError));
+        const { getByText, getByTestId, findByTestId } = setup({ actions: actions });
+        expect(getByText('uqjsmit')).toBeInTheDocument();
+        await act(async () => await fireEvent.click(getByTestId('action_cell-1-edit-button')));
+        await expect(await findByTestId('user_uid-input')).toBeInTheDocument();
+        await userEvent.type(getByTestId('user_licence_number-input'), newLicence);
+        // commit changes
+        await userEvent.click(getByTestId('update_dialog-action-button'));
+        // assert error message
+        expect(
+            within(await findByTestId('confirmation_alert-error')).getByText(new RegExp(expectedError, 'i')),
+        ).toBeInTheDocument();
+    });
+
+    it('Add User functions correctly', async () => {
+        actions.loadUserList = jest.fn(() => {
+            return Promise.resolve();
+        });
+        actions.loadTeamList = jest.fn(() => {
+            return Promise.resolve();
+        });
+        const { getByText, getByTestId } = setup({ actions: actions });
+
+        expect(
+            getByText(locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library')),
+        ).toBeInTheDocument();
+        expect(getByText('uqjsmit')).toBeInTheDocument();
+        expect(getByTestId('user-management-data-table-toolbar-export-menu')).toBeInTheDocument();
+
+        await act(async () => {
+            await fireEvent.click(getByTestId('user-management-data-table-toolbar-add-button'));
+        });
+
+        await waitFor(() => {
+            expect(getByTestId('user_uid-input')).toBeInTheDocument();
+        });
+        await act(async () => {
+            await fireEvent.change(getByTestId('user_uid-input'), { target: { value: 'uqtestuser' } });
+            await fireEvent.change(getByTestId('user_name-input'), { target: { value: 'TEST USER' } });
+        });
+
+        await userEvent.click(getByTestId('user_team-input'));
+        selectOptionFromListByIndex(0);
+
         // Check the disabled fields
         expect(getByTestId('user_licence_number-input')).toHaveAttribute('disabled');
         await act(async () => {
@@ -176,7 +277,7 @@ describe('Manage Users', () => {
                 can_see_reports: 0,
             },
             user_current_flag: 1,
-            user_team: 'WSS',
+            user_team: 'SPACES',
             user_licence_number: 'TEST LIC',
             user_name: 'TEST USER',
             user_uid: 'uqtestuser',
@@ -200,6 +301,9 @@ describe('Manage Users', () => {
             await fireEvent.change(getByTestId('user_name-input'), { target: { value: 'TEST USER' } });
         });
 
+        await userEvent.click(getByTestId('user_team-input'));
+        selectOptionFromListByIndex(0);
+
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
             expect(actions.addUser).rejects.toEqual('Test Error');
@@ -221,6 +325,10 @@ describe('Manage Users', () => {
             await fireEvent.change(getByTestId('user_uid-input'), { target: { value: 'uqtestuser' } });
             await fireEvent.change(getByTestId('user_name-input'), { target: { value: 'TEST USER' } });
         });
+
+        await userEvent.click(getByTestId('user_team-input'));
+        selectOptionFromListByIndex(0);
+
         // // commit the change
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
@@ -234,7 +342,8 @@ describe('Manage Users', () => {
                 can_see_reports: 0,
             },
             user_current_flag: 1,
-            user_team: 'WSS',
+            user_team: 'SPACES',
+            user_team_display: 'Work Station Support',
             user_id: 1,
             user_licence_number: 'NOT LICENSED',
             user_name: 'TEST USER',

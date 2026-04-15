@@ -12,7 +12,7 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 import { PERMISSIONS } from '../../../config/auth';
 import { useForm, useObjectList, useConfirmationAlert } from '../../../helpers/hooks';
-import { transformRow, transformRequest } from './transformers';
+import { transformRequest } from './transformers';
 import { makeAssetExcludedMessage } from './utils';
 import { breadcrumbs } from 'config/routes';
 import { FormContext } from '../../../helpers/hooks';
@@ -38,7 +38,7 @@ const componentIdLower = 'bulk_asset_update';
 const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const pageLocale = locale.pages.manage.bulkassetupdate;
 
-    const list = useObjectList([], transformRow, { key: 'asset_id' });
+    const list = useObjectList([], null, { key: 'asset_id' });
     const excludedList = useObjectList([], null, { key: 'asset_id' });
 
     const [step, setStep] = useState(1);

@@ -1,54 +1,6 @@
-import { transformRow, transformRequest, transformFilterRow } from './transformers';
+import { transformRequest, transformFilterRow } from './transformers';
 
 describe('utils', () => {
-    describe('transformRow', () => {
-        it('should add asset_type_name and asset_location if they are missing', () => {
-            const row = [
-                { asset_type: { asset_type_name: 'type1' }, last_location: { site_name: 'site1' } },
-                { asset_type: { asset_type_name: 'type2' }, last_location: { site_name: 'site2' } },
-                { other_key: 'other_value' },
-            ];
-
-            const transformedRow = transformRow(row);
-
-            expect(transformedRow).toEqual([
-                {
-                    asset_type: { asset_type_name: 'type1' },
-                    last_location: { site_name: 'site1' },
-                    asset_type_name: 'type1',
-                    asset_location: 'site1',
-                },
-                {
-                    asset_type: { asset_type_name: 'type2' },
-                    last_location: { site_name: 'site2' },
-                    asset_type_name: 'type2',
-                    asset_location: 'site2',
-                },
-                {
-                    other_key: 'other_value',
-                    asset_type_name: '',
-                    asset_location: '',
-                },
-            ]);
-        });
-
-        it('should return the transformed row if it already exists', () => {
-            const row = [
-                { asset_location: 'location1' },
-                { asset_location: 'location2' },
-                { asset_location: 'location3' },
-            ];
-
-            const transformedRow = transformRow(row);
-
-            expect(transformedRow).toEqual([
-                { asset_location: 'location1' },
-                { asset_location: 'location2' },
-                { asset_location: 'location3' },
-            ]);
-        });
-    });
-
     describe('transformRequest', () => {
         it('should return the expected result when updating Location', () => {
             // Provide sample input values for formValues
@@ -325,7 +277,6 @@ describe('utils', () => {
                 {
                     asset_barcode: '456',
                     asset_id_displayed: '456',
-                    asset_location: '3-303 Building 3, Site 3',
                     site_name: 'Site 3',
                     building_name: 'Building 3',
                     floor_id_displayed: '3',
@@ -337,7 +288,6 @@ describe('utils', () => {
                 {
                     asset_barcode: '123',
                     asset_id_displayed: '123',
-                    asset_location: '1-101 Building 1, Site 1',
                     site_name: 'Site 1',
                     building_name: 'Building 1',
                     floor_id_displayed: '1',
@@ -345,7 +295,6 @@ describe('utils', () => {
                 },
                 {
                     asset_id_displayed: '',
-                    asset_location: '2-202 Building 2, Site 2',
                     site_name: 'Site 2',
                     building_name: 'Building 2',
                     floor_id_displayed: '2',
@@ -354,7 +303,6 @@ describe('utils', () => {
                 {
                     asset_barcode: '456',
                     asset_id_displayed: '456',
-                    asset_location: '3-303 Building 3, Site 3',
                     site_name: 'Site 3',
                     building_name: 'Building 3',
                     floor_id_displayed: '3',

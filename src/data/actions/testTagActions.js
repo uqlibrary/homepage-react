@@ -33,6 +33,10 @@ import {
     TEST_TAG_UPDATE_USER_API,
     TEST_TAG_ADD_USER_API,
     TEST_TAG_DELETE_USER_API,
+    TEST_TAG_TEAM_LIST_API,
+    TEST_TAG_UPDATE_TEAM_API,
+    TEST_TAG_ADD_TEAM_API,
+    TEST_TAG_DELETE_TEAM_API,
 } from 'repositories/routes';
 import { checkExpireSession } from './actionhelpers';
 
@@ -325,6 +329,7 @@ export function loadAssetsFiltered(pattern, filter) {
                 });
             })
             .catch(error => {
+                console.error(error);
                 dispatch({
                     type: actions.TESTTAG_ASSETS_FAILED,
                     payload: error.message,
@@ -720,10 +725,10 @@ export function updateInspectionDetails(id, request) {
 
 /* REPORT INSPECTIONS DUE */
 
-export function getInspectionsDue({ locationId, locationType, period, periodType }) {
+export function getInspectionsDue({ locationId, locationType, period, periodType, teamSlug }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_DUE_LOADING });
-        return get(TEST_TAG_REPORT_INSPECTIONS_DUE_API({ locationId, locationType, period, periodType }))
+        return get(TEST_TAG_REPORT_INSPECTIONS_DUE_API({ locationId, locationType, period, periodType, teamSlug }))
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_INSPECTIONS_DUE_LOADED,
@@ -753,10 +758,10 @@ export function clearInspectionsDue() {
 }
 
 /* REPORT INSPECTIONS BY LICENCED USER */
-export function getInspectionsByLicencedUser({ startDate, endDate, userRange }) {
+export function getInspectionsByLicencedUser({ startDate, endDate, userRange, teamSlug }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_LOADING });
-        return get(TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({ startDate, endDate, userRange }))
+        return get(TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({ startDate, endDate, userRange, teamSlug }))
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_LOADED,
@@ -857,6 +862,7 @@ export function loadAssetReportByFilters({
     locationId,
     inspectionDateFrom,
     inspectionDateTo,
+    teamSlug,
 }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_REPORT_LOADING });
@@ -867,6 +873,7 @@ export function loadAssetReportByFilters({
                 locationId,
                 inspectionDateFrom,
                 inspectionDateTo,
+                teamSlug,
             }),
         )
             .then(response => {
@@ -1006,6 +1013,122 @@ export function deleteUser(id) {
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_USER_LIST_DELETE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+/* Manage Team Lists */
+export function loadTeamList() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_TEAM_LIST_LOADING });
+        return get(TEST_TAG_TEAM_LIST_API())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_TEAM_LIST_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_TEAM_LIST_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function clearTeamListError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_TEAM_LIST_CLEAR_ERROR });
+    };
+}
+
+export function updateTeam(team, request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_TEAM_LIST_UPDATING });
+        return put(TEST_TAG_UPDATE_TEAM_API(team), request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_TEAM_LIST_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_TEAM_LIST_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_TEAM_LIST_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function addTeam(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_TEAM_LIST_ADDING });
+        return post(TEST_TAG_ADD_TEAM_API(), request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_TEAM_LIST_ADDED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_TEAM_LIST_ADD_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_TEAM_LIST_ADD_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function deleteTeam(team) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_TEAM_LIST_DELETING });
+        return destroy(TEST_TAG_DELETE_TEAM_API(team))
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_TEAM_LIST_DELETED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_TEAM_LIST_DELETE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_TEAM_LIST_DELETE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

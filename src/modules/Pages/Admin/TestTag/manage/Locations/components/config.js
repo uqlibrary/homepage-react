@@ -1,10 +1,13 @@
 import React from 'react';
 
 import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import { createLocationString } from '../../../helpers/helpers';
+import { createLocationLink, createLocationString } from '../../../helpers/helpers';
 import { isEmptyStr } from '../../../helpers/helpers';
+import { isValidUrl } from '../../../../Alerts/Form/AlertForm';
 
 export default {
     site: {
@@ -40,6 +43,20 @@ export default {
             },
             asset_count: {
                 fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 140 },
+            },
+            site_excluded: {
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 100 },
+            },
+            site_excluded_cb: {
+                component: props => {
+                    return (
+                        <FormControlLabel
+                            control={<Checkbox color="primary" checked={props.value} {...props} />}
+                            label={locale.pages.manage.locations.form.columns.site.site_excluded_cb.label}
+                        />
+                    );
+                },
+                fieldParams: { canEdit: true, renderInTable: false, minWidth: 150 },
             },
         },
     },
@@ -82,6 +99,25 @@ export default {
             asset_count: {
                 fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 140 },
             },
+            building_excluded: {
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 100 },
+            },
+            building_excluded_cb: {
+                component: (props, _, row) => {
+                    return (
+                        <FormControlLabel
+                            control={<Checkbox color="primary" checked={props.value} {...props} />}
+                            label={
+                                row.parent_excluded
+                                    ? locale.pages.manage.locations.form.columns.building.building_excluded_cb.labelAlt
+                                    : locale.pages.manage.locations.form.columns.building.building_excluded_cb.label
+                            }
+                            disabled={row.parent_excluded}
+                        />
+                    );
+                },
+                fieldParams: { canEdit: true, renderInTable: false, minWidth: 150 },
+            },
         },
     },
     floor: {
@@ -115,8 +151,48 @@ export default {
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
             },
+            floor_plan_url: {
+                component: props => (
+                    <TextField
+                        variant="standard"
+                        {...props}
+                        inputProps={{ ...props.inputProps, maxLength: 255 }}
+                        helperText={locale.pages.general.helperText.maxChars(255)}
+                        required={false}
+                    />
+                ),
+                validate: v => !!v?.trim?.().length && /* istanbul ignore next */ !isValidUrl(v),
+                fieldParams: {
+                    canEdit: true,
+                    renderInTable: true,
+                    renderInAdd: true,
+                    renderInUpdate: true,
+                    flex: 2,
+                    minWidth: 150,
+                    renderCell: params => createLocationLink(params.value, params.value),
+                },
+            },
             asset_count: {
                 fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 140 },
+            },
+            floor_excluded: {
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 100 },
+            },
+            floor_excluded_cb: {
+                component: (props, _, row) => {
+                    return (
+                        <FormControlLabel
+                            control={<Checkbox color="primary" checked={props.value} {...props} />}
+                            label={
+                                row.parent_excluded
+                                    ? locale.pages.manage.locations.form.columns.floor.floor_excluded_cb.labelAlt
+                                    : locale.pages.manage.locations.form.columns.floor.floor_excluded_cb.label
+                            }
+                            disabled={row.parent_excluded}
+                        />
+                    );
+                },
+                fieldParams: { canEdit: true, renderInTable: false, minWidth: 150 },
             },
         },
     },
@@ -158,6 +234,25 @@ export default {
             },
             asset_count: {
                 fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 140 },
+            },
+            room_excluded: {
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 100 },
+            },
+            room_excluded_cb: {
+                component: (props, _, row) => {
+                    return (
+                        <FormControlLabel
+                            control={<Checkbox color="primary" checked={props.value} {...props} />}
+                            label={
+                                row.parent_excluded
+                                    ? locale.pages.manage.locations.form.columns.room.room_excluded_cb.labelAlt
+                                    : locale.pages.manage.locations.form.columns.room.room_excluded_cb.label
+                            }
+                            disabled={row.parent_excluded}
+                        />
+                    );
+                },
+                fieldParams: { canEdit: true, renderInTable: false, minWidth: 150 },
             },
         },
     },
