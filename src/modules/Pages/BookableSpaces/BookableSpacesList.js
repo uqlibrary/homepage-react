@@ -30,6 +30,7 @@ import {
     FILTER_SPACE_CAPACITY_ACTION_NAME,
 } from './spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
+import { CAMPUS_DUTTON_PARK } from 'config/locale';
 
 const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     ...standardText(theme),
@@ -241,22 +242,100 @@ export const BookableSpacesList = ({
     };
     const [selectedCampus, setSelectedCampus] = React.useState(getCampusInitialState());
 
-    function getLatLngCenter(selectedCampusId) {
-        const campusList = {
-            [1]: {
-                space_latitude: -27.497975,
-                space_longitude: 153.012385,
-            },
-            [2]: {
-                space_latitude: -27.5538,
-                space_longitude: 152.33588,
-            },
-            [3]: {
-                space_latitude: -27.50008,
-                space_longitude: 153.03027,
-            },
-        };
-        return campusList[selectedCampusId];
+    // based on https://stackoverflow.com/a/42234774
+    // this isn't the formula I am used to, which has much more trig, but it seems good enough
+    function getLatLngCenter(spacesList, selectedCampusId) {
+        function radiansToDegrees(rad) {
+            return (rad * 180) / Math.PI;
+        }
+        function degreesToRadians(degr) {
+            return (degr * Math.PI) / 180;
+        }
+        function formattedGeolocatedLocation(latitude, longitude, campusId, campusName = null) {
+            return {
+                space_latitude: latitude,
+                space_longitude: longitude,
+                space_campus_id: campusId,
+                space_zlevel: campusName === CAMPUS_DUTTON_PARK ? 6 : null,
+            };
+        }
+
+        const spacesListForCampus = spacesList?.filter(s => s.space_campus_id === selectedCampusId);
+
+        /* eslint-disable camelcase */
+        const buildingsOnCampus =
+            !!spacesListForCampus &&
+            Object.values(
+                // just get one location per building, to stop reweighting of space locations
+                spacesListForCampus?.reduce(
+                    (
+                        acc,
+                        {
+                            space_building_name,
+                            space_building_number,
+                            space_latitude,
+                            space_longitude,
+                            space_campus_id,
+                            space_campus_name,
+                        },
+                    ) => {
+                        if (!acc[space_building_number]) {
+                            acc[space_building_number] = {
+                                building_number: space_building_number,
+                                building_name: space_building_name,
+                                building_latitude: space_latitude,
+                                building_longitude: space_longitude,
+                                building_campus_id: space_campus_id,
+                                building_campus_name: space_campus_name,
+                            };
+                        }
+                        return acc;
+                    },
+                    {},
+                ),
+            );
+
+        if (buildingsOnCampus.length === 0) {
+            // this is probably unreachable - there cant be no buildings at this point
+            return null;
+        }
+
+        if (buildingsOnCampus.length === 1) {
+            return formattedGeolocatedLocation(
+                buildingsOnCampus.at(0).building_latitude,
+                buildingsOnCampus.at(0).building_longitude,
+                buildingsOnCampus.at(0).building_campus_id,
+                buildingsOnCampus.at(0).building_campus_name,
+            );
+        }
+
+        let X = 0.0;
+        let Y = 0.0;
+        let Z = 0.0;
+
+        buildingsOnCampus?.map(building => {
+            const lat = degreesToRadians(building.building_latitude);
+            const lon = degreesToRadians(building.building_longitude);
+
+            const a = Math.cos(lat) * Math.cos(lon);
+            const b = Math.cos(lat) * Math.sin(lon);
+            const c = Math.sin(lat);
+
+            X += a;
+            Y += b;
+            Z += c;
+        });
+
+        const numberOfCoords = buildingsOnCampus.length;
+        X /= numberOfCoords;
+        Y /= numberOfCoords;
+        Z /= numberOfCoords;
+
+        const lon = Math.atan2(Y, X);
+        const hyp = Math.sqrt(X * X + Y * Y);
+        const lat = Math.atan2(Z, hyp);
+
+        return formattedGeolocatedLocation(radiansToDegrees(lat), radiansToDegrees(lon), selectedCampusId);
     }
 
     const handleCampusSelection = e => {
@@ -270,7 +349,7 @@ export const BookableSpacesList = ({
         nextYear.setFullYear(current.getFullYear() + 1);
         setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear });
 
-        const locationOfCentreOfCampus = getLatLngCenter(campusId);
+        const locationOfCentreOfCampus = getLatLngCenter(bookableSpacesRoomList?.data?.locations, campusId);
         !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
     };
 
@@ -842,7 +921,10 @@ export const BookableSpacesList = ({
                                     sortedSpaceLocations={sortedSpaceLocations}
                                     spacesFavouritesList={spacesFavouritesList}
                                     onMarkerClick={handleMarkerClick}
-                                    centreLatLong={getLatLngCenter(selectedCampus)}
+                                    centreLatLong={getLatLngCenter(
+                                        bookableSpacesRoomList?.data?.locations,
+                                        selectedCampus,
+                                    )}
                                 />
                             </div>
                         </StyledLayoutWrapper>

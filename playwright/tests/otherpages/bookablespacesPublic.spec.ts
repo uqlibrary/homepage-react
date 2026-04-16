@@ -16,6 +16,9 @@ const TENTH_PANEL = 'space-7';
 const NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST = 2; // 1 for skip button, 1 for acccessible heading
 const VISIBLE_SPACES_ST_LUCIA_ALL = 10;
 
+// Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
+// which would otherwise cause BookableSpacesList to re-render and destabilise the filter
+// group toggles and count assertions enough for Playwright to time out in CI.
 const disableMazeMapAssets = async (page: Page) => {
     await page.route('**/vendor/mazemap/**', route => route.abort());
 };
@@ -792,6 +795,8 @@ test.describe('Spaces', () => {
             ).toHaveCount(0);
         });
         test('can use special filter: open spaces', async ({ page }) => {
+            // note: the dates used are this weeks because mock/index.js overwrites the json data to be the current week - look for function resetWeeklyHourDatesToBeCurrent
+
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
@@ -978,9 +983,6 @@ test.describe('Spaces', () => {
             page.getByTestId(`facility-type-group-${groupId}`).locator('svg.collapsedGroup');
 
         test.beforeEach(async ({ page }) => {
-            // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
-            // which would otherwise cause BookableSpacesList to re-render and destabilise the filter
-            // group toggles and count assertions enough for Playwright to time out in CI.
             await disableMazeMapAssets(page);
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
@@ -1360,7 +1362,7 @@ test.describe('Spaces', () => {
         });
 
         test('it remembers the changed campus', async ({ page }) => {
-            await page.goto('spaces'); // reload page after campus change
+            await page.goto('spaces'); // reload page after campus change in before
             await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('Dutton Park');
         });
 

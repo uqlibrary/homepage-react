@@ -38,6 +38,14 @@ const BookableSpacesMap = React.forwardRef(
         const selectedMarkerElRef = useRef(null);
         const activePopupRef = useRef(null);
 
+        const ZOOM_CAMPUS_MANY_BUILDINGS = 20;
+        const ZOOM_CAMPUS_ONE_BUILDING = 17;
+        const CAMPUS_INDEX_ST_LUCIA = 1;
+
+        const zoomLevelForCampus = _campusId => {
+            return _campusId === CAMPUS_INDEX_ST_LUCIA ? ZOOM_CAMPUS_ONE_BUILDING : ZOOM_CAMPUS_MANY_BUILDINGS;
+        };
+
         const setSelectedMarker = (markerEl, space) => {
             if (selectedMarkerElRef.current && selectedMarkerElRef.current !== markerEl) {
                 removeClass(selectedMarkerElRef.current, 'selected-marker');
@@ -99,12 +107,14 @@ const BookableSpacesMap = React.forwardRef(
         useImperativeHandle(ref, () => ({
             flyToSpace(location) {
                 const map = mazeMapInstanceRef.current;
-                if (!map || !location?.space_longitude || !location?.space_latitude) return;
+                if (!map || !location?.space_longitude || !location?.space_latitude || !location?.space_campus_id) {
+                    return;
+                }
 
                 const doFly = () => {
                     map.flyTo({
                         center: [location.space_longitude, location.space_latitude],
-                        zoom: 20,
+                        zoom: zoomLevelForCampus(location.space_campus_id),
                         curve: 0.5,
                         speed: 1.6,
                     });
@@ -150,11 +160,11 @@ const BookableSpacesMap = React.forwardRef(
             }
 
             mazeMapInstanceRef.current = new window.Mazemap.Map({
-                container: mapContainer,
+                container: 'mazemap-container',
                 campuses: 'all',
                 center: { lat: centreLatLong.space_latitude, lng: centreLatLong.space_longitude },
-                zoom: 18,
-                zLevel: 1,
+                zoom: zoomLevelForCampus(centreLatLong.space_campus_id),
+                zLevel: centreLatLong?.space_zlevel ?? 1,
                 RTLTextPlugin: null,
             });
 
@@ -250,7 +260,7 @@ BookableSpacesMap.propTypes = {
     sortedSpaceLocations: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
     onMarkerClick: PropTypes.func.isRequired,
-    centreLatLong: PropTypes.any,
+    centreLatLong: PropTypes.object,
 };
 
 export default BookableSpacesMap;
