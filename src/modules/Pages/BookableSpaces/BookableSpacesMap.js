@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
 import { addClass, removeClass } from 'helpers/general';
+import { CAMPUS_ST_LUCIA } from 'config/locale';
 
 const StyledMapWrapperDiv = styled('div')(() => ({
     position: 'absolute',
@@ -38,12 +39,10 @@ const BookableSpacesMap = React.forwardRef(
         const selectedMarkerElRef = useRef(null);
         const activePopupRef = useRef(null);
 
-        const ZOOM_CAMPUS_MANY_BUILDINGS = 20;
-        const ZOOM_CAMPUS_ONE_BUILDING = 17;
-        const CAMPUS_INDEX_ST_LUCIA = 1;
-
-        const zoomLevelForCampus = _campusId => {
-            return _campusId === CAMPUS_INDEX_ST_LUCIA ? ZOOM_CAMPUS_ONE_BUILDING : ZOOM_CAMPUS_MANY_BUILDINGS;
+        const ZOOM_CAMPUS_MANY_BUILDINGS = 17;
+        const ZOOM_CAMPUS_ONE_BUILDING = 20;
+        const zoomLevelForCampus = _campusName => {
+            return _campusName === CAMPUS_ST_LUCIA ? ZOOM_CAMPUS_MANY_BUILDINGS : ZOOM_CAMPUS_ONE_BUILDING;
         };
 
         const setSelectedMarker = (markerEl, space) => {
@@ -114,7 +113,7 @@ const BookableSpacesMap = React.forwardRef(
                 const doFly = () => {
                     map.flyTo({
                         center: [location.space_longitude, location.space_latitude],
-                        zoom: zoomLevelForCampus(location.space_campus_id),
+                        zoom: zoomLevelForCampus(location.space_campus_name),
                         curve: 0.5,
                         speed: 1.6,
                     });
@@ -163,7 +162,7 @@ const BookableSpacesMap = React.forwardRef(
                 container: 'mazemap-container',
                 campuses: 'all',
                 center: { lat: centreLatLong.space_latitude, lng: centreLatLong.space_longitude },
-                zoom: zoomLevelForCampus(centreLatLong.space_campus_id),
+                zoom: zoomLevelForCampus(centreLatLong.space_campus_name),
                 zLevel: centreLatLong?.space_zlevel ?? 1,
                 RTLTextPlugin: null,
             });

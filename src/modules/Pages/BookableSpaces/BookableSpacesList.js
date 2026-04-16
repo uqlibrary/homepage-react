@@ -224,7 +224,7 @@ export const BookableSpacesList = ({
     };
 
     const handleSpaceExpand = useCallback(space => {
-        console.log('handleSpaceExpand space=', space);
+        console.log('### handleSpaceExpand space=', space);
 
         highlightPanel(space);
 
@@ -244,19 +244,21 @@ export const BookableSpacesList = ({
 
     // based on https://stackoverflow.com/a/42234774
     // this isn't the formula I am used to, which has much more trig, but it seems good enough
-    function getLatLngCenter(spacesList, selectedCampusId) {
+    function getLatLngCentreOfCampus(spacesList, selectedCampusId) {
         function radiansToDegrees(rad) {
             return (rad * 180) / Math.PI;
         }
         function degreesToRadians(degr) {
             return (degr * Math.PI) / 180;
         }
-        function formattedGeolocatedLocation(latitude, longitude, campusId, campusName = null) {
+        function formattedGeolocatedLocation(latitude, longitude, campusId, campusName) {
+            const DUTTON_PARK_FLOOR_LEVEL = 6; // we only occupy level 6 at Dutton Park
             return {
                 space_latitude: latitude,
                 space_longitude: longitude,
                 space_campus_id: campusId,
-                space_zlevel: campusName === CAMPUS_DUTTON_PARK ? 6 : null,
+                space_campus_name: campusName,
+                space_zlevel: campusName === CAMPUS_DUTTON_PARK ? DUTTON_PARK_FLOOR_LEVEL : null,
             };
         }
 
@@ -335,7 +337,12 @@ export const BookableSpacesList = ({
         const hyp = Math.sqrt(X * X + Y * Y);
         const lat = Math.atan2(Z, hyp);
 
-        return formattedGeolocatedLocation(radiansToDegrees(lat), radiansToDegrees(lon), selectedCampusId);
+        return formattedGeolocatedLocation(
+            radiansToDegrees(lat),
+            radiansToDegrees(lon),
+            selectedCampusId,
+            buildingsOnCampus.at(0).building_campus_name,
+        );
     }
 
     const handleCampusSelection = e => {
@@ -349,7 +356,8 @@ export const BookableSpacesList = ({
         nextYear.setFullYear(current.getFullYear() + 1);
         setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear });
 
-        const locationOfCentreOfCampus = getLatLngCenter(bookableSpacesRoomList?.data?.locations, campusId);
+        const locationOfCentreOfCampus = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
+        console.log('### locationOfCentreOfCampus=', locationOfCentreOfCampus);
         !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
     };
 
@@ -921,7 +929,7 @@ export const BookableSpacesList = ({
                                     sortedSpaceLocations={sortedSpaceLocations}
                                     spacesFavouritesList={spacesFavouritesList}
                                     onMarkerClick={handleMarkerClick}
-                                    centreLatLong={getLatLngCenter(
+                                    centreLatLong={getLatLngCentreOfCampus(
                                         bookableSpacesRoomList?.data?.locations,
                                         selectedCampus,
                                     )}
