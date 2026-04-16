@@ -1,6 +1,8 @@
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { useCookies } from 'react-cookie';
+
 import { Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -194,6 +196,8 @@ export const BookableSpacesList = ({
     const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
     const FACILITY_TYPE_NAME_CAPACITY = 'Bookable';
 
+    const CAMPUS_INDEX_ST_LUCIA = 1;
+
     const [campusList, setCampusList] = useState([]);
 
     const [selectedFacilityTypes, setSelectedFacilityTypes2] = useState([]);
@@ -227,11 +231,37 @@ export const BookableSpacesList = ({
         mapRef.current?.flyToSpace(space);
     }, []);
 
-    const [selectedCampus, setSelectedCampus2] = React.useState(1);
-    const setSelectedCampus = x => {
-        console.log('BookableSpacesList campus::setSelectedCampus', x);
-        console.log('BookableSpacesList campus::setSelectedCampus bookableSpacesRoomList=', bookableSpacesRoomList);
-        setSelectedCampus2(x);
+    const getCampusInitialState = () => {
+        return CAMPUS_INDEX_ST_LUCIA;
+    };
+    const [selectedCampus, setSelectedCampus] = React.useState(getCampusInitialState());
+
+    function getLatLngCenter(selectedCampusId) {
+        const campusList = {
+            [1]: {
+                space_latitude: -27.497975,
+                space_longitude: 153.012385,
+            },
+            [2]: {
+                space_latitude: -27.5538,
+                space_longitude: 152.33588,
+            },
+            [3]: {
+                space_latitude: -27.50008,
+                space_longitude: 153.03027,
+            },
+        };
+        return campusList[selectedCampusId];
+    }
+
+    const handleCampusSelection = e => {
+        const campusId = e?.target?.value;
+        console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
+        console.log('BookableSpacesList campus::handleCampusSelection bookableSpacesRoomList=', bookableSpacesRoomList);
+        setSelectedCampus(campusId);
+
+        const locationOfCentreOfCampus = getLatLngCenter(campusId);
+        !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
     };
 
     const minimumSpaceCapacity = 1;
@@ -740,6 +770,9 @@ export const BookableSpacesList = ({
                                     maximumSpaceCapacity={maximumSpaceCapacity}
                                     capacityFilterValue={capacityFilterValue}
                                     setCapacityFilterValue={setCapacityFilterValue}
+                                    campusList={campusList}
+                                    selectedCampus={selectedCampus}
+                                    handleCampusSelection={handleCampusSelection}
                                     activeFilterCount={activeFilterCount}
                                 />
                             </div>
@@ -799,6 +832,7 @@ export const BookableSpacesList = ({
                                     sortedSpaceLocations={sortedSpaceLocations}
                                     spacesFavouritesList={spacesFavouritesList}
                                     onMarkerClick={handleMarkerClick}
+                                    centreLatLong={getLatLngCenter(selectedCampus)}
                                 />
                             </div>
                         </StyledLayoutWrapper>
