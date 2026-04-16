@@ -42,8 +42,10 @@ const StandardAuthPage = ({ title = '', locale = null, requiredPermissions, incl
         () =>
             user
                 ? locale?.header?.pageSubtitle?.(
-                      user?.team_display_name ?? user?.user_team ?? /* istanbul ignore next */ '',
-                      user?.department_display_name ?? user?.user_department ?? /* istanbul ignore next */ '',
+                      ...[
+                          user?.team_display_name ?? user?.user_team ?? /* istanbul ignore next */ '',
+                          user?.department_display_name ?? user?.user_department ?? /* istanbul ignore next */ '',
+                      ],
                   )
                 : /* istanbul ignore next */ '',
         [user, locale],
