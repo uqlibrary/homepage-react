@@ -242,27 +242,17 @@ export const SidebarFilters = ({
     selectedFacilityTypes,
     setSelectedFacilityTypes,
     filteredFacilityTypeList,
-    selectedCampus,
-    handleCampusSelection,
     suppliedClassName,
     minimumSpaceCapacity,
     maximumSpaceCapacity,
     capacityFilterValue,
     setCapacityFilterValue,
+    selectedCampus,
+    handleCampusSelection,
     campusList,
     activeFilterCount,
 }) => {
-    console.log(
-        'TOP SidebarFilters facilityTypeList=',
-        facilityTypeListLoading,
-        facilityTypeListError,
-        facilityTypeList,
-    );
-    const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness2] = React.useState([]);
-    const setFacilityTypeFilterGroupExpandedness = x => {
-        console.log('SidebarFilters setFacilityTypeFilterGroupExpandedness=', x);
-        setFacilityTypeFilterGroupExpandedness2(x);
-    };
+    const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
     const [defaultCampus, setDefaultCampus] = React.useState(1);
 
     function sortedUsedGroups() {
@@ -270,7 +260,6 @@ export const SidebarFilters = ({
             !filteredFacilityTypeList?.data?.facility_type_groups ||
             filteredFacilityTypeList?.data?.facility_type_groups?.length === 0
         ) {
-            console.log('SidebarFilters sortedUsedGroups no facility type group data');
             return [];
         }
         const usedFilterList = [...filteredFacilityTypeList?.data?.facility_type_groups];
@@ -835,12 +824,12 @@ SidebarFilters.propTypes = {
     filteredFacilityTypeList: PropTypes.any,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
-    selectedCampus: PropTypes.any,
-    handleCampusSelection: PropTypes.func,
     minimumSpaceCapacity: PropTypes.number,
     maximumSpaceCapacity: PropTypes.number,
     capacityFilterValue: PropTypes.array,
     setCapacityFilterValue: PropTypes.func,
+    selectedCampus: PropTypes.any,
+    handleCampusSelection: PropTypes.func,
     campusList: PropTypes.any,
     suppliedClassName: PropTypes.string,
     activeFilterCount: PropTypes.number,

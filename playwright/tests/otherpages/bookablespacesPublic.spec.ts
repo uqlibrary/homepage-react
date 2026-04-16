@@ -16,15 +16,18 @@ const TENTH_PANEL = 'space-7';
 const NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST = 2; // 1 for skip button, 1 for acccessible heading
 const VISIBLE_SPACES_ST_LUCIA_ALL = 10;
 
+// Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
+// which would otherwise cause BookableSpacesList to re-render and destabilise the filter
+// group toggles and count assertions enough for Playwright to time out in CI.
 const disableMazeMapAssets = async (page: Page) => {
     await page.route('**/vendor/mazemap/**', route => route.abort());
 };
 
 test.describe('Spaces', () => {
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page, context }) => {
         await disableMazeMapAssets(page);
+        await context.clearCookies();
     });
-
     test('can navigate to Spaces public page', async ({ page }) => {
         await page.goto('/?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -489,6 +492,8 @@ test.describe('Spaces', () => {
     });
     test.describe('filtering', () => {
         test.beforeEach(async ({ page }) => {
+            // things don't redraw fast enough for playwright to work if we load the page then resize.
+            // so instead, load the homepage, resize, then navigate to spaces
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces');
@@ -595,11 +600,6 @@ test.describe('Spaces', () => {
             await expect(filterCount).not.toBeVisible();
         });
         test('can OR on filters in the same group', async ({ page }) => {
-            await page.goto('');
-            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
             // setup Ids
             const avEquipmentCheckbox = page.getByTestId('facility-type-listitem-8');
             const byodStationCheckbox = page.getByTestId('facility-type-listitem-32');
@@ -659,11 +659,6 @@ test.describe('Spaces', () => {
         test('can unfilter by cartouche', async ({ page }) => {
             // "cartouches" are the buttons that show at the top of the filter sidebar when a checkbox is checked. Clicking them unsets the filter (unchecks the checkbox)
             // they act as both a summary of the filters checked, and a quick way to unselect, without scrolling up and down
-            await page.goto('');
-            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
             const bookableId = 9002;
             const bookableCheckbox = page.getByTestId(`facility-type-listitem-${bookableId}`);
             const bookableUnsetCartouche = page.getByTestId(`button-deselect-selected-${bookableId}`);
@@ -768,10 +763,6 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0);
         });
         test('can clear all filters with one click', async ({ page }) => {
-            await page.goto('spaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
             const avEquipmentCheckbox = page.getByTestId('facility-type-listitem-8');
             const byodStationCheckbox = page.getByTestId('facility-type-listitem-32');
 
@@ -804,58 +795,7 @@ test.describe('Spaces', () => {
             ).toHaveCount(0);
         });
         test('can use special filter: open spaces', async ({ page }) => {
-            // This test dynamically extracts a date from the mock data and uses it for filtering
-            // This makes the test independent of mock data date ranges
-            let dateToMatchForFiltering = '2025-08-25'; // fallback if extraction fails
-
-            await page.route('**/bookable_spaces/weekly_hours*', async route => {
-                const response = await route.fetch();
-                const weeklyHoursData = await response.json();
-
-                // Dynamically extract the first date from the mock data
-                if (weeklyHoursData?.locations && weeklyHoursData.locations.length > 0) {
-                    const firstLocation = weeklyHoursData.locations[0];
-                    if (firstLocation?.departments?.[0]?.weeks?.[0]) {
-                        const firstWeek = firstLocation.departments[0].weeks[0];
-                        // Get the first day's date from the week object
-                        const firstDayData = Object.values(firstWeek)[0] as any;
-                        if (firstDayData?.date) {
-                            dateToMatchForFiltering = firstDayData.date;
-                        }
-                    }
-                }
-
-                // Set exactly one location (lid 3841) to be currently_open for the extracted date
-                if (weeklyHoursData?.locations) {
-                    weeklyHoursData.locations.forEach((location: { lid: number; departments: { weeks: any[] }[] }) => {
-                        const isTargetLocation = location?.lid === 3841; // Walter Harrison Law Library
-                        if (location && location.departments) {
-                            location.departments.forEach(department => {
-                                if (department && department.weeks) {
-                                    department.weeks.forEach(week => {
-                                        Object.entries(week || {}).forEach(([dayName, dayData]) => {
-                                            // Only set currently_open for the extracted date
-                                            if (dayData && dayData.date === dateToMatchForFiltering && dayData.times) {
-                                                dayData.times.currently_open = isTargetLocation;
-                                            } else if (dayData && dayData.times) {
-                                                // Set all other dates to not currently_open
-                                                dayData.times.currently_open = false;
-                                            }
-                                        });
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
-
-                // Send back the modified response
-                await route.fulfill({
-                    status: response.status(),
-                    headers: response.headers(),
-                    body: JSON.stringify(weeklyHoursData),
-                });
-            });
+            // note: the dates used are this weeks because mock/index.js overwrites the json data to be the current week - look for function resetWeeklyHourDatesToBeCurrent
 
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
@@ -881,10 +821,6 @@ test.describe('Spaces', () => {
             );
         });
         test('can use special filter: capacity and clear checkbox', async ({ page }) => {
-            await page.goto('spaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
             const filterCount = page.getByTestId('space-filter-count').locator('span');
             const spacesCount = page.getByTestId('space-space-count');
             const cartoucheList = page.getByTestId('button-deselect-list'); // buttons at top of the filters to turn them off
@@ -962,10 +898,6 @@ test.describe('Spaces', () => {
             await expect(maximumCapacityField).toHaveValue('24');
         });
         test('can use special filter: capacity and clear all', async ({ page }) => {
-            await page.goto('spaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
-
             const filterCount = page.getByTestId('space-filter-count').locator('span');
             const spacesCount = page.getByTestId('space-space-count');
             const cartoucheList = page.getByTestId('button-deselect-list'); // buttons at top of the filters to turn them off
@@ -1051,9 +983,6 @@ test.describe('Spaces', () => {
             page.getByTestId(`facility-type-group-${groupId}`).locator('svg.collapsedGroup');
 
         test.beforeEach(async ({ page }) => {
-            // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
-            // which would otherwise cause BookableSpacesList to re-render and destabilise the filter
-            // group toggles and count assertions enough for Playwright to time out in CI.
             await disableMazeMapAssets(page);
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
@@ -1430,6 +1359,11 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).not.toBeVisible();
             await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-building')).not.toBeVisible();
             await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).not.toBeVisible();
+        });
+
+        test('it remembers the changed campus', async ({ page }) => {
+            await page.goto('spaces'); // reload page after campus change in before
+            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('Dutton Park');
         });
 
         test('bookable links appear correct on load on change of campus', async ({ page }) => {

@@ -504,14 +504,13 @@ const BookableSpacesMap = React.forwardRef(
                 !location?.space_campus_id && alert('CAMPUS ID NOT PROVIDED'); // debug
                 const map = mazeMapInstanceRef.current;
                 if (!map || !location?.space_longitude || !location?.space_latitude || !location?.space_campus_id) {
-                    console.log('invalid call to flyToSpace', location);
                     return;
                 }
 
                 const doFly = () => {
                     map.flyTo({
                         center: [location.space_longitude, location.space_latitude],
-                        zoom: zoomLevelForCampus(location.space_campus_id),
+                        zoom: zoomLevelForCampus(location.space_campus_name),
                         curve: 0.5,
                         speed: 1.6,
                     });
@@ -561,7 +560,7 @@ const BookableSpacesMap = React.forwardRef(
                 container: 'mazemap-container',
                 campuses: 'all',
                 center: { lat: centreLatLong.space_latitude, lng: centreLatLong.space_longitude },
-                zoom: zoomLevelForCampus(centreLatLong.space_campus_id),
+                zoom: zoomLevelForCampus(centreLatLong.space_campus_name),
                 zLevel: centreLatLong?.space_zlevel ?? 1,
                 RTLTextPlugin: null,
             });

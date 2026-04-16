@@ -1,4 +1,4 @@
-const CAMPUS_ST_LUCIA = 'St Lucia';
+export const CAMPUS_ST_LUCIA = 'St Lucia';
 const CAMPUS_GATTON = 'Gatton';
 const CAMPUS_HERSTON = 'Herston';
 export const CAMPUS_DUTTON_PARK = 'Dutton Park';
