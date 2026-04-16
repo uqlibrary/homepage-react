@@ -1359,6 +1359,11 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).not.toBeVisible();
         });
 
+        test('it remembers the changed campus', async ({ page }) => {
+            await page.goto('spaces'); // reload page after campus change
+            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('Dutton Park');
+        });
+
         test('bookable links appear correct on load on change of campus', async ({ page }) => {
             // public bookable Architecture and Music example
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable`)).not.toBeVisible();

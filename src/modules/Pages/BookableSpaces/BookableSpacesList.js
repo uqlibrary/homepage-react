@@ -231,7 +231,12 @@ export const BookableSpacesList = ({
         mapRef.current?.flyToSpace(space);
     }, []);
 
+    const [cookies, setCookie] = useCookies();
     const getCampusInitialState = () => {
+        const spacesPreferredCampus = cookies.UQLspacesPreferredCampus;
+        if (!!spacesPreferredCampus) {
+            return parseInt(spacesPreferredCampus, 10);
+        }
         return CAMPUS_INDEX_ST_LUCIA;
     };
     const [selectedCampus, setSelectedCampus] = React.useState(getCampusInitialState());
@@ -259,6 +264,11 @@ export const BookableSpacesList = ({
         console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
         console.log('BookableSpacesList campus::handleCampusSelection bookableSpacesRoomList=', bookableSpacesRoomList);
         setSelectedCampus(campusId);
+
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(current.getFullYear() + 1);
+        setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear });
 
         const locationOfCentreOfCampus = getLatLngCenter(campusId);
         !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
