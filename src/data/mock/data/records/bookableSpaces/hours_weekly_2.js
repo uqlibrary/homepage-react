@@ -1,4 +1,5 @@
 export default {
+    "comment": "the dates in this file are overwritten in mock/index.js to be the current week - look for function resetWeeklyHourDatesToBeCurrent",
     "locations": [{
         "lid": 3823,
         "display_name": "Architecture and Music",

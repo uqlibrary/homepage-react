@@ -1,5 +1,7 @@
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+
+import { useCookies } from 'react-cookie';
 
 import { Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -28,6 +30,7 @@ import {
     FILTER_SPACE_CAPACITY_ACTION_NAME,
 } from './spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
+import { CAMPUS_DUTTON_PARK } from 'config/locale';
 
 const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     ...standardText(theme),
@@ -48,9 +51,15 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
         transition: 'background-color 1s linear, border 1s linear',
     },
 }));
-const BookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
+const StyledBookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
     backgroundColor: 'rgb(243, 243, 244)',
     marginBottom: '-50px',
+
+    /* move the mazemaps floor indicator when the filter sidebar is open */
+    '&:has(.filterSideBar.popupFilterList) .mapboxgl-ctrl-bottom-left': {
+        left: '21.1rem',
+    },
+
     [theme.breakpoints.up('lg')]: {
         '&:has(.spacesListHolder.hide)': {
             '& .mapHolder': {
@@ -187,6 +196,8 @@ export const BookableSpacesList = ({
     const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
     const FACILITY_TYPE_NAME_CAPACITY = 'Bookable';
 
+    const CAMPUS_INDEX_ST_LUCIA = 1;
+
     const [campusList, setCampusList] = useState([]);
 
     const [selectedFacilityTypes, setSelectedFacilityTypes2] = useState([]);
@@ -201,25 +212,152 @@ export const BookableSpacesList = ({
 
     const mapRef = useRef(null);
 
+    const highlightPanel = space => {
+        const spacePanel = document.querySelector(`#space-${space?.space_id} > div:first-of-type`);
+        addClass(spacePanel, 'highlightPanel');
+        addClass(spacePanel, 'mobileHighlightPanel');
+
+        setTimeout(() => {
+            removeClass(spacePanel, 'highlightPanel');
+        }, 3000);
+    };
+
     const handleSpaceExpand = useCallback(space => {
+        console.log('### handleSpaceExpand space=', space);
+
+        highlightPanel(space);
+
+        // show space's location on the map
         mapRef.current?.flyToSpace(space);
     }, []);
 
-    const [selectedCampus, setSelectedCampus2] = React.useState(1);
-    const setSelectedCampus = x => {
-        console.log('BookableSpacesList campus::setSelectedCampus', x);
-        console.log('BookableSpacesList campus::setSelectedCampus bookableSpacesRoomList=', bookableSpacesRoomList);
-        setSelectedCampus2(x);
+    const [cookies, setCookie] = useCookies();
+    const getCampusInitialState = () => {
+        const spacesPreferredCampus = cookies.UQLspacesPreferredCampus;
+        if (!!spacesPreferredCampus) {
+            return parseInt(spacesPreferredCampus, 10);
+        }
+        return CAMPUS_INDEX_ST_LUCIA;
     };
+    const [selectedCampus, setSelectedCampus] = React.useState(getCampusInitialState());
+
+    // based on https://stackoverflow.com/a/42234774
+    // this isn't the formula I am used to, which has much more trig, but it seems good enough
+    function getLatLngCentreOfCampus(spacesList, selectedCampusId) {
+        function radiansToDegrees(rad) {
+            return (rad * 180) / Math.PI;
+        }
+        function degreesToRadians(degr) {
+            return (degr * Math.PI) / 180;
+        }
+        function formattedGeolocatedLocation(latitude, longitude, campusId, campusName) {
+            const DUTTON_PARK_FLOOR_LEVEL = 6; // we only occupy level 6 at Dutton Park
+            return {
+                space_latitude: latitude,
+                space_longitude: longitude,
+                space_campus_id: campusId,
+                space_campus_name: campusName,
+                space_zlevel: campusName === CAMPUS_DUTTON_PARK ? DUTTON_PARK_FLOOR_LEVEL : null,
+            };
+        }
+
+        const spacesListForCampus = spacesList?.filter(s => s.space_campus_id === selectedCampusId);
+
+        /* eslint-disable camelcase */
+        const buildingsOnCampus =
+            !!spacesListForCampus &&
+            Object.values(
+                // just get one location per building, to stop reweighting of space locations
+                spacesListForCampus?.reduce(
+                    (
+                        acc,
+                        {
+                            space_building_name,
+                            space_building_number,
+                            space_latitude,
+                            space_longitude,
+                            space_campus_id,
+                            space_campus_name,
+                        },
+                    ) => {
+                        if (!acc[space_building_number]) {
+                            acc[space_building_number] = {
+                                building_number: space_building_number,
+                                building_name: space_building_name,
+                                building_latitude: space_latitude,
+                                building_longitude: space_longitude,
+                                building_campus_id: space_campus_id,
+                                building_campus_name: space_campus_name,
+                            };
+                        }
+                        return acc;
+                    },
+                    {},
+                ),
+            );
+
+        if (buildingsOnCampus.length === 0) {
+            // this is probably unreachable - there cant be no buildings at this point
+            return null;
+        }
+
+        if (buildingsOnCampus.length === 1) {
+            return formattedGeolocatedLocation(
+                buildingsOnCampus.at(0).building_latitude,
+                buildingsOnCampus.at(0).building_longitude,
+                buildingsOnCampus.at(0).building_campus_id,
+                buildingsOnCampus.at(0).building_campus_name,
+            );
+        }
+
+        let X = 0.0;
+        let Y = 0.0;
+        let Z = 0.0;
+
+        buildingsOnCampus?.map(building => {
+            const lat = degreesToRadians(building.building_latitude);
+            const lon = degreesToRadians(building.building_longitude);
+
+            const a = Math.cos(lat) * Math.cos(lon);
+            const b = Math.cos(lat) * Math.sin(lon);
+            const c = Math.sin(lat);
+
+            X += a;
+            Y += b;
+            Z += c;
+        });
+
+        const numberOfCoords = buildingsOnCampus.length;
+        X /= numberOfCoords;
+        Y /= numberOfCoords;
+        Z /= numberOfCoords;
+
+        const lon = Math.atan2(Y, X);
+        const hyp = Math.sqrt(X * X + Y * Y);
+        const lat = Math.atan2(Z, hyp);
+
+        return formattedGeolocatedLocation(
+            radiansToDegrees(lat),
+            radiansToDegrees(lon),
+            selectedCampusId,
+            buildingsOnCampus.at(0).building_campus_name,
+        );
+    }
+
     const handleCampusSelection = e => {
         const campusId = e?.target?.value;
         console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
         console.log('BookableSpacesList campus::handleCampusSelection bookableSpacesRoomList=', bookableSpacesRoomList);
         setSelectedCampus(campusId);
 
-        const firstSpaceInCampus = bookableSpacesRoomList?.data?.locations?.find(s => s.space_campus_id === campusId);
-        console.log('BookableSpacesList campus::handleCampusSelection firstSpaceInCampus=', firstSpaceInCampus);
-        !!firstSpaceInCampus && mapRef.current?.flyToSpace(firstSpaceInCampus);
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(current.getFullYear() + 1);
+        setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear });
+
+        const locationOfCentreOfCampus = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
+        console.log('### locationOfCentreOfCampus=', locationOfCentreOfCampus);
+        !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
     };
 
     const minimumSpaceCapacity = 1;
@@ -274,7 +412,7 @@ export const BookableSpacesList = ({
 
             /* eslint-disable camelcase */
             const currentCampusList = Object.values(
-                bookableSpacesRoomList?.data?.locations.reduce(
+                bookableSpacesRoomList?.data?.locations?.reduce(
                     (acc, { space_campus_id, space_campus_name, space_campus_number }) => {
                         if (!acc[space_campus_id]) {
                             acc[space_campus_id] = {
@@ -643,14 +781,7 @@ export const BookableSpacesList = ({
                 behavior: 'smooth',
             });
 
-        // highlight it
-        const spacePanel = document.querySelector(`#space-${space?.space_id} > div:first-of-type`);
-        addClass(spacePanel, 'highlightPanel');
-        addClass(spacePanel, 'mobileHighlightPanel');
-
-        setTimeout(() => {
-            removeClass(spacePanel, 'highlightPanel');
-        }, 3000);
+        highlightPanel(space);
 
         !!spaceElement && spaceElement?.focus();
 
@@ -673,7 +804,7 @@ export const BookableSpacesList = ({
 
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
     return (
-        <BookableSpacesListWrapperDiv>
+        <StyledBookableSpacesListWrapperDiv>
             {(() => {
                 if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                     return (
@@ -700,7 +831,6 @@ export const BookableSpacesList = ({
                         </StandardPage>
                     );
                 } else {
-                    // mobile and tablet
                     return (
                         <StyledLayoutWrapper data-testid="library-spaces">
                             <div>
@@ -798,13 +928,17 @@ export const BookableSpacesList = ({
                                     sortedSpaceLocations={sortedSpaceLocations}
                                     spacesFavouritesList={spacesFavouritesList}
                                     onMarkerClick={handleMarkerClick}
+                                    centreLatLong={getLatLngCentreOfCampus(
+                                        bookableSpacesRoomList?.data?.locations,
+                                        selectedCampus,
+                                    )}
                                 />
                             </div>
                         </StyledLayoutWrapper>
                     );
                 }
             })()}
-        </BookableSpacesListWrapperDiv>
+        </StyledBookableSpacesListWrapperDiv>
     );
 };
 

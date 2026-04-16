@@ -242,22 +242,18 @@ export const SidebarFilters = ({
     selectedFacilityTypes,
     setSelectedFacilityTypes,
     filteredFacilityTypeList,
-    selectedCampus,
-    handleCampusSelection,
     suppliedClassName,
     minimumSpaceCapacity,
     maximumSpaceCapacity,
     capacityFilterValue,
     setCapacityFilterValue,
+    selectedCampus,
+    handleCampusSelection,
     campusList,
     activeFilterCount,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
-    const [defaultCampus, setDefaultCampus2] = React.useState(1);
-    const setDefaultCampus = x => {
-        console.log('campus::setDefaultCampus', x);
-        setDefaultCampus2(x);
-    };
+    const [defaultCampus, setDefaultCampus] = React.useState(1);
 
     function sortedUsedGroups() {
         if (
@@ -268,7 +264,7 @@ export const SidebarFilters = ({
         }
         const usedFilterList = [...filteredFacilityTypeList?.data?.facility_type_groups];
 
-        return usedFilterList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order);
+        return usedFilterList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order) || [];
     }
 
     React.useEffect(() => {
@@ -715,7 +711,7 @@ export const SidebarFilters = ({
     }
 
     return (
-        <StyledSidebarDiv id="StyledSidebarDivTemp" className={suppliedClassName}>
+        <StyledSidebarDiv id="StyledSidebarDivTemp" className={`filterSideBar ${suppliedClassName}`}>
             <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
                 <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
                     Skip to list of Spaces
@@ -828,12 +824,12 @@ SidebarFilters.propTypes = {
     filteredFacilityTypeList: PropTypes.any,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
-    selectedCampus: PropTypes.any,
-    handleCampusSelection: PropTypes.func,
     minimumSpaceCapacity: PropTypes.number,
     maximumSpaceCapacity: PropTypes.number,
     capacityFilterValue: PropTypes.array,
     setCapacityFilterValue: PropTypes.func,
+    selectedCampus: PropTypes.any,
+    handleCampusSelection: PropTypes.func,
     campusList: PropTypes.any,
     suppliedClassName: PropTypes.string,
     activeFilterCount: PropTypes.number,
