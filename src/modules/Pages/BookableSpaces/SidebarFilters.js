@@ -145,7 +145,6 @@ const StyledSidebarDiv = styled('div')(() => ({
     backgroundColor: 'white',
     flexDirection: 'row',
     flexGrow: 0,
-    marginTop: '0.25rem',
 }));
 const StyledSidebarSubDiv = styled('div')(({ theme }) => ({
     '& > div:first-of-type': {
