@@ -278,6 +278,8 @@ const formatDistance = distanceMeters => {
 const supportsDeviceOrientation = () =>
     typeof window !== 'undefined' && typeof window.DeviceOrientationEvent !== 'undefined';
 
+const MAX_WEBKIT_COMPASS_ACCURACY_DEGREES = 35;
+
 const normalizeAngle = angle => {
     if (!Number.isFinite(Number(angle))) {
         return null;
@@ -324,12 +326,22 @@ const getScreenOrientationAngle = () => {
     return 0;
 };
 
-const getDeviceHeading = event => {
+const getDeviceHeading = (event, { allowRelativeAlpha = false } = {}) => {
     if (Number.isFinite(Number(event?.webkitCompassHeading))) {
+        const compassAccuracy = Number(event?.webkitCompassAccuracy);
+
+        if (Number.isFinite(compassAccuracy) && compassAccuracy > MAX_WEBKIT_COMPASS_ACCURACY_DEGREES) {
+            return null;
+        }
+
         return normalizeAngle(Number(event.webkitCompassHeading));
     }
 
     if (!Number.isFinite(Number(event?.alpha))) {
+        return null;
+    }
+
+    if (event?.absolute !== true && !allowRelativeAlpha) {
         return null;
     }
 
@@ -846,6 +858,7 @@ const BookableSpacesMap = React.forwardRef(
         const geolocationWatchIdRef = useRef(null);
         const userLocationMarkerRef = useRef(null);
         const orientationHeadingRef = useRef(null);
+        const hasAbsoluteOrientationRef = useRef(false);
         const automaticResumeStatusTimeoutRef = useRef(null);
         const pendingInitialLiveRouteRef = useRef(false);
         const rerouteAttemptRef = useRef({
@@ -1448,7 +1461,16 @@ const BookableSpacesMap = React.forwardRef(
             }
 
             const handleDeviceOrientation = event => {
-                const nextHeading = getDeviceHeading(event);
+                const isAbsoluteReading =
+                    Number.isFinite(Number(event?.webkitCompassHeading)) || event?.absolute === true;
+
+                if (isAbsoluteReading) {
+                    hasAbsoluteOrientationRef.current = true;
+                }
+
+                const nextHeading = getDeviceHeading(event, {
+                    allowRelativeAlpha: !hasAbsoluteOrientationRef.current,
+                });
 
                 if (!Number.isFinite(nextHeading)) {
                     return;
@@ -1473,9 +1495,12 @@ const BookableSpacesMap = React.forwardRef(
                 setMapBearing(mazeMapInstanceRef.current, smoothedHeading);
             };
 
+            hasAbsoluteOrientationRef.current = false;
+            window.addEventListener('deviceorientationabsolute', handleDeviceOrientation, true);
             window.addEventListener('deviceorientation', handleDeviceOrientation, true);
 
             return () => {
+                window.removeEventListener('deviceorientationabsolute', handleDeviceOrientation, true);
                 window.removeEventListener('deviceorientation', handleDeviceOrientation, true);
             };
         }, [isMazeMapReady, orientationState.enabled]);
