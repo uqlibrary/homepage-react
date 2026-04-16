@@ -6,8 +6,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const disableHotReload = process.env.MOBILE_LAN === 'true';
 const enableFastRefresh =
-    process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'cc' && process.env.NODE_ENV !== 'production';
+    process.env.NODE_ENV !== 'test' &&
+    process.env.NODE_ENV !== 'cc' &&
+    process.env.NODE_ENV !== 'production' &&
+    !disableHotReload;
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 
 const port = 2020;
@@ -21,12 +25,18 @@ module.exports = {
     mode: 'development',
     context: resolve(__dirname),
     devtool: 'source-map',
-    entry: {
-        browserUpdate: join(__dirname, 'public', 'browser-update.js'),
-        webpackDevClient: `webpack-dev-server/client?${protocol}://${url}:${port}`,
-        webPackDevServer: 'webpack/hot/only-dev-server',
-        index: join(__dirname, 'src', 'index.js'),
-    },
+    entry: Object.assign(
+        {
+            browserUpdate: join(__dirname, 'public', 'browser-update.js'),
+            index: join(__dirname, 'src', 'index.js'),
+        },
+        disableHotReload
+            ? {}
+            : {
+                  webpackDevClient: `webpack-dev-server/client?${protocol}://${url}:${port}`,
+                  webPackDevServer: 'webpack/hot/only-dev-server',
+              },
+    ),
     output: {
         filename: '[name].js',
         path: resolve(__dirname),
@@ -35,6 +45,7 @@ module.exports = {
         // assetModuleFilename: 'images/[hash][ext][query]' // TBD
     },
     devServer: {
+        client: disableHotReload ? false : undefined,
         // client: {
         //     logging: 'info',
         // },
@@ -47,6 +58,8 @@ module.exports = {
         headers: { 'X-Custom-Header': 'yes' },
         historyApiFallback: true,
         host: host,
+        hot: !disableHotReload,
+        liveReload: !disableHotReload,
         // hot: true,
         server: protocol,
         // inline: true,
@@ -135,7 +148,7 @@ module.exports = {
             clear: false,
         }),
         enableFastRefresh && new ReactRefreshWebpackPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
+        !disableHotReload && new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         // new webpack.NamedModulesPlugin(),
         new webpack.LoaderOptionsPlugin({

@@ -12,6 +12,7 @@ fi
 USE_MOCK=true \
 HOST=0.0.0.0 \
 HTTPS=true \
+MOBILE_LAN=true \
 URL="$LAN_IP" \
 FULL_PATH="https://$LAN_IP:2020" \
 NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=2048}" \
