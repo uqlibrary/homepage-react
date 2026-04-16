@@ -84,7 +84,7 @@ describe('InspectionsDue', () => {
             periodType: 'month',
             teamSlug: 'WSS',
         });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
         expect(getByTestId('location_picker-inspections-due-site')).toBeInTheDocument();
         expect(getByTestId('location_picker-inspections-due-site-input')).toHaveAttribute('value', 'All sites');
         expect(getByTestId('location_picker-inspections-due-building')).toBeInTheDocument();
@@ -132,7 +132,7 @@ describe('InspectionsDue', () => {
             periodType: 'month',
             teamSlug: 'WSS',
         });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
@@ -185,7 +185,7 @@ describe('InspectionsDue', () => {
             periodType: 'month',
             teamSlug: 'WSS',
         });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
@@ -224,7 +224,7 @@ describe('InspectionsDue', () => {
         });
         expect(loadSitesFn).toHaveBeenCalled();
         expect(getInspectionsDueFn).toHaveBeenCalledWith({ period: config.defaults.monthsPeriod, periodType: 'month' });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
@@ -267,7 +267,7 @@ describe('InspectionsDue', () => {
         });
         expect(loadSitesFn).toHaveBeenCalled();
         expect(getInspectionsDueFn).toHaveBeenCalledWith({ period: config.defaults.monthsPeriod, periodType: 'month' });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));

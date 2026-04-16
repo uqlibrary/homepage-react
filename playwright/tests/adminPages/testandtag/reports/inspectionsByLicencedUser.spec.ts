@@ -21,10 +21,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(
-            page,
-            locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Work Station Support', 'Library'),
-        );
+        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqtest1')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]', {
@@ -34,10 +31,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
 
     test('Inspector selection works as intended', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(
-            page,
-            locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Work Station Support', 'Library'),
-        );
+        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect(
             page.getByTestId('team_selector-team_display_name-select').getByText('Work Station Support'),
@@ -83,10 +77,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         const currentYear = new Date().getFullYear();
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(
-            page,
-            locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Work Station Support', 'Library'),
-        );
+        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqtest1')).toBeVisible();
         // Add a start date
@@ -145,10 +136,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
 
     test('team selector functions as expected', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(
-            page,
-            locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Work Station Support', 'Library'),
-        );
+        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect(
             page.getByTestId('team_selector-team_display_name-select').getByText('Work Station Support'),

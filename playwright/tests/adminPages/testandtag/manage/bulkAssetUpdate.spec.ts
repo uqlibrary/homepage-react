@@ -33,10 +33,7 @@ test.describe('Test and Tag bulk asset update', () => {
 
     const checkBaseline = async (page: Page) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(
-            page,
-            locale.pages.manage.bulkassetupdate.header.pageSubtitle('Work Station Support', 'Library'),
-        );
+        await assertTitles(page, locale.pages.manage.bulkassetupdate.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
     };
 

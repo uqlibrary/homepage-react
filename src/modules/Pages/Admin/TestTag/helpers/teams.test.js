@@ -9,9 +9,9 @@ jest.mock('./hooks', () => ({
 const mockUser = {
     user_team: 'team-alpha',
     department_teams: [
-        { id: 1, team_slug: 'team-alpha', team_display_name: 'Team Alpha' },
-        { id: 2, team_slug: 'team-beta', team_display_name: 'Team Beta' },
-        { id: 3, team_slug: 'team-gamma', team_display_name: 'Team Gamma' },
+        { id: 1, team_slug: 'team-alpha', team_display_name: 'Team Alpha', team_current_flag: 1 },
+        { id: 2, team_slug: 'team-beta', team_display_name: 'Team Beta', team_current_flag: 1 },
+        { id: 3, team_slug: 'team-gamma', team_display_name: 'Team Gamma', team_current_flag: 0 },
     ],
 };
 
@@ -26,9 +26,9 @@ describe('teams', () => {
 
             expect(result.current).toEqual([
                 { value: -1, label: 'All teams' },
-                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha' },
-                { value: 2, team_slug: 'team-beta', label: 'Team Beta' },
-                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
             ]);
         });
 
@@ -36,9 +36,9 @@ describe('teams', () => {
             const { result } = renderHook(() => useUserDepartmentTeamList(mockUser, false));
 
             expect(result.current).toEqual([
-                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha' },
-                { value: 2, team_slug: 'team-beta', label: 'Team Beta' },
-                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
             ]);
         });
 
@@ -59,6 +59,17 @@ describe('teams', () => {
 
             expect(result.current).toEqual([{ value: -1, label: 'All teams' }]);
         });
+
+        it('should not append "(disabled)" label when includeDisabledLabel is false', () => {
+            const { result } = renderHook(() => useUserDepartmentTeamList(mockUser, true, false));
+
+            expect(result.current).toEqual([
+                { value: -1, label: 'All teams' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma', current: false },
+            ]);
+        });
     });
 
     describe('useCurrentUserDepartmentTeamList', () => {
@@ -69,9 +80,9 @@ describe('teams', () => {
 
             expect(result.current).toEqual([
                 { value: -1, label: 'All teams' },
-                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha' },
-                { value: 2, team_slug: 'team-beta', label: 'Team Beta' },
-                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
             ]);
         });
 
@@ -81,9 +92,22 @@ describe('teams', () => {
             const { result } = renderHook(() => useCurrentUserDepartmentTeamList(false));
 
             expect(result.current).toEqual([
-                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha' },
-                { value: 2, team_slug: 'team-beta', label: 'Team Beta' },
-                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
+            ]);
+        });
+
+        it('should not append "(disabled)" label when includeDisabledLabel is false', () => {
+            hooks.useAccountUser.mockReturnValue({ user: mockUser });
+
+            const { result } = renderHook(() => useCurrentUserDepartmentTeamList(true, false));
+
+            expect(result.current).toEqual([
+                { value: -1, label: 'All teams' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma', current: false },
             ]);
         });
     });
@@ -102,9 +126,9 @@ describe('teams', () => {
 
             expect(result.current.userTeamList).toEqual([
                 { value: -1, label: 'All teams' },
-                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha' },
-                { value: 2, team_slug: 'team-beta', label: 'Team Beta' },
-                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
             ]);
             expect(result.current.teamSelectFieldName).toBe('team_display_name');
             expect(result.current.selectedTeam).toBe(1);
@@ -128,9 +152,20 @@ describe('teams', () => {
             const { result } = renderHook(() => useUserTeams({ user: mockUser, allTeamsOption: false }));
 
             expect(result.current.userTeamList).toEqual([
-                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha' },
-                { value: 2, team_slug: 'team-beta', label: 'Team Beta' },
-                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
+            ]);
+        });
+
+        it('should not append "(disabled)" label when includeDisabledLabel is false', () => {
+            const { result } = renderHook(() => useUserTeams({ user: mockUser, includeDisabledLabel: false }));
+
+            expect(result.current.userTeamList).toEqual([
+                { value: -1, label: 'All teams' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma', current: false },
             ]);
         });
 

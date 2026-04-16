@@ -2,22 +2,28 @@ import { useState, useMemo, useCallback } from 'react';
 
 import { useAccountUser } from './hooks';
 
-export const useUserDepartmentTeamList = (user, allOption = true) => {
+const labelDisabled = '(disabled)';
+
+export const useUserDepartmentTeamList = (user, allOption = true, includeDisabledLabel = true) => {
     const teamList = useMemo(() => {
         const list =
             user?.department_teams?.map(team => ({
                 value: team.id,
                 team_slug: team.team_slug,
-                label: team.team_display_name,
+                label:
+                    team.team_current_flag === 1 || includeDisabledLabel === false
+                        ? team.team_display_name
+                        : `${team.team_display_name} ${labelDisabled}`,
+                current: team.team_current_flag === 1,
             })) ?? /* istanbul ignore next */ [];
         return allOption ? [{ value: -1, label: 'All teams' }, ...list] : list;
-    }, [user, allOption]);
+    }, [user, allOption, includeDisabledLabel]);
     return teamList;
 };
 
-export const useCurrentUserDepartmentTeamList = (allOption = true) => {
+export const useCurrentUserDepartmentTeamList = (allOption = true, includeDisabledLabel = true) => {
     const { user } = useAccountUser();
-    return useUserDepartmentTeamList(user, allOption);
+    return useUserDepartmentTeamList(user, allOption, includeDisabledLabel);
 };
 
 export const useUserTeams = ({
@@ -25,8 +31,9 @@ export const useUserTeams = ({
     teamSelectFieldName = 'team_display_name',
     setDefaultTeam = true,
     allTeamsOption = true,
+    includeDisabledLabel = true,
 } = {}) => {
-    const teamList = useUserDepartmentTeamList(user, allTeamsOption);
+    const teamList = useUserDepartmentTeamList(user, allTeamsOption, includeDisabledLabel);
 
     const getTeamSlug = useCallback(teamId => teamList?.find?.(t => t.value === teamId)?.team_slug ?? '', [teamList]);
     const getTeamIdBySlug = useCallback(teamSlug => teamList?.find?.(t => t.team_slug === teamSlug)?.value ?? '', [
