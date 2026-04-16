@@ -846,10 +846,10 @@ export const BookableSpacesList = ({
     }, []);
 
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
-    const campusCentre = React.useMemo(() => getLatLngCenter(bookableSpacesRoomList?.data?.locations, selectedCampus), [
-        bookableSpacesRoomList?.data?.locations,
-        selectedCampus,
-    ]);
+    const campusCentre = React.useMemo(
+        () => getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, selectedCampus),
+        [bookableSpacesRoomList?.data?.locations, selectedCampus],
+    );
 
     return (
         <StyledBookableSpacesListWrapperDiv>
