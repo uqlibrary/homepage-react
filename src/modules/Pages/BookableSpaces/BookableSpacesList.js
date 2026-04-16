@@ -799,38 +799,45 @@ export const BookableSpacesList = ({
         ) : null;
     };
 
-    const handleMarkerClick = (e, space) => {
-        // Stop the click from opening the popup
-        e?.originalEvent?.stopPropagation();
+    const handleMarkerClick = useCallback(
+        (e, space) => {
+            // Stop the click from opening the popup
+            e?.originalEvent?.stopPropagation();
 
-        // scroll the spaces sidebar to the relevant space
-        const spaceElement = document.getElementById(`space-${space?.space_id}`);
-        !!spaceElement &&
-            typeof spaceElement?.scrollIntoView === 'function' &&
-            spaceElement?.scrollIntoView({
-                behavior: 'smooth',
-            });
+            // scroll the spaces sidebar to the relevant space
+            const spaceElement = document.getElementById(`space-${space?.space_id}`);
+            !!spaceElement &&
+                typeof spaceElement?.scrollIntoView === 'function' &&
+                spaceElement?.scrollIntoView({
+                    behavior: 'smooth',
+                });
 
-        highlightPanel(space);
+            highlightPanel(space);
 
-        !!spaceElement && spaceElement?.focus();
+            !!spaceElement && spaceElement?.focus();
 
-        // if we opened one earlier, close it now (so they don't have masses of them open)
-        if (!!previousToggledSpaceButton) {
-            previousToggledSpaceButton?.click();
-        }
+            // if we opened one earlier, close it now (so they don't have masses of them open)
+            if (!!previousToggledSpaceButton) {
+                previousToggledSpaceButton?.click();
+            }
 
-        // expand it, if not already open
-        const toggleSpaceButton = document.getElementById(`toggle-panel-button-space-${space?.space_id}`);
-        if (
-            !!toggleSpaceButton &&
-            toggleSpaceButton.hasAttribute('aria-expanded') &&
-            toggleSpaceButton.getAttribute('aria-expanded') === 'false'
-        ) {
-            toggleSpaceButton.click();
-            setPreviousToggledSpaceButton(toggleSpaceButton);
-        }
-    };
+            // expand it, if not already open
+            const toggleSpaceButton = document.getElementById(`toggle-panel-button-space-${space?.space_id}`);
+            if (
+                !!toggleSpaceButton &&
+                toggleSpaceButton.hasAttribute('aria-expanded') &&
+                toggleSpaceButton.getAttribute('aria-expanded') === 'false'
+            ) {
+                toggleSpaceButton.click();
+                setPreviousToggledSpaceButton(toggleSpaceButton);
+            }
+        },
+        [previousToggledSpaceButton],
+    );
+
+    const handleNavigationClose = useCallback(() => {
+        setActiveNavigationSpace(null);
+    }, []);
 
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
     const campusCentre = React.useMemo(() => getLatLngCenter(bookableSpacesRoomList?.data?.locations, selectedCampus), [
@@ -968,7 +975,7 @@ export const BookableSpacesList = ({
                                     centreLatLong={campusCentre}
                                     navigationTarget={activeNavigationSpace}
                                     navigationOrigin={campusCentre}
-                                    onNavigationClose={() => setActiveNavigationSpace(null)}
+                                    onNavigationClose={handleNavigationClose}
                                 />
                             </div>
                         </StyledLayoutWrapper>

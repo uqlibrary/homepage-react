@@ -804,8 +804,6 @@ const BookableSpacesMap = React.forwardRef(
         },
         ref,
     ) => {
-        console.log('BookableSpacesMap load centreLatLong=', centreLatLong);
-
         const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
         const [isMazeMapReady, setIsMazeMapReady] = React.useState(false);
         const [mapContainer, setMapContainer] = React.useState(null);
@@ -858,6 +856,10 @@ const BookableSpacesMap = React.forwardRef(
         const ZOOM_CAMPUS_MANY_BUILDINGS = 20;
         const ZOOM_CAMPUS_ONE_BUILDING = 17;
         const CAMPUS_INDEX_ST_LUCIA = 1;
+
+        React.useEffect(() => {
+            console.log('BookableSpacesMap centreLatLong changed=', centreLatLong);
+        }, [centreLatLong]);
 
         const zoomLevelForCampus = _campusId => {
             return _campusId === CAMPUS_INDEX_ST_LUCIA ? ZOOM_CAMPUS_ONE_BUILDING : ZOOM_CAMPUS_MANY_BUILDINGS;
@@ -1111,19 +1113,39 @@ const BookableSpacesMap = React.forwardRef(
 
             if (!navigationTarget || !navigationOrigin) {
                 routeDrawerRef.current.clear();
-                setNavigationState({
-                    status: 'idle',
-                    steps: [],
-                    currentStepIndex: 0,
-                    totalDistanceMeters: null,
-                    totalDurationMinutes: null,
-                    title: '',
-                    error: '',
+                setNavigationState(current => {
+                    if (
+                        current.status === 'idle' &&
+                        current.steps.length === 0 &&
+                        current.currentStepIndex === 0 &&
+                        current.totalDistanceMeters === null &&
+                        current.totalDurationMinutes === null &&
+                        current.title === '' &&
+                        current.error === ''
+                    ) {
+                        return current;
+                    }
+
+                    return {
+                        status: 'idle',
+                        steps: [],
+                        currentStepIndex: 0,
+                        totalDistanceMeters: null,
+                        totalDurationMinutes: null,
+                        title: '',
+                        error: '',
+                    };
                 });
-                setRerouteRequest({
-                    active: false,
-                    origin: null,
-                    reason: '',
+                setRerouteRequest(current => {
+                    if (!current.active && !current.origin && current.reason === '') {
+                        return current;
+                    }
+
+                    return {
+                        active: false,
+                        origin: null,
+                        reason: '',
+                    };
                 });
                 return;
             }
@@ -1273,7 +1295,7 @@ const BookableSpacesMap = React.forwardRef(
                         }));
                     }
                 });
-        }, [isMazeMapReady, navigationOrigin, navigationTarget, rerouteRequest]);
+        }, [isMazeMapReady, navigationOrigin, navigationTarget, rerouteRequest.active, rerouteRequest.origin]);
 
         React.useEffect(() => {
             const clearGeolocationWatch = () => {
