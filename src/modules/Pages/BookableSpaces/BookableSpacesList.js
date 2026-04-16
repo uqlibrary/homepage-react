@@ -57,8 +57,7 @@ const StyledBookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
 
     /* move the mazemaps floor indicator when the filter sidebar is open */
     '&:has(.filterSideBar.popupFilterList) .mapboxgl-ctrl-bottom-left': {
-        left: '20rem',
-        top: 'calc(100% - 470px)',
+        left: '21.1rem',
     },
 
     [theme.breakpoints.up('lg')]: {
