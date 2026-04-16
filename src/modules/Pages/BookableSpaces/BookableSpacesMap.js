@@ -104,7 +104,7 @@ const BookableSpacesMap = React.forwardRef(
         };
 
         useImperativeHandle(ref, () => ({
-            flyToSpace(location) {
+            flyToSpace(location, zoomOverride = null) {
                 const map = mazeMapInstanceRef.current;
                 if (!map || !location?.space_longitude || !location?.space_latitude || !location?.space_campus_id) {
                     return;
@@ -113,7 +113,7 @@ const BookableSpacesMap = React.forwardRef(
                 const doFly = () => {
                     map.flyTo({
                         center: [location.space_longitude, location.space_latitude],
-                        zoom: zoomLevelForCampus(location.space_campus_name),
+                        zoom: zoomOverride ?? zoomLevelForCampus(location.space_campus_name),
                         curve: 0.5,
                         speed: 1.6,
                     });

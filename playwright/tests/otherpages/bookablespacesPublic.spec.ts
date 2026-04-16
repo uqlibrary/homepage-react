@@ -12,6 +12,7 @@ const SEVENTH_PANEL = 'space-4';
 const EIGHTH_PANEL = 'space-5';
 const NINTH_PANEL = 'space-6';
 const TENTH_PANEL = 'space-7';
+const GATTON_PANEL_ONE = 'space-8';
 
 const NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST = 2; // 1 for skip button, 1 for acccessible heading
 const VISIBLE_SPACES_ST_LUCIA_ALL = 10;
@@ -1320,6 +1321,76 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
         });
     });
+    test.describe('Can change libraries', () => {
+        test('it changes to a different library on prompt', async ({ page }) => {
+            const librarySelectorButton = page.getByTestId('filter-by-library');
+            const selectedLibraryButtonLabel = page.getByTestId('filter-by-library').locator('[tabindex="0"]');
+            const libraryChooserButton = (buttonId: string) => page.getByTestId(`library-${buttonId}`);
+            const spacePanelWrapper = page.getByTestId('space-wrapper').locator(':scope > *');
+            const all = VISIBLE_SPACES_ST_LUCIA_ALL;
+            const ALL_LIBRARIES_BUTTON_ID = '0';
+            const ARMUS_BUTTON_ID = '3';
+
+            await page.goto('');
+            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
+            await page.goto('spaces');
+            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+
+            // all space panels load visible (using filters changes which appear)
+            await expect(spacePanelWrapper).toHaveCount(all + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
+            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('St Lucia');
+
+            // change library
+            await librarySelectorButton.click(); // open drop down
+            await libraryChooserButton(ARMUS_BUTTON_ID).click(); // choose armus
+
+            // the library filter selector label updates on change
+            await expect(selectedLibraryButtonLabel).toContainText('Architecture and Music Library');
+
+            // the panels show update on change of library
+            await expect(spacePanelWrapper).toHaveCount(7 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
+
+            // change library
+            await librarySelectorButton.click(); // open drop down
+            await libraryChooserButton(ALL_LIBRARIES_BUTTON_ID).click(); // choose 'all libraries'
+
+            // the library filter selector label updates on change
+            await expect(selectedLibraryButtonLabel).toContainText('All libraries');
+
+            // the panels show update on change of library
+            await expect(spacePanelWrapper).toHaveCount(all + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
+        });
+
+        test('an invalid library cookie will not cause an error and the first campus+first library will be used', async ({
+            page,
+            context,
+        }) => {
+            const selectedCampusNameElement = page.getByTestId('filter-by-campus').locator('[tabindex="0"]');
+            const selectLibraryNameElement = page.getByTestId('filter-by-library').locator('[tabindex="0"]');
+
+            // on inital load, it honours the non-default campus cookie
+            await page.goto('spaces');
+            await expect(selectedCampusNameElement).toContainText('St Lucia');
+            await expect(selectLibraryNameElement).toContainText('All libraries');
+
+            // change library
+            await page.getByTestId('filter-by-library').click(); // open drop down
+            await page.getByTestId('library-3').click(); // choose armus
+
+            // the library filter selector label updates on change
+            await expect(selectLibraryNameElement).toContainText('Architecture and Music Library');
+
+            // manually override the set cookie to an invalid value
+            await context.addCookies([
+                { name: 'UQLspacesPreferredLibrary', value: '999', domain: 'localhost', path: '/' },
+            ]);
+
+            // reload the page - now the library cookie has an invalid value, it ignores the cookie value and uses the default
+            await page.goto('spaces');
+            await expect(selectedCampusNameElement).toContainText('St Lucia');
+            await expect(selectLibraryNameElement).toContainText('All libraries');
+        });
+    });
     test.describe('Can change campuses', () => {
         test.beforeEach(async ({ page }) => {
             // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
@@ -1462,6 +1533,76 @@ test.describe('Spaces', () => {
             // close second panel
             await page.getByTestId(`${PACE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
+        });
+
+        test('an invalid campus cookie will not cause an error and the first campus will be used', async ({
+            page,
+            context,
+        }) => {
+            // on inital load, it honours the non-default campus cookie
+            await page.goto('spaces');
+            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('Dutton Park');
+
+            await context.addCookies([
+                { name: 'UQLspacesPreferredCampus', value: '999', domain: 'localhost', path: '/' },
+            ]);
+
+            // after resetting the cookie invalidly, it ignores campus cookie and uses the default
+            await page.goto('spaces'); // reload page after campus change in before
+            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('St Lucia');
+        });
+
+        test('each campus loads correctly', async ({ page }) => {
+            const spacePanelWrapper = page.getByTestId('space-wrapper').locator(':scope > *');
+            const panelLabel = (panelId: string) =>
+                page.getByTestId(`${panelId}-friendly-location-collapsed`).locator('div');
+            const changeCampusButton = page.getByTestId('filter-by-campus');
+            const librarySelector = page.getByTestId('filter-by-library').locator('[tabindex="0"]');
+            const campusChooser = (campusId: string) => page.getByTestId(`campus-${campusId}`);
+
+            const CAMPUS_ID_ST_LUCIA = '1';
+            const CAMPUS_ID_GATTON = '2';
+            const CAMPUS_ID_DUTTON_PARK = '3';
+
+            // on inital load, it honours the non-default campus cookie
+            await page.goto('spaces');
+            await expect(changeCampusButton.locator('[tabindex="0"]')).toContainText('Dutton Park');
+
+            await expect(panelLabel(PACE)).toContainText('Dutton Park Health Sciences');
+            await expect(spacePanelWrapper).toHaveCount(1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
+            await expect(librarySelector).not.toBeVisible();
+
+            // CHANGE CAMPUS TO GATTON
+            await changeCampusButton.click(); // open drop down
+            await campusChooser(CAMPUS_ID_GATTON).click(); // choose gatton
+            await expect(panelLabel(GATTON_PANEL_ONE)).toContainText('J.K. Murray Library');
+            await expect(spacePanelWrapper).toHaveCount(4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
+            await expect(librarySelector).not.toBeVisible();
+
+            // CHANGE CAMPUS TO ST LUCIA
+            await changeCampusButton.click(); // open drop down
+            await campusChooser(CAMPUS_ID_ST_LUCIA).click(); // choose st lucia
+            await expect(panelLabel(ARCH_REFERENCE)).toContainText('Architecture and Music Library');
+            await expect(spacePanelWrapper).toHaveCount(
+                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+            );
+            await expect(librarySelector).toContainText('All libraries');
+
+            // and circle around, to be sure!
+
+            // CHANGE CAMPUS TO DUTTON PARK
+            await changeCampusButton.click(); // open drop down
+            await campusChooser(CAMPUS_ID_DUTTON_PARK).click(); // choose dutton park
+            await expect(panelLabel(PACE)).toContainText('Dutton Park Health Sciences');
+            await expect(spacePanelWrapper).toHaveCount(1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
+            await expect(librarySelector).not.toBeVisible();
+
+            // CHANGE CAMPUS TO GATTON
+            await changeCampusButton.click(); // open drop down
+            await campusChooser(CAMPUS_ID_GATTON).click(); // choose gatton
+            await expect(panelLabel(GATTON_PANEL_ONE)).toContainText('J.K. Murray Library');
+            await expect(spacePanelWrapper).toHaveCount(4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
+            await expect(librarySelector).not.toBeVisible();
         });
     });
 });
