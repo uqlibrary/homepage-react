@@ -22,6 +22,10 @@ const StyledTable = styled('table')(() => ({
         minWidth: '5em',
     },
 }));
+const StyledOpeningHoursHeadingTypography = styled(Typography)(() => ({
+    fontSize: '1rem',
+    fontWeight: 500,
+}));
 
 export const OpeningHoursTable = ({ weeklyHoursLoading, weeklyHoursError, weeklyHours, bookableSpace }) => {
     const spaceId = bookableSpace?.space_id;
@@ -60,9 +64,9 @@ export const OpeningHoursTable = ({ weeklyHoursLoading, weeklyHoursError, weekly
 
     return (
         <>
-            <Typography component={'h4'} variant={'h6'}>
+            <StyledOpeningHoursHeadingTypography component={'h4'} variant={'h6'}>
                 {bookableSpace?.space_library_name} opening hours
-            </Typography>
+            </StyledOpeningHoursHeadingTypography>
             <div style={{ overflowX: 'scroll' }} tabIndex="0">
                 <StyledTable>
                     <caption>Opening hours in the coming week for {bookableSpace?.space_library_name}</caption>
