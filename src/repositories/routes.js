@@ -111,7 +111,9 @@ export const TEST_TAG_ROOM_API = id => ({
 export const TEST_TAG_ADD_LOCATION_API = type => ({ apiUrl: `test-and-tag/${type}` });
 export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test-and-tag/${type}/${id}` });
 
-export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test-and-tag/asset/search/current/${pattern}` });
+export const TEST_TAG_ASSETS_API = pattern => {
+    return { apiUrl: `/test-and-tag/asset/search/current/${pattern}` };
+};
 export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
     const urlParams = {
         ...(filter?.status?.discarded === false ? { without_discards: 1 } : {}),
@@ -135,7 +137,6 @@ export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
     const apiUrl = `/test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
-    console.log('TEST_TAG_ASSETS_MINE_API', apiUrl);
     return {
         apiUrl,
     };

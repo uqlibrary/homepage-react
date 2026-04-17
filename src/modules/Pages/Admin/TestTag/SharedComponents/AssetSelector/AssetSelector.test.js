@@ -130,7 +130,7 @@ describe('AssetSelector', () => {
             const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
 
             await waitFor(() => expect(onSearchFn).toHaveBeenCalledWith(`UQL${patternMasked}`));
-            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(filter, patternMasked));
+            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(patternMasked, filter));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -190,7 +190,7 @@ describe('AssetSelector', () => {
             const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
 
             await waitFor(() => expect(onSearchFn).toHaveBeenCalledWith(patternMasked));
-            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(filter, patternMasked));
+            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(patternMasked, filter));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
 
             expect(getByRole('listbox')).not.toEqual(null);
@@ -213,7 +213,7 @@ describe('AssetSelector', () => {
             const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
 
             await waitFor(() => expect(onSearchFn).toHaveBeenCalledWith(`UQL${patternMasked}`));
-            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(filter, patternMasked));
+            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(patternMasked, filter));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
 
             expect(queryByRole('listbox')).toEqual(null); // no list box shown in headless mode
