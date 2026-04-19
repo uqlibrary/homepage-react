@@ -76,7 +76,7 @@ const AssetSelector = ({
                 onSearch?.(assetPartial);
                 dispatch(
                     !!filterRef.current
-                        ? actions.loadAssetsFiltered(filterRef.current, assetPartial)
+                        ? actions.loadAssetsFiltered(assetPartial, filterRef.current)
                         : actions.loadAssets(assetPartial),
                 );
             }

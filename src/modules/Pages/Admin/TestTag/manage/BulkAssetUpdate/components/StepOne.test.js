@@ -257,8 +257,8 @@ describe('StepOne', () => {
             await userEvent.click(toggle);
 
             expect(loadAssetsFilteredFn).toHaveBeenLastCalledWith(
-                expect.objectContaining({ all_teams: true, status: { discarded: false } }),
                 searchPattern,
+                expect.objectContaining({ all_teams: true, status: { discarded: false } }),
             );
         }, 10000);
     });

@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
@@ -20,10 +21,15 @@ import config from './config';
 import { transformRow, transformUpdateRequest, emptyActionState, actionReducer } from './utils';
 import { breadcrumbs } from 'config/routes';
 
+import { SwitchIncludeAllTeams, useTeams, createFilter } from '../../../SharedComponents/Teams';
+
 const componentId = 'inspection-details';
 
-const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListError }) => {
+const InspectionDetails = ({ actions }) => {
     const pageLocale = locale.pages.manage.inspectiondetails;
+    const { assetsList, assetsListLoading, assetsListError } = useSelector(state =>
+        state.get?.('testTagAssetsReducer'),
+    );
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -47,7 +53,20 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
     const [actionState, actionDispatch] = React.useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
 
-    const [searchPattern, setSearchPattern] = React.useState('');
+    const [searchPattern, setSearchPattern] = React.useState(undefined);
+
+    const teamActions = useMemo(
+        () => ({
+            loadAssets: actions?.loadAssetsFiltered,
+            clearAssets: actions?.clearAssets,
+        }),
+        [actions],
+    );
+
+    const { includeAllTeams, onAllTeamsChange, allTeams } = useTeams({
+        searchTerm: searchPattern,
+        actions: teamActions,
+    });
 
     const closeDialog = React.useCallback(() => {
         actionDispatch({ type: 'clear' });
@@ -76,7 +95,8 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                 .then(() => {
                     closeDialog();
                     openConfirmationAlert(locale.config.alerts.success(), 'success');
-                    actions.loadAssets(searchPattern); // call last search
+                    const filters = createFilter(allTeams);
+                    teamActions.loadAssets(searchPattern, filters); // call last search
                 })
                 .catch(error => {
                     console.error(error);
@@ -87,7 +107,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                 });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [searchPattern],
+        [searchPattern, allTeams],
     );
 
     const { columns } = useDataTableColumns({
@@ -100,6 +120,13 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
 
     const { row } = useDataTableRow(assetsList, transformRow);
 
+    const onClear = React.useCallback(() => {
+        setSearchPattern(undefined);
+    }, []);
+
+    const handleAllTeamsChange = value => {
+        onAllTeamsChange?.(value, { disableAssetClearing: true });
+    };
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -124,7 +151,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                         isBusy={dialogueBusy}
                     />
                     <Grid container spacing={3}>
-                        <Grid xs={12} md={4} style={{ flex: 1 }}>
+                        <Grid xs={12} md={4}>
                             <AssetSelector
                                 id={componentId}
                                 locale={pageLocale.form}
@@ -134,7 +161,18 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                                 required={false}
                                 clearOnSelect={false}
                                 headless
+                                filter={includeAllTeams}
                                 onSearch={onSearch}
+                                onClear={onClear}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid xs={12}>
+                            <SwitchIncludeAllTeams
+                                id={componentId}
+                                locale={pageLocale.form}
+                                onChange={handleAllTeamsChange}
                             />
                         </Grid>
                     </Grid>
@@ -173,9 +211,6 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
 
 InspectionDetails.propTypes = {
     actions: PropTypes.object,
-    assetsList: PropTypes.any,
-    assetsListLoading: PropTypes.bool,
-    assetsListError: PropTypes.any,
 };
 
 export default React.memo(InspectionDetails);
