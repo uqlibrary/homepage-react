@@ -268,8 +268,16 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         !!siteHeader && siteHeader.removeAttribute('secondLevelUrl');
     }, []);
 
-    const getSpacesUrl = (includeFullPath = false) => {
-        return hrefToInternalPage('/spaces', pageLocation, includeFullPath);
+    const getSpacesUrl = () => {
+        let url =
+            window.location.hostname === 'homepage-development.library.uq.edu.au'
+                ? /* istanbul ignore next */ window.location.href + 'spaces'
+                : '/spaces';
+        if (window.location.hostname === 'localhost') {
+            const username = new URLSearchParams(window.location.search)?.get('user');
+            url += '?user=' + username ?? 'vanilla';
+        }
+        return url;
     };
     // display as locations then booking link but code as booking then locations,
     // so they don't tab to the booking link after clicking the locations open
