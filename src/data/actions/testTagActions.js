@@ -318,7 +318,7 @@ export function loadAssets(pattern) {
             });
     };
 }
-export function loadAssetsFiltered(filter, pattern) {
+export function loadAssetsFiltered(pattern, filter) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSETS_LOADING });
         return get(TEST_TAG_ASSETS_FILTERED_API(pattern, filter))

@@ -14,6 +14,7 @@ const testActions = {
     clearAssetsError: jest.fn(),
     updateInspectionDetails: jest.fn(() => Promise.resolve()),
     loadAssets: jest.fn(() => Promise.resolve()),
+    loadAssetsFiltered: jest.fn(() => Promise.resolve()),
 };
 const mockAPIReturn = [
     {
@@ -105,7 +106,7 @@ describe('InspectionDetails', () => {
     it('renders component standard', () => {
         const { getByText } = setup({ actions: tntActions });
         expect(
-            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library')),
+            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle(null, 'Library')),
         ).toBeInTheDocument();
     });
     it('loads an asset by value', async () => {
@@ -119,11 +120,35 @@ describe('InspectionDetails', () => {
             expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
         });
         expect(
-            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library')),
+            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle(null, 'Library')),
         ).toBeInTheDocument();
 
         await userEvent.type(getByTestId('asset_selector-inspection-details-input'), '123');
         await mockActionsStore.dispatch(tntActions.loadAssets('UQL000123'));
+        const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+    it('loads an asset by value when allTeams checked', async () => {
+        mockApi = setupMockAdapter();
+        mockApi
+            .onGet(repositories.routes.TEST_TAG_ASSETS_FILTERED_API('UQL000123').apiUrl)
+            .reply(200, { status: 'OK', data: [mockAPIReturn] });
+        mockActionsStore = setupStoreForActions();
+        const { getByText, getByTestId, getByRole } = setup({ actions: tntActions, assetsList: mockAPIReturn });
+        await waitFor(() => {
+            expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
+        });
+        expect(
+            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle(null, 'Library')),
+        ).toBeInTheDocument();
+
+        const toggle = getByRole('checkbox', { name: 'All team assets' });
+        await userEvent.click(toggle);
+        expect(toggle).toBeChecked();
+
+        await userEvent.type(getByTestId('asset_selector-inspection-details-input'), '123');
+        await mockActionsStore.dispatch(tntActions.loadAssets('UQL000123'));
+
         const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
@@ -138,7 +163,7 @@ describe('InspectionDetails', () => {
             expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
         });
         expect(
-            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library')),
+            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle(null, 'Library')),
         ).toBeInTheDocument();
 
         await userEvent.type(getByTestId('asset_selector-inspection-details-input'), '123');
@@ -156,7 +181,7 @@ describe('InspectionDetails', () => {
             expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
         });
         expect(
-            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library')),
+            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle(null, 'Library')),
         ).toBeInTheDocument();
         expect(getByText('Power Cord - C5')).toBeInTheDocument();
 
@@ -186,7 +211,7 @@ describe('InspectionDetails', () => {
             expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
         });
         expect(
-            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library')),
+            getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle(null, 'Library')),
         ).toBeInTheDocument();
         expect(getByText('Power Cord - C5')).toBeInTheDocument();
         await userEvent.click(getByTestId('action_cell-UQL000123-edit-button'));

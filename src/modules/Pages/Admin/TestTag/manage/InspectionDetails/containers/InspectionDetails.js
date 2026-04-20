@@ -6,7 +6,6 @@ import { withUser } from '../../../helpers/withUser';
 
 export const mapStateToProps = state => {
     return {
-        ...state.get('testTagAssetsReducer'),
         ...state.get('testTagInspectionDetailsUpdateReducer'),
     };
 };
