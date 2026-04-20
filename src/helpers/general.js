@@ -299,17 +299,17 @@ export const isValidUrl = testUrl => {
     );
 };
 
-// generate a link to a page inside this app
-// assumes calling app has set: import { useLocation } from 'react-router-dom'; const pageLocation = useLocation();
-export const hrefToInternalPage = (path, pageLocation, includeFullPath = false) => {
-    const prefix = `${includeFullPath ? fullPath : ''}`;
-    const url =
-        !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-            ? `${prefix}${path}${pageLocation.search}` // eg include ?user=s1111111
-            : `${prefix}${path}`;
-    console.log('url = ', url);
-    return url;
-};
+// // generate a link to a page inside this app
+// // assumes calling app has set: import { useLocation } from 'react-router-dom'; const pageLocation = useLocation();
+// export const hrefToInternalPage = (path, pageLocation, includeFullPath = false) => {
+//     const prefix = `${includeFullPath ? fullPath : ''}`;
+//     const url =
+//         !!pageLocation.search && pageLocation.search.indexOf('?') === 0
+//             ? `${prefix}${path}${pageLocation.search}` // eg include ?user=s1111111
+//             : `${prefix}${path}`;
+//     console.log('url = ', url);
+//     return url;
+// };
 // gets the File Type of a url eg PDF, as uppercase
 export const standardisedExtension = url => {
     if (!url || !(typeof url === 'string' || url instanceof String)) {
