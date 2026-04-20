@@ -1070,7 +1070,7 @@ export default {
                 ]
             }, {
                 space_id: 13,
-                space_uuid: "f98g_fwas_5g33",
+                space_uuid: "f98g_fwas_5g44",
                 space_name: "central-1",
                 space_precise: null,
                 space_description: "<p>Some words about Central library</p>",
@@ -1160,7 +1160,7 @@ export default {
                 ],
             }, {
                 space_id: 14,
-                space_uuid: "f98g_fwas_5g33",
+                space_uuid: "f98g_fwas_5g55",
                 space_name: "bsl-1",
                 space_precise: null,
                 space_description: null,
@@ -1179,7 +1179,7 @@ export default {
                 space_floor_id: 3,
                 space_floor_name: "3",
                 space_is_ground_floor: 0,
-                space_library_id: 10457,
+                space_library_id: 3829,
                 space_library_name: 'Biological Sciences Library',
                 space_building_name: "Biological Sciences Library",
                 space_building_number: "0094",

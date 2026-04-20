@@ -145,7 +145,6 @@ const StyledSidebarDiv = styled('div')(() => ({
     backgroundColor: 'white',
     flexDirection: 'row',
     flexGrow: 0,
-    marginTop: '0.25rem',
 }));
 const StyledSidebarSubDiv = styled('div')(({ theme }) => ({
     '& > div:first-of-type': {
@@ -188,7 +187,7 @@ const StyledCampusWrapperDiv = styled('div')(({ theme }) => ({
     '& h3': {
         marginBottom: 0,
     },
-    '& .campusSelector': {
+    '& .sidebarSelector': {
         '& > div': {
             paddingBlock: '1rem',
         },
@@ -251,6 +250,9 @@ export const SidebarFilters = ({
     handleCampusSelection,
     campusList,
     activeFilterCount,
+    librariesForCampus,
+    selectedLibrary,
+    handleLibrarySelection,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
     const [defaultCampus, setDefaultCampus] = React.useState(1);
@@ -753,7 +755,7 @@ export const SidebarFilters = ({
                             Choose campus
                         </h3>
                         <Select
-                            className="campusSelector"
+                            className="sidebarSelector"
                             id="filter-by-campus"
                             labelId="filter-by-campus-label"
                             data-testid="filter-by-campus"
@@ -779,6 +781,39 @@ export const SidebarFilters = ({
                                     </MenuItem>
                                 ))}
                         </Select>
+                        {librariesForCampus?.length > 2 && (
+                            // we only show a selector when there is more than 1 libary + the 'all libraries' selector
+                            <>
+                                <h3 id="filter-by-library-label" htmlFor="filter-by-library-input">
+                                    Choose library
+                                </h3>
+                                <Select
+                                    className="sidebarSelector"
+                                    id="filter-by-library"
+                                    labelId="filter-by-library-label"
+                                    data-testid="filter-by-library"
+                                    value={
+                                        librariesForCampus?.find(c => c.library_id === selectedLibrary)?.library_id || 0
+                                    }
+                                    onChange={handleLibrarySelection}
+                                    inputProps={{
+                                        id: 'filter-by-library-input',
+                                        title: 'Filter the displayed Spaces by library',
+                                    }}
+                                >
+                                    {librariesForCampus?.map((library, index) => (
+                                        <MenuItem
+                                            value={library?.library_id}
+                                            key={`filter-by-library-menuitem-${index}`}
+                                            selected={library?.library_id === 99999}
+                                            data-testid={`library-${library?.library_id}`}
+                                        >
+                                            {library.library_name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </>
+                        )}
                     </StyledCampusWrapperDiv>
                 )}
                 {sortedUsedGroups()?.map(group => {
@@ -833,6 +868,9 @@ SidebarFilters.propTypes = {
     campusList: PropTypes.any,
     suppliedClassName: PropTypes.string,
     activeFilterCount: PropTypes.number,
+    librariesForCampus: PropTypes.any,
+    selectedLibrary: PropTypes.any,
+    handleLibrarySelection: PropTypes.func,
 };
 
 export default React.memo(SidebarFilters);
