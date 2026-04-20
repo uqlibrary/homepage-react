@@ -51,7 +51,10 @@ import {
 import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { ImageUploadDropzone } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/ImageUploadDropzone';
 import SpaceOutagePanel from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceOutagePanel';
-import { getSpaceOutageStatus, normalizeSpaceOutageList } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+import {
+    getSpaceOutageStatus,
+    normalizeSpaceOutageList,
+} from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceLocationMap';
 
@@ -1675,7 +1678,11 @@ export const EditSpaceForm = ({
                                                     key={`${tabName}-edit`}
                                                     label={`${tabName}`}
                                                     {...a11yProps(index)}
-                                                    data-testid={isUnavailabilityTab ? 'tab-unavailability' : `tab-${slugifyName(tabName)}`}
+                                                    data-testid={
+                                                        isUnavailabilityTab
+                                                            ? 'tab-unavailability'
+                                                            : `tab-${slugifyName(tabName)}`
+                                                    }
                                                 />
                                             );
                                         })}
@@ -1711,8 +1718,8 @@ export const EditSpaceForm = ({
                                                 variant={'body2'}
                                                 data-testid="space-outage-upcoming-notice-text"
                                             >
-                                                This Space has scheduled unavailability. It will be shown as
-                                                unavailable during that time.
+                                                This Space has scheduled unavailability. It will be shown as unavailable
+                                                during that time.
                                             </Typography>
                                         </StyledDraftModeNotice>
                                     </Box>
