@@ -75,22 +75,34 @@ export default {
             "space_campus_number": "01",
             space_draftmode: true,
             "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/111',
-            space_outages: [
-                {
-                    space_outage_id: 9001,
-                    space_id: 123456,
-                    space_outage_start: '2026-04-21 08:00:00',
-                    space_outage_end: '2026-04-21 10:00:00',
-                    space_outage_reason: 'AV maintenance',
-                },
-                {
-                    space_outage_id: 9002,
-                    space_id: 123456,
-                    space_outage_start: '2026-04-23 13:00:00',
-                    space_outage_end: '2026-04-23 16:00:00',
-                    space_outage_reason: 'Deep cleaning',
-                },
-            ],
+            // Dynamic outages: one current, one upcoming
+            space_outages: (() => {
+                const now = new Date();
+                const pad = v => String(v).padStart(2, '0');
+                const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
+                // Current outage: now-1h to now+1h
+                const currentStart = new Date(now.getTime() - 60*60*1000);
+                const currentEnd = new Date(now.getTime() + 60*60*1000);
+                // Upcoming outage: now+7d to now+7d+2h
+                const upcomingStart = new Date(now.getTime() + 7*24*60*60*1000);
+                const upcomingEnd = new Date(now.getTime() + 7*24*60*60*1000 + 2*60*60*1000);
+                return [
+                    {
+                        space_outage_id: 9001,
+                        space_id: 123456,
+                        space_outage_start: fmt(currentStart),
+                        space_outage_end: fmt(currentEnd),
+                        space_outage_reason: 'AV maintenance',
+                    },
+                    {
+                        space_outage_id: 9002,
+                        space_id: 123456,
+                        space_outage_start: fmt(upcomingStart),
+                        space_outage_end: fmt(upcomingEnd),
+                        space_outage_reason: 'Deep cleaning',
+                    },
+                ];
+            })(),
             facility_types: [
                 {
                     "facility_type_id": 23,

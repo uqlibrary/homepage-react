@@ -1,4 +1,4 @@
-const pad = value => String(value).padStart(2, '0');
+import moment from 'moment';
 
 export const emptySpaceOutageDraft = {
     space_outage_start: '',
@@ -22,40 +22,37 @@ export const normalizeSpaceOutageList = value => {
     return [];
 };
 
+// Returns a moment object or null
 export const parseSpaceOutageDate = value => {
     if (!value) {
         return null;
     }
-
-    const normalisedValue = String(value).replace(' ', 'T');
-    const parsedDate = new Date(normalisedValue);
-
-    return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
+    // Accepts 'YYYY-MM-DD HH:mm:ss' or 'YYYY-MM-DDTHH:mm:ss'
+    const m = moment(String(value).replace('T', ' '), 'YYYY-MM-DD HH:mm:ss', true);
+    return m.isValid() ? m : null;
 };
 
+// Returns string for <input type="datetime-local">, e.g. '2026-04-20T08:00'
 export const formatSpaceOutageDateTimeForInput = value => {
-    const parsedDate = parseSpaceOutageDate(value);
-    if (!parsedDate) {
+    const m = parseSpaceOutageDate(value);
+    if (!m) {
         return '';
     }
-
-    return [
-        parsedDate.getFullYear(),
-        pad(parsedDate.getMonth() + 1),
-        pad(parsedDate.getDate()),
-    ].join('-') + `T${pad(parsedDate.getHours())}:${pad(parsedDate.getMinutes())}`;
+    return m.format('YYYY-MM-DDTHH:mm');
 };
 
+// Accepts input from <input type="datetime-local"> and outputs 'YYYY-MM-DD HH:mm:ss'
 export const formatSpaceOutageDateTimeForPayload = value => {
     if (!value) {
         return null;
     }
-
-    const normalisedValue = String(value).trim().replace('T', ' ');
-    if (normalisedValue.length === 16) {
-        return `${normalisedValue}:00`;
-    }
-    return normalisedValue;
+    // Accepts 'YYYY-MM-DDTHH:mm' or 'YYYY-MM-DD HH:mm' or with seconds
+    const m = moment(
+        String(value).replace('T', ' '),
+        ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD HH:mm', 'YYYY-MM-DDTHH:mm:ss', 'YYYY-MM-DDTHH:mm'],
+        true,
+    );
+    return m.isValid() ? m.format('YYYY-MM-DD HH:mm:ss') : null;
 };
 
 export const formatSpaceOutageDateTimeForDisplay = value => {
@@ -73,14 +70,15 @@ export const formatSpaceOutageDateTimeForDisplay = value => {
 export const getSpaceOutageStatus = (outage, currentTime = new Date()) => {
     const startDate = parseSpaceOutageDate(outage?.space_outage_start);
     const endDate = parseSpaceOutageDate(outage?.space_outage_end);
+    const now = moment(currentTime);
 
     if (!startDate || !endDate) {
         return 'Invalid';
     }
-    if (currentTime >= startDate && currentTime < endDate) {
+    if (now.isSameOrAfter(startDate) && now.isBefore(endDate)) {
         return 'Current';
     }
-    if (currentTime < startDate) {
+    if (now.isBefore(startDate)) {
         return 'Upcoming';
     }
     return 'Past';
@@ -88,8 +86,8 @@ export const getSpaceOutageStatus = (outage, currentTime = new Date()) => {
 
 export const sortSpaceOutages = outages => {
     return [...normalizeSpaceOutageList(outages)].sort((leftOutage, rightOutage) => {
-        const leftDate = parseSpaceOutageDate(leftOutage?.space_outage_start)?.getTime() || 0;
-        const rightDate = parseSpaceOutageDate(rightOutage?.space_outage_start)?.getTime() || 0;
+        const leftDate = parseSpaceOutageDate(leftOutage?.space_outage_start)?.valueOf() || 0;
+        const rightDate = parseSpaceOutageDate(rightOutage?.space_outage_start)?.valueOf() || 0;
         return leftDate - rightDate;
     });
 };
