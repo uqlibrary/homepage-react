@@ -145,13 +145,14 @@ describe('FilterDialog', () => {
         await userEvent.click(getByTestId('location_picker-filter-dialog-site-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
 
-        await waitFor(() => expect(loadAssetsMineFn).toHaveBeenLastCalledWith({ textSearch: '' }));
+        await waitFor(() => expect(loadAssetsMineFn).toHaveBeenLastCalledWith({ teamSlug: 'WSS', textSearch: '' }));
 
         await userEvent.click(getByTestId('location_picker-filter-dialog-building-input'));
         await userEvent.selectOptions(getByRole('listbox'), '0001 - Forgan Smith Building');
 
         await waitFor(() =>
             expect(loadAssetsMineFn).toHaveBeenLastCalledWith({
+                teamSlug: 'WSS',
                 locationId: 1,
                 locationType: 'building',
                 textSearch: '',
@@ -162,20 +163,31 @@ describe('FilterDialog', () => {
         await userEvent.selectOptions(getByRole('listbox'), '2');
 
         await waitFor(() =>
-            expect(loadAssetsMineFn).toHaveBeenLastCalledWith({ locationType: 'floor', locationId: 1, textSearch: '' }),
+            expect(loadAssetsMineFn).toHaveBeenLastCalledWith({
+                teamSlug: 'WSS',
+                locationType: 'floor',
+                locationId: 1,
+                textSearch: '',
+            }),
         );
 
         await userEvent.click(getByTestId('location_picker-filter-dialog-room-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'W212');
 
         await waitFor(() =>
-            expect(loadAssetsMineFn).toHaveBeenLastCalledWith({ locationType: 'room', locationId: 1, textSearch: '' }),
+            expect(loadAssetsMineFn).toHaveBeenLastCalledWith({
+                teamSlug: 'WSS',
+                locationType: 'room',
+                locationId: 1,
+                textSearch: '',
+            }),
         );
 
         await userEvent.type(getByTestId('filter_dialog-test-search-notes-input'), 'Test notes');
 
         await waitFor(() =>
             expect(loadAssetsMineFn).toHaveBeenLastCalledWith({
+                teamSlug: 'WSS',
                 locationType: 'room',
                 locationId: 1,
                 textSearch: 'Test notes',
@@ -187,6 +199,7 @@ describe('FilterDialog', () => {
 
         await waitFor(() =>
             expect(loadAssetsMineFn).toHaveBeenLastCalledWith({
+                teamSlug: 'WSS',
                 assetTypeId: 3,
                 locationType: 'room',
                 locationId: 1,
@@ -204,6 +217,7 @@ describe('FilterDialog', () => {
 
         await waitFor(() =>
             expect(loadAssetsMineFn).toHaveBeenLastCalledWith({
+                teamSlug: 'WSS',
                 locationType: 'room',
                 locationId: 1,
                 textSearch: '',

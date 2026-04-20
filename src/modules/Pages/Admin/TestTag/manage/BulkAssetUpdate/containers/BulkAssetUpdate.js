@@ -11,11 +11,13 @@ export const DEFAULT_FORM_VALUES = {
     hasDiscardStatus: false,
     hasAssetType: false,
     hasAssetStatus: false,
+    hasAssetTeam: false,
     location: undefined,
     fullLocation: undefined,
     asset_type: undefined,
     discard_reason: undefined,
     asset_status: undefined,
+    asset_team: undefined,
     hasClearNotes: false,
     monthRange: config.defaults.monthsPeriod || '-1',
 };

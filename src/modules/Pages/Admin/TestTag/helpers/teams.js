@@ -1,63 +1,60 @@
 import { useState, useMemo, useCallback } from 'react';
 
 import { useAccountUser } from './hooks';
-import { createFilter } from '../SharedComponents/DataTable/Filter/SelectField';
 
-export const useUserDepartmentTeamList = (user, allOption = true) => {
+const labelDisabled = '(disabled)';
+
+export const useUserDepartmentTeamList = (user, allOption = true, includeDisabledLabel = true) => {
     const teamList = useMemo(() => {
         const list =
             user?.department_teams?.map(team => ({
-                id: team.id,
+                value: team.id,
                 team_slug: team.team_slug,
-                label: team.team_display_name,
+                label:
+                    team.team_current_flag === 1 || includeDisabledLabel === false
+                        ? team.team_display_name
+                        : `${team.team_display_name} ${labelDisabled}`,
+                current: team.team_current_flag === 1,
             })) ?? /* istanbul ignore next */ [];
-        return allOption ? [{ id: -1, label: 'All teams' }, ...list] : list;
-    }, [user, allOption]);
+        return allOption ? [{ value: -1, label: 'All teams' }, ...list] : list;
+    }, [user, allOption, includeDisabledLabel]);
     return teamList;
 };
 
-export const useCurrentUserDepartmentTeamList = (allOption = true) => {
+export const useCurrentUserDepartmentTeamList = (allOption = true, includeDisabledLabel = true) => {
     const { user } = useAccountUser();
-    return useUserDepartmentTeamList(user, allOption);
+    return useUserDepartmentTeamList(user, allOption, includeDisabledLabel);
 };
 
-export const useUserTeams = (user, teamSelectFieldName = 'team_display_name', setDefaultTeam = true) => {
-    const teamList = useUserDepartmentTeamList(user);
+export const useUserTeams = ({
+    user,
+    teamSelectFieldName = 'team_display_name',
+    setDefaultTeam = true,
+    allTeamsOption = true,
+    includeDisabledLabel = true,
+} = {}) => {
+    const teamList = useUserDepartmentTeamList(user, allTeamsOption, includeDisabledLabel);
 
-    const createDefaultSelectedTeam = (fieldName, teamId) => () => {
-        const filter = createFilter(fieldName, [teamId]);
-        return {
-            items: [filter],
-        };
-    };
+    const getTeamSlug = useCallback(teamId => teamList?.find?.(t => t.value === teamId)?.team_slug ?? '', [teamList]);
+    const getTeamIdBySlug = useCallback(teamSlug => teamList?.find?.(t => t.team_slug === teamSlug)?.value ?? '', [
+        teamList,
+    ]);
+    const getDefaultTeamId = () => (setDefaultTeam ? getTeamIdBySlug(user?.user_team) : '');
 
-    const defaultTeamId = teamList.find(t => t.team_slug === user.user_team).id;
-    const getDefaultSelectedTeam = setDefaultTeam
-        ? createDefaultSelectedTeam(teamSelectFieldName, defaultTeamId)
-        : { items: [] };
-    const [selectedTeam, setSelectedTeam] = useState(getDefaultSelectedTeam);
+    const [selectedTeam, setSelectedTeam] = useState(getDefaultTeamId);
 
-    const getSelectedTeamSlug = useCallback(
-        team => {
-            return team.items.length > 0
-                ? teamList.find(t => t.id === parseInt(team.items[0].value[0], 10))?.team_slug
-                : '';
-        },
-        [teamList],
-    );
-
-    const selectedTeamSlug = useMemo(() => {
-        return getSelectedTeamSlug(selectedTeam);
-    }, [selectedTeam, getSelectedTeamSlug]);
+    const selectedTeamSlug = useMemo(() => teamList.find(t => t.value === selectedTeam)?.team_slug ?? '', [
+        selectedTeam,
+        teamList,
+    ]);
 
     return {
         userTeamList: teamList,
-        defaultTeamId,
         selectedTeam,
         selectedTeamSlug,
         teamSelectFieldName,
+        getTeamSlug,
+        getTeamIdBySlug,
         setSelectedTeam,
-        createDefaultSelectedTeam,
-        getSelectedTeamSlug,
     };
 };

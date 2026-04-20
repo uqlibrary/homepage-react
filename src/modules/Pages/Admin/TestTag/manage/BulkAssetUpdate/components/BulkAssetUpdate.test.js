@@ -109,6 +109,7 @@ describe('BulkAssetUpdate', () => {
         expect(getByTestId('asset_selector-bulk-asset-update-step-one-input')).toBeInTheDocument();
         expect(getByTestId('bulk_asset_update-step-one-feature-button')).toBeInTheDocument();
         expect(getByTestId('data_table-bulk-asset-update-step-one')).toBeInTheDocument();
+        expect(getByTestId('bulk_asset_update-step-one-all-teams-switch')).toBeInTheDocument();
         expect(getAllByRole('row').length).toBe(1); // just the header initially in the table
         expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
     });
@@ -428,7 +429,7 @@ describe('BulkAssetUpdate', () => {
 
             const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
 
-            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(patternMasked, filter));
+            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(filter, patternMasked));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });
