@@ -37,6 +37,9 @@ favicon.ico
 index.html
 stats.json
 
+# ignore wasm files
+*.wasm
+
 # Playwright
 /playwright/.results
 /playwright/.cache
