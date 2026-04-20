@@ -400,50 +400,67 @@ export const SpaceOutagePanel = ({
                 </Button>
             </Grid>
             <Grid item xs={12}>
-                {spaceOutageListLoading && !outages?.length ? (
-                    <InlineLoader message="Loading outages" />
-                ) : spaceOutageListError ? (
-                    <StyledInfoBox data-testid="space-outage-load-error">
-                        <Typography component={'p'}>
-                            Unable to load space outages right now. Please try again later.
-                        </Typography>
-                    </StyledInfoBox>
-                ) : outages.length === 0 ? (
-                    <StyledInfoBox data-testid="space-outage-empty-state">
-                        <Typography component={'p'}>No outages have been recorded for this space.</Typography>
-                    </StyledInfoBox>
-                ) : (
-                    <>
-                        <Typography component={'h4'} variant={'subtitle1'} data-testid="space-outage-scheduled-heading">
-                            Current and upcoming outages
-                        </Typography>
-                        {activeAndUpcomingOutages.length > 0 ? (
-                            renderOutageTable(activeAndUpcomingOutages, 'space-outage-scheduled')
-                        ) : (
-                            <StyledInfoBox data-testid="space-outage-scheduled-empty-state">
+                {/* Refactored to avoid nested ternaries for clarity */}
+                {(() => {
+                    if (spaceOutageListLoading && !outages?.length) {
+                        return <InlineLoader message="Loading outages" />;
+                    }
+                    if (spaceOutageListError) {
+                        return (
+                            <StyledInfoBox data-testid="space-outage-load-error">
                                 <Typography component={'p'}>
-                                    No current or upcoming outages are recorded for this space.
+                                    Unable to load space outages right now. Please try again later.
                                 </Typography>
                             </StyledInfoBox>
-                        )}
-
-                        <Typography
-                            component={'h4'}
-                            variant={'subtitle1'}
-                            sx={{ mt: 3 }}
-                            data-testid="space-outage-past-heading"
-                        >
-                            Past outages
-                        </Typography>
-                        {pastOutages.length > 0 ? (
-                            renderOutageTable(pastOutages, 'space-outage-past')
-                        ) : (
-                            <StyledInfoBox data-testid="space-outage-past-empty-state">
-                                <Typography component={'p'}>No past outages are recorded for this space.</Typography>
+                        );
+                    }
+                    if (outages.length === 0) {
+                        return (
+                            <StyledInfoBox data-testid="space-outage-empty-state">
+                                <Typography component={'p'}>No outages have been recorded for this space.</Typography>
                             </StyledInfoBox>
-                        )}
-                    </>
-                )}
+                        );
+                    }
+                    // Outages exist
+                    return (
+                        <>
+                            <Typography
+                                component={'h4'}
+                                variant={'subtitle1'}
+                                data-testid="space-outage-scheduled-heading"
+                            >
+                                Current and upcoming outages
+                            </Typography>
+                            {activeAndUpcomingOutages.length > 0 ? (
+                                renderOutageTable(activeAndUpcomingOutages, 'space-outage-scheduled')
+                            ) : (
+                                <StyledInfoBox data-testid="space-outage-scheduled-empty-state">
+                                    <Typography component={'p'}>
+                                        No current or upcoming outages are recorded for this space.
+                                    </Typography>
+                                </StyledInfoBox>
+                            )}
+
+                            <Typography
+                                component={'h4'}
+                                variant={'subtitle1'}
+                                sx={{ mt: 3 }}
+                                data-testid="space-outage-past-heading"
+                            >
+                                Past outages
+                            </Typography>
+                            {pastOutages.length > 0 ? (
+                                renderOutageTable(pastOutages, 'space-outage-past')
+                            ) : (
+                                <StyledInfoBox data-testid="space-outage-past-empty-state">
+                                    <Typography component={'p'}>
+                                        No past outages are recorded for this space.
+                                    </Typography>
+                                </StyledInfoBox>
+                            )}
+                        </>
+                    );
+                })()}
             </Grid>
         </Grid>
     );
