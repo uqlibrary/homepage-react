@@ -91,7 +91,7 @@ describe('SwitchIncludeAllTeams hooks', () => {
                     result.current.onAllTeamsChange(true);
                 });
 
-                expect(defaultProps.actions.loadAssets).toHaveBeenCalledWith({ all_teams: true }, 'test');
+                expect(defaultProps.actions.loadAssets).toHaveBeenCalledWith('test', { all_teams: true });
             });
 
             it('should merge additionalFilters with base filters', () => {
@@ -103,7 +103,7 @@ describe('SwitchIncludeAllTeams hooks', () => {
                     });
                 });
 
-                expect(defaultProps.actions.loadAssets).toHaveBeenCalledWith({ all_teams: true, site_id: 1 }, 'test');
+                expect(defaultProps.actions.loadAssets).toHaveBeenCalledWith('test', { all_teams: true, site_id: 1 });
             });
 
             it('should call clearAssets when value is false and asset team differs from user team', () => {
@@ -135,7 +135,7 @@ describe('SwitchIncludeAllTeams hooks', () => {
                 });
 
                 expect(defaultProps.actions.clearAssets).not.toHaveBeenCalled();
-                expect(defaultProps.actions.loadAssets).toHaveBeenCalledWith({}, 'test');
+                expect(defaultProps.actions.loadAssets).toHaveBeenCalledWith('test', {});
             });
 
             it('should not call clearAssets or loadAssets when searchTerm is undefined and team matches', () => {

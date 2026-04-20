@@ -568,8 +568,8 @@ describe('AssetPanel', () => {
             await userEvent.click(toggle);
 
             expect(loadAssetsFilteredFn).toHaveBeenCalledWith(
-                expect.objectContaining({ all_teams: true }),
                 searchPattern,
+                expect.objectContaining({ all_teams: true }),
             );
         }, 10000);
 
@@ -607,8 +607,8 @@ describe('AssetPanel', () => {
             await userEvent.click(toggle);
 
             expect(loadAssetsFilteredFn).toHaveBeenCalledWith(
-                expect.not.objectContaining({ all_teams: true }),
                 'UQL310000',
+                expect.not.objectContaining({ all_teams: true }),
             );
         }, 10000);
 

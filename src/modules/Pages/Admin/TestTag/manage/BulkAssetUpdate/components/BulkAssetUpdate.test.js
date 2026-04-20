@@ -429,7 +429,7 @@ describe('BulkAssetUpdate', () => {
 
             const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
 
-            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(filter, patternMasked));
+            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(patternMasked, filter));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });

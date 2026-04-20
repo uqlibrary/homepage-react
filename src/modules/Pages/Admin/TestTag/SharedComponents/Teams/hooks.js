@@ -10,7 +10,6 @@ export const createFilter = value => {
 
 const useTeams = ({ assetTeamSlug, searchTerm, actions }) => {
     const [allTeams, setAllTeams] = useState();
-
     const {
         user: { user_team: userTeam },
     } = useAccountUser();
@@ -28,7 +27,7 @@ const useTeams = ({ assetTeamSlug, searchTerm, actions }) => {
                 actions.clearAssets?.();
             } else if (searchTerm !== undefined) {
                 const filters = { ...createFilter(value), ...additionalFilters };
-                actions.loadAssets(filters, searchTerm);
+                actions.loadAssets(searchTerm, filters);
             }
         },
         [assetTeamSlug, searchTerm, userTeam, actions],

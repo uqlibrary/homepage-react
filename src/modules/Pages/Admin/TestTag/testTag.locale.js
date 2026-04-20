@@ -767,7 +767,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `Test note management for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `Test note management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -808,7 +808,7 @@ export default {
                         helperText: 'Scan or enter a new ID to search',
                         placeholder: 'Enter at least 3 characters',
                     },
-
+                    includeAllTeams: 'All team assets',
                     actionTooltips: {
                         edit: 'Edit test notes',
                     },
