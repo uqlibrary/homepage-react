@@ -142,11 +142,22 @@ export const SpaceOutagePanel = ({
     };
 
     const handleDraftChange = fieldName => event => {
+        let value = event?.target?.value || '';
+        if (value && typeof value === 'string' && value.length >= 16) {
+            const momentValue = require('moment')(value, [
+                'YYYY-MM-DDTHH:mm',
+                'YYYY-MM-DD HH:mm',
+                'YYYY-MM-DDTHH:mm:ss',
+                'YYYY-MM-DD HH:mm:ss',
+            ], true);
+            if (momentValue.isValid()) {
+                value = momentValue.format('YYYY-MM-DDTHH:mm');
+            }
+        }
         const newDraft = {
             ...draft,
-            [fieldName]: event?.target?.value || '',
+            [fieldName]: value,
         };
-
         setDraft(newDraft);
         if (validationErrors.length > 0) {
             setValidationErrors(validateSpaceOutageDraft(newDraft, outages, editingOutageId).errors);

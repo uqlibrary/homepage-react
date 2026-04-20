@@ -27,8 +27,16 @@ export const parseSpaceOutageDate = value => {
     if (!value) {
         return null;
     }
-    // Accepts 'YYYY-MM-DD HH:mm:ss' or 'YYYY-MM-DDTHH:mm:ss'
-    const m = moment(String(value).replace('T', ' '), 'YYYY-MM-DD HH:mm:ss', true);
+    const m = moment(
+        String(value),
+        [
+            'YYYY-MM-DDTHH:mm',
+            'YYYY-MM-DD HH:mm',
+            'YYYY-MM-DDTHH:mm:ss',
+            'YYYY-MM-DD HH:mm:ss'
+        ],
+        true
+    );
     return m.isValid() ? m : null;
 };
 
