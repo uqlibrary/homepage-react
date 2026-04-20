@@ -26,7 +26,8 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import FooterRow from './FooterRow';
 import { breadcrumbs } from 'config/routes';
 import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
-import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
+
 import { useUserTeams } from '../../../helpers/teams';
 
 const moment = require('moment');
@@ -67,7 +68,9 @@ const InspectionsByLicencedUser = ({
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
-    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams(user);
+    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams({
+        user,
+    });
 
     const onCloseConfirmationAlert = () => {
         if (!!userInspectionsError) actions.clearInspectionsError();
@@ -190,13 +193,12 @@ const InspectionsByLicencedUser = ({
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={1}>
                         <Grid xs={12} md={4}>
-                            {/* Team Picker */}
-                            <SelectField
-                                field={teamSelectFieldName}
+                            <TeamSelector
+                                id={teamSelectFieldName}
                                 options={userTeamList}
-                                locale={{ all: 'All teams', label: 'Team' }}
-                                filterModel={selectedTeam}
-                                setFilterModel={onTeamChange}
+                                label={'Team'}
+                                currentValue={selectedTeam}
+                                onChange={onTeamChange}
                             />
                         </Grid>
                     </Grid>

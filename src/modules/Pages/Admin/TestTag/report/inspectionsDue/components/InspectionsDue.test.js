@@ -84,7 +84,7 @@ describe('InspectionsDue', () => {
             periodType: 'month',
             teamSlug: 'WSS',
         });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
         expect(getByTestId('location_picker-inspections-due-site')).toBeInTheDocument();
         expect(getByTestId('location_picker-inspections-due-site-input')).toHaveAttribute('value', 'All sites');
         expect(getByTestId('location_picker-inspections-due-building')).toBeInTheDocument();
@@ -101,7 +101,7 @@ describe('InspectionsDue', () => {
         );
         expect(getByTestId('data_table-inspections-due')).toBeInTheDocument();
 
-        expect(getByTestId('team-display-name-select-filter')).toBeInTheDocument();
+        expect(getByTestId('team_selector-team_display_name-select')).toBeInTheDocument();
         expect(getByText('Work Station Support')).toBeInTheDocument();
 
         // check first row is as expected
@@ -132,7 +132,7 @@ describe('InspectionsDue', () => {
             periodType: 'month',
             teamSlug: 'WSS',
         });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
@@ -185,7 +185,7 @@ describe('InspectionsDue', () => {
             periodType: 'month',
             teamSlug: 'WSS',
         });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
@@ -224,7 +224,7 @@ describe('InspectionsDue', () => {
         });
         expect(loadSitesFn).toHaveBeenCalled();
         expect(getInspectionsDueFn).toHaveBeenCalledWith({ period: config.defaults.monthsPeriod, periodType: 'month' });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
@@ -267,7 +267,7 @@ describe('InspectionsDue', () => {
         });
         expect(loadSitesFn).toHaveBeenCalled();
         expect(getInspectionsDueFn).toHaveBeenCalledWith({ period: config.defaults.monthsPeriod, periodType: 'month' });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
@@ -308,8 +308,7 @@ describe('InspectionsDue', () => {
         });
 
         // open team selector and select WSS team
-        const teamSelect = within(getByTestId('team-display-name-select-filter')).getByRole('combobox');
-        await userEvent.click(teamSelect);
+        await userEvent.click(getByTestId('team_selector-team_display_name-select'));
         const listbox = await findByRole('listbox');
         await userEvent.click(within(listbox).getByText('Spaces'));
 
