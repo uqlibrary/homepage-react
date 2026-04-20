@@ -317,6 +317,8 @@ export const SPACES_ALL_API = ({ includeDrafts } = {}) => ({
     },
 });
 export const SPACES_SINGLE_API = ({ uuid }) => ({ apiUrl: `bookable_spaces/space/${uuid}` });
+export const SPACES_OUTAGES_API = ({ spaceId }) => ({ apiUrl: `bookable_spaces/space/${spaceId}/outages` });
+export const SPACES_OUTAGE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_outage/${id}` });
 
 export const WEEKLYHOURS_API = () => {
     return {

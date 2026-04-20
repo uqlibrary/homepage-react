@@ -151,6 +151,18 @@ describe('Backend routes method', () => {
         MockDate.reset();
     });
 
+    it('should construct url for SPACES_OUTAGES_API', () => {
+        expect(routes.SPACES_OUTAGES_API({ spaceId: 123 })).toEqual({
+            apiUrl: 'bookable_spaces/space/123/outages',
+        });
+    });
+
+    it('should construct url for SPACES_OUTAGE_API', () => {
+        expect(routes.SPACES_OUTAGE_API({ id: 456 })).toEqual({
+            apiUrl: 'bookable_spaces/space_outage/456',
+        });
+    });
+
     it('should construct url for WEEKLYHOURS_API', () => {
         const MockDate = require('mockdate');
         MockDate.set('2020-01-01T00:00:00.000Z', 10);

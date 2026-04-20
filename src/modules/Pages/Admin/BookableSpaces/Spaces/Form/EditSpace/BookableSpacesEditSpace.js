@@ -40,6 +40,9 @@ export const BookableSpacesEditSpace = ({
     bookableSpaceGetting,
     bookableSpaceGetError,
     bookableSpaceGetResult,
+    spaceOutageList,
+    spaceOutageListLoading,
+    spaceOutageListError,
 }) => {
     console.log(
         'Edit bookableSpaceGet:',
@@ -93,6 +96,13 @@ export const BookableSpacesEditSpace = ({
             actions.loadABookableSpacesRoom(spaceUuid);
         }
     }, [actions, spaceUuid]);
+
+    useEffect(() => {
+        const spaceId = bookableSpaceGetResult?.data?.space_id;
+        if (!!spaceId) {
+            actions.loadBookableSpaceOutages(spaceId);
+        }
+    }, [actions, bookableSpaceGetResult?.data?.space_id]);
 
     const [currentCampusList, setCurrentCampusList] = useState([]);
     useEffect(() => {
@@ -265,6 +275,9 @@ export const BookableSpacesEditSpace = ({
                 springshareList={springshareList}
                 currentCampusList={currentCampusList}
                 initialCampus={safeCampusIndex(currentCampusList, formValues?.campus_id)}
+                spaceOutageList={spaceOutageList}
+                spaceOutageListLoading={spaceOutageListLoading}
+                spaceOutageListError={spaceOutageListError}
                 mode="edit"
             />
         );
@@ -294,6 +307,9 @@ BookableSpacesEditSpace.propTypes = {
     bookableSpacesRoomUpdating: PropTypes.any,
     bookableSpacesRoomUpdateError: PropTypes.any,
     bookableSpacesRoomUpdateResult: PropTypes.any,
+    spaceOutageList: PropTypes.any,
+    spaceOutageListLoading: PropTypes.any,
+    spaceOutageListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesEditSpace);

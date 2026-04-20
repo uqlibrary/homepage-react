@@ -28,7 +28,9 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditIcon from '@mui/icons-material/Edit';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -45,6 +47,7 @@ import NorthIcon from '@mui/icons-material/North';
 import { addClass, removeClass, slugifyName, standardText } from 'helpers/general';
 
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { getSpaceOutageStatus } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import {
     addBreadcrumbsToSiteHeader,
     spacesAdminLink,
@@ -515,6 +518,22 @@ export const BookableSpacesManageSpaces = ({
         return bookableSpace?.facility_types?.some(spaceFacility => {
             return spaceFacility?.facility_type_id === facilityType?.facility_type_id;
         });
+    }
+
+    function getSpaceUnavailabilityStatus(bookableSpace) {
+        const outageStatuses = (bookableSpace?.space_outages || []).map(spaceOutage => {
+            const outageStatus = getSpaceOutageStatus(spaceOutage);
+            return outageStatus;
+        });
+
+        if (outageStatuses.includes('Current')) {
+            return 'Current';
+        }
+        if (outageStatuses.includes('Upcoming')) {
+            return 'Upcoming';
+        }
+
+        return null;
     }
 
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : '#fff');
@@ -1056,6 +1075,8 @@ export const BookableSpacesManageSpaces = ({
                                             displayedRows?.find(u => u?.spaceId === space?.space_id && !!u?.showSpace),
                                         )
                                         ?.map(bookableSpace => {
+                                            const spaceUnavailabilityStatus = getSpaceUnavailabilityStatus(bookableSpace);
+
                                             return (
                                                 <StyledTableRow
                                                     key={`space-${bookableSpace?.space_id}`}
@@ -1068,6 +1089,30 @@ export const BookableSpacesManageSpaces = ({
                                                         style={{ paddingBlock: '0.5rem' }}
                                                     >
                                                         <div>
+                                                            {spaceUnavailabilityStatus === 'Current' && (
+                                                                <HighlightOffIcon
+                                                                    style={{
+                                                                        width: '1rem',
+                                                                        marginRight: '0.35rem',
+                                                                        color: '#d32f2f',
+                                                                        verticalAlign: 'text-bottom',
+                                                                    }}
+                                                                    titleAccess="This Space is currently unavailable"
+                                                                    data-testid={`space-${bookableSpace?.space_id}-outage-current-icon`}
+                                                                />
+                                                            )}
+                                                            {spaceUnavailabilityStatus === 'Upcoming' && (
+                                                                <ErrorOutlineIcon
+                                                                    style={{
+                                                                        width: '1rem',
+                                                                        marginRight: '0.35rem',
+                                                                        color: '#ed6c02',
+                                                                        verticalAlign: 'text-bottom',
+                                                                    }}
+                                                                    titleAccess="This Space has upcoming scheduled unavailability"
+                                                                    data-testid={`space-${bookableSpace?.space_id}-outage-upcoming-icon`}
+                                                                />
+                                                            )}
                                                             {!!bookableSpace?.space_draftmode && (
                                                                 <WarningAmberIcon
                                                                     style={{
