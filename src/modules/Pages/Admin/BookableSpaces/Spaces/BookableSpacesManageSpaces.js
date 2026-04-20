@@ -1075,7 +1075,11 @@ export const BookableSpacesManageSpaces = ({
                                             displayedRows?.find(u => u?.spaceId === space?.space_id && !!u?.showSpace),
                                         )
                                         ?.map(bookableSpace => {
-                                            const spaceUnavailabilityStatus = getSpaceUnavailabilityStatus(bookableSpace);
+
+                                            // Determine if there are current and/or upcoming outages
+                                            const outages = bookableSpace?.space_outages || [];
+                                            const hasCurrentOutage = outages.some(o => getSpaceOutageStatus(o) === 'Current');
+                                            const hasUpcomingOutage = outages.some(o => getSpaceOutageStatus(o) === 'Upcoming');
 
                                             return (
                                                 <StyledTableRow
@@ -1089,7 +1093,7 @@ export const BookableSpacesManageSpaces = ({
                                                         style={{ paddingBlock: '0.5rem' }}
                                                     >
                                                         <div>
-                                                            {spaceUnavailabilityStatus === 'Current' && (
+                                                            {hasCurrentOutage && (
                                                                 <HighlightOffIcon
                                                                     style={{
                                                                         width: '1rem',
@@ -1101,7 +1105,7 @@ export const BookableSpacesManageSpaces = ({
                                                                     data-testid={`space-${bookableSpace?.space_id}-outage-current-icon`}
                                                                 />
                                                             )}
-                                                            {spaceUnavailabilityStatus === 'Upcoming' && (
+                                                            {hasUpcomingOutage && (
                                                                 <ErrorOutlineIcon
                                                                     style={{
                                                                         width: '1rem',
