@@ -9,6 +9,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
+import { breadcrumbs } from 'config/routes';
+
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -18,9 +20,6 @@ import { useAccountContext } from 'context';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
-
-import { breadcrumbs } from 'config/routes';
-import { CAMPUS_DUTTON_PARK } from 'config/locale';
 import {
     FACILITY_TYPE_CHECKBOX,
     FACILITY_TYPE_SLIDER,
@@ -31,6 +30,7 @@ import {
     FILTER_SPACE_CAPACITY_ACTION_NAME,
 } from './spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
+import { CAMPUS_DUTTON_PARK } from 'config/locale';
 
 const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     ...standardText(theme),
@@ -197,9 +197,8 @@ export const BookableSpacesList = ({
     const FACILITY_TYPE_NAME_CAPACITY = 'Bookable';
 
     const FIRST_CAMPUS_ID = 1;
-    const ALL_BUILDINGS_ID = 0;
-
-    const [cookies, setCookie] = useCookies();
+    const ALL_LIBRARIES_ID = 0;
+    const ZOOM_IN_TO_LIBRARY = 20;
 
     const [campusList, setCampusList] = useState([]);
     const [librariesForCampus, setCampusLibraryList] = useState([]);
@@ -230,20 +229,25 @@ export const BookableSpacesList = ({
         highlightPanel(space);
 
         // show space's location on the map
-        mapRef.current?.flyToSpace(space);
+        mapRef.current?.flyToSpace(space, ZOOM_IN_TO_LIBRARY);
     }, []);
 
-    const [selectedLibrary, setSelectedLibrary] = React.useState(ALL_BUILDINGS_ID);
+    const [selectedLibrary, setSelectedLibrary] = React.useState(ALL_LIBRARIES_ID);
 
     // ensure we use a valid campus id value
     // (have to do it on the fly, not at setup, as seems campusList isnt available then)
+    const [cookies, setCookie] = useCookies();
     const correctedCampusId = campusId =>
         campusList?.find(c => c.campus_id === campusId) ? campusId : FIRST_CAMPUS_ID;
     const getCampusInitialState = () => {
         const spacesPreferredCampus = cookies.UQLspacesPreferredCampus;
-        return !!spacesPreferredCampus ? parseInt(spacesPreferredCampus, 10) : FIRST_CAMPUS_ID;
+        if (!!spacesPreferredCampus) {
+            return parseInt(spacesPreferredCampus, 10);
+        }
+        return FIRST_CAMPUS_ID;
     };
     const [selectedCampus, setSelectedCampus] = React.useState(getCampusInitialState());
+
     // based on https://stackoverflow.com/a/42234774
     // this isn't the formula I am used to, which has much more trig, but it seems good enough
     function getLatLngCentreOfCampus(spacesList, selectedCampusId) {
@@ -358,19 +362,17 @@ export const BookableSpacesList = ({
         nextYear.setFullYear(current.getFullYear() + 1);
         setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear });
 
-        setSelectedLibrary(0); // clear the library on changing campus
+        setSelectedLibrary(ALL_LIBRARIES_ID); // clear the library on changing campus
 
         const locationOfCentreOfCampus = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
         !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
     };
 
     const handleLibrarySelection = e => {
-        const ZOOM_IN_TO_BUILDING = 20;
-
         const libraryId = e?.target?.value;
         setSelectedLibrary(libraryId);
 
-        if (libraryId === 0) {
+        if (libraryId === ALL_LIBRARIES_ID) {
             // all libraries chosen
             const locationOfCentreOfCampus = getLatLngCentreOfCampus(
                 bookableSpacesRoomList?.data?.locations,
@@ -380,7 +382,7 @@ export const BookableSpacesList = ({
         } else {
             // particular library chosen
             const libraryDetails = bookableSpacesRoomList?.data?.locations?.find(s => s.space_library_id === libraryId);
-            !!libraryDetails && mapRef.current?.flyToSpace(libraryDetails, !!libraryId ? ZOOM_IN_TO_BUILDING : null);
+            !!libraryDetails && mapRef.current?.flyToSpace(libraryDetails, ZOOM_IN_TO_LIBRARY);
         }
     };
 
@@ -454,6 +456,8 @@ export const BookableSpacesList = ({
             );
             setCampusList(currentCampusList);
 
+            // build list for library selector
+            // get libraries on this campus, one entry per library (not per space)
             const currentLibraryList = Object.values(
                 bookableSpacesRoomList?.data?.locations?.reduce(
                     (acc, { space_campus_id, space_library_id, space_library_name }) => {
@@ -475,7 +479,7 @@ export const BookableSpacesList = ({
             // add an 'all' option
             currentLibraryList?.length > 0 &&
                 currentLibraryList.unshift({
-                    library_id: 0,
+                    library_id: ALL_LIBRARIES_ID,
                     library_name: 'All libraries',
                     library_space_count: 0,
                 });
@@ -543,27 +547,15 @@ export const BookableSpacesList = ({
     };
 
     function showSpace(space, facilityTypeToGroup, selectedFacilityTypes, selectedCurrentCampus, selectedLibrary) {
-        console.log(
-            'showSpace',
-            space.space_name,
-            '; campus=',
-            space.space_campus_id,
-            ';selectedCurrentCampus=',
-            selectedCurrentCampus,
-            ';selectedLibrary=',
-            selectedLibrary,
-        );
         if (space?.space_draftmode) {
             return false;
         }
 
         if (space.space_campus_id !== selectedCurrentCampus) {
-            console.log('showSpace skip by campus mismatch');
             return false;
         }
 
         if (!!selectedLibrary && space.space_library_id !== selectedLibrary) {
-            console.log('showSpace skip by library mismatch, ', selectedLibrary);
             return false;
         }
 
@@ -1008,9 +1000,6 @@ BookableSpacesList.propTypes = {
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
-    campusList: PropTypes.any,
-    campusListLoading: PropTypes.any,
-    campusListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesList);

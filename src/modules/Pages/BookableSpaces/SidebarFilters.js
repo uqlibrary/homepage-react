@@ -782,6 +782,7 @@ export const SidebarFilters = ({
                                 ))}
                         </Select>
                         {librariesForCampus?.length > 2 && (
+                            // we only show a selector when there is more than 1 libary + the 'all libraries' selector
                             <>
                                 <h3 id="filter-by-library-label" htmlFor="filter-by-library-input">
                                     Choose library
@@ -800,18 +801,16 @@ export const SidebarFilters = ({
                                         title: 'Filter the displayed Spaces by library',
                                     }}
                                 >
-                                    {librariesForCampus
-                                        // ?.filter(library => library.library_space_count > 0)
-                                        ?.map((library, index) => (
-                                            <MenuItem
-                                                value={library?.library_id}
-                                                key={`filter-by-library-menuitem-${index}`}
-                                                selected={library?.library_id === 99999}
-                                                data-testid={`library-${library?.library_id}`}
-                                            >
-                                                {library.library_name}
-                                            </MenuItem>
-                                        ))}
+                                    {librariesForCampus?.map((library, index) => (
+                                        <MenuItem
+                                            value={library?.library_id}
+                                            key={`filter-by-library-menuitem-${index}`}
+                                            selected={library?.library_id === 99999}
+                                            data-testid={`library-${library?.library_id}`}
+                                        >
+                                            {library.library_name}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </>
                         )}
