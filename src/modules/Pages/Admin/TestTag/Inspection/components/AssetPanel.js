@@ -166,7 +166,7 @@ const AssetPanel = ({
                 isBusy={dialogueBusy}
             />
             <Grid container spacing={3}>
-                <Grid xs={12} item sm={6} md={3}>
+                <Grid xs={12} item sm={6} md={6}>
                     <FormGroup>
                         <AssetSelector
                             id={componentId}

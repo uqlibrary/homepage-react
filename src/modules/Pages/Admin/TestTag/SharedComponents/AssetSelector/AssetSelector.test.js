@@ -58,6 +58,8 @@ describe('AssetSelector', () => {
         selectOptionFromListByIndex(0, { getByRole, getAllByRole });
 
         expect(getByTestId('asset_selector-test-input')).toHaveAttribute('value', 'NEW ASSET');
+        // assert that barcode scanner trigger is present
+        expect(getByTestId('barcode-scanner-open-button')).toBeEnabled();
     });
     it('renders component without ADD NEW option', () => {
         const { getByTestId, getByText, queryByRole } = setup({
@@ -130,7 +132,7 @@ describe('AssetSelector', () => {
             const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
 
             await waitFor(() => expect(onSearchFn).toHaveBeenCalledWith(`UQL${patternMasked}`));
-            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(filter, patternMasked));
+            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(patternMasked, filter));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -190,7 +192,7 @@ describe('AssetSelector', () => {
             const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
 
             await waitFor(() => expect(onSearchFn).toHaveBeenCalledWith(patternMasked));
-            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(filter, patternMasked));
+            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(patternMasked, filter));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
 
             expect(getByRole('listbox')).not.toEqual(null);
@@ -213,7 +215,7 @@ describe('AssetSelector', () => {
             const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
 
             await waitFor(() => expect(onSearchFn).toHaveBeenCalledWith(`UQL${patternMasked}`));
-            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(filter, patternMasked));
+            await mockActionsStore.dispatch(tntActions.loadAssetsFiltered(patternMasked, filter));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
 
             expect(queryByRole('listbox')).toEqual(null); // no list box shown in headless mode
