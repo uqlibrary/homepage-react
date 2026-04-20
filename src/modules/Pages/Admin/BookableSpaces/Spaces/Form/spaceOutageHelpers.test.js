@@ -48,8 +48,8 @@ describe('spaceOutageHelpers', () => {
     it('finds overlapping outages excluding the edited row', () => {
         const overlapping = getOverlappingSpaceOutages(
             {
-                space_outage_start: '2026-04-22T11:00',
-                space_outage_end: '2026-04-22T13:00',
+                space_outage_start: '2026-04-22 11:00:00',
+                space_outage_end: '2026-04-22 13:00:00',
             },
             sampleOutages,
         );
@@ -59,8 +59,8 @@ describe('spaceOutageHelpers', () => {
 
         const excludedOverlap = getOverlappingSpaceOutages(
             {
-                space_outage_start: '2026-04-22T11:00',
-                space_outage_end: '2026-04-22T13:00',
+                space_outage_start: '2026-04-22 11:00:00',
+                space_outage_end: '2026-04-22 13:00:00',
             },
             sampleOutages,
             2,
@@ -73,8 +73,8 @@ describe('spaceOutageHelpers', () => {
 
         const validation = validateSpaceOutageDraft(
             {
-                space_outage_start: '2026-04-22T11:00',
-                space_outage_end: '2026-04-22T10:00',
+                space_outage_start: '2026-04-22 11:00:00',
+                space_outage_end: '2026-04-22 10:00:00',
             },
             sampleOutages,
         );
@@ -82,8 +82,8 @@ describe('spaceOutageHelpers', () => {
 
         const warningValidation = validateSpaceOutageDraft(
             {
-                space_outage_start: '2026-04-22T11:00',
-                space_outage_end: '2026-04-22T13:00',
+                space_outage_start: '2026-04-22 11:00:00',
+                space_outage_end: '2026-04-22 13:00:00',
             },
             sampleOutages,
         );

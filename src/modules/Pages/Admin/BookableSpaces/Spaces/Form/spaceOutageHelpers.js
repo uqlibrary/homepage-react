@@ -67,10 +67,20 @@ export const formatSpaceOutageDateTimeForDisplay = value => {
     }).format(parsedDate);
 };
 
-export const getSpaceOutageStatus = (outage, currentTime = new Date()) => {
+export const getSpaceOutageStatus = (outage, currentTime) => {
+    // Always use moment for all date logic
+    const now = currentTime ? moment(currentTime) : moment();
     const startDate = parseSpaceOutageDate(outage?.space_outage_start);
     const endDate = parseSpaceOutageDate(outage?.space_outage_end);
-    const now = moment(currentTime);
+
+    // DEBUG: Log outage status calculation
+    // eslint-disable-next-line no-console
+    console.log('[getSpaceOutageStatus]', {
+        outage,
+        currentTime: now.format('YYYY-MM-DD HH:mm:ss'),
+        startDate: startDate ? startDate.format('YYYY-MM-DD HH:mm:ss') : null,
+        endDate: endDate ? endDate.format('YYYY-MM-DD HH:mm:ss') : null,
+    });
 
     if (!startDate || !endDate) {
         return 'Invalid';

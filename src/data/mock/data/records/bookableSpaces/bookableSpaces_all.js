@@ -88,13 +88,6 @@ export default {
                 const upcomingEnd = new Date(now.getTime() + 7*24*60*60*1000 + 2*60*60*1000);
                 return [
                     {
-                        space_outage_id: 9001,
-                        space_id: 123456,
-                        space_outage_start: fmt(currentStart),
-                        space_outage_end: fmt(currentEnd),
-                        space_outage_reason: 'AV maintenance',
-                    },
-                    {
                         space_outage_id: 9002,
                         space_id: 123456,
                         space_outage_start: fmt(upcomingStart),
@@ -478,15 +471,18 @@ export default {
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/333',
-                space_outages: [
-                    {
-                        space_outage_id: 9006,
-                        space_id: 2,
-                        space_outage_start: '2026-04-20 08:00:00',
-                        space_outage_end: '2026-04-20 18:00:00',
-                        space_outage_reason: 'Lighting maintenance',
-                    },
-                ],
+                space_outages: (() => {
+                    const moment = require('moment');
+                    return [
+                        {
+                            space_outage_id: 9006,
+                            space_id: 2,
+                            space_outage_start: moment().subtract(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                            space_outage_end: moment().add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                            space_outage_reason: 'Lighting maintenance',
+                        },
+                    ];
+                })(),
                 space_type_id: 4,
                 space_type_details: {
                     "space_type_id": 4,
