@@ -102,12 +102,8 @@ test.describe('Spaces', () => {
         test('bookable links appear correct on load', async ({ page }) => {
             // public bookable Architecture and Music example
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable`)).not.toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`).locator('a')).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`).locator('a')).toHaveAttribute(
-                'href',
-                `https://uqbookit.uq.edu.au/#/app/booking-types/333`,
-            );
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).not.toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-message`)).toBeVisible();
 
             // // second panel
             // await expect(page.getByTestId(`${PACE}-not-bookable`)).not.toBeVisible();
@@ -153,6 +149,24 @@ test.describe('Spaces', () => {
 
             // third panel
             await expect(page.getByTestId(`${LIV}-description`)).toHaveCount(0);
+        });
+
+        test('current unavailability is shown with reason on expand', async ({ page }) => {
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-unavailable-message`)).not.toBeVisible();
+            await expect(page.getByTestId(`${LIV}-unavailable-message`)).not.toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-message`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-message`)).toContainText(
+                'This space is currently unavailable.',
+            );
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-reason`)).not.toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-unavailable-message`)).not.toBeVisible();
+
+            await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-reason`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-reason`)).toContainText(
+                'Reason: Lighting maintenance',
+            );
         });
 
         test('opening hours appear correct on load', async ({ page }) => {
@@ -489,6 +503,26 @@ test.describe('Spaces', () => {
         // and the controls have swapped
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-collapse-button`)).not.toBeVisible();
+    });
+    test('expanding a different space collapses the previously expanded space', async ({ page }) => {
+        await page.goto('');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await page.goto('spaces');
+        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+
+        await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute('aria-expanded', 'true');
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).toBeVisible();
+
+        await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
+
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute('aria-expanded', 'false');
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).not.toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toBeVisible();
+
+        await expect(page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`)).toHaveAttribute('aria-expanded', 'true');
+        await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
+        await expect(page.getByTestId(`${ARCH_BOOKABLE}-summary-hours`)).not.toBeVisible();
     });
     test.describe('filtering', () => {
         test.beforeEach(async ({ page }) => {

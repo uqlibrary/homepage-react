@@ -22,6 +22,8 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -48,6 +50,8 @@ import {
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { ImageUploadDropzone } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/ImageUploadDropzone';
+import SpaceOutagePanel from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceOutagePanel';
+import { getSpaceOutageStatus, normalizeSpaceOutageList } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceLocationMap';
 
@@ -225,14 +229,13 @@ const StyledWarningListBox = styled('div')(({ theme }) => ({
 }));
 
 function CustomTabPanel(props) {
-    const { children, value, index, ...other } = props;
-    // Once a tab has been shown, keep it mounted (just hidden) so that
-    // widgets like MazeMap are never destroyed and recreated on tab switch,
-    // which causes marker DOM elements to escape the map container.
-    const [hasBeenActive, setHasBeenActive] = React.useState(value === index);
+    const { children, value, index, keepMounted = false, testId, ...other } = props;
+    // Keep only tabs with components that break on remount, such as MazeMap,
+    // mounted while hidden. Other tabs can unmount normally.
+    const [hasBeenActive, setHasBeenActive] = React.useState(keepMounted ? value === index : false);
     React.useEffect(() => {
-        if (value === index) setHasBeenActive(true);
-    }, [value, index]);
+        if (keepMounted && value === index) setHasBeenActive(true);
+    }, [keepMounted, value, index]);
 
     return (
         <div
@@ -240,9 +243,10 @@ function CustomTabPanel(props) {
             hidden={value !== index}
             id={`spacesform-tabpanel-${index}`}
             aria-labelledby={`spacesform-tab-${index}`}
+            data-testid={testId}
             {...other}
         >
-            {hasBeenActive && <Box sx={{ p: 3 }}>{children}</Box>}
+            {(keepMounted ? hasBeenActive : value === index) && <Box sx={{ p: 3 }}>{children}</Box>}
         </div>
     );
 }
@@ -250,6 +254,8 @@ CustomTabPanel.propTypes = {
     children: PropTypes.any,
     value: PropTypes.number,
     index: PropTypes.number,
+    keepMounted: PropTypes.bool,
+    testId: PropTypes.string,
 };
 
 export const EditSpaceForm = ({
@@ -271,6 +277,9 @@ export const EditSpaceForm = ({
     pageTitle,
     currentPageSlug,
     springshareList,
+    spaceOutageList,
+    spaceOutageListLoading,
+    spaceOutageListError,
     bookableSpacesRoomUpdating,
     bookableSpacesRoomUpdateError,
     bookableSpacesRoomUpdateResult,
@@ -303,6 +312,22 @@ export const EditSpaceForm = ({
     const { account } = useAccountContext();
     const theme = useTheme();
 
+    const getSpaceUnavailabilityStatus = outages => {
+        const outageStatuses = normalizeSpaceOutageList(outages).map(spaceOutage => getSpaceOutageStatus(spaceOutage));
+
+        if (outageStatuses.includes('Current')) {
+            return 'Current';
+        }
+        if (outageStatuses.includes('Upcoming')) {
+            return 'Upcoming';
+        }
+
+        return null;
+    };
+
+    const spaceUnavailabilityStatus =
+        spaceOutageListLoading || !!spaceOutageListError ? null : getSpaceUnavailabilityStatus(spaceOutageList);
+
     const [location, setLocation1] = useState({});
     const setLocation = newValues => {
         console.log('setLocation', newValues);
@@ -320,10 +345,13 @@ export const EditSpaceForm = ({
     const firstTabId = 0;
     const secondTabId = 1;
     const thirdTabId = 2;
-    const lastTabId = 3; // the total number of steps / panels
+    const addModeLastTabId = 3;
+    const editModeOutageTabId = 3;
+    const editModeImageryTabId = 4;
     const [activeStep, setActiveStep] = useState(0);
 
-    const tabLabels = ['About', 'Facility types', 'Location & Hours', 'Imagery'];
+    const addModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Imagery'];
+    const editModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Unavailability', 'Imagery'];
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
@@ -1452,6 +1480,19 @@ export const EditSpaceForm = ({
             </Grid>
         );
     };
+    const outagePanel = () => {
+        return (
+            <SpaceOutagePanel
+                actions={actions}
+                mode={mode}
+                spaceId={formValues?.space_id}
+                spaceName={formValues?.space_name}
+                spaceOutageList={spaceOutageList}
+                spaceOutageListLoading={spaceOutageListLoading}
+                spaceOutageListError={spaceOutageListError}
+            />
+        );
+    };
     const cancelButton = () => {
         return (
             <StyledUqTightLink
@@ -1493,7 +1534,7 @@ export const EditSpaceForm = ({
         } else if (index === thirdTabId) {
             return validatePanelLocation(formValues)?.length;
         } else {
-            // index must = 3
+            // index must = 3 in add mode
             return validatePanelImagery(formValues)?.length;
         }
     }
@@ -1535,7 +1576,7 @@ export const EditSpaceForm = ({
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <Stepper activeStep={activeStep}>
-                                        {tabLabels?.map((tabName, index) => {
+                                        {addModeTabLabels?.map((tabName, index) => {
                                             const stepProps = { completed: null };
                                             const labelProps = {
                                                 optional: null,
@@ -1583,7 +1624,7 @@ export const EditSpaceForm = ({
                                 {activeStep === firstTabId && aboutPanel()}
                                 {activeStep === secondTabId && facilityTypePanel()}
                                 {activeStep === thirdTabId && locationPanel()}
-                                {activeStep === lastTabId && imageryPanel()}
+                                {activeStep === addModeLastTabId && imageryPanel()}
                                 <Grid item xs={12}>
                                     <Box
                                         id={'button-wrapper'}
@@ -1599,7 +1640,7 @@ export const EditSpaceForm = ({
                                             Back
                                         </StyledSecondaryButton>
                                         <Box sx={{ flex: '1 1 auto' }} />
-                                        {activeStep === lastTabId ? (
+                                        {activeStep === addModeLastTabId ? (
                                             saveButton(errorMessages?.length > 0)
                                         ) : (
                                             <StyledPrimaryButton
@@ -1626,7 +1667,7 @@ export const EditSpaceForm = ({
                             <Box sx={{ width: '100%' }}>
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                     <StyledTabs value={panelId} onChange={handleTabChange} aria-label="Space fields">
-                                        {tabLabels?.map((tabName, index) => {
+                                        {editModeTabLabels?.map((tabName, index) => {
                                             return (
                                                 <Tab
                                                     key={`${tabName}-edit`}
@@ -1656,16 +1697,72 @@ export const EditSpaceForm = ({
                                         </StyledDraftModeNotice>
                                     </Box>
                                 )}
-                                <CustomTabPanel value={panelId} index={firstTabId}>
+                                {spaceUnavailabilityStatus === 'Upcoming' && (
+                                    <Box sx={{ mt: 2 }} data-testid="space-outage-upcoming-notice">
+                                        <StyledDraftModeNotice data-testid="space-outage-upcoming-notice-panel">
+                                            <ErrorOutlineIcon
+                                                style={{ color: theme?.palette.warning.dark }}
+                                                data-testid="space-outage-upcoming-notice-icon"
+                                            />
+                                            <Typography
+                                                component={'p'}
+                                                variant={'body2'}
+                                                data-testid="space-outage-upcoming-notice-text"
+                                            >
+                                                This Space has scheduled unavailability. It will be shown as
+                                                unavailable during that time.
+                                            </Typography>
+                                        </StyledDraftModeNotice>
+                                    </Box>
+                                )}
+                                {spaceUnavailabilityStatus === 'Current' && (
+                                    <Box sx={{ mt: 2 }} data-testid="space-outage-current-notice">
+                                        <StyledErrorAttentionMessageDiv data-testid="space-outage-current-notice-panel">
+                                            <HighlightOffIcon
+                                                style={{ color: theme?.palette.error.main }}
+                                                data-testid="space-outage-current-notice-icon"
+                                            />
+                                            <Typography
+                                                component={'p'}
+                                                variant={'body2'}
+                                                data-testid="space-outage-current-notice-text"
+                                            >
+                                                This Space is presently unavailable and will display as unavailable in
+                                                the spaces list until the current outage ends.
+                                            </Typography>
+                                        </StyledErrorAttentionMessageDiv>
+                                    </Box>
+                                )}
+                                <CustomTabPanel value={panelId} index={firstTabId} testId="spaces-tabpanel-about">
                                     {aboutPanel()}
                                 </CustomTabPanel>
-                                <CustomTabPanel value={panelId} index={secondTabId}>
+                                <CustomTabPanel
+                                    value={panelId}
+                                    index={secondTabId}
+                                    testId="spaces-tabpanel-facility-types"
+                                >
                                     {facilityTypePanel()}
                                 </CustomTabPanel>
-                                <CustomTabPanel value={panelId} index={thirdTabId}>
+                                <CustomTabPanel
+                                    value={panelId}
+                                    index={thirdTabId}
+                                    keepMounted
+                                    testId="spaces-tabpanel-location-hours"
+                                >
                                     {locationPanel()}
                                 </CustomTabPanel>
-                                <CustomTabPanel value={panelId} index={lastTabId}>
+                                <CustomTabPanel
+                                    value={panelId}
+                                    index={editModeOutageTabId}
+                                    testId="spaces-tabpanel-unavailability"
+                                >
+                                    {outagePanel()}
+                                </CustomTabPanel>
+                                <CustomTabPanel
+                                    value={panelId}
+                                    index={editModeImageryTabId}
+                                    testId="spaces-tabpanel-imagery"
+                                >
                                     {imageryPanel()}
                                 </CustomTabPanel>
                             </Box>
@@ -1709,6 +1806,9 @@ EditSpaceForm.propTypes = {
     mode: PropTypes.string,
     bookableSpaceGetError: PropTypes.any,
     springshareList: PropTypes.any,
+    spaceOutageList: PropTypes.any,
+    spaceOutageListLoading: PropTypes.any,
+    spaceOutageListError: PropTypes.any,
 };
 
 export default React.memo(EditSpaceForm);

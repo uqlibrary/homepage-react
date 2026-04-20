@@ -27,6 +27,13 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('spaces-sort-button')).toContainText('Sort by name');
         await page.getByTestId('admin-spaces-list-paginator-select').selectOption('10');
 
+        await expect(page.getByTestId(`space-${FORGEN}-outage-upcoming-icon`)).toBeVisible();
+        await expect(page.getByTestId(`space-${PACE}-outage-upcoming-icon`)).toBeVisible();
+        await expect(page.getByTestId(`space-${FORGEN}-outage-current-icon`)).not.toBeVisible();
+        await expect(page.getByTestId(`space-${PACE}-outage-current-icon`)).not.toBeVisible();
+        await expect(page.getByTestId(`space-${LIVERIS}-outage-upcoming-icon`)).not.toBeVisible();
+        await expect(page.getByTestId(`space-${LIVERIS}-outage-current-icon`)).not.toBeVisible();
+
         const greenTick = (id: string) =>
             page.getByTestId(`${id}`).locator('svg path[d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"]');
 

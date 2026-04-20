@@ -3,6 +3,8 @@ import { destroy, get, post, put } from 'repositories/generic';
 import {
     SPACES_ADD_LOCATION_API,
     SPACES_SINGLE_API,
+    SPACES_OUTAGES_API,
+    SPACES_OUTAGE_API,
     SPACES_MODIFY_LOCATION_API,
     SPACES_ALL_API,
     SPACES_SITE_API,
@@ -42,6 +44,29 @@ export function loadABookableSpacesRoom(spacesUuid) {
                     type: actions.SPACES_ROOM_GET_FAILED,
                     payload: error.message,
                 });
+            });
+    };
+}
+
+export function loadBookableSpaceOutages(spaceId) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_OUTAGE_LIST_LOADING });
+        const url = SPACES_OUTAGES_API({ spaceId });
+        return get(url)
+            .then(response => {
+                dispatch({
+                    type: actions.SPACES_OUTAGE_LIST_LOADED,
+                    payload: Array.isArray(response?.data) ? response.data : response?.data?.space_outages || [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_OUTAGE_LIST_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
             });
     };
 }
@@ -161,6 +186,96 @@ export function updateBookableSpaceLocation(request, locationType, _locationId =
 export function clearABookableSpace() {
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_CLEAR });
+    };
+}
+
+export function createBookableSpaceOutage(request) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_OUTAGE_ADDING });
+        const url = SPACES_OUTAGES_API({ spaceId: request?.space_id });
+        return post(url, request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_OUTAGE_ADDED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_OUTAGE_ADD_FAILED,
+                        payload: response?.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_OUTAGE_ADD_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function updateBookableSpaceOutage(request, outageId) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_OUTAGE_UPDATING });
+        const url = SPACES_OUTAGE_API({ id: outageId });
+        return put(url, request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_OUTAGE_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_OUTAGE_UPDATE_FAILED,
+                        payload: response?.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_OUTAGE_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function deleteBookableSpaceOutage(outageId) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_OUTAGE_DELETING });
+        const url = SPACES_OUTAGE_API({ id: outageId });
+        return destroy(url)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_OUTAGE_DELETED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_OUTAGE_DELETE_FAILED,
+                        payload: response?.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_OUTAGE_DELETE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
     };
 }
 

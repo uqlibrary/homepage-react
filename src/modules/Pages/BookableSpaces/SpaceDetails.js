@@ -14,7 +14,11 @@ import { OpeningHoursDown } from './OpeningHoursDown';
 import { OpeningHoursShort } from './OpeningHoursShort';
 import { OpeningHoursTable } from './OpeningHoursTable';
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { addClass, pluralise, removeClass } from 'helpers/general';
+import {
+    getSpaceOutageStatus,
+    normalizeSpaceOutageList,
+} from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+import { pluralise } from 'helpers/general';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const StyledFriendlyLocationDiv = styled('div')(() => ({
@@ -58,6 +62,17 @@ const StyledBookitLinkWrapperDiv = styled('div')(({ theme }) => ({
                 color: '#fff',
             },
         },
+    },
+}));
+const StyledUnavailableMessage = styled('div')(({ theme }) => ({
+    marginTop: '0.5rem',
+    padding: '0.5rem 0.75rem',
+    borderRadius: '4px',
+    backgroundColor: '#fff2f2',
+    border: `1px solid ${theme.palette.error.light}`,
+    color: theme.palette.error.dark,
+    '& p': {
+        margin: 0,
     },
 }));
 const StyledLocationImg = styled('img')(({ theme }) => ({
@@ -112,9 +127,10 @@ const SpaceDetails = ({
     weeklyHoursError,
     bookableSpace,
     collapsed = false,
+    isExpanded = false,
     // collapsed=true: called by sidebar, has open-close icon;
     // collapsed=false: opens from icon in map, no open-close icon
-    onExpand = null,
+    onToggle = null,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -123,87 +139,45 @@ const SpaceDetails = ({
     // const isDesktopView = !isTabletView && !isMobileView;
     // console.log('BookableSpacesList window width (m, t, d):', isMobileView, isTabletView, isDesktopView);
 
-    const [isCollapsed, setIsCollapsed] = React.useState(collapsed);
+    const isCollapsed = collapsed ? !isExpanded : false;
+
+    const currentOutages = React.useMemo(
+        () => normalizeSpaceOutageList(bookableSpace?.space_outages).filter(outage => getSpaceOutageStatus(outage) === 'Current'),
+        [bookableSpace?.space_outages],
+    );
+    const isCurrentlyUnavailable = currentOutages.length > 0;
+    const currentOutageReason = currentOutages
+        .map(outage => outage?.space_outage_reason?.trim())
+        .find(reason => !!reason);
 
     const summaryPanelElementId = spaceId => `summary-info-${spaceId}`;
 
     const showHideSpacePanel = bookableSpace => {
-        const hidePanel = (panelId, classname = 'hiddenSection') => {
-            const openPanel = document.getElementById(panelId);
-            addClass(openPanel, classname);
-        };
-        const showPanel = (panelId, classname = 'hiddenSection') => {
-            const closedPanel = document.getElementById(panelId);
-            removeClass(closedPanel, classname);
-        };
-
         const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
-        const spaceDescriptionElementsId = spaceId => `space-description-${spaceId}`;
         const togglePanelButtonElementId = spaceId => `toggle-panel-button-space-${spaceId}`;
-        const expandSpace = (spaceId, spaceName) => {
-            hidePanel(summaryPanelElementId(spaceId));
-            showPanel(spaceExtraElementsId(spaceId));
-
-            const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
-            removeClass(spaceDescription, 'truncated');
-
-            const toggleButton = document.getElementById(togglePanelButtonElementId(spaceId));
-            toggleButton?.setAttribute('aria-expanded', true);
-            toggleButton?.setAttribute('aria-label', `Show fewer details for ${spaceName}`);
-            const toggleButtonExpandIcon = toggleButton?.querySelector('svg.closePanel');
-            !!toggleButtonExpandIcon && (toggleButtonExpandIcon.style.display = 'none');
-            const toggleButtonCollapseIcon = toggleButton?.querySelector('svg.openPanel');
-            !!toggleButtonCollapseIcon && (toggleButtonCollapseIcon.style.display = 'block');
-
-            setIsCollapsed(false);
-            onExpand?.(bookableSpace);
-        };
-        const collapseSpace = (spaceId, spaceName) => {
-            showPanel(summaryPanelElementId(spaceId));
-            hidePanel(spaceExtraElementsId(spaceId));
-
-            const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
-            addClass(spaceDescription, 'truncated');
-
-            const toggleButton = document.querySelector(`#${togglePanelButtonElementId(spaceId)}`);
-            toggleButton?.setAttribute('aria-expanded', false);
-            toggleButton?.setAttribute('aria-label', `Show more information about ${spaceName}`);
-            const toggleButtonExpandIcon = document.querySelector(
-                `#${togglePanelButtonElementId(spaceId)} svg.closePanel`,
-            );
-            !!toggleButtonExpandIcon && (toggleButtonExpandIcon.style.display = 'block');
-            const toggleButtonCollapseIcon = document.querySelector(
-                `#${togglePanelButtonElementId(spaceId)} svg.openPanel`,
-            );
-            !!toggleButtonCollapseIcon && (toggleButtonCollapseIcon.style.display = 'none');
-
-            setIsCollapsed(true);
-        };
-        const toggleSpace = (spaceId, spaceName) => {
-            const moreInfoPanel = document.getElementById(spaceExtraElementsId(spaceId));
-            if (moreInfoPanel?.classList?.contains('hiddenSection')) {
-                expandSpace(spaceId, spaceName);
-            } else {
-                collapseSpace(spaceId, spaceName);
-            }
+        const toggleSpace = () => {
+            onToggle?.(bookableSpace, isCollapsed);
         };
         return (
             <IconButton
                 id={togglePanelButtonElementId(bookableSpace?.space_id)}
                 data-testid={`space-${bookableSpace?.space_id}-toggle-panel-button`}
-                onClick={() => toggleSpace(bookableSpace?.space_id, bookableSpace?.space_name)}
-                aria-label={`Show more information about ${bookableSpace?.space_name}`}
+                onClick={toggleSpace}
+                aria-label={
+                    isCollapsed
+                        ? `Show more information about ${bookableSpace?.space_name}`
+                        : `Show fewer details for ${bookableSpace?.space_name}`
+                }
                 aria-haspopup="true"
                 aria-expanded={`${isCollapsed ? 'false' : 'true'}`}
                 aria-controls={spaceExtraElementsId(bookableSpace?.space_id)}
             >
-                <KeyboardArrowDownIcon style={{ display: 'block' }} className="closePanel" />
-                <KeyboardArrowUpIcon style={{ display: 'none' }} className="openPanel" />
+                <KeyboardArrowDownIcon style={{ display: isCollapsed ? 'block' : 'none' }} className="closePanel" />
+                <KeyboardArrowUpIcon style={{ display: isCollapsed ? 'none' : 'block' }} className="openPanel" />
             </IconButton>
         );
     };
 
-    const isExpanded = !isCollapsed;
     const getDescriptionClassName = () => {
         if (!!isMobileView) {
             return 'hasMaxHeight'; // on mobile we make the description scrollable, in a desperate attempt to keep the popup height reasonable
@@ -254,7 +228,20 @@ const SpaceDetails = ({
                         {getFriendlyLocationDescription(bookableSpace, isCollapsed)}
                     </StyledFriendlyLocationDiv>
                 )}
-                {isBookable && (
+                {isCurrentlyUnavailable && (
+                    <StyledUnavailableMessage data-testid={`space-${bookableSpace?.space_id}-unavailable-message`}>
+                        <Typography variant="body2">This space is currently unavailable.</Typography>
+                        {!isCollapsed && !!currentOutageReason && (
+                            <Typography
+                                variant="body2"
+                                data-testid={`space-${bookableSpace?.space_id}-unavailable-reason`}
+                            >
+                                Reason: {currentOutageReason}
+                            </Typography>
+                        )}
+                    </StyledUnavailableMessage>
+                )}
+                {isBookable && !isCurrentlyUnavailable && (
                     <StyledBookitLinkWrapperDiv data-testid={`space-${bookableSpace?.space_id}-booking-link`}>
                         {uqBookitMakeABookingIcon}
                         <a href={bookableSpace?.space_external_book_url} target={'_blank'}>
@@ -367,7 +354,8 @@ SpaceDetails.propTypes = {
     weeklyHoursError: PropTypes.any,
     bookableSpace: PropTypes.any,
     collapsed: PropTypes.bool,
-    onExpand: PropTypes.func,
+    isExpanded: PropTypes.bool,
+    onToggle: PropTypes.func,
 };
 
 export default React.memo(SpaceDetails);

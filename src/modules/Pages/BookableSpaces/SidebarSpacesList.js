@@ -48,7 +48,9 @@ const SidebarSpacesList = ({
     isLoggedIn = false,
     onFavouriteToggle = null,
     isFavouriteActionInProgress = false,
-    onSpaceExpand = null,
+    onSpaceSelect = null,
+    onSpaceToggle = null,
+    expandedSpaceId = null,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -148,8 +150,8 @@ const SidebarSpacesList = ({
                                     <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                         {renderFavouriteIcon(bookableSpace)}
                                         <span
-                                            onClick={() => onSpaceExpand?.(bookableSpace)}
-                                            style={onSpaceExpand ? { cursor: 'pointer' } : undefined}
+                                            onClick={() => onSpaceSelect?.(bookableSpace)}
+                                            style={onSpaceSelect ? { cursor: 'pointer' } : undefined}
                                             title="Show on map"
                                         >
                                             {bookableSpace?.space_type_details?.space_type_name}
@@ -167,7 +169,8 @@ const SidebarSpacesList = ({
                                     bookableSpace={bookableSpace}
                                     collapsed
                                     showAllData
-                                    onExpand={onSpaceExpand}
+                                    isExpanded={expandedSpaceId === bookableSpace?.space_id}
+                                    onToggle={onSpaceToggle}
                                 />
                             </StyledStandardCard>
                         </StyledBookableSpaceGridItem>
@@ -191,7 +194,9 @@ SidebarSpacesList.propTypes = {
     isLoggedIn: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
     isFavouriteActionInProgress: PropTypes.bool,
-    onSpaceExpand: PropTypes.func,
+    onSpaceSelect: PropTypes.func,
+    onSpaceToggle: PropTypes.func,
+    expandedSpaceId: PropTypes.number,
 };
 
 export default React.memo(SidebarSpacesList);

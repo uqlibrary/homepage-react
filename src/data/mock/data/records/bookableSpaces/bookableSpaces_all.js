@@ -75,6 +75,22 @@ export default {
             "space_campus_number": "01",
             space_draftmode: true,
             "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/111',
+            space_outages: [
+                {
+                    space_outage_id: 9001,
+                    space_id: 123456,
+                    space_outage_start: '2026-04-21 08:00:00',
+                    space_outage_end: '2026-04-21 10:00:00',
+                    space_outage_reason: 'AV maintenance',
+                },
+                {
+                    space_outage_id: 9002,
+                    space_id: 123456,
+                    space_outage_start: '2026-04-23 13:00:00',
+                    space_outage_end: '2026-04-23 16:00:00',
+                    space_outage_reason: 'Deep cleaning',
+                },
+            ],
             facility_types: [
                 {
                     "facility_type_id": 23,
@@ -153,6 +169,15 @@ export default {
             space_longitude: "153.03024",
             space_zlevel: 1,
             "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/222',
+            space_outages: [
+                {
+                    space_outage_id: 9003,
+                    space_id: 1234544,
+                    space_outage_start: '2026-04-24 09:00:00',
+                    space_outage_end: '2026-04-24 11:30:00',
+                    space_outage_reason: 'Furniture replacement',
+                },
+            ],
             facility_types: [
                 {
                     "facility_type_id": 23,
@@ -244,6 +269,15 @@ export default {
             space_longitude: "153.01344",
             space_zlevel: 3,
             "space_external_book_url": null,
+            space_outages: [
+                {
+                    space_outage_id: 9004,
+                    space_id: 43534,
+                    space_outage_start: '2026-04-17 09:00:00',
+                    space_outage_end: '2026-04-17 11:00:00',
+                    space_outage_reason: 'Completed projector repair',
+                },
+            ],
             space_type_id: 3,
             space_type_details: {
                 "space_type_id": 3,
@@ -432,6 +466,15 @@ export default {
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/333',
+                space_outages: [
+                    {
+                        space_outage_id: 9006,
+                        space_id: 2,
+                        space_outage_start: '2026-04-20 08:00:00',
+                        space_outage_end: '2026-04-20 18:00:00',
+                        space_outage_reason: 'Lighting maintenance',
+                    },
+                ],
                 space_type_id: 4,
                 space_type_details: {
                     "space_type_id": 4,

@@ -207,7 +207,7 @@ export const BookableSpacesList = ({
     };
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
-    const [previousToggledSpaceButton, setPreviousToggledSpaceButton] = useState(null);
+    const [expandedSpaceId, setExpandedSpaceId] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
 
     const mapRef = useRef(null);
@@ -222,7 +222,7 @@ export const BookableSpacesList = ({
         }, 3000);
     };
 
-    const handleSpaceExpand = useCallback(space => {
+    const handleSpaceSelect = useCallback(space => {
         console.log('### handleSpaceExpand space=', space);
 
         highlightPanel(space);
@@ -230,6 +230,25 @@ export const BookableSpacesList = ({
         // show space's location on the map
         mapRef.current?.flyToSpace(space);
     }, []);
+
+    const handleSpaceToggle = useCallback(
+        (space, shouldExpand) => {
+            if (!space?.space_id) {
+                return;
+            }
+
+            if (shouldExpand) {
+                setExpandedSpaceId(space.space_id);
+                handleSpaceSelect(space);
+                return;
+            }
+
+            if (expandedSpaceId === space.space_id) {
+                setExpandedSpaceId(null);
+            }
+        },
+        [expandedSpaceId, handleSpaceSelect],
+    );
 
     const [cookies, setCookie] = useCookies();
     const getCampusInitialState = () => {
@@ -357,6 +376,7 @@ export const BookableSpacesList = ({
 
         const locationOfCentreOfCampus = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
         console.log('### locationOfCentreOfCampus=', locationOfCentreOfCampus);
+        setExpandedSpaceId(null);
         !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
     };
 
@@ -785,21 +805,7 @@ export const BookableSpacesList = ({
 
         !!spaceElement && spaceElement?.focus();
 
-        // if we opened one earlier, close it now (so they don't have masses of them open)
-        if (!!previousToggledSpaceButton) {
-            previousToggledSpaceButton?.click();
-        }
-
-        // expand it, if not already open
-        const toggleSpaceButton = document.getElementById(`toggle-panel-button-space-${space?.space_id}`);
-        if (
-            !!toggleSpaceButton &&
-            toggleSpaceButton.hasAttribute('aria-expanded') &&
-            toggleSpaceButton.getAttribute('aria-expanded') === 'false'
-        ) {
-            toggleSpaceButton.click();
-            setPreviousToggledSpaceButton(toggleSpaceButton);
-        }
+        setExpandedSpaceId(space?.space_id ?? null);
     };
 
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
@@ -916,7 +922,9 @@ export const BookableSpacesList = ({
                                             isLoggedIn={isLoggedIn}
                                             onFavouriteToggle={handleFavouriteAction}
                                             isFavouriteActionInProgress={isFavouriteActionInProgress}
-                                            onSpaceExpand={handleSpaceExpand}
+                                            onSpaceSelect={handleSpaceSelect}
+                                            onSpaceToggle={handleSpaceToggle}
+                                            expandedSpaceId={expandedSpaceId}
                                         />
                                     </div>
                                 </>

@@ -9,6 +9,7 @@ import { default as bookableSpaces } from '../../../../src/data/mock/data/record
 const TAB_ABOUT = 'tab-about';
 const TAB_FACILITY_TYPES = 'tab-facility-types';
 const TABS_LOCATION_HOURS = 'tab-location-hours';
+const TAB_UNAVAILABILITY = 'tab-unavailability';
 const TAB_IMAGERY = 'tab-imagery';
 
 const LAW_DEFAULT_LATITUDE = '-27.49718';
@@ -597,6 +598,8 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId(TAB_FACILITY_TYPES)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toBeVisible();
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toBeVisible();
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TAB_IMAGERY)).toBeVisible();
         await expect(page.getByTestId(TAB_IMAGERY)).toHaveAttribute('aria-selected', 'false');
 
@@ -627,6 +630,8 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId(TAB_FACILITY_TYPES)).toHaveAttribute('aria-selected', 'true');
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toBeVisible();
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toBeVisible();
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TAB_IMAGERY)).toBeVisible();
         await expect(page.getByTestId(TAB_IMAGERY)).toHaveAttribute('aria-selected', 'false');
 
@@ -656,6 +661,8 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId(TAB_FACILITY_TYPES)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toBeVisible();
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toHaveAttribute('aria-selected', 'true');
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toBeVisible();
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TAB_IMAGERY)).toBeVisible();
         await expect(page.getByTestId(TAB_IMAGERY)).toHaveAttribute('aria-selected', 'false');
 
@@ -685,6 +692,8 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId(TAB_FACILITY_TYPES)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toBeVisible();
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toBeVisible();
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TAB_IMAGERY)).toBeVisible();
         await expect(page.getByTestId(TAB_IMAGERY)).toHaveAttribute('aria-selected', 'true');
 
@@ -704,6 +713,56 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(cancelButton).toContainText('Cancel');
         await expect(saveButton).toBeVisible();
         await expect(saveButton).toContainText('Save');
+    });
+    test('can return to unavailability after visiting about', async ({ page }) => {
+        await page.getByTestId(TAB_UNAVAILABILITY).click();
+
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'true');
+        await expect(page.getByTestId('spaces-tabpanel-unavailability')).toBeVisible();
+        await expect(page.getByTestId('space-outage-summary')).toBeVisible();
+        await expect(page.getByTestId('space-outage-scheduled-heading')).toBeVisible();
+        await expect(page.getByTestId('space-outage-past-heading')).toBeVisible();
+
+        await page.getByTestId(TAB_ABOUT).click();
+
+        await expect(page.getByTestId(TAB_ABOUT)).toHaveAttribute('aria-selected', 'true');
+        await expect(page.getByTestId('spaces-tabpanel-about')).toBeVisible();
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+
+        await page.getByTestId(TAB_UNAVAILABILITY).click();
+
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'true');
+        await expect(page.getByTestId('spaces-tabpanel-unavailability')).toBeVisible();
+        await expect(page.getByTestId('space-outage-summary')).toBeVisible();
+        await expect(page.getByTestId('space-outage-scheduled-heading')).toBeVisible();
+        await expect(page.getByTestId('space-outage-past-heading')).toBeVisible();
+    });
+    test('unavailability tab separates scheduled and past outages', async ({ page }) => {
+        await page.getByTestId(TAB_UNAVAILABILITY).click();
+
+        await expect(page.getByTestId('spaces-tabpanel-unavailability')).toBeVisible();
+        await expect(page.getByTestId('space-outage-scheduled-table')).toBeVisible();
+        await expect(page.getByTestId('space-outage-past-empty-state')).toBeVisible();
+
+        await expect(page.getByTestId('space-outage-row-9001')).toBeVisible();
+        await expect(page.getByTestId('space-outage-row-9002')).toBeVisible();
+        await expect(page.getByTestId('space-outage-edit-9001')).toBeEnabled();
+        await expect(page.getByTestId('space-outage-delete-9001')).toBeEnabled();
+        await expect(page.getByTestId('space-outage-edit-9002')).toBeEnabled();
+        await expect(page.getByTestId('space-outage-delete-9002')).toBeEnabled();
+
+        await page.goto('/admin/spaces/edit/97fd5_nm39_gh29?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await ensureSpaceTypeSelected(page);
+
+        await page.getByTestId(TAB_UNAVAILABILITY).click();
+
+        await expect(page.getByTestId('space-outage-scheduled-empty-state')).toBeVisible();
+        await expect(page.getByTestId('space-outage-past-table')).toBeVisible();
+        await expect(page.getByTestId('space-outage-row-9004')).toBeVisible();
+        await expect(page.getByTestId('space-outage-edit-9004')).toBeDisabled();
+        await expect(page.getByTestId('space-outage-delete-9004')).toBeDisabled();
     });
     test('can re-edit after save', async ({ page }) => {
         // click save button
