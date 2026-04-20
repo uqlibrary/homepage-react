@@ -17,11 +17,9 @@ import StepLabel from '@mui/material/StepLabel';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 
-import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -56,7 +54,6 @@ const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.error.light,
     marginTop: 4,
 }));
-
 const StyledPrettyLocationDiv = styled('div')(() => ({
     '& .location-space': {
         lineHeight: 1.25,
@@ -66,7 +63,6 @@ const StyledPrettyLocationDiv = styled('div')(() => ({
         whiteSpace: 'nowrap',
     },
 }));
-
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     '& > div > div': {
         columnGap: '0.25rem',
@@ -81,13 +77,11 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
         fontSize: '16px',
     },
 }));
-
 const StyledFilterWrapper = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
 }));
-
 const StyledHighlightedGrid = styled(Grid)(({ theme }) => ({
     border: theme.palette.designSystem.border,
     marginTop: '2rem',
@@ -96,26 +90,6 @@ const StyledHighlightedGrid = styled(Grid)(({ theme }) => ({
         marginBottom: '0.5rem',
     },
 }));
-
-const StyledAttentionMessageDiv = styled('div')(() => ({
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: '0.5rem',
-    paddingBottom: '0.5rem',
-    paddingTop: '1rem',
-}));
-
-const StyledErrorAttentionMessageDiv = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: '0.5rem',
-    marginTop: '0.75rem',
-    backgroundColor: '#fff2f2',
-    border: `1px solid ${theme.palette.error.light}`,
-    borderRadius: '4px',
-    padding: '0.6rem 0.8rem',
-}));
-
 const StyledDraftModeNotice = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -125,7 +99,6 @@ const StyledDraftModeNotice = styled('div')(({ theme }) => ({
     borderRadius: '4px',
     padding: '0.6rem 0.8rem',
 }));
-
 const StyledUqTightLink = styled('a')(({ theme }) => ({
     color: theme.palette.primary.main,
     fontWeight: 500,
@@ -149,7 +122,6 @@ const StyledUqTightLink = styled('a')(({ theme }) => ({
         },
     },
 }));
-
 const StyledFacilityGroupCheckboxBlock = styled('div')(() => ({
     '& h5': {
         fontWeight: 300,
@@ -303,19 +275,9 @@ export const EditSpaceForm = ({
     const { account } = useAccountContext();
     const theme = useTheme();
 
-    const [location, setLocation1] = useState({});
-    const setLocation = newValues => {
-        console.log('setLocation', newValues);
-        setLocation1(newValues);
-    };
-
+    const [location, setLocation] = useState({});
     const [isConfirmationOpen, showConfirmation, hideConfirmation] = useConfirmationState();
-
-    const [errorMessages, setErrorMessages2] = useState([]);
-    const setErrorMessages = m => {
-        console.log('setErrorMessages', m);
-        setErrorMessages2(m);
-    };
+    const [errorMessages, setErrorMessages] = useState([]);
 
     const firstTabId = 0;
     const secondTabId = 1;
@@ -350,35 +312,23 @@ export const EditSpaceForm = ({
     };
 
     const [isBookable, setIsBookable] = useState();
-    const [hasCapacityLimit, setHasCapacityLimit] = useState();
+    // const [hasCapacityLimit, setHasCapacityLimit] = useState();
     useEffect(() => {
         hideConfirmation();
 
         setIsBookable(!!formValues?.space_external_book_url || false);
 
-        setHasCapacityLimit(formValues?.space_capacity > 0 || false);
+        // setHasCapacityLimit(formValues?.space_capacity > 0 || false);
     }, [hideConfirmation, formValues?.space_uuid, formValues?.space_external_book_url, formValues?.space_capacity]);
 
     useEffect(() => {
         if (!bookableSpacesRoomAdding && (!!bookableSpacesRoomAddError || !!bookableSpacesRoomAddResult)) {
-            console.log(
-                'ConfirmationBox: useEffect Adding: showConfirmation',
-                bookableSpacesRoomAdding,
-                bookableSpacesRoomAddError,
-                bookableSpacesRoomAddResult,
-            );
             showConfirmation();
         }
     }, [bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult, showConfirmation]);
 
     useEffect(() => {
         if (!bookableSpacesRoomUpdating && (!!bookableSpacesRoomUpdateError || !!bookableSpacesRoomUpdateResult)) {
-            console.log(
-                'ConfirmationBox: useEffect Updating: showConfirmation',
-                bookableSpacesRoomUpdating,
-                bookableSpacesRoomUpdateError,
-                bookableSpacesRoomUpdateResult,
-            );
             showConfirmation();
         }
     }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult, showConfirmation]);
@@ -546,7 +496,6 @@ export const EditSpaceForm = ({
         if (_prop === 'isBookableCheckbox') {
             setIsBookable(e?.target?.checked);
             if (theNewValue === false) {
-                console.log('handleChange booking url cleared');
                 // they have cleared the checkbox. Wipe the booking url
                 prop = 'space_external_book_url';
             }
@@ -680,31 +629,22 @@ export const EditSpaceForm = ({
     }
 
     const returnToDashboard = () => {
-        console.log('ConfirmationBox: returnToDashboard');
         hideConfirmation();
         actions.clearABookableSpace();
         navigateToPage('/admin/spaces');
     };
     const clearForm = () => {
-        console.log('ConfirmationBox: clearForm');
         hideConfirmation();
         actions.clearABookableSpace();
         window.location.reload(false);
     };
     const reEditRecord = () => {
-        console.log('ConfirmationBox: reEditRecord');
         clearForm();
         actions.clearABookableSpace();
         navigateToPage(window.location.href);
     };
 
     const spaceTypeList = React.useMemo(() => {
-        console.log(
-            'bookableSpacesRoomList for spaceTypeList',
-            bookableSpacesRoomListLoading,
-            bookableSpacesRoomListError,
-            bookableSpacesRoomList,
-        );
         if (
             bookableSpacesRoomListLoading === false &&
             bookableSpacesRoomListError === false &&
@@ -881,17 +821,10 @@ export const EditSpaceForm = ({
         const currentCampus =
             (!!currentCampusList &&
                 currentCampusList.length > 0 &&
-                currentCampusList?.find(c => {
-                    const match = c?.campus_id === formValues?.campus_id;
-                    return match;
-                })) ||
+                currentCampusList?.find(c => c?.campus_id === formValues?.campus_id)) ||
             {};
         const currentCampusLibraries = validLibraryList(currentCampus?.libraries || []);
-        const currentLibrary =
-            currentCampusLibraries?.find(l => {
-                const match = l?.library_id === formValues?.library_id;
-                return match;
-            }) || {};
+        const currentLibrary = currentCampusLibraries?.find(l => l?.library_id === formValues?.library_id) || {};
 
         const updatedLocation = {};
         updatedLocation.currentCampus = currentCampus;
@@ -953,9 +886,9 @@ export const EditSpaceForm = ({
             knownBookableFacilityType?.facility_type_id !== undefined
                 ? String(knownBookableFacilityType?.facility_type_id)
                 : null;
-        const isBookableFacilityTypeSelectedById =
-            !!knownBookableFacilityTypeId && selectedFacilityTypeIdsAsString.includes(knownBookableFacilityTypeId);
-        const isBookableFacilityTypeSelectedByName = selectedFacilityTypeNames.includes('bookable');
+        // const isBookableFacilityTypeSelectedById =
+        //     !!knownBookableFacilityTypeId && selectedFacilityTypeIdsAsString.includes(knownBookableFacilityTypeId);
+        // const isBookableFacilityTypeSelectedByName = selectedFacilityTypeNames.includes('bookable');
 
         return (
             <Grid container spacing={3}>
@@ -981,7 +914,6 @@ export const EditSpaceForm = ({
                     </FormControl>
                 </Grid>
                 <Grid item md={6} xs={12}>
-                    {console.log('space Type List', spaceTypeList)}
                     <FormControl variant="standard" fullWidth>
                         <InputLabel id="add-space-type-label" htmlFor="add-space-type-input">
                             Choose an existing Space type *
@@ -1035,7 +967,6 @@ export const EditSpaceForm = ({
                         config={editorConfig}
                         data={formValues?.space_description || ''}
                         onReady={editor => {
-                            console.log('space_description onready fired');
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
@@ -1050,7 +981,6 @@ export const EditSpaceForm = ({
                         }}
                         onChange={(event, editor) => {
                             const htmlData = editor.getData();
-                            console.log('space_description onchange fired', htmlData, formValues?.space_description);
                             // handleChange simply doesn't fire here?!?
                             const newValues = {
                                 ...formValues,
