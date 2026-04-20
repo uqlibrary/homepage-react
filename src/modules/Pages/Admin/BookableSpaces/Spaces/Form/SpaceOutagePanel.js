@@ -107,24 +107,22 @@ export const SpaceOutagePanel = ({
     const [isSaving, setIsSaving] = useState(false);
     const [deletingOutageId, setDeletingOutageId] = useState(null);
 
-    const validation = useMemo(
-        () => validateSpaceOutageDraft(draft, outages, editingOutageId),
-        [draft, outages, editingOutageId],
-    );
+    const validation = useMemo(() => validateSpaceOutageDraft(draft, outages, editingOutageId), [
+        draft,
+        outages,
+        editingOutageId,
+    ]);
 
-    const currentOutages = useMemo(
-        () => outages.filter(outage => getSpaceOutageStatus(outage) === 'Current'),
-        [outages],
-    );
-    const upcomingOutages = useMemo(
-        () => outages.filter(outage => getSpaceOutageStatus(outage) === 'Upcoming'),
-        [outages],
-    );
+    const currentOutages = useMemo(() => outages.filter(outage => getSpaceOutageStatus(outage) === 'Current'), [
+        outages,
+    ]);
+    const upcomingOutages = useMemo(() => outages.filter(outage => getSpaceOutageStatus(outage) === 'Upcoming'), [
+        outages,
+    ]);
     const pastOutages = useMemo(() => outages.filter(outage => getSpaceOutageStatus(outage) === 'Past'), [outages]);
-    const activeAndUpcomingOutages = useMemo(
-        () => outages.filter(outage => getSpaceOutageStatus(outage) !== 'Past'),
-        [outages],
-    );
+    const activeAndUpcomingOutages = useMemo(() => outages.filter(outage => getSpaceOutageStatus(outage) !== 'Past'), [
+        outages,
+    ]);
 
     const isPastOutage = outage => getSpaceOutageStatus(outage) === 'Past';
 
@@ -144,12 +142,11 @@ export const SpaceOutagePanel = ({
     const handleDraftChange = fieldName => event => {
         let value = event?.target?.value || '';
         if (value && typeof value === 'string' && value.length >= 16) {
-            const momentValue = require('moment')(value, [
-                'YYYY-MM-DDTHH:mm',
-                'YYYY-MM-DD HH:mm',
-                'YYYY-MM-DDTHH:mm:ss',
-                'YYYY-MM-DD HH:mm:ss',
-            ], true);
+            const momentValue = require('moment')(
+                value,
+                ['YYYY-MM-DDTHH:mm', 'YYYY-MM-DD HH:mm', 'YYYY-MM-DDTHH:mm:ss', 'YYYY-MM-DD HH:mm:ss'],
+                true,
+            );
             if (momentValue.isValid()) {
                 value = momentValue.format('YYYY-MM-DDTHH:mm');
             }
@@ -308,7 +305,7 @@ export const SpaceOutagePanel = ({
         <Grid container spacing={3}>
             <Grid item xs={12}>
                 <Typography component={'h3'} variant={'h6'}>
-                    Unavailability
+                    Outages
                 </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -325,7 +322,9 @@ export const SpaceOutagePanel = ({
                     <Typography component={'p'}>
                         <strong>Next outage:</strong>{' '}
                         {upcomingOutages.length > 0
-                            ? `${formatSpaceOutageDateTimeForDisplay(upcomingOutages[0]?.space_outage_start)} to ${formatSpaceOutageDateTimeForDisplay(upcomingOutages[0]?.space_outage_end)}`
+                            ? `${formatSpaceOutageDateTimeForDisplay(
+                                  upcomingOutages[0]?.space_outage_start,
+                              )} to ${formatSpaceOutageDateTimeForDisplay(upcomingOutages[0]?.space_outage_end)}`
                             : 'No upcoming outages recorded'}
                     </Typography>
                 </StyledSummaryBox>
@@ -333,10 +332,11 @@ export const SpaceOutagePanel = ({
             <Grid item md={6} xs={12}>
                 <TextField
                     id="space_outage_start"
-                    label="Unavailable from *"
+                    label="Unavailable from"
                     type="datetime-local"
                     variant="standard"
                     fullWidth
+                    required
                     value={draft?.space_outage_start}
                     onChange={handleDraftChange('space_outage_start')}
                     error={!!getFieldError('space_outage_start')}
@@ -348,10 +348,11 @@ export const SpaceOutagePanel = ({
             <Grid item md={6} xs={12}>
                 <TextField
                     id="space_outage_end"
-                    label="Unavailable until *"
+                    label="Unavailable until"
                     type="datetime-local"
                     variant="standard"
                     fullWidth
+                    required
                     value={draft?.space_outage_end}
                     onChange={handleDraftChange('space_outage_end')}
                     error={!!getFieldError('space_outage_end')}
@@ -366,6 +367,7 @@ export const SpaceOutagePanel = ({
                     label="Reason"
                     variant="standard"
                     fullWidth
+                    required
                     multiline
                     minRows={3}
                     value={draft?.space_outage_reason}
@@ -399,30 +401,28 @@ export const SpaceOutagePanel = ({
             </Grid>
             <Grid item xs={12}>
                 {spaceOutageListLoading && !outages?.length ? (
-                    <InlineLoader message="Loading unavailability" />
+                    <InlineLoader message="Loading outages" />
                 ) : spaceOutageListError ? (
                     <StyledInfoBox data-testid="space-outage-load-error">
                         <Typography component={'p'}>
-                            Unable to load space unavailability right now. Please try again later.
+                            Unable to load space outages right now. Please try again later.
                         </Typography>
                     </StyledInfoBox>
                 ) : outages.length === 0 ? (
                     <StyledInfoBox data-testid="space-outage-empty-state">
-                        <Typography component={'p'}>
-                            No unavailability periods have been recorded for this space.
-                        </Typography>
+                        <Typography component={'p'}>No outages have been recorded for this space.</Typography>
                     </StyledInfoBox>
                 ) : (
                     <>
                         <Typography component={'h4'} variant={'subtitle1'} data-testid="space-outage-scheduled-heading">
-                            Current and upcoming unavailability
+                            Current and upcoming outages
                         </Typography>
                         {activeAndUpcomingOutages.length > 0 ? (
                             renderOutageTable(activeAndUpcomingOutages, 'space-outage-scheduled')
                         ) : (
                             <StyledInfoBox data-testid="space-outage-scheduled-empty-state">
                                 <Typography component={'p'}>
-                                    No current or upcoming unavailability is recorded for this space.
+                                    No current or upcoming outages are recorded for this space.
                                 </Typography>
                             </StyledInfoBox>
                         )}
@@ -433,15 +433,13 @@ export const SpaceOutagePanel = ({
                             sx={{ mt: 3 }}
                             data-testid="space-outage-past-heading"
                         >
-                            Past unavailability
+                            Past outages
                         </Typography>
                         {pastOutages.length > 0 ? (
                             renderOutageTable(pastOutages, 'space-outage-past')
                         ) : (
                             <StyledInfoBox data-testid="space-outage-past-empty-state">
-                                <Typography component={'p'}>
-                                    No past unavailability is recorded for this space.
-                                </Typography>
+                                <Typography component={'p'}>No past outages are recorded for this space.</Typography>
                             </StyledInfoBox>
                         )}
                     </>

@@ -154,12 +154,15 @@ export const validateSpaceOutageDraft = (draft, existingOutages = [], editingOut
     if (!!draftStart && !!draftEnd && draftEnd <= draftStart) {
         errors.push({ field: 'space_outage_end', message: 'The end date and time must be after the start.' });
     }
+    if (!draft?.space_outage_reason || !draft?.space_outage_reason.trim()) {
+        errors.push({ field: 'space_outage_reason', message: 'A reason is required.' });
+    }
 
     const overlappingOutages = getOverlappingSpaceOutages(draft, existingOutages, editingOutageId);
     if (overlappingOutages.length > 0) {
         warnings.push({
             field: 'space_outage_range',
-            message: 'This unavailability overlaps another outage window already recorded for this space.',
+            message: 'This outage overlaps another outage window already recorded for this space.',
         });
     }
 

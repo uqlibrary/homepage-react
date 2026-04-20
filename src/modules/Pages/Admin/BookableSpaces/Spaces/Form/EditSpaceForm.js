@@ -354,7 +354,7 @@ export const EditSpaceForm = ({
     const [activeStep, setActiveStep] = useState(0);
 
     const addModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Imagery'];
-    const editModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Unavailability', 'Imagery'];
+    const editModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Outages', 'Imagery'];
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
@@ -1718,7 +1718,7 @@ export const EditSpaceForm = ({
                                                 variant={'body2'}
                                                 data-testid="space-outage-upcoming-notice-text"
                                             >
-                                                This Space has scheduled unavailability. It will be shown as unavailable
+                                                This Space has scheduled outage(s). It will be shown as unavailable
                                                 during that time.
                                             </Typography>
                                         </StyledDraftModeNotice>
