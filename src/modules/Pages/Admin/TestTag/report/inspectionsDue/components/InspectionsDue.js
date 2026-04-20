@@ -25,6 +25,7 @@ import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 import * as _ from 'lodash';
 import { GridWrapper } from '../../../SharedComponents/LocationPicker/LocationPicker';
 import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
 
 import { useUserTeams } from '../../../helpers/teams';
 
@@ -93,11 +94,11 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
         selectedTeam,
         selectedTeamSlug,
         teamSelectFieldName,
+        getTeamSlug,
         setSelectedTeam,
-        getSelectedTeamSlug,
-    } = useUserTeams(user);
-
-    // const prevSearchRef = useRef({ locationStr: '', monthRange, selectedTeamSlug });
+    } = useUserTeams({
+        user,
+    });
 
     const [filterModel, setFilterModel] = useState({ items: [] });
 
@@ -142,13 +143,12 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     );
 
     const handleSelectedTeam = useCallback(
-        updater => {
-            const newState = updater(selectedTeam);
-            setSelectedTeam(newState);
-            const newSlug = getSelectedTeamSlug(newState);
-            getInspectionsDue({ teamSlug: newSlug });
+        optionValue => {
+            const newTeamSlug = getTeamSlug(optionValue);
+            setSelectedTeam(optionValue);
+            getInspectionsDue({ teamSlug: newTeamSlug });
         },
-        [selectedTeam, setSelectedTeam, getSelectedTeamSlug, getInspectionsDue],
+        [setSelectedTeam, getTeamSlug, getInspectionsDue],
     );
     const handleSelectedLocation = useCallback(
         value => {
@@ -174,12 +174,12 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
                         <GridWrapper withGrid divisor={2}>
-                            <SelectField
-                                field={teamSelectFieldName}
+                            <TeamSelector
+                                id={teamSelectFieldName}
                                 options={userTeamList}
-                                locale={{ all: 'All teams', label: 'Team' }}
-                                filterModel={selectedTeam}
-                                setFilterModel={handleSelectedTeam}
+                                label={'Team'}
+                                currentValue={selectedTeam}
+                                onChange={handleSelectedTeam}
                             />
                         </GridWrapper>
                     </Grid>
