@@ -69,7 +69,7 @@ describe('spaceOutageHelpers', () => {
     });
 
     it('validates required fields and ordering while warning on overlap', () => {
-        expect(validateSpaceOutageDraft({}, sampleOutages).errors).toHaveLength(2);
+        expect(validateSpaceOutageDraft({}, sampleOutages).errors).toHaveLength(3);
 
         const validation = validateSpaceOutageDraft(
             {

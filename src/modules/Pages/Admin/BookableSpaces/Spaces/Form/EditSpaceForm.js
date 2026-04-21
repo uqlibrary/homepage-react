@@ -1671,15 +1671,15 @@ export const EditSpaceForm = ({
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                     <StyledTabs value={panelId} onChange={handleTabChange} aria-label="Space fields">
                                         {editModeTabLabels?.map((tabName, index) => {
-                                            // Add data-testid="tab-unavailability" to the Unavailability tab only
-                                            const isUnavailabilityTab = slugifyName(tabName) === 'unavailability';
+                                            // Always assign 'tab-unavailability' testid to the Outages tab for test compatibility
+                                            const isOutagesTab = slugifyName(tabName) === 'outages';
                                             return (
                                                 <Tab
                                                     key={`${tabName}-edit`}
                                                     label={`${tabName}`}
                                                     {...a11yProps(index)}
                                                     data-testid={
-                                                        isUnavailabilityTab
+                                                        isOutagesTab
                                                             ? 'tab-unavailability'
                                                             : `tab-${slugifyName(tabName)}`
                                                     }

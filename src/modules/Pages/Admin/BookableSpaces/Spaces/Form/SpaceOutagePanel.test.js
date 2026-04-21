@@ -41,9 +41,9 @@ describe('SpaceOutagePanel', () => {
         );
 
         expect(screen.getByTestId('space-outage-scheduled-heading')).toHaveTextContent(
-            'Current and upcoming unavailability',
+            'Current and upcoming outages',
         );
-        expect(screen.getByTestId('space-outage-past-heading')).toHaveTextContent('Past unavailability');
+        expect(screen.getByTestId('space-outage-past-heading')).toHaveTextContent('Past outages');
 
         expect(screen.getByTestId('space-outage-edit-1')).toBeDisabled();
         expect(screen.getByTestId('space-outage-delete-1')).toBeDisabled();
