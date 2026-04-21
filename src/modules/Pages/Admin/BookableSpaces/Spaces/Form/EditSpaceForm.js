@@ -311,7 +311,11 @@ export const EditSpaceForm = ({
         },
     };
 
-    const [isBookable, setIsBookable] = useState();
+    const [isBookable, setIsBookable2] = useState();
+    const setIsBookable = x => {
+        console.log('setIsBookable', x);
+        setIsBookable2(x);
+    };
     // const [hasCapacityLimit, setHasCapacityLimit] = useState();
     useEffect(() => {
         hideConfirmation();
@@ -319,7 +323,12 @@ export const EditSpaceForm = ({
         setIsBookable(!!formValues?.space_external_book_url || false);
 
         // setHasCapacityLimit(formValues?.space_capacity > 0 || false);
-    }, [hideConfirmation, formValues?.space_uuid, formValues?.space_external_book_url, formValues?.space_capacity]);
+    }, [
+        hideConfirmation,
+        formValues?.space_uuid,
+        formValues?.space_external_book_url,
+        //    , formValues?.space_capacity
+    ]);
 
     useEffect(() => {
         if (!bookableSpacesRoomAdding && (!!bookableSpacesRoomAddError || !!bookableSpacesRoomAddResult)) {
@@ -334,28 +343,39 @@ export const EditSpaceForm = ({
     }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult, showConfirmation]);
 
     const validatePanelAbout = (currentValues, errorMessages = []) => {
+        console.log('validatePanelAbout start currentValues=', currentValues);
         if (!currentValues?.space_name) {
             errorMessages?.push({ field: 'space_name', message: 'A Name is required.' });
         }
         if (!currentValues?.space_type_id) {
             errorMessages.push({ field: 'space_type_id', message: 'A Type is required.' });
         }
-        if (!currentValues?.space_capacity || currentValues?.space_capacity < 1) {
-            errorMessages.push({
-                field: 'space_capacity',
-                message: 'The number of patrons who can use the space is required.',
-            });
-        }
-        return errorMessages;
-    };
+        // spaces with a booking url must have capacity entered
 
-    function validatePanelFacilityTypes(currentValues, errorMessages = []) {
-        if (!!isBookable && !currentValues?.space_external_book_url) {
+        console.log('validatePanelAbout currentValues.space_external_book_url=', currentValues.space_external_book_url);
+        console.log('validatePanelAbout currentValues.space_capacity=', currentValues.space_capacity);
+        console.log('validatePanelAbout currentValues.isBookableCheckbox=', currentValues.isBookableCheckbox);
+        console.log('validatePanelAbout isBookable=', isBookable);
+        if (!!currentValues.isBookableCheckbox && !currentValues?.space_external_book_url) {
             errorMessages.push({
                 field: 'space_external_book_url',
                 message: 'Provide the booking link, or uncheck the checkbox.',
             });
         }
+        if (
+            (!!currentValues.isBookableCheckbox || !!currentValues.space_external_book_url) &&
+            (!currentValues?.space_capacity || Number(currentValues?.space_capacity) < 1)
+        ) {
+            errorMessages.push({
+                field: 'space_capacity',
+                message: 'Bookable spaces must have the Space capacity set.',
+            });
+        }
+        console.log('validatePanelAbout errorMessages=', errorMessages);
+        return errorMessages;
+    };
+
+    function validatePanelFacilityTypes(currentValues, errorMessages = []) {
         return errorMessages;
     }
 
@@ -390,11 +410,20 @@ export const EditSpaceForm = ({
         return errorMessages;
     }
 
-    // validate fields value
-    const formValid = valuesToSend => {
+    const validateForm = valuesToValidate => {
+        console.log('validateForm valuesToValidate=', valuesToValidate);
         const messages = [];
 
-        validatePanelAbout(valuesToSend, messages)?.forEach(m => {
+        validatePanelAbout(valuesToValidate, messages)?.forEach(m => {
+            const findIndex = messages?.findIndex(e => e?.field === m?.field);
+            if (findIndex !== -1) {
+                messages?.splice(findIndex, 1);
+            }
+            messages?.push(m);
+        });
+        console.log('validateForm messages=', messages);
+
+        validatePanelFacilityTypes(valuesToValidate, messages)?.forEach(m => {
             const findIndex = messages?.findIndex(e => e?.field === m?.field);
             if (findIndex !== -1) {
                 messages?.splice(findIndex, 1);
@@ -402,7 +431,7 @@ export const EditSpaceForm = ({
             messages?.push(m);
         });
 
-        validatePanelFacilityTypes(valuesToSend, messages)?.forEach(m => {
+        validatePanelLocation(valuesToValidate, messages)?.forEach(m => {
             const findIndex = messages?.findIndex(e => e?.field === m?.field);
             if (findIndex !== -1) {
                 messages?.splice(findIndex, 1);
@@ -410,7 +439,7 @@ export const EditSpaceForm = ({
             messages?.push(m);
         });
 
-        validatePanelLocation(valuesToSend, messages)?.forEach(m => {
+        validatePanelImagery(valuesToValidate, messages)?.forEach(m => {
             const findIndex = messages?.findIndex(e => e?.field === m?.field);
             if (findIndex !== -1) {
                 messages?.splice(findIndex, 1);
@@ -418,15 +447,7 @@ export const EditSpaceForm = ({
             messages?.push(m);
         });
 
-        validatePanelImagery(valuesToSend, messages)?.forEach(m => {
-            const findIndex = messages?.findIndex(e => e?.field === m?.field);
-            if (findIndex !== -1) {
-                messages?.splice(findIndex, 1);
-            }
-            messages?.push(m);
-        });
-
-        console.log('formValid errorMessages=', messages);
+        console.log('validateForm errorMessages=', messages);
 
         setErrorMessages(messages);
 
@@ -435,7 +456,7 @@ export const EditSpaceForm = ({
     const handleNext = () => {
         // setEditorReady(false);
         document.activeElement.blur(); // defocus the button
-        formValid(formValues);
+        validateForm(formValues);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
         scrollToTopOfPage();
     };
@@ -443,13 +464,14 @@ export const EditSpaceForm = ({
     const handleBack = () => {
         // setEditorReady(false);
         document.activeElement.blur(); // defocus the button
-        formValid(formValues);
+        validateForm(formValues);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
         scrollToTopOfPage();
     };
 
     const handleFieldCompletion = e => {
-        const validationResult = formValid(formValues);
+        console.log('handleFieldCompletion', e.target, formValues);
+        const validationResult = validateForm(formValues);
         if (validationResult !== true) {
             setErrorMessages(validationResult);
         }
@@ -490,14 +512,19 @@ export const EditSpaceForm = ({
     const handleChange = _prop => e => {
         let theNewValue =
             e?.target?.hasOwnProperty('checked') && e?.target?.type !== 'radio' ? e?.target?.checked : e?.target?.value;
+        console.log('handleChange start ', _prop, theNewValue);
+
+        const localFormValues = formValues;
 
         const updatedLocation = {};
         let prop = _prop;
         if (_prop === 'isBookableCheckbox') {
+            console.log('handleChange isBookableCheckbox=', theNewValue);
             setIsBookable(e?.target?.checked);
             if (theNewValue === false) {
                 // they have cleared the checkbox. Wipe the booking url
                 prop = 'space_external_book_url';
+                localFormValues.isBookableCheckbox = false;
             }
         } else if (_prop === 'facility_type_id') {
             prop = 'facility_types';
@@ -613,10 +640,13 @@ export const EditSpaceForm = ({
             newLocation.floor_id = updatedLocation?.floor_id;
         }
         const newValues = {
-            ...formValues,
+            ...localFormValues,
             ...newLocation,
             [prop]: theNewValue,
         };
+        console.log('handleChange newValues=', newValues);
+
+        validateForm(newValues);
 
         setFormValues(newValues);
     };
@@ -768,7 +798,7 @@ export const EditSpaceForm = ({
         valuesToSend.space_type_id = formValues?.space_type_id || selectedSpaceType?.space_type_id || null;
         valuesToSend.space_floor_id = formValues?.floor_id;
         valuesToSend.space_precise = formValues?.space_precise;
-        valuesToSend.space_capacity = !!formValues?.space_capacity ? formValues?.space_capacity : 1;
+        valuesToSend.space_capacity = !!formValues?.space_capacity ? formValues?.space_capacity : 0;
         valuesToSend.space_description = formValues?.space_description;
         valuesToSend.space_photo_url = formValues?.space_photo_url;
         valuesToSend.space_photo_description = formValues?.space_photo_description;
@@ -787,7 +817,10 @@ export const EditSpaceForm = ({
         valuesToSend.uploadedFile = formValues.uploadedFile;
         console.log('handleSaveClick valuesToSend=', valuesToSend);
 
-        const validationResult = formValid(valuesToSend);
+        const validationResult = validateForm({
+            ...valuesToSend,
+            isBookableCheckbox: formValues.isBookableCheckbox,
+        });
         if (validationResult !== true) {
             setErrorMessages(validationResult);
 
@@ -840,6 +873,7 @@ export const EditSpaceForm = ({
         setLocation({
             ...updatedLocation,
         });
+        validateForm(formValues);
     }, [currentCampusList, formValues]);
 
     const handleSuppliedFiles = files => {
@@ -866,26 +900,25 @@ export const EditSpaceForm = ({
     };
 
     const bookableCheckboxLabel = 'This Space is bookable';
-    const bookableUrlLabel = { inputProps: { 'aria-label': bookableCheckboxLabel } };
     const aboutPanel = () => {
         const bookingUrlQuerystringWarning = getBookingUrlQuerystringWarning(formValues?.space_external_book_url);
-        const selectedFacilityTypes = formValues?.facility_types || [];
-        const selectedFacilityTypeIds = selectedFacilityTypes
-            .map(ft => ft?.facility_type_id)
-            .filter(id => id !== null && id !== undefined);
-        const selectedFacilityTypeIdsAsString = selectedFacilityTypeIds.map(id => String(id));
-        const selectedFacilityTypeNames = selectedFacilityTypes
-            .map(ft => (ft?.facility_type_name || '').trim().toLowerCase())
-            .filter(Boolean);
+        // const selectedFacilityTypes = formValues?.facility_types || [];
+        // const selectedFacilityTypeIds = selectedFacilityTypes
+        //     .map(ft => ft?.facility_type_id)
+        //     .filter(id => id !== null && id !== undefined);
+        // const selectedFacilityTypeIdsAsString = selectedFacilityTypeIds.map(id => String(id));
+        // const selectedFacilityTypeNames = selectedFacilityTypes
+        //     .map(ft => (ft?.facility_type_name || '').trim().toLowerCase())
+        //     .filter(Boolean);
 
-        const knownBookableFacilityType = getFlatFacilityTypeList(facilityTypeList)?.find(
-            ft => (ft?.facility_type_name || '').trim().toLowerCase() === 'bookable',
-        );
-        const knownBookableFacilityTypeId =
-            knownBookableFacilityType?.facility_type_id !== null &&
-            knownBookableFacilityType?.facility_type_id !== undefined
-                ? String(knownBookableFacilityType?.facility_type_id)
-                : null;
+        // const knownBookableFacilityType = getFlatFacilityTypeList(facilityTypeList)?.find(
+        //     ft => (ft?.facility_type_name || '').trim().toLowerCase() === 'bookable',
+        // );
+        // const knownBookableFacilityTypeId =
+        //     knownBookableFacilityType?.facility_type_id !== null &&
+        //     knownBookableFacilityType?.facility_type_id !== undefined
+        //         ? String(knownBookableFacilityType?.facility_type_id)
+        //         : null;
         // const isBookableFacilityTypeSelectedById =
         //     !!knownBookableFacilityTypeId && selectedFacilityTypeIdsAsString.includes(knownBookableFacilityTypeId);
         // const isBookableFacilityTypeSelectedByName = selectedFacilityTypeNames.includes('bookable');
@@ -1001,11 +1034,11 @@ export const EditSpaceForm = ({
                             data-testid="contains-bookable-checkbox"
                             control={
                                 <Checkbox
-                                    {...bookableUrlLabel}
-                                    checked={!!isBookable || false}
+                                    checked={!!isBookable}
                                     data-testid="space-can-book"
                                     className={'checkbox'}
                                     onChange={handleChange('isBookableCheckbox')}
+                                    inputProps={{ 'aria-label': bookableCheckboxLabel }}
                                 />
                             }
                         />
@@ -1042,34 +1075,45 @@ export const EditSpaceForm = ({
                 <Grid item xs={12}>
                     <div data-testid="capacity-details">
                         <Typography component={'h4'} variant={'p'}>
-                            How many people can use this space?
+                            How many people can use this space? (Required field when space is bookable){' '}
+                            {isBookable && (
+                                <span
+                                    className="required"
+                                    aria-label="Required"
+                                    data-testid="capacity-required-indicator"
+                                >
+                                    *
+                                </span>
+                            )}
                         </Typography>
+                        {console.log('formValues?.space_capacity=', formValues?.space_capacity)}
                         <FormControl variant="standard" fullWidth>
-                            <InputLabel htmlFor="space_capacity">
-                                Enter the number of patrons who can make use of this Space *<br />
+                            <InputLabel htmlFor="space-capacity">
+                                Enter the number of patrons who can make use of this Space
                             </InputLabel>
                             <Input
                                 type="number"
-                                id="space_capacity"
-                                data-testid="space_capacity"
-                                value={formValues?.space_capacity || 1}
+                                id="space-capacity"
+                                data-testid="space-capacity"
+                                value={formValues?.space_capacity || 0}
                                 onChange={handleChange('space_capacity')}
                                 // onBlur={handleChange('space_capacity')}
                                 onBlur={handleFieldCompletion}
                                 style={{ width: '5rem' }}
                                 inputProps={{
                                     style: { textAlign: 'right' },
-                                    min: 1,
-                                    // onchange: formValid(formValues),
+                                    min: 0,
                                 }}
-                                required
+                                required={isBookable}
                             />
                             <Typography component={'p'} style={{ marginTop: '0.5rem' }}>
-                                (Note: capacity only shows to users if the space is bookable.)
+                                (Note: capacity is only displayed to users if the space is bookable.)
                             </Typography>
-                            <StyledErrorMessageTypography component={'div'}>
-                                {reportErrorMessage('space_capacity')}
-                            </StyledErrorMessageTypography>
+                            {!!isBookable && (
+                                <StyledErrorMessageTypography component={'div'} data-testid="space-capacity-error">
+                                    {reportErrorMessage('space_capacity')}
+                                </StyledErrorMessageTypography>
+                            )}
                         </FormControl>
                     </div>
                 </Grid>
@@ -1415,15 +1459,17 @@ export const EditSpaceForm = ({
         );
     };
 
-    function panelErrorCount(index) {
-        if (index === firstTabId) {
-            return validatePanelAbout(formValues)?.length;
-        } else if (index === secondTabId) {
+    function panelErrorCount(tabId) {
+        if (tabId === firstTabId) {
+            const abouterrorcount = validatePanelAbout(formValues);
+            console.log('abouterrorcount=', abouterrorcount);
+            return abouterrorcount?.length;
+        } else if (tabId === secondTabId) {
             return validatePanelFacilityTypes(formValues)?.length;
-        } else if (index === thirdTabId) {
+        } else if (tabId === thirdTabId) {
             return validatePanelLocation(formValues)?.length;
         } else {
-            // index must = 3
+            // tabId must = 3
             return validatePanelImagery(formValues)?.length;
         }
     }
@@ -1465,7 +1511,7 @@ export const EditSpaceForm = ({
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <Stepper activeStep={activeStep}>
-                                        {tabLabels?.map((tabName, index) => {
+                                        {tabLabels?.map((tabName, tabId) => {
                                             const stepProps = { completed: null };
                                             const labelProps = {
                                                 optional: null,
@@ -1473,14 +1519,14 @@ export const EditSpaceForm = ({
                                             return (
                                                 <Step key={tabName} {...stepProps} sx={{ paddingRight: '25px' }}>
                                                     <StepLabel {...labelProps}>
-                                                        {panelErrorCount(index) === 0 ? (
+                                                        {panelErrorCount(tabId) === 0 ? (
                                                             <span data-testid={`tab-${slugifyName(tabName)}`}>
                                                                 {tabName}
                                                             </span>
                                                         ) : (
                                                             <StyledErrorCountBadge
                                                                 color="error"
-                                                                badgeContent={panelErrorCount(index)}
+                                                                badgeContent={panelErrorCount(tabId)}
                                                                 data-testid={`tab-${slugifyName(tabName)}`}
                                                             >
                                                                 {tabName}

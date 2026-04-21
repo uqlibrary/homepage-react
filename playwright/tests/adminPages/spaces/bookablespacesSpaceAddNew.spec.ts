@@ -2,7 +2,7 @@ import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 
-import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
+import { COLOR_GLOBAL_ALERT_RED, COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 import { assertErrorPopupAppears } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
@@ -132,9 +132,9 @@ test.describe('Spaces Admin - add new space', () => {
 
         const selectedSpaceTypeId = await chooseAnySpaceType(page);
 
-        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+        const capacityNumberField = page.getByTestId('space-capacity').locator('input');
         await expect(capacityNumberField).toBeVisible();
-        await expect(capacityNumberField).toHaveValue('1');
+        await expect(capacityNumberField).toHaveValue('0');
         await capacityNumberField.clear();
         await capacityNumberField.fill('2');
 
@@ -196,7 +196,7 @@ test.describe('Spaces Admin - add new space', () => {
         await bookingUrlField.fill('https://example.com');
 
         // enter a Space capacity
-        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+        const capacityNumberField = page.getByTestId('space-capacity').locator('input');
         await expect(capacityNumberField).toBeVisible();
         await capacityNumberField.clear();
         await capacityNumberField.fill('8');
@@ -323,6 +323,113 @@ test.describe('Spaces Admin - add new space', () => {
         await assertExpectedDataSentToServer(page, expectedValues);
     });
 
+    test('capacity validates correctly for a bookable space', async ({ page }) => {
+        // on load the space is not bookable and has no capacity defined
+        await expect(page.getByTestId(STEP_ABOUT).locator('.MuiBadge-badge')).toBeVisible();
+        await expect(page.getByTestId(STEP_ABOUT).locator('.MuiBadge-badge')).toHaveText('2');
+        await page.getByTestId('space-can-book').scrollIntoViewIfNeeded();
+        await expect(page.getByTestId('space-can-book').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-can-book').locator('input')).not.toBeChecked();
+        await expect(page.getByTestId('space-capacity').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-capacity').locator('input')).toHaveValue('0');
+        await expect(page.getByTestId('capacity-required-indicator')).not.toBeVisible();
+        await expect(page.getByTestId('space-capacity-error')).not.toBeVisible();
+
+        // make the space bookable
+        await page
+            .getByTestId('contains-bookable-checkbox')
+            .locator('input')
+            .check();
+
+        // capacity is now required and an error shows
+        await expect(page.getByTestId('capacity-required-indicator')).toBeVisible();
+        await expect(page.getByTestId('space-capacity-error')).toBeVisible();
+        await expect(page.getByTestId('space-capacity-error')).toHaveCSS('color', COLOR_GLOBAL_ALERT_RED);
+
+        await expect(page.getByTestId(STEP_ABOUT).locator('.MuiBadge-badge')).toBeVisible();
+        await expect(page.getByTestId(STEP_ABOUT).locator('.MuiBadge-badge')).toHaveText('4');
+
+        // enter a value in capacity (unfortunately we cant use the number input spinner fields :( )
+        const capacityNumberField = page.getByTestId('space-capacity').locator('input');
+        await capacityNumberField.click(); // focus
+        await capacityNumberField.clear();
+        await capacityNumberField.fill('8');
+
+        // and the error goes away
+        await expect(page.getByTestId('space-capacity-error')).not.toBeVisible();
+        await expect(page.getByTestId(STEP_ABOUT).locator('.MuiBadge-badge')).toHaveText('3'); // error count goes from 4 to 3
+
+        // fill in other required fields
+        const nameField = page.getByTestId('space-name').locator('input');
+        await nameField.fill('W12343');
+        await chooseAnySpaceType(page);
+        const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
+        await bookingUrlField.fill('https://example.com');
+
+        await expect(page.getByTestId(STEP_ABOUT).locator('.MuiBadge-badge')).not.toBeVisible();
+
+        // navigate to save button
+        await page.getByTestId('spaces-form-next-button').click(); // to facility types
+        await page.getByTestId('spaces-form-next-button').click(); // to locations
+        await page.getByTestId('spaces-form-next-button').click(); // to final step, imagery
+
+        // no errors are present at save point
+        await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible();
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+
+        // save the new record
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // success indicated
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
+    });
+
+    test('capacity validates correctly for a non-bookable space', async ({ page }) => {
+        await page.getByTestId('space_draftmode').scrollIntoViewIfNeeded();
+        await expect(page.getByTestId(STEP_ABOUT).locator('.MuiBadge-badge')).toBeVisible();
+        await expect(page.getByTestId(STEP_ABOUT).locator('.MuiBadge-badge')).toHaveText('2');
+
+        // on load the space has no capacity defined and capacity is not required
+        await expect(page.getByTestId('space-capacity').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-capacity').locator('input')).toHaveValue('0');
+        await expect(page.getByTestId('capacity-required-indicator')).not.toBeVisible();
+        await expect(page.getByTestId('space-capacity-error')).not.toBeVisible();
+
+        // enter a value in capacity (unfortunately we cant use the number input spinner fields :( )
+        const capacityNumberField = page.getByTestId('space-capacity').locator('input');
+        await capacityNumberField.click(); // focus
+        await capacityNumberField.clear();
+        await capacityNumberField.fill('8');
+
+        // no change in errors
+        await expect(page.getByTestId('space-capacity-error')).not.toBeVisible();
+        await expect(page.getByTestId(STEP_ABOUT).locator('.MuiBadge-badge')).toHaveText('2'); // error count unchanged
+
+        // fill in other required fields
+        const nameField = page.getByTestId('space-name').locator('input');
+        await nameField.fill('W12343');
+        await chooseAnySpaceType(page);
+
+        await expect(page.getByTestId(STEP_ABOUT).locator('.MuiBadge-badge')).not.toBeVisible();
+
+        // navigate to save button
+        await page.getByTestId('spaces-form-next-button').click(); // to facility types
+        await page.getByTestId('spaces-form-next-button').click(); // to locations
+        await page.getByTestId('spaces-form-next-button').click(); // to final step, imagery
+
+        // no errors are present at save point
+        await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible();
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+
+        // save the new record
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // success indicated
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
+    });
+
     test('add spaces page save dialog is accessible', async ({ page }) => {
         const nameField = page.getByTestId('space-name').locator('input');
 
@@ -332,7 +439,7 @@ test.describe('Spaces Admin - add new space', () => {
         await chooseAnySpaceType(page);
 
         // enter a Space capacity
-        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+        const capacityNumberField = page.getByTestId('space-capacity').locator('input');
         await expect(capacityNumberField).toBeVisible();
         await capacityNumberField.clear();
         await capacityNumberField.fill('8');

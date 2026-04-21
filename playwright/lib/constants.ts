@@ -5,3 +5,4 @@ export const DLOR_OBJECT_OWNER = 'uqstaff';
 export const DLOR_NO_EDIT_USER = 's1111111';
 
 export const COLOR_UQPURPLE = 'rgb(81, 36, 122)';
+export const COLOR_GLOBAL_ALERT_RED = 'rgb(214, 41, 41)'; // #d62929, DS $error-500
