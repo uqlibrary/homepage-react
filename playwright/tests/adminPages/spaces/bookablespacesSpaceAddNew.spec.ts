@@ -166,6 +166,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_longitude: PACE_DEFAULT_LONGITUDE,
             space_zlevel: 1,
             space_external_book_url: null,
+            space_description: null,
             space_draftmode: false,
             space_capacity: '2',
         };
@@ -183,6 +184,11 @@ test.describe('Spaces Admin - add new space', () => {
         await nameField.fill('W12343');
 
         const selectedSpaceTypeId = await chooseAnySpaceType(page);
+
+        // Check the description checkbox to enable the description field
+        const descriptionCheckbox = page.getByTestId('toggle-space-description-checkbox').locator('input');
+        await expect(descriptionCheckbox).toBeVisible();
+        await descriptionCheckbox.check();
 
         const descriptionField = page.getByRole('textbox', { name: 'Editor editing area: main' });
         await descriptionField.fill('This is a sunny corner in the Law library where you blah blah blah');

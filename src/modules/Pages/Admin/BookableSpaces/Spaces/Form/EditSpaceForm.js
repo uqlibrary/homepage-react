@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Badge from '@mui/material/Badge';
@@ -105,6 +105,18 @@ const StyledDraftModeNotice = styled('div')(({ theme }) => ({
     border: `1px solid ${theme.palette.warning.light}`,
     borderRadius: '4px',
     padding: '0.6rem 0.8rem',
+}));
+const StyledErrorAttentionMessageDiv = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: '0.5rem',
+    backgroundColor: theme.palette.error.light,
+    border: `1px solid ${theme.palette.error.main}`,
+    borderRadius: '4px',
+    padding: '0.6rem 0.8rem',
+    '& p': {
+        margin: 0,
+    },
 }));
 const StyledUqTightLink = styled('a')(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -307,6 +319,8 @@ export const EditSpaceForm = ({
 
     const [isConfirmationOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [errorMessages, setErrorMessages] = useState([]);
+    const [showSpaceDescriptionCheckbox, setShowSpaceDescriptionCheckbox] = useState(!!formValues?.space_description);
+    const spaceDescriptionStateKeyRef = useRef(`${mode}:${formValues?.space_uuid || 'new'}`);
 
     const firstTabId = 0;
     const secondTabId = 1;
@@ -373,6 +387,15 @@ export const EditSpaceForm = ({
             showConfirmation();
         }
     }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult, showConfirmation]);
+
+    useEffect(() => {
+        const nextStateKey = `${mode}:${formValues?.space_uuid || 'new'}`;
+
+        if (spaceDescriptionStateKeyRef.current !== nextStateKey) {
+            spaceDescriptionStateKeyRef.current = nextStateKey;
+            setShowSpaceDescriptionCheckbox(!!formValues?.space_description);
+        }
+    }, [mode, formValues?.space_description, formValues?.space_uuid]);
 
     const validatePanelAbout = (currentValues, errorMessages = []) => {
         console.log('validatePanelAbout start currentValues=', currentValues);
@@ -831,7 +854,7 @@ export const EditSpaceForm = ({
         valuesToSend.space_floor_id = formValues?.floor_id;
         valuesToSend.space_precise = formValues?.space_precise;
         valuesToSend.space_capacity = !!formValues?.space_capacity ? formValues?.space_capacity : 0;
-        valuesToSend.space_description = formValues?.space_description;
+        valuesToSend.space_description = showSpaceDescriptionCheckbox ? formValues?.space_description : null;
         valuesToSend.space_photo_url = formValues?.space_photo_url;
         valuesToSend.space_photo_description = formValues?.space_photo_description;
         valuesToSend.space_opening_hours_id = formValues?.space_opening_hours_id;
@@ -1018,47 +1041,58 @@ export const EditSpaceForm = ({
                         </Typography>
                     </Grid>
                 )}
-
-                <Grid item xs={12} data-testid="add-space-description">
-                    <label htmlFor="space_description">
-                        Space description
-                        <br />
-                        (Provide a succinct paragraph or two, not something very long)
-                    </label>
-                    <CKEditor
-                        id="space_description"
-                        label="Space description"
-                        editor={ClassicEditor}
-                        config={editorConfig}
-                        data={formValues?.space_description || ''}
-                        onReady={editor => {
-                            editor.editing.view.change(writer => {
-                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                            });
-
-                            const editableElement = editor.ui.getEditableElement();
-                            editableElement?.addEventListener('click', event => {
-                                const anchorElement = event?.target?.closest?.('a');
-                                if (!!anchorElement) {
-                                    event.preventDefault();
-                                }
-                            });
-                        }}
-                        onChange={(event, editor) => {
-                            const htmlData = editor.getData();
-                            // handleChange simply doesn't fire here?!?
-                            const newValues = {
-                                ...formValues,
-                                space_description: htmlData,
-                            };
-                            setFormValues(newValues);
-                        }}
-                        onBlur={handleFieldCompletion}
+                <Grid item xs={12}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={showSpaceDescriptionCheckbox}
+                                onChange={event => setShowSpaceDescriptionCheckbox(event.target.checked)}
+                                data-testid="toggle-space-description-checkbox"
+                            />
+                        }
+                        label="Provide additional description for this space"
                     />
-                    <StyledErrorMessageTypography component={'div'}>
-                        {reportErrorMessage('space_description')}
-                    </StyledErrorMessageTypography>
                 </Grid>
+                {showSpaceDescriptionCheckbox && (
+                    <Grid item xs={12} data-testid="add-space-description">
+                        <label htmlFor="space_description">
+                            Space description
+                            <br />
+                            <span style={{ fontWeight: 400 }}>
+                                Optional: Add details unique to this space. This will appear after the standard space
+                                type description. Leave blank to use only the standard description.
+                            </span>
+                        </label>
+                        <CKEditor
+                            id="space_description"
+                            label="Space description"
+                            editor={ClassicEditor}
+                            config={editorConfig}
+                            data={formValues?.space_description || ''}
+                            onReady={editor => {
+                                editor.editing.view.change(writer => {
+                                    writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                                });
+
+                                const editableElement = editor.ui.getEditableElement();
+                                editableElement?.addEventListener('click', event => {
+                                    const anchorElement = event?.target?.closest?.('a');
+                                    if (!!anchorElement) {
+                                        event.preventDefault();
+                                    }
+                                });
+                            }}
+                            onChange={(event, editor) => {
+                                const htmlData = editor.getData();
+                                setFormValues({ ...formValues, space_description: htmlData });
+                            }}
+                            onBlur={handleFieldCompletion}
+                        />
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('space_description')}
+                        </StyledErrorMessageTypography>
+                    </Grid>
+                )}
                 <Grid item xs={12}>
                     <StyledHighlightedGrid item xs={12}>
                         <FormControlLabel
@@ -1648,7 +1682,7 @@ export const EditSpaceForm = ({
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                     <StyledTabs value={panelId} onChange={handleTabChange} aria-label="Space fields">
                                         {editModeTabLabels?.map((tabName, index) => {
-                                            // Always assign 'tab-unavailability' testid to the Outages tab for test compatibility
+                                            // Keep the legacy outages test id for existing tests.
                                             const isOutagesTab = slugifyName(tabName) === 'outages';
                                             return (
                                                 <Tab
