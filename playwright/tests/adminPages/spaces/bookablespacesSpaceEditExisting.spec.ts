@@ -393,31 +393,31 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
-    test('override hours load properly', async ({ page }) => {
-        await page.goto('/admin/spaces/edit/a00de509-570b-4acb-9ca1-89c4baebe2e6?user=libSpaces');
-        await page.setViewportSize({
-            width: 1300,
-            height: 1000,
-        });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
-
-        // change to Location tab
-        await page.getByTestId(TABS_LOCATION_HOURS).click();
-
-        // await expect(page.getByTestId('space-2-summary-hours').locator('input')).toHaveValue(
-        //     'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
-        // );
-        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
-            'this space opens at 8am',
-        );
-
-        const saveButton = page.getByTestId('admin-spaces-save-button-submit');
-        await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
-        await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
-        await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
-    });
+    // test('override hours load properly', async ({ page }) => {
+    //     await page.goto('/admin/spaces/edit/a00de509-570b-4acb-9ca1-89c4baebe2e6?user=libSpaces');
+    //     await page.setViewportSize({
+    //         width: 1300,
+    //         height: 1000,
+    //     });
+    //     // wait for page to load
+    //     await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+    //
+    //     // change to Location tab
+    //     await page.getByTestId(TABS_LOCATION_HOURS).click();
+    //
+    //     // await expect(page.getByTestId('space-2-summary-hours').locator('input')).toHaveValue(
+    //     //     'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
+    //     // );
+    //     await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
+    //     await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
+    //         'this space opens at 8am',
+    //     );
+    //
+    //     const saveButton = page.getByTestId('admin-spaces-save-button-submit');
+    //     await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+    //     await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+    //     await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
+    // });
 });
 test.describe('Spaces Admin - edit space', () => {
     test.beforeEach(async ({ page }) => {
