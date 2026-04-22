@@ -18,6 +18,7 @@ import userData from '../../../../../../../data/mock/data/testing/testAndTag/tes
 import siteList from '../../../../../../../data/mock/data/testing/testAndTag/testTagSites';
 import floorList from '../../../../../../../data/mock/data/testing/testAndTag/testTagFloors';
 import roomList from '../../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
+import { assertLocationLink } from '../../../helpers/helpers.test';
 
 const defaultLocationState = {
     siteList,
@@ -78,8 +79,12 @@ describe('InspectionsDue', () => {
         });
 
         expect(loadSitesFn).toHaveBeenCalled();
-        expect(getInspectionsDueFn).toHaveBeenCalledWith({ period: config.defaults.monthsPeriod, periodType: 'month' });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getInspectionsDueFn).toHaveBeenCalledWith({
+            period: config.defaults.monthsPeriod,
+            periodType: 'month',
+            teamSlug: 'WSS',
+        });
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
         expect(getByTestId('location_picker-inspections-due-site')).toBeInTheDocument();
         expect(getByTestId('location_picker-inspections-due-site-input')).toHaveAttribute('value', 'All sites');
         expect(getByTestId('location_picker-inspections-due-building')).toBeInTheDocument();
@@ -96,18 +101,19 @@ describe('InspectionsDue', () => {
         );
         expect(getByTestId('data_table-inspections-due')).toBeInTheDocument();
 
+        expect(getByTestId('team_selector-team_display_name-select')).toBeInTheDocument();
+        expect(getByText('Work Station Support')).toBeInTheDocument();
+
         // check first row is as expected
         const row = within(getAllByRole('row')[1]);
         expect(row.getByText('UQL000007')).toBeInTheDocument();
         expect(row.getByText('Power Cord - C5')).toBeInTheDocument();
-
         // expect a red cell with alert icon
         expect(row.getAllByRole('cell')[2]).toHaveStyle('background-color: #951126');
         expect(row.getByText('2010-04-25')).toBeInTheDocument();
         expect(row.getByTestId('tooltip-overdue')).toBeInTheDocument();
-
         expect(row.getByText('2022-10-25')).toBeInTheDocument();
-        expect(row.getByText('4-L412')).toBeInTheDocument();
+        assertLocationLink(row.getByText('4-L412'), 'http://4.a');
 
         // check pagination counter shows expected number of rows
         expect(getByText('1–10 of 10')).toBeInTheDocument();
@@ -121,8 +127,12 @@ describe('InspectionsDue', () => {
             actions: { loadSites: loadSitesFn, getInspectionsDue: getInspectionsDueFn },
         });
         expect(loadSitesFn).toHaveBeenCalled();
-        expect(getInspectionsDueFn).toHaveBeenCalledWith({ period: config.defaults.monthsPeriod, periodType: 'month' });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getInspectionsDueFn).toHaveBeenCalledWith({
+            period: config.defaults.monthsPeriod,
+            periodType: 'month',
+            teamSlug: 'WSS',
+        });
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
@@ -134,6 +144,7 @@ describe('InspectionsDue', () => {
                 locationType: 'site',
                 period: '3',
                 periodType: 'month',
+                teamSlug: 'WSS',
             }),
         );
 
@@ -149,6 +160,7 @@ describe('InspectionsDue', () => {
                 locationType: 'site',
                 period: '6',
                 periodType: 'month',
+                teamSlug: 'WSS',
             }),
         );
         expect(getByTestId('months_selector-inspections-due-select')).toHaveTextContent('6 months');
@@ -168,8 +180,12 @@ describe('InspectionsDue', () => {
             actions: { loadSites: loadSitesFn, getInspectionsDue: getInspectionsDueFn, clearFloors: clearFloorsFn },
         });
         expect(loadSitesFn).toHaveBeenCalled();
-        expect(getInspectionsDueFn).toHaveBeenCalledWith({ period: config.defaults.monthsPeriod, periodType: 'month' });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getInspectionsDueFn).toHaveBeenCalledWith({
+            period: config.defaults.monthsPeriod,
+            periodType: 'month',
+            teamSlug: 'WSS',
+        });
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
@@ -185,6 +201,7 @@ describe('InspectionsDue', () => {
                 locationType: 'building',
                 period: '3',
                 periodType: 'month',
+                teamSlug: 'WSS',
             }),
         );
         expect(clearFloorsFn).toHaveBeenCalled();
@@ -207,7 +224,7 @@ describe('InspectionsDue', () => {
         });
         expect(loadSitesFn).toHaveBeenCalled();
         expect(getInspectionsDueFn).toHaveBeenCalledWith({ period: config.defaults.monthsPeriod, periodType: 'month' });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
@@ -250,7 +267,7 @@ describe('InspectionsDue', () => {
         });
         expect(loadSitesFn).toHaveBeenCalled();
         expect(getInspectionsDueFn).toHaveBeenCalledWith({ period: config.defaults.monthsPeriod, periodType: 'month' });
-        expect(getByText('Asset tests due report for Work Station Support (Library)')).toBeInTheDocument();
+        expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
         await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
@@ -276,6 +293,33 @@ describe('InspectionsDue', () => {
             }),
         );
     }, 8000);
+
+    it('fires action when team filter changes', async () => {
+        const loadSitesFn = jest.fn();
+        const getInspectionsDueFn = jest.fn();
+        const { getByTestId, findByRole } = setup({
+            actions: { loadSites: loadSitesFn, getInspectionsDue: getInspectionsDueFn },
+        });
+
+        expect(getInspectionsDueFn).toHaveBeenCalledWith({
+            period: config.defaults.monthsPeriod,
+            periodType: 'month',
+            teamSlug: 'WSS',
+        });
+
+        // open team selector and select WSS team
+        await userEvent.click(getByTestId('team_selector-team_display_name-select'));
+        const listbox = await findByRole('listbox');
+        await userEvent.click(within(listbox).getByText('Spaces'));
+
+        await waitFor(() =>
+            expect(getInspectionsDueFn).toHaveBeenLastCalledWith({
+                period: '3',
+                periodType: 'month',
+                teamSlug: 'SPACES',
+            }),
+        );
+    });
 
     describe('coverage', () => {
         it.skip('shows alert if inspectionsDueError is set', async () => {

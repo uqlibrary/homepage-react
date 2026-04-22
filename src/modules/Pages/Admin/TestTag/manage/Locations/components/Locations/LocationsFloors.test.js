@@ -4,6 +4,7 @@ import {
     WithRouter,
     WithReduxStore,
     waitForElementToBeRemoved,
+    waitForElementToBeRemovedIfPresent,
     userEvent,
     within,
     act,
@@ -55,9 +56,11 @@ function setup(testProps = {}, renderer = rtlRender) {
     );
 }
 const assertRowText = (row, values) => {
-    values.every(
-        (value, index) => values === undefined || expect(within(row[index]).getByText(value)).toBeInTheDocument(),
-    );
+    values.forEach((value, index) => {
+        if (value !== undefined && value !== null && value !== '') {
+            expect(within(row[index]).getByText(value)).toBeInTheDocument();
+        }
+    });
 };
 const assertHeader = (grid, values, rowIndex = 0) => {
     const headerRow = within(grid).getAllByRole('row')[rowIndex];
@@ -125,13 +128,15 @@ describe('Locations', () => {
             expect(getByTestId('location_picker-locations-floor-input')).not.toHaveAttribute('disabled');
 
             const grid = getByTestId('data_table-locations');
-            assertHeader(grid, ['Floor ID', 'No. assets', 'Excluded']);
-            const cells1 = assertRow(grid, ['29', '1', 'No'], 1);
-            expect(within(cells1[3]).getByTestId('action_cell-29-edit-button')).not.toHaveAttribute('disabled');
-            expect(within(cells1[3]).getByTestId('action_cell-29-delete-button')).toHaveAttribute('disabled');
-            const cells2 = assertRow(grid, ['30', '0', 'Yes'], 2);
-            expect(within(cells2[3]).getByTestId('action_cell-30-edit-button')).not.toHaveAttribute('disabled');
-            expect(within(cells2[3]).getByTestId('action_cell-30-delete-button')).not.toHaveAttribute('disabled');
+            assertHeader(grid, ['Floor ID', 'Floor plan URL', 'No. assets', 'Excluded']);
+
+            const cells1 = assertRow(grid, ['29', 'http://29.a', '1', 'Yes'], 1);
+            expect(within(cells1[4]).getByTestId('action_cell-29-edit-button')).not.toHaveAttribute('disabled');
+            expect(within(cells1[4]).getByTestId('action_cell-29-delete-button')).toHaveAttribute('disabled');
+
+            const cells2 = assertRow(grid, ['30', null, '0', 'Yes'], 2);
+            expect(within(cells2[4]).getByTestId('action_cell-30-edit-button')).not.toHaveAttribute('disabled');
+            expect(within(cells2[4]).getByTestId('action_cell-30-delete-button')).not.toHaveAttribute('disabled');
         });
 
         it('handles add action as expected', async () => {
@@ -183,7 +188,7 @@ describe('Locations', () => {
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
 
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(addLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -211,7 +216,7 @@ describe('Locations', () => {
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
 
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(addLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -273,7 +278,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -301,7 +306,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -364,7 +369,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -372,6 +377,7 @@ describe('Locations', () => {
                     floor_building_id: 8,
                     floor_id_displayed: '29 update',
                     floor_excluded_cb: true, // flag is retained
+                    floor_plan_url: 'http://29.a',
                 },
                 type: 'floor',
             });
@@ -392,7 +398,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
             await userEvent.click(getByTestId('update_dialog-action-button'));
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
 
             expect(updateLocationFn).toHaveBeenCalledWith({
                 request: {
@@ -400,6 +406,7 @@ describe('Locations', () => {
                     floor_building_id: 8,
                     floor_id_displayed: '30 update',
                     floor_excluded_cb: false, // flag is retained
+                    floor_plan_url: null,
                 },
                 type: 'floor',
             });

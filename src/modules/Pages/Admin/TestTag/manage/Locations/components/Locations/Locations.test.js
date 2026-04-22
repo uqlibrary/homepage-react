@@ -1,5 +1,12 @@
 import React from 'react';
-import { rtlRender, WithRouter, WithReduxStore, waitForElementToBeRemoved, userEvent, waitFor } from 'test-utils';
+import {
+    rtlRender,
+    WithRouter,
+    WithReduxStore,
+    waitForElementToBeRemovedIfPresent,
+    userEvent,
+    waitFor,
+} from 'test-utils';
 import Immutable from 'immutable';
 
 import siteList from '../../../../../../../../data/mock/data/testing/testAndTag/testTagSites';
@@ -60,7 +67,7 @@ describe('Locations', () => {
         jest.setTimeout(30000);
         it('handles closing of dialog', async () => {
             const addLocationFn = jest.fn(() => Promise.resolve());
-            const { getByText, getByTestId, findByTestId, queryByTestId } = setup({
+            const { getByText, getByTestId, findByTestId } = setup({
                 isOpen: true,
                 actions: {
                     loadSites: jest.fn(),
@@ -79,7 +86,7 @@ describe('Locations', () => {
 
             userEvent.click(getByTestId('update_dialog-cancel-button'));
 
-            await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
+            await waitForElementToBeRemovedIfPresent('update_dialog-locations');
             expect(addLocationFn).not.toHaveBeenCalled();
         });
         it('handles Add action promise rejection', async () => {

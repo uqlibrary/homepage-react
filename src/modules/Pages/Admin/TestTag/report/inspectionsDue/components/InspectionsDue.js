@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
@@ -15,17 +15,20 @@ import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelec
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
-import { transformRow } from './utils';
 import { breadcrumbs } from 'config/routes';
 import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 import * as _ from 'lodash';
 import { GridWrapper } from '../../../SharedComponents/LocationPicker/LocationPicker';
 import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
+
+import { useUserTeams } from '../../../helpers/teams';
+
 const moment = require('moment');
 
 const componentId = 'inspections-due';
@@ -67,10 +70,11 @@ export const getLastLocationWithId = location => {
 const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspectionsDueError }) => {
     const pageLocale = locale.pages.report.inspectionsDue;
     const monthsOptions = locale.config.monthsOptions;
+    const { user } = useAccountUser();
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
-    const { lastSelectedLocation, selectedLocation } = useSelectLocation({
+    useSelectLocation({
         location,
         setLocation,
         actions,
@@ -81,13 +85,23 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
         locale: pageLocale.form.columns,
         withActions: false,
     });
-    const { row } = useDataTableRow(inspectionsDue, transformRow);
+    const { row } = useDataTableRow(inspectionsDue);
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
 
-    const prevSearchRef = useRef({ locationStr: '', monthRange });
+    const {
+        userTeamList,
+        selectedTeam,
+        selectedTeamSlug,
+        teamSelectFieldName,
+        getTeamSlug,
+        setSelectedTeam,
+    } = useUserTeams({
+        user,
+    });
 
     const [filterModel, setFilterModel] = useState({ items: [] });
+
     const uniqueAssetTypeList = React.useMemo(() => extractAssetTypeData(inspectionsDue), [inspectionsDue]);
 
     const onCloseConfirmationAlert = () => actions.clearInspectionsDueError();
@@ -104,27 +118,51 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
     }, []);
 
-    useEffect(() => {
-        const locationStr = JSON.stringify(location);
-        if (prevSearchRef.current.locationStr === locationStr && prevSearchRef.current.monthRange === monthRange) {
-            return;
-        }
-        prevSearchRef.current = { locationStr, monthRange };
-
-        // const locationId = location[selectedLocation];
-        const newLocation = getLastLocationWithId(location);
-        actions.getInspectionsDue({
-            period: monthRange,
-            periodType: 'month',
-            ...newLocation,
-        });
-    }, [actions, lastSelectedLocation, location, monthRange, selectedLocation]);
-
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
-    const onMonthRangeChange = value => {
-        setMonthRange(value);
-    };
+    const getInspectionsDue = useCallback(
+        values => {
+            const newLocation = getLastLocationWithId(location);
+            actions.getInspectionsDue({
+                period: monthRange,
+                periodType: 'month',
+                teamSlug: selectedTeamSlug,
+                ...newLocation,
+                ...values,
+            });
+        },
+        [actions, location, monthRange, selectedTeamSlug],
+    );
+
+    const onMonthRangeChange = useCallback(
+        value => {
+            setMonthRange(value);
+            getInspectionsDue({ period: value, periodType: 'month' });
+        },
+        [getInspectionsDue],
+    );
+
+    const handleSelectedTeam = useCallback(
+        optionValue => {
+            const newTeamSlug = getTeamSlug(optionValue);
+            setSelectedTeam(optionValue);
+            getInspectionsDue({ teamSlug: newTeamSlug });
+        },
+        [setSelectedTeam, getTeamSlug, getInspectionsDue],
+    );
+    const handleSelectedLocation = useCallback(
+        value => {
+            const newLocation = getLastLocationWithId(value);
+            setLocation(value);
+            getInspectionsDue({ ...newLocation });
+        },
+        [setLocation, getInspectionsDue],
+    );
+
+    useEffect(() => {
+        getInspectionsDue({});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <StandardAuthPage
@@ -135,11 +173,22 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
             <StyledWrapper>
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
+                        <GridWrapper withGrid divisor={2}>
+                            <TeamSelector
+                                id={teamSelectFieldName}
+                                options={userTeamList}
+                                label={'Team'}
+                                currentValue={selectedTeam}
+                                onChange={handleSelectedTeam}
+                            />
+                        </GridWrapper>
+                    </Grid>
+                    <Grid container spacing={3}>
                         <AutoLocationPicker
                             id={componentId}
                             actions={actions}
                             location={location}
-                            setLocation={setLocation}
+                            setLocation={handleSelectedLocation}
                             hasAllOption
                             locale={locale.pages.general.locationPicker}
                         />

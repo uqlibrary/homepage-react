@@ -10,14 +10,14 @@ test.describe('Test and Tag Report - Inspections due', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(
-            page,
-            locale.pages.report.inspectionsDue.header.pageSubtitle('Work Station Support', 'Library'),
-        );
+        await assertTitles(page, locale.pages.report.inspectionsDue.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000007')).toBeVisible();
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
         await expect(page.getByTestId('months_selector-inspections-due-select').getByText('3 months')).toBeVisible();
+        await expect(
+            page.getByTestId('team_selector-team_display_name-select').getByText('Work Station Support'),
+        ).toBeVisible();
         // Default states of other selectors
         await expect(page.getByTestId('location_picker-inspections-due-building-input')).toBeDisabled();
         await expect(page.getByTestId('location_picker-inspections-due-floor-input')).toBeDisabled();
@@ -27,14 +27,21 @@ test.describe('Test and Tag Report - Inspections due', () => {
 
     test('page UI elements function as expected', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(
-            page,
-            locale.pages.report.inspectionsDue.header.pageSubtitle('Work Station Support', 'Library'),
-        );
+        await assertTitles(page, locale.pages.report.inspectionsDue.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000007')).toBeVisible();
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
         await expect(page.getByTestId('months_selector-inspections-due-select').getByText('3 months')).toBeVisible();
+        await expect(
+            page.getByTestId('team_selector-team_display_name-select').getByText('Work Station Support'),
+        ).toBeVisible();
+
+        // show all teams
+        await page.getByTestId('team_selector-team_display_name-select').click();
+        await page.getByRole('option', { name: 'All teams' }).click();
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–10 of 10')).toBeVisible();
+        await expect(page.getByTestId('team_selector-team_display_name-select').getByText('All teams')).toBeVisible();
+
         // Change Site
         await page.getByTestId('location_picker-inspections-due-site-input').click();
         await page.locator('#location_picker-inspections-due-site-option-1').click();
@@ -67,5 +74,30 @@ test.describe('Test and Tag Report - Inspections due', () => {
         await page.getByTestId('months_selector-inspections-due-select').click();
         await page.getByTestId('months_selector-inspections-due-option-1').click();
         await page.locator('[data-testid="confirmation_alert-error-alert"] button').click();
+    });
+
+    test('team selector functions as expected', async ({ page }) => {
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await assertTitles(page, locale.pages.report.inspectionsDue.header.pageSubtitle(null, 'Library'));
+        await forcePageRefresh(page);
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000007')).toBeVisible();
+
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–6 of 6')).toBeVisible();
+
+        await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
+        await expect(page.getByTestId('months_selector-inspections-due-select').getByText('3 months')).toBeVisible();
+        await expect(
+            page.getByTestId('team_selector-team_display_name-select').getByText('Work Station Support'),
+        ).toBeVisible();
+
+        await page.getByTestId('team_selector-team_display_name-select').click();
+        await page.getByRole('option', { name: 'Spaces' }).click();
+
+        // Check if number of results are correct
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–4 of 4')).toBeVisible();
+
+        await page.getByTestId('team_selector-team_display_name-select').click();
+        await page.getByRole('option', { name: 'All teams' }).click();
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–10 of 10')).toBeVisible();
     });
 });

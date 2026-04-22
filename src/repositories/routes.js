@@ -111,7 +111,9 @@ export const TEST_TAG_ROOM_API = id => ({
 export const TEST_TAG_ADD_LOCATION_API = type => ({ apiUrl: `test-and-tag/${type}` });
 export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test-and-tag/${type}/${id}` });
 
-export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test-and-tag/asset/search/current/${pattern}` });
+export const TEST_TAG_ASSETS_API = pattern => {
+    return { apiUrl: `/test-and-tag/asset/search/current/${pattern}` };
+};
 export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
     const urlParams = {
         ...(filter?.status?.discarded === false ? { without_discards: 1 } : {}),
@@ -121,16 +123,16 @@ export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
     const apiUrl = `test-and-tag/asset/search/current/${pattern}${hasParams ? `?${qs.toString()}` : ''}`;
-
     return {
         apiUrl,
     };
 };
-export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId, textSearch }) => {
+export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId, textSearch, teamSlug }) => {
     const urlParams = {
         ...(!!locationId && !!locationType ? { location_id: locationId, location_type: locationType } : {}),
         ...(!!assetTypeId ? { asset_type_id: assetTypeId } : {}),
         ...(!!textSearch ? { inspect_comment: textSearch } : {}),
+        ...(!!teamSlug ? { team_slug: teamSlug } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
@@ -159,10 +161,11 @@ export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test-and
 export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test-and-tag/asset-type/${id}` });
 
 /** TEST AND TAG INSPECTIONS REPORT */
-export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, period, periodType }) => {
+export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, period, periodType, teamSlug }) => {
     const urlParams = {
         ...(!!locationId && !!locationType ? { [`${locationType}_id`]: locationId } : {}),
         ...(!!period && !!periodType ? { period_length: period, period_type: periodType } : {}),
+        ...(!!teamSlug ? { team_slug: teamSlug } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
@@ -172,10 +175,11 @@ export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, 
     };
 };
 /* TEST AND TAG INSPECTIONS BY LICENCED USER */
-export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({ startDate, endDate, userRange }) => {
+export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({ startDate, endDate, userRange, teamSlug }) => {
     const urlParams = {
         ...(!!startDate && !!endDate ? { start_date: startDate, end_date: endDate } : {}),
         ...(!!userRange ? { user_range: userRange } : {}),
+        ...(!!teamSlug ? { team_slug: teamSlug } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = Object.keys(urlParams).length > 0;
@@ -195,6 +199,7 @@ export const TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST = ({
     locationId,
     inspectionDateFrom,
     inspectionDateTo,
+    teamSlug,
 }) => {
     const urlParams = {
         ...(!!assetStatus ? { asset_status: assetStatus } : {}),
@@ -202,10 +207,12 @@ export const TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST = ({
         ...(!!locationId ? { location_id: locationId } : {}),
         ...(!!inspectionDateFrom ? { inspection_date_from: inspectionDateFrom } : {}),
         ...(!!inspectionDateTo ? { inspection_date_to: inspectionDateTo } : {}),
+        ...(!!teamSlug ? { team_slug: teamSlug } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = Object.keys(urlParams).length > 0;
     const apiUrl = `test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
+
     return {
         apiUrl,
     };

@@ -18,13 +18,20 @@ import floorList from '../../../../../../../data/mock/data/testing/testAndTag/te
 import roomList from '../../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
 import assetTypeData from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetTypes';
 
-import { transformRow } from './utils';
-
 import { useObjectList } from '../../../helpers/hooks';
 
 import StepOne from './StepOne';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
+import { assertLocationLink, assertLocationLinkless } from '../../../helpers/helpers.test';
+
+jest.mock('react-cookie', () => ({
+    useCookies: jest.fn(() => [{}, jest.fn(), jest.fn()]),
+}));
+jest.mock('throttle-debounce', () => ({
+    debounce: jest.fn((_delay, fn) => fn),
+    throttle: jest.fn((_delay, fn) => fn),
+}));
 
 const defaultLocationState = {
     siteList,
@@ -91,7 +98,7 @@ describe('StepOne', () => {
     });
 
     it('renders component', async () => {
-        const list = renderHook(() => useObjectList([], transformRow)).result.current;
+        const list = renderHook(() => useObjectList([])).result.current;
 
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
@@ -117,7 +124,7 @@ describe('StepOne', () => {
     it('adds row items from filterDialog popup', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const list = renderHook(() => useObjectList([], transformRow)).result;
+        const list = renderHook(() => useObjectList([])).result;
 
         const { getByText, getByTestId, getAllByRole, findByTestId, rerender } = setup({
             isFilterDialogOpen: true,
@@ -170,13 +177,13 @@ describe('StepOne', () => {
         const row1 = within(getAllByRole('row')[1]);
         expect(row1.getByText('UQL000001')).toBeInTheDocument();
         expect(row1.getByText('BRK-DELL')).toBeInTheDocument();
-        expect(row1.getByText('1-W212 Forgan Smith Building, St Lucia')).toBeInTheDocument();
+        assertLocationLinkless(row1.getByText('1-W212 Forgan Smith Building, St Lucia'));
         expect(row1.getByText('AWAITINGTEST')).toBeInTheDocument();
 
         const row2 = within(getAllByRole('row')[2]);
         expect(row2.getByText('UQL000002')).toBeInTheDocument();
         expect(row2.getByText('PWRC13-10')).toBeInTheDocument();
-        expect(row2.getByText('1-W212 Forgan Smith Building, St Lucia')).toBeInTheDocument();
+        assertLocationLink(row2.getByText('2-W212 Forgan Smith Building, St Lucia'));
         expect(row2.getByText('CURRENT')).toBeInTheDocument();
 
         // delete 1 item from the list
@@ -218,5 +225,41 @@ describe('StepOne', () => {
         // check reset button calls expected function
         await userEvent.click(getByTestId('footer_bar-test-step-one-alt-button'));
         expect(resetFn).toHaveBeenCalled();
+    });
+
+    describe('all teams switch', () => {
+        it('calls loadAssetsFiltered when toggling all teams after a search', async () => {
+            const list = renderHook(() => useObjectList([])).result.current;
+            const searchPattern = 'UQL310000';
+
+            const loadAssetsFilteredFn = jest.fn();
+
+            const loadSitesFn = jest.fn();
+            const { getByText, getByTestId, getByRole } = setup({
+                list,
+                actions: {
+                    loadAssetsFiltered: loadAssetsFilteredFn,
+                    loadSites: loadSitesFn,
+                    clearRooms: jest.fn(),
+                    clearAssetsMine: jest.fn(),
+                },
+            });
+
+            expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
+
+            // Type in asset selector using userEvent — triggers real input events that React detects
+            const input = getByTestId('asset_selector-test-step-one-input');
+            await userEvent.click(input);
+            await userEvent.paste(searchPattern);
+
+            // Toggle all teams on — should call loadAssetsFiltered since searchTerm is set
+            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            await userEvent.click(toggle);
+
+            expect(loadAssetsFilteredFn).toHaveBeenLastCalledWith(
+                searchPattern,
+                expect.objectContaining({ all_teams: true, status: { discarded: false } }),
+            );
+        }, 10000);
     });
 });

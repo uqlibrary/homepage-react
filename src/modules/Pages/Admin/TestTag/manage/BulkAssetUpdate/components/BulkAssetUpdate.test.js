@@ -40,6 +40,7 @@ const defaultLocationState = {
 import BulkAssetUpdate from './BulkAssetUpdate';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
+import { assertLocationLink, assertLocationLinkless } from '../../../helpers/helpers.test';
 
 function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
@@ -108,6 +109,7 @@ describe('BulkAssetUpdate', () => {
         expect(getByTestId('asset_selector-bulk-asset-update-step-one-input')).toBeInTheDocument();
         expect(getByTestId('bulk_asset_update-step-one-feature-button')).toBeInTheDocument();
         expect(getByTestId('data_table-bulk-asset-update-step-one')).toBeInTheDocument();
+        expect(getByTestId('bulk_asset_update-step-one-all-teams-switch')).toBeInTheDocument();
         expect(getAllByRole('row').length).toBe(1); // just the header initially in the table
         expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
     });
@@ -147,13 +149,13 @@ describe('BulkAssetUpdate', () => {
         const row1 = within(getAllByRole('row')[1]);
         expect(row1.getByText('UQL000001')).toBeInTheDocument();
         expect(row1.getByText('BRK-DELL')).toBeInTheDocument();
-        expect(row1.getByText('1-W212 Forgan Smith Building, St Lucia')).toBeInTheDocument();
+        assertLocationLinkless(row1.getByText('1-W212 Forgan Smith Building, St Lucia'));
         expect(row1.getByText('AWAITINGTEST')).toBeInTheDocument();
 
         const row2 = within(getAllByRole('row')[2]);
         expect(row2.getByText('UQL000002')).toBeInTheDocument();
         expect(row2.getByText('PWRC13-10')).toBeInTheDocument();
-        expect(row2.getByText('1-W212 Forgan Smith Building, St Lucia')).toBeInTheDocument();
+        assertLocationLink(row2.getByText('2-W212 Forgan Smith Building, St Lucia'));
         expect(row2.getByText('CURRENT')).toBeInTheDocument();
 
         // delete 1 item from the list

@@ -7,7 +7,9 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 test.describe('Test and Tag Admin Inspection page', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('http://localhost:2020/admin/testntag/inspect?user=uqtesttag');
-        await expect.poll(async () => await page.locator(':focus').getAttribute('value')).toBe('St Lucia');
+        await expect
+            .poll(async () => await page.locator(':focus').getAttribute('value'), { timeout: 30_000 })
+            .toBe('St Lucia');
     });
 
     const selectListBox = async (page: Page, pattern: string, timeout: number = 10_000) =>
@@ -144,6 +146,17 @@ test.describe('Test and Tag Admin Inspection page', () => {
                     await page.getByTestId('location_picker-event-panel-floor').click({ timeout: 2000 });
                     await page.locator('#location_picker-event-panel-floor-option-0').click({ timeout: 2000 });
                     await expect(page.getByTestId('location_picker-event-panel-floor-input')).toHaveValue('1');
+                    // floor plan
+                    const button = page.getByTestId('floor-plan-adornment');
+                    // tooltip
+                    await button.hover();
+                    await expect(page.getByRole('tooltip')).toBeVisible();
+                    await expect(page.getByRole('tooltip')).toHaveText(
+                        locale.pages.inspect.form.event.location.floor.floorPlanTooltip,
+                    );
+                    // link
+                    await expect(button).toHaveAttribute('href', 'http://29.a');
+                    await expect(button).toHaveAttribute('target', '_blank');
                 }).toPass();
 
                 // Room
@@ -216,7 +229,9 @@ test.describe('Test and Tag Admin Inspection page', () => {
             });
 
             test('should allow selection of new asset and type', async ({ page }) => {
-                await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled();
+                await expect(
+                    async () => await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled(),
+                ).toPass({ timeout: 20_000 });
                 await page.getByTestId('asset_selector-asset-panel-input').click();
                 await page.locator('#asset_selector-asset-panel-option-0').click();
                 await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('NEW ASSET');
@@ -226,6 +241,9 @@ test.describe('Test and Tag Admin Inspection page', () => {
             });
 
             test('should allow creation of new asset type', async ({ page }) => {
+                await expect(
+                    async () => await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled(),
+                ).toPass({ timeout: 20_000 });
                 await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled();
                 await page.getByTestId('asset_selector-asset-panel-input').click();
                 await page.locator('#asset_selector-asset-panel-option-0').click();

@@ -1,4 +1,4 @@
-import { test, expect } from '@uq/pw/test';
+import { Page, test, expect } from '@uq/pw/test';
 import { assertAccessibility, defaultDisabledRules } from '@uq/pw/lib/axe';
 import { assertTitles, forcePageRefresh, getFieldValue } from '../helpers';
 import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
@@ -10,12 +10,18 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await page.goto('http://localhost:2020/admin/testntag/report/inspectionsbylicenceduser?user=uqtesttag');
     });
 
+    const showDropdown = async (page: Page, testId: string) => {
+        await expect(async () => {
+            await page.locator('body').click({ timeout: 2000 });
+            await expect(page.getByRole('listbox')).not.toBeVisible({ timeout: 3000 });
+            await page.getByTestId(testId).click({ timeout: 2000 });
+            await expect(page.getByRole('listbox')).toBeVisible({ timeout: 3000 });
+        }).toPass();
+    };
+
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(
-            page,
-            locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Work Station Support', 'Library'),
-        );
+        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqtest1')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]', {
@@ -24,23 +30,14 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
     });
 
     test('Inspector selection works as intended', async ({ page }) => {
-        const showDropdown = async (testId: string) => {
-            await expect(async () => {
-                await page.locator('body').click({ timeout: 2000 });
-                await expect(page.getByRole('listbox')).not.toBeVisible({ timeout: 3000 });
-                await page.getByTestId(testId).click({ timeout: 2000 });
-                await expect(page.getByRole('listbox')).toBeVisible({ timeout: 3000 });
-            }).toPass();
-        };
-
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(
-            page,
-            locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Work Station Support', 'Library'),
-        );
+        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
+        await expect(
+            page.getByTestId('team_selector-team_display_name-select').getByText('Work Station Support'),
+        ).toBeVisible();
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqtest1')).toBeVisible();
-        await showDropdown('user_inspections-user-name');
+        await showDropdown(page, 'user_inspections-user-name');
         // Select user with no records
         await page.getByTestId('user_inspections-user-name-option-2').click();
         await page.locator('body').click();
@@ -51,7 +48,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
             page.getByTestId('user_inspections-user-name-select').getByText('Third Testing user'),
         ).toBeVisible();
         // Select a second user
-        await showDropdown('user_inspections-user-name');
+        await showDropdown(page, 'user_inspections-user-name');
         await page.getByTestId('user_inspections-user-name-option-1').click();
         await page.locator('body').click();
         await expect(page.getByRole('progressbar')).not.toBeVisible();
@@ -64,7 +61,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         ).toBeVisible();
 
         // Select third user
-        await showDropdown('user_inspections-user-name-select');
+        await showDropdown(page, 'user_inspections-user-name-select');
         await page.getByTestId('user_inspections-user-name-option-0').click();
         await page.locator('body').click();
         await expect(page.getByRole('progressbar')).not.toBeVisible();
@@ -80,15 +77,12 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         const currentYear = new Date().getFullYear();
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(
-            page,
-            locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Work Station Support', 'Library'),
-        );
+        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqtest1')).toBeVisible();
         // Add a start date
         await page.getByTestId('user_inspections-tagged-start-button').click();
-        await page.locator('.MuiPickersDay-root:has-text("11")').click();
+        await page.locator('.MuiPickersDay-root:text("11")').click();
         await page.locator('body').click();
         // Should require an end date here
         await expect(
@@ -99,14 +93,14 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
             `${currentYear}-${currentMonth}-11`,
         );
         await page.getByTestId('user_inspections-tagged-end-button').click();
-        await page.locator('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root:has-text("12")').click();
+        await page.locator('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root:text("12")').click();
         await page.locator('body').click();
         await expect(page.getByTestId('user_inspections-tagged-end-input')).toHaveValue(
             `${currentYear}-${currentMonth}-12`,
         );
         // Set up an incorrect date for the end
         await page.getByTestId('user_inspections-tagged-end-button').click();
-        await page.locator('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root:has-text("10")').click();
+        await page.locator('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root:text("10")').click();
         await page.locator('body').click();
         await expect(
             page
@@ -138,5 +132,46 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await expect(page.getByTestId('user_inspections-tagged-start-input')).not.toHaveValue(
             `${currentYear}-${currentMonth}-12`,
         );
+    });
+
+    test('team selector functions as expected', async ({ page }) => {
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle(null, 'Library'));
+        await forcePageRefresh(page);
+        await expect(
+            page.getByTestId('team_selector-team_display_name-select').getByText('Work Station Support'),
+        ).toBeVisible();
+
+        await expect(page.getByText('uqtest7')).toBeVisible();
+        await expect(page.getByText('uqtest15')).not.toBeVisible();
+
+        await page.getByTestId('team_selector-team_display_name-select').click();
+        await page.getByRole('option', { name: 'Spaces' }).click();
+
+        await expect(page.getByText('uqtest7')).not.toBeVisible();
+        await expect(page.getByText('uqtest15')).toBeVisible();
+
+        await page.getByTestId('team_selector-team_display_name-select').click();
+        await page.getByRole('option', { name: 'All teams' }).click();
+
+        await expect(page.getByText('uqtest7')).toBeVisible();
+        await expect(page.getByText('uqtest15')).toBeVisible();
+
+        await showDropdown(page, 'user_inspections-user-name');
+        // Select user with no records
+        await page.getByTestId('user_inspections-user-name-option-2').click();
+        await page.locator('body').click();
+
+        // Check the value of the dropdown
+        await expect(
+            page.getByTestId('user_inspections-user-name-select').getByText('Third Testing user'),
+        ).toBeVisible();
+
+        // Select team again
+        await page.getByTestId('team_selector-team_display_name-select').click();
+        await page.getByRole('option', { name: 'Spaces' }).click();
+
+        // User dropdown should clear
+        await expect(page.getByTestId('user_inspections-user-name-input')).toHaveValue('');
     });
 });

@@ -90,7 +90,7 @@ const moment = require('moment');
 
 const mock = new MockAdapter(api, { delayResponse: 1000 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
-const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
+export const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
 
 const queryString = new URLSearchParams(window.location.search);
@@ -1229,6 +1229,23 @@ mock.onGet('exams/course/FREN1010/summary')
     .onDelete(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)))
     .reply(() => [200, { status: 'OK' }])
 
+    .onGet(/test-and-tag\/asset\/search\/current\/.*[?]without_discards=1&all_teams=1/)
+    .reply(config => {
+        const patternTmp = config.url.split('/').pop();
+        const pattern = patternTmp.split('?')[0];
+        const allAssets = [...testTag_assets.data, ...testTag_assets_all.data];
+        // filter array to matching asset id's
+        return [
+            200,
+            {
+                data: allAssets.filter(
+                    asset =>
+                        asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()) &&
+                        asset.asset_status !== 'DISCARDED',
+                ),
+            },
+        ];
+    })
     .onGet(/test-and-tag\/asset\/search\/current\/.*[?]without_discards=1/)
     .reply(config => {
         const patternTmp = config.url.split('/').pop();
@@ -1360,6 +1377,16 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({ period: '3', periodType: 'month' }).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({ period: '3', periodType: 'month', teamSlug: 'WSS' }).apiUrl)
+    .reply(() => [
+        200,
+        { data: test_tag_pending_inspections.data.filter(inspection => inspection.asset_team_owned_by === 'WSS') },
+    ])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({ period: '3', periodType: 'month', teamSlug: 'SPACES' }).apiUrl)
+    .reply(() => [
+        200,
+        { data: test_tag_pending_inspections.data.filter(inspection => inspection.asset_team_owned_by === 'SPACES') },
+    ])
     .onGet(
         routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({
             period: '3',
@@ -1434,13 +1461,56 @@ mock.onGet('exams/course/FREN1010/summary')
     //         },
     //     ];
     // })
+
     .onGet(
         new RegExp(
-            panelRegExp(
+            escapeRegExp(
                 routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
                     startDate: null,
                     endDate: null,
                     userRange: null,
+                    teamSlug: 'WSS',
+                }).apiUrl,
+            ),
+        ),
+    )
+    .reply(() => [
+        200,
+        {
+            data: {
+                user_inspections: test_tag_inspections_by_licenced_user.data.user_inspections.filter(
+                    user => user.user_team === 'WSS',
+                ),
+            },
+        },
+    ])
+    .onGet(
+        new RegExp(
+            escapeRegExp(
+                routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
+                    teamSlug: 'SPACES',
+                }).apiUrl,
+            ),
+        ),
+    )
+    .reply(() => [
+        200,
+        {
+            data: {
+                user_inspections: test_tag_inspections_by_licenced_user.data.user_inspections.filter(
+                    user => user.user_team === 'SPACES',
+                ),
+            },
+        },
+    ])
+    .onGet(
+        new RegExp(
+            escapeRegExp(
+                routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
+                    startDate: null,
+                    endDate: null,
+                    userRange: null,
+                    teamSlug: null,
                 }).apiUrl,
             ),
         ),
@@ -1457,9 +1527,32 @@ mock.onGet('exams/course/FREN1010/summary')
             locationId: '4',
             inspectionDateFrom: null,
             inspectionDateTo: null,
+            teamSlug: null,
         }).apiUrl,
     )
     .reply(() => [200, test_tag_assets_report_assets])
+    .onGet(
+        new RegExp(
+            escapeRegExp(
+                routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({
+                    locationType: 'building',
+                    teamSlug: 'WSS',
+                }).apiUrl,
+            ),
+        ),
+    )
+    .reply(() => [200, { data: test_tag_assets_mine.data.filter(asset => asset.asset_team_owned_by === 'WSS') }])
+    .onGet(
+        new RegExp(
+            escapeRegExp(
+                routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({
+                    locationType: '.*',
+                    teamSlug: 'SPACES',
+                }).apiUrl,
+            ),
+        ),
+    )
+    .reply(() => [200, { data: test_tag_assets_mine.data.filter(asset => asset.asset_team_owned_by === 'SPACES') }])
     // .onGet(/test-and-tag\/asset\/search\/mine.*/)
     // .reply(config => {
     //    const url = new URL(`${config.baseURL}${config.url}`);
@@ -1472,6 +1565,10 @@ mock.onGet('exams/course/FREN1010/summary')
     //         asset[location] === (locationId ?? asset[location]) &&
     //         asset.inspect_comment.indexOf(params.get('inspect_comment') ?? asset.inspect_comment) > -1)}]
     // })
+    .onGet(new RegExp(escapeRegExp(routes.TEST_TAG_ASSETS_MINE_API({ teamSlug: 'WSS' }).apiUrl)))
+    .reply(() => [200, { data: test_tag_assets_mine.data.filter(asset => asset.asset_team_owned_by === 'WSS') }])
+    .onGet(new RegExp(escapeRegExp(routes.TEST_TAG_ASSETS_MINE_API({ teamSlug: 'SPACES' }).apiUrl)))
+    .reply(() => [200, { data: test_tag_assets_mine.data.filter(asset => asset.asset_team_owned_by === 'SPACES') }])
     .onGet(/test-and-tag\/asset\/search\/mine.*/)
     .reply(() => [200, test_tag_assets_mine])
     .onPut(routes.TEST_TAG_BULK_UPDATE_API().apiUrl)

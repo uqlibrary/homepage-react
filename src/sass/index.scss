@@ -1,14 +1,14 @@
 // Charts styles from toolbox
-@import './charts';
+@use 'charts';
 // Import the local modules styles
-@import './components';
+@use 'components';
 // Print styles
-@import './print';
+@use 'print';
 // Browser update script styles
-@import './browserUpdate';
+@use 'browserUpdate';
 
 // UQ Design System styles
-@import 'UQds';
+@use 'UQds';
 
 button.carousel__back-button,
 button.carousel__next-button,
@@ -180,3 +180,13 @@ abbr {
         margin-left: auto;
     }
 }
+
+.MuiDataGrid-root .location-link {
+    color: #51247A !important;
+    font-weight: normal !important;
+    &:hover {
+        color: #51247A !important;
+        background-color: transparent !important;
+    }
+}
+

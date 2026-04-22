@@ -13,13 +13,16 @@ import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/AssetStatusSelector';
 import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
 
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import config, { transformRow } from './config';
+import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
 import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
+
+import { useUserTeams } from '../../../helpers/teams';
 
 const moment = require('moment');
 
@@ -53,6 +56,7 @@ const AssetReportByFilters = ({
     /* locale and styles */
     const pageLocale = locale.pages.report.assetReportByFilters;
     const statusTypes = pageLocale.form.statusTypes;
+    const { user } = useAccountUser();
 
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
@@ -61,6 +65,10 @@ const AssetReportByFilters = ({
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, error: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, error: null });
     const [statusType, setStatusType] = React.useState(0);
+
+    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams({
+        user,
+    });
 
     const buildingList = useMemo(() => {
         /* istanbul ignore else */
@@ -94,7 +102,7 @@ const AssetReportByFilters = ({
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
-    const { row } = useDataTableRow(assetList, transformRow);
+    const { row } = useDataTableRow(assetList);
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -110,6 +118,7 @@ const AssetReportByFilters = ({
             locationId: taggedBuildingName > 0 ? taggedBuildingName : null,
             inspectionDateFrom: !!selectedStartDate.dateFormatted ? selectedStartDate.dateFormatted : null,
             inspectionDateTo: !!selectedEndDate.dateFormatted ? selectedEndDate.dateFormatted : null,
+            teamSlug: selectedTeamSlug !== '' ? selectedTeamSlug : null,
         };
     };
 
@@ -151,7 +160,6 @@ const AssetReportByFilters = ({
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
 
         actions.loadTaggedBuildingList();
-        buildPayload();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -181,7 +189,7 @@ const AssetReportByFilters = ({
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [statusType, taggedBuildingName, selectedStartDate, selectedEndDate]);
+    }, [statusType, taggedBuildingName, selectedStartDate, selectedEndDate, selectedTeamSlug]);
 
     return (
         <StandardAuthPage
@@ -193,7 +201,17 @@ const AssetReportByFilters = ({
                 <StandardCard title={pageLocale.form.title} id={componentId}>
                     <Grid container spacing={1}>
                         <Grid xs={12} md={6} lg={3}>
-                            {/* Status Picker */}
+                            <TeamSelector
+                                id={teamSelectFieldName}
+                                options={userTeamList}
+                                label={'Team'}
+                                currentValue={selectedTeam}
+                                onChange={setSelectedTeam}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                        <Grid xs={12} md={6} lg={3}>
                             <AssetStatusSelector
                                 id={componentId}
                                 label={pageLocale.form.filterStatusLabel}
@@ -204,7 +222,6 @@ const AssetReportByFilters = ({
                             />
                         </Grid>
                         <Grid xs={12} md={6} lg={3}>
-                            {/* Building Picker */}
                             <LocationPicker
                                 id={componentIdLower}
                                 locale={{
@@ -221,7 +238,6 @@ const AssetReportByFilters = ({
                             />
                         </Grid>
                         <Grid xs={12} md={6} lg={3}>
-                            {/* Start Date */}
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}

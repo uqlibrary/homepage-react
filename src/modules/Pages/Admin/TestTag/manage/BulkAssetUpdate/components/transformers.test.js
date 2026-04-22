@@ -1,54 +1,6 @@
-import { transformRow, transformRequest, transformFilterRow } from './transformers';
+import { transformRequest, transformFilterRow } from './transformers';
 
 describe('utils', () => {
-    describe('transformRow', () => {
-        it('should add asset_type_name and asset_location if they are missing', () => {
-            const row = [
-                { asset_type: { asset_type_name: 'type1' }, last_location: { site_name: 'site1' } },
-                { asset_type: { asset_type_name: 'type2' }, last_location: { site_name: 'site2' } },
-                { other_key: 'other_value' },
-            ];
-
-            const transformedRow = transformRow(row);
-
-            expect(transformedRow).toEqual([
-                {
-                    asset_type: { asset_type_name: 'type1' },
-                    last_location: { site_name: 'site1' },
-                    asset_type_name: 'type1',
-                    asset_location: 'site1',
-                },
-                {
-                    asset_type: { asset_type_name: 'type2' },
-                    last_location: { site_name: 'site2' },
-                    asset_type_name: 'type2',
-                    asset_location: 'site2',
-                },
-                {
-                    other_key: 'other_value',
-                    asset_type_name: '',
-                    asset_location: '',
-                },
-            ]);
-        });
-
-        it('should return the transformed row if it already exists', () => {
-            const row = [
-                { asset_location: 'location1' },
-                { asset_location: 'location2' },
-                { asset_location: 'location3' },
-            ];
-
-            const transformedRow = transformRow(row);
-
-            expect(transformedRow).toEqual([
-                { asset_location: 'location1' },
-                { asset_location: 'location2' },
-                { asset_location: 'location3' },
-            ]);
-        });
-    });
-
     describe('transformRequest', () => {
         it('should return the expected result when updating Location', () => {
             // Provide sample input values for formValues
@@ -57,6 +9,7 @@ describe('utils', () => {
                 hasDiscardStatus: false,
                 hasAssetStatus: false,
                 hasAssetType: false,
+                hasAssetTeam: false,
                 asset_list: [{ asset_id: 1 }, { asset_id: 2 }, { asset_id: 3 }],
                 location: {
                     room: 'Room 1',
@@ -98,6 +51,8 @@ describe('utils', () => {
                 },
                 discard_reason: 'No longer needed',
                 hasClearNotes: true,
+                hasAssetTeam: true,
+                asset_team: { team_slug: 'team-1' },
             };
 
             // Define the expected output
@@ -106,6 +61,7 @@ describe('utils', () => {
                 asset_room_id_last_seen: 'Room 1',
                 clear_comments: 1,
                 month_range: 48,
+                team_slug: 'team-1',
             };
 
             // Call the transformRequest function with the sample input values
@@ -130,6 +86,8 @@ describe('utils', () => {
                 },
                 discard_reason: 'No longer needed',
                 hasClearNotes: true,
+                hasAssetTeam: true,
+                asset_team: { team_slug: 'team-1' },
             };
 
             // Define the expected output
@@ -137,6 +95,7 @@ describe('utils', () => {
                 asset: [1, 2, 3],
                 asset_room_id_last_seen: 'Room 1',
                 clear_comments: 1,
+                team_slug: 'team-1',
             };
 
             // Call the transformRequest function with the sample input values
@@ -158,6 +117,8 @@ describe('utils', () => {
                 },
                 discard_reason: 'No longer needed',
                 hasClearNotes: false,
+                hasAssetTeam: true,
+                asset_team: { team_slug: 'team-1' },
             };
 
             // Define the expected output
@@ -187,6 +148,8 @@ describe('utils', () => {
                 },
                 discard_reason: 'No longer needed',
                 hasClearNotes: true,
+                hasAssetTeam: true,
+                asset_team: { team_slug: 'team-1' },
             };
 
             // Define the expected output
@@ -194,6 +157,7 @@ describe('utils', () => {
                 asset: [1, 2, 3],
                 asset_type_id: 1,
                 clear_comments: 1,
+                team_slug: 'team-1',
             };
 
             // Call the transformRequest function with the sample input values
@@ -220,6 +184,8 @@ describe('utils', () => {
                 asset_status: {
                     value: 'INSTORAGE',
                 },
+                hasAssetTeam: true,
+                asset_team: { team_slug: 'team-1' },
             };
 
             // Define the expected output - hasAssetStatus should clear other flags
@@ -228,6 +194,7 @@ describe('utils', () => {
                 asset_room_id_last_seen: 'Room 2',
                 asset_status: 'INSTORAGE',
                 clear_comments: 1,
+                team_slug: 'team-1',
             };
 
             // Call the transformRequest function with the sample input values
@@ -272,6 +239,8 @@ describe('utils', () => {
                 asset_status: {
                     value: 'INSTORAGE',
                 },
+                hasAssetTeam: true,
+                asset_team: { team_slug: 'team-1' },
             };
 
             const result = transformRequest(formValues);
@@ -279,6 +248,7 @@ describe('utils', () => {
             expect(result).toEqual({
                 asset: [1],
                 asset_room_id_last_seen: 'Room 1',
+                team_slug: 'team-1',
             });
             expect(result.asset_status).toBeUndefined();
         });
@@ -295,6 +265,7 @@ describe('utils', () => {
                     value: 'INSTORAGE',
                 },
                 hasClearNotes: true,
+                hasAssetTeam: false,
             };
 
             const result = transformRequest(formValues);
@@ -304,6 +275,32 @@ describe('utils', () => {
                 clear_comments: 1,
             });
             expect(result.asset_status).toBeUndefined();
+        });
+
+        it('should return the expected result when asset team is being updated', () => {
+            // Provide sample input values for formValues
+            const formValues = {
+                hasDiscardStatus: false,
+                asset_list: [{ asset_id: 1 }, { asset_id: 2 }, { asset_id: 3 }],
+                hasLocation: false,
+                hasAssetType: false,
+                hasClearNotes: true,
+                hasAssetTeam: true,
+                asset_team: { team_slug: 'team-1' },
+            };
+
+            // Define the expected output
+            const expectedOutput = {
+                asset: [1, 2, 3],
+                clear_comments: 1,
+                team_slug: 'team-1',
+            };
+
+            // Call the transformRequest function with the sample input values
+            const result = transformRequest(formValues);
+
+            // Assert that the result matches the expected output
+            expect(result).toEqual(expectedOutput);
         });
     });
     describe('transformFilterRow', () => {
@@ -325,7 +322,6 @@ describe('utils', () => {
                 {
                     asset_barcode: '456',
                     asset_id_displayed: '456',
-                    asset_location: '3-303 Building 3, Site 3',
                     site_name: 'Site 3',
                     building_name: 'Building 3',
                     floor_id_displayed: '3',
@@ -337,7 +333,6 @@ describe('utils', () => {
                 {
                     asset_barcode: '123',
                     asset_id_displayed: '123',
-                    asset_location: '1-101 Building 1, Site 1',
                     site_name: 'Site 1',
                     building_name: 'Building 1',
                     floor_id_displayed: '1',
@@ -345,7 +340,6 @@ describe('utils', () => {
                 },
                 {
                     asset_id_displayed: '',
-                    asset_location: '2-202 Building 2, Site 2',
                     site_name: 'Site 2',
                     building_name: 'Building 2',
                     floor_id_displayed: '2',
@@ -354,7 +348,6 @@ describe('utils', () => {
                 {
                     asset_barcode: '456',
                     asset_id_displayed: '456',
-                    asset_location: '3-303 Building 3, Site 3',
                     site_name: 'Site 3',
                     building_name: 'Building 3',
                     floor_id_displayed: '3',
