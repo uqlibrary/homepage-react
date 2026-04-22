@@ -86,7 +86,6 @@ const originalMockData = (spaceUud: string) => {
         space_photo_description: mockData?.space_photo_description,
         space_opening_hours_id: mockData?.space_opening_hours_id,
         space_services_page: mockData?.space_services_page,
-        space_opening_hours_override: mockData?.space_opening_hours_override,
         space_latitude: mockData?.space_latitude,
         space_longitude: mockData?.space_longitude,
         space_zlevel: mockData?.space_zlevel,
@@ -178,9 +177,6 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(mapTab(2)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
         await expect(mapTab(3)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
 
-        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue('');
-
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
         await expect(page.getByTestId('space_services_page').locator('input')).toHaveValue(
             'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
@@ -271,8 +267,6 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(mapTab(2)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
         await expect(mapTab(3)).toHaveCSS('color', COLOR_UQPURPLE);
 
-        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
-
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
         await expect(page.getByTestId('space_services_page').locator('input')).toHaveValue(
             'https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library',
@@ -359,11 +353,6 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(mapTab(2)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
         await expect(mapTab(3)).toHaveCSS('color', 'rgba(0, 0, 0, 0.6)');
 
-        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
-            'Open from 7am Monday - Friday',
-        );
-
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
         await expect(page.getByTestId('space_services_page').locator('input')).toBeEmpty();
 
@@ -395,31 +384,6 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
-    // test('override hours load properly', async ({ page }) => {
-    //     await page.goto('/admin/spaces/edit/a00de509-570b-4acb-9ca1-89c4baebe2e6?user=libSpaces');
-    //     await page.setViewportSize({
-    //         width: 1300,
-    //         height: 1000,
-    //     });
-    //     // wait for page to load
-    //     await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
-    //
-    //     // change to Location tab
-    //     await page.getByTestId(TABS_LOCATION_HOURS).click();
-    //
-    //     // await expect(page.getByTestId('space-2-summary-hours').locator('input')).toHaveValue(
-    //     //     'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
-    //     // );
-    //     await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
-    //     await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
-    //         'this space opens at 8am',
-    //     );
-    //
-    //     const saveButton = page.getByTestId('admin-spaces-save-button-submit');
-    //     await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
-    //     await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
-    //     await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
-    // });
 });
 test.describe('Spaces Admin - edit space', () => {
     test.beforeEach(async ({ page }) => {
@@ -518,12 +482,6 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('add-space-springshare-id')).toContainText(
             'No Springshare opening hours will display',
         );
-
-        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-opening-hours-override')
-            .locator('input')
-            .fill('');
 
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
         await expect(page.getByTestId('space_services_page').locator('input')).toHaveValue(
@@ -904,12 +862,6 @@ test.describe('Spaces Admin - edit space', () => {
             .locator('input')
             .fill('http://example.com');
 
-        await page
-            .getByRole('textbox', {
-                name: 'An extra line about opening',
-            })
-            .fill('space is open from 7am');
-
         // change to imagery tab
         await page.getByTestId(TAB_IMAGERY).click();
 
@@ -948,7 +900,6 @@ test.describe('Spaces Admin - edit space', () => {
             space_photo_description: 'words about the photo',
             space_opening_hours_id: DUHIG_TOWER_SPRINGSHARE_SPACE_ID,
             space_services_page: 'http://example.com',
-            space_opening_hours_override: 'space is open from 7am',
             space_latitude: LAW_DEFAULT_LATITUDE, // TODO: drag an drop to change these
             space_longitude: LAW_DEFAULT_LONGITUDE,
             space_zlevel: 1,

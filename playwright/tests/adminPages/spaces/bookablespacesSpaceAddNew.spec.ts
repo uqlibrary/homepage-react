@@ -230,23 +230,30 @@ test.describe('Spaces Admin - add new space', () => {
         // change to location tab
         await page.getByTestId('spaces-form-next-button').click(); // locations tab
 
+        const duttonparkCampusSelector = page.locator(
+            'ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type',
+        );
+        const gattonCampusSelector = 'ul[aria-labelledby="add-space-select-campus-label"] li:nth-of-type(2)';
+        const warehouseBuildingSelector = page.locator(
+            'ul[aria-labelledby="add-space-select-library-label"] li:last-of-type',
+        );
+        const libraryWarehouseFloorTwoSelector = '[aria-labelledby="add-space-select-floor-label"] li:last-of-type';
+
         // choose a different location
         // change campus
         await page.getByTestId('add-space-select-campus').click();
-        await expect(page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toBeVisible();
-        await page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:nth-of-type(2)').click();
+        await expect(duttonparkCampusSelector).toBeVisible();
+        await page.locator(gattonCampusSelector).click();
 
         // change building
         await page.getByTestId('add-space-select-library').click();
-        await expect(
-            page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type'),
-        ).toBeVisible();
-        await page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type').click();
+        await expect(warehouseBuildingSelector).toBeVisible();
+        await warehouseBuildingSelector.click();
 
         // change floor
         await page.getByTestId('add-space-select-floor').click();
-        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type')).toBeVisible();
-        await page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type').click();
+        await expect(page.locator(libraryWarehouseFloorTwoSelector)).toBeVisible();
+        await page.locator(libraryWarehouseFloorTwoSelector).click();
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-campus')).toContainText('Gatton');
@@ -273,16 +280,8 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('add-space-springshare-id')).toContainText(
             'No Springshare opening hours will display',
         );
-        await await page
-            .getByRole('combobox', {
-                name: 'Choose the Springshare',
-            })
-            .click();
-        await page
-            .getByRole('option', {
-                name: 'Duhig Tower',
-            })
-            .click();
+        await page.getByRole('combobox', { name: 'Choose the Springshare' }).click();
+        await page.getByRole('option', { name: 'Duhig Tower - Study space' }).click();
 
         await expect(inputField('space_services_page', page)).toBeVisible();
         await inputField('space_services_page', page).fill(
@@ -723,7 +722,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(aboutPageInputField).toContainText(
             'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
         );
-        await expect(springshareSelector).toContainText('Walter Harrison Law');
+        await expect(springshareSelector).toContainText('Walter Harrison Law - Collections and space');
 
         // open the building dropdown to change building
         librarySelector.click();

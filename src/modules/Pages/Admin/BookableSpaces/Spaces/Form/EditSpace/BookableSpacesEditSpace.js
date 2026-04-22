@@ -142,7 +142,6 @@ export const BookableSpacesEditSpace = ({
                 space_zlevel: bookableSpaceGetResult?.data?.space_zlevel,
                 space_name: bookableSpaceGetResult?.data?.space_name,
                 space_opening_hours_id: bookableSpaceGetResult?.data?.space_opening_hours_id || -1,
-                space_opening_hours_override: bookableSpaceGetResult?.data?.space_opening_hours_override,
                 space_photo_description: bookableSpaceGetResult?.data?.space_photo_description,
                 space_photo_url: bookableSpaceGetResult?.data?.space_photo_url,
                 space_precise: bookableSpaceGetResult?.data?.space_precise,

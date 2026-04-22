@@ -5,7 +5,6 @@ const ARCH_REFERENCE = 'space-1'; // a public Architecture and Music Library spa
 const ARCH_BOOKABLE = 'space-2'; // a public Architecture and Music Library space with booking and rich facilities
 const PACE = 'space-1234544'; // a space in dutton park (pace)
 const LIV = 'space-43534'; // a space in liveris building (used to show we can , if we want, add spaces that aren't in our Libraries)
-const FOURTH_PANEL = 'space-1';
 const ARCH_PANEL_4 = 'space-2';
 const ARCH_PANEL_5 = 'space-3';
 const ARCH_PANEL_6 = 'space-4';
@@ -13,6 +12,8 @@ const ARCH_PANEL_7 = 'space-5';
 const ARCH_PANEL_8 = 'space-6';
 const ARCH_PANEL_9 = 'space-7';
 const GATTON_PANEL_ONE = 'space-8';
+const CENTRAL_PANEL_ONE = 'space-13';
+const CENTRAL_PANEL_TWO = 'space-14';
 
 const NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST = 2; // 1 for skip button, 1 for acccessible heading
 const VISIBLE_SPACES_ST_LUCIA_ALL = 10;
@@ -76,17 +77,6 @@ test.describe('Spaces', () => {
             await expect(
                 page.getByTestId(`${ARCH_REFERENCE}-friendly-location`).locator('.location-campus'),
             ).not.toBeVisible();
-
-            // // second panel
-            // await expect(page.getByTestId(`${PACE}-friendly-location-collapsed`)).not.toBeVisible();
-            // // await expect(
-            // //     page.getByTestId(`${PACE}-friendly-location-collapsed`).locator('.location-library'),
-            // // ).toContainText('Dutton Park Health Sciences');
-            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
-            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).not.toBeVisible();
-            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).not.toBeVisible();
-            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-building')).not.toBeVisible();
-            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).not.toBeVisible();
 
             // third panel
             await expect(page.getByTestId(`${LIV}-friendly-location-collapsed`)).toBeVisible();
@@ -154,44 +144,40 @@ test.describe('Spaces', () => {
         });
 
         test('opening hours appear correct on load', async ({ page }) => {
+            const ARMUS_OPENING_HOURS = 'Opening hours Today: 7:30am - 7:30pm';
+            const CENTRAL_OPENING_HOURS = 'Opening hours Today: 24 Hours';
+
             // public Architecture and Music Library example
             await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toContainText(
-                'Opening hours Today: 7:30am - 7:30pm',
-            );
-            await expect(page.getByTestId(`${ARCH_REFERENCE}-override_opening_hours`)).not.toBeVisible();
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toContainText('Opening hours');
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toContainText(ARMUS_OPENING_HOURS);
 
             // second panel
-            await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-summary-hours`)).toContainText('Open from 7am Monday - Friday');
-            await expect(page.getByTestId(`${LIV}-override_opening_hours`)).not.toBeVisible();
-            await expect(page.getByTestId(`${LIV}-override_opening_hours`)).toContainText(
-                'Open from 7am Monday - Friday',
-            );
-
-            // the spaces below these have the correct details
-            await expect(page.getByTestId(`${FOURTH_PANEL}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${FOURTH_PANEL}-summary-hours`)).toContainText(
-                'Opening hours Today: 7:30am - 7:30pm',
-            );
-
-            await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toContainText(
-                'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
-            );
-            await expect(page.getByTestId(`${ARCH_PANEL_4}-override_opening_hours`)).toContainText(
-                'this space opens at 8am',
-            );
+            await expect(page.getByTestId(`${LIV}-summary-hours`)).not.toBeVisible();
 
             await expect(page.getByTestId(`${ARCH_PANEL_5}-summary-hours`)).not.toBeVisible();
+
+            // the spaces below these have the correct details
+
+            await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toContainText(ARMUS_OPENING_HOURS);
+
+            await expect(page.getByTestId(`${ARCH_PANEL_5}-summary-hours`)).not.toBeVisible();
+
             await expect(page.getByTestId(`${ARCH_PANEL_6}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_PANEL_6}-summary-hours`)).toContainText(
-                'Opening hours Today: 7:30am - 7:30pm',
-            );
+            await expect(page.getByTestId(`${ARCH_PANEL_6}-summary-hours`)).toContainText(ARMUS_OPENING_HOURS);
 
             await expect(page.getByTestId(`${ARCH_PANEL_7}-summary-hours`)).not.toBeVisible();
+
             await expect(page.getByTestId(`${ARCH_PANEL_8}-summary-hours`)).not.toBeVisible();
+
             await expect(page.getByTestId(`${ARCH_PANEL_9}-summary-hours`)).not.toBeVisible();
+
+            await expect(page.getByTestId(`${CENTRAL_PANEL_ONE}-summary-hours`)).toBeVisible();
+            await expect(page.getByTestId(`${CENTRAL_PANEL_ONE}-summary-hours`)).toContainText(CENTRAL_OPENING_HOURS);
+
+            await expect(page.getByTestId(`${CENTRAL_PANEL_TWO}-summary-hours`)).toBeVisible();
+            await expect(page.getByTestId(`${CENTRAL_PANEL_TWO}-summary-hours`)).toContainText(CENTRAL_OPENING_HOURS);
         });
 
         test('facilities are hidden on opening', async ({ page }) => {
@@ -374,11 +360,11 @@ test.describe('Spaces', () => {
 
         // initially the lower sub-panel is hidden
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).not.toBeVisible();
-        await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
+        await expect(page.getByTestId(`${ARCH_PANEL_4}-facility`)).not.toBeVisible();
 
         // and the summary shows
         await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toBeVisible();
-        await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
+        await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toBeVisible();
 
         // and description is truncated
         await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toBeVisible();
@@ -390,7 +376,7 @@ test.describe('Spaces', () => {
         // the lower sub-panel is visible
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).toBeVisible();
         // the other blocks have not appeared (are unaffected by this button click)
-        await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
+        await expect(page.getByTestId(`${ARCH_PANEL_4}-facility`)).not.toBeVisible();
         // and description is no longer truncated
         await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).not.toHaveClass(/truncated/);
@@ -410,7 +396,7 @@ test.describe('Spaces', () => {
 
         // the summary sub-panel is hidden for the single panel
         await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).not.toBeVisible();
-        await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
+        await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toBeVisible();
 
         // collapse the bottom sub-panel
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
@@ -418,7 +404,7 @@ test.describe('Spaces', () => {
         // and the lower sub-panel details are hidden again
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).not.toBeVisible();
         // the other blocks have not appeared (button only affects one space)
-        await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
+        await expect(page.getByTestId(`${ARCH_PANEL_4}-facility`)).not.toBeVisible();
         // and description is truncated
         await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toHaveClass(/truncated/);
@@ -1432,7 +1418,6 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${PACE}-summary-hours`)).toContainText(
                 'Opening hours Today: 10:15pm - 10:30pm',
             );
-            await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
         });
 
         test('facilities are hidden on opening on change of campus', async ({ page }) => {

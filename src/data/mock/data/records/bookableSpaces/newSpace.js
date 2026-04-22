@@ -9,7 +9,6 @@ export default {
         space_photo_description: "",
         space_opening_hours_id: 3970,
         space_services_page: "https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library",
-        space_opening_hours_override: 'this space opens at 8am',
         created_at: "2025-08-01 10:00:00",
         updated_at: "2025-08-01 11:00:00",
         space_latitude: "-27.496955206561836",

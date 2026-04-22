@@ -14,14 +14,6 @@ const StyledHeadingTypography = styled(Typography)(() => ({
 export const OpeningHoursDown = ({ weeklyHoursLoading, weeklyHoursError, weeklyHours, bookableSpace }) => {
     const spaceId = bookableSpace?.space_id;
 
-    const overrideMessage = !!bookableSpace?.space_opening_hours_override ? (
-        <p data-testid={`space-${spaceId}-override_opening_hours`}>
-            Note: {bookableSpace?.space_opening_hours_override}
-        </p>
-    ) : (
-        ''
-    );
-
     if (weeklyHoursLoading === true) {
         return null;
     }
@@ -31,19 +23,18 @@ export const OpeningHoursDown = ({ weeklyHoursLoading, weeklyHoursError, weeklyH
                 <p data-testid={`space-${spaceId}-weekly-hours-error`}>
                     General opening hours currently unavailable - please try again later.
                 </p>
-                {overrideMessage}
             </>
         );
     }
 
     if (weeklyHours?.locations?.length === 0) {
-        return overrideMessage; // we don't get the building opening hours for this location
+        return ''; // we don't get the building opening hours for this location
     }
 
     const openingHoursList = spaceOpeningHours(bookableSpace, weeklyHours);
 
     if (!openingHoursList || openingHoursList?.length === 0) {
-        return overrideMessage; // no opening hours
+        return ''; // no opening hours
     }
 
     return (
@@ -52,7 +43,6 @@ export const OpeningHoursDown = ({ weeklyHoursLoading, weeklyHoursError, weeklyH
                 {bookableSpace?.space_library_name} opening hours
             </StyledHeadingTypography>
             <div style={{ overflowX: 'scroll' }} tabIndex="0">
-                {overrideMessage}
                 {openingHoursList
                     ?.slice(0, 2) // onlyy today and tomorrow, to make the display shorter
                     ?.map(d => (

@@ -859,7 +859,6 @@ export const EditSpaceForm = ({
         valuesToSend.space_photo_description = formValues?.space_photo_description;
         valuesToSend.space_opening_hours_id = formValues?.space_opening_hours_id;
         valuesToSend.space_services_page = formValues?.space_services_page;
-        valuesToSend.space_opening_hours_override = formValues?.space_opening_hours_override;
         valuesToSend.space_latitude = formValues?.space_latitude?.toString();
         valuesToSend.space_longitude = formValues?.space_longitude?.toString();
         valuesToSend.space_zlevel = formValues?.space_zlevel;
@@ -1424,21 +1423,6 @@ export const EditSpaceForm = ({
                             {reportErrorMessage('space_opening_hours_id')}
                         </StyledErrorMessageTypography>
                     </StyledSpringshareHouseFormControl>{' '}
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="space_opening_hours_override">
-                            An extra line about opening hours, specific to this Space
-                        </InputLabel>
-                        <Input
-                            id="space_opening_hours_override"
-                            data-testid="space-opening-hours-override"
-                            value={formValues?.space_opening_hours_override || ''}
-                            onChange={handleChange('space_opening_hours_override')}
-                            onBlur={handleFieldCompletion}
-                        />
-                        <StyledErrorMessageTypography component={'div'}>
-                            {reportErrorMessage('space_opening_hours_override')}
-                        </StyledErrorMessageTypography>
-                    </FormControl>
                 </Grid>
             </Grid>
         );

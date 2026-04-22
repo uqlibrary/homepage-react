@@ -510,7 +510,6 @@ export const BookableSpacesList = ({
         }
     }, [selectedCampus, bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
 
-    // this will need to be passed space.space_opening_hours_override later when AD-797 is done
     function isLocationOpen(locationId, hoursData) {
         if (!locationId) {
             return false;

@@ -12,52 +12,33 @@ const StyledParagraphTypography = styled(Typography)(({ theme }) => ({
 }));
 
 export const OpeningHoursShort = ({ weeklyHoursLoading, weeklyHoursError, weeklyHours, bookableSpace }) => {
-    const spaceId = bookableSpace?.space_id;
-
-    const overrideMessage = (prefix = 'Note: ') =>
-        !!bookableSpace?.space_opening_hours_override ? (
-            <p data-testid={`space-${spaceId}-override_opening_hours-short`}>
-                {prefix} {bookableSpace?.space_opening_hours_override}
-            </p>
-        ) : (
-            ''
-        );
-
     if (weeklyHoursLoading === true) {
         return null;
     }
     if (!!weeklyHoursError) {
-        return <>{overrideMessage()}</>;
+        return null;
     }
 
     if (weeklyHoursLoading === false && weeklyHoursError === false && weeklyHours?.locations?.length === 0) {
-        return overrideMessage(''); // we don't get the building opening hours for this location
+        return null; // we don't get the building opening hours for this location
     }
 
     const openingHoursList = spaceOpeningHours(bookableSpace, weeklyHours);
 
     if (!openingHoursList || openingHoursList?.length === 0) {
-        return overrideMessage(''); // no springshare opening hours
+        return null; // no springshare opening hours
     }
 
     const todaysHours = openingHoursList?.find(o => o?.dayName === 'Today');
 
-    const spaceOpeningHoursMessage = () =>
-        !!bookableSpace?.space_opening_hours_override ? (
-            <>
-                <b>{bookableSpace?.space_library_name} opening hours</b> Today: {todaysHours?.rendered}{' '}
-            </>
-        ) : (
-            <>
-                <b>Opening hours</b> Today: {todaysHours?.rendered}{' '}
-            </>
-        );
+    const spaceOpeningHoursMessage = () => (
+        <>
+            <b>Opening hours</b> Today: {todaysHours?.rendered}
+        </>
+    );
     return (
         <>
-            <StyledParagraphTypography component={'p'}>
-                {spaceOpeningHoursMessage()}
-                {bookableSpace?.space_opening_hours_override && `(${bookableSpace?.space_opening_hours_override})`}
-            </StyledParagraphTypography>
+            <StyledParagraphTypography component={'p'}>{spaceOpeningHoursMessage()}</StyledParagraphTypography>
         </>
     );
 };
