@@ -56,9 +56,11 @@ export const AccordionWithCheckbox = ({ id, children, label, slotProps, disabled
             />
         </AccordionSummary>
         <AccordionDetails {...slotProps?.accordionDetails}>{children}</AccordionDetails>
-        <AccordionActions>
-            <Button {...slotProps?.accordionActions}>Clear</Button>
-        </AccordionActions>
+        {slotProps?.accordionActions && (
+            <AccordionActions>
+                <Button {...slotProps?.accordionActions}>Clear</Button>
+            </AccordionActions>
+        )}
     </StyledAccordion>
 );
 

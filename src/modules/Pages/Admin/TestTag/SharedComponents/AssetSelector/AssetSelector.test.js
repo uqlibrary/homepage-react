@@ -58,6 +58,8 @@ describe('AssetSelector', () => {
         selectOptionFromListByIndex(0, { getByRole, getAllByRole });
 
         expect(getByTestId('asset_selector-test-input')).toHaveAttribute('value', 'NEW ASSET');
+        // assert that barcode scanner trigger is present
+        expect(getByTestId('barcode-scanner-open-button')).toBeEnabled();
     });
     it('renders component without ADD NEW option', () => {
         const { getByTestId, getByText, queryByRole } = setup({

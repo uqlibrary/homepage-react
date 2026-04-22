@@ -103,7 +103,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         setConfirmDialogueBusy(true);
         const clonedData = structuredClone(formValues);
         const request = transformRequest(clonedData);
-        console.log('Bulk Asset Update Request:', request);
         actions
             .bulkAssetUpdate(request)
             .then(() => {

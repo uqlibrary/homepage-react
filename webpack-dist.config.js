@@ -98,6 +98,9 @@ const webpackConfig = {
         compress: true,
         port: port,
         host: '0.0.0.0',
+        client: {
+            overlay: false,
+        },
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -155,6 +158,7 @@ const webpackConfig = {
             ),
             'process.env.TITLE_SUFFIX': JSON.stringify(config.titleSuffix),
             'process.env.GIT_SHA': JSON.stringify(process.env.CI_COMMIT_ID),
+            'process.env.BARCODE_SCANNER_WASM_PATH': JSON.stringify(process.env.BARCODE_SCANNER_WASM_PATH),
         }),
         new webpack.IgnorePlugin({
             resourceRegExp: /^\.\/locale$/,

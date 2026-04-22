@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { fullPath } from '../config/routes';
 
 /* istanbul ignore next */
-const tryCatch = (callback, _default = undefined) => {
+const silentTryCatch = (callback, _default = undefined) => {
     try {
         return callback();
     } catch (e) {
@@ -12,16 +12,16 @@ const tryCatch = (callback, _default = undefined) => {
     }
 };
 
-export const isDevEnv = () => tryCatch(() => process.env.BRANCH === 'development', false);
-export const isJestTest = () => tryCatch(() => !!process.env.JEST_WORKER_ID, false);
+export const isDevEnv = () => silentTryCatch(() => process.env.BRANCH === 'development', false);
+export const isJestTest = () => silentTryCatch(() => !!process.env.JEST_WORKER_ID, false);
 
 /* istanbul ignore next */
-export const isPlaywrightTest = () => tryCatch(() => !!process?.env?.PW_IS_RUNNING, false);
+export const isPlaywrightTest = () => silentTryCatch(() => !!process?.env?.PW_IS_RUNNING, false);
 
 /* istanbul ignore next */
 export const isTest = () => isJestTest() || isPlaywrightTest();
 
-export const isLocal = () => tryCatch(() => isDevEnv() && process.env.TITLE_SUFFIX === 'LOCAL', false);
+export const isLocal = () => silentTryCatch(() => isDevEnv() && process.env.TITLE_SUFFIX === 'LOCAL', false);
 
 export const leftJoin = (objArr1, objArr2, key1, key2) => {
     if (!objArr2) {

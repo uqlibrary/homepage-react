@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 
 import { addClass, removeClass } from 'helpers/general';
 import { CAMPUS_ST_LUCIA } from 'config/locale';
+import { getSpaceOutageStatus, normalizeSpaceOutageList } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
 const StyledMapWrapperDiv = styled('div')(() => ({
     position: 'absolute',
@@ -80,6 +81,29 @@ const BookableSpacesMap = React.forwardRef(
                     const libraryEl = document.createElement('span');
                     libraryEl.textContent = space.space_library_name;
                     container.appendChild(libraryEl);
+                }
+
+                const currentOutages = normalizeSpaceOutageList(space?.space_outages).filter(
+                    outage => getSpaceOutageStatus(outage) === 'Current',
+                );
+                const currentOutageReason = currentOutages
+                    .map(outage => outage?.space_outage_reason?.trim())
+                    .find(reason => !!reason);
+
+                if (currentOutages.length > 0) {
+                    container.appendChild(document.createElement('br'));
+                    const unavailableEl = document.createElement('div');
+                    unavailableEl.textContent = 'This space is currently unavailable.';
+                    unavailableEl.style.cssText =
+                        'margin-top: 6px; color: #842029; background: #f8d7da; border: 1px solid #f5c2c7; border-radius: 4px; padding: 6px 8px;';
+                    container.appendChild(unavailableEl);
+
+                    if (currentOutageReason) {
+                        const reasonEl = document.createElement('div');
+                        reasonEl.textContent = `Reason: ${currentOutageReason}`;
+                        reasonEl.style.cssText = 'margin-top: 4px; font-size: 0.8rem; color: #842029;';
+                        container.appendChild(reasonEl);
+                    }
                 }
 
                 const isFavourite = markerEl.classList.contains('star-marker-el');

@@ -20,7 +20,8 @@ import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
 import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
-import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
+
 import { useUserTeams } from '../../../helpers/teams';
 
 const moment = require('moment');
@@ -65,7 +66,9 @@ const AssetReportByFilters = ({
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, error: null });
     const [statusType, setStatusType] = React.useState(0);
 
-    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams(user);
+    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams({
+        user,
+    });
 
     const buildingList = useMemo(() => {
         /* istanbul ignore else */
@@ -157,7 +160,6 @@ const AssetReportByFilters = ({
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
 
         actions.loadTaggedBuildingList();
-        // buildPayload();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -199,19 +201,17 @@ const AssetReportByFilters = ({
                 <StandardCard title={pageLocale.form.title} id={componentId}>
                     <Grid container spacing={1}>
                         <Grid xs={12} md={6} lg={3}>
-                            {/* Team Picker */}
-                            <SelectField
-                                field={teamSelectFieldName}
+                            <TeamSelector
+                                id={teamSelectFieldName}
                                 options={userTeamList}
-                                locale={{ all: 'All teams', label: 'Team' }}
-                                filterModel={selectedTeam}
-                                setFilterModel={setSelectedTeam}
+                                label={'Team'}
+                                currentValue={selectedTeam}
+                                onChange={setSelectedTeam}
                             />
                         </Grid>
                     </Grid>
                     <Grid container spacing={1}>
                         <Grid xs={12} md={6} lg={3}>
-                            {/* Status Picker */}
                             <AssetStatusSelector
                                 id={componentId}
                                 label={pageLocale.form.filterStatusLabel}
@@ -222,7 +222,6 @@ const AssetReportByFilters = ({
                             />
                         </Grid>
                         <Grid xs={12} md={6} lg={3}>
-                            {/* Building Picker */}
                             <LocationPicker
                                 id={componentIdLower}
                                 locale={{
@@ -239,7 +238,6 @@ const AssetReportByFilters = ({
                             />
                         </Grid>
                         <Grid xs={12} md={6} lg={3}>
-                            {/* Start Date */}
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}

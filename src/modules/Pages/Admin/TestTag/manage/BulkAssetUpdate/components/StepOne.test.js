@@ -25,6 +25,14 @@ import StepOne from './StepOne';
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import { assertLocationLink, assertLocationLinkless } from '../../../helpers/helpers.test';
 
+jest.mock('react-cookie', () => ({
+    useCookies: jest.fn(() => [{}, jest.fn(), jest.fn()]),
+}));
+jest.mock('throttle-debounce', () => ({
+    debounce: jest.fn((_delay, fn) => fn),
+    throttle: jest.fn((_delay, fn) => fn),
+}));
+
 const defaultLocationState = {
     siteList,
     siteListLoading: false,
@@ -217,5 +225,41 @@ describe('StepOne', () => {
         // check reset button calls expected function
         await userEvent.click(getByTestId('footer_bar-test-step-one-alt-button'));
         expect(resetFn).toHaveBeenCalled();
+    });
+
+    describe('all teams switch', () => {
+        it('calls loadAssetsFiltered when toggling all teams after a search', async () => {
+            const list = renderHook(() => useObjectList([])).result.current;
+            const searchPattern = 'UQL310000';
+
+            const loadAssetsFilteredFn = jest.fn();
+
+            const loadSitesFn = jest.fn();
+            const { getByText, getByTestId, getByRole } = setup({
+                list,
+                actions: {
+                    loadAssetsFiltered: loadAssetsFilteredFn,
+                    loadSites: loadSitesFn,
+                    clearRooms: jest.fn(),
+                    clearAssetsMine: jest.fn(),
+                },
+            });
+
+            expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
+
+            // Type in asset selector using userEvent — triggers real input events that React detects
+            const input = getByTestId('asset_selector-test-step-one-input');
+            await userEvent.click(input);
+            await userEvent.paste(searchPattern);
+
+            // Toggle all teams on — should call loadAssetsFiltered since searchTerm is set
+            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            await userEvent.click(toggle);
+
+            expect(loadAssetsFilteredFn).toHaveBeenLastCalledWith(
+                searchPattern,
+                expect.objectContaining({ all_teams: true, status: { discarded: false } }),
+            );
+        }, 10000);
     });
 });

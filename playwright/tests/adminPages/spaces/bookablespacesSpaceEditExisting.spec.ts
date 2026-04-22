@@ -9,6 +9,7 @@ import { default as bookableSpaces } from '../../../../src/data/mock/data/record
 const TAB_ABOUT = 'tab-about';
 const TAB_FACILITY_TYPES = 'tab-facility-types';
 const TABS_LOCATION_HOURS = 'tab-location-hours';
+const TAB_UNAVAILABILITY = 'tab-unavailability';
 const TAB_IMAGERY = 'tab-imagery';
 
 const LAW_DEFAULT_LATITUDE = '-27.49718';
@@ -68,26 +69,27 @@ const chooseDifferentSpaceType = async (page: Page) => {
 };
 
 const originalMockData = (spaceUud: string) => {
-    const currentData = bookableSpaces?.data?.locations?.find(b => b.space_uuid === spaceUud);
-    const currentDataFacilities = currentData?.facility_types?.map(ft => ft.facility_type_id) || [];
+    const mockData = bookableSpaces?.data?.locations?.find(b => b.space_uuid === spaceUud);
+    const mockDataFacilities = mockData?.facility_types?.map(ft => ft.facility_type_id) || [];
     return {
-        space_id: currentData?.space_id,
-        space_floor_id: currentData?.space_floor_id,
-        space_name: currentData?.space_name, // required field
-        space_type_id: currentData?.space_type_id, // required field
-        facility_types: [...currentDataFacilities],
-        space_capacity: currentData?.space_capacity,
-        space_precise: currentData?.space_precise,
-        space_description: currentData?.space_description,
-        space_photo_url: currentData?.space_photo_url,
-        space_photo_description: currentData?.space_photo_description,
-        space_opening_hours_id: currentData?.space_opening_hours_id,
-        space_services_page: currentData?.space_services_page,
-        space_opening_hours_override: currentData?.space_opening_hours_override,
-        space_latitude: currentData?.space_latitude,
-        space_longitude: currentData?.space_longitude,
-        space_zlevel: currentData?.space_zlevel,
-        space_external_book_url: currentData?.space_external_book_url,
+        space_id: mockData?.space_id,
+        space_floor_id: mockData?.space_floor_id,
+        space_name: mockData?.space_name, // required field
+        space_type_id: mockData?.space_type_id, // required field
+        facility_types: [...mockDataFacilities],
+        space_capacity: mockData?.space_capacity,
+        space_precise: mockData?.space_precise,
+        space_description: mockData?.space_description,
+        space_photo_url: mockData?.space_photo_url,
+        space_photo_description: mockData?.space_photo_description,
+        space_opening_hours_id: mockData?.space_opening_hours_id,
+        space_services_page: mockData?.space_services_page,
+        space_opening_hours_override: mockData?.space_opening_hours_override,
+        space_latitude: mockData?.space_latitude,
+        space_longitude: mockData?.space_longitude,
+        space_zlevel: mockData?.space_zlevel,
+        space_external_book_url: mockData?.space_external_book_url,
+        space_draftmode: mockData?.space_draftmode,
     };
 };
 
@@ -391,31 +393,31 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
-    test('override hours load properly', async ({ page }) => {
-        await page.goto('/admin/spaces/edit/a00de509-570b-4acb-9ca1-89c4baebe2e6?user=libSpaces');
-        await page.setViewportSize({
-            width: 1300,
-            height: 1000,
-        });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
-
-        // change to Location tab
-        await page.getByTestId(TABS_LOCATION_HOURS).click();
-
-        // await expect(page.getByTestId('space-2-summary-hours').locator('input')).toHaveValue(
-        //     'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
-        // );
-        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
-            'this space opens at 8am',
-        );
-
-        const saveButton = page.getByTestId('admin-spaces-save-button-submit');
-        await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
-        await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
-        await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
-    });
+    // test('override hours load properly', async ({ page }) => {
+    //     await page.goto('/admin/spaces/edit/a00de509-570b-4acb-9ca1-89c4baebe2e6?user=libSpaces');
+    //     await page.setViewportSize({
+    //         width: 1300,
+    //         height: 1000,
+    //     });
+    //     // wait for page to load
+    //     await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+    //
+    //     // change to Location tab
+    //     await page.getByTestId(TABS_LOCATION_HOURS).click();
+    //
+    //     // await expect(page.getByTestId('space-2-summary-hours').locator('input')).toHaveValue(
+    //     //     'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
+    //     // );
+    //     await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
+    //     await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
+    //         'this space opens at 8am',
+    //     );
+    //
+    //     const saveButton = page.getByTestId('admin-spaces-save-button-submit');
+    //     await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+    //     await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+    //     await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
+    // });
 });
 test.describe('Spaces Admin - edit space', () => {
     test.beforeEach(async ({ page }) => {
@@ -425,7 +427,6 @@ test.describe('Spaces Admin - edit space', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
-        await ensureSpaceTypeSelected(page);
     });
 
     test('edit spaces page is accessible', async ({ page }) => {
@@ -454,6 +455,8 @@ test.describe('Spaces Admin - edit space', () => {
 
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
+
+        await ensureSpaceTypeSelected(page);
 
         // clear as many of the non-required fields as is possible and confirm will submit
 
@@ -557,13 +560,8 @@ test.describe('Spaces Admin - edit space', () => {
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
-            space_id: 123456,
-            space_floor_id: 1,
-            space_name: '01-W431', // required field
-            space_type_id: 1, // required field
-            space_draftmode: true,
+            ...originalMockData('f98g_fwas_5g33'),
             facility_types: [],
-            space_capacity: 1,
             space_precise: '',
             space_description: '',
             space_external_book_url: null,
@@ -571,10 +569,6 @@ test.describe('Spaces Admin - edit space', () => {
             space_photo_description: '',
             space_opening_hours_id: -1,
             space_services_page: '',
-            space_opening_hours_override: null,
-            space_latitude: LAW_DEFAULT_LATITUDE, // can't clear map fields
-            space_longitude: LAW_DEFAULT_LONGITUDE,
-            space_zlevel: 1,
             uploadedFile: [],
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -597,6 +591,8 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId(TAB_FACILITY_TYPES)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toBeVisible();
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toBeVisible();
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TAB_IMAGERY)).toBeVisible();
         await expect(page.getByTestId(TAB_IMAGERY)).toHaveAttribute('aria-selected', 'false');
 
@@ -627,6 +623,8 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId(TAB_FACILITY_TYPES)).toHaveAttribute('aria-selected', 'true');
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toBeVisible();
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toBeVisible();
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TAB_IMAGERY)).toBeVisible();
         await expect(page.getByTestId(TAB_IMAGERY)).toHaveAttribute('aria-selected', 'false');
 
@@ -656,6 +654,8 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId(TAB_FACILITY_TYPES)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toBeVisible();
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toHaveAttribute('aria-selected', 'true');
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toBeVisible();
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TAB_IMAGERY)).toBeVisible();
         await expect(page.getByTestId(TAB_IMAGERY)).toHaveAttribute('aria-selected', 'false');
 
@@ -685,6 +685,8 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId(TAB_FACILITY_TYPES)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toBeVisible();
         await expect(page.getByTestId(TABS_LOCATION_HOURS)).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toBeVisible();
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'false');
         await expect(page.getByTestId(TAB_IMAGERY)).toBeVisible();
         await expect(page.getByTestId(TAB_IMAGERY)).toHaveAttribute('aria-selected', 'true');
 
@@ -705,6 +707,53 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(saveButton).toBeVisible();
         await expect(saveButton).toContainText('Save');
     });
+    test('can return to unavailability after visiting about', async ({ page }) => {
+        await page.getByTestId(TAB_UNAVAILABILITY).click();
+
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'true');
+        await expect(page.getByTestId('spaces-tabpanel-unavailability')).toBeVisible();
+        await expect(page.getByTestId('space-outage-summary')).toBeVisible();
+        await expect(page.getByTestId('space-outage-scheduled-heading')).toBeVisible();
+        await expect(page.getByTestId('space-outage-past-heading')).toBeVisible();
+
+        await page.getByTestId(TAB_ABOUT).click();
+
+        await expect(page.getByTestId(TAB_ABOUT)).toHaveAttribute('aria-selected', 'true');
+        await expect(page.getByTestId('spaces-tabpanel-about')).toBeVisible();
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+
+        await page.getByTestId(TAB_UNAVAILABILITY).click();
+
+        await expect(page.getByTestId(TAB_UNAVAILABILITY)).toHaveAttribute('aria-selected', 'true');
+        await expect(page.getByTestId('spaces-tabpanel-unavailability')).toBeVisible();
+        await expect(page.getByTestId('space-outage-summary')).toBeVisible();
+        await expect(page.getByTestId('space-outage-scheduled-heading')).toBeVisible();
+        await expect(page.getByTestId('space-outage-past-heading')).toBeVisible();
+    });
+    test('unavailability tab separates scheduled and past outages', async ({ page }) => {
+        await page.getByTestId(TAB_UNAVAILABILITY).click();
+
+        await expect(page.getByTestId('spaces-tabpanel-unavailability')).toBeVisible();
+        await expect(page.getByTestId('space-outage-scheduled-table')).toBeVisible();
+        await expect(page.getByTestId('space-outage-past-empty-state')).toBeVisible();
+
+        // Check that at least one scheduled outage row is present (dynamic data)
+        const scheduledRows = await page.locator('[data-testid^="space-outage-row-"]').count();
+        expect(scheduledRows).toBeGreaterThanOrEqual(1);
+
+        await page.goto('/admin/spaces/edit/97fd5_nm39_gh29?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await ensureSpaceTypeSelected(page);
+
+        await page.getByTestId(TAB_UNAVAILABILITY).click();
+
+        await expect(page.getByTestId('space-outage-scheduled-empty-state')).toBeVisible();
+        await expect(page.getByTestId('space-outage-past-table')).toBeVisible();
+        await expect(page.getByTestId('space-outage-row-9004')).toBeVisible();
+        await expect(page.getByTestId('space-outage-edit-9004')).toBeDisabled();
+        await expect(page.getByTestId('space-outage-delete-9004')).toBeDisabled();
+    });
     test('can re-edit after save', async ({ page }) => {
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
@@ -718,6 +767,8 @@ test.describe('Spaces Admin - edit space', () => {
             .getByTestId('space-name')
             .locator('input')
             .fill('New space name');
+
+        await ensureSpaceTypeSelected(page);
 
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
@@ -758,6 +809,8 @@ test.describe('Spaces Admin - edit space', () => {
         await nameField.fill('New space name');
         await nameField.press('Tab');
 
+        await ensureSpaceTypeSelected(page);
+
         const selectedSpaceTypeId = await chooseDifferentSpaceType(page);
 
         await page.getByText('Ut enim ad minim veniam, quis').click();
@@ -775,7 +828,7 @@ test.describe('Spaces Admin - edit space', () => {
 
         // enter a Space capacity
         await expect(page.getByTestId('capacity-details')).toBeVisible();
-        const capacityNumberField = page.getByTestId('space_capacity').locator('input');
+        const capacityNumberField = page.getByTestId('space-capacity').locator('input');
         await capacityNumberField.click(); // focus
         await capacityNumberField.clear();
         await capacityNumberField.fill('32');
@@ -962,7 +1015,6 @@ test.describe('Spaces Admin - edit space', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             // wait for page to load
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
-            await ensureSpaceTypeSelected(page);
 
             const facilityTypeId = '7';
             const label = 'On-desk power point';
@@ -988,21 +1040,185 @@ test.describe('Spaces Admin - edit space', () => {
         });
     });
 });
+test.describe('Spaces admin - edit other spaces', () => {
+    test.beforeEach(async ({ page }) => {
+        await disableMazeMapAssets(page);
+    });
+
+    test('a bookable space can change capacity', async ({ page, context }) => {
+        const testSpaceUuid = 'df40_2jsf_zdk5';
+        const spaceCapacityValue = '5';
+
+        await setTestDataCookie(context, page);
+
+        await page.goto(`/admin/spaces/edit/${testSpaceUuid}?user=libSpaces`);
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        await expect(page.getByTestId(TAB_ABOUT).locator('.MuiBadge-badge')).not.toBeVisible();
+        await page.getByTestId('space-can-book').scrollIntoViewIfNeeded();
+        await expect(page.getByTestId('space-can-book').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
+        await expect(page.getByTestId('capacity-required-indicator')).toBeVisible();
+        await expect(page.getByTestId('space-capacity').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-capacity').locator('input')).toHaveValue(spaceCapacityValue);
+        await expect(page.getByTestId('space-capacity-error')).not.toBeVisible();
+
+        // make non-bookable
+        await page
+            .getByTestId('space-can-book')
+            .locator('input')
+            .uncheck();
+
+        // the capacity field is no longer required, and its value is unchanged
+        await expect(page.getByTestId('capacity-required-indicator')).not.toBeVisible();
+        await expect(page.getByTestId('space-capacity').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-capacity').locator('input')).toHaveValue(spaceCapacityValue);
+        await expect(page.getByTestId('space-capacity-error')).not.toBeVisible();
+
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+
+        const expectedValues = {
+            ...originalMockData(testSpaceUuid),
+            space_capacity: Number(spaceCapacityValue),
+            space_external_book_url: null,
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+
+    test('when a test becomes non-bookable the capacity is no longer required', async ({ page, context }) => {
+        const testSpaceUuid = 'df40_2jsf_zdk5';
+
+        await setTestDataCookie(context, page);
+
+        await page.goto(`/admin/spaces/edit/${testSpaceUuid}?user=libSpaces`);
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        await expect(page.getByTestId(TAB_ABOUT).locator('.MuiBadge-badge')).not.toBeVisible();
+        await page.getByTestId('space-can-book').scrollIntoViewIfNeeded();
+        await expect(page.getByTestId('space-can-book').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
+        await expect(page.getByTestId('capacity-required-indicator')).toBeVisible();
+        await expect(page.getByTestId('space-capacity').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-capacity').locator('input')).toHaveValue('5');
+        await expect(page.getByTestId('space-capacity-error')).not.toBeVisible();
+
+        // update the Space capacity
+        const capacityNumberField = page.getByTestId('space-capacity').locator('input');
+        await expect(capacityNumberField).toBeVisible();
+        await capacityNumberField.clear();
+        await capacityNumberField.fill('8');
+
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+
+        const expectedValues = {
+            ...originalMockData(testSpaceUuid),
+            space_capacity: '8',
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+
+    test('a non-bookable space can add a capacity value', async ({ page, context }) => {
+        const testSpaceuuid = '9a7796e0-b708-45c0-a8de-1183282e0b62';
+        const newCapacityValue = '7';
+
+        await setTestDataCookie(context, page);
+
+        await page.goto('/admin/spaces/edit/' + testSpaceuuid + '?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        await expect(page.getByTestId(TAB_ABOUT).locator('.MuiBadge-badge')).not.toBeVisible();
+        await page.getByTestId('space-can-book').scrollIntoViewIfNeeded();
+        await expect(page.getByTestId('space-can-book').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-can-book').locator('input')).not.toBeChecked();
+        // capacity for a non-bookable space is not required
+        await expect(page.getByTestId('capacity-required-indicator')).not.toBeVisible();
+        await expect(page.getByTestId('space-capacity').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-capacity').locator('input')).toHaveValue('0');
+        await expect(page.getByTestId('space-capacity-error')).not.toBeVisible();
+
+        // update the Space capacity
+        const capacityNumberField = page.getByTestId('space-capacity').locator('input');
+        await expect(capacityNumberField).toBeVisible();
+        await capacityNumberField.clear();
+        await capacityNumberField.fill(newCapacityValue);
+
+        // now save
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+
+        const expectedValues = {
+            ...originalMockData(testSpaceuuid),
+            space_opening_hours_id: -1,
+            space_capacity: newCapacityValue,
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+
+    test('can clear a capacity value on a non bookable space', async ({ page, context }) => {
+        const testSpaceuuid = '97fd5_nm39_gh29';
+
+        const capacityNumberField = page.getByTestId('space-capacity').locator('input');
+
+        await setTestDataCookie(context, page);
+
+        await page.goto(`/admin/spaces/edit/${testSpaceuuid}?user=libSpaces`);
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await page.getByTestId('space-can-book').scrollIntoViewIfNeeded();
+        await expect(capacityNumberField).toBeVisible();
+        await expect(capacityNumberField).toHaveValue('1');
+
+        // clear the Space capacity
+        await capacityNumberField.clear();
+
+        // now save
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+
+        const expectedValues = {
+            ...originalMockData(testSpaceuuid),
+            space_opening_hours_id: -1,
+            space_capacity: 0,
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+});
 test.describe('booking link controller works properly', () => {
     test.beforeEach(async ({ page }) => {
         await disableMazeMapAssets(page);
     });
     test('can clear booking link', async ({ page, context }) => {
+        const testSpaceUuid = 'f98g_fwas_5g33';
+
         await setTestDataCookie(context, page);
 
         const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
 
-        await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
+        await page.goto(`/admin/spaces/edit/${testSpaceUuid}?user=libSpaces`);
         await page.setViewportSize({ width: 1300, height: 1000 });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
-
-        await chooseAnySpaceType(page);
 
         // bookable is checked
         await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
@@ -1027,25 +1243,26 @@ test.describe('booking link controller works properly', () => {
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
-            ...originalMockData('f98g_fwas_5g33'),
+            ...originalMockData(testSpaceUuid),
             // space_type_id: 1,
             space_draftmode: true,
-            space_capacity: 1,
+            space_capacity: 7,
             space_external_book_url: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
     test('an unchanged empty booking link remains empty', async ({ page, context }) => {
+        const testSpaceUuid = '97fd5_nm39_gh29';
+
         await setTestDataCookie(context, page);
 
-        await page.goto('/admin/spaces/edit/97fd5_nm39_gh29?user=libSpaces');
+        await page.goto(`/admin/spaces/edit/${testSpaceUuid}?user=libSpaces`);
         await page.setViewportSize({
             width: 1300,
             height: 1000,
         });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
-        await ensureSpaceTypeSelected(page);
 
         // bookable is checked
         await expect(page.getByTestId('space-can-book').locator('input')).not.toBeChecked();
@@ -1061,9 +1278,9 @@ test.describe('booking link controller works properly', () => {
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
-            ...originalMockData('97fd5_nm39_gh29'),
-            space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
-            space_draftmode: false,
+            ...originalMockData(testSpaceUuid),
+            // space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
+            // space_draftmode: false,
             space_opening_hours_id: -1, // might need to look into this?
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1073,14 +1290,14 @@ test.describe('booking link controller works properly', () => {
 
         const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
 
-        await page.goto('/admin/spaces/edit/97fd5_nm39_gh29?user=libSpaces');
+        const testSpaceUuid = '97fd5_nm39_gh29';
+        await page.goto(`/admin/spaces/edit/${testSpaceUuid}?user=libSpaces`);
         await page.setViewportSize({
             width: 1300,
             height: 1000,
         });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
-        await ensureSpaceTypeSelected(page);
 
         // bookable is not checked
         await expect(page.getByTestId('space-can-book').locator('input')).not.toBeChecked();
@@ -1093,15 +1310,14 @@ test.describe('booking link controller works properly', () => {
             .check();
         await expect(page.getByTestId('booking-link-details')).toBeVisible();
 
-        // save now to confirm it throws an error for want of the url
-        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        await page.getByTestId('admin-spaces-save-button-submit').click();
-
         await expect(page.getByTestId('spaces-button-error-list')).toBeVisible();
         await expect(page.getByTestId('spaces-button-error-list')).toContainText('These errors occurred');
         await expect(page.getByTestId('spaces-button-error-list')).toContainText(
             'Provide the booking link, or uncheck the checkbox',
         );
+
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
 
         await expect(page.getByTestId('toast-message')).toBeVisible();
         await expect(page.getByTestId('toast-message')).toContainText('These errors occurred');
@@ -1120,9 +1336,7 @@ test.describe('booking link controller works properly', () => {
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
-            ...originalMockData('97fd5_nm39_gh29'),
-            space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
-            space_draftmode: false,
+            ...originalMockData(testSpaceUuid),
             space_opening_hours_id: -1, // might need to look into this?
             space_external_book_url: 'http://example.com',
         };

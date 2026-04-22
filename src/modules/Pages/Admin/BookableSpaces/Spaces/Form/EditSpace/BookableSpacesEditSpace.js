@@ -40,6 +40,9 @@ export const BookableSpacesEditSpace = ({
     bookableSpaceGetting,
     bookableSpaceGetError,
     bookableSpaceGetResult,
+    spaceOutageList,
+    spaceOutageListLoading,
+    spaceOutageListError,
 }) => {
     console.log(
         'Edit bookableSpaceGet:',
@@ -94,6 +97,13 @@ export const BookableSpacesEditSpace = ({
         }
     }, [actions, spaceUuid]);
 
+    useEffect(() => {
+        const spaceId = bookableSpaceGetResult?.data?.space_id;
+        if (!!spaceId) {
+            actions.loadBookableSpaceOutages(spaceId);
+        }
+    }, [actions, bookableSpaceGetResult?.data?.space_id]);
+
     const [currentCampusList, setCurrentCampusList] = useState([]);
     useEffect(() => {
         if (campusListLoading === false && campusListError === false && campusList?.length > 0) {
@@ -122,7 +132,7 @@ export const BookableSpacesEditSpace = ({
                 campus_name: bookableSpaceGetResult?.data?.space_campus_name,
                 campus_id: bookableSpaceGetResult?.data?.space_campus_id,
                 space_description: bookableSpaceGetResult?.data?.space_description,
-                space_capacity: bookableSpaceGetResult?.data?.space_capacity || 1,
+                space_capacity: bookableSpaceGetResult?.data?.space_capacity || 0,
                 space_draftmode: !!bookableSpaceGetResult?.data?.space_draftmode,
                 space_external_book_url: bookableSpaceGetResult?.data?.space_external_book_url,
                 space_id: bookableSpaceGetResult?.data?.space_id,
@@ -265,6 +275,9 @@ export const BookableSpacesEditSpace = ({
                 springshareList={springshareList}
                 currentCampusList={currentCampusList}
                 initialCampus={safeCampusIndex(currentCampusList, formValues?.campus_id)}
+                spaceOutageList={spaceOutageList}
+                spaceOutageListLoading={spaceOutageListLoading}
+                spaceOutageListError={spaceOutageListError}
                 mode="edit"
             />
         );
@@ -294,6 +307,9 @@ BookableSpacesEditSpace.propTypes = {
     bookableSpacesRoomUpdating: PropTypes.any,
     bookableSpacesRoomUpdateError: PropTypes.any,
     bookableSpacesRoomUpdateResult: PropTypes.any,
+    spaceOutageList: PropTypes.any,
+    spaceOutageListLoading: PropTypes.any,
+    spaceOutageListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesEditSpace);

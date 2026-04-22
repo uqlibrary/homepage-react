@@ -138,6 +138,26 @@ const withDelay = response => config => {
     });
 };
 
+const cloneMockValue = value => JSON.parse(JSON.stringify(value));
+const collectMockSpaceOutages = spaces =>
+    (spaces || []).flatMap(space =>
+        (space?.space_outages || []).map(outage => ({
+            ...cloneMockValue(outage),
+            space_id: outage?.space_id || space?.space_id,
+        })),
+    );
+let mockSpaceOutageRecords = collectMockSpaceOutages(bookableSpaces_all?.data?.locations);
+const getMockSpaceOutagesForSpace = spaceId =>
+    mockSpaceOutageRecords
+        .filter(outage => String(outage?.space_id) === String(spaceId))
+        .sort((leftOutage, rightOutage) => String(leftOutage?.space_outage_start).localeCompare(rightOutage?.space_outage_start));
+const getNextMockSpaceOutageId = () => {
+    const highestKnownId = mockSpaceOutageRecords.reduce((currentHighest, outage) => {
+        return Math.max(currentHighest, Number(outage?.space_outage_id) || 0);
+    }, 9000);
+    return highestKnownId + 1;
+};
+
 mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
     // mock account response
     if (['s2222222', 's3333333'].indexOf(user) > -1) {
@@ -1209,6 +1229,23 @@ mock.onGet('exams/course/FREN1010/summary')
     .onDelete(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)))
     .reply(() => [200, { status: 'OK' }])
 
+    .onGet(/test-and-tag\/asset\/search\/current\/.*[?]without_discards=1&all_teams=1/)
+    .reply(config => {
+        const patternTmp = config.url.split('/').pop();
+        const pattern = patternTmp.split('?')[0];
+        const allAssets = [...testTag_assets.data, ...testTag_assets_all.data];
+        // filter array to matching asset id's
+        return [
+            200,
+            {
+                data: allAssets.filter(
+                    asset =>
+                        asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()) &&
+                        asset.asset_status !== 'DISCARDED',
+                ),
+            },
+        ];
+    })
     .onGet(/test-and-tag\/asset\/search\/current\/.*[?]without_discards=1/)
     .reply(config => {
         const patternTmp = config.url.split('/').pop();
@@ -1528,6 +1565,10 @@ mock.onGet('exams/course/FREN1010/summary')
     //         asset[location] === (locationId ?? asset[location]) &&
     //         asset.inspect_comment.indexOf(params.get('inspect_comment') ?? asset.inspect_comment) > -1)}]
     // })
+    .onGet(new RegExp(escapeRegExp(routes.TEST_TAG_ASSETS_MINE_API({ teamSlug: 'WSS' }).apiUrl)))
+    .reply(() => [200, { data: test_tag_assets_mine.data.filter(asset => asset.asset_team_owned_by === 'WSS') }])
+    .onGet(new RegExp(escapeRegExp(routes.TEST_TAG_ASSETS_MINE_API({ teamSlug: 'SPACES' }).apiUrl)))
+    .reply(() => [200, { data: test_tag_assets_mine.data.filter(asset => asset.asset_team_owned_by === 'SPACES') }])
     .onGet(/test-and-tag\/asset\/search\/mine.*/)
     .reply(() => [200, test_tag_assets_mine])
     .onPut(routes.TEST_TAG_BULK_UPDATE_API().apiUrl)
@@ -1678,6 +1719,51 @@ mock.onGet('exams/course/FREN1010/summary')
                 },
             ];
         }
+    })
+    .onGet(/bookable_spaces\/space\/\d+\/outages.*/)
+    .reply(config => {
+        const urlTail = config.url.split('/').slice(-2).join('/');
+        const spaceId = urlTail.split('/')[0];
+        return [200, { status: 'OK', data: getMockSpaceOutagesForSpace(spaceId) }];
+    })
+    .onPost(/bookable_spaces\/space\/\d+\/outages.*/)
+    .reply(config => {
+        const body = JSON.parse(config.data);
+        const urlTail = config.url.split('/').slice(-2).join('/');
+        const spaceId = body?.space_id || urlTail.split('/')[0];
+        const newOutage = {
+            space_outage_id: getNextMockSpaceOutageId(),
+            space_id: Number(spaceId),
+            space_outage_start: body?.space_outage_start,
+            space_outage_end: body?.space_outage_end,
+            space_outage_reason: body?.space_outage_reason || null,
+        };
+        mockSpaceOutageRecords = [...mockSpaceOutageRecords, newOutage];
+        return [200, { status: 'OK', data: newOutage }];
+    })
+    .onPut(/bookable_spaces\/space_outage\/\d+.*/)
+    .reply(config => {
+        const outageId = config.url.split('/').pop().split('?')[0];
+        const body = JSON.parse(config.data);
+        const existingOutage = mockSpaceOutageRecords.find(outage => String(outage?.space_outage_id) === String(outageId));
+        const updatedOutage = {
+            ...existingOutage,
+            ...body,
+            space_outage_id: Number(outageId),
+            space_id: Number(body?.space_id || existingOutage?.space_id),
+        };
+        mockSpaceOutageRecords = mockSpaceOutageRecords.map(outage =>
+            String(outage?.space_outage_id) === String(outageId) ? updatedOutage : outage,
+        );
+        return [200, { status: 'OK', data: updatedOutage }];
+    })
+    .onDelete(/bookable_spaces\/space_outage\/\d+.*/)
+    .reply(config => {
+        const outageId = config.url.split('/').pop().split('?')[0];
+        mockSpaceOutageRecords = mockSpaceOutageRecords.filter(
+            outage => String(outage?.space_outage_id) !== String(outageId),
+        );
+        return [200, { status: 'OK' }];
     })
     // SPACES_SINGLE_API
     .onGet(/bookable_spaces\/space\/.*/)
