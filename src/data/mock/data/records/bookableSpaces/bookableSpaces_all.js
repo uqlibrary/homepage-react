@@ -32,7 +32,7 @@ export default {
                 "space_type_description": "Designed for individual study, these spaces typically include local, isolated areas and amenities to support focused, independent work.",
                 "spaces_count": 1
             },
-             {
+            {
                 "space_type_id": 6,
                 "space_type_name": "An unallocated space type",
                 "space_type_description": "A space type that has not yet been allocated to any spaces. This is used to test the display of space types with no spaces allocated to them.",
@@ -52,7 +52,7 @@ export default {
             space_opening_hours_override: null,
             created_at: "2025-08-01 10:00:00",
             updated_at: "2025-08-01 11:00:00",
-            "space_capacity": null,
+            "space_capacity": 7,
             space_latitude: "-27.49718",
             space_longitude: "153.01214",
             space_zlevel: 1,
@@ -256,6 +256,7 @@ export default {
             space_campus_id: 3,
             space_campus_name: "Dutton Park",
             space_campus_number: "45",
+            space_draftmode: false,
         }, {
             space_id: 43534,
             space_uuid: "97fd5_nm39_gh29",
@@ -338,6 +339,7 @@ export default {
             space_campus_id: 1,
             space_campus_name: "St Lucia",
             "space_campus_number": "01",
+            space_draftmode: false,
         }, {
             "space_id": 1,
             "space_uuid": "a00de3d4-7e11-47eb-8079-532bdef80def",
@@ -369,6 +371,7 @@ export default {
             "space_campus_id": 1,
             "space_campus_name": "St Lucia",
             "space_campus_number": "01",
+            "space_draftmode": false,
             "space_external_book_url": null,
             space_type_id: 4,
             space_type_details: {
@@ -470,6 +473,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_draftmode": false,
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/333',
                 space_outages: (() => {
                     const moment = require('moment');
@@ -571,6 +575,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_draftmode": false,
                 "space_external_book_url": null,
                 "facility_types": [],
                 space_type_id: 5,
@@ -611,6 +616,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_draftmode": false,
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/444',
                 space_type_id: 6,
                 space_type_details: {
@@ -688,6 +694,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_draftmode": false,
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/555',
                 "space_type_id": 4,
                 "space_type_details": {
@@ -761,6 +768,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_draftmode": false,
                 "space_external_book_url": null,
                 "space_type_id": 4,
                 "space_type_details": {
@@ -830,6 +838,7 @@ export default {
                 "space_campus_id": 1,
                 "space_campus_name": "St Lucia",
                 "space_campus_number": "01",
+                "space_draftmode": false,
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/666',
                 "space_type_id": 4,
                 "space_type_details": {
@@ -894,6 +903,7 @@ export default {
                 "space_campus_id": 2,
                 "space_campus_name": "Gatton",
                 "space_campus_number": "29",
+                "space_draftmode": false,
                 "space_external_book_url": null,
                 "space_type_id": 2,
                 "space_type_details": {
@@ -958,6 +968,7 @@ export default {
                 "space_campus_id": 2,
                 "space_campus_name": "Gatton",
                 "space_campus_number": "29",
+                "space_draftmode": false,
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/GAT2',
                 "space_type_id": 4,
                 "space_type_details": {
@@ -1006,8 +1017,8 @@ export default {
                 "created_at": "2025-12-02T04:33:04.000000Z",
                 "updated_at": "2025-12-02T04:33:04.000000Z",
                 "space_capacity": null,
-                "space_latitude": -27.55370,
-                "space_longitude": 152.33593,
+                "space_latitude": "-27.55370",
+                "space_longitude": "152.33593",
                 "space_type": "Communal space",
                 "space_floor_id": 1,
                 "space_floor_name": "1",
@@ -1022,6 +1033,7 @@ export default {
                 "space_campus_id": 2,
                 "space_campus_name": "Gatton",
                 "space_campus_number": "29",
+                "space_draftmode": false,
                 "space_external_book_url": null,
                 "space_type_id": 1,
                 "space_type_details": {
@@ -1086,6 +1098,7 @@ export default {
                 "space_campus_id": 2,
                 "space_campus_name": "Gatton",
                 "space_campus_number": "29",
+                "space_draftmode": false,
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/GAT4',
                 "space_type_id": 1,
                 "space_type_details": {
@@ -1153,7 +1166,7 @@ export default {
                 },
                 space_campus_name: "St Lucia",
                 "space_campus_number": "01",
-                space_draftmode: false,
+                "space_draftmode": false,
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/central-1',
                 facility_types: [
                     {
