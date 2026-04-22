@@ -15,6 +15,8 @@ const TAB_IMAGERY = 'tab-imagery';
 const LAW_DEFAULT_LATITUDE = '-27.49718';
 const LAW_DEFAULT_LONGITUDE = '153.01214';
 
+const DUHIG_TOWER_SPRINGSHARE_SPACE_ID = 3831;
+
 import { Page } from '@playwright/test';
 
 const chooseAnySpaceType = async (page: Page) => {
@@ -893,7 +895,7 @@ test.describe('Spaces Admin - edit space', () => {
             .fill('somewhere deep in the bowels of the warehouse');
 
         await page.getByRole('combobox', { name: 'Choose the Springshare' }).click();
-        await page.getByRole('option', { name: 'Dorothy Hill Engineering and' }).click();
+        await page.getByRole('option', { name: 'Duhig Tower' }).click();
 
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
@@ -944,7 +946,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_photo_url: 'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
             // space_photo_url: 'http://example.com/x.png',
             space_photo_description: 'words about the photo',
-            space_opening_hours_id: 3825,
+            space_opening_hours_id: DUHIG_TOWER_SPRINGSHARE_SPACE_ID,
             space_services_page: 'http://example.com',
             space_opening_hours_override: 'space is open from 7am',
             space_latitude: LAW_DEFAULT_LATITUDE, // TODO: drag an drop to change these

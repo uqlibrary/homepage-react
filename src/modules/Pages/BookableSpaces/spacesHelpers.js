@@ -116,6 +116,10 @@ function filterNext7Days(departmentData) {
 
 // rewrite the hours-by-week into one long list of days
 function convertWeeksToDays(data) {
+    if (!data) {
+        return [];
+    }
+
     // Create a deep copy to avoid mutating the original data
     const location = JSON.parse(JSON.stringify(data));
 
@@ -157,11 +161,11 @@ function convertWeeksToDays(data) {
 }
 
 export const spaceOpeningHours = (bookableSpace, weeklyHours) => {
-    const details = weeklyHours?.locations?.find(spaceOpeningHours => {
-        return spaceOpeningHours?.lid === bookableSpace?.space_opening_hours_id;
-    });
+    const details = weeklyHours?.locations?.filter(lib =>
+        lib?.departments.find(spaceOpeningHours => spaceOpeningHours?.lid === bookableSpace?.space_opening_hours_id),
+    );
     if (!!details) {
-        const openingDetails = convertWeeksToDays(details);
+        const openingDetails = convertWeeksToDays(details?.at(0));
         return openingDetails?.department?.next7days;
     }
     return [];

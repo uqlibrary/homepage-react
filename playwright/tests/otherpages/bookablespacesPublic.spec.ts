@@ -77,6 +77,17 @@ test.describe('Spaces', () => {
                 page.getByTestId(`${ARCH_REFERENCE}-friendly-location`).locator('.location-campus'),
             ).not.toBeVisible();
 
+            // // second panel
+            // await expect(page.getByTestId(`${PACE}-friendly-location-collapsed`)).not.toBeVisible();
+            // // await expect(
+            // //     page.getByTestId(`${PACE}-friendly-location-collapsed`).locator('.location-library'),
+            // // ).toContainText('Dutton Park Health Sciences');
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).not.toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).not.toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-building')).not.toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).not.toBeVisible();
+
             // third panel
             await expect(page.getByTestId(`${LIV}-friendly-location-collapsed`)).toBeVisible();
             await expect(

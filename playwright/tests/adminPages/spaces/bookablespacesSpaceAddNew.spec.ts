@@ -5,6 +5,9 @@ import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/he
 import { COLOR_GLOBAL_ALERT_RED, COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 import { assertErrorPopupAppears } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
+const DUTTON_PARK_SPRINGSHARE_SPACE_ID = 3970;
+const DUHIG_TOWER_SPRINGSHARE_SPACE_ID = 3831;
+
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
 
 const chooseAnySpaceType = async (page: Page): Promise<number> => {
@@ -161,7 +164,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_floor_id: 65,
             space_name: 'W12343',
             space_type_id: Number(selectedSpaceTypeId),
-            space_opening_hours_id: 3967,
+            space_opening_hours_id: DUTTON_PARK_SPRINGSHARE_SPACE_ID,
             space_latitude: PACE_DEFAULT_LATITUDE,
             space_longitude: PACE_DEFAULT_LONGITUDE,
             space_zlevel: 1,
@@ -277,7 +280,7 @@ test.describe('Spaces Admin - add new space', () => {
             .click();
         await page
             .getByRole('option', {
-                name: 'Dorothy Hill Engineering',
+                name: 'Duhig Tower',
             })
             .click();
 
@@ -317,7 +320,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_description: '<p>This is a sunny corner in the Law library where you blah blah blah</p>',
             space_external_book_url: 'https://example.com',
             space_type_id: selectedSpaceTypeId,
-            space_opening_hours_id: 3825, // dhesl
+            space_opening_hours_id: DUHIG_TOWER_SPRINGSHARE_SPACE_ID,
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
             facility_types: [ASKUS_FILTER_TYPE, MICROWAVE_FILTER_TYPE],
             space_latitude: PACE_DEFAULT_LATITUDE, // TODO add drag and drop test
@@ -597,7 +600,7 @@ test.describe('Spaces Admin - add new space', () => {
             .click();
         await page
             .getByRole('option', {
-                name: 'Dorothy Hill Engineering',
+                name: 'Duhig Tower',
             })
             .click();
 
@@ -746,7 +749,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(floorSelector).toContainText('Central Library - 4');
 
         await expect(aboutPageInputField).toContainText('https://web.library.uq.edu.au/visit/duhig-tower');
-        await expect(springshareSelector).toContainText('Duhig Tower'); // Springshare value
+        await expect(springshareSelector).toContainText('Central'); // Springshare value
 
         // open the floor dropdown to change floor
         floorSelector.click();
@@ -772,7 +775,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(floorSelector).not.toContainText('Ground floor');
 
         await expect(aboutPageInputField).toContainText('https://web.library.uq.edu.au/visit/duhig-tower');
-        await expect(springshareSelector).toContainText('Duhig Tower'); // Springshare value
+        await expect(springshareSelector).toContainText('Central'); // Springshare value
     });
 });
 test.describe('Spaces Admin - errors', () => {

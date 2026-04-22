@@ -14,7 +14,7 @@ export default {
                     "building_number": "0001",
                     "ground_floor_id": null,
                     "library_about_page_default": "https://web.library.uq.edu.au/visit/walter-harrison-law-library",
-                    "library_springshare_id": 3841,
+                    "library_springshare_id": 4801,
                     "floors": [
                         {
                             "floor_id": 1,
@@ -48,7 +48,7 @@ export default {
                     "building_number": "0002",
                     "ground_floor_id": 4,
                     "library_about_page_default": 'https://web.library.uq.edu.au/visit/duhig-tower',
-                    "library_springshare_id": 3830,
+                    "library_springshare_id": 10457,
                     "floors": [
                         {
                             "floor_id": 4,
@@ -66,7 +66,7 @@ export default {
                     "building_name": "Zelman Cowen Building",
                     "building_ground_floor_id": null,
                     "library_about_page_default": "https:\/\/web.library.uq.edu.au\/visit\/architecture-and-music-library",
-                    "library_springshare_id": 3823,
+                    "library_springshare_id": 10451,
                     "floors": [
                         {
                             "floor_id": 3,
@@ -90,7 +90,7 @@ export default {
                     "building_number": "8102",
                     "ground_floor_id": 29,
                     "library_about_page_default": 'https://web.library.uq.edu.au/visit/jk-murray-library-uq-gatton',
-                    "library_springshare_id": 3833,
+                    "library_springshare_id": 8867,
                     "floors": [
                         {
                             "floor_id": 29,
@@ -146,7 +146,7 @@ export default {
                     "building_number": "870",
                     "ground_floor_id": 29,
                     "library_about_page_default": 'https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library',
-                    "library_springshare_id": 3967,
+                    "library_springshare_id": 3970,
                     "floors": [
                         {
                             "floor_id": 65,
