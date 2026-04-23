@@ -16,14 +16,7 @@ async function clickDeleteButton(page: Page) {
     await expect(page.getByTestId('confirmation-dialog')).toBeVisible();
 }
 
-const disableMazeMapAssets = async (page: Page) => {
-    await page.route('**/vendor/mazemap/**', route => route.abort());
-};
-
 test.describe('Spaces Admin - manage locations', () => {
-    test.beforeEach(async ({ page }) => {
-        await disableMazeMapAssets(page);
-    });
     test('can navigate from dashboard to manage locations', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });

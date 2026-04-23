@@ -21,6 +21,12 @@ test = test.extend({
                 body: '{}',
             });
         });
+        // Disable MazeMap assets in E2E by default.
+        // Several admin flows do not need live map rendering, and loading MazeMap
+        // can trigger external tile/service rate limiting that makes tests flaky.
+        await page.route('**/vendor/mazemap/**', route => {
+            route.abort();
+        });
         await page.route(' https://api.library.uq.edu.au/**', route => {
             route.fulfill({
                 status: 200,
