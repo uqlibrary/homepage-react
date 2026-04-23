@@ -1,12 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Typography from '@mui/material/Typography';
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 
-const CampusLocationMap = (campusCentre = null) => {
+const CampusLocationMap = ({ campusCentre = null } = {}) => {
     const defaultCoords = locale?.locations?.greatCourtCoordinates;
-    const initialLat = campusCentre?.space_latitude ?? defaultCoords[0];
-    const initialLng = campusCentre?.space_longitude ?? defaultCoords[1];
+    const initialLat = Number(campusCentre?.campus_latitude ?? defaultCoords[0]);
+    const initialLng = Number(campusCentre?.campus_longitude ?? defaultCoords[1]);
 
     const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
     const [mapContainer, setMapContainer] = React.useState(null);
@@ -80,7 +81,7 @@ const CampusLocationMap = (campusCentre = null) => {
             mazeMapInstanceRef.current?.remove();
             mazeMapInstanceRef.current = null;
         };
-    }, [isMazeMapScriptReady, mapContainer]);
+    }, [isMazeMapScriptReady, mapContainer, initialLat, initialLng]);
 
     return (
         <>
@@ -93,6 +94,10 @@ const CampusLocationMap = (campusCentre = null) => {
             </Typography>
         </>
     );
+};
+
+CampusLocationMap.propTypes = {
+    campusCentre: PropTypes.object,
 };
 
 export default React.memo(CampusLocationMap);
