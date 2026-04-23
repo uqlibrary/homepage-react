@@ -1,11 +1,13 @@
 import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { ARMUS_SPRINGSHARE_ID, CENTRAL_SPRINGSHARE_ID } from '../../../../src/config/locale';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 import { assertDialogToastHasMessage, assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
 const LAW_DEFAULT_LATITUDE = '-27.49718';
 const LAW_DEFAULT_LONGITUDE = '153.01214';
+
+const CENTRAL_SPRINGSHARE_SPACE_ID = '10457';
+const ARMUS_SPRINGSHARE_SPACE_ID = '10451';
 
 async function clickDeleteButton(page: Page) {
     const mainDialog = page.getByTestId('main-dialog');
@@ -448,7 +450,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(buildingNumberInputField).toBeVisible();
             await buildingNumberInputField.fill('0084');
 
-            const armusRadioButton = page.getByTestId(`library_springshare_id-${CENTRAL_SPRINGSHARE_ID}`);
+            const armusRadioButton = page.getByTestId(`library_springshare_id-${CENTRAL_SPRINGSHARE_SPACE_ID}`);
             await expect(armusRadioButton).toBeVisible();
             await armusRadioButton.click();
 
@@ -466,7 +468,7 @@ test.describe('Spaces Admin - manage locations', () => {
                 library_campus_id: '1',
                 building_number: '0084',
                 library_about_page_default: 'https://example.com',
-                library_springshare_id: '3842',
+                library_springshare_id: CENTRAL_SPRINGSHARE_SPACE_ID,
             };
             await assertExpectedDataSentToServer(page, expectedValues);
         });
@@ -669,7 +671,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(buildingNumberInputElement).toBeVisible();
             await expect(buildingNumberInputElement).toHaveValue('0001');
             await buildingNumberInputElement.type('9');
-            const armusRadioButton = page.getByTestId(`library_springshare_id-${ARMUS_SPRINGSHARE_ID}`);
+            const armusRadioButton = page.getByTestId(`library_springshare_id-${ARMUS_SPRINGSHARE_SPACE_ID}`);
             await expect(armusRadioButton).toBeVisible();
             await armusRadioButton.click();
 
@@ -685,7 +687,7 @@ test.describe('Spaces Admin - manage locations', () => {
                 library_about_page_default: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library', // unchanged
                 library_campus_id: '1', // unchanged
                 building_ground_floor_id: undefined, // unchanged
-                library_springshare_id: '3823',
+                library_springshare_id: ARMUS_SPRINGSHARE_SPACE_ID,
             };
             await assertExpectedDataSentToServer(page, expectedValues);
         });

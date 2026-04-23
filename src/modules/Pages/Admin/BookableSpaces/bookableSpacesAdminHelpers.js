@@ -187,18 +187,34 @@ export function displayToastErrorMessage(message) {
         !!styles && styles?.remove();
     }, hideDelay + 1000);
 }
-export const springshareLocations = weeklyHours =>
-    !!weeklyHours?.locations &&
-    weeklyHours?.locations?.length > 0 &&
-    weeklyHours?.locations
-        ?.filter(l => l?.lid !== ASKUS_SPRINGSHARE_ID)
-        ?.sort((a, b) => a?.display_name?.localeCompare(b?.display_name))
-        // eslint-disable-next-line camelcase
-        ?.map(({ lid, display_name }) => ({
-            id: lid,
-            // eslint-disable-next-line camelcase
-            display_name,
-        }));
+export const springshareLocations = weeklyHours => {
+    if (!weeklyHours?.locations || weeklyHours?.locations?.length === 0) {
+        return [];
+    }
+
+    const result = [];
+
+    const locations =
+        !!weeklyHours?.locations &&
+        weeklyHours?.locations?.length > 0 &&
+        weeklyHours?.locations
+            ?.filter(l => l?.lid !== ASKUS_SPRINGSHARE_ID)
+            ?.sort((a, b) => a?.display_name?.localeCompare(b?.display_name));
+
+    for (const library of locations) {
+        const nonAskUsDepts = library.departments.filter(dept => !dept.name.toLowerCase().includes('askus desk'));
+
+        for (const dept of nonAskUsDepts) {
+            const items = {
+                id: dept.lid,
+                display_name: `${library.display_name} - ${dept.name}`,
+            };
+            result.push(items);
+        }
+    }
+
+    return result;
+};
 
 export function removeAnyListeners(element) {
     if (!element) {

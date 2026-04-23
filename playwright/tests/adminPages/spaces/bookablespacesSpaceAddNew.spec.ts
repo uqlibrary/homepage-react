@@ -5,6 +5,9 @@ import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/he
 import { COLOR_GLOBAL_ALERT_RED, COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 import { assertErrorPopupAppears } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
+const DUTTON_PARK_SPRINGSHARE_SPACE_ID = 3970;
+const DUHIG_TOWER_SPRINGSHARE_SPACE_ID = 3831;
+
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
 
 const chooseAnySpaceType = async (page: Page): Promise<number> => {
@@ -161,7 +164,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_floor_id: 65,
             space_name: 'W12343',
             space_type_id: Number(selectedSpaceTypeId),
-            space_opening_hours_id: 3967,
+            space_opening_hours_id: DUTTON_PARK_SPRINGSHARE_SPACE_ID,
             space_latitude: PACE_DEFAULT_LATITUDE,
             space_longitude: PACE_DEFAULT_LONGITUDE,
             space_zlevel: 1,
@@ -227,23 +230,30 @@ test.describe('Spaces Admin - add new space', () => {
         // change to location tab
         await page.getByTestId('spaces-form-next-button').click(); // locations tab
 
+        const duttonparkCampusSelector = page.locator(
+            'ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type',
+        );
+        const gattonCampusSelector = 'ul[aria-labelledby="add-space-select-campus-label"] li:nth-of-type(2)';
+        const warehouseBuildingSelector = page.locator(
+            'ul[aria-labelledby="add-space-select-library-label"] li:last-of-type',
+        );
+        const libraryWarehouseFloorTwoSelector = '[aria-labelledby="add-space-select-floor-label"] li:last-of-type';
+
         // choose a different location
         // change campus
         await page.getByTestId('add-space-select-campus').click();
-        await expect(page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toBeVisible();
-        await page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:nth-of-type(2)').click();
+        await expect(duttonparkCampusSelector).toBeVisible();
+        await page.locator(gattonCampusSelector).click();
 
         // change building
         await page.getByTestId('add-space-select-library').click();
-        await expect(
-            page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type'),
-        ).toBeVisible();
-        await page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type').click();
+        await expect(warehouseBuildingSelector).toBeVisible();
+        await warehouseBuildingSelector.click();
 
         // change floor
         await page.getByTestId('add-space-select-floor').click();
-        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type')).toBeVisible();
-        await page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type').click();
+        await expect(page.locator(libraryWarehouseFloorTwoSelector)).toBeVisible();
+        await page.locator(libraryWarehouseFloorTwoSelector).click();
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-campus')).toContainText('Gatton');
@@ -270,16 +280,8 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('add-space-springshare-id')).toContainText(
             'No Springshare opening hours will display',
         );
-        await await page
-            .getByRole('combobox', {
-                name: 'Choose the Springshare',
-            })
-            .click();
-        await page
-            .getByRole('option', {
-                name: 'Dorothy Hill Engineering',
-            })
-            .click();
+        await page.getByRole('combobox', { name: 'Choose the Springshare' }).click();
+        await page.getByRole('option', { name: 'Duhig Tower - Study space' }).click();
 
         await expect(inputField('space_services_page', page)).toBeVisible();
         await inputField('space_services_page', page).fill(
@@ -317,7 +319,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_description: '<p>This is a sunny corner in the Law library where you blah blah blah</p>',
             space_external_book_url: 'https://example.com',
             space_type_id: selectedSpaceTypeId,
-            space_opening_hours_id: 3825, // dhesl
+            space_opening_hours_id: DUHIG_TOWER_SPRINGSHARE_SPACE_ID,
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
             facility_types: [ASKUS_FILTER_TYPE, MICROWAVE_FILTER_TYPE],
             space_latitude: PACE_DEFAULT_LATITUDE, // TODO add drag and drop test
@@ -597,7 +599,7 @@ test.describe('Spaces Admin - add new space', () => {
             .click();
         await page
             .getByRole('option', {
-                name: 'Dorothy Hill Engineering',
+                name: 'Duhig Tower',
             })
             .click();
 
@@ -720,7 +722,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(aboutPageInputField).toContainText(
             'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
         );
-        await expect(springshareSelector).toContainText('Walter Harrison Law');
+        await expect(springshareSelector).toContainText('Walter Harrison Law - Collections and space');
 
         // open the building dropdown to change building
         librarySelector.click();
@@ -746,7 +748,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(floorSelector).toContainText('Central Library - 4');
 
         await expect(aboutPageInputField).toContainText('https://web.library.uq.edu.au/visit/duhig-tower');
-        await expect(springshareSelector).toContainText('Duhig Tower'); // Springshare value
+        await expect(springshareSelector).toContainText('Central'); // Springshare value
 
         // open the floor dropdown to change floor
         floorSelector.click();
@@ -772,7 +774,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(floorSelector).not.toContainText('Ground floor');
 
         await expect(aboutPageInputField).toContainText('https://web.library.uq.edu.au/visit/duhig-tower');
-        await expect(springshareSelector).toContainText('Duhig Tower'); // Springshare value
+        await expect(springshareSelector).toContainText('Central'); // Springshare value
     });
 });
 test.describe('Spaces Admin - errors', () => {
