@@ -17,9 +17,9 @@ export const locale = {
             recommendedDimensionsNotification:
                 'Max image size: [MAXFILESIZE] KB. Recommended dimensions: [WIDTH]px by [HEIGHT]px (aspect ratio: [RATIO]).',
             ideal: {
-                width: 813,
-                height: 300,
-                ratio: 2.71,
+                width: 'TBA',
+                height: 'TBA',
+                ratio: 'TBA',
             },
             minRatio: 2.55,
             maxRatio: 2.8,
