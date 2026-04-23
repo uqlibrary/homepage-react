@@ -254,7 +254,12 @@ export const SidebarFilters = ({
     selectedLibrary,
     handleLibrarySelection,
 }) => {
-    const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
+    console.log('SidebarFilters TOP filteredFacilityTypeList', filteredFacilityTypeList);
+    const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness2] = React.useState([]);
+    const setFacilityTypeFilterGroupExpandedness = x => {
+        console.log('SidebarFilters setFacilityTypeFilterGroupExpandedness', x);
+        setFacilityTypeFilterGroupExpandedness2(x);
+    };
     const [defaultCampus, setDefaultCampus] = React.useState(1);
 
     function sortedUsedGroups() {
@@ -284,6 +289,7 @@ export const SidebarFilters = ({
                     isGroupExpanded: g?.facility_type_group_loads_open,
                 });
             });
+            console.log('SidebarFilters useEffect root expandednessList=', expandednessList);
             setFacilityTypeFilterGroupExpandedness(expandednessList);
 
             const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
@@ -316,6 +322,7 @@ export const SidebarFilters = ({
             groupId: filterGroupId,
             isGroupExpanded: isGroupExpandedInput,
         });
+        console.log('SidebarFilters resetFacilityTypeFilterGroupExpandedness newExpandedness=', newExpandedness);
         setFacilityTypeFilterGroupExpandedness(newExpandedness);
     };
 
@@ -821,6 +828,7 @@ export const SidebarFilters = ({
                     const isGroupExpanded = !!facilityTypeFilterGroupExpandedness?.find(
                         o => o?.groupId === filterGroupId,
                     )?.isGroupExpanded;
+                    console.log('SidebarFilters isGroupExpanded', filterGroupId, isGroupExpanded);
                     const groupLength = selectedFacilityTypes?.filter(
                         ftf => ftf?.facility_type_group_id === filterGroupId,
                     )?.length;
