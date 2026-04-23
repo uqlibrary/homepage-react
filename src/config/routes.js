@@ -33,6 +33,8 @@ export const flattedPathConfigExact = [
     '/admin/testntag/manage/inspectiondevices',
     '/admin/testntag/manage/bulkassetupdate',
     '/admin/testntag/manage/inspectiondetails',
+    '/admin/testntag/manage/teams',
+    '/admin/testntag/manage/printertemplates',
     '/admin/testntag/report/recalibrationsdue',
     '/admin/testntag/report/inspectionsdue',
     '/admin/testntag/report/assetsbyfilter',
@@ -377,6 +379,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.testntagmanageteams,
             element: <components.TestTagManageTeams />,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagmanageprintertemplates,
+            element: <components.TestTagManagePrinterTemplates />,
             exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },

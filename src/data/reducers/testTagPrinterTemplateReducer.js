@@ -8,14 +8,14 @@ export const initialState = {
 };
 
 const handlers = {
-    [actions.TESTTAG_PRINTER_TEMPLATE_LOADING]: state => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_LOADING]: state => ({
         ...initialState,
         ...state,
         printerTemplateListLoading: true,
         printerTemplateListLoaded: false,
         printerTemplateListError: null,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_LOADED]: (state, action) => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         printerTemplateList: action?.payload ?? [],
@@ -23,77 +23,77 @@ const handlers = {
         printerTemplateListLoaded: true,
         printerTemplateListError: null,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_FAILED]: (state, action) => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         printerTemplateListLoading: false,
         printerTemplateListLoaded: false,
         printerTemplateListError: action?.payload ?? null,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_UPDATING]: state => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_UPDATING]: state => ({
         ...initialState,
         ...state,
         printerTemplateListLoading: true,
         printerTemplateListLoaded: false,
         printerTemplateListError: null,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_UPDATED]: state => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_UPDATED]: state => ({
         ...initialState,
         ...state,
         printerTemplateListLoading: false,
         printerTemplateListLoaded: false,
         printerTemplateListError: null,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_UPDATE_FAILED]: (state, action) => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_UPDATE_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         printerTemplateListLoading: false,
         printerTemplateListLoaded: false,
         printerTemplateListError: action.payload,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_ADDING]: state => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_ADDING]: state => ({
         ...initialState,
         ...state,
         printerTemplateListLoading: true,
         printerTemplateListLoaded: false,
         printerTemplateListError: null,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_ADDED]: state => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_ADDED]: state => ({
         ...initialState,
         ...state,
         printerTemplateListLoading: false,
         printerTemplateListLoaded: false,
         printerTemplateListError: null,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_ADD_FAILED]: (state, action) => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_ADD_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         printerTemplateListLoading: false,
         printerTemplateListLoaded: false,
         printerTemplateListError: action.payload,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_DELETING]: state => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_DELETING]: state => ({
         ...initialState,
         ...state,
         printerTemplateListLoading: true,
         printerTemplateListLoaded: false,
         printerTemplateListError: null,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_DELETED]: state => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_DELETED]: state => ({
         ...initialState,
         ...state,
         printerTemplateListLoading: false,
         printerTemplateListLoaded: false,
         printerTemplateListError: null,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_DELETE_FAILED]: (state, action) => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_DELETE_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         printerTemplateListLoading: false,
         printerTemplateListLoaded: false,
         printerTemplateListError: action.payload,
     }),
-    [actions.TESTTAG_PRINTER_TEMPLATE_CLEAR_ERROR]: state => ({
+    [actions.TESTTAG_PRINTER_TEMPLATE_LIST_CLEAR_ERROR]: state => ({
         ...initialState,
         ...state,
         printerTemplateListError: null,

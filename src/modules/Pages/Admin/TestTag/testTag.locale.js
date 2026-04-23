@@ -15,6 +15,7 @@ import BulkUpdateIcon from '@mui/icons-material/DynamicFeed';
 import AssetsInspectedByDateIcon from '@mui/icons-material/EventNote';
 import InspectionByUserIcon from '@mui/icons-material/VerifiedUser';
 import AssetIcon from '@mui/icons-material/Power';
+import PrinterTemplateIcon from '@mui/icons-material/ReceiptLongOutlined';
 // import Box from '@material-ui/core/Box';
 import Box from '@mui/material/Box';
 
@@ -214,6 +215,13 @@ export default {
                             icon: <TeamsIcon />,
                             permissions: [PERMISSIONS.can_admin],
                             path: pathConfig.admin.testntagmanageteams,
+                        },
+                        {
+                            id: 'printertemplates',
+                            title: 'Printer Templates',
+                            icon: <PrinterTemplateIcon />,
+                            permissions: [PERMISSIONS.can_admin],
+                            path: pathConfig.admin.testntagmanageprintertemplates,
                         },
                     ],
                 },
@@ -1182,6 +1190,74 @@ export default {
                 helperText: {
                     team_slug: 'A team ID must contain only lower case letters and numbers',
                     team_display_name: 'A team display name is required',
+                },
+            },
+            printertemplates: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage - Printer Templates',
+                        icon: <PrinterTemplateIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: (_, dept) => `Printer template management for ${dept}`,
+                },
+                form: {
+                    actions: 'Actions',
+                    addButtonLabel: 'Add Printer Template',
+                    columns: {
+                        printer_template_id: {
+                            label: 'ID',
+                        },
+                        printer_template_name: {
+                            label: 'Printer template name',
+                        },
+                        identifiers_arr: {
+                            label: 'Printer identifiers',
+                        },
+                        identifiers: {
+                            label: 'Printer identifiers',
+                        },
+                        printer_template_current_flag: {
+                            label: 'Active',
+                        },
+                        printer_template_current_flag_cb: {
+                            label: 'Active',
+                        },
+                    },
+                    actionTooltips: {
+                        edit: 'Edit printer template',
+                        delete: 'Disable printer template',
+                    },
+                },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Add new printer template',
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Edit printer template',
+                },
+                snackbar: {
+                    loadFail: 'unable to load printer template list',
+                    addSuccess: 'Printer template added successfully',
+                    addFail: 'Unable to add the printer template',
+                    updateSuccess: 'Printer template updated successfully',
+                    updateFail: 'Unable to update the printer template',
+                    deleteSuccess: 'Printer template deleted successfully',
+                    deleteFail: 'Unable to delete the printer template',
+                },
+                dialogDeleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to disable this printer template?',
+                    confirmationTitle: 'Disable printer template',
+                },
+                helperText: {
+                    printer_template_name: 'A printer template name is required',
+                    printer_template_identifier: 'A printer template identifier is required',
                 },
             },
         },
