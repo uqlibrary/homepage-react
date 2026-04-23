@@ -14,11 +14,6 @@ const CampusLocationMap = (campusCentre = null) => {
     const markerRef = React.useRef(null);
 
     React.useEffect(() => {
-        if (window.Mazemap) {
-            setIsMazeMapScriptReady(true);
-            return;
-        }
-
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.css`;
@@ -34,14 +29,17 @@ const CampusLocationMap = (campusCentre = null) => {
         return () => {
             document.head.removeChild(link);
             document.body.removeChild(script);
+            delete window.Mazemap;
         };
     }, []);
 
     React.useEffect(() => {
-        if (!isMazeMapScriptReady || !mapContainer) return;
+        if (!isMazeMapScriptReady || !mapContainer) {
+            return () => {};
+        }
 
         mazeMapInstanceRef.current = new window.Mazemap.Map({
-            container: 'campus-location-mazemap',
+            container: mapContainer,
             campuses: 'all',
             center: { lng: initialLng, lat: initialLat },
             zoom: 15,
@@ -82,7 +80,6 @@ const CampusLocationMap = (campusCentre = null) => {
             mazeMapInstanceRef.current?.remove();
             mazeMapInstanceRef.current = null;
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isMazeMapScriptReady, mapContainer]);
 
     return (
