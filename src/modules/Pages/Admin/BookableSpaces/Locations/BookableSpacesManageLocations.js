@@ -240,6 +240,7 @@ export const BookableSpacesManageLocations = ({
     };
 
     const [savingProgressShown, showSavingProgress] = React.useState(false);
+    const [selectedCampusCentre, setSelectedCampusCentre] = React.useState(null);
 
     React.useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -944,6 +945,7 @@ export const BookableSpacesManageLocations = ({
             campus_latitude: campusList?.at(0)?.campus_latitude,
             campus_longitude: campusList?.at(0)?.campus_longitude,
         };
+        setSelectedCampusCentre(campusValues);
         const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${campusCoreForm(campusValues)}`;
 
         if (!!formBody) {
@@ -1013,6 +1015,7 @@ export const BookableSpacesManageLocations = ({
                 }
                 ${campusDetails?.libraries?.length === 0 ? '<p>No libraries</p>' : ''}
             </div>`;
+            setSelectedCampusCentre(campusDetails);
 
         if (!!formBody) {
             const dialogBodyElement = document.getElementById('dialogBody');
@@ -1167,7 +1170,7 @@ export const BookableSpacesManageLocations = ({
                     <div id="dialogMessage" />
                     <div id="dialogBody" />
                     <div id="mapWrapper" style={{ display: 'none' }}>
-                        <CampusLocationMap />
+                        <CampusLocationMap campusCentre={selectedCampusCentre} />
                     </div>
                     <div id="dialogFooter" className={'dialogFooter'}>
                         <p id="dialogMessage" data-testid="dialogMessage">
