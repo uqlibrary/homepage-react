@@ -114,7 +114,7 @@ const StyledLayoutWrapper = styled('div')(() => ({
         maxWidth: '50%',
         zIndex: 997,
         paddingLeft: '0.5rem',
-        height: 'fit-content',
+        height: '100%',
     },
     '& .hide': {
         display: 'none',
@@ -936,7 +936,7 @@ export const BookableSpacesList = ({
                                         aria-expanded={showSpacesSelectorPopup}
                                         aria-label={showSpacesSelectorPopup ? 'Hide spaces list' : 'Show spaces list'}
                                         className="spacesTab"
-                                        style={{ right: showSpacesSelectorPopup ? '20rem' : '0' }}
+                                        style={{ right: showSpacesSelectorPopup ? '20.5rem' : '0' }}
                                     >
                                         {showSpacesSelectorPopup ? (
                                             <ChevronRightIcon fontSize="small" />
