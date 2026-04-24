@@ -28,7 +28,8 @@ import {
     FILTER_CAPACITY_TYPE_ID,
     FILTER_CURRENTLY_OPEN_ACTION_NAME,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
-} from './spacesHelpers';
+    isBookable,
+} from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { CAMPUS_DUTTON_PARK } from 'config/locale';
 
@@ -563,10 +564,6 @@ export const BookableSpacesList = ({
         }
         return null; // Date not found in data
     }
-
-    const isBookable = space => {
-        return space?.space_external_book_url?.startsWith('http');
-    };
 
     function showSpace(space, facilityTypeToGroup, selectedFacilityTypes, selectedCurrentCampus, selectedLibrary) {
         if (space?.space_draftmode) {
