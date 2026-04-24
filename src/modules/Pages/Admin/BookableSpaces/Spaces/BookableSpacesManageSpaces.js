@@ -192,6 +192,14 @@ const StyledExpandCollapseTableIconButton = styled(IconButton)(({ theme }) => ({
     marginRight: '1rem',
 }));
 
+const GreenTick = ({ title, dataTestId }) => {
+    return <DoneIcon titleAccess={title} style={{ stroke: 'green' }} data-testid={dataTestId} />;
+};
+GreenTick.propTypes = {
+    title: PropTypes.string,
+    dataTestId: PropTypes.string,
+};
+
 const CAMPUS_ID_UNSELECTED = '';
 const LIBRARY_ID_UNSELECTED = '';
 const FLOOR_ID_UNSELECTED = '';
@@ -520,21 +528,21 @@ export const BookableSpacesManageSpaces = ({
         });
     }
 
-    function getSpaceUnavailabilityStatus(bookableSpace) {
-        const outageStatuses = (bookableSpace?.space_outages || []).map(spaceOutage => {
-            const outageStatus = getSpaceOutageStatus(spaceOutage);
-            return outageStatus;
-        });
-
-        if (outageStatuses.includes('Current')) {
-            return 'Current';
-        }
-        if (outageStatuses.includes('Upcoming')) {
-            return 'Upcoming';
-        }
-
-        return null;
-    }
+    // function getSpaceUnavailabilityStatus(bookableSpace) {
+    //     const outageStatuses = (bookableSpace?.space_outages || []).map(spaceOutage => {
+    //         const outageStatus = getSpaceOutageStatus(spaceOutage);
+    //         return outageStatus;
+    //     });
+    //
+    //     if (outageStatuses.includes('Current')) {
+    //         return 'Current';
+    //     }
+    //     if (outageStatuses.includes('Upcoming')) {
+    //         return 'Upcoming';
+    //     }
+    //
+    //     return null;
+    // }
 
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : '#fff');
 
@@ -1221,10 +1229,9 @@ export const BookableSpacesManageSpaces = ({
                                                         }
                                                     >
                                                         {isBookable(bookableSpace) && (
-                                                            <DoneIcon
-                                                                titleAccess={'Space is bookable'}
-                                                                style={{ stroke: 'green' }}
-                                                                data-testid={`tick-${bookableSpace?.space_id}-facilitytype-bookable`}
+                                                            <GreenTick
+                                                                title="Space is bookable"
+                                                                dataTestId={`tick-${bookableSpace?.space_id}-facilitytype-bookable`}
                                                             />
                                                         )}
                                                     </TableCell>
@@ -1252,10 +1259,9 @@ export const BookableSpacesManageSpaces = ({
                                                                         }
                                                                     >
                                                                         {hasFacility(facilityType, bookableSpace) && (
-                                                                            <DoneIcon
-                                                                                titleAccess={`Space has ${facilityType?.facility_type_name}`}
-                                                                                style={{ stroke: 'green' }}
-                                                                                data-testid={`tick-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
+                                                                            <GreenTick
+                                                                                title={`Space has ${facilityType?.facility_type_name}`}
+                                                                                dataTestId={`tick-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
                                                                             />
                                                                         )}
                                                                     </TableCell>
