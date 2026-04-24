@@ -21,11 +21,17 @@ const ARMUS7 = '7';
 
 test.describe('Spaces Admin - manage locations', () => {
     test('page has correct data', async ({ page }) => {
+        const visibleSpaces = page
+            .getByTestId('space-table')
+            .locator('tbody')
+            .locator(':scope > tr:not(.hidden)');
+
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
         await expect(page.getByTestId('spaces-sort-button')).toContainText('Sort by name');
         await page.getByTestId('admin-spaces-list-paginator-select').selectOption('10');
+        await expect(visibleSpaces).toHaveCount(10);
 
         await expect(page.getByTestId(`space-${FORGEN}-outage-upcoming-icon`)).toBeVisible();
         await expect(page.getByTestId(`space-${PACE}-outage-upcoming-icon`)).toBeVisible();
