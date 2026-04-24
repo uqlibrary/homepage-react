@@ -46,7 +46,7 @@ import NorthIcon from '@mui/icons-material/North';
 
 import { addClass, removeClass, slugifyName, standardText } from 'helpers/general';
 
-import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { getFriendlyLocationDescription, isBookable } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { getSpaceOutageStatus } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import {
     addBreadcrumbsToSiteHeader,
@@ -730,6 +730,7 @@ export const BookableSpacesManageSpaces = ({
                     ...spaceType,
                     id: String(spaceType?.id),
                 })) || [];
+        const bookableColumnId = 0;
         return (
             <>
                 <StyledTableWrapperDiv
@@ -929,6 +930,21 @@ export const BookableSpacesManageSpaces = ({
                                         >
                                             Filters:
                                         </TableCell>
+                                        <TableCell
+                                            component="th"
+                                            sx={{
+                                                borderBottomWidth: 0,
+                                                borderTop: borderColour,
+                                                textAlign: 'center',
+                                                borderLeft: borderColour,
+                                                backgroundColor: backgroundColorColumn,
+                                                verticalAlign: 'bottom',
+                                                paddingBottom: '4rem',
+                                            }}
+                                            rowSpan={2}
+                                        >
+                                            Bookable
+                                        </TableCell>
                                         {sortedFacilityTypeGroups?.map((group, index) => {
                                             return (
                                                 <TableCell
@@ -1075,11 +1091,14 @@ export const BookableSpacesManageSpaces = ({
                                             displayedRows?.find(u => u?.spaceId === space?.space_id && !!u?.showSpace),
                                         )
                                         ?.map(bookableSpace => {
-
                                             // Determine if there are current and/or upcoming outages
                                             const outages = bookableSpace?.space_outages || [];
-                                            const hasCurrentOutage = outages.some(o => getSpaceOutageStatus(o) === 'Current');
-                                            const hasUpcomingOutage = outages.some(o => getSpaceOutageStatus(o) === 'Upcoming');
+                                            const hasCurrentOutage = outages.some(
+                                                o => getSpaceOutageStatus(o) === 'Current',
+                                            );
+                                            const hasUpcomingOutage = outages.some(
+                                                o => getSpaceOutageStatus(o) === 'Upcoming',
+                                            );
 
                                             return (
                                                 <StyledTableRow
@@ -1188,7 +1207,27 @@ export const BookableSpacesManageSpaces = ({
                                                             {getFriendlyLocationDescription(bookableSpace)}
                                                         </div>
                                                     </StyledStickyTableCell>
-
+                                                    <TableCell
+                                                        data-testid={`space-${bookableSpace?.space_id}-facilitytype-bookable`}
+                                                        sx={{
+                                                            backgroundColor: getColumnBackgroundColor(bookableColumnId),
+                                                            textAlign: 'center',
+                                                            borderInline: borderColour,
+                                                        }}
+                                                        title={
+                                                            isBookable(bookableSpace)
+                                                                ? 'Space is bookable'
+                                                                : 'Space IS NOT bookable'
+                                                        }
+                                                    >
+                                                        {isBookable(bookableSpace) && (
+                                                            <DoneIcon
+                                                                titleAccess={'Space is bookable'}
+                                                                style={{ stroke: 'green' }}
+                                                                data-testid={`tick-${bookableSpace?.space_id}-facilitytype-bookable`}
+                                                            />
+                                                        )}
+                                                    </TableCell>
                                                     {sortedFacilityTypeGroups?.length > 0 &&
                                                         sortedFacilityTypeGroups?.map(group => {
                                                             return group?.facility_type_children?.map(facilityType => {

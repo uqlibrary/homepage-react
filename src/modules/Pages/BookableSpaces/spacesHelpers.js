@@ -170,3 +170,7 @@ export const spaceOpeningHours = (bookableSpace, weeklyHours) => {
     }
     return [];
 };
+
+export const isBookable = space => {
+    return space?.space_external_book_url?.startsWith('http');
+};

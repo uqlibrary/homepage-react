@@ -46,6 +46,9 @@ test.describe('Spaces Admin - manage locations', () => {
         const FORGAN_SMITH_FACILITY_TYPE = 'space-123456-facilitytype';
         const DUTTON_PARK_FACILITY_TYPE = 'space-1234544-facilitytype';
         const LIVERIS_FACILITY_TYPE = 'space-43534-facilitytype';
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-bookable`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-bookable`)).toBeVisible();
+
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-askus-service`)).toBeVisible();
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-askus-service`)).not.toBeVisible();
 
@@ -197,6 +200,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-undergrad-spaces`)).toBeVisible();
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-undergrad-spaces`)).toBeVisible();
 
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-bookable`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-bookable`)).toBeVisible();
+
         await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-askus-service`)).toBeVisible();
         await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-askus-service`)).not.toBeVisible();
 
@@ -347,6 +353,9 @@ test.describe('Spaces Admin - manage locations', () => {
 
         await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-whiteboard`)).toBeVisible();
         await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-whiteboard`)).not.toBeVisible();
+
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-bookable`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-bookable`)).not.toBeVisible();
 
         await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-askus-service`)).toBeVisible();
         await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-askus-service`)).not.toBeVisible();
@@ -500,7 +509,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
 
-        await expect(page.getByTestId('spaces-dashboard-header-row').locator('> th')).toHaveCount(2);
+        await expect(page.getByTestId('spaces-dashboard-header-row').locator('> th')).toHaveCount(3);
     });
     test.describe('is accessible', () => {
         test('spaces dashboard page is accessible', async ({ page }) => {
