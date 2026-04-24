@@ -172,15 +172,22 @@ export default {
             space_longitude: "153.03024",
             space_zlevel: 1,
             "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/222',
-            space_outages: [
-                {
-                    space_outage_id: 9003,
-                    space_id: 1234544,
-                    space_outage_start: '2026-04-24 09:00:00',
-                    space_outage_end: '2026-04-24 11:30:00',
-                    space_outage_reason: 'Furniture replacement',
-                },
-            ],
+            space_outages: (() => {
+                const now = new Date();
+                const pad = v => String(v).padStart(2, '0');
+                const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
+                const upcomingStart = new Date(now.getTime() + 24*60*60*1000);
+                const upcomingEnd = new Date(now.getTime() + 24*60*60*1000 + 150*60*1000);
+                return [
+                    {
+                        space_outage_id: 9003,
+                        space_id: 1234544,
+                        space_outage_start: fmt(upcomingStart),
+                        space_outage_end: fmt(upcomingEnd),
+                        space_outage_reason: 'Furniture replacement',
+                    },
+                ];
+            })(),
             facility_types: [
                 {
                     "facility_type_id": 23,
