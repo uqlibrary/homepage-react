@@ -41,7 +41,7 @@ describe('SpaceDetails outage notices', () => {
         );
 
         expect(screen.getByTestId('space-123-outage-notice')).toBeInTheDocument();
-        expect(screen.getByText('Current outage')).toBeInTheDocument();
+        expect(screen.getByText('Current closure')).toBeInTheDocument();
         expect(screen.getByTestId('space-123-outage-message')).toHaveTextContent(
             'Currently unavailable until 10:00am 1 January 2999.',
         );
@@ -101,7 +101,7 @@ describe('SpaceDetails outage notices', () => {
         );
 
         expect(screen.getByTestId('space-456-outage-notice')).toBeInTheDocument();
-        expect(screen.getByText('Upcoming outage')).toBeInTheDocument();
+        expect(screen.getByText('Upcoming closure')).toBeInTheDocument();
         expect(screen.getByTestId('space-456-outage-message')).toHaveTextContent(
             'Closed 9:00am to 5:00pm on 30 April 2026.',
         );

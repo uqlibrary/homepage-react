@@ -225,7 +225,7 @@ const SpaceDetails = ({
                 {!!visibleOutage && (
                     <StyledOutageNotice data-testid={`space-${bookableSpace?.space_id}-outage-notice`}>
                         <UserAttention
-                            titleText={visibleOutage.status === 'Current' ? 'Current outage' : 'Upcoming outage'}
+                            titleText={visibleOutage.status === 'Current' ? 'Current closure' : 'Upcoming closure'}
                             tone={visibleOutage.tone}
                             variant="aligned"
                         >

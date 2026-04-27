@@ -103,7 +103,7 @@ export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) =>
             {!!visibleOutage && (
                 <StyledPopupOutageNotice data-testid={`space-${space?.space_id}-map-popup-outage-notice`}>
                     <UserAttention
-                        titleText={visibleOutage.status === 'Current' ? 'Current outage' : 'Upcoming outage'}
+                        titleText={visibleOutage.status === 'Current' ? 'Current closure' : 'Upcoming closure'}
                         tone={visibleOutage.tone}
                         variant="aligned"
                     >

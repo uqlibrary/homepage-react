@@ -32,7 +32,7 @@ describe('BookableSpacesMapPopupContent', () => {
         );
 
         expect(screen.getByTestId('space-100-map-popup')).toBeInTheDocument();
-        expect(screen.getByText('Current outage')).toBeInTheDocument();
+        expect(screen.getByText('Current closure')).toBeInTheDocument();
         expect(screen.getByTestId('space-100-map-popup-outage-message')).toHaveTextContent(
             'Currently unavailable until 12:00pm 1 January 2999.',
         );
@@ -91,7 +91,7 @@ describe('BookableSpacesMapPopupContent', () => {
             />,
         );
 
-        expect(screen.getByText('Upcoming outage')).toBeInTheDocument();
+        expect(screen.getByText('Upcoming closure')).toBeInTheDocument();
         expect(screen.getByTestId('space-101-map-popup-outage-message')).toHaveTextContent(
             'Closed 9:00am to 12:00pm on 30 April 2026.',
         );

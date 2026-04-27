@@ -335,7 +335,7 @@ export const EditSpaceForm = ({
     const [activeStep, setActiveStep] = useState(0);
 
     const addModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Imagery'];
-    const editModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Outages', 'Imagery'];
+    const editModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Closures', 'Imagery'];
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
@@ -1671,7 +1671,7 @@ export const EditSpaceForm = ({
                                     <StyledTabs value={panelId} onChange={handleTabChange} aria-label="Space fields">
                                         {editModeTabLabels?.map((tabName, index) => {
                                             // Keep the legacy outages test id for existing tests.
-                                            const isOutagesTab = slugifyName(tabName) === 'outages';
+                                            const isOutagesTab = ['outages', 'closures'].includes(slugifyName(tabName));
                                             return (
                                                 <Tab
                                                     key={`${tabName}-edit`}
@@ -1717,7 +1717,7 @@ export const EditSpaceForm = ({
                                                 variant={'body2'}
                                                 data-testid="space-outage-upcoming-notice-text"
                                             >
-                                                This Space has scheduled outage(s). It will be shown as unavailable
+                                                This Space has scheduled closure(s). It will be shown as unavailable
                                                 during that time.
                                             </Typography>
                                         </StyledDraftModeNotice>
@@ -1736,7 +1736,7 @@ export const EditSpaceForm = ({
                                                 data-testid="space-outage-current-notice-text"
                                             >
                                                 This Space is presently unavailable and will display as unavailable in
-                                                the spaces list until the current outage ends.
+                                                the spaces list until the current closure ends.
                                             </Typography>
                                         </StyledErrorAttentionMessageDiv>
                                     </Box>

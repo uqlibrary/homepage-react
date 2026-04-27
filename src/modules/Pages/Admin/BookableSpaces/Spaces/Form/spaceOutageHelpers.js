@@ -271,7 +271,7 @@ export const validateSpaceOutageDraft = (draft, existingOutages = [], editingOut
     if (overlappingOutages.length > 0) {
         warnings.push({
             field: 'space_outage_range',
-            message: 'This outage overlaps another outage window already recorded for this space.',
+            message: 'This closure overlaps another closure window already recorded for this space.',
         });
     }
 

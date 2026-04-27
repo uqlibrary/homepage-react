@@ -257,7 +257,7 @@ export const SpaceOutagePanel = ({
 
     const renderOutageTable = (tableOutages, testIdPrefix) => (
         <TableContainer data-testid={`${testIdPrefix}-table`}>
-            <Table aria-label="Space outage list">
+            <Table aria-label="Space closure list">
                 <TableHead>
                     <TableRow>
                         <TableCell>From</TableCell>
@@ -309,7 +309,7 @@ export const SpaceOutagePanel = ({
         <Grid container spacing={3}>
             <Grid item xs={12}>
                 <Typography component={'h3'} variant={'h6'}>
-                    Outages
+                    Closures
                 </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -324,12 +324,12 @@ export const SpaceOutagePanel = ({
                         </StyledStatusPill>
                     </Typography>
                     <Typography component={'p'}>
-                        <strong>Next outage:</strong>{' '}
+                        <strong>Next closure:</strong>{' '}
                         {upcomingOutages.length > 0
                             ? `${formatSpaceOutageDateTimeForDisplay(
                                   upcomingOutages[0]?.space_outage_start,
                               )} to ${formatSpaceOutageDateTimeForDisplay(upcomingOutages[0]?.space_outage_end)}`
-                            : 'No upcoming outages recorded'}
+                            : 'No upcoming closures recorded'}
                     </Typography>
                 </StyledSummaryBox>
             </Grid>
@@ -394,7 +394,7 @@ export const SpaceOutagePanel = ({
                             inputProps={{ 'data-testid': 'space-outage-show-time-public' }}
                         />
                     }
-                    label="Show outage times on the public page"
+                    label="Show closure times on the public page"
                 />
             </Grid>
             <Grid item xs={12}>
@@ -404,7 +404,7 @@ export const SpaceOutagePanel = ({
                     disabled={isSaving}
                     data-testid="space-outage-save-button"
                 >
-                    {editingOutageId ? 'Update outage' : 'Save outage'}
+                    {editingOutageId ? 'Update closure' : 'Save closure'}
                 </Button>{' '}
                 <Button
                     variant="text"
@@ -419,13 +419,13 @@ export const SpaceOutagePanel = ({
                 {/* Refactored to avoid nested ternaries for clarity */}
                 {(() => {
                     if (spaceOutageListLoading && !outages?.length) {
-                        return <InlineLoader message="Loading outages" />;
+                        return <InlineLoader message="Loading closures" />;
                     }
                     if (spaceOutageListError) {
                         return (
                             <StyledInfoBox data-testid="space-outage-load-error">
                                 <Typography component={'p'}>
-                                    Unable to load space outages right now. Please try again later.
+                                    Unable to load space closures right now. Please try again later.
                                 </Typography>
                             </StyledInfoBox>
                         );
@@ -433,7 +433,7 @@ export const SpaceOutagePanel = ({
                     if (outages.length === 0) {
                         return (
                             <StyledInfoBox data-testid="space-outage-empty-state">
-                                <Typography component={'p'}>No outages have been recorded for this space.</Typography>
+                                <Typography component={'p'}>No closures have been recorded for this space.</Typography>
                             </StyledInfoBox>
                         );
                     }
@@ -445,14 +445,14 @@ export const SpaceOutagePanel = ({
                                 variant={'subtitle1'}
                                 data-testid="space-outage-scheduled-heading"
                             >
-                                Current and upcoming outages
+                                Current and upcoming closures
                             </Typography>
                             {activeAndUpcomingOutages.length > 0 ? (
                                 renderOutageTable(activeAndUpcomingOutages, 'space-outage-scheduled')
                             ) : (
                                 <StyledInfoBox data-testid="space-outage-scheduled-empty-state">
                                     <Typography component={'p'}>
-                                        No current or upcoming outages are recorded for this space.
+                                        No current or upcoming closures are recorded for this space.
                                     </Typography>
                                 </StyledInfoBox>
                             )}
@@ -463,14 +463,14 @@ export const SpaceOutagePanel = ({
                                 sx={{ mt: 3 }}
                                 data-testid="space-outage-past-heading"
                             >
-                                Past outages
+                                Past closures
                             </Typography>
                             {pastOutages.length > 0 ? (
                                 renderOutageTable(pastOutages, 'space-outage-past')
                             ) : (
                                 <StyledInfoBox data-testid="space-outage-past-empty-state">
                                     <Typography component={'p'}>
-                                        No past outages are recorded for this space.
+                                        No past closures are recorded for this space.
                                     </Typography>
                                 </StyledInfoBox>
                             )}
