@@ -690,6 +690,30 @@ export default {
                 "space_campus_number": "01",
                 "space_draftmode": false,
                 "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/555',
+                space_outages: (() => {
+                    const now = new Date();
+                    const pad = v => String(v).padStart(2, '0');
+                    const fmt = d =>
+                        `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(
+                            d.getMinutes(),
+                        )}:00`;
+                    // Same-day partial outage example: tomorrow from 8:00am to 1:00pm.
+                    const upcomingStart = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+                    upcomingStart.setHours(8, 0, 0, 0);
+                    const upcomingEnd = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+                    upcomingEnd.setHours(13, 0, 0, 0);
+
+                    return [
+                        {
+                            space_outage_id: 9005,
+                            space_id: 5,
+                            space_outage_start: fmt(upcomingStart),
+                            space_outage_end: fmt(upcomingEnd),
+                            space_outage_reason: 'Air conditioning maintenance',
+                            space_outage_show_time_public: false,
+                        },
+                    ];
+                })(),
                 "space_type_id": 4,
                 "space_type_details": {
                     "space_type_id": 4,
@@ -762,6 +786,30 @@ export default {
                 "space_campus_number": "01",
                 "space_draftmode": false,
                 "space_external_book_url": null,
+                space_outages: (() => {
+                    const now = new Date();
+                    const pad = v => String(v).padStart(2, '0');
+                    const fmt = d =>
+                        `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(
+                            d.getMinutes(),
+                        )}:00`;
+                    // Multi-day outage example: starts in 2 days, ends in 4 days.
+                    const multiDayStart = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
+                    multiDayStart.setHours(10, 0, 0, 0);
+                    const multiDayEnd = new Date(now.getTime() + 4 * 24 * 60 * 60 * 1000);
+                    multiDayEnd.setHours(16, 0, 0, 0);
+
+                    return [
+                        {
+                            space_outage_id: 9007,
+                            space_id: 6,
+                            space_outage_start: fmt(multiDayStart),
+                            space_outage_end: fmt(multiDayEnd),
+                            space_outage_reason: 'Floor resurfacing works',
+                            space_outage_show_time_public: true,
+                        },
+                    ];
+                })(),
                 "space_type_id": 4,
                 "space_type_details": {
                     "space_type_id": 4,

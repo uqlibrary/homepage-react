@@ -4,7 +4,10 @@ export const emptySpaceOutageDraft = {
     space_outage_start: '',
     space_outage_end: '',
     space_outage_reason: '',
+    space_outage_show_time_public: true,
 };
+
+export const SPACE_OUTAGE_NOTICE_WINDOW_DAYS = 7;
 
 export const normalizeSpaceOutageList = value => {
     if (Array.isArray(value)) {
@@ -75,20 +78,87 @@ export const formatSpaceOutageDateTimeForDisplay = value => {
     }).format(parsedDate);
 };
 
+export const formatSpaceOutageDateTimeForPublicNotice = value => {
+    const parsedDate = parseSpaceOutageDate(value);
+    if (!parsedDate) {
+        return 'Not set';
+    }
+
+    return parsedDate.format('DD/MM/YYYY h:mma');
+};
+
+export const getSpaceOutageShowTimePublic = outage => {
+    const rawValue = outage?.space_outage_show_time_public;
+
+    if (rawValue === false || rawValue === 0) {
+        return false;
+    }
+    if (typeof rawValue === 'string') {
+        return !['0', 'false', 'n', 'no'].includes(rawValue.trim().toLowerCase());
+    }
+
+    // Default to true for backward compatibility with existing records.
+    return true;
+};
+
+export const formatSpaceOutageRangeForPublicNotice = (startValue, endValue, showTimePublic = true) => {
+    const startDate = parseSpaceOutageDate(startValue);
+    const endDate = parseSpaceOutageDate(endValue);
+
+    if (!startDate || !endDate) {
+        return `${formatSpaceOutageDateTimeForPublicNotice(startValue)} to ${formatSpaceOutageDateTimeForPublicNotice(
+            endValue,
+        )}`;
+    }
+
+    const sameYear = startDate.isSame(endDate, 'year');
+
+    if (!showTimePublic) {
+        if (startDate.isSame(endDate, 'day')) {
+            return startDate.format('D MMMM YYYY');
+        }
+
+        if (sameYear) {
+            return `${startDate.format('D MMMM')} to ${endDate.format('D MMMM YYYY')}`;
+        }
+
+        return `${startDate.format('D MMMM YYYY')} to ${endDate.format('D MMMM YYYY')}`;
+    }
+
+    if (startDate.isSame(endDate, 'day')) {
+        return `${startDate.format('h:mma')} to ${endDate.format('h:mma')} on ${startDate.format('D MMMM YYYY')}`;
+    }
+
+    if (sameYear) {
+        return `${startDate.format('h:mma D MMMM')} to ${endDate.format('h:mma D MMMM YYYY')}`;
+    }
+
+    return `${startDate.format('h:mma D MMMM YYYY')} to ${endDate.format('h:mma D MMMM YYYY')}`;
+};
+
+export const formatSpaceOutageUntilForPublicNotice = (endValue, currentTime, showTimePublic = true) => {
+    const endDate = parseSpaceOutageDate(endValue);
+    if (!endDate) {
+        return formatSpaceOutageDateTimeForPublicNotice(endValue);
+    }
+
+    if (!showTimePublic) {
+        return endDate.format('D MMMM YYYY');
+    }
+
+    const now = currentTime ? moment(currentTime) : moment();
+    if (endDate.isSame(now, 'day')) {
+        return `${endDate.format('h:mma')} on ${endDate.format('D MMMM YYYY')}`;
+    }
+
+    return endDate.format('h:mma D MMMM YYYY');
+};
+
 export const getSpaceOutageStatus = (outage, currentTime) => {
     // Always use moment for all date logic
     const now = currentTime ? moment(currentTime) : moment();
     const startDate = parseSpaceOutageDate(outage?.space_outage_start);
     const endDate = parseSpaceOutageDate(outage?.space_outage_end);
-
-    // DEBUG: Log outage status calculation
-    // eslint-disable-next-line no-console
-    console.log('[getSpaceOutageStatus]', {
-        outage,
-        currentTime: now.format('YYYY-MM-DD HH:mm:ss'),
-        startDate: startDate ? startDate.format('YYYY-MM-DD HH:mm:ss') : null,
-        endDate: endDate ? endDate.format('YYYY-MM-DD HH:mm:ss') : null,
-    });
 
     if (!startDate || !endDate) {
         return 'Invalid';
@@ -108,6 +178,45 @@ export const sortSpaceOutages = outages => {
         const rightDate = parseSpaceOutageDate(rightOutage?.space_outage_start)?.valueOf() || 0;
         return leftDate - rightDate;
     });
+};
+
+export const getVisibleSpaceOutage = (
+    outages,
+    currentTime,
+    noticeWindowDays = SPACE_OUTAGE_NOTICE_WINDOW_DAYS,
+) => {
+    const now = currentTime ? moment(currentTime) : moment();
+    const sortedOutages = sortSpaceOutages(outages);
+    const currentOutage = sortedOutages.find(outage => getSpaceOutageStatus(outage, now) === 'Current');
+
+    if (currentOutage) {
+        return {
+            status: 'Current',
+            tone: 'error',
+            outage: currentOutage,
+            reason: currentOutage?.space_outage_reason?.trim() || '',
+        };
+    }
+
+    const upcomingOutage = sortedOutages.find(outage => {
+        if (getSpaceOutageStatus(outage, now) !== 'Upcoming') {
+            return false;
+        }
+
+        const startDate = parseSpaceOutageDate(outage?.space_outage_start);
+        return !!startDate && startDate.diff(now, 'days', true) <= noticeWindowDays;
+    });
+
+    if (!upcomingOutage) {
+        return null;
+    }
+
+    return {
+        status: 'Upcoming',
+        tone: 'warning',
+        outage: upcomingOutage,
+        reason: upcomingOutage?.space_outage_reason?.trim() || '',
+    };
 };
 
 export const getOverlappingSpaceOutages = (draft, existingOutages = [], editingOutageId = null) => {
@@ -174,4 +283,5 @@ export const buildSpaceOutagePayload = ({ spaceId, draft }) => ({
     space_outage_start: formatSpaceOutageDateTimeForPayload(draft?.space_outage_start),
     space_outage_end: formatSpaceOutageDateTimeForPayload(draft?.space_outage_end),
     space_outage_reason: draft?.space_outage_reason?.trim() || null,
+    space_outage_show_time_public: !!draft?.space_outage_show_time_public,
 });

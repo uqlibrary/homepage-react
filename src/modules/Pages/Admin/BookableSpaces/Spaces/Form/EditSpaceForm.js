@@ -110,12 +110,16 @@ const StyledErrorAttentionMessageDiv = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     columnGap: '0.5rem',
-    backgroundColor: theme.palette.error.light,
+    backgroundColor: '#fbeaea',
     border: `1px solid ${theme.palette.error.main}`,
     borderRadius: '4px',
     padding: '0.6rem 0.8rem',
+    '& svg': {
+        color: '#000',
+    },
     '& p': {
         margin: 0,
+        color: '#000',
     },
 }));
 const StyledUqTightLink = styled('a')(({ theme }) => ({
@@ -1723,7 +1727,7 @@ export const EditSpaceForm = ({
                                     <Box sx={{ mt: 2 }} data-testid="space-outage-current-notice">
                                         <StyledErrorAttentionMessageDiv data-testid="space-outage-current-notice-panel">
                                             <HighlightOffIcon
-                                                style={{ color: theme?.palette.error.main }}
+                                                style={{ color: '#000' }}
                                                 data-testid="space-outage-current-notice-icon"
                                             />
                                             <Typography

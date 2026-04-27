@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { Grid } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -28,6 +30,7 @@ import {
     emptySpaceOutageDraft,
     formatSpaceOutageDateTimeForDisplay,
     formatSpaceOutageDateTimeForInput,
+    getSpaceOutageShowTimePublic,
     getSpaceOutageStatus,
     sortSpaceOutages,
     validateSpaceOutageDraft,
@@ -140,7 +143,7 @@ export const SpaceOutagePanel = ({
     };
 
     const handleDraftChange = fieldName => event => {
-        let value = event?.target?.value || '';
+        let value = event?.target?.type === 'checkbox' ? !!event?.target?.checked : event?.target?.value || '';
         if (value && typeof value === 'string' && value.length >= 16) {
             const momentValue = require('moment')(
                 value,
@@ -238,6 +241,7 @@ export const SpaceOutagePanel = ({
             space_outage_start: formatSpaceOutageDateTimeForInput(outage?.space_outage_start),
             space_outage_end: formatSpaceOutageDateTimeForInput(outage?.space_outage_end),
             space_outage_reason: outage?.space_outage_reason || '',
+            space_outage_show_time_public: getSpaceOutageShowTimePublic(outage),
         });
     };
 
@@ -380,6 +384,18 @@ export const SpaceOutagePanel = ({
                         <Typography component={'p'}>{warning.message}</Typography>
                     </StyledWarningBox>
                 ))}
+            </Grid>
+            <Grid item xs={12}>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={!!draft?.space_outage_show_time_public}
+                            onChange={handleDraftChange('space_outage_show_time_public')}
+                            inputProps={{ 'data-testid': 'space-outage-show-time-public' }}
+                        />
+                    }
+                    label="Show outage times on the public page"
+                />
             </Grid>
             <Grid item xs={12}>
                 <Button
