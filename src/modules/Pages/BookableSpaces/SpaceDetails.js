@@ -135,14 +135,12 @@ const SpaceDetails = ({
     // const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
     // const isTabletView = isMobileView ? false : _isTabletViewJust;
     // const isDesktopView = !isTabletView && !isMobileView;
-    // console.log('BookableSpacesList window width (m, t, d):', isMobileView, isTabletView, isDesktopView);
 
     const isCollapsed = collapsed ? !isExpanded : false;
 
-    const visibleOutage = React.useMemo(
-        () => getVisibleSpaceOutage(bookableSpace?.space_outages),
-        [bookableSpace?.space_outages],
-    );
+    const visibleOutage = React.useMemo(() => getVisibleSpaceOutage(bookableSpace?.space_outages), [
+        bookableSpace?.space_outages,
+    ]);
 
     const summaryPanelElementId = spaceId => `summary-info-${spaceId}`;
 
@@ -233,17 +231,20 @@ const SpaceDetails = ({
                                 {visibleOutage.status === 'Current'
                                     ? `Currently unavailable until ${formatSpaceOutageUntilForPublicNotice(
                                           visibleOutage.outage?.space_outage_end,
-                                        undefined,
-                                        getSpaceOutageShowTimePublic(visibleOutage.outage),
+                                          undefined,
+                                          getSpaceOutageShowTimePublic(visibleOutage.outage),
                                       )}.`
                                     : `Closed ${formatSpaceOutageRangeForPublicNotice(
                                           visibleOutage.outage?.space_outage_start,
                                           visibleOutage.outage?.space_outage_end,
-                                        getSpaceOutageShowTimePublic(visibleOutage.outage),
+                                          getSpaceOutageShowTimePublic(visibleOutage.outage),
                                       )}.`}
                             </Typography>
                             {!isCollapsed && !!visibleOutage.reason && (
-                                <Typography variant="body2" data-testid={`space-${bookableSpace?.space_id}-outage-reason`}>
+                                <Typography
+                                    variant="body2"
+                                    data-testid={`space-${bookableSpace?.space_id}-outage-reason`}
+                                >
                                     Reason: {visibleOutage.reason}
                                 </Typography>
                             )}
