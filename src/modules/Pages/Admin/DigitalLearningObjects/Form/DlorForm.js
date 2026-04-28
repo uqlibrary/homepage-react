@@ -876,23 +876,17 @@ export const DlorForm = ({
     );
 
     useEffect(() => {
-        const publishingUserHasChanged = formDefaults?.object_publishing_user !== formValues?.object_publishing_user;
-        const publishingUserEmailHasChanged =
-            formDefaults?.object_publishing_user_email !== formValues?.object_publishing_user_email;
-
-        if (publishingUserHasChanged || publishingUserEmailHasChanged) {
+        if (
+            formDefaults?.object_publishing_user !== formValues?.object_publishing_user ||
+            formDefaults?.object_publishing_user_email !== formValues?.object_publishing_user_email
+        ) {
             setFormValues(prevValues => ({
                 ...prevValues,
                 object_publishing_user: formDefaults.object_publishing_user,
                 object_publishing_user_email: formDefaults.object_publishing_user_email,
             }));
         }
-    }, [
-        formDefaults.object_publishing_user,
-        formDefaults.object_publishing_user_email,
-        formValues?.object_publishing_user,
-        formValues?.object_publishing_user_email,
-    ]);
+    }, [formDefaults.object_publishing_user, formDefaults.object_publishing_user_email]);
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
         const rawSummary = html2text.fromString(enteredDescription);
