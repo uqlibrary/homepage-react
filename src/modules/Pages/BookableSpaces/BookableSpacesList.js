@@ -215,9 +215,10 @@ export const BookableSpacesList = ({
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [expandedSpaceId, setExpandedSpaceId] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
-    const [useLegacyMapExperience] = useState(() => {
+    const [useJourneyExperience] = useState(() => {
         if (typeof window === 'undefined') return false;
-        return new URLSearchParams(window.location.search).get('legacyMap') === '1';
+        const params = new URLSearchParams(window.location.search);
+        return params.get('journey') === '1' || params.get('newJourney') === '1';
     });
 
     const mapRef = useRef(null);
@@ -904,7 +905,7 @@ export const BookableSpacesList = ({
                             <p data-testid="no-spaces">No locations found yet - please try again soon.</p>
                         </StandardPage>
                     );
-                } else if (!useLegacyMapExperience) {
+                } else if (useJourneyExperience) {
                     return (
                         <BookableSpacesJourney
                             filteredSpaceLocations={sortedSpaceLocations}
