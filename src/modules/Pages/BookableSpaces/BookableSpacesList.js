@@ -20,6 +20,7 @@ import { useAccountContext } from 'context';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
+import BookableSpacesJourney from 'modules/Pages/BookableSpaces/BookableSpacesJourney';
 import {
     FACILITY_TYPE_CHECKBOX,
     FACILITY_TYPE_SLIDER,
@@ -28,6 +29,7 @@ import {
     FILTER_CAPACITY_TYPE_ID,
     FILTER_CURRENTLY_OPEN_ACTION_NAME,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
+    getFlatFacilityTypeList,
     isBookable,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
@@ -213,6 +215,10 @@ export const BookableSpacesList = ({
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [expandedSpaceId, setExpandedSpaceId] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
+    const [useLegacyMapExperience] = useState(() => {
+        if (typeof window === 'undefined') return false;
+        return new URLSearchParams(window.location.search).get('legacyMap') === '1';
+    });
 
     const mapRef = useRef(null);
 
@@ -751,6 +757,26 @@ export const BookableSpacesList = ({
         );
         return filteredFacilityTypeList;
     };
+    const filteredFacilityTypeList = React.useMemo(
+        () => getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList),
+        [bookableSpacesRoomList, facilityTypeList, selectedCampus],
+    );
+
+    React.useEffect(() => {
+        if (!!selectedFacilityTypes?.length || !filteredFacilityTypeList?.data?.facility_type_groups?.length) {
+            return;
+        }
+        const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
+        const newFilters = flatFacilityTypeList?.map(facilityType => ({
+            facility_type_group_id: facilityType?.facility_type_group_id,
+            facility_type_id: facilityType?.facility_type_id,
+            selected: false,
+            unselected: false,
+            facility_special_action: facilityType?.facility_special_action,
+        }));
+        setSelectedFacilityTypes(newFilters);
+    }, [filteredFacilityTypeList, selectedFacilityTypes, setSelectedFacilityTypes]);
+
     const toggleFilterPopupVisibility = e => {
         setShowFilterSelectorPopup(!showFilterSelectorPopup);
     };
@@ -878,6 +904,33 @@ export const BookableSpacesList = ({
                             <p data-testid="no-spaces">No locations found yet - please try again soon.</p>
                         </StandardPage>
                     );
+                } else if (!useLegacyMapExperience) {
+                    return (
+                        <BookableSpacesJourney
+                            filteredSpaceLocations={sortedSpaceLocations}
+                            totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}
+                            selectedFacilityTypes={selectedFacilityTypes}
+                            setSelectedFacilityTypes={setSelectedFacilityTypes}
+                            filteredFacilityTypeList={filteredFacilityTypeList}
+                            facilityTypeList={facilityTypeList}
+                            facilityTypeListLoading={facilityTypeListLoading}
+                            facilityTypeListError={facilityTypeListError}
+                            minimumSpaceCapacity={minimumSpaceCapacity}
+                            maximumSpaceCapacity={maximumSpaceCapacity}
+                            capacityFilterValue={capacityFilterValue}
+                            setCapacityFilterValue={setCapacityFilterValue}
+                            campusList={campusList}
+                            selectedCampus={correctedCampusId(selectedCampus)}
+                            handleCampusSelection={handleCampusSelection}
+                            activeFilterCount={activeFilterCount}
+                            librariesForCampus={librariesForCampus}
+                            selectedLibrary={selectedLibrary}
+                            handleLibrarySelection={handleLibrarySelection}
+                            weeklyHours={weeklyHours}
+                            weeklyHoursLoading={weeklyHoursLoading}
+                            weeklyHoursError={weeklyHoursError}
+                        />
+                    );
                 } else {
                     return (
                         <StyledLayoutWrapper data-testid="library-spaces">
@@ -905,10 +958,7 @@ export const BookableSpacesList = ({
                                     facilityTypeListError={facilityTypeListError}
                                     selectedFacilityTypes={selectedFacilityTypes}
                                     setSelectedFacilityTypes={setSelectedFacilityTypes}
-                                    filteredFacilityTypeList={getFilteredFacilityTypeList(
-                                        bookableSpacesRoomList,
-                                        facilityTypeList,
-                                    )}
+                                    filteredFacilityTypeList={filteredFacilityTypeList}
                                     suppliedClassName={showFilterSelectorPopup ? 'popupFilterList' : 'hide'}
                                     minimumSpaceCapacity={minimumSpaceCapacity}
                                     maximumSpaceCapacity={maximumSpaceCapacity}

@@ -129,6 +129,7 @@ const SpaceDetails = ({
     // collapsed=true: called by sidebar, has open-close icon;
     // collapsed=false: opens from icon in map, no open-close icon
     onToggle = null,
+    showToggle = true,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -210,9 +211,11 @@ const SpaceDetails = ({
     return (
         <div id="SpaceDetailsTemp">
             <StyledSpaceDiv>
-                <div style={{ float: 'right', marginTop: '-40px', marginRight: '-10px' }}>
-                    {showHideSpacePanel(bookableSpace)}
-                </div>
+                {!!showToggle && (
+                    <div style={{ float: 'right', marginTop: '-40px', marginRight: '-10px' }}>
+                        {showHideSpacePanel(bookableSpace)}
+                    </div>
+                )}
                 {isCollapsed && (
                     <StyledFriendlyLocationDiv
                         data-testid={`space-${bookableSpace?.space_id}-friendly-location-collapsed`}
@@ -366,6 +369,7 @@ SpaceDetails.propTypes = {
     collapsed: PropTypes.bool,
     isExpanded: PropTypes.bool,
     onToggle: PropTypes.func,
+    showToggle: PropTypes.bool,
 };
 
 export default React.memo(SpaceDetails);
