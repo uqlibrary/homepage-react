@@ -6,7 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Popper from '@mui/material/Popper';
 
-import { isEmptyStr, isInvalidUUID } from '../../../helpers/helpers';
+import { isEmptyObject, isEmptyStr, isInvalidUUID } from '../../../helpers/helpers';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import Licence from './Licence';
@@ -72,7 +72,10 @@ export default {
                     {...props}
                 />
             ),
-            validate: value => isEmptyStr(value),
+            validate: value => {
+                console.log(value);
+                return typeof value === 'string' ? isEmptyStr(value) : isEmptyObject(value);
+            },
             fieldParams: {
                 canEdit: true,
                 renderInTable: false,

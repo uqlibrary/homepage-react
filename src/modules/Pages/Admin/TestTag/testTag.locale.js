@@ -1212,10 +1212,10 @@ export default {
                         printer_template_name: {
                             label: 'Printer template name',
                         },
-                        identifiers_arr: {
+                        identifiers: {
                             label: 'Printer identifiers',
                         },
-                        identifiers: {
+                        identifiers_str: {
                             label: 'Printer identifiers',
                         },
                         printer_template_current_flag: {
@@ -1224,9 +1224,16 @@ export default {
                         printer_template_current_flag_cb: {
                             label: 'Active',
                         },
+                        printer_template_code: {
+                            label: 'Template code',
+                        },
+                        vars: {
+                            label: 'Template variables',
+                        },
                     },
                     actionTooltips: {
-                        edit: 'Edit printer template',
+                        edit: 'Edit printer template variables',
+                        advedit: 'Edit printer template code',
                         delete: 'Disable printer template',
                     },
                 },
@@ -1258,6 +1265,8 @@ export default {
                 helperText: {
                     printer_template_name: 'A printer template name is required',
                     printer_template_identifier: 'A printer template identifier is required',
+                    printer_template_code:
+                        'Printer template code is required and must include required placeholder variables',
                 },
             },
         },

@@ -26,6 +26,11 @@ import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/T
 
 const componentId = 'printer-template-management';
 
+const dialogStyles = {
+    padding: '6px',
+    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: '75vh', maxWidth: '75%' },
+};
+
 const PrinterTemplates = () => {
     const pageLocale = locale.pages.manage.printertemplates;
 
@@ -43,6 +48,7 @@ const PrinterTemplates = () => {
         errorMessage: printerTemplateListError,
         errorMessageFormatter: locale.config.alerts.error,
     });
+
     const closeDialog = React.useCallback(() => {
         actionDispatch({ type: 'clear' });
     }, []);
@@ -112,18 +118,39 @@ const PrinterTemplates = () => {
     }, []);
 
     const handleAddClick = () => {
+        const fieldProps = {
+            identifiers: {
+                options: [],
+            },
+        };
+
         actionDispatch({
             type: 'add',
             title: pageLocale.dialogAdd?.confirmationTitle,
+            fieldProps,
         });
     };
 
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
+        const identifiers =
+            printerTemplateList.find(template => template.printer_template_id === row.printer_template_id)
+                ?.identifiers ?? [];
+        console.log(identifiers);
+        const fieldProps = {
+            identifiers: {
+                options: identifiers,
+                getOptionKey: option => option.printer_template_identifier_id,
+                getOptionLabel: option => option.printer_template_identifier_value ?? '',
+                isOptionEqualToValue: (option, value) => option.printer_template_identifier_value === value,
+            },
+        };
+        console.log(fieldProps);
         actionDispatch({
             type: 'edit',
             title: pageLocale.dialogEdit?.confirmationTitle,
             row,
+            fieldProps,
         });
     };
 
@@ -184,6 +211,8 @@ const PrinterTemplates = () => {
                     onAction={onRowAdd}
                     props={actionState?.props}
                     isBusy={dialogueBusy}
+                    noMinContentWidth
+                    sx={dialogStyles}
                 />
                 <UpdateDialog
                     id={componentId}
@@ -199,6 +228,8 @@ const PrinterTemplates = () => {
                     onAction={onRowEdit}
                     props={actionState?.props}
                     isBusy={dialogueBusy}
+                    noMinContentWidth
+                    sx={dialogStyles}
                 />
                 <ConfirmationBox
                     actionButtonColor="primary"

@@ -81,7 +81,9 @@ describe('utils', () => {
             can_inspect: 'No',
             can_alter: 'Yes',
             can_see_reports: 'No',
-            user_team: 'WSS',
+            user_team: {
+                team_slug: 'WSS',
+            },
         };
 
         const expectedOutput = {
@@ -105,7 +107,9 @@ describe('utils', () => {
         inputRequest.can_inspect_cb = true;
         inputRequest.can_alter_cb = true;
         inputRequest.can_see_reports_cb = true;
-        inputRequest.user_team = 'PF';
+        inputRequest.user_team = {
+            team_slug: 'PF',
+        };
 
         expectedOutput.privileges = {
             can_admin: 1,
@@ -124,7 +128,9 @@ describe('utils', () => {
             id: 123,
             department_display_name: 'Department A',
             user_department: 'UQL',
-            user_team: 'SPACES',
+            user_team: {
+                team_slug: 'SPACES',
+            },
             privileges: {
                 can_admin_cb: true,
                 can_inspect_cb: false,
@@ -155,11 +161,14 @@ describe('utils', () => {
 
         const transformedRequest = transformUpdateRequest(inputRequest);
         expect(transformedRequest).toEqual(expectedOutput);
-
+        console.log(inputRequest);
         inputRequest.can_admin_cb = true;
         inputRequest.can_inspect_cb = true;
         inputRequest.can_alter_cb = true;
         inputRequest.can_see_reports_cb = true;
+        inputRequest.user_team = {
+            team_slug: 'SPACES',
+        };
 
         expectedOutput.privileges = {
             can_admin: 1,

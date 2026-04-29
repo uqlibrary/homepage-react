@@ -48,6 +48,7 @@ export const UpdateDialogue = ({
     row,
     props,
     isBusy = false,
+    sx,
 }) => {
     const componentId = `${rootId}-${id}`;
 
@@ -99,21 +100,17 @@ export const UpdateDialogue = ({
         e.stopPropagation();
     };
 
-    const handleChange = (event, value) => {
+    const handleChange = field => (event, value) => {
         const isCheckbox = event.target.type === 'checkbox';
-        const isOption = event.target.getAttribute?.('role') === 'option';
-        const dataKey = isOption ? event.target.id.split('-')[0] : event.target.name;
-        const optionKey = fields?.[dataKey]?.fieldParams?.optionKey;
-        // eslint-disable-next-line no-nested-ternary
-        const newValue = isOption ? value?.[optionKey] : isCheckbox ? event.target.checked : event.target.value;
+        const newValue = isCheckbox ? event.target.checked : value || event.target.value;
 
         setData(prevState => ({
             ...prevState,
-            [dataKey]: newValue,
+            [field]: newValue,
         }));
     };
     return (
-        <StyledDialog open={isOpen} id={`${componentId}`} data-testid={`${componentId}`}>
+        <StyledDialog open={isOpen} id={`${componentId}`} data-testid={`${componentId}`} sx={sx}>
             <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                 {title}
             </DialogTitle>
@@ -157,7 +154,7 @@ export const UpdateDialogue = ({
                                                         label: dataColumns[field].label,
                                                         error: dataFields[field]?.validate?.(data?.[field], data),
                                                         checked: !!data?.[field],
-                                                        onChange: handleChange,
+                                                        onChange: handleChange(field),
                                                         onClick: _onClickAction,
                                                         InputLabelProps: {
                                                             shrink: true,
@@ -178,6 +175,7 @@ export const UpdateDialogue = ({
                                                     }),
                                                     data,
                                                     row,
+                                                    action,
                                                 )}
                                             </>
                                         )}
@@ -258,6 +256,7 @@ UpdateDialogue.propTypes = {
     props: PropTypes.object,
     fieldProps: PropTypes.object,
     isBusy: PropTypes.bool,
+    sx: PropTypes.object,
 };
 
 export default React.memo(UpdateDialogue);

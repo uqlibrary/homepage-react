@@ -1,7 +1,7 @@
 export const transformRow = row => {
     return row?.map(line => ({
         ...line,
-        identifiers: line?.identifiers?.map(identifier => identifier.printer_template_identifier_value).join(', '),
+        identifiers_str: line?.identifiers?.map(identifier => identifier.printer_template_identifier_value).join(', '),
         printer_template_current_flag_cb: line?.printer_template_current_flag === 1,
         printer_template_current_flag: line?.printer_template_current_flag === 1 ? 'Yes' : 'No',
     }));
