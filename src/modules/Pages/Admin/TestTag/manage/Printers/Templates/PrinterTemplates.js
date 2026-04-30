@@ -28,7 +28,7 @@ const componentId = 'printer-template-management';
 
 const dialogStyles = {
     padding: '6px',
-    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: '75vh', maxWidth: '75%' },
+    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: '75vh' },
 };
 
 const PrinterTemplates = () => {
@@ -121,6 +121,9 @@ const PrinterTemplates = () => {
         const fieldProps = {
             identifiers: {
                 options: [],
+            },
+            vars: {
+                setIsEditing: () => {},
             },
         };
 

@@ -101,9 +101,9 @@ export const UpdateDialogue = ({
     };
 
     const handleChange = field => (event, value) => {
-        const isCheckbox = event.target.type === 'checkbox';
+        const isCheckbox = event?.target?.type === 'checkbox';
         const newValue = isCheckbox ? event.target.checked : value || event.target.value;
-
+        console.log('handleChange', field, newValue, isCheckbox);
         setData(prevState => ({
             ...prevState,
             [field]: newValue,

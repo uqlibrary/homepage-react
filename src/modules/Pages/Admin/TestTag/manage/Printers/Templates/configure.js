@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -10,264 +9,13 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 
-import { GridRowModes, DataGrid, GridToolbarContainer, GridActionsCellItem } from '@mui/x-data-grid';
+import PlaceholderEditor from './PlaceholderEditor';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { isEmptyStr } from '../../../helpers/helpers';
 
-export const PRINTER_TEMPLATE_USER_VARS = [
-    {
-        printer_template_var_name: 'BARCODEX',
-        printer_template_var_label: 'Barcode X',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'BARCODEY',
-        printer_template_var_label: 'Barcode Y',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'DUEDATEX',
-        printer_template_var_label: 'Due Date X',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'DUEDATEY',
-        printer_template_var_label: 'Due Date Y',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'LABELDATEDUEX',
-        printer_template_var_label: 'Label Date Due X',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'LABELDATEDUEY',
-        printer_template_var_label: 'Label Date Due Y',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'LABELDATETESTEDX',
-        printer_template_var_label: 'Label Date Tested X',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'LABELDATETESTEDY',
-        printer_template_var_label: 'Label Date Tested Y',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'LABELTESTEDBYX',
-        printer_template_var_label: 'Label Tested By X',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'LABELTESTEDBYY',
-        printer_template_var_label: 'Label Tested By Y',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'LOGOX',
-        printer_template_var_label: 'Logo X',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'LOGOY',
-        printer_template_var_label: 'Logo Y',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'TESTDATEX',
-        printer_template_var_label: 'Test Date X',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'TESTDATEY',
-        printer_template_var_label: 'Test Date Y',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'USERIDX',
-        printer_template_var_label: 'User ID X',
-        printer_template_var_default_value: '0',
-    },
-    {
-        printer_template_var_name: 'USERIDY',
-        printer_template_var_label: 'User ID Y',
-        printer_template_var_default_value: '0',
-    },
-];
-
-export const randomId = rows => Math.max(...(rows?.map?.(row => row.printer_template_var_id) ?? [0])) + 1;
-function EditToolbar(props) {
-    const { setRows, setRowModesModel } = props;
-
-    const handleClick = () => {
-        const id = randomId();
-        setRows(oldRows => [
-            ...oldRows,
-            {
-                printer_template_var_id: id,
-                printer_template_var_label: '',
-                printer_template_var_value: '',
-                isNew: true,
-            },
-        ]);
-        setRowModesModel(oldModel => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'printer_template_var_label' },
-        }));
-    };
-
-    return (
-        <GridToolbarContainer>
-            <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-                Add template variable
-            </Button>
-        </GridToolbarContainer>
-    );
-}
-EditToolbar.propTypes = {
-    setRowModesModel: PropTypes.func.isRequired,
-    setRows: PropTypes.func.isRequired,
-};
-
-export const getCleanVarName = params => {
-    const varName = params.row.printer_template_var_name;
-    return varName?.replaceAll(/[\s{}]/g, '').toUpperCase() ?? '';
-};
-
-// eslint-disable-next-line react/prop-types
-export const VarsComponent = ({ InputLabelProps, inputProps, onClick, onChange, value, error, ...props }) => {
-    const [rows, setRows] = React.useState(value);
-    const [rowModesModel, setRowModesModel] = React.useState({});
-
-    const _onChange = props => {
-        console.log('datagrid _onchange', props);
-    };
-    const handleDeleteClick = id => () => {
-        setRows(rows.filter(row => row.id !== id));
-    };
-    const handleRowEditStart = (params, event) => {
-        event.defaultMuiPrevented = true;
-    };
-    const handleRowEditStop = (params, event) => {
-        event.defaultMuiPrevented = true;
-    };
-
-    const columns = [
-        {
-            field: 'printer_template_var_name',
-            headerName: 'Variable name',
-            flex: 1,
-            editable: true,
-            type: 'number',
-            resizable: false,
-            valueGetter: getCleanVarName,
-        },
-        {
-            field: 'printer_template_var_value',
-            headerName: 'Variable value',
-            width: 150,
-            editable: true,
-            type: 'number',
-            resizable: false,
-        },
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: '',
-            width: 50,
-            cellClassName: 'actions',
-            getActions: ({ id }) => {
-                return [
-                    <GridActionsCellItem
-                        icon={<DeleteIcon />}
-                        label="Delete"
-                        color="inherit"
-                        onClick={handleDeleteClick(id)}
-                    />,
-                ];
-            },
-            resizable: false,
-        },
-    ];
-
-    return (
-        <Box
-            sx={{
-                height: 500,
-                width: '100%',
-                '& .actions': {
-                    color: 'text.secondary',
-                },
-                '& .textPrimary': {
-                    color: 'text.primary',
-                },
-            }}
-        >
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                editMode="row"
-                getRowId={row => row.printer_template_var_id}
-                rowModesModel={rowModesModel}
-                onRowEditStart={handleRowEditStart}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={_onChange}
-                components={{
-                    Toolbar: EditToolbar,
-                }}
-                componentsProps={{
-                    toolbar: { setRows, setRowModesModel },
-                }}
-                experimentalFeatures={{ newEditingApi: true }}
-            />
-        </Box>
-    );
-    // return (
-    //     <Autocomplete
-    //         renderInput={params => (
-    //             <TextField
-    //                 variant="standard"
-    //                 {...params}
-    //                 label={locale.pages.manage.printertemplates.form.columns.vars.label}
-    //                 required
-    //                 error={error}
-    //                 helperText={error ? locale.pages.manage.printertemplates.helperText.vars : ''}
-    //                 InputLabelProps={InputLabelProps}
-    //                 inputProps={{
-    //                     ...params.inputProps,
-    //                     ...inputProps,
-    //                 }}
-    //                 onClick={onClick}
-    //             />
-    //         )}
-    //         multiple
-    //         freeSolo
-    //         renderTags={(value, getTagProps) =>
-    //             value.map((option, index) => {
-    //                 const { key, ...tagProps } = getTagProps({ index });
-    //                 console.log(option, index, key, tagProps);
-    //                 return (
-    //                     <Chip
-    //                         variant="outlined"
-    //                         label={option.printer_template_identifier_value ?? option}
-    //                         key={key}
-    //                         {...tagProps}
-    //                     />
-    //                 );
-    //             })
-    //         }
-    //         {...props}
-    //     />
-    // );
-};
+import { getCleanVarName, getUserVariablePlaceholder } from './utils';
 
 export default {
     sort: {
@@ -360,8 +108,16 @@ export default {
             },
         },
         vars: {
-            component: ({ ...props }) => <VarsComponent {...props} />,
-            validate: value => value?.length === 0 ?? false,
+            component: ({ ...props }) => <PlaceholderEditor {...props} />,
+            validate: (_, row) => {
+                const userVariables =
+                    row?.vars?.reduce?.((acc, variable) => [...acc, variable.printer_template_var_name], []) ?? [];
+                const printerTemplateCode = row?.printer_template_code ?? '';
+                const missing = userVariables.filter(
+                    varName => !printerTemplateCode.includes(getUserVariablePlaceholder(getCleanVarName(varName))),
+                );
+                return missing.length > 0;
+            },
             fieldParams: {
                 canEdit: true,
                 renderInTable: false,

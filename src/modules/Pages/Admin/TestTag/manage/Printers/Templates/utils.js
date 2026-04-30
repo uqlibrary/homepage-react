@@ -63,3 +63,10 @@ export const actionReducer = (_, action) => {
             throw `Unknown action '${type}'`;
     }
 };
+
+export const randomId = rows => Math.max(...(rows?.map?.(row => row.printer_template_var_id) ?? [0])) + 1;
+export const getCleanVarName = name => {
+    const varName = name;
+    return varName?.replaceAll(/[\s{}]/g, '').toUpperCase() ?? '';
+};
+export const getUserVariablePlaceholder = name => `{{${name}}}`;

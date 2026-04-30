@@ -1212,6 +1212,9 @@ export default {
                         printer_template_name: {
                             label: 'Printer template name',
                         },
+                        printer_template_label: {
+                            label: 'Printer template label',
+                        },
                         identifiers: {
                             label: 'Printer identifiers',
                         },
@@ -1264,9 +1267,12 @@ export default {
                 },
                 helperText: {
                     printer_template_name: 'A printer template name is required',
-                    printer_template_identifier: 'A printer template identifier is required',
+                    printer_template_identifier:
+                        'A printer identifier is required and must not have been used with another template.',
                     printer_template_code:
-                        'Printer template code is required and must include required placeholder variables',
+                        'Printer template code is required and must include defined placeholder variables',
+                    vars:
+                        'One or more defined variables are missing from the template code. All variables must be included in the printer template code as {{VARNAME}}',
                 },
             },
         },
