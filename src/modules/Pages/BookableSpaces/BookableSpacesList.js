@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { useCookies } from 'react-cookie';
+import { useLocation } from 'react-router-dom';
 
 import { Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -175,6 +176,7 @@ export const BookableSpacesList = ({
     spacesFavouritesList,
 }) => {
     const { account } = useAccountContext();
+    const location = useLocation();
     const isLoggedIn = !!account?.id;
     console.log(
         'BookableSpacesList load facilityTypeList:',
@@ -215,13 +217,22 @@ export const BookableSpacesList = ({
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [expandedSpaceId, setExpandedSpaceId] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
-    const [useJourneyExperience] = useState(() => {
+    const useJourneyExperience = React.useMemo(() => {
         if (typeof window === 'undefined') return false;
         // Support both standard query params (?journey=1) and hash-router query params (#/spaces?journey=1)
-        const hashSearch = window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '';
-        const params = new URLSearchParams(window.location.search || hashSearch);
+        const hashValue = location.hash || window.location.hash || '';
+        const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
+        const searchValue = location.search || window.location.search || '';
+        const params = new URLSearchParams(searchValue || hashSearch);
         return params.get('journey') === '1' || params.get('newJourney') === '1';
-    });
+    }, [location.search, location.hash]);
+    const initialJourneyModeRef = useRef(useJourneyExperience);
+
+    React.useEffect(() => {
+        if (initialJourneyModeRef.current !== useJourneyExperience) {
+            window.location.reload();
+        }
+    }, [useJourneyExperience]);
 
     const mapRef = useRef(null);
 
