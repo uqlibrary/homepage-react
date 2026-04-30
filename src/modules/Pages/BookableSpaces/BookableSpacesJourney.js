@@ -16,9 +16,10 @@ import TuneIcon from '@mui/icons-material/Tune';
 import TvIcon from '@mui/icons-material/Tv';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
+import { pluralise } from 'helpers/general';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
-import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
+import { spaceOpeningHours } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const carouselAnimationDurationMs = 220;
 
@@ -426,6 +427,11 @@ const BookableSpacesJourney = ({
         return uniqueImages;
     }, [selectedSpace]);
 
+    const spaceHours = React.useMemo(
+        () => (!weeklyHoursLoading && !weeklyHoursError ? spaceOpeningHours(selectedSpace, weeklyHours) || [] : []),
+        [selectedSpace, weeklyHours, weeklyHoursLoading, weeklyHoursError],
+    );
+
     React.useEffect(() => {
         setActiveImageIndex(0);
         setPreviousImageIndex(null);
@@ -487,9 +493,20 @@ const BookableSpacesJourney = ({
 
     const goToLegacyBrowse = () => {
         const url = new URL(window.location.href);
-        url.searchParams.delete('journey');
-        url.searchParams.delete('newJourney');
-        url.searchParams.delete('legacyMap');
+        // Handle both standard query params and hash-router query params (#/path?param=val)
+        if (url.hash.includes('?')) {
+            const [hashPath, hashQuery] = url.hash.split('?');
+            const hashParams = new URLSearchParams(hashQuery);
+            hashParams.delete('journey');
+            hashParams.delete('newJourney');
+            hashParams.delete('legacyMap');
+            const remaining = hashParams.toString();
+            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
+        } else {
+            url.searchParams.delete('journey');
+            url.searchParams.delete('newJourney');
+            url.searchParams.delete('legacyMap');
+        }
         window.location.assign(url.toString());
     };
 
@@ -767,6 +784,31 @@ const BookableSpacesJourney = ({
                         <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
                             {selectedIntent?.label || 'Matching spaces'}
                         </Typography>
+
+                        {/* Campus picker — visible inline on results, not buried in advanced filters */}
+                        {campusList?.length > 1 && (
+                            <Box>
+                                <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.75, color: '#1f1230' }}>
+                                    Campus
+                                </Typography>
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                    {campusList.map(campus => (
+                                        <Button
+                                            key={campus.campus_id}
+                                            variant={selectedCampus === campus.campus_id ? 'contained' : 'outlined'}
+                                            size="small"
+                                            onClick={() =>
+                                                handleCampusSelection({ target: { value: campus.campus_id } })
+                                            }
+                                            sx={{ textTransform: 'none' }}
+                                        >
+                                            {campus.campus_name}
+                                        </Button>
+                                    ))}
+                                </Box>
+                            </Box>
+                        )}
+
                         <Typography variant="body2" sx={{ color: '#666' }}>
                             Showing {filteredSpaceLocations?.length || 0}
                             {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
@@ -841,15 +883,17 @@ const BookableSpacesJourney = ({
                         >
                             Back to results
                         </Button>
-                        <StyledDetailSurface>
-                            <Typography component="h2" variant="h5" sx={{ fontWeight: 700, mb: 1, color: '#1f1230' }}>
-                                {selectedSpace?.space_name}
-                            </Typography>
-                            <Typography variant="body1" sx={{ mb: 2, color: '#666' }}>
-                                {selectedSpace?.space_library_name}
-                            </Typography>
 
-                            <StyledImageCarousel>
+                        {/* Hero: carousel + title/meta side by side on desktop */}
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                                gap: '1.5rem',
+                                alignItems: 'start',
+                            }}
+                        >
+                            <StyledImageCarousel sx={{ minHeight: { xs: '220px', md: '360px' } }}>
                                 {detailImages?.[activeImageIndex]?.src ? (
                                     <div className="carouselViewport">
                                         {isCarouselAnimating && detailImages?.[previousImageIndex]?.src && (
@@ -879,10 +923,9 @@ const BookableSpacesJourney = ({
                                             fontWeight: 600,
                                         }}
                                     >
-                                        Image placeholder
+                                        No image available
                                     </Box>
                                 )}
-
                                 {detailImages.length > 1 && (
                                     <StyledCarouselControlsLayer>
                                         <StyledCarouselControl
@@ -903,35 +946,206 @@ const BookableSpacesJourney = ({
                                 )}
                             </StyledImageCarousel>
 
-                            <Typography variant="body1" sx={{ mt: 2, mb: 1 }}>
-                                {selectedSpace?.space_description
-                                    ? String(selectedSpace.space_description).replace(/<[^>]*>/g, ' ')
-                                    : 'Space details will appear here.'}
-                            </Typography>
+                            <Stack spacing={2} sx={{ pt: { xs: 0, md: 0.5 } }}>
+                                <Box>
+                                    <Typography
+                                        component="h2"
+                                        variant="h5"
+                                        sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5, lineHeight: 1.2 }}
+                                    >
+                                        {selectedSpace?.space_name}
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+                                        {selectedSpace?.space_library_name}
+                                    </Typography>
+                                    {!!(
+                                        selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type
+                                    ) && (
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                display: 'inline-block',
+                                                px: 1.25,
+                                                py: 0.25,
+                                                borderRadius: '20px',
+                                                backgroundColor: '#ede8f5',
+                                                color: '#51247a',
+                                                fontWeight: 600,
+                                                letterSpacing: 0.3,
+                                            }}
+                                        >
+                                            {selectedSpace?.space_type_details?.space_type_name ||
+                                                selectedSpace?.space_type}
+                                        </Typography>
+                                    )}
+                                </Box>
 
-                            <Typography component="h3" variant="h6" sx={{ mt: 2, mb: 1, fontWeight: 700 }}>
-                                Space details
-                            </Typography>
-                            <SpaceDetails
-                                weeklyHours={weeklyHours}
-                                weeklyHoursLoading={weeklyHoursLoading}
-                                weeklyHoursError={weeklyHoursError}
-                                bookableSpace={selectedSpace}
-                                collapsed={false}
-                                isExpanded
-                                showToggle={false}
-                            />
+                                {!!(
+                                    selectedSpace?.space_type_details?.space_type_description ||
+                                    selectedSpace?.space_description
+                                ) && (
+                                    <Box sx={{ borderLeft: '3px solid #51247a', pl: 1.5 }}>
+                                        {!!selectedSpace?.space_type_details?.space_type_description && (
+                                            <Typography
+                                                variant="body2"
+                                                sx={{
+                                                    color: '#4f4d57',
+                                                    mb: selectedSpace?.space_description ? 1 : 0,
+                                                }}
+                                            >
+                                                {selectedSpace.space_type_details.space_type_description}
+                                            </Typography>
+                                        )}
+                                        {!!selectedSpace?.space_description && (
+                                            <Typography variant="body2" sx={{ color: '#666' }}>
+                                                {String(selectedSpace.space_description)
+                                                    .replace(/<[^>]*>/g, ' ')
+                                                    .trim()}
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                )}
+                            </Stack>
+                        </Box>
 
-                            <Typography component="h3" variant="h6" sx={{ mt: 2, mb: 1, fontWeight: 700 }}>
-                                Map
-                            </Typography>
-                            <div
-                                style={{
-                                    height: isMobileView ? '260px' : '320px',
-                                    borderRadius: '10px',
-                                    overflow: 'hidden',
+                        {/* Space details section — journey-only, no shared component */}
+                        <StyledDetailSurface>
+                            <Typography
+                                component="h3"
+                                variant="h6"
+                                sx={{
+                                    fontWeight: 700,
+                                    mb: 2,
+                                    color: '#1f1230',
+                                    pb: 1,
+                                    borderBottom: '1px solid #ddd8e4',
                                 }}
                             >
+                                Space details
+                            </Typography>
+                            <Stack spacing={2.5}>
+                                {/* Booking */}
+                                {!!selectedSpace?.space_external_book_url ? (
+                                    <Box>
+                                        <Button
+                                            variant="contained"
+                                            component="a"
+                                            href={selectedSpace.space_external_book_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            sx={{ textTransform: 'none' }}
+                                        >
+                                            Book this space
+                                        </Button>
+                                    </Box>
+                                ) : (
+                                    <Typography variant="body2" sx={{ color: '#4f4d57' }}>
+                                        No booking required.
+                                    </Typography>
+                                )}
+
+                                {/* Capacity */}
+                                {!!(selectedSpace?.space_capacity && selectedSpace.space_capacity > 0) && (
+                                    <Typography variant="body2" sx={{ color: '#4f4d57' }}>
+                                        <strong>Capacity:</strong> {selectedSpace.space_capacity}{' '}
+                                        {pluralise('person', selectedSpace.space_capacity, 'people')}
+                                    </Typography>
+                                )}
+
+                                {/* Facilities */}
+                                {selectedSpace?.facility_types?.length > 0 && (
+                                    <Box>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{ fontWeight: 600, mb: 0.75, color: '#1f1230' }}
+                                        >
+                                            Facilities
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                            {selectedSpace.facility_types.map(f => (
+                                                <Chip
+                                                    key={f.facility_type_id}
+                                                    label={f.facility_type_name}
+                                                    size="small"
+                                                    variant="outlined"
+                                                    sx={{ borderColor: '#c9bfdf', color: '#51247a' }}
+                                                />
+                                            ))}
+                                        </Box>
+                                    </Box>
+                                )}
+
+                                {/* Opening hours — vertical list, never a table */}
+                                {spaceHours.length > 0 && (
+                                    <Box>
+                                        <Typography variant="body2" sx={{ fontWeight: 600, mb: 1, color: '#1f1230' }}>
+                                            {selectedSpace?.space_library_name} opening hours
+                                        </Typography>
+                                        <Stack spacing={0}>
+                                            {spaceHours.map((d, i) => {
+                                                const isToday = d?.dayName === 'Today';
+                                                return (
+                                                    <Box
+                                                        key={i}
+                                                        sx={{
+                                                            display: 'grid',
+                                                            gridTemplateColumns: '7.5rem 1fr',
+                                                            gap: '0.5rem',
+                                                            py: 0.75,
+                                                            borderBottom:
+                                                                i < spaceHours.length - 1
+                                                                    ? '1px solid #f0ecf7'
+                                                                    : 'none',
+                                                            backgroundColor: isToday ? '#f9f6fe' : 'transparent',
+                                                            px: isToday ? 1 : 0,
+                                                            borderRadius: isToday ? '4px' : 0,
+                                                            mx: isToday ? -1 : 0,
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            variant="body2"
+                                                            sx={{
+                                                                fontWeight: isToday ? 700 : 400,
+                                                                color: isToday ? '#51247a' : '#1f1230',
+                                                            }}
+                                                        >
+                                                            {d?.dayName}
+                                                        </Typography>
+                                                        <Typography
+                                                            variant="body2"
+                                                            sx={{
+                                                                color: isToday ? '#51247a' : '#4f4d57',
+                                                                fontWeight: isToday ? 600 : 400,
+                                                            }}
+                                                        >
+                                                            {d?.rendered}
+                                                        </Typography>
+                                                    </Box>
+                                                );
+                                            })}
+                                        </Stack>
+                                    </Box>
+                                )}
+                            </Stack>
+                        </StyledDetailSurface>
+
+                        {/* Map section */}
+                        <StyledDetailSurface sx={{ p: 0, overflow: 'hidden' }}>
+                            <Typography
+                                component="h3"
+                                variant="h6"
+                                sx={{
+                                    fontWeight: 700,
+                                    color: '#1f1230',
+                                    px: '1.5rem',
+                                    pt: '1.25rem',
+                                    pb: '1rem',
+                                    borderBottom: '1px solid #ddd8e4',
+                                }}
+                            >
+                                Location
+                            </Typography>
+                            <div style={{ height: isMobileView ? '260px' : '340px' }}>
                                 <BookableSpacesMap
                                     sortedSpaceLocations={[selectedSpace]}
                                     spacesFavouritesList={null}

@@ -217,7 +217,9 @@ export const BookableSpacesList = ({
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
     const [useJourneyExperience] = useState(() => {
         if (typeof window === 'undefined') return false;
-        const params = new URLSearchParams(window.location.search);
+        // Support both standard query params (?journey=1) and hash-router query params (#/spaces?journey=1)
+        const hashSearch = window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '';
+        const params = new URLSearchParams(window.location.search || hashSearch);
         return params.get('journey') === '1' || params.get('newJourney') === '1';
     });
 
