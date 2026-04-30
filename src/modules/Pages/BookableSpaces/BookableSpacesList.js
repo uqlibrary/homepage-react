@@ -387,6 +387,7 @@ export const BookableSpacesList = ({
         console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
         console.log('BookableSpacesList campus::handleCampusSelection bookableSpacesRoomList=', bookableSpacesRoomList);
         setSelectedCampus(campusId);
+        setSelectedFacilityTypes([]); // reset so the useEffect re-initializes with the new campus's facility types
 
         const current = new Date();
         const nextYear = new Date();

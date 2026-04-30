@@ -324,9 +324,11 @@ export const SidebarFilters = ({
     const setFilters = (facilityTypeId, isSelected, isUnselected, facilitySpecialAction) => {
         console.log('setFilters =', facilityTypeId, isSelected, isUnselected, facilitySpecialAction);
         console.log('setFilters selectedFacilityTypes', [...selectedFacilityTypes]);
-        const resetFilter = selectedFacilityTypes?.find(ftf => {
-            return ftf?.facility_type_id === facilityTypeId;
-        });
+        // Look up from selectedFacilityTypes first; fall back to filteredFacilityTypeList for types
+        // that were added to the UI after the initial state was set (e.g. after campus change)
+        const resetFilter =
+            selectedFacilityTypes?.find(ftf => ftf?.facility_type_id === facilityTypeId) ||
+            getFlatFacilityTypeList(filteredFacilityTypeList)?.find(f => f?.facility_type_id === facilityTypeId);
         const newFilters = selectedFacilityTypes?.filter(ftf => {
             return ftf?.facility_type_id !== facilityTypeId;
         });
