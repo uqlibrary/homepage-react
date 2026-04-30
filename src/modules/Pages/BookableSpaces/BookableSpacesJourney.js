@@ -107,18 +107,75 @@ const StyledDetailSurface = styled('div')(({ theme }) => ({
 }));
 
 const StyledAdvancedFiltersPanel = styled(StyledDetailSurface)(({ theme }) => ({
+    background: 'linear-gradient(180deg, #fcfbff 0%, #f7f4fc 100%)',
+    border: '1px solid #d9d0e8',
+    boxShadow: '0 10px 26px rgba(50, 24, 84, 0.08)',
+    borderRadius: '16px',
+    padding: '1.25rem',
+    overflow: 'hidden',
+    boxSizing: 'border-box',
+    [theme.breakpoints.down('sm')]: {
+        padding: '1rem',
+    },
+    '& .filterSideBar.journeyFilterSidebar, & .filterSideBar.journeyFilterSidebar *': {
+        boxSizing: 'border-box',
+    },
     '& .filterSideBar.journeyFilterSidebar': {
         maxWidth: '100%',
         flexBasis: '100%',
         width: '100%',
         overflowY: 'visible',
         paddingTop: 0,
+        margin: 0,
+        backgroundColor: 'transparent',
     },
     '& .filterSideBar.journeyFilterSidebar > div': {
         width: '100%',
     },
+    '& .filterSideBar.journeyFilterSidebar .sectionHeading': {
+        fontWeight: 700,
+        color: '#25153d',
+        letterSpacing: '0.01em',
+    },
+    '& .filterSideBar.journeyFilterSidebar [data-testid="topOfSidebar"]': {
+        fontSize: '1.3rem',
+        fontWeight: 800,
+        lineHeight: 1.2,
+        marginBottom: '0.35rem',
+    },
+    '& .filterSideBar.journeyFilterSidebar [data-testid="space-filter-count"]': {
+        fontSize: '0.98rem',
+        fontWeight: 600,
+        color: '#56456f',
+        lineHeight: 1.3,
+        marginTop: '0.2rem',
+        marginBottom: '0.55rem',
+    },
+    '& .filterSideBar.journeyFilterSidebar [data-testid="space-filter-count"] span': {
+        display: 'inline-block',
+        minWidth: '1.2rem',
+        marginLeft: '0.35rem',
+        padding: '0.08rem 0.45rem',
+        borderRadius: '999px',
+        backgroundColor: '#ece4f9',
+        color: '#432166',
+        fontSize: '0.82rem',
+        fontWeight: 700,
+        textAlign: 'center',
+    },
     '& .filterSideBar.journeyFilterSidebar .sidebarSelector': {
         width: '100%',
+    },
+    '& .filterSideBar.journeyFilterSidebar .sidebarSelector > div': {
+        backgroundColor: '#ffffff',
+        border: '1px solid #d9d0e8',
+        borderRadius: '10px',
+        boxShadow: '0 1px 3px rgba(31, 18, 48, 0.06)',
+        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+    },
+    '& .filterSideBar.journeyFilterSidebar .sidebarSelector > div:focus-within': {
+        borderColor: '#6a3ea1',
+        boxShadow: '0 0 0 3px rgba(106, 62, 161, 0.15)',
     },
     '& .filterSideBar.journeyFilterSidebar .sidebarSelector .MuiInputBase-root': {
         width: '100%',
@@ -126,6 +183,8 @@ const StyledAdvancedFiltersPanel = styled(StyledDetailSurface)(({ theme }) => ({
     '& .filterSideBar.journeyFilterSidebar .sidebarSelector .MuiSelect-select': {
         width: '100%',
         boxSizing: 'border-box',
+        fontWeight: 500,
+        color: '#2a1d3f',
     },
     '& .filterSideBar.journeyFilterSidebar [data-testid="sidebarCheckboxes"]': {
         display: 'block',
@@ -138,24 +197,104 @@ const StyledAdvancedFiltersPanel = styled(StyledDetailSurface)(({ theme }) => ({
     },
     '& .filterSideBar.journeyFilterSidebar [data-testid^="filter-group-block-"]': {
         width: '100%',
-        paddingBlock: '12px',
+        padding: '0.9rem 1rem 1rem',
+        marginTop: '0.75rem',
+        backgroundColor: '#ffffff',
+        border: '1px solid #e2daef',
+        borderRadius: '12px',
+        boxShadow: '0 1px 3px rgba(31, 18, 48, 0.05)',
+        overflow: 'hidden',
     },
     '& .filterSideBar.journeyFilterSidebar [data-testid^="filter-group-block-"] h3': {
         marginBottom: 0,
+        fontWeight: 700,
+        color: '#25153d',
     },
     '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"]': {
         display: 'grid',
         gridTemplateColumns: '1fr',
-        gap: '0.5rem 1rem',
+        gap: '0.55rem 0.75rem',
         width: '100%',
-        paddingTop: '0.75rem',
+        paddingTop: '0.85rem',
+        margin: 0,
+        paddingLeft: 0,
     },
     '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li': {
-        marginLeft: 0,
+        marginLeft: '0 !important',
+        paddingLeft: 0,
         minWidth: 0,
+        borderRadius: '8px',
+        listStyle: 'none',
     },
     '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label': {
         width: '100%',
+        borderRadius: '8px',
+        padding: '0.25rem 0.35rem 0.25rem 0.15rem',
+        transition: 'background-color 0.2s ease, border-color 0.2s ease',
+        border: '1px solid transparent',
+        textDecoration: 'none',
+    },
+    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label:hover': {
+        backgroundColor: '#f6f2fc',
+        borderColor: '#ddd1ee',
+    },
+    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label:hover > span:nth-of-type(2)': {
+        backgroundColor: 'transparent',
+        color: '#2a1d3f',
+        textDecoration: 'none',
+    },
+    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label:focus > span:nth-of-type(2)': {
+        backgroundColor: 'transparent',
+        color: '#2a1d3f',
+        textDecoration: 'none',
+    },
+    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label:focus-visible > span:nth-of-type(2)': {
+        backgroundColor: 'transparent',
+        color: '#2a1d3f',
+        textDecoration: 'none',
+    },
+    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label span': {
+        textDecoration: 'none !important',
+    },
+    '& .filterSideBar.journeyFilterSidebar .MuiCheckbox-root': {
+        color: '#6c4f99',
+        padding: '6px',
+    },
+    '& .filterSideBar.journeyFilterSidebar .MuiCheckbox-root.Mui-checked': {
+        color: '#51247a',
+    },
+    '& .filterSideBar.journeyFilterSidebar .MuiCheckbox-root:hover': {
+        backgroundColor: 'rgba(81, 36, 122, 0.08)',
+    },
+    '& .filterSideBar.journeyFilterSidebar .selectedFilterTypeLabel span:last-of-type': {
+        color: '#34224f',
+        fontWeight: 500,
+    },
+    '& .filterSideBar.journeyFilterSidebar .selectedFilterTypeLabel:has(.Mui-checked)': {
+        backgroundColor: '#f4eefc',
+        borderColor: '#cdbbe8',
+    },
+    '& .filterSideBar.journeyFilterSidebar .selectedFilterTypeLabel:has(.Mui-checked) span:last-of-type': {
+        color: '#2a1d3f',
+        fontWeight: 600,
+    },
+    '& .filterSideBar.journeyFilterSidebar .sliderGroupHeading, & .filterSideBar.journeyFilterSidebar h4': {
+        color: '#2a1d3f',
+        fontWeight: 700,
+    },
+    '& .filterSideBar.journeyFilterSidebar .MuiSlider-root': {
+        color: '#51247a',
+    },
+    '& .filterSideBar.journeyFilterSidebar .MuiSlider-rail': {
+        opacity: 1,
+        backgroundColor: '#d9cee9',
+    },
+    '& .filterSideBar.journeyFilterSidebar .MuiSlider-thumb': {
+        border: '2px solid #ffffff',
+        boxShadow: '0 1px 4px rgba(37, 21, 61, 0.35)',
+    },
+    '& .filterSideBar.journeyFilterSidebar button': {
+        borderRadius: '9px',
     },
     [theme.breakpoints.up('sm')]: {
         '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"]': {
@@ -163,6 +302,11 @@ const StyledAdvancedFiltersPanel = styled(StyledDetailSurface)(({ theme }) => ({
         },
     },
     [theme.breakpoints.up('md')]: {
+        '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"]': {
+            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+        },
+    },
+    [theme.breakpoints.up('xl')]: {
         '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"]': {
             gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
         },
@@ -576,9 +720,43 @@ const BookableSpacesJourney = ({
                             variant="outlined"
                             startIcon={<TuneIcon />}
                             onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                            sx={{ textTransform: 'none', fontWeight: 600 }}
+                            sx={{
+                                textTransform: 'none',
+                                fontWeight: 600,
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 1,
+                            }}
+                            aria-label={
+                                activeFilterCount > 0
+                                    ? `Advanced filters, ${activeFilterCount} filter${
+                                          activeFilterCount === 1 ? '' : 's'
+                                      } applied`
+                                    : 'Advanced filters'
+                            }
                         >
                             Advanced filters
+                            {activeFilterCount > 0 && (
+                                <Box
+                                    component="span"
+                                    sx={{
+                                        minWidth: '1.35rem',
+                                        height: '1.35rem',
+                                        px: 0.45,
+                                        borderRadius: '999px',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 700,
+                                        lineHeight: 1,
+                                        backgroundColor: '#51247a',
+                                        color: '#fff',
+                                    }}
+                                >
+                                    {activeFilterCount}
+                                </Box>
+                            )}
                         </Button>
                     )}
                 </Stack>
