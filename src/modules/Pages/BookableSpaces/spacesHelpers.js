@@ -174,3 +174,34 @@ export const spaceOpeningHours = (bookableSpace, weeklyHours) => {
 export const isBookable = space => {
     return space?.space_external_book_url?.startsWith('http');
 };
+
+export const getSpaceHoursStatus = (space, weeklyHours) => {
+    const days = spaceOpeningHours(space, weeklyHours);
+    if (!days || days.length === 0) return null;
+    const today = days[0];
+    if (!today) return null;
+
+    const status = today?.times?.status;
+    if (status === 'closed') return 'closed';
+    if (status === '24hours') return 'open';
+
+    const openStr = today?.open; // e.g. "07:30:00"
+    const closeStr = today?.close; // e.g. "19:30:00"
+
+    if (!openStr || !closeStr) return null;
+
+    const now = new Date();
+    const [oh, om] = openStr.split(':').map(Number);
+    const [ch, cm] = closeStr.split(':').map(Number);
+
+    const openTime = new Date();
+    openTime.setHours(oh, om, 0, 0);
+    const closeTime = new Date();
+    closeTime.setHours(ch, cm, 0, 0);
+
+    if (now < openTime || now >= closeTime) return 'closed';
+
+    const minsUntilClose = (closeTime - now) / 60000;
+    if (minsUntilClose <= 60) return 'closing-soon';
+    return 'open';
+};

@@ -71,7 +71,7 @@ export default {
                             "from": "7:30am",
                             "to": "7:30pm"
                         }],
-                        "currently_open": false
+                        "currently_open": true
                     },
                     "rendered": "7:30am - 7:30pm",
                     "open": "07:30:00",

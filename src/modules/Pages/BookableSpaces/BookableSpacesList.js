@@ -920,10 +920,14 @@ export const BookableSpacesList = ({
                         </StandardPage>
                     );
                 } else if (useJourneyExperience) {
+                    const highlightedSpace =
+                        bookableSpacesRoomList?.data?.locations?.find(s => s.space_highlighted && !s.space_draftmode) ||
+                        null;
                     return (
                         <BookableSpacesJourney
                             filteredSpaceLocations={sortedSpaceLocations}
                             totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}
+                            highlightedSpace={highlightedSpace}
                             selectedFacilityTypes={selectedFacilityTypes}
                             setSelectedFacilityTypes={setSelectedFacilityTypes}
                             filteredFacilityTypeList={filteredFacilityTypeList}

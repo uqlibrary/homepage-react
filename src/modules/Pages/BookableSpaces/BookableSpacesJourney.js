@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Box, Button, Chip, Grid, IconButton, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Chip, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ComputerIcon from '@mui/icons-material/Computer';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
@@ -19,9 +17,7 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import { pluralise } from 'helpers/general';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
-import { spaceOpeningHours } from 'modules/Pages/BookableSpaces/spacesHelpers';
-
-const carouselAnimationDurationMs = 220;
+import { spaceOpeningHours, getSpaceHoursStatus } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledJourneyWrapper = styled('div')(({ theme }) => ({
     backgroundColor: '#fff',
@@ -38,6 +34,7 @@ const StyledJourneyPanel = styled('div')(({ theme }) => ({
     maxWidth: '1200px',
     margin: '0 auto',
     width: '100%',
+    boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
     rowGap: '2rem',
@@ -104,6 +101,164 @@ const StyledDetailSurface = styled('div')(({ theme }) => ({
     borderRadius: '12px',
     padding: '1.5rem',
     border: `1px solid ${theme.palette.designSystem.borderColor}`,
+}));
+
+const StyledLandingHeroShell = styled('section')(({ theme }) => ({
+    background: 'linear-gradient(135deg, #4b2271 0%, #5e2c8d 58%, #6f369f 100%)',
+    overflow: 'hidden',
+    boxShadow: '0 16px 40px rgba(45, 19, 74, 0.16)',
+    [theme.breakpoints.down('sm')]: {
+        boxShadow: '0 12px 28px rgba(45, 19, 74, 0.14)',
+    },
+}));
+
+const StyledLandingHeroLayout = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: '1fr',
+    alignItems: 'stretch',
+    minHeight: '420px',
+    [theme.breakpoints.up('md')]: {
+        gridTemplateColumns: 'minmax(0, 0.95fr) minmax(320px, 1.05fr)',
+        minHeight: '390px',
+    },
+}));
+
+const StyledLandingHeroVisual = styled('div')(({ theme }) => ({
+    position: 'relative',
+    minHeight: '220px',
+    background:
+        'linear-gradient(180deg, rgba(20, 8, 34, 0.18) 0%, rgba(20, 8, 34, 0.5) 100%), url(/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    order: 1,
+    [theme.breakpoints.up('md')]: {
+        order: 2,
+        minHeight: '100%',
+    },
+    '&::before': {
+        content: '""',
+        position: 'absolute',
+        inset: 0,
+        background:
+            'linear-gradient(135deg, rgba(81, 36, 122, 0.18) 0%, rgba(81, 36, 122, 0.04) 42%, rgba(16, 8, 31, 0.38) 100%)',
+    },
+}));
+
+const StyledLandingHeroContentColumn = styled('div')(({ theme }) => ({
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    padding: '1.25rem',
+    order: 2,
+    [theme.breakpoints.up('md')]: {
+        order: 1,
+        padding: '2rem 0 2rem 2rem',
+    },
+}));
+
+const StyledLandingHeroCard = styled('div')(({ theme }) => ({
+    position: 'relative',
+    zIndex: 1,
+    width: '100%',
+    maxWidth: '640px',
+    backgroundColor: '#5a2b87',
+    color: '#fff',
+    padding: '1.6rem',
+    boxShadow: '0 20px 40px rgba(26, 10, 43, 0.28)',
+    [theme.breakpoints.up('md')]: {
+        marginRight: '-5.5rem',
+        padding: '2.25rem 2.5rem',
+    },
+}));
+
+const StyledLandingHeroInner = styled('div')(({ theme }) => ({
+    width: '100%',
+    maxWidth: '1200px',
+    margin: '0 auto',
+    [theme.breakpoints.down('md')]: {
+        maxWidth: '100%',
+    },
+}));
+
+const StyledLandingFeatureCard = styled('article')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100%',
+    overflow: 'hidden',
+    borderRadius: '16px',
+    backgroundColor: '#fff',
+    border: `1px solid ${theme.palette.designSystem.borderColor}`,
+    boxShadow: '0 10px 24px rgba(31, 18, 48, 0.08)',
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
+    '&:hover': {
+        transform: 'translateY(-4px)',
+        boxShadow: '0 18px 36px rgba(31, 18, 48, 0.12)',
+        borderColor: '#d2c4e7',
+    },
+}));
+
+const StyledLandingFeatureImage = styled('div')(() => ({
+    width: '100%',
+    aspectRatio: '16 / 10',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundColor: '#ddd6e8',
+}));
+
+const StyledLandingHighlightPanel = styled('section')(({ theme }) => ({
+    position: 'relative',
+    minHeight: '300px',
+    borderRadius: '14px',
+    overflow: 'hidden',
+    backgroundColor: '#34204f',
+    display: 'flex',
+    alignItems: 'center',
+    padding: '1rem',
+    boxShadow: '0 14px 34px rgba(31, 18, 48, 0.16)',
+    boxSizing: 'border-box',
+    [theme.breakpoints.down('md')]: {
+        minHeight: 'auto',
+        alignItems: 'stretch',
+    },
+    [theme.breakpoints.down('sm')]: {
+        padding: '0.75rem',
+    },
+}));
+
+const StyledLandingHighlightPanelMedia = styled('div')(() => ({
+    position: 'absolute',
+    inset: 0,
+    backgroundColor: '#1a0a25',
+    backgroundImage:
+        'linear-gradient(140deg, rgba(18, 10, 29, 0.22) 0%, rgba(18, 10, 29, 0.6) 72%, rgba(18, 10, 29, 0.78) 100%), url(/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+}));
+
+const StyledLandingHighlightTextCard = styled('div')(({ theme }) => ({
+    position: 'relative',
+    zIndex: 1,
+    width: '100%',
+    maxWidth: '31rem',
+    margin: 0,
+    backgroundColor: 'rgba(90, 43, 135, 0.92)',
+    color: '#fff',
+    padding: '1.25rem 1.35rem',
+    boxShadow: '0 16px 30px rgba(23, 11, 37, 0.35)',
+    boxSizing: 'border-box',
+    [theme.breakpoints.down('sm')]: {
+        maxWidth: '100%',
+        padding: '1rem 1.05rem',
+    },
+}));
+
+const StyledLandingHighlightAsideContent = styled('div')(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: 'auto',
+    marginBottom: 'auto',
 }));
 
 const StyledAdvancedFiltersPanel = styled(StyledDetailSurface)(({ theme }) => ({
@@ -313,93 +468,66 @@ const StyledAdvancedFiltersPanel = styled(StyledDetailSurface)(({ theme }) => ({
     },
 }));
 
-const StyledImageCarousel = styled('div')(({ theme }) => ({
+const StyledDetailImage = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: '12px',
     overflow: 'hidden',
     backgroundColor: '#d5d5da',
-    minHeight: '240px',
+    aspectRatio: '4 / 3',
     [theme.breakpoints.up('md')]: {
-        minHeight: '340px',
+        aspectRatio: '16 / 10',
     },
     '& img': {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        display: 'block',
-    },
-    '& .carouselViewport': {
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        minHeight: 'inherit',
-        zIndex: 1,
-    },
-    '& .carouselImage': {
         position: 'absolute',
         inset: 0,
         width: '100%',
         height: '100%',
         objectFit: 'cover',
-        pointerEvents: 'none',
-    },
-    '& .slideInFromRight': {
-        animation: `bsjSlideInFromRight ${carouselAnimationDurationMs}ms ease both`,
-        zIndex: 2,
-    },
-    '& .slideInFromLeft': {
-        animation: `bsjSlideInFromLeft ${carouselAnimationDurationMs}ms ease both`,
-        zIndex: 2,
-    },
-    '& .slideOutToLeft': {
-        animation: `bsjSlideOutToLeft ${carouselAnimationDurationMs}ms ease both`,
-        zIndex: 1,
-    },
-    '& .slideOutToRight': {
-        animation: `bsjSlideOutToRight ${carouselAnimationDurationMs}ms ease both`,
-        zIndex: 1,
-    },
-    '@keyframes bsjSlideInFromRight': {
-        from: { transform: 'translateX(100%)' },
-        to: { transform: 'translateX(0)' },
-    },
-    '@keyframes bsjSlideInFromLeft': {
-        from: { transform: 'translateX(-100%)' },
-        to: { transform: 'translateX(0)' },
-    },
-    '@keyframes bsjSlideOutToLeft': {
-        from: { transform: 'translateX(0)' },
-        to: { transform: 'translateX(-100%)' },
-    },
-    '@keyframes bsjSlideOutToRight': {
-        from: { transform: 'translateX(0)' },
-        to: { transform: 'translateX(100%)' },
+        display: 'block',
     },
 }));
 
-const StyledCarouselControl = styled(IconButton)(() => ({
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    zIndex: 1,
-    pointerEvents: 'auto',
-    backgroundColor: 'rgba(20, 20, 20, 0.62)',
-    color: '#fff',
-    border: '1px solid rgba(255, 255, 255, 0.45)',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.25)',
-    opacity: 1,
-    visibility: 'visible',
-    '&:hover': {
-        backgroundColor: 'rgba(20, 20, 20, 0.78)',
+const HOURS_STATUS_CONFIG = {
+    open: {
+        label: 'Open now',
+        sx: { backgroundColor: '#e8f5e9', color: '#1b5e20', borderColor: '#a5d6a7', border: '1px solid' },
     },
-}));
+    'closing-soon': {
+        label: 'Closing soon',
+        sx: { backgroundColor: '#fff8e1', color: '#e65100', borderColor: '#ffe082', border: '1px solid' },
+    },
+    closed: {
+        label: 'Closed',
+        sx: { backgroundColor: '#fdecea', color: '#b71c1c', borderColor: '#ffcdd2', border: '1px solid' },
+    },
+};
 
-const StyledCarouselControlsLayer = styled('div')(() => ({
-    position: 'absolute',
-    inset: 0,
-    zIndex: 20,
-    pointerEvents: 'none',
-}));
+const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHoursError }) => {
+    if (weeklyHoursLoading || weeklyHoursError || !weeklyHours) return null;
+    const status = getSpaceHoursStatus(space, weeklyHours);
+    if (!status) return null;
+    const config = HOURS_STATUS_CONFIG[status];
+    return (
+        <Chip
+            data-testid={'spaces-journey-open-status-chip-' + status}
+            label={config.label}
+            size="small"
+            sx={{
+                fontWeight: 700,
+                fontSize: '0.75rem',
+                letterSpacing: '0.01em',
+                ...config.sx,
+            }}
+        />
+    );
+};
+
+SpaceOpenStatusChip.propTypes = {
+    space: PropTypes.object,
+    weeklyHours: PropTypes.object,
+    weeklyHoursLoading: PropTypes.bool,
+    weeklyHoursError: PropTypes.bool,
+};
 
 const intentDefinitions = [
     {
@@ -446,11 +574,7 @@ const intentDefinitions = [
     },
 ];
 
-const demoCarouselImages = [
-    '/images/spotlights/43f8c480-e1e9-11ea-8b42-656cb34d5c84.jpg',
-    '/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
-    '/images/spotlights/f9ff71b0-d77e-11ea-8881-93befcabdbc2.jpg',
-];
+const landingHeroHighlights = ['Quiet corners', 'Bookable rooms', 'Computer access', 'Campus-aware filters'];
 
 const getIntentFilterIds = (facilityGroups, intent) => {
     const ids = [];
@@ -468,6 +592,7 @@ const getIntentFilterIds = (facilityGroups, intent) => {
 const BookableSpacesJourney = ({
     filteredSpaceLocations,
     totalSpaceCount,
+    highlightedSpace,
     selectedFacilityTypes,
     setSelectedFacilityTypes,
     filteredFacilityTypeList,
@@ -491,15 +616,11 @@ const BookableSpacesJourney = ({
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm'));
+    const journeyTopRef = React.useRef(null);
     const [view, setView] = React.useState('landing');
     const [selectedIntentId, setSelectedIntentId] = React.useState(null);
     const [selectedSpace, setSelectedSpace] = React.useState(null);
-    const [activeImageIndex, setActiveImageIndex] = React.useState(0);
-    const [previousImageIndex, setPreviousImageIndex] = React.useState(null);
-    const [isCarouselAnimating, setIsCarouselAnimating] = React.useState(false);
-    const [carouselDirection, setCarouselDirection] = React.useState('next');
     const [showAdvancedFilters, setShowAdvancedFilters] = React.useState(false);
-    const carouselAnimationTimeoutRef = React.useRef(null);
     const canShowAdvancedFilters = view === 'results';
 
     const selectedIntent = intentDefinitions.find(intent => intent.id === selectedIntentId) || null;
@@ -546,19 +667,6 @@ const BookableSpacesJourney = ({
             (image, index, arr) => !!image?.src && arr.findIndex(i => i.src === image.src) === index,
         );
 
-        const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
-        if (isLocalhost && uniqueImages.length <= 1) {
-            const demoImages = demoCarouselImages.map(src => ({
-                src,
-                alt: `${selectedSpace?.space_name || 'Space'} demo image`,
-            }));
-
-            if (uniqueImages.length === 1) {
-                return [uniqueImages[0], ...demoImages.slice(0, 2)];
-            }
-            return demoImages;
-        }
-
         if (uniqueImages.length === 0) {
             return [
                 {
@@ -577,47 +685,10 @@ const BookableSpacesJourney = ({
     );
 
     React.useEffect(() => {
-        setActiveImageIndex(0);
-        setPreviousImageIndex(null);
-        setIsCarouselAnimating(false);
-        setCarouselDirection('next');
-    }, [selectedSpace]);
-
-    React.useEffect(() => {
-        return () => {
-            if (carouselAnimationTimeoutRef.current) {
-                clearTimeout(carouselAnimationTimeoutRef.current);
-            }
-        };
-    }, []);
-
-    React.useEffect(() => {
         if (!canShowAdvancedFilters && showAdvancedFilters) {
             setShowAdvancedFilters(false);
         }
     }, [canShowAdvancedFilters, showAdvancedFilters]);
-
-    const handleCarouselChange = direction => {
-        if (detailImages.length <= 1 || isCarouselAnimating) return;
-
-        const nextIndex =
-            direction === 'prev'
-                ? (activeImageIndex - 1 + detailImages.length) % detailImages.length
-                : (activeImageIndex + 1) % detailImages.length;
-
-        setPreviousImageIndex(activeImageIndex);
-        setCarouselDirection(direction);
-        setActiveImageIndex(nextIndex);
-        setIsCarouselAnimating(true);
-
-        if (carouselAnimationTimeoutRef.current) {
-            clearTimeout(carouselAnimationTimeoutRef.current);
-        }
-        carouselAnimationTimeoutRef.current = setTimeout(() => {
-            setIsCarouselAnimating(false);
-            setPreviousImageIndex(null);
-        }, carouselAnimationDurationMs);
-    };
 
     const applyIntentFilters = intent => {
         const ids = getIntentFilterIds(filteredFacilityTypeList?.data?.facility_type_groups, intent);
@@ -672,36 +743,169 @@ const BookableSpacesJourney = ({
 
     const landingHighlights = [
         {
+            eyebrow: 'Explore',
             title: 'Discover spaces faster',
             text:
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+            image: '/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
+            imagePosition: '18% center',
         },
         {
+            eyebrow: 'Choose',
             title: 'Match to your study style',
             text:
                 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+            image: '/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
+            imagePosition: 'center center',
         },
         {
-            title: 'Refine with confidence',
-            text:
-                'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+            eyebrow: 'Relax',
+            title: 'Study in comfort',
+            text: 'Find spaces with the facilities and atmosphere that make it easier to settle in and stay focused.',
+            image: '/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
+            imagePosition: '82% center',
         },
     ];
 
-    const landingSupportItems = [
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.',
-        'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    ];
+    const highlightSpaceDescription = React.useMemo(() => {
+        if (!highlightedSpace?.space_description) return '';
+        return String(highlightedSpace.space_description)
+            .replace(/<[^>]*>/g, ' ')
+            .replace(/\s{2,}/g, ' ')
+            .trim();
+    }, [highlightedSpace]);
 
-    let activeImageAnimationClass = '';
-    if (isCarouselAnimating) {
-        activeImageAnimationClass = carouselDirection === 'next' ? 'slideInFromRight' : 'slideInFromLeft';
-    }
+    React.useEffect(() => {
+        if (view === 'details') {
+            journeyTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, [view]);
 
     return (
-        <StyledJourneyWrapper data-testid="spaces-journey-wrapper">
+        <StyledJourneyWrapper data-testid="spaces-journey-wrapper" ref={journeyTopRef}>
+            {view === 'landing' && (
+                <StyledLandingHeroShell>
+                    <StyledLandingHeroInner data-testid="spaces-journey-landing-hero-inner">
+                        <StyledLandingHeroLayout data-testid="spaces-journey-landing-hero-layout">
+                            <StyledLandingHeroContentColumn data-testid="spaces-journey-landing-hero-content-column">
+                                <StyledLandingHeroCard data-testid="spaces-journey-landing-hero-card">
+                                    <Typography
+                                        component="p"
+                                        sx={{
+                                            margin: 0,
+                                            mb: 1,
+                                            fontSize: '0.92rem',
+                                            fontWeight: 700,
+                                            letterSpacing: '0.08em',
+                                            textTransform: 'uppercase',
+                                            color: 'rgba(255, 255, 255, 0.74)',
+                                        }}
+                                    >
+                                        Study spaces
+                                    </Typography>
+                                    <Typography
+                                        component="h2"
+                                        sx={{
+                                            margin: 0,
+                                            fontWeight: 400,
+                                            lineHeight: 1.12,
+                                            fontSize: { xs: '2.05rem', md: '2.8rem' },
+                                            letterSpacing: '-0.02em',
+                                        }}
+                                    >
+                                        Find a learning space that suits how you want to study
+                                    </Typography>
+                                    <Typography
+                                        variant="body1"
+                                        sx={{
+                                            mt: 2,
+                                            maxWidth: '30rem',
+                                            color: 'rgba(255, 255, 255, 0.88)',
+                                            lineHeight: 1.7,
+                                            fontSize: { xs: '1rem', md: '1.08rem' },
+                                        }}
+                                    >
+                                        Start with your study style, then refine by campus, facilities and room type to
+                                        get to the right space faster.
+                                    </Typography>
+                                    <Box
+                                        data-testid="spaces-journey-landing-hero-highlights"
+                                        sx={{
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                            gap: '0.55rem',
+                                            mt: 2,
+                                        }}
+                                    >
+                                        {landingHeroHighlights.map(item => (
+                                            <Box
+                                                key={item}
+                                                component="span"
+                                                data-testid={`spaces-journey-landing-hero-highlight-${item
+                                                    .toLowerCase()
+                                                    .replace(/[^a-z0-9]+/g, '-')}`}
+                                                sx={{
+                                                    px: 1.05,
+                                                    py: 0.45,
+                                                    borderRadius: '999px',
+                                                    border: '1px solid rgba(255, 255, 255, 0.22)',
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                                    color: '#fff',
+                                                    fontSize: '0.82rem',
+                                                    fontWeight: 600,
+                                                    letterSpacing: '0.01em',
+                                                }}
+                                            >
+                                                {item}
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                    <Stack direction={isMobileView ? 'column' : 'row'} spacing={1.5} sx={{ mt: 3 }}>
+                                        <Button
+                                            data-testid="spaces-journey-landing-get-started"
+                                            variant="contained"
+                                            onClick={goToIntentSelection}
+                                            sx={{
+                                                textTransform: 'none',
+                                                alignSelf: 'flex-start',
+                                                backgroundColor: '#fff',
+                                                color: '#51247a',
+                                                fontWeight: 700,
+                                                '&:hover': {
+                                                    backgroundColor: '#f3ebff',
+                                                },
+                                            }}
+                                        >
+                                            Get started
+                                        </Button>
+                                        <Button
+                                            data-testid="spaces-journey-landing-browse-all"
+                                            variant="outlined"
+                                            onClick={goToLegacyBrowse}
+                                            sx={{
+                                                textTransform: 'none',
+                                                alignSelf: 'flex-start',
+                                                color: '#fff',
+                                                borderColor: 'rgba(255, 255, 255, 0.45)',
+                                                '&:hover': {
+                                                    borderColor: '#fff',
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                                                },
+                                            }}
+                                        >
+                                            Browse all study spaces
+                                        </Button>
+                                    </Stack>
+                                </StyledLandingHeroCard>
+                            </StyledLandingHeroContentColumn>
+                            <StyledLandingHeroVisual
+                                data-testid="spaces-journey-landing-hero-visual"
+                                aria-hidden="true"
+                            />
+                        </StyledLandingHeroLayout>
+                    </StyledLandingHeroInner>
+                </StyledLandingHeroShell>
+            )}
             <StyledJourneyPanel>
                 <Stack
                     direction="row"
@@ -789,35 +993,6 @@ const BookableSpacesJourney = ({
 
                 {view === 'landing' && (
                     <Stack spacing={3}>
-                        <StyledDetailSurface>
-                            <Stack spacing={2}>
-                                <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
-                                    Start with what you need
-                                </Typography>
-                                <Typography variant="body1" sx={{ color: '#1f1230', maxWidth: '70ch' }}>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                </Typography>
-                                <Stack direction={isMobileView ? 'column' : 'row'} spacing={1.5}>
-                                    <Button
-                                        variant="contained"
-                                        onClick={goToIntentSelection}
-                                        sx={{ textTransform: 'none', alignSelf: 'flex-start' }}
-                                    >
-                                        Get started
-                                    </Button>
-                                    <Button
-                                        variant="outlined"
-                                        onClick={goToLegacyBrowse}
-                                        sx={{ textTransform: 'none', alignSelf: 'flex-start' }}
-                                    >
-                                        Browse all study spaces
-                                    </Button>
-                                </Stack>
-                            </Stack>
-                        </StyledDetailSurface>
-
                         <Box
                             sx={{
                                 display: 'grid',
@@ -826,43 +1001,201 @@ const BookableSpacesJourney = ({
                                 alignItems: 'stretch',
                             }}
                         >
-                            {landingHighlights.map(item => (
-                                <StyledDetailSurface
+                            {landingHighlights.map((item, index) => (
+                                <StyledLandingFeatureCard
                                     key={item.title}
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        minHeight: { xs: 'auto', md: '190px' },
-                                    }}
+                                    data-testid={`spaces-journey-landing-feature-card-${index + 1}`}
                                 >
-                                    <Typography component="h3" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-                                        {item.title}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ color: '#4f4d57' }}>
-                                        {item.text}
-                                    </Typography>
-                                </StyledDetailSurface>
+                                    <StyledLandingFeatureImage
+                                        data-testid={`spaces-journey-landing-feature-image-${index + 1}`}
+                                        sx={{
+                                            backgroundImage: `url(${item.image})`,
+                                            backgroundPosition: item.imagePosition || 'center',
+                                        }}
+                                    />
+                                    <Box
+                                        data-testid={`spaces-journey-landing-feature-content-${index + 1}`}
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flexGrow: 1,
+                                            p: { xs: '1.2rem', md: '1.4rem' },
+                                        }}
+                                    >
+                                        <Typography
+                                            component="p"
+                                            data-testid={`spaces-journey-landing-feature-eyebrow-${index + 1}`}
+                                            sx={{
+                                                m: 0,
+                                                mb: 0.55,
+                                                color: '#6a6278',
+                                                fontSize: '0.92rem',
+                                                fontWeight: 500,
+                                            }}
+                                        >
+                                            {item.eyebrow}
+                                        </Typography>
+                                        <Typography
+                                            component="h3"
+                                            data-testid={`spaces-journey-landing-feature-title-${index + 1}`}
+                                            sx={{
+                                                m: 0,
+                                                mb: 1,
+                                                color: '#20142f',
+                                                fontSize: { xs: '1.55rem', md: '1.8rem' },
+                                                lineHeight: 1.15,
+                                                fontWeight: 500,
+                                                letterSpacing: '-0.02em',
+                                            }}
+                                        >
+                                            {item.title}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            data-testid={`spaces-journey-landing-feature-text-${index + 1}`}
+                                            sx={{
+                                                color: '#5a5861',
+                                                fontSize: '1rem',
+                                                lineHeight: 1.65,
+                                                maxWidth: { xs: '100%', lg: '30ch' },
+                                            }}
+                                        >
+                                            {item.text}
+                                        </Typography>
+                                    </Box>
+                                </StyledLandingFeatureCard>
                             ))}
                         </Box>
 
-                        <StyledDetailSurface>
-                            <Grid container spacing={3} alignItems="stretch">
-                                <Grid item xs={12} md={7}>
-                                    <Typography component="h3" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-                                        Study Space highlight
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ color: '#4f4d57', mb: 1.5 }}>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices
-                                        gravida dictum fusce ut placerat orci nulla.
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ color: '#4f4d57' }}>
-                                        This is a placeholder. it could have images, text, rich text, etc. blandit
-                                        volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque.
-                                    </Typography>
+                        <StyledLandingHighlightPanel data-testid="spaces-journey-landing-highlight-panel">
+                            <StyledLandingHighlightPanelMedia
+                                aria-hidden="true"
+                                sx={
+                                    highlightedSpace?.space_photo_url
+                                        ? {
+                                              backgroundImage:
+                                                  'linear-gradient(140deg, rgba(18, 10, 29, 0.22) 0%, rgba(18, 10, 29, 0.6) 72%, rgba(18, 10, 29, 0.78) 100%), url(' +
+                                                  highlightedSpace.space_photo_url +
+                                                  ')',
+                                              backgroundSize: 'cover',
+                                              backgroundPosition: 'center',
+                                          }
+                                        : undefined
+                                }
+                            />
+                            <Grid
+                                container
+                                spacing={2.5}
+                                alignItems="stretch"
+                                sx={{
+                                    position: 'relative',
+                                    zIndex: 1,
+                                    width: '100%',
+                                    [theme.breakpoints.down('lg')]: {
+                                        margin: 0,
+                                        width: '100%',
+                                    },
+                                }}
+                            >
+                                <Grid
+                                    item
+                                    xs={12}
+                                    lg={7}
+                                    data-testid="spaces-journey-landing-highlight-primary"
+                                    sx={{
+                                        [theme.breakpoints.down('lg')]: {
+                                            pl: '0 !important',
+                                            pr: '0 !important',
+                                        },
+                                    }}
+                                >
+                                    <StyledLandingHighlightTextCard data-testid="spaces-journey-landing-highlight-text-card">
+                                        <Typography
+                                            component="h3"
+                                            variant="h6"
+                                            data-testid="spaces-journey-landing-highlight-title"
+                                            sx={{
+                                                fontWeight: 700,
+                                                mb: 0.8,
+                                                color: '#fff',
+                                            }}
+                                        >
+                                            Study Space highlight
+                                        </Typography>
+                                        {!!highlightedSpace?.space_name && (
+                                            <Typography
+                                                component="h4"
+                                                variant="subtitle1"
+                                                data-testid="spaces-journey-landing-highlight-space-name"
+                                                sx={{ fontWeight: 600, mb: 0.8, color: 'rgba(255,255,255,0.88)' }}
+                                            >
+                                                {highlightedSpace.space_name}
+                                                {!!highlightedSpace.space_library_name &&
+                                                    ' — ' + highlightedSpace.space_library_name}
+                                            </Typography>
+                                        )}
+                                        {!!highlightedSpace && (
+                                            <Box sx={{ mb: 1.2 }}>
+                                                <SpaceOpenStatusChip
+                                                    space={highlightedSpace}
+                                                    weeklyHours={weeklyHours}
+                                                    weeklyHoursLoading={weeklyHoursLoading}
+                                                    weeklyHoursError={weeklyHoursError}
+                                                />
+                                            </Box>
+                                        )}
+                                        {!!highlightedSpace?.space_type_details?.space_type_description && (
+                                            <Typography
+                                                variant="body2"
+                                                data-testid="spaces-journey-landing-highlight-body-1"
+                                                sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.6, mb: 1 }}
+                                            >
+                                                {highlightedSpace.space_type_details.space_type_description}
+                                            </Typography>
+                                        )}
+                                        {!!highlightSpaceDescription && (
+                                            <Typography
+                                                variant="body2"
+                                                data-testid="spaces-journey-landing-highlight-body-2"
+                                                sx={{ color: 'rgba(255,255,255,0.82)', lineHeight: 1.55, mb: 1.5 }}
+                                            >
+                                                {highlightSpaceDescription}
+                                            </Typography>
+                                        )}
+                                        <Button
+                                            data-testid="spaces-journey-landing-highlight-view-space"
+                                            variant="contained"
+                                            onClick={() => {
+                                                setSelectedSpace(highlightedSpace);
+                                                setView('details');
+                                            }}
+                                            sx={{
+                                                textTransform: 'none',
+                                                alignSelf: 'flex-start',
+                                                backgroundColor: '#fff',
+                                                color: '#51247a',
+                                                fontWeight: 700,
+                                                '&:hover': { backgroundColor: '#f3ebff' },
+                                            }}
+                                        >
+                                            View this space
+                                        </Button>
+                                    </StyledLandingHighlightTextCard>
                                 </Grid>
-                                <Grid item xs={12} md={5}>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    lg={5}
+                                    data-testid="spaces-journey-landing-highlight-secondary"
+                                    sx={{
+                                        [theme.breakpoints.down('lg')]: {
+                                            pl: '0 !important',
+                                            pr: '0 !important',
+                                        },
+                                    }}
+                                >
                                     <Box
+                                        data-testid="spaces-journey-landing-highlight-offered-box"
                                         sx={{
                                             backgroundColor: '#ffffff',
                                             border: '1px solid #ddd8e4',
@@ -870,27 +1203,52 @@ const BookableSpacesJourney = ({
                                             p: '1rem',
                                             height: '100%',
                                             boxSizing: 'border-box',
+                                            display: 'flex',
+                                            flexDirection: 'column',
                                         }}
                                     >
-                                        <Typography component="h4" variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>
-                                            What's offered here
-                                        </Typography>
-                                        <Stack component="ul" spacing={1} sx={{ pl: '1.25rem', m: 0 }}>
-                                            {landingSupportItems.map(item => (
-                                                <Typography
-                                                    component="li"
-                                                    variant="body2"
-                                                    key={item}
-                                                    sx={{ color: '#4f4d57' }}
+                                        <StyledLandingHighlightAsideContent data-testid="spaces-journey-landing-highlight-offered-content">
+                                            <Typography
+                                                component="h4"
+                                                variant="subtitle1"
+                                                data-testid="spaces-journey-landing-highlight-offered-title"
+                                                sx={{ fontWeight: 700, mb: 1 }}
+                                            >
+                                                What's offered here
+                                            </Typography>
+                                            {highlightedSpace?.facility_types?.length > 0 ? (
+                                                <Box
+                                                    data-testid="spaces-journey-landing-highlight-offered-chips"
+                                                    sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', mt: 0.5 }}
                                                 >
-                                                    {item}
+                                                    {highlightedSpace.facility_types.map(ft => (
+                                                        <Chip
+                                                            key={ft.facility_type_id}
+                                                            label={ft.facility_type_name}
+                                                            size="small"
+                                                            variant="outlined"
+                                                            sx={{
+                                                                borderColor: '#c9bfdf',
+                                                                color: '#51247a',
+                                                                fontSize: '0.8rem',
+                                                            }}
+                                                        />
+                                                    ))}
+                                                </Box>
+                                            ) : (
+                                                <Typography
+                                                    variant="body2"
+                                                    sx={{ color: '#4f4d57', mt: 0.5 }}
+                                                    data-testid="spaces-journey-landing-highlight-offered-empty"
+                                                >
+                                                    No facilities listed for this space.
                                                 </Typography>
-                                            ))}
-                                        </Stack>
+                                            )}
+                                        </StyledLandingHighlightAsideContent>
                                     </Box>
                                 </Grid>
                             </Grid>
-                        </StyledDetailSurface>
+                        </StyledLandingHighlightPanel>
                     </Stack>
                 )}
 
@@ -1016,19 +1374,26 @@ const BookableSpacesJourney = ({
                                         <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
                                             {space?.space_library_name}
                                         </Typography>
-                                        <Typography
-                                            variant="body2"
+                                        <Typography variant="body2" sx={{ color: '#999' }}>
+                                            {space?.space_type_details?.space_type_name || space?.space_type}
+                                        </Typography>
+                                        <Box
                                             sx={{
-                                                color: '#999',
                                                 mb:
                                                     space?.space_type_details?.space_type_description ||
                                                     space?.space_description
                                                         ? 1
                                                         : 0,
+                                                mt: 0.5,
                                             }}
                                         >
-                                            {space?.space_type_details?.space_type_name || space?.space_type}
-                                        </Typography>
+                                            <SpaceOpenStatusChip
+                                                space={space}
+                                                weeklyHours={weeklyHours}
+                                                weeklyHoursLoading={weeklyHoursLoading}
+                                                weeklyHoursError={weeklyHoursError}
+                                            />
+                                        </Box>
                                         {!!space?.space_type_details?.space_type_description && (
                                             <Typography
                                                 variant="body2"
@@ -1062,7 +1427,7 @@ const BookableSpacesJourney = ({
                             Back to results
                         </Button>
 
-                        {/* Hero: carousel + title/meta side by side on desktop */}
+                        {/* Hero: image + title/meta side by side on desktop */}
                         <Box
                             sx={{
                                 display: 'grid',
@@ -1071,24 +1436,9 @@ const BookableSpacesJourney = ({
                                 alignItems: 'start',
                             }}
                         >
-                            <StyledImageCarousel sx={{ minHeight: { xs: '220px', md: '360px' } }}>
-                                {detailImages?.[activeImageIndex]?.src ? (
-                                    <div className="carouselViewport">
-                                        {isCarouselAnimating && detailImages?.[previousImageIndex]?.src && (
-                                            <img
-                                                className={`carouselImage ${
-                                                    carouselDirection === 'next' ? 'slideOutToLeft' : 'slideOutToRight'
-                                                }`}
-                                                src={detailImages[previousImageIndex].src}
-                                                alt={detailImages[previousImageIndex].alt}
-                                            />
-                                        )}
-                                        <img
-                                            className={`carouselImage ${activeImageAnimationClass}`}
-                                            src={detailImages[activeImageIndex].src}
-                                            alt={detailImages[activeImageIndex].alt}
-                                        />
-                                    </div>
+                            <StyledDetailImage>
+                                {detailImages?.[0]?.src ? (
+                                    <img src={detailImages[0].src} alt={detailImages[0].alt} />
                                 ) : (
                                     <Box
                                         sx={{
@@ -1104,25 +1454,7 @@ const BookableSpacesJourney = ({
                                         No image available
                                     </Box>
                                 )}
-                                {detailImages.length > 1 && (
-                                    <StyledCarouselControlsLayer>
-                                        <StyledCarouselControl
-                                            aria-label="Previous image"
-                                            onClick={() => handleCarouselChange('prev')}
-                                            sx={{ left: 8 }}
-                                        >
-                                            <ChevronLeftIcon />
-                                        </StyledCarouselControl>
-                                        <StyledCarouselControl
-                                            aria-label="Next image"
-                                            onClick={() => handleCarouselChange('next')}
-                                            sx={{ right: 8 }}
-                                        >
-                                            <ChevronRightIcon />
-                                        </StyledCarouselControl>
-                                    </StyledCarouselControlsLayer>
-                                )}
-                            </StyledImageCarousel>
+                            </StyledDetailImage>
 
                             <Stack spacing={2} sx={{ pt: { xs: 0, md: 0.5 } }}>
                                 <Box>
@@ -1139,22 +1471,35 @@ const BookableSpacesJourney = ({
                                     {!!(
                                         selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type
                                     ) && (
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                display: 'inline-block',
-                                                px: 1.25,
-                                                py: 0.25,
-                                                borderRadius: '20px',
-                                                backgroundColor: '#ede8f5',
-                                                color: '#51247a',
-                                                fontWeight: 600,
-                                                letterSpacing: 0.3,
-                                            }}
+                                        <Stack
+                                            direction="row"
+                                            spacing={1}
+                                            alignItems="center"
+                                            sx={{ flexWrap: 'wrap' }}
                                         >
-                                            {selectedSpace?.space_type_details?.space_type_name ||
-                                                selectedSpace?.space_type}
-                                        </Typography>
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
+                                                    display: 'inline-block',
+                                                    px: 1.25,
+                                                    py: 0.25,
+                                                    borderRadius: '20px',
+                                                    backgroundColor: '#ede8f5',
+                                                    color: '#51247a',
+                                                    fontWeight: 600,
+                                                    letterSpacing: 0.3,
+                                                }}
+                                            >
+                                                {selectedSpace?.space_type_details?.space_type_name ||
+                                                    selectedSpace?.space_type}
+                                            </Typography>
+                                            <SpaceOpenStatusChip
+                                                space={selectedSpace}
+                                                weeklyHours={weeklyHours}
+                                                weeklyHoursLoading={weeklyHoursLoading}
+                                                weeklyHoursError={weeklyHoursError}
+                                            />
+                                        </Stack>
                                     )}
                                 </Box>
 
@@ -1342,6 +1687,7 @@ const BookableSpacesJourney = ({
 BookableSpacesJourney.propTypes = {
     filteredSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
+    highlightedSpace: PropTypes.object,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
     filteredFacilityTypeList: PropTypes.object,
