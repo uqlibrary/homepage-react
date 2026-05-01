@@ -130,7 +130,9 @@ const StyledLandingHeroVisual = styled('div')(({ theme }) => ({
     position: 'relative',
     minHeight: '220px',
     background:
-        'linear-gradient(180deg, rgba(20, 8, 34, 0.18) 0%, rgba(20, 8, 34, 0.5) 100%), url(/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg)',
+        'linear-gradient(180deg, rgba(20, 8, 34, 0.18) 0%, rgba(20, 8, 34, 0.5) 100%), url(' +
+        journeyFallbackImage +
+        ')',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     order: 1,
@@ -752,7 +754,7 @@ const BookableSpacesJourney = ({
             title: 'Discover spaces faster',
             text:
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-            image: '/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
+            image: journeyFallbackImage,
             imagePosition: '18% center',
         },
         {
@@ -760,14 +762,14 @@ const BookableSpacesJourney = ({
             title: 'Match to your study style',
             text:
                 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-            image: '/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
+            image: journeyFallbackImage,
             imagePosition: 'center center',
         },
         {
             eyebrow: 'Relax',
             title: 'Study in comfort',
             text: 'Find spaces with the facilities and atmosphere that make it easier to settle in and stay focused.',
-            image: '/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
+            image: journeyFallbackImage,
             imagePosition: '82% center',
         },
     ];
