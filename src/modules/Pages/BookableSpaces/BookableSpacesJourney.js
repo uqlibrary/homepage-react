@@ -19,6 +19,9 @@ import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import { spaceOpeningHours, getSpaceHoursStatus } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
+const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
+const journeyFallbackDetailImage = require('../../../../public/images/digital-learning-hub-hero-shot-wide.png');
+
 const StyledJourneyWrapper = styled('div')(({ theme }) => ({
     backgroundColor: '#fff',
     minHeight: 'calc(100vh - 200px)',
@@ -231,7 +234,9 @@ const StyledLandingHighlightPanelMedia = styled('div')(() => ({
     inset: 0,
     backgroundColor: '#1a0a25',
     backgroundImage:
-        'linear-gradient(140deg, rgba(18, 10, 29, 0.22) 0%, rgba(18, 10, 29, 0.6) 72%, rgba(18, 10, 29, 0.78) 100%), url(/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg)',
+        'linear-gradient(140deg, rgba(18, 10, 29, 0.22) 0%, rgba(18, 10, 29, 0.6) 72%, rgba(18, 10, 29, 0.78) 100%), url(' +
+        journeyFallbackImage +
+        ')',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
@@ -670,7 +675,7 @@ const BookableSpacesJourney = ({
         if (uniqueImages.length === 0) {
             return [
                 {
-                    src: null,
+                    src: journeyFallbackDetailImage,
                     alt: 'Placeholder image for this space',
                 },
             ];
@@ -1076,6 +1081,8 @@ const BookableSpacesJourney = ({
                                               backgroundImage:
                                                   'linear-gradient(140deg, rgba(18, 10, 29, 0.22) 0%, rgba(18, 10, 29, 0.6) 72%, rgba(18, 10, 29, 0.78) 100%), url(' +
                                                   highlightedSpace.space_photo_url +
+                                                  '), url(' +
+                                                  journeyFallbackImage +
                                                   ')',
                                               backgroundSize: 'cover',
                                               backgroundPosition: 'center',
@@ -1438,7 +1445,14 @@ const BookableSpacesJourney = ({
                         >
                             <StyledDetailImage>
                                 {detailImages?.[0]?.src ? (
-                                    <img src={detailImages[0].src} alt={detailImages[0].alt} />
+                                    <img
+                                        src={detailImages[0].src}
+                                        alt={detailImages[0].alt}
+                                        onError={event => {
+                                            event.currentTarget.onerror = null;
+                                            event.currentTarget.src = journeyFallbackDetailImage;
+                                        }}
+                                    />
                                 ) : (
                                     <Box
                                         sx={{
