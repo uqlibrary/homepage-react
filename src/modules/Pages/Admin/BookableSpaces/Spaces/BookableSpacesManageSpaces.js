@@ -27,32 +27,37 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
+import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DoneIcon from '@mui/icons-material/Done';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-
-import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
-import DoneIcon from '@mui/icons-material/Done';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import SouthIcon from '@mui/icons-material/South';
 import NorthIcon from '@mui/icons-material/North';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
-import { addClass, removeClass, slugifyName, standardText } from 'helpers/general';
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
-import { getFriendlyLocationDescription, isBookable } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { addClass, removeClass, scrollToTopOfPage, slugifyName, standardText } from 'helpers/general';
+import {
+    getFlatFacilityTypeList,
+    getFriendlyLocationDescription,
+    isBookable,
+} from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { getSpaceOutageStatus } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import {
     addBreadcrumbsToSiteHeader,
+    displayToastMessage,
     spacesAdminLink,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
+import { useConfirmationState } from 'hooks';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 const backgroundColorColumn = '#f0f0f0';
 const borderColour = '1px solid rgb(224 224 224 / 1)';
@@ -109,6 +114,7 @@ const StyledTableHead = styled(TableHead)(() => ({
 const StyledHeadingFacilityTableCell = styled(TableCell)(() => ({
     whiteSpace: 'break-spaces',
     textAlign: 'center',
+    verticalAlign: 'bottom',
 }));
 
 const StyledHeaderTableRow = styled(TableRow)(({ theme }) => ({
@@ -236,6 +242,14 @@ export const BookableSpacesManageSpaces = ({
     console.log('TOP facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
 
     const { account } = useAccountContext();
+    const [savingProgressShown, showSavingProgress] = useState(false);
+
+    const [currentEditColumn, setCurrentEditColumn] = useState(null);
+    const [checkedFacilityType, setCheckedFacilityType2] = useState({});
+    const setCheckedFacilityType = x => {
+        console.log('setCheckedFacilityType', x);
+        setCheckedFacilityType2(x);
+    };
 
     const [displayedRows, setDisplayedRows2] = useState([]);
     const setDisplayedRows = rows => {
@@ -294,6 +308,22 @@ export const BookableSpacesManageSpaces = ({
         return sourceSpaces.sort((a, b) => compareByName(a, b) * directionMultiplier);
     };
 
+    const [isConfirmationBoxOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    const [confirmationLocale, setConfirmationLocale] = React.useState({
+        confirmationTitle: 'An error occurred while saving',
+        confirmButtonLabel: 'OK',
+    });
+    const hideConfirmationLocal = () => {
+        hideConfirmation(0);
+    };
+    const showErrorMessageinPopup = confirmationTitle => {
+        setConfirmationLocale({
+            ...confirmationLocale,
+            confirmationTitle: confirmationTitle,
+        });
+        showConfirmation();
+    };
+
     // the filters we will show on the page
     const [availableFilters, setAvailableFilters2] = useState([
         { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
@@ -332,6 +362,43 @@ export const BookableSpacesManageSpaces = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [campusListError, campusListLoading, campusList, bookableSpacesRoomList?.data?.locations]);
+
+    const initialFilterTypeValues = () => {
+        const state = {};
+        const flatFacilityTypeList = getFlatFacilityTypeList(facilityTypeList);
+        for (const space of bookableSpacesRoomList?.data?.locations) {
+            console.log('init', space);
+            state[space.space_id] = {};
+            const enabledIds = new Set(space.facility_types.map(f => f.facility_type_id));
+
+            for (const ft of flatFacilityTypeList) {
+                state[space.space_id][ft.facility_type_id] = enabledIds.has(ft.facility_type_id);
+            }
+        }
+        return state;
+    };
+
+    React.useEffect(() => {
+        if (
+            bookableSpacesRoomListError === false &&
+            bookableSpacesRoomListLoading === false &&
+            !!bookableSpacesRoomList?.data?.locations &&
+            bookableSpacesRoomList?.data?.locations.length > 0 &&
+            facilityTypeListError === false &&
+            facilityTypeListLoading === false &&
+            !!facilityTypeList?.data?.facility_type_groups &&
+            facilityTypeList?.data?.facility_type_groups.length > 0
+        ) {
+            setCheckedFacilityType(initialFilterTypeValues());
+        }
+    }, [
+        bookableSpacesRoomListError,
+        bookableSpacesRoomListLoading,
+        bookableSpacesRoomList,
+        facilityTypeListError,
+        facilityTypeListLoading,
+        facilityTypeList,
+    ]);
 
     React.useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -739,6 +806,64 @@ export const BookableSpacesManageSpaces = ({
                     id: String(spaceType?.id),
                 })) || [];
         const bookableColumnId = 0;
+
+        const setColumnEditable = e => {
+            const button = e?.target?.closest('button');
+
+            const idTemplate = 'facility-type-column-edit-';
+            const id = Number(button?.id?.replace(idTemplate, ''));
+            setCurrentEditColumn(id);
+        };
+        const clearColumnEditable = () => {
+            setCurrentEditColumn(null);
+            setCheckedFacilityType(initialFilterTypeValues());
+        };
+        const holdFacilityTypeChange = (spaceId, facilityTypeId, checked) => {
+            const updatedList = {
+                ...checkedFacilityType,
+                [spaceId]: {
+                    ...checkedFacilityType[spaceId],
+                    [facilityTypeId]: checked,
+                },
+            };
+            setCheckedFacilityType(updatedList);
+        };
+        const saveChangedFilterTypes = async e => {
+            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+
+            scrollToTopOfPage();
+            showSavingProgress(true);
+
+            const buttonIdTemplate = 'facility-type-column-save-';
+            const button = e?.target?.closest('button');
+            const checkboxId = Number(button?.id?.replace(buttonIdTemplate, ''));
+            const valuestoSend = Object.entries(checkedFacilityType).map(([spaceId, facilities]) => ({
+                space_id: spaceId,
+                checked: facilities[checkboxId] ?? false,
+            }));
+
+            if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+                setCookie('CYPRESS_DATA_SAVED', valuestoSend);
+            }
+            try {
+                const response = await actions.saveBulkFilterTypes(valuestoSend);
+                if (response?.status?.toLowerCase?.() !== 'ok') {
+                    throw new Error(response?.message || 'updating the facility types failed');
+                }
+                displayToastMessage('Change to facility types saved.');
+            } catch (error) {
+                console.error('Error updating bulk facilities', error);
+                const message = error?.message || 'updating the facility types failed';
+                showErrorMessageinPopup(
+                    `[BSMS-001] Sorry, an error occurred - ${message}. The admins have been informed`,
+                );
+            } finally {
+                setCurrentEditColumn(null);
+                showSavingProgress(false);
+                actions.loadAllBookableSpacesRooms({ includeDrafts: true });
+            }
+        };
+
         return (
             <>
                 <StyledTableWrapperDiv
@@ -1075,20 +1200,60 @@ export const BookableSpacesManageSpaces = ({
                                         </div>
                                     </StyledStickyTableCell>
                                     {sortedFacilityTypeGroups?.map(group =>
-                                        group?.facility_type_children?.map(facilityType => (
-                                            <StyledHeadingFacilityTableCell
-                                                component="th"
-                                                key={`facilitytype-${facilityType?.facility_type_id}`}
-                                                sx={{
-                                                    backgroundColor: getColumnBackgroundColor(
-                                                        facilityType?.overall_order,
-                                                    ),
-                                                    borderLeft: borderColour,
-                                                }}
-                                            >
-                                                {facilityType?.facility_type_name}
-                                            </StyledHeadingFacilityTableCell>
-                                        )),
+                                        group?.facility_type_children?.map(facilityType => {
+                                            const currentlyEditing =
+                                                currentEditColumn === facilityType.facility_type_id;
+                                            const isDisabled =
+                                                currentEditColumn !== facilityType.facility_type_id &&
+                                                currentEditColumn !== null;
+                                            return (
+                                                <StyledHeadingFacilityTableCell
+                                                    component="th"
+                                                    key={`facilitytype-${facilityType?.facility_type_id}`}
+                                                    sx={{
+                                                        backgroundColor: getColumnBackgroundColor(
+                                                            facilityType?.overall_order,
+                                                        ),
+                                                        borderLeft: borderColour,
+                                                    }}
+                                                >
+                                                    {currentlyEditing && (
+                                                        <Button
+                                                            key={`facility-type-column-cancel-${facilityType.facility_type_id}`}
+                                                            id={`facility-type-column-cancel-${facilityType.facility_type_id}`}
+                                                            data-testid={`facility-type-column-cancel-${facilityType.facility_type_id}`}
+                                                            onClick={clearColumnEditable}
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                    )}
+                                                    <div>{facilityType?.facility_type_name}</div>
+                                                    {!currentlyEditing && (
+                                                        <IconButton
+                                                            color="primary"
+                                                            key={`facility-type-column-edit-${facilityType.facility_type_id}`}
+                                                            data-testid={`facility-type-column-edit-${facilityType.facility_type_id}`}
+                                                            id={`facility-type-column-edit-${facilityType.facility_type_id}`}
+                                                            onClick={setColumnEditable}
+                                                            aria-label={`Fast edit which spaces can have ${facilityType?.facility_type_name}`}
+                                                            disabled={isDisabled}
+                                                        >
+                                                            <EditIcon style={{ width: '1rem' }} />
+                                                        </IconButton>
+                                                    )}
+                                                    {currentlyEditing && (
+                                                        <Button
+                                                            key={`facility-type-column-save-${facilityType.facility_type_id}`}
+                                                            id={`facility-type-column-save-${facilityType.facility_type_id}`}
+                                                            data-testid={`facility-type-column-save-${facilityType.facility_type_id}`}
+                                                            onClick={saveChangedFilterTypes}
+                                                        >
+                                                            Save
+                                                        </Button>
+                                                    )}
+                                                </StyledHeadingFacilityTableCell>
+                                            );
+                                        }),
                                     )}
                                 </StyledHeaderTableRow>
                             </StyledTableHead>
@@ -1241,10 +1406,12 @@ export const BookableSpacesManageSpaces = ({
                                                                 const facilitySlug = slugifyName(
                                                                     facilityType?.facility_type_name,
                                                                 );
+                                                                const currentlyEditing =
+                                                                    currentEditColumn === facilityType.facility_type_id;
                                                                 return (
                                                                     <TableCell
-                                                                        key={`space-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
-                                                                        data-testid={`space-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
+                                                                        key={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_id}`}
+                                                                        data-testid={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_id}`}
                                                                         sx={{
                                                                             backgroundColor: getColumnBackgroundColor(
                                                                                 facilityType?.overall_order,
@@ -1258,12 +1425,33 @@ export const BookableSpacesManageSpaces = ({
                                                                                 : `Space DOES NOT have ${facilityType?.facility_type_name}`
                                                                         }
                                                                     >
-                                                                        {hasFacility(facilityType, bookableSpace) && (
-                                                                            <GreenTick
-                                                                                title={`Space has ${facilityType?.facility_type_name}`}
-                                                                                dataTestId={`tick-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
+                                                                        {currentlyEditing && (
+                                                                            <Checkbox
+                                                                                checked={
+                                                                                    checkedFacilityType[
+                                                                                        bookableSpace.space_id
+                                                                                    ]?.[
+                                                                                        facilityType.facility_type_id
+                                                                                    ] ?? false
+                                                                                }
+                                                                                id={`facility-type-column-editing-${bookableSpace?.space_id}-${facilityType.facility_type_id}`}
+                                                                                onChange={e =>
+                                                                                    holdFacilityTypeChange(
+                                                                                        bookableSpace.space_id,
+                                                                                        facilityType.facility_type_id,
+                                                                                        e.target.checked,
+                                                                                    )
+                                                                                }
+                                                                                data-testid="toggle-space-description-checkbox"
                                                                             />
                                                                         )}
+                                                                        {hasFacility(facilityType, bookableSpace) &&
+                                                                            !currentlyEditing && (
+                                                                                <GreenTick
+                                                                                    title={`Space has ${facilityType?.facility_type_name}`}
+                                                                                    dataTestId={`tick-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
+                                                                                />
+                                                                            )}
                                                                     </TableCell>
                                                                 );
                                                             });
@@ -1305,7 +1493,13 @@ export const BookableSpacesManageSpaces = ({
         <SpacesAdminPage systemTitle="Spaces" pageTitle="Manage Spaces" currentPageSlug="dashboard">
             <Grid container spacing={3} className="aaaaaaaaa">
                 {(() => {
-                    if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
+                    if (!!savingProgressShown) {
+                        return (
+                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                                <InlineLoader message="Saving" />
+                            </StyledBookableSpaceGridItem>
+                        );
+                    } else if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                         return (
                             <StyledBookableSpaceGridItem item xs={12} md={9}>
                                 <InlineLoader message="Loading" />
@@ -1339,6 +1533,14 @@ export const BookableSpacesManageSpaces = ({
                     }
                 })()}
             </Grid>
+            <ConfirmationBox
+                confirmationBoxId="spaces-manage-spaces-error"
+                onAction={() => hideConfirmationLocal}
+                onClose={hideConfirmationLocal}
+                hideCancelButton
+                isOpen={isConfirmationBoxOpen}
+                locale={confirmationLocale}
+            />
             <Dialog open={!!deleteCandidate} onClose={closeDeleteConfirmation} data-testid="spaces-delete-dialog">
                 <DialogContent>
                     <DialogContentText data-testid="spaces-delete-dialog-message">

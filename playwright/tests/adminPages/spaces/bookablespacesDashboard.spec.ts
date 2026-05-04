@@ -1,5 +1,8 @@
 import { expect, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
+import { assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
+import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
+import { Page } from '@playwright/test';
 
 const CAMPUS_ALL_OPTION = '1';
 const CAMPUS_ST_LUCIA_OPTION = '2';
@@ -55,460 +58,503 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-bookable`)).toBeVisible();
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-bookable`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-askus-service`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-askus-service`)).not.toBeVisible();
+        // Facility Type IDs
+        const askus = 54;
+        const foodOutlets = 53;
+        const productionPrinting = 55;
+        const retail = 56;
+        const artwork = 57;
+        const energyPod = 30;
+        const vending = 26;
+        const fridge = 20;
+        const hotColdWater = 21;
+        const kitchen = 3;
+        const microwave = 4;
+        const pharmacy = 28;
+        const pwdToilets = 25;
+        const pwdToiletsFlat = 24;
+        const recharge = 29;
+        const scanning = 31;
+        const stationery = 27;
+        const toiletsF = 23;
+        const toiletsM = 22;
+        const adjustable = 39;
+        const avEquipment = 8;
+        const byod = 32;
+        const powerPoint = 33;
+        const computer = 5;
+        const generalCollection = 42;
+        const highUseCollection = 41;
+        const lending = 45;
+        const lockers = 40;
+        const loungeChairs = 47;
+        const powerPointB = 7;
+        const usbA = 34;
+        const usbCHigh = 37;
+        const usbCLow = 36;
+        const qiCharger = 35;
+        const reading = 43;
+        const requested = 44;
+        const returnStation = 46;
+        const dimmable = 48;
+        const lowLight = 49;
+        const naturalLight = 50;
+        const highNoise = 10;
+        const lowNoise = 17;
+        const ATtech = 11;
+        const exam = 52;
+        const postgrad = 13;
+        const power = 12;
+        const underGrad = 14;
+        const whiteboard = 38;
+        const deskLamp = 16;
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-food-outlets`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-food-outlets`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${askus}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${askus}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-production-printing-services`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-production-printing-services`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${foodOutlets}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${foodOutlets}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-retail-outlets`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-retail-outlets`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${productionPrinting}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${productionPrinting}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${retail}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${retail}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-energy-pod`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-energy-pod`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${artwork}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${artwork}`)).toBeVisible();
 
-        await expect(
-            page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-food-drink-vending-machinesnack-bar`),
-        ).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-food-drink-vending-machinesnack-bar`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${energyPod}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${energyPod}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-fridge`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-fridge`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${vending}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${vending}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-hot-cold-water`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-hot-cold-water`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${fridge}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${fridge}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-kitchen`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-kitchen`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${hotColdWater}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${hotColdWater}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-microwave`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-microwave`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${kitchen}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${kitchen}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-pharmacy-vending-machinesnack-bar`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-pharmacy-vending-machinesnack-bar`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${microwave}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${microwave}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-pwd-toilets-automatic-door`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-pwd-toilets-automatic-door`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${pharmacy}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${pharmacy}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-pwd-toilets-lie-flat`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-pwd-toilets-lie-flat`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${pwdToilets}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${pwdToilets}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-recharge-station`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-recharge-station`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${pwdToiletsFlat}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${pwdToiletsFlat}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-self-printing-scanning`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-self-printing-scanning`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${recharge}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${recharge}`)).toBeVisible();
 
-        await expect(
-            page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-stationery-vending-machinesnack-bar`),
-        ).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-stationery-vending-machinesnack-bar`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${scanning}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${scanning}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-toilets-female`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-toilets-female`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${stationery}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${stationery}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-toilets-male`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-toilets-male`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${toiletsF}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${toiletsF}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-adjustable-desks`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-adjustable-desks`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${toiletsM}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${toiletsM}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-av-equipment`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-av-equipment`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${adjustable}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${adjustable}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-byod-station`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-byod-station`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${avEquipment}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${avEquipment}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-client-accessible-power-point`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-client-accessible-power-point`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${byod}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${byod}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-computer`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-computer`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${powerPoint}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${powerPoint}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-general-collections`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-general-collections`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${computer}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${computer}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-high-use-collections`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-high-use-collections`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${generalCollection}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${generalCollection}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-lending`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-lending`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${highUseCollection}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${highUseCollection}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-lockers`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-lockers`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${lending}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${lending}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-lounge-chairs`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-lounge-chairs`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${lockers}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${lockers}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-on-desk-power-point`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-on-desk-power-point`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${loungeChairs}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${loungeChairs}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-on-desk-usb-a`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-on-desk-usb-a`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${powerPointB}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${powerPointB}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-on-desk-usb-c-high-power`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-on-desk-usb-c-high-power`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${usbA}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${usbA}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-on-desk-usb-c-low-power`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-on-desk-usb-c-low-power`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${usbCHigh}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${usbCHigh}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-qi-chargers`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-qi-chargers`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${usbCLow}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${usbCLow}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-recreational-reading-collection`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-recreational-reading-collection`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${qiCharger}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${qiCharger}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-requested-items`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-requested-items`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${reading}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${reading}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-return-station`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-return-station`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${requested}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${requested}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-whiteboard`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-whiteboard`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${returnStation}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${returnStation}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-desk-lamp`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-desk-lamp`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${whiteboard}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${whiteboard}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-dimmable`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-dimmable`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${deskLamp}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${deskLamp}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-low-light`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-low-light`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${dimmable}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${dimmable}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-natural`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-natural`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${lowLight}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${lowLight}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-high-noise-level`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-high-noise-level`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${naturalLight}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${naturalLight}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-low-noise-level`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-low-noise-level`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${highNoise}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${highNoise}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-at-technology`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-at-technology`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${lowNoise}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${lowNoise}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-exam-friendly`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-exam-friendly`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${ATtech}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${ATtech}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-postgraduate-spaces`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-postgraduate-spaces`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${exam}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${exam}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-power-outlets`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-power-outlets`)).not.toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${postgrad}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${postgrad}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-undergrad-spaces`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-undergrad-spaces`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${power}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${power}`)).not.toBeVisible();
+
+        await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${underGrad}`)).toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${underGrad}`)).toBeVisible();
 
         await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-bookable`)).toBeVisible();
         await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-bookable`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-askus-service`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-askus-service`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${askus}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${askus}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-food-outlets`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-food-outlets`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${foodOutlets}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${foodOutlets}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-production-printing-services`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-production-printing-services`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${productionPrinting}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${productionPrinting}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-retail-outlets`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-retail-outlets`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${retail}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${retail}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-contains-artwork`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${artwork}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${artwork}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-energy-pod`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-energy-pod`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${energyPod}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${energyPod}`)).not.toBeVisible();
 
-        await expect(
-            page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-food-drink-vending-machinesnack-bar`),
-        ).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-food-drink-vending-machinesnack-bar`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${vending}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${vending}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-fridge`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-fridge`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${fridge}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${fridge}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-hot-cold-water`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-hot-cold-water`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${hotColdWater}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${hotColdWater}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-kitchen`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-kitchen`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${kitchen}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${kitchen}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-microwave`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-microwave`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${microwave}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${microwave}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-pharmacy-vending-machinesnack-bar`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-pharmacy-vending-machinesnack-bar`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${pharmacy}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${pharmacy}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-pwd-toilets-automatic-door`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-pwd-toilets-automatic-door`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${pwdToilets}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${pwdToilets}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-pwd-toilets-lie-flat`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-pwd-toilets-lie-flat`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${pwdToiletsFlat}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${pwdToiletsFlat}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-recharge-station`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-recharge-station`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${recharge}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${recharge}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-self-printing-scanning`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-self-printing-scanning`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${scanning}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${scanning}`)).toBeVisible();
 
-        await expect(
-            page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-stationery-vending-machinesnack-bar`),
-        ).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-stationery-vending-machinesnack-bar`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${stationery}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${stationery}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-toilets-female`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-toilets-female`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${toiletsF}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${toiletsF}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-toilets-male`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-toilets-male`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${toiletsM}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${toiletsM}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-adjustable-desks`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-adjustable-desks`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${adjustable}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${adjustable}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-av-equipment`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-av-equipment`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${avEquipment}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${avEquipment}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-byod-station`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-byod-station`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${byod}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${byod}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-client-accessible-power-point`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-client-accessible-power-point`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${powerPoint}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${powerPoint}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-computer`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-computer`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${computer}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${computer}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-general-collections`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-general-collections`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${generalCollection}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${generalCollection}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-high-use-collections`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-high-use-collections`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${highUseCollection}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${highUseCollection}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-lending`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-lending`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${lending}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${lending}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-lockers`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-lockers`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${lockers}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${lockers}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-lounge-chairs`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-lounge-chairs`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${loungeChairs}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${loungeChairs}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-on-desk-power-point`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-on-desk-power-point`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${powerPointB}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${powerPointB}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-on-desk-usb-a`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-on-desk-usb-a`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${usbA}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${usbA}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-on-desk-usb-c-high-power`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-on-desk-usb-c-high-power`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${usbCHigh}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${usbCHigh}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-on-desk-usb-c-low-power`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-on-desk-usb-c-low-power`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${usbCLow}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${usbCLow}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-qi-chargers`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-qi-chargers`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${qiCharger}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${qiCharger}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-recreational-reading-collection`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-recreational-reading-collection`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${reading}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${reading}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-requested-items`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-requested-items`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${requested}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${requested}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-return-station`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-return-station`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${returnStation}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${returnStation}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-desk-lamp`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-desk-lamp`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${deskLamp}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${deskLamp}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-dimmable`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-dimmable`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${dimmable}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${dimmable}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-low-light`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-low-light`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${lowLight}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${lowLight}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-natural`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-natural`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${naturalLight}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${naturalLight}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-high-noise-level`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-high-noise-level`)).toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${highNoise}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${highNoise}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-low-noise-level`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-low-noise-level`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${lowNoise}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${lowNoise}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-at-technology`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-at-technology`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${ATtech}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${ATtech}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-exam-friendly`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-exam-friendly`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${exam}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${exam}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-postgraduate-spaces`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-postgraduate-spaces`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${postgrad}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${postgrad}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-power-outlets`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-power-outlets`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${power}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${power}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-undergrad-spaces`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-undergrad-spaces`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${underGrad}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${underGrad}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-whiteboard`)).toBeVisible();
-        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-whiteboard`)).not.toBeVisible();
+        await expect(page.getByTestId(`${DUTTON_PARK_FACILITY_TYPE}-${whiteboard}`)).toBeVisible();
+        await expect(greenTick(`${DUTTON_PARK_FACILITY_TYPE}-${whiteboard}`)).not.toBeVisible();
 
         await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-bookable`)).toBeVisible();
         await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-bookable`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-askus-service`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-askus-service`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${askus}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${askus}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-food-outlets`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-food-outlets`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${foodOutlets}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${foodOutlets}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-production-printing-services`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-production-printing-services`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${productionPrinting}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${productionPrinting}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-retail-outlets`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-retail-outlets`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${retail}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${retail}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-contains-artwork`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-contains-artwork`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${artwork}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${artwork}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-energy-pod`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-energy-pod`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${energyPod}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${energyPod}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-food-drink-vending-machinesnack-bar`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-food-drink-vending-machinesnack-bar`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${vending}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${vending}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-fridge`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-fridge`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${fridge}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${fridge}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-hot-cold-water`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-hot-cold-water`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${hotColdWater}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${hotColdWater}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-kitchen`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-kitchen`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${kitchen}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${kitchen}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-microwave`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-microwave`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${microwave}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${microwave}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-pharmacy-vending-machinesnack-bar`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-pharmacy-vending-machinesnack-bar`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${pharmacy}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${pharmacy}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-pwd-toilets-automatic-door`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-pwd-toilets-automatic-door`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${pwdToilets}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${pwdToilets}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-pwd-toilets-lie-flat`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-pwd-toilets-lie-flat`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${pwdToiletsFlat}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${pwdToiletsFlat}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-recharge-station`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-recharge-station`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${recharge}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${recharge}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-self-printing-scanning`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-self-printing-scanning`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${scanning}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${scanning}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-stationery-vending-machinesnack-bar`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-stationery-vending-machinesnack-bar`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${stationery}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${stationery}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-toilets-female`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-toilets-female`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${toiletsF}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${toiletsF}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-toilets-male`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-toilets-male`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${toiletsM}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${toiletsM}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-adjustable-desks`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-adjustable-desks`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${adjustable}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${adjustable}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-av-equipment`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-av-equipment`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${avEquipment}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${avEquipment}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-byod-station`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-byod-station`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${byod}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${byod}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-client-accessible-power-point`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-client-accessible-power-point`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${powerPoint}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${powerPoint}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-computer`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-computer`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${computer}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${computer}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-general-collections`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-general-collections`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${generalCollection}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${generalCollection}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-high-use-collections`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-high-use-collections`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${highUseCollection}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${highUseCollection}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-lending`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-lending`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${lending}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${lending}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-lockers`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-lockers`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${lockers}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${lockers}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-lounge-chairs`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-lounge-chairs`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${loungeChairs}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${loungeChairs}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-on-desk-power-point`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-on-desk-power-point`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${powerPointB}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${powerPointB}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-on-desk-usb-a`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-on-desk-usb-a`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${usbA}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${usbA}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-on-desk-usb-c-high-power`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-on-desk-usb-c-high-power`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${usbCHigh}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${usbCHigh}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-on-desk-usb-c-low-power`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-on-desk-usb-c-low-power`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${usbCLow}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${usbCLow}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-qi-chargers`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-qi-chargers`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${qiCharger}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${qiCharger}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-recreational-reading-collection`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-recreational-reading-collection`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${reading}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${reading}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-requested-items`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-requested-items`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${requested}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${requested}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-return-station`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-return-station`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${returnStation}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${returnStation}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-desk-lamp`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-desk-lamp`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${deskLamp}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${deskLamp}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-dimmable`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-dimmable`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${dimmable}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${dimmable}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-low-light`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-low-light`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${lowLight}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${lowLight}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-natural`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-natural`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${naturalLight}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${naturalLight}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-high-noise-level`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-high-noise-level`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${highNoise}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${highNoise}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-low-noise-level`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-low-noise-level`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${lowNoise}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${lowNoise}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-at-technology`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-at-technology`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${ATtech}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${ATtech}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-exam-friendly`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-exam-friendly`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${exam}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${exam}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-postgraduate-spaces`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-postgraduate-spaces`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${postgrad}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${postgrad}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-power-outlets`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-power-outlets`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${power}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${power}`)).not.toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-undergrad-spaces`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-undergrad-spaces`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${underGrad}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${underGrad}`)).toBeVisible();
 
-        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-whiteboard`)).toBeVisible();
-        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-whiteboard`)).not.toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS_FACILITY_TYPE}-${whiteboard}`)).toBeVisible();
+        await expect(greenTick(`${LIVERIS_FACILITY_TYPE}-${whiteboard}`)).not.toBeVisible();
     });
     test('single result is as expected', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces&responseType=facilityTypesWithOne');
@@ -1020,5 +1066,116 @@ test.describe('Spaces Admin - manage locations', () => {
                 .locator('tbody')
                 .locator(':scope > tr:not(.hidden)'),
         ).toHaveCount(10);
+    });
+    test.describe('can bulk manage facility types', () => {
+        const changeCheckboxes = async (page: Page) => {
+            const artwork = 57;
+            const energyPod = 30;
+
+            const editButton = (id: number) => page.getByTestId(`facility-type-column-edit-${id}`);
+            const cancelButton = (id: number) => page.getByTestId(`facility-type-column-cancel-${id}`);
+            const saveButton = (id: number) => page.getByTestId(`facility-type-column-save-${id}`);
+
+            // initally, all edit buttons are enabled
+            await expect(editButton(energyPod)).toBeVisible();
+            await expect(editButton(energyPod)).not.toBeDisabled();
+            await expect(editButton(artwork)).toBeVisible();
+            await expect(editButton(artwork)).not.toBeDisabled();
+
+            // and the control buttons are not visible
+            await expect(cancelButton(artwork)).not.toBeVisible();
+            await expect(saveButton(artwork)).not.toBeVisible();
+            await expect(cancelButton(energyPod)).not.toBeVisible();
+            await expect(saveButton(energyPod)).not.toBeVisible();
+
+            // now, choose to edit the artwork types
+            await editButton(artwork).click();
+
+            // artwork edit buttons change to control buttons
+            await expect(editButton(artwork)).not.toBeVisible();
+            await expect(cancelButton(artwork)).toBeVisible();
+            await expect(saveButton(artwork)).toBeVisible();
+
+            // other buttons unchanged
+            await expect(cancelButton(energyPod)).not.toBeVisible();
+            await expect(saveButton(energyPod)).not.toBeVisible();
+            await expect(editButton(energyPod)).toBeVisible();
+            await expect(editButton(energyPod)).toBeDisabled();
+
+            const facilityTypeCheckbox = (spaceId: number, facilityTypeId: number) =>
+                page.getByTestId(`space-${spaceId}-facilitytype-${facilityTypeId}`).locator('input');
+
+            // first artwork checkbox is checked. uncheck it
+            const firstSpace = 123456;
+            await expect(facilityTypeCheckbox(firstSpace, artwork)).toBeVisible();
+            await expect(facilityTypeCheckbox(firstSpace, artwork)).toBeChecked();
+            await facilityTypeCheckbox(firstSpace, artwork).uncheck();
+
+            // second artwork checkbox is unchecked. check it
+            const secondSpace = 2;
+            await expect(facilityTypeCheckbox(secondSpace, artwork)).toBeVisible();
+            await expect(facilityTypeCheckbox(secondSpace, artwork)).not.toBeChecked();
+            await facilityTypeCheckbox(secondSpace, artwork).check();
+
+            // and save
+            await saveButton(artwork).click();
+        };
+        test('can save', async ({ page, context }) => {
+            await page.goto('/admin/spaces?user=libSpaces');
+            await page.setViewportSize({
+                width: 1300,
+                height: 1000,
+            });
+
+            await setTestDataCookie(context, page);
+
+            // wait for page to load
+            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+            await changeCheckboxes(page);
+
+            // success message displays
+            await assertToastHasMessage(page, 'Change to facility types saved.');
+
+            const expectedValues = [
+                { checked: false, space_id: '1' },
+                { checked: true, space_id: '2' }, // changed
+                { checked: false, space_id: '3' },
+                { checked: false, space_id: '4' },
+                { checked: false, space_id: '5' },
+                { checked: false, space_id: '6' },
+                { checked: false, space_id: '7' },
+                { checked: false, space_id: '8' },
+                { checked: false, space_id: '9' },
+                { checked: false, space_id: '10' },
+                { checked: false, space_id: '11' },
+                { checked: true, space_id: '13' },
+                { checked: true, space_id: '14' },
+                { checked: false, space_id: '43534' },
+                { checked: false, space_id: '123456' },
+                { checked: false, space_id: '1234544' }, // changed
+            ];
+            await assertExpectedDataSentToServer(page, expectedValues);
+        });
+        test('failed save displays correctly', async ({ page, context }) => {
+            await page.goto('/admin/spaces?user=libSpaces&responseType=bulkFacilitiesUpdateError');
+            await page.setViewportSize({
+                width: 1300,
+                height: 1000,
+            });
+
+            await setTestDataCookie(context, page);
+
+            // wait for page to load
+            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+            await changeCheckboxes(page);
+
+            // error dialog displays
+            await expect(page.getByTestId('message-title')).toBeVisible();
+            await expect(page.getByTestId('message-title')).toContainText(
+                '[BSMS-001] Sorry, an error occurred - updating the facility types failed. The admins have been informed',
+            );
+        });
     });
 });
