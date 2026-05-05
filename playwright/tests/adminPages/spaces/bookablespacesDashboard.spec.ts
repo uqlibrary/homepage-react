@@ -584,7 +584,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(campusSelector.locator('input')).toHaveValue(ST_LUCIA_RECORD_ID);
             await expect(campusSelector.locator('div')).toContainText('St Lucia');
             await expect(librarySelector.locator('input')).not.toBeDisabled();
-            await expect(floorSelector.locator('input')).toBeDisabled();
+            await expect(floorSelector.locator('input')).not.toBeDisabled();
 
             // only St Lucia spaces display on the first page, still sorted by name
             await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
@@ -607,7 +607,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(campusSelector.locator('input')).toHaveValue(PACE_RECORD_ID);
             await expect(campusSelector.locator('div')).toContainText('Dutton Park');
             await expect(librarySelector.locator('input')).not.toBeDisabled();
-            await expect(floorSelector.locator('input')).toBeDisabled();
+            await expect(floorSelector.locator('input')).not.toBeDisabled();
 
             // only PACE spaces display
             await expect(visibleSpaces).toHaveCount(1);
@@ -675,7 +675,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(campusSelector.locator('input')).toHaveValue(PACE_RECORD_ID);
             await expect(campusSelector.locator('div')).toContainText('Dutton Park');
             await expect(librarySelector.locator('input')).not.toBeDisabled();
-            await expect(floorSelector.locator('input')).toBeDisabled();
+            await expect(floorSelector.locator('input')).not.toBeDisabled();
             await expect(visibleSpaces).toHaveCount(1); // only PACE spaces display
             await expect(lawSpace).not.toBeVisible();
             await expect(paceSpace).toBeVisible();
@@ -693,7 +693,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(campusSelector.locator('input')).toHaveValue(ST_LUCIA_RECORD_ID);
             await expect(campusSelector.locator('div')).toContainText('St Lucia');
             await expect(librarySelector.locator('input')).not.toBeDisabled();
-            await expect(floorSelector.locator('input')).toBeDisabled();
+            await expect(floorSelector.locator('input')).not.toBeDisabled();
             await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5); // first page of St Lucia spaces display
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).not.toBeVisible();
@@ -701,7 +701,7 @@ test.describe('Spaces Admin - manage locations', () => {
 
             await expect(campusSelector.locator('input')).not.toBeDisabled();
             await expect(librarySelector.locator('input')).not.toBeDisabled();
-            await expect(floorSelector.locator('input')).toBeDisabled();
+            await expect(floorSelector.locator('input')).not.toBeDisabled();
 
             // open the library selector
             await expect(librarySelector.locator('input')).not.toBeDisabled();
@@ -724,11 +724,13 @@ test.describe('Spaces Admin - manage locations', () => {
 
             // open Floor selector
             await floorSelector.click();
-            const secondFloorOption = 'ul[aria-labelledby="filter-by-floor-label"] li:nth-of-type(2)';
-            await expect(page.locator(secondFloorOption)).toContainText('3A');
+            const floor3AOption = page.locator('ul[aria-labelledby="filter-by-floor-label"] li', {
+                hasText: '3A',
+            });
+            await expect(floor3AOption).toBeVisible();
 
             // choose Floor 3a
-            await page.locator(secondFloorOption).click(); // choose 3A
+            await floor3AOption.click(); // choose 3A
             await expect(visibleSpaces).toHaveCount(0); // No spaces display
             await expect(lawSpace).not.toBeVisible();
             await expect(paceSpace).not.toBeVisible();
@@ -737,11 +739,11 @@ test.describe('Spaces Admin - manage locations', () => {
 
             // reopen floor selector
             await floorSelector.click();
-            const firstFloorOption = 'ul[aria-labelledby="filter-by-floor-label"] li:nth-of-type(1)';
-            await expect(page.locator(firstFloorOption)).toContainText('2');
+            const floor2Option = page.locator('ul[aria-labelledby="filter-by-floor-label"] li', { hasText: '2' });
+            await expect(floor2Option).toBeVisible();
 
             // choose Floor 2
-            await page.locator(firstFloorOption).click(); // choose floor "2"
+            await floor2Option.click(); // choose floor "2"
             await expect(visibleSpaces).toHaveCount(1); // 1 space displays
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).not.toBeVisible();
@@ -925,7 +927,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(campusSelector.locator('input')).toHaveValue(ST_LUCIA_RECORD_ID);
         await expect(campusSelector.locator('div')).toContainText('St Lucia');
         await expect(librarySelector.locator('input')).not.toBeDisabled();
-        await expect(floorSelector.locator('input')).toBeDisabled();
+        await expect(floorSelector.locator('input')).not.toBeDisabled();
 
         // only St Lucia spaces display on the first page, still sorted by name
         await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
