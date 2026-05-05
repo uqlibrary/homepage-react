@@ -93,8 +93,8 @@ test.describe('Spaces', () => {
         test('bookable links appear correct on load', async ({ page }) => {
             // public bookable Architecture and Music example
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable`)).not.toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).not.toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-message`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toBeVisible();
 
             await expect(page.getByTestId(`${LIV}-not-bookable`)).toBeVisible();
             await expect(page.getByTestId(`${LIV}-not-bookable`)).toContainText('No booking required.');
@@ -126,19 +126,19 @@ test.describe('Spaces', () => {
         });
 
         test('current unavailability is shown with reason on expand', async ({ page }) => {
-            await expect(page.getByTestId(`${ARCH_REFERENCE}-unavailable-message`)).not.toBeVisible();
-            await expect(page.getByTestId(`${LIV}-unavailable-message`)).not.toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-message`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-message`)).toContainText(
-                'This space is currently unavailable.',
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-outage-notice`)).not.toBeVisible();
+            await expect(page.getByTestId(`${LIV}-outage-notice`)).not.toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toContainText(
+                'Currently unavailable until',
             );
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-reason`)).not.toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-unavailable-message`)).not.toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-reason`)).not.toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toBeVisible();
+            await expect(page.getByTestId(`${PACE}-outage-notice`)).not.toBeVisible();
 
             await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-reason`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-unavailable-reason`)).toContainText(
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-reason`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-reason`)).toContainText(
                 'Reason: Lighting maintenance',
             );
         });

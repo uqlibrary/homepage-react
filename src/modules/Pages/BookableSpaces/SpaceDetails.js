@@ -15,11 +15,14 @@ import { OpeningHoursShort } from './OpeningHoursShort';
 import { OpeningHoursTable } from './OpeningHoursTable';
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import {
-    getSpaceOutageStatus,
-    normalizeSpaceOutageList,
+    formatSpaceOutageRangeForPublicNotice,
+    formatSpaceOutageUntilForPublicNotice,
+    getSpaceOutageShowTimePublic,
+    getVisibleSpaceOutage,
 } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import { pluralise } from 'helpers/general';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
 
 const StyledFriendlyLocationDiv = styled('div')(() => ({
     marginTop: '5px',
@@ -64,15 +67,10 @@ const StyledBookitLinkWrapperDiv = styled('div')(({ theme }) => ({
         },
     },
 }));
-const StyledUnavailableMessage = styled('div')(({ theme }) => ({
+const StyledOutageNotice = styled('div')(() => ({
     marginTop: '0.5rem',
-    padding: '0.5rem 0.75rem',
-    borderRadius: '4px',
-    backgroundColor: '#fff2f2',
-    border: `1px solid ${theme.palette.error.light}`,
-    color: theme.palette.error.dark,
     '& p': {
-        margin: 0,
+        marginTop: '0.5rem',
     },
 }));
 const StyledLocationImg = styled('img')(({ theme }) => ({
@@ -137,18 +135,12 @@ const SpaceDetails = ({
     // const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
     // const isTabletView = isMobileView ? false : _isTabletViewJust;
     // const isDesktopView = !isTabletView && !isMobileView;
-    // console.log('BookableSpacesList window width (m, t, d):', isMobileView, isTabletView, isDesktopView);
 
     const isCollapsed = collapsed ? !isExpanded : false;
 
-    const currentOutages = React.useMemo(
-        () => normalizeSpaceOutageList(bookableSpace?.space_outages).filter(outage => getSpaceOutageStatus(outage) === 'Current'),
-        [bookableSpace?.space_outages],
-    );
-    const isCurrentlyUnavailable = currentOutages.length > 0;
-    const currentOutageReason = currentOutages
-        .map(outage => outage?.space_outage_reason?.trim())
-        .find(reason => !!reason);
+    const visibleOutage = React.useMemo(() => getVisibleSpaceOutage(bookableSpace?.space_outages), [
+        bookableSpace?.space_outages,
+    ]);
 
     const summaryPanelElementId = spaceId => `summary-info-${spaceId}`;
 
@@ -228,20 +220,38 @@ const SpaceDetails = ({
                         {getFriendlyLocationDescription(bookableSpace, isCollapsed)}
                     </StyledFriendlyLocationDiv>
                 )}
-                {isCurrentlyUnavailable && (
-                    <StyledUnavailableMessage data-testid={`space-${bookableSpace?.space_id}-unavailable-message`}>
-                        <Typography variant="body2">This space is currently unavailable.</Typography>
-                        {!isCollapsed && !!currentOutageReason && (
-                            <Typography
-                                variant="body2"
-                                data-testid={`space-${bookableSpace?.space_id}-unavailable-reason`}
-                            >
-                                Reason: {currentOutageReason}
+                {!!visibleOutage && (
+                    <StyledOutageNotice data-testid={`space-${bookableSpace?.space_id}-outage-notice`}>
+                        <UserAttention
+                            titleText={visibleOutage.status === 'Current' ? 'Current closure' : 'Upcoming closure'}
+                            tone={visibleOutage.tone}
+                            variant="aligned"
+                        >
+                            <Typography variant="body2" data-testid={`space-${bookableSpace?.space_id}-outage-message`}>
+                                {visibleOutage.status === 'Current'
+                                    ? `Currently unavailable until ${formatSpaceOutageUntilForPublicNotice(
+                                          visibleOutage.outage?.space_outage_end,
+                                          undefined,
+                                          getSpaceOutageShowTimePublic(visibleOutage.outage),
+                                      )}.`
+                                    : `Closed ${formatSpaceOutageRangeForPublicNotice(
+                                          visibleOutage.outage?.space_outage_start,
+                                          visibleOutage.outage?.space_outage_end,
+                                          getSpaceOutageShowTimePublic(visibleOutage.outage),
+                                      )}.`}
                             </Typography>
-                        )}
-                    </StyledUnavailableMessage>
+                            {!isCollapsed && !!visibleOutage.reason && (
+                                <Typography
+                                    variant="body2"
+                                    data-testid={`space-${bookableSpace?.space_id}-outage-reason`}
+                                >
+                                    Reason: {visibleOutage.reason}
+                                </Typography>
+                            )}
+                        </UserAttention>
+                    </StyledOutageNotice>
                 )}
-                {isBookable && !isCurrentlyUnavailable && (
+                {isBookable && (
                     <StyledBookitLinkWrapperDiv data-testid={`space-${bookableSpace?.space_id}-booking-link`}>
                         {uqBookitMakeABookingIcon}
                         <a href={bookableSpace?.space_external_book_url} target={'_blank'}>

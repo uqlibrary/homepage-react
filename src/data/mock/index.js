@@ -1737,6 +1737,8 @@ mock.onGet('exams/course/FREN1010/summary')
             space_outage_start: body?.space_outage_start,
             space_outage_end: body?.space_outage_end,
             space_outage_reason: body?.space_outage_reason || null,
+            space_outage_show_time_public:
+                body?.space_outage_show_time_public === undefined ? true : !!body?.space_outage_show_time_public,
         };
         mockSpaceOutageRecords = [...mockSpaceOutageRecords, newOutage];
         return [200, { status: 'OK', data: newOutage }];

@@ -518,9 +518,6 @@ export const BookableSpacesManageSpaces = ({
     };
     const isCampusSelected =
         selectedFilters?.find(f => f?.filterType === 'campus')?.filterValue !== CAMPUS_ID_UNSELECTED;
-    const isLibrarySelected =
-        !!isCampusSelected &&
-        selectedFilters?.find(f => f?.filterType === 'library')?.filterValue !== LIBRARY_ID_UNSELECTED;
 
     function hasFacility(facilityType, bookableSpace) {
         return bookableSpace?.facility_types?.some(spaceFacility => {
@@ -710,6 +707,11 @@ export const BookableSpacesManageSpaces = ({
         const selectedLibraryId = selectedFilters?.find(f => f?.filterType === 'library')?.filterValue;
         const selectedLibrary =
             !!selectedCampus && selectedCampus?.libraries?.find(library => library?.library_id === selectedLibraryId);
+        const selectedCampusFloors = selectedCampus?.libraries?.flatMap(library => library?.floors || []) || [];
+        const availableFloors = selectedLibrary?.floors || selectedCampusFloors;
+        const floorFilterTypes = [
+            ...new Map(availableFloors?.map(floor => [floor?.floor_id, floor])).values(),
+        ]?.sort((a, b) => a?.floor_name?.localeCompare(b?.floor_name));
         const selectedSpaceType = selectedFilters?.find(f => f?.filterType === 'spaceType')?.filterValue;
         const knownSpaceTypes =
             bookableSpacesRoomList?.data?.known_space_types
@@ -809,6 +811,7 @@ export const BookableSpacesManageSpaces = ({
                                 <InputLabel
                                     id="filter-by-library-label"
                                     htmlFor="filter-by-library-input"
+                                    shrink
                                     disabled={!isCampusSelected}
                                 >
                                     By library
@@ -817,10 +820,21 @@ export const BookableSpacesManageSpaces = ({
                                     id="filter-by-library"
                                     labelId="filter-by-library-label"
                                     data-testid="filter-by-library"
+                                    displayEmpty
                                     value={
                                         selectedFilters?.find(f => f?.filterType === 'library')?.filterValue ||
                                         LIBRARY_ID_UNSELECTED
                                     }
+                                    renderValue={selectedValue => {
+                                        if (selectedValue === LIBRARY_ID_UNSELECTED) {
+                                            return 'Show all libraries';
+                                        }
+                                        return (
+                                            selectedCampus?.libraries?.find(
+                                                library => String(library?.library_id) === String(selectedValue),
+                                            )?.library_name || 'Show all libraries'
+                                        );
+                                    }}
                                     onChange={selectFilter('library')}
                                     inputProps={{
                                         id: 'filter-by-library-input',
@@ -828,6 +842,7 @@ export const BookableSpacesManageSpaces = ({
                                     }}
                                     disabled={!isCampusSelected}
                                 >
+                                    <MenuItem value={LIBRARY_ID_UNSELECTED}>Show all libraries</MenuItem>
                                     {selectedCampus?.libraries
                                         ?.sort((a, b) => a?.library_name?.localeCompare(b?.library_name))
                                         ?.map((library, index) => (
@@ -845,7 +860,8 @@ export const BookableSpacesManageSpaces = ({
                                 <InputLabel
                                     id="filter-by-floor-label"
                                     htmlFor="filter-by-floor-input"
-                                    disabled={!isLibrarySelected}
+                                    shrink
+                                    disabled={!isCampusSelected}
                                 >
                                     By level
                                 </InputLabel>
@@ -853,38 +869,59 @@ export const BookableSpacesManageSpaces = ({
                                     id="filter-by-floor"
                                     labelId="filter-by-floor-label"
                                     data-testid="filter-by-floor"
+                                    displayEmpty
                                     value={
                                         selectedFilters?.find(f => f?.filterType === 'floor')?.filterValue ||
                                         FLOOR_ID_UNSELECTED
                                     }
+                                    renderValue={selectedValue => {
+                                        if (selectedValue === FLOOR_ID_UNSELECTED) {
+                                            return 'Show all levels';
+                                        }
+                                        const selectedFloor = floorFilterTypes?.find(
+                                            floor => String(floor?.floor_id) === String(selectedValue),
+                                        );
+                                        return selectedFloor?.floor_name || 'Show all levels';
+                                    }}
                                     onChange={selectFilter('floor')}
                                     inputProps={{
                                         id: 'filter-by-floor-input',
                                         title: 'Filter the displayed Spaces by level',
                                     }}
-                                    disabled={!isLibrarySelected}
+                                    disabled={!isCampusSelected}
                                 >
-                                    {!!selectedLibrary &&
-                                        selectedLibrary?.floors?.map((floor, index) => (
-                                            <MenuItem
-                                                value={floor?.floor_id}
-                                                key={`filter-by-floor-menuitem-${index}`}
-                                                selected={floor?.floor_id === 99999}
-                                            >
-                                                {floor?.floor_name}
-                                            </MenuItem>
-                                        ))}
+                                    <MenuItem value={FLOOR_ID_UNSELECTED}>Show all levels</MenuItem>
+                                    {floorFilterTypes?.map((floor, index) => (
+                                        <MenuItem
+                                            value={floor?.floor_id}
+                                            key={`filter-by-floor-menuitem-${index}`}
+                                            selected={floor?.floor_id === 99999}
+                                        >
+                                            {floor?.floor_name}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                             <FormControl variant="standard" fullWidth>
-                                <InputLabel id="filter-by-space-type-label" htmlFor="filter-by-space-type-input">
+                                <InputLabel id="filter-by-space-type-label" htmlFor="filter-by-space-type-input" shrink>
                                     By space type
                                 </InputLabel>
                                 <Select
                                     id="filter-by-space-type"
                                     labelId="filter-by-space-type-label"
                                     data-testid="filter-by-space-type"
+                                    displayEmpty
                                     value={selectedSpaceType || SPACE_TYPE_ID_UNSELECTED}
+                                    renderValue={selectedValue => {
+                                        if (selectedValue === SPACE_TYPE_ID_UNSELECTED) {
+                                            return 'Show all space types';
+                                        }
+                                        return (
+                                            spaceTypeFilterTypes?.find(
+                                                spaceType => String(spaceType?.id) === String(selectedValue),
+                                            )?.label || 'Show all space types'
+                                        );
+                                    }}
                                     onChange={selectFilter('spaceType')}
                                     inputProps={{
                                         id: 'filter-by-space-type-input',
