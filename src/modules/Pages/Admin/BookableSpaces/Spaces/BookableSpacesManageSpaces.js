@@ -43,7 +43,15 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
-import { addClass, removeClass, scrollToTopOfPage, slugifyName, standardText } from 'helpers/general';
+import {
+    addClass,
+    removeClass,
+    scrollToTopOfPage,
+    slugifyName,
+    standardText,
+    StyledPrimaryButton,
+    StyledSecondaryButton,
+} from 'helpers/general';
 import {
     getFlatFacilityTypeList,
     getFriendlyLocationDescription,
@@ -1250,14 +1258,15 @@ export const BookableSpacesManageSpaces = ({
                                                     }}
                                                 >
                                                     {currentlyEditing && (
-                                                        <Button
+                                                        <StyledSecondaryButton
                                                             key={`facility-type-column-cancel-${facilityType.facility_type_id}`}
                                                             id={`facility-type-column-cancel-${facilityType.facility_type_id}`}
                                                             data-testid={`facility-type-column-cancel-${facilityType.facility_type_id}`}
                                                             onClick={clearColumnEditable}
+                                                            style={{ padding: '0.5rem .75rem' }}
                                                         >
                                                             Cancel
-                                                        </Button>
+                                                        </StyledSecondaryButton>
                                                     )}
                                                     <div>{facilityType?.facility_type_name}</div>
                                                     {!currentlyEditing && (
@@ -1274,14 +1283,15 @@ export const BookableSpacesManageSpaces = ({
                                                         </IconButton>
                                                     )}
                                                     {currentlyEditing && (
-                                                        <Button
+                                                        <StyledPrimaryButton
                                                             key={`facility-type-column-save-${facilityType.facility_type_id}`}
                                                             id={`facility-type-column-save-${facilityType.facility_type_id}`}
                                                             data-testid={`facility-type-column-save-${facilityType.facility_type_id}`}
                                                             onClick={saveChangedFilterTypes}
+                                                            style={{ padding: '0.5rem .75rem', marginTop: '0.5rem' }}
                                                         >
                                                             Save
-                                                        </Button>
+                                                        </StyledPrimaryButton>
                                                     )}
                                                 </StyledHeadingFacilityTableCell>
                                             );
