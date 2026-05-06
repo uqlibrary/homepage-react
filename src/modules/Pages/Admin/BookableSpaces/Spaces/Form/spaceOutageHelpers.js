@@ -7,6 +7,13 @@ export const emptySpaceOutageDraft = {
     space_outage_show_time_public: true,
 };
 
+export const OUTAGE_SCOPE_OPTIONS = [
+    { value: 'space', label: 'This space' },
+    { value: 'floor', label: 'All spaces on this floor' },
+    { value: 'library', label: 'All spaces in this library' },
+    { value: 'campus', label: 'All spaces in this campus' },
+];
+
 export const SPACE_OUTAGE_NOTICE_WINDOW_DAYS = 7;
 
 export const normalizeSpaceOutageList = value => {
@@ -280,6 +287,13 @@ export const validateSpaceOutageDraft = (draft, existingOutages = [], editingOut
 
 export const buildSpaceOutagePayload = ({ spaceId, draft }) => ({
     space_id: spaceId,
+    space_outage_start: formatSpaceOutageDateTimeForPayload(draft?.space_outage_start),
+    space_outage_end: formatSpaceOutageDateTimeForPayload(draft?.space_outage_end),
+    space_outage_reason: draft?.space_outage_reason?.trim() || null,
+    space_outage_show_time_public: !!draft?.space_outage_show_time_public,
+});
+
+export const buildBulkOutagePayload = ({ draft }) => ({
     space_outage_start: formatSpaceOutageDateTimeForPayload(draft?.space_outage_start),
     space_outage_end: formatSpaceOutageDateTimeForPayload(draft?.space_outage_end),
     space_outage_reason: draft?.space_outage_reason?.trim() || null,

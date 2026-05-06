@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 import { Grid } from '@mui/material';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -26,8 +30,10 @@ import {
     displayToastMessage,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import {
+    buildBulkOutagePayload,
     buildSpaceOutagePayload,
     emptySpaceOutageDraft,
+    OUTAGE_SCOPE_OPTIONS,
     formatSpaceOutageDateTimeForDisplay,
     formatSpaceOutageDateTimeForInput,
     getSpaceOutageShowTimePublic,
@@ -97,6 +103,9 @@ export const SpaceOutagePanel = ({
     actions,
     spaceId,
     spaceName,
+    floorId,
+    libraryId,
+    campusId,
     spaceOutageList,
     spaceOutageListLoading,
     spaceOutageListError,
@@ -105,6 +114,7 @@ export const SpaceOutagePanel = ({
     const outages = useMemo(() => sortSpaceOutages(spaceOutageList), [spaceOutageList]);
 
     const [draft, setDraft] = useState(emptySpaceOutageDraft);
+    const [outageScope, setOutageScope] = useState('space');
     const [editingOutageId, setEditingOutageId] = useState(null);
     const [validationErrors, setValidationErrors] = useState([]);
     const [isSaving, setIsSaving] = useState(false);
@@ -128,6 +138,13 @@ export const SpaceOutagePanel = ({
     ]);
 
     const isPastOutage = outage => getSpaceOutageStatus(outage) === 'Past';
+
+    const scopeIdMap = {
+        space: spaceId,
+        floor: floorId,
+        library: libraryId,
+        campus: campusId,
+    };
 
     const resetDraft = () => {
         setDraft(emptySpaceOutageDraft);
@@ -180,16 +197,28 @@ export const SpaceOutagePanel = ({
 
         setIsSaving(true);
         try {
-            const payload = buildSpaceOutagePayload({ spaceId, draft });
-            const response = editingOutageId
-                ? await actions.updateBookableSpaceOutage(payload, editingOutageId)
-                : await actions.createBookableSpaceOutage(payload);
+            let response;
+            if (editingOutageId) {
+                const payload = buildSpaceOutagePayload({ spaceId, draft });
+                response = await actions.updateBookableSpaceOutage(payload, editingOutageId);
+            } else if (outageScope === 'space') {
+                const payload = buildSpaceOutagePayload({ spaceId, draft });
+                response = await actions.createBookableSpaceOutage(payload);
+            } else {
+                const payload = buildBulkOutagePayload({ draft });
+                response = await actions.createBookableBulkOutage(payload, outageScope, scopeIdMap[outageScope]);
+            }
 
             if (!isOkResponse(response)) {
                 throw new Error(response?.message || 'Unable to save the space unavailability.');
             }
 
-            displayToastMessage(editingOutageId ? 'Space unavailability updated' : 'Space unavailability saved');
+            const scopeLabel = OUTAGE_SCOPE_OPTIONS.find(o => o.value === outageScope)?.label || 'space';
+            displayToastMessage(
+                editingOutageId
+                    ? 'Space unavailability updated'
+                    : `Closure saved for: ${scopeLabel}`,
+            );
             resetDraft();
             await refreshOutages();
         } catch (error) {
@@ -332,6 +361,31 @@ export const SpaceOutagePanel = ({
                             : 'No upcoming closures recorded'}
                     </Typography>
                 </StyledSummaryBox>
+            </Grid>
+            <Grid item xs={12}>
+                <FormControl component="fieldset" disabled={!!editingOutageId}>
+                    <FormLabel component="legend">Apply closure to</FormLabel>
+                    <RadioGroup
+                        row
+                        value={outageScope}
+                        onChange={e => setOutageScope(e.target.value)}
+                        data-testid="space-outage-scope"
+                    >
+                        {OUTAGE_SCOPE_OPTIONS.map(option => (
+                            <FormControlLabel
+                                key={option.value}
+                                value={option.value}
+                                control={<Radio size="small" inputProps={{ 'data-testid': `space-outage-scope-${option.value}` }} />}
+                                label={option.label}
+                                disabled={
+                                    (option.value === 'floor' && !floorId) ||
+                                    (option.value === 'library' && !libraryId) ||
+                                    (option.value === 'campus' && !campusId)
+                                }
+                            />
+                        ))}
+                    </RadioGroup>
+                </FormControl>
             </Grid>
             <Grid item md={6} xs={12}>
                 <TextField
@@ -486,6 +540,9 @@ SpaceOutagePanel.propTypes = {
     actions: PropTypes.object,
     spaceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     spaceName: PropTypes.string,
+    floorId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    libraryId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    campusId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     spaceOutageList: PropTypes.any,
     spaceOutageListLoading: PropTypes.any,
     spaceOutageListError: PropTypes.any,
