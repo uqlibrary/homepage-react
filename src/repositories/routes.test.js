@@ -157,6 +157,12 @@ describe('Backend routes method', () => {
         });
     });
 
+    it('should construct url for SPACES_BULK_FACILITIES_API', () => {
+        expect(routes.SPACES_BULK_FACILITIES_API({ id: 123456 })).toEqual({
+            apiUrl: 'bookable_spaces/bulkFacilityTypes/123456',
+        });
+    });
+
     it('should construct url for SPACES_OUTAGE_API', () => {
         expect(routes.SPACES_OUTAGE_API({ id: 456 })).toEqual({
             apiUrl: 'bookable_spaces/space_outage/456',

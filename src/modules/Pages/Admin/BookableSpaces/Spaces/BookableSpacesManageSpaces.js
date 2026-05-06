@@ -245,11 +245,7 @@ export const BookableSpacesManageSpaces = ({
     const [savingProgressShown, showSavingProgress] = useState(false);
 
     const [currentEditColumn, setCurrentEditColumn] = useState(null);
-    const [checkedFacilityType, setCheckedFacilityType2] = useState({});
-    const setCheckedFacilityType = x => {
-        console.log('setCheckedFacilityType', x);
-        setCheckedFacilityType2(x);
-    };
+    const [checkedFacilityType, setCheckedFacilityType] = useState({});
 
     const [displayedRows, setDisplayedRows2] = useState([]);
     const setDisplayedRows = rows => {
@@ -367,7 +363,6 @@ export const BookableSpacesManageSpaces = ({
         const state = {};
         const flatFacilityTypeList = getFlatFacilityTypeList(facilityTypeList);
         for (const space of bookableSpacesRoomList?.data?.locations) {
-            console.log('init', space);
             state[space.space_id] = {};
             const enabledIds = new Set(space.facility_types.map(f => f.facility_type_id));
 
@@ -848,7 +843,7 @@ export const BookableSpacesManageSpaces = ({
                 setCookie('CYPRESS_DATA_SAVED', valuestoSend);
             }
             try {
-                const response = await actions.saveBulkFilterTypes(valuestoSend);
+                const response = await actions.saveBulkFilterTypes(checkboxId, valuestoSend);
                 if (response?.status?.toLowerCase?.() !== 'ok') {
                     throw new Error(response?.message || 'updating the facility types failed');
                 }
