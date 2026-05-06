@@ -17,15 +17,16 @@ import { GridRowModes, DataGrid, GridToolbarContainer, GridActionsCellItem } fro
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { randomId, getCleanVarName } from './utils';
 
-const FormLabelText = styled(Typography)(({ error, theme }) => ({
-    // Matches InputLabel styles
+const FormLabelText = styled(Typography, {
+    shouldForwardProp: prop => prop !== 'error',
+})(({ error, theme }) => ({
     ...theme.typography.caption,
     color: error ? theme.palette.error.main : theme.palette.text.secondary,
     marginBottom: theme.spacing(0.5),
     display: 'block', // Optional: forces label to own line
 }));
 
-const EditToolbar = props => {
+const AddToolbar = props => {
     const { rows, setRows, setRowModesModel } = props;
 
     const handleClick = () => {
@@ -54,13 +55,13 @@ const EditToolbar = props => {
         </GridToolbarContainer>
     );
 };
-EditToolbar.propTypes = {
+AddToolbar.propTypes = {
     setRowModesModel: PropTypes.func.isRequired,
     rows: PropTypes.array.isRequired,
     setRows: PropTypes.func.isRequired,
 };
 
-const PlaceholderEditor = ({ label, onChange, value, error, ...props }) => {
+const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...props }) => {
     const [rows, setRows] = React.useState(value);
     const [rowModesModel, setRowModesModel] = React.useState({});
 
@@ -87,10 +88,13 @@ const PlaceholderEditor = ({ label, onChange, value, error, ...props }) => {
     };
 
     const handleEditClick = id => () => {
+        setIsEditing?.(true);
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+        console.log(setIsEditing, props);
     };
 
     const handleSaveClick = id => () => {
+        setIsEditing?.(false);
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     };
     const handleDeleteClick = id => () => {
@@ -99,6 +103,7 @@ const PlaceholderEditor = ({ label, onChange, value, error, ...props }) => {
         onChange(null, newRows);
     };
     const handleCancelClick = id => () => {
+        setIsEditing?.(false);
         setRowModesModel({
             ...rowModesModel,
             [id]: { mode: GridRowModes.View, ignoreModifications: true },
@@ -202,13 +207,12 @@ const PlaceholderEditor = ({ label, onChange, value, error, ...props }) => {
                     editMode="row"
                     getRowId={row => row.printer_template_var_id}
                     rowModesModel={rowModesModel}
-                    onRowModesModelChange={newModel => setRowModesModel(newModel)}
                     onRowEditStart={handleRowEditStart}
                     onRowEditStop={handleRowEditStop}
                     processRowUpdate={processRowUpdate}
                     onProcessRowUpdateError={_onError}
                     components={{
-                        Toolbar: EditToolbar,
+                        Toolbar: AddToolbar,
                     }}
                     componentsProps={{
                         toolbar: { rows, setRows, setRowModesModel },
@@ -235,6 +239,7 @@ PlaceholderEditor.propTypes = {
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array.isRequired,
     error: PropTypes.bool,
+    setIsEditing: PropTypes.func,
 };
 
 export default PlaceholderEditor;

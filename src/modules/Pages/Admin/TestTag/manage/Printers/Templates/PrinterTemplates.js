@@ -48,6 +48,7 @@ const PrinterTemplates = () => {
         errorMessage: printerTemplateListError,
         errorMessageFormatter: locale.config.alerts.error,
     });
+    const [editingRows, setEditingRows] = React.useState(0);
 
     const closeDialog = React.useCallback(() => {
         actionDispatch({ type: 'clear' });
@@ -117,16 +118,21 @@ const PrinterTemplates = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const setIsEditing = value => {
+        console.log('setIsEditing', value);
+        setEditingRows(prev => (value ? prev + 1 : Math.max(prev - 1, 0)));
+    };
     const handleAddClick = () => {
         const fieldProps = {
             identifiers: {
                 options: [],
             },
             vars: {
-                setIsEditing: () => {},
+                setIsEditing,
             },
         };
 
+        setEditingRows(0);
         actionDispatch({
             type: 'add',
             title: pageLocale.dialogAdd?.confirmationTitle,
@@ -139,7 +145,7 @@ const PrinterTemplates = () => {
         const identifiers =
             printerTemplateList.find(template => template.printer_template_id === row.printer_template_id)
                 ?.identifiers ?? [];
-        console.log(identifiers);
+
         const fieldProps = {
             identifiers: {
                 options: identifiers,
@@ -147,8 +153,12 @@ const PrinterTemplates = () => {
                 getOptionLabel: option => option.printer_template_identifier_value ?? '',
                 isOptionEqualToValue: (option, value) => option.printer_template_identifier_value === value,
             },
+            vars: {
+                setIsEditing,
+            },
         };
-        console.log(fieldProps);
+
+        setEditingRows(0);
         actionDispatch({
             type: 'edit',
             title: pageLocale.dialogEdit?.confirmationTitle,
@@ -233,6 +243,7 @@ const PrinterTemplates = () => {
                     isBusy={dialogueBusy}
                     noMinContentWidth
                     sx={dialogStyles}
+                    disabledState={{ actionButton: editingRows > 0 }}
                 />
                 <ConfirmationBox
                     actionButtonColor="primary"

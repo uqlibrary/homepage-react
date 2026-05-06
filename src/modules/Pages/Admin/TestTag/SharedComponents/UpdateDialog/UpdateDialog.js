@@ -49,6 +49,7 @@ export const UpdateDialogue = ({
     props,
     isBusy = false,
     sx,
+    disabledState = { actionButton: false, cancelButton: false },
 }) => {
     const componentId = `${rootId}-${id}`;
 
@@ -197,7 +198,7 @@ export const UpdateDialogue = ({
                                         id={`${rootId}-cancel-button`}
                                         data-testid={`${rootId}-cancel-button`}
                                         fullWidth={isMobileView}
-                                        disabled={isBusy}
+                                        disabled={isBusy || disabledState?.cancelButton}
                                     >
                                         {locale.cancelButtonLabel}
                                     </Button>
@@ -215,7 +216,7 @@ export const UpdateDialogue = ({
                                         id={`${rootId}-action-button`}
                                         data-testid={`${rootId}-action-button`}
                                         fullWidth={isMobileView}
-                                        disabled={isBusy || !isValid}
+                                        disabled={isBusy || !isValid || disabledState?.actionButton}
                                     >
                                         {isBusy ? (
                                             <CircularProgress
@@ -257,6 +258,10 @@ UpdateDialogue.propTypes = {
     fieldProps: PropTypes.object,
     isBusy: PropTypes.bool,
     sx: PropTypes.object,
+    disabledState: PropTypes.shape({
+        actionButton: PropTypes.bool,
+        cancelButton: PropTypes.bool,
+    }),
 };
 
 export default React.memo(UpdateDialogue);
