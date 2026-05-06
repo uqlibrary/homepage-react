@@ -13,6 +13,7 @@ import {
     SPACES_SPACETYPE_UPDATE_API,
     SPACES_SPACETYPE_DELETE_API,
     SPACES_FAVOURITES_API,
+    SPACES_BULK_FACILITIES_API,
 } from 'repositories/routes';
 import { API_URL } from 'config';
 
@@ -71,7 +72,36 @@ export function loadBookableSpaceOutages(spaceId) {
     };
 }
 
+export function saveBulkFilterTypes(valuestoSend) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_BULK_FACILITIES_SAVING });
+        return put(SPACES_BULK_FACILITIES_API(), valuestoSend)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_BULK_FACILITIES_SAVED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_BULK_FACILITIES_SAVE_FAILED,
+                        payload: response,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_BULK_FACILITIES_SAVE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
 export function loadAllBookableSpacesRooms({ includeDrafts } = {}) {
+    console.log('loadAllBookableSpacesRooms RELOAD SPACES');
     return dispatch => {
         // dispatch({ type: actions.SPACES_ROOM_LIST_CLEAR });
         dispatch({ type: actions.SPACES_ROOM_LIST_LOADING });
