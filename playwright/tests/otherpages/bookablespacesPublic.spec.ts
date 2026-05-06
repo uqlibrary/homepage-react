@@ -122,7 +122,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toHaveCount(1); // second line is hidden
 
             // third panel
-            await expect(page.getByTestId(`${LIV}-description`)).toHaveCount(0);
+            await expect(page.getByTestId(`${LIV}-description`)).toHaveCount(1);
         });
 
         test('current unavailability is shown with reason on expand', async ({ page }) => {
@@ -153,7 +153,8 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toContainText(ARMUS_OPENING_HOURS);
 
             // second panel
-            await expect(page.getByTestId(`${LIV}-summary-hours`)).not.toBeVisible();
+            await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
+            await expect(page.getByTestId(`${LIV}-summary-hours`)).toContainText(ARMUS_OPENING_HOURS);
 
             await expect(page.getByTestId(`${ARCH_PANEL_5}-summary-hours`)).not.toBeVisible();
 

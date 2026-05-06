@@ -267,10 +267,11 @@ export default {
             space_uuid: "97fd5_nm39_gh29",
             space_name: "46-342/343",
             space_precise: "Eastern corner",
-            space_description: null,
+            space_highlighted: true,
+            space_description: "<p>A comfortable meeting and study space located in the Andrew N. Liveris building at St Lucia campus. Ideal for small group collaboration or focused individual work, with great natural light and a range of modern facilities.</p>",
             space_photo_url: "https://campuses.uq.edu.au/files/35424/46-342-343.JPG", // https://campuses.uq.edu.au/list-rooms
             space_photo_description: 'a large room with many tables, each wih 4 chairs',
-            space_opening_hours_id: null,
+            space_opening_hours_id: 10451,
             space_services_page: null,
             created_at: "2025-08-01 10:00:00",
             updated_at: "2025-08-01 11:00:00",
