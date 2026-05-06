@@ -150,7 +150,9 @@ let mockSpaceOutageRecords = collectMockSpaceOutages(bookableSpaces_all?.data?.l
 const getMockSpaceOutagesForSpace = spaceId =>
     mockSpaceOutageRecords
         .filter(outage => String(outage?.space_id) === String(spaceId))
-        .sort((leftOutage, rightOutage) => String(leftOutage?.space_outage_start).localeCompare(rightOutage?.space_outage_start));
+        .sort((leftOutage, rightOutage) =>
+            String(leftOutage?.space_outage_start).localeCompare(rightOutage?.space_outage_start),
+        );
 const getNextMockSpaceOutageId = () => {
     const highestKnownId = mockSpaceOutageRecords.reduce((currentHighest, outage) => {
         return Math.max(currentHighest, Number(outage?.space_outage_id) || 0);
@@ -1722,14 +1724,20 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(/bookable_spaces\/space\/\d+\/outages.*/)
     .reply(config => {
-        const urlTail = config.url.split('/').slice(-2).join('/');
+        const urlTail = config.url
+            .split('/')
+            .slice(-2)
+            .join('/');
         const spaceId = urlTail.split('/')[0];
         return [200, { status: 'OK', data: getMockSpaceOutagesForSpace(spaceId) }];
     })
     .onPost(/bookable_spaces\/space\/\d+\/outages.*/)
     .reply(config => {
         const body = JSON.parse(config.data);
-        const urlTail = config.url.split('/').slice(-2).join('/');
+        const urlTail = config.url
+            .split('/')
+            .slice(-2)
+            .join('/');
         const spaceId = body?.space_id || urlTail.split('/')[0];
         const newOutage = {
             space_outage_id: getNextMockSpaceOutageId(),
@@ -1745,9 +1753,14 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onPut(/bookable_spaces\/space_outage\/\d+.*/)
     .reply(config => {
-        const outageId = config.url.split('/').pop().split('?')[0];
+        const outageId = config.url
+            .split('/')
+            .pop()
+            .split('?')[0];
         const body = JSON.parse(config.data);
-        const existingOutage = mockSpaceOutageRecords.find(outage => String(outage?.space_outage_id) === String(outageId));
+        const existingOutage = mockSpaceOutageRecords.find(
+            outage => String(outage?.space_outage_id) === String(outageId),
+        );
         const updatedOutage = {
             ...existingOutage,
             ...body,
@@ -1761,7 +1774,10 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onDelete(/bookable_spaces\/space_outage\/\d+.*/)
     .reply(config => {
-        const outageId = config.url.split('/').pop().split('?')[0];
+        const outageId = config.url
+            .split('/')
+            .pop()
+            .split('?')[0];
         mockSpaceOutageRecords = mockSpaceOutageRecords.filter(
             outage => String(outage?.space_outage_id) !== String(outageId),
         );
@@ -2043,6 +2059,13 @@ mock.onGet('exams/course/FREN1010/summary')
     //     }
     //     return [200, { status: 'OK' }];
     // })
+    .onPut(new RegExp(panelRegExp(routes.SPACES_BULK_FACILITIES_API({ id: '.*' }).apiUrl)))
+    .reply(
+        withDelay([
+            responseType === 'bulkFacilitiesUpdateError' ? 500 : 200,
+            responseType === 'bulkFacilitiesUpdateError' ? {} : { status: 'OK' },
+        ]),
+    )
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);

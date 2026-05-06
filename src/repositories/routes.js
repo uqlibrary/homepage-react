@@ -326,6 +326,11 @@ export const SPACES_ALL_API = ({ includeDrafts } = {}) => ({
 export const SPACES_SINGLE_API = ({ uuid }) => ({ apiUrl: `bookable_spaces/space/${uuid}` });
 export const SPACES_OUTAGES_API = ({ spaceId }) => ({ apiUrl: `bookable_spaces/space/${spaceId}/outages` });
 export const SPACES_OUTAGE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_outage/${id}` });
+export const SPACES_FLOOR_OUTAGES_API = ({ floorId }) => ({ apiUrl: `bookable_spaces/floor/${floorId}/outages` });
+export const SPACES_LIBRARY_OUTAGES_API = ({ libraryId }) => ({
+    apiUrl: `bookable_spaces/library/${libraryId}/outages`,
+});
+export const SPACES_CAMPUS_OUTAGES_API = ({ campusId }) => ({ apiUrl: `bookable_spaces/campus/${campusId}/outages` });
 
 export const WEEKLYHOURS_API = () => {
     return {
@@ -361,3 +366,4 @@ export const SPACES_SPACETYPE_CREATE_API = () => ({ apiUrl: 'bookable_spaces/spa
 export const SPACES_SPACETYPE_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });
 export const SPACES_SPACETYPE_DELETE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });
 export const SPACES_FAVOURITES_API = () => ({ apiUrl: 'bookable_spaces/favourites' });
+export const SPACES_BULK_FACILITIES_API = ({ id }) => ({ apiUrl: `bookable_spaces/bulkFacilityTypes/${id}` });

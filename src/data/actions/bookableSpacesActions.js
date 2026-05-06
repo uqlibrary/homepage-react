@@ -5,6 +5,9 @@ import {
     SPACES_SINGLE_API,
     SPACES_OUTAGES_API,
     SPACES_OUTAGE_API,
+    SPACES_FLOOR_OUTAGES_API,
+    SPACES_LIBRARY_OUTAGES_API,
+    SPACES_CAMPUS_OUTAGES_API,
     SPACES_MODIFY_LOCATION_API,
     SPACES_ALL_API,
     SPACES_SITE_API,
@@ -13,6 +16,7 @@ import {
     SPACES_SPACETYPE_UPDATE_API,
     SPACES_SPACETYPE_DELETE_API,
     SPACES_FAVOURITES_API,
+    SPACES_BULK_FACILITIES_API,
 } from 'repositories/routes';
 import { API_URL } from 'config';
 
@@ -71,7 +75,36 @@ export function loadBookableSpaceOutages(spaceId) {
     };
 }
 
+export function saveBulkFilterTypes(facilityTypeId, request) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_BULK_FACILITIES_SAVING });
+        return put(SPACES_BULK_FACILITIES_API({ id: facilityTypeId }), request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_BULK_FACILITIES_SAVED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_BULK_FACILITIES_SAVE_FAILED,
+                        payload: response,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_BULK_FACILITIES_SAVE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
 export function loadAllBookableSpacesRooms({ includeDrafts } = {}) {
+    console.log('loadAllBookableSpacesRooms RELOAD SPACES');
     return dispatch => {
         // dispatch({ type: actions.SPACES_ROOM_LIST_CLEAR });
         dispatch({ type: actions.SPACES_ROOM_LIST_LOADING });
@@ -186,6 +219,34 @@ export function updateBookableSpaceLocation(request, locationType, _locationId =
 export function clearABookableSpace() {
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_CLEAR });
+    };
+}
+
+const BULK_OUTAGE_URL_MAP = {
+    floor: ({ scopeId }) => SPACES_FLOOR_OUTAGES_API({ floorId: scopeId }),
+    library: ({ scopeId }) => SPACES_LIBRARY_OUTAGES_API({ libraryId: scopeId }),
+    campus: ({ scopeId }) => SPACES_CAMPUS_OUTAGES_API({ campusId: scopeId }),
+};
+
+export function createBookableBulkOutage(request, scope, scopeId) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_OUTAGE_ADDING });
+        const urlBuilder = BULK_OUTAGE_URL_MAP[scope];
+        const url = urlBuilder({ scopeId });
+        return post(url, request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({ type: actions.SPACES_OUTAGE_ADDED, payload: response });
+                } else {
+                    dispatch({ type: actions.SPACES_OUTAGE_ADD_FAILED, payload: response?.message });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({ type: actions.SPACES_OUTAGE_ADD_FAILED, payload: error.message });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
     };
 }
 
