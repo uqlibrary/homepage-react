@@ -72,10 +72,10 @@ export function loadBookableSpaceOutages(spaceId) {
     };
 }
 
-export function saveBulkFilterTypes(valuestoSend) {
+export function saveBulkFilterTypes(facilityTypeId, request) {
     return dispatch => {
         dispatch({ type: actions.SPACES_BULK_FACILITIES_SAVING });
-        return put(SPACES_BULK_FACILITIES_API(), valuestoSend)
+        return put(SPACES_BULK_FACILITIES_API({ id: facilityTypeId }), request)
             .then(response => {
                 if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({

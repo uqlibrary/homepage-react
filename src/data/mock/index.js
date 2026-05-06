@@ -2059,7 +2059,7 @@ mock.onGet('exams/course/FREN1010/summary')
     //     }
     //     return [200, { status: 'OK' }];
     // })
-    .onPut(routes.SPACES_BULK_FACILITIES_API().apiUrl)
+    .onPut(new RegExp(panelRegExp(routes.SPACES_BULK_FACILITIES_API({ id: '.*' }).apiUrl)))
     .reply(
         withDelay([
             responseType === 'bulkFacilitiesUpdateError' ? 500 : 200,
