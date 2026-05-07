@@ -715,19 +715,15 @@ const BookableSpacesJourney = ({
 
     const goToLegacyBrowse = () => {
         const url = new URL(window.location.href);
-        // Handle both standard query params and hash-router query params (#/path?param=val)
+        // The advanced/map view is reached by adding ?advanced=1
+        // Support both standard query params and hash-router query params (#/path?param=val)
         if (url.hash.includes('?')) {
             const [hashPath, hashQuery] = url.hash.split('?');
             const hashParams = new URLSearchParams(hashQuery);
-            hashParams.delete('journey');
-            hashParams.delete('newJourney');
-            hashParams.delete('legacyMap');
-            const remaining = hashParams.toString();
-            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
+            hashParams.set('advanced', '1');
+            url.hash = `${hashPath}?${hashParams.toString()}`;
         } else {
-            url.searchParams.delete('journey');
-            url.searchParams.delete('newJourney');
-            url.searchParams.delete('legacyMap');
+            url.searchParams.set('advanced', '1');
         }
         window.location.assign(url.toString());
     };
