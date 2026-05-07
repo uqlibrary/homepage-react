@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { useLocation } from 'react-router-dom';
 
-import { Grid, useTheme } from '@mui/material';
+import { Button, Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 
 import { breadcrumbs } from 'config/routes';
 
@@ -218,14 +219,29 @@ export const BookableSpacesList = ({
     const [expandedSpaceId, setExpandedSpaceId] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
     const useJourneyExperience = React.useMemo(() => {
-        if (typeof window === 'undefined') return false;
-        // Support both standard query params (?journey=1) and hash-router query params (#/spaces?journey=1)
+        if (typeof window === 'undefined') return true;
+        // Journey is the default view. ?advanced=1 switches to the legacy map/list view.
+        // Support both standard query params (?advanced=1) and hash-router query params (#/spaces?advanced=1)
         const hashValue = location.hash || window.location.hash || '';
         const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
         const searchValue = location.search || window.location.search || '';
         const params = new URLSearchParams(searchValue || hashSearch);
-        return params.get('journey') === '1' || params.get('newJourney') === '1';
+        return params.get('advanced') !== '1';
     }, [location.search, location.hash]);
+
+    const goToJourney = () => {
+        const url = new URL(window.location.href);
+        if (url.hash.includes('?')) {
+            const [hashPath, hashQuery] = url.hash.split('?');
+            const hashParams = new URLSearchParams(hashQuery);
+            hashParams.delete('advanced');
+            const remaining = hashParams.toString();
+            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
+        } else {
+            url.searchParams.delete('advanced');
+        }
+        window.location.assign(url.toString());
+    };
     const initialJourneyModeRef = useRef(useJourneyExperience);
 
     React.useEffect(() => {
@@ -1044,7 +1060,32 @@ export const BookableSpacesList = ({
                                 </>
                             )}
 
-                            <div id="mapWrapper" className="mapHolder" style={{ height: '100%' }}>
+                            <div id="mapWrapper" className="mapHolder" style={{ height: '100%', position: 'relative' }}>
+                                <Button
+                                    data-testid="spaces-advanced-go-to-journey"
+                                    variant="contained"
+                                    startIcon={<TravelExploreIcon />}
+                                    onClick={goToJourney}
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 12,
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
+                                        zIndex: 1000,
+                                        textTransform: 'none',
+                                        backgroundColor: '#51247a',
+                                        color: '#fff',
+                                        fontWeight: 600,
+                                        border: '2px solid rgba(255, 255, 255, 0.85)',
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.35)',
+                                        '&:hover': {
+                                            backgroundColor: '#3c1a5b',
+                                            borderColor: '#fff',
+                                        },
+                                    }}
+                                >
+                                    Help me find a space
+                                </Button>
                                 <BookableSpacesMap
                                     ref={mapRef}
                                     sortedSpaceLocations={sortedSpaceLocations}
