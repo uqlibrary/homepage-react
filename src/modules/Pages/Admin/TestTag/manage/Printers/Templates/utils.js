@@ -1,3 +1,13 @@
+export const randomId = rows =>
+    Math.max(...(rows?.length > 0 ? rows.map(row => row.printer_template_var_id) : [0])) + 1;
+export const getCleanVarName = name => {
+    const varName = name;
+    return varName?.replaceAll(/[\s{}]/g, '').toUpperCase() ?? '';
+};
+export const getUserVariablePlaceholder = name => `{{${name}}}`;
+export const getSafeUserVariableNamePlaceholder = name => getUserVariablePlaceholder(getCleanVarName(name));
+export const getSafeUserVariableValuePlaceholder = value => (typeof value === 'string' ? value : `${value}`);
+
 export const transformRow = row => {
     return row?.map(line => ({
         ...line,
@@ -10,12 +20,34 @@ export const transformRow = row => {
 export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {} };
 
 export const transformUpdateRequest = request => {
+    console.log(request);
     request.printer_template_current_flag = request?.printer_template_current_flag_cb ? 1 : 0;
-    delete request.created_at;
-    delete request.printer_template_id;
+
+    // clean up identifiers array
+    const identifiers = request?.identifiers ?? [];
+    request.identifiers = identifiers.map(identifier => ({
+        ...(typeof identifier === 'string' ? { printer_template_identifier_value: identifier } : identifier),
+    }));
+
+    // clean up vars array
+    const vars = request?.vars ?? [];
+    request.vars = vars.map(variable => {
+        delete variable.error;
+        delete variable.isNew;
+        if (variable.hasOwnProperty('isAdded')) {
+            console.log('deleting printer_template_var_id', variable.printer_template_var_id);
+            delete variable.isAdded;
+            delete variable.printer_template_var_id;
+        }
+        variable.printer_template_var_name = getSafeUserVariableNamePlaceholder(variable.printer_template_var_name);
+        variable.printer_template_var_value = getSafeUserVariableValuePlaceholder(variable.printer_template_var_value);
+        return variable;
+    });
+
+    delete request.identifiers_str;
+    delete request.printer_template_department_slug;
     delete request.printer_template_current_flag_cb;
-    delete request.printer_template_department;
-    delete request.printer_template_slug;
+    delete request.created_at;
     delete request.updated_at;
     return request;
 };
@@ -24,6 +56,24 @@ export const transformAddRequest = request => {
     // Assign team Current flag.
     request.printer_template_current_flag = request?.printer_template_current_flag_cb ? 1 : 0;
 
+    // clean up identifiers array
+    const identifiers = request?.identifiers ?? [];
+    request.identifiers = identifiers.map(identifier => ({
+        printer_template_identifier_value: identifier,
+    }));
+
+    // clean up vars array
+    const vars = request?.vars ?? [];
+    request.vars = vars.map(variable => {
+        delete variable.error;
+        delete variable.isNew;
+        delete variable.isAdded;
+        delete variable.printer_template_var_id;
+
+        variable.printer_template_var_name = getSafeUserVariableNamePlaceholder(variable.printer_template_var_name);
+        variable.printer_template_var_value = getSafeUserVariableValuePlaceholder(variable.printer_template_var_value);
+        return variable;
+    });
     // clear data not required from UI for request.
     delete request.printer_template_current_flag_cb;
 
@@ -41,6 +91,7 @@ export const actionReducer = (_, action) => {
                 row: {
                     printer_template_name: '',
                     identifiers: [],
+                    vars: [],
                 },
                 title,
                 props: { ...props },
@@ -63,10 +114,3 @@ export const actionReducer = (_, action) => {
             throw `Unknown action '${type}'`;
     }
 };
-
-export const randomId = rows => Math.max(...(rows?.map?.(row => row.printer_template_var_id) ?? [0])) + 1;
-export const getCleanVarName = name => {
-    const varName = name;
-    return varName?.replaceAll(/[\s{}]/g, '').toUpperCase() ?? '';
-};
-export const getUserVariablePlaceholder = name => `{{${name}}}`;

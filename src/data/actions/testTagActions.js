@@ -1170,10 +1170,10 @@ export function clearPrinterTemplateListError() {
     };
 }
 
-export function updatePrinterTemplate(printerTemplate, request) {
+export function updatePrinterTemplate(printerTemplateId, request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_UPDATING });
-        return put(TEST_TAG_UPDATE_PRINTER_TEMPLATE_API(printerTemplate), request)
+        return put(TEST_TAG_UPDATE_PRINTER_TEMPLATE_API(printerTemplateId), request)
             .then(response => {
                 if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({

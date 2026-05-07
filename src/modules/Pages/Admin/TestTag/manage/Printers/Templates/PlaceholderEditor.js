@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { styled } from '@mui/material/styles';
@@ -12,7 +12,13 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/CheckOutlined';
 import CancelIcon from '@mui/icons-material/Close';
 
-import { GridRowModes, DataGrid, GridToolbarContainer, GridActionsCellItem } from '@mui/x-data-grid';
+import { GridRowModes, DataGrid, GridToolbarContainer, GridActionsCellItem, GridEditInputCell } from '@mui/x-data-grid';
+
+import * as actions from 'data/actions';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+import { useConfirmationAlert } from '../../../helpers/hooks';
+
+import { isEmptyStr } from '../../../helpers/helpers';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { randomId, getCleanVarName } from './utils';
@@ -38,6 +44,7 @@ const AddToolbar = props => {
                 printer_template_var_label: '',
                 printer_template_var_value: '',
                 isNew: true,
+                isAdded: true,
             },
             ...oldRows,
         ]);
@@ -61,23 +68,45 @@ AddToolbar.propTypes = {
     setRows: PropTypes.func.isRequired,
 };
 
-const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...props }) => {
+const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing }) => {
     const [rows, setRows] = React.useState(value);
-    const [rowModesModel, setRowModesModel] = React.useState({});
+    const [editRowsModel, setEditRowsModel] = useState({});
+    const [rowModesModel, setRowModesModel] = useState({});
+
+    const onCloseConfirmationAlert = () => actions.clearPrinterTemplateListError();
+    const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: null,
+        errorMessageFormatter: locale.config.alerts.error,
+    });
 
     const processRowUpdate = newRow => {
+        console.log('processRowUpdate', newRow);
+        const nameInvalid =
+            isEmptyStr(newRow.printer_template_var_name) || newRow.printer_template_var_name?.length > 255;
+        const labelInvalid =
+            isEmptyStr(newRow.printer_template_var_label) || newRow.printer_template_var_label?.length > 255;
+        const valueInvalid = !Number.isInteger(Number(newRow.printer_template_var_value));
+
+        if (nameInvalid || labelInvalid || valueInvalid) {
+            openConfirmationAlert('All fields must be completed before saving.', 'error');
+            throw new Error('All fields must be completed before saving.');
+        }
+
         const updatedRow = { ...newRow, isNew: false };
         const newRows = rows.map(row =>
             row.printer_template_var_id === newRow.printer_template_var_id ? updatedRow : row,
         );
-        console.log('validate vars processRowUpdate', newRow);
         setRows(newRows);
         onChange(null, newRows);
+        setIsEditing?.(false);
         return updatedRow;
     };
 
     const _onError = error => {
         console.error('datagrid error', error);
+        setIsEditing?.(true);
     };
     const handleRowEditStart = (params, event) => {
         event.defaultMuiPrevented = true;
@@ -90,11 +119,9 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
     const handleEditClick = id => () => {
         setIsEditing?.(true);
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-        console.log(setIsEditing, props);
     };
 
     const handleSaveClick = id => () => {
-        setIsEditing?.(false);
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     };
     const handleDeleteClick = id => () => {
@@ -117,6 +144,14 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
 
     const columns = [
         {
+            field: 'printer_template_var_id',
+            headerName: 'ID',
+            hide: true,
+            editable: false,
+            type: 'number',
+            resizable: false,
+        },
+        {
             field: 'printer_template_var_name',
             headerName: 'Variable',
             width: 175,
@@ -124,6 +159,19 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
             type: 'string',
             resizable: false,
             valueGetter: params => getCleanVarName(params.row.printer_template_var_name),
+            // eslint-disable-next-line no-unused-vars
+            renderEditCell: ({ hasChanged, otherFieldsProps, ...params }) => (
+                <GridEditInputCell
+                    {...params}
+                    inputProps={{
+                        maxLength: 255,
+                    }}
+                />
+            ),
+            preProcessEditCellProps: params => {
+                const hasError = isEmptyStr(params.props.value) || params.props.value.length > 255;
+                return { ...params.props, error: hasError };
+            },
         },
         {
             field: 'printer_template_var_label',
@@ -132,7 +180,21 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
             editable: true,
             type: 'string',
             resizable: false,
+            // eslint-disable-next-line no-unused-vars
+            renderEditCell: ({ hasChanged, otherFieldsProps, ...params }) => (
+                <GridEditInputCell
+                    {...params}
+                    inputProps={{
+                        maxLength: 255,
+                    }}
+                />
+            ),
+            preProcessEditCellProps: params => {
+                const hasError = isEmptyStr(params.props.value) || params.props.value.length > 255;
+                return { ...params.props, error: hasError };
+            },
         },
+
         {
             field: 'printer_template_var_value',
             headerName: 'Value',
@@ -140,6 +202,15 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
             editable: true,
             type: 'number',
             resizable: false,
+            preProcessEditCellProps: params => {
+                let hasError = false;
+                try {
+                    hasError = !Number.isInteger(Number(params.props.value));
+                } catch (error) {
+                    hasError = true;
+                }
+                return { ...params.props, error: hasError };
+            },
         },
         {
             field: 'actions',
@@ -148,15 +219,16 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
             width: 100,
             cellClassName: 'actions',
             getActions: ({ id }) => {
+                const anyInEditMode = Object.keys(rowModesModel).some(
+                    key => rowModesModel[key].mode === GridRowModes.Edit,
+                );
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
                 if (isInEditMode) {
                     return [
                         <GridActionsCellItem icon={<SaveIcon />} label="Save" onClick={handleSaveClick(id)} />,
                         <GridActionsCellItem
                             icon={<CancelIcon />}
                             label="Cancel"
-                            className="textPrimary"
                             onClick={handleCancelClick(id)}
                             color="inherit"
                         />,
@@ -167,15 +239,16 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
                     <GridActionsCellItem
                         icon={<EditIcon />}
                         label="Edit"
-                        className="textPrimary"
                         onClick={handleEditClick(id)}
                         color="inherit"
+                        disabled={anyInEditMode}
                     />,
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
                         label="Delete"
                         onClick={handleDeleteClick(id)}
                         color="inherit"
+                        disabled={anyInEditMode}
                     />,
                 ];
             },
@@ -206,7 +279,10 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
                     columns={columns}
                     editMode="row"
                     getRowId={row => row.printer_template_var_id}
+                    editRowsModel={editRowsModel}
+                    onEditRowsModelChange={model => setEditRowsModel(model)}
                     rowModesModel={rowModesModel}
+                    onRowModesModelChange={newModel => setRowModesModel(newModel)}
                     onRowEditStart={handleRowEditStart}
                     onRowEditStop={handleRowEditStop}
                     processRowUpdate={processRowUpdate}
@@ -217,6 +293,7 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
                     componentsProps={{
                         toolbar: { rows, setRows, setRowModesModel },
                     }}
+                    disableIgnoreModificationsIfProcessingProps
                     experimentalFeatures={{ newEditingApi: true }}
                     disableDensitySelector
                     disableColumnMenu
@@ -231,6 +308,13 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
                     {locale.pages.manage.printertemplates.helperText.vars}
                 </Typography>
             )}
+            <ConfirmationAlert
+                isOpen={confirmationAlert.visible}
+                message={confirmationAlert.message}
+                type={confirmationAlert.type}
+                closeAlert={closeConfirmationAlert}
+                autoHideDuration={confirmationAlert.autoHideDuration}
+            />
         </>
     );
 };

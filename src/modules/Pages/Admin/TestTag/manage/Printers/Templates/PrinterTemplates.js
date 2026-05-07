@@ -58,12 +58,11 @@ const PrinterTemplates = () => {
         setDialogueBusy(true);
         const request = structuredClone(data);
         const wrappedRequest = transformAddRequest(request);
-        actions
-            .addTeam(wrappedRequest)
+        dispatch(actions.addPrinterTemplate(wrappedRequest))
             .then(() => {
                 closeDialog();
                 openConfirmationAlert(locale.config.alerts.success(), 'success');
-                actions.loadTeamList();
+                dispatch(actions.loadPrinterTemplateList());
             })
             .catch(error => {
                 console.error(error);
@@ -78,13 +77,11 @@ const PrinterTemplates = () => {
     const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
-        const teamSlug = request.team_slug;
         const wrappedRequest = transformUpdateRequest(request);
-        actions
-            .updateTeam(teamSlug, wrappedRequest)
+        dispatch(actions.updatePrinterTemplate(wrappedRequest.printer_template_id, wrappedRequest))
             .then(() => {
                 openConfirmationAlert(locale.config.alerts.success(), 'success');
-                actions.loadTeamList();
+                dispatch(actions.loadPrinterTemplateList());
                 closeDialog();
             })
             .catch(error => {
@@ -99,14 +96,12 @@ const PrinterTemplates = () => {
 
     const onRowDelete = React.useCallback(data => {
         setDialogueBusy(true);
-        const teamSlug = data.row.team_slug;
 
-        actions
-            .deleteTeam(teamSlug)
+        dispatch(actions.deletePrinterTemplate(data.row.printer_template_id))
             .then(() => {
                 closeDialog();
                 openConfirmationAlert(locale.config.alerts.success(), 'success');
-                actions.loadTeamList();
+                dispatch(actions.loadPrinterTemplateList());
             })
             .catch(error => {
                 console.error(error);
