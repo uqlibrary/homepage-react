@@ -333,9 +333,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         );
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-springshare-id')).toContainText(
-            'No Springshare opening hours will display (click to change)',
-        );
+        await expect(page.getByTestId('add-space-springshare-id')).toContainText('Architecture and Music');
 
         const mapTab = (tabId: number) =>
             page.getByTestId('spaces-campus-maps-tabs').locator(`button:nth-of-type(${tabId})`);
@@ -1129,7 +1127,6 @@ test.describe('Spaces admin - edit other spaces', () => {
 
         const expectedValues = {
             ...originalMockData(testSpaceuuid),
-            space_opening_hours_id: -1,
             space_capacity: 0,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -1209,7 +1206,6 @@ test.describe('booking link controller works properly', () => {
             ...originalMockData(testSpaceUuid),
             // space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
             // space_draftmode: false,
-            space_opening_hours_id: -1, // might need to look into this?
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -1265,7 +1261,6 @@ test.describe('booking link controller works properly', () => {
         // acts as check of what we sent to api
         const expectedValues = {
             ...originalMockData(testSpaceUuid),
-            space_opening_hours_id: -1, // might need to look into this?
             space_external_book_url: 'http://example.com',
         };
         await assertExpectedDataSentToServer(page, expectedValues);

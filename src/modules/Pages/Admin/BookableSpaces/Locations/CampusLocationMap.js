@@ -27,7 +27,24 @@ const CampusLocationMap = ({ campusCentre = null } = {}) => {
         script.onload = () => setIsMazeMapScriptReady(true);
         document.body.appendChild(script);
 
+        // MazeMap calls api.mazemap.com which returns 401 in dev (no credentials).
+        // Intercept those requests and return an empty-but-valid campus collection
+        // so MazeMap doesn't crash internally when it tries to .map() over the result.
+        const origFetch = window.fetch;
+        window.fetch = (url, ...args) => {
+            if (typeof url === 'string' && url.includes('api.mazemap.com')) {
+                return Promise.resolve(
+                    new Response(JSON.stringify({ campuses: [] }), {
+                        status: 200,
+                        headers: { 'Content-Type': 'application/json' },
+                    }),
+                );
+            }
+            return origFetch(url, ...args);
+        };
+
         return () => {
+            window.fetch = origFetch;
             document.head.removeChild(link);
             document.body.removeChild(script);
             delete window.Mazemap;

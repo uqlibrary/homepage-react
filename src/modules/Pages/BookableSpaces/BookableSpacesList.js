@@ -2,12 +2,14 @@ import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { useCookies } from 'react-cookie';
+import { useLocation } from 'react-router-dom';
 
-import { Grid, useTheme } from '@mui/material';
+import { Button, Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 
 import { breadcrumbs } from 'config/routes';
 
@@ -20,6 +22,7 @@ import { useAccountContext } from 'context';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
+import BookableSpacesJourney from 'modules/Pages/BookableSpaces/BookableSpacesJourney';
 import {
     FACILITY_TYPE_CHECKBOX,
     FACILITY_TYPE_SLIDER,
@@ -28,6 +31,7 @@ import {
     FILTER_CAPACITY_TYPE_ID,
     FILTER_CURRENTLY_OPEN_ACTION_NAME,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
+    getFlatFacilityTypeList,
     isBookable,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
@@ -173,6 +177,7 @@ export const BookableSpacesList = ({
     spacesFavouritesList,
 }) => {
     const { account } = useAccountContext();
+    const location = useLocation();
     const isLoggedIn = !!account?.id;
     console.log(
         'BookableSpacesList load facilityTypeList:',
@@ -213,6 +218,37 @@ export const BookableSpacesList = ({
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [expandedSpaceId, setExpandedSpaceId] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
+    const useJourneyExperience = React.useMemo(() => {
+        if (typeof window === 'undefined') return true;
+        // Journey is the default view. ?advanced=1 switches to the legacy map/list view.
+        // Support both standard query params (?advanced=1) and hash-router query params (#/spaces?advanced=1)
+        const hashValue = location.hash || window.location.hash || '';
+        const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
+        const searchValue = location.search || window.location.search || '';
+        const params = new URLSearchParams(searchValue || hashSearch);
+        return params.get('advanced') !== '1';
+    }, [location.search, location.hash]);
+
+    const goToJourney = () => {
+        const url = new URL(window.location.href);
+        if (url.hash.includes('?')) {
+            const [hashPath, hashQuery] = url.hash.split('?');
+            const hashParams = new URLSearchParams(hashQuery);
+            hashParams.delete('advanced');
+            const remaining = hashParams.toString();
+            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
+        } else {
+            url.searchParams.delete('advanced');
+        }
+        window.location.assign(url.toString());
+    };
+    const initialJourneyModeRef = useRef(useJourneyExperience);
+
+    React.useEffect(() => {
+        if (initialJourneyModeRef.current !== useJourneyExperience) {
+            window.location.reload();
+        }
+    }, [useJourneyExperience]);
 
     const mapRef = useRef(null);
 
@@ -378,6 +414,7 @@ export const BookableSpacesList = ({
         console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
         console.log('BookableSpacesList campus::handleCampusSelection bookableSpacesRoomList=', bookableSpacesRoomList);
         setSelectedCampus(campusId);
+        setSelectedFacilityTypes([]); // reset so the useEffect re-initializes with the new campus's facility types
 
         const current = new Date();
         const nextYear = new Date();
@@ -751,6 +788,26 @@ export const BookableSpacesList = ({
         );
         return filteredFacilityTypeList;
     };
+    const filteredFacilityTypeList = React.useMemo(
+        () => getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList),
+        [bookableSpacesRoomList, facilityTypeList, selectedCampus],
+    );
+
+    React.useEffect(() => {
+        if (!!selectedFacilityTypes?.length || !filteredFacilityTypeList?.data?.facility_type_groups?.length) {
+            return;
+        }
+        const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
+        const newFilters = flatFacilityTypeList?.map(facilityType => ({
+            facility_type_group_id: facilityType?.facility_type_group_id,
+            facility_type_id: facilityType?.facility_type_id,
+            selected: false,
+            unselected: false,
+            facility_special_action: facilityType?.facility_special_action,
+        }));
+        setSelectedFacilityTypes(newFilters);
+    }, [filteredFacilityTypeList, selectedFacilityTypes, setSelectedFacilityTypes]);
+
     const toggleFilterPopupVisibility = e => {
         setShowFilterSelectorPopup(!showFilterSelectorPopup);
     };
@@ -878,6 +935,37 @@ export const BookableSpacesList = ({
                             <p data-testid="no-spaces">No locations found yet - please try again soon.</p>
                         </StandardPage>
                     );
+                } else if (useJourneyExperience) {
+                    const highlightedSpace =
+                        bookableSpacesRoomList?.data?.locations?.find(s => s.space_highlighted && !s.space_draftmode) ||
+                        null;
+                    return (
+                        <BookableSpacesJourney
+                            filteredSpaceLocations={sortedSpaceLocations}
+                            totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}
+                            highlightedSpace={highlightedSpace}
+                            selectedFacilityTypes={selectedFacilityTypes}
+                            setSelectedFacilityTypes={setSelectedFacilityTypes}
+                            filteredFacilityTypeList={filteredFacilityTypeList}
+                            facilityTypeList={facilityTypeList}
+                            facilityTypeListLoading={facilityTypeListLoading}
+                            facilityTypeListError={facilityTypeListError}
+                            minimumSpaceCapacity={minimumSpaceCapacity}
+                            maximumSpaceCapacity={maximumSpaceCapacity}
+                            capacityFilterValue={capacityFilterValue}
+                            setCapacityFilterValue={setCapacityFilterValue}
+                            campusList={campusList}
+                            selectedCampus={correctedCampusId(selectedCampus)}
+                            handleCampusSelection={handleCampusSelection}
+                            activeFilterCount={activeFilterCount}
+                            librariesForCampus={librariesForCampus}
+                            selectedLibrary={selectedLibrary}
+                            handleLibrarySelection={handleLibrarySelection}
+                            weeklyHours={weeklyHours}
+                            weeklyHoursLoading={weeklyHoursLoading}
+                            weeklyHoursError={weeklyHoursError}
+                        />
+                    );
                 } else {
                     return (
                         <StyledLayoutWrapper data-testid="library-spaces">
@@ -905,10 +993,7 @@ export const BookableSpacesList = ({
                                     facilityTypeListError={facilityTypeListError}
                                     selectedFacilityTypes={selectedFacilityTypes}
                                     setSelectedFacilityTypes={setSelectedFacilityTypes}
-                                    filteredFacilityTypeList={getFilteredFacilityTypeList(
-                                        bookableSpacesRoomList,
-                                        facilityTypeList,
-                                    )}
+                                    filteredFacilityTypeList={filteredFacilityTypeList}
                                     suppliedClassName={showFilterSelectorPopup ? 'popupFilterList' : 'hide'}
                                     minimumSpaceCapacity={minimumSpaceCapacity}
                                     maximumSpaceCapacity={maximumSpaceCapacity}
@@ -975,7 +1060,32 @@ export const BookableSpacesList = ({
                                 </>
                             )}
 
-                            <div id="mapWrapper" className="mapHolder" style={{ height: '100%' }}>
+                            <div id="mapWrapper" className="mapHolder" style={{ height: '100%', position: 'relative' }}>
+                                <Button
+                                    data-testid="spaces-advanced-go-to-journey"
+                                    variant="contained"
+                                    startIcon={<TravelExploreIcon />}
+                                    onClick={goToJourney}
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 12,
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
+                                        zIndex: 1000,
+                                        textTransform: 'none',
+                                        backgroundColor: '#51247a',
+                                        color: '#fff',
+                                        fontWeight: 600,
+                                        border: '2px solid rgba(255, 255, 255, 0.85)',
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.35)',
+                                        '&:hover': {
+                                            backgroundColor: '#3c1a5b',
+                                            borderColor: '#fff',
+                                        },
+                                    }}
+                                >
+                                    Help me find a space
+                                </Button>
                                 <BookableSpacesMap
                                     ref={mapRef}
                                     sortedSpaceLocations={sortedSpaceLocations}
