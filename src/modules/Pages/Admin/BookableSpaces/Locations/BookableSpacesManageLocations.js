@@ -241,6 +241,12 @@ export const BookableSpacesManageLocations = ({
 
     const [savingProgressShown, showSavingProgress] = React.useState(false);
     const [selectedCampusCentre, setSelectedCampusCentre] = React.useState(null);
+    const [showCampusMap, setShowCampusMap] = React.useState(false);
+
+    const handleCloseDialog = e => {
+        closeDialog(e);
+        setShowCampusMap(false);
+    };
 
     React.useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -1035,6 +1041,7 @@ export const BookableSpacesManageLocations = ({
             const mapid = 'mapWrapper';
             const mapWrapper = document.getElementById(mapid);
             !!mapWrapper && (mapWrapper.style.display = 'block');
+            setShowCampusMap(true);
 
             const dialog = document.getElementById('popupDialog');
             !!dialog && dialog?.showModal();
@@ -1170,7 +1177,7 @@ export const BookableSpacesManageLocations = ({
                     <div id="dialogMessage" />
                     <div id="dialogBody" />
                     <div id="mapWrapper" style={{ display: 'none' }}>
-                        <CampusLocationMap campusCentre={selectedCampusCentre} />
+                        {showCampusMap && <CampusLocationMap campusCentre={selectedCampusCentre} />}
                     </div>
                     <div id="dialogFooter" className={'dialogFooter'}>
                         <p id="dialogMessage" data-testid="dialogMessage">
@@ -1197,7 +1204,7 @@ export const BookableSpacesManageLocations = ({
                                 <StyledButton
                                     className={'secondary'}
                                     children={'Cancel'}
-                                    onClick={closeDialog}
+                                    onClick={handleCloseDialog}
                                     data-testid="dialog-cancel-button"
                                 />
                                 <StyledButton
