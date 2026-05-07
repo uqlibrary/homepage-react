@@ -1078,7 +1078,7 @@ export const BookableSpacesManageLocations = ({
                                 <EditIcon />
                             </StyledEditButton>
                         </StyledRow>,
-                        ...library?.floors?.map(floor => (
+                        ...(library?.floors?.map(floor => (
                             <StyledRow key={`location-floor-${floor?.floor_id}`} style={{ paddingLeft: '12rem' }}>
                                 <StyledEditButton
                                     color="primary"
@@ -1098,7 +1098,7 @@ export const BookableSpacesManageLocations = ({
                                     <EditIcon />
                                 </StyledEditButton>
                             </StyledRow>
-                        )),
+                        )) ?? []),
                     ])}
                 </>
             </>
