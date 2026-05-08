@@ -1,3 +1,5 @@
+import { isEmptyStr } from '../../../helpers/helpers';
+
 export const randomId = rows =>
     Math.max(...(rows?.length > 0 ? rows.map(row => row.printer_template_var_id) : [0])) + 1;
 export const getCleanVarName = name => {
@@ -20,7 +22,6 @@ export const transformRow = row => {
 export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {} };
 
 export const transformUpdateRequest = request => {
-    console.log(request);
     request.printer_template_current_flag = request?.printer_template_current_flag_cb ? 1 : 0;
 
     // clean up identifiers array
@@ -35,7 +36,6 @@ export const transformUpdateRequest = request => {
         delete variable.error;
         delete variable.isNew;
         if (variable.hasOwnProperty('isAdded')) {
-            console.log('deleting printer_template_var_id', variable.printer_template_var_id);
             delete variable.isAdded;
             delete variable.printer_template_var_id;
         }
@@ -113,4 +113,12 @@ export const actionReducer = (_, action) => {
         default:
             throw `Unknown action '${type}'`;
     }
+};
+
+export const validateTemplateUserVariable = row => {
+    const nameInvalid = isEmptyStr(row.printer_template_var_name) || row.printer_template_var_name?.length > 255;
+    const labelInvalid = isEmptyStr(row.printer_template_var_label) || row.printer_template_var_label?.length > 255;
+    const valueInvalid = !Number.isInteger(Number(row.printer_template_var_value));
+
+    return nameInvalid || labelInvalid || valueInvalid;
 };

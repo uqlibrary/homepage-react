@@ -9,6 +9,12 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/CheckOutlined';
+import CancelIcon from '@mui/icons-material/Close';
+
+import { GridRowModes, GridActionsCellItem, GridEditInputCell } from '@mui/x-data-grid';
 
 import PlaceholderEditor from './PlaceholderEditor';
 
@@ -39,11 +45,10 @@ export default {
                 />
             ),
             // validate: value => isInvalidTeamSlug(value),
-            fieldParams: { canEdit: true, canAdd: true, renderInUpdate: true, renderInTable: true, minWidth: 200 },
+            fieldParams: { canEdit: true, canAdd: true, renderInUpdate: true, renderInTable: true, minWidth: 250 },
         },
         identifiers: {
             component: ({ InputLabelProps, inputProps, onClick, error, ...props }) => {
-                console.log(props);
                 return (
                     <Autocomplete
                         renderInput={params => (
@@ -71,7 +76,6 @@ export default {
                         renderTags={(value, getTagProps) =>
                             value.map((option, index) => {
                                 const { key, ...tagProps } = getTagProps({ index });
-                                console.log(option, index, key, tagProps);
                                 return (
                                     <Chip
                                         variant="outlined"
@@ -167,3 +171,123 @@ export default {
         },
     },
 };
+
+export const placeholderEditorColumns = ({
+    rowModesModel,
+    handleSaveClick,
+    handleCancelClick,
+    handleEditClick,
+    handleDeleteClick,
+}) => [
+    {
+        field: 'printer_template_var_id',
+        headerName: 'ID',
+        hide: true,
+        editable: false,
+        type: 'number',
+        resizable: false,
+    },
+    {
+        field: 'printer_template_var_name',
+        headerName: 'Variable',
+        width: 175,
+        minWidth: 150,
+        editable: true,
+        type: 'string',
+        resizable: false,
+        valueGetter: params => getCleanVarName(params.row.printer_template_var_name),
+        // eslint-disable-next-line no-unused-vars
+        renderEditCell: ({ hasChanged, otherFieldsProps, ...params }) => (
+            <GridEditInputCell
+                {...params}
+                inputProps={{
+                    maxLength: 255,
+                }}
+            />
+        ),
+        preProcessEditCellProps: params => {
+            const hasError = isEmptyStr(params.props.value) || params.props.value.length > 255;
+            return { ...params.props, error: hasError };
+        },
+    },
+    {
+        field: 'printer_template_var_label',
+        headerName: 'Description',
+        minWidth: 150,
+        flex: 1,
+        editable: true,
+        type: 'string',
+        resizable: false,
+        // eslint-disable-next-line no-unused-vars
+        renderEditCell: ({ hasChanged, otherFieldsProps, ...params }) => (
+            <GridEditInputCell
+                {...params}
+                inputProps={{
+                    maxLength: 255,
+                }}
+            />
+        ),
+        preProcessEditCellProps: params => {
+            const hasError = isEmptyStr(params.props.value) || params.props.value.length > 255;
+            return { ...params.props, error: hasError };
+        },
+    },
+
+    {
+        field: 'printer_template_var_value',
+        headerName: 'Value',
+        width: 125,
+        editable: true,
+        type: 'number',
+        resizable: false,
+        preProcessEditCellProps: params => {
+            let hasError = false;
+            try {
+                hasError = !Number.isInteger(Number(params.props.value));
+            } catch (error) {
+                hasError = true;
+            }
+            return { ...params.props, error: hasError };
+        },
+    },
+    {
+        field: 'actions',
+        type: 'actions',
+        headerName: '',
+        width: 100,
+        cellClassName: 'actions',
+        getActions: ({ id }) => {
+            const anyInEditMode = Object.keys(rowModesModel).some(key => rowModesModel[key].mode === GridRowModes.Edit);
+            const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+            if (isInEditMode) {
+                return [
+                    <GridActionsCellItem icon={<SaveIcon />} label="Save" onClick={handleSaveClick(id)} />,
+                    <GridActionsCellItem
+                        icon={<CancelIcon />}
+                        label="Cancel"
+                        onClick={handleCancelClick(id)}
+                        color="inherit"
+                    />,
+                ];
+            }
+
+            return [
+                <GridActionsCellItem
+                    icon={<EditIcon />}
+                    label="Edit"
+                    onClick={handleEditClick(id)}
+                    color="inherit"
+                    disabled={anyInEditMode}
+                />,
+                <GridActionsCellItem
+                    icon={<DeleteIcon />}
+                    label="Delete"
+                    onClick={handleDeleteClick(id)}
+                    color="inherit"
+                    disabled={anyInEditMode}
+                />,
+            ];
+        },
+        resizable: false,
+    },
+];

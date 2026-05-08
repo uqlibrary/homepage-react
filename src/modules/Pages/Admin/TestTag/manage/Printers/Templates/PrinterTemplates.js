@@ -1,20 +1,22 @@
-import React, { useReducer } from 'react';
-
-import Grid from '@mui/material/Unstable_Grid2';
-import CircularProgress from '@mui/material/CircularProgress';
+import React, { useReducer, useMemo } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 
+import Grid from '@mui/material/Unstable_Grid2';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 import * as actions from 'data/actions';
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-
-import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import DataTable from '../../../SharedComponents/DataTable/DataTable';
+import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
@@ -22,16 +24,20 @@ import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionS
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import config from './configure';
 import { breadcrumbs } from 'config/routes';
-import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 
 const componentId = 'printer-template-management';
 
-const dialogStyles = {
-    padding: '6px',
-    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: '75vh' },
-};
-
 const PrinterTemplates = () => {
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
+
+    const dialogStyles = useMemo(
+        () => ({
+            '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: isMobileView ? '100%' : '75vh' },
+        }),
+        [isMobileView],
+    );
+
     const pageLocale = locale.pages.manage.printertemplates;
 
     const { printerTemplateList, printerTemplateListLoading, printerTemplateListError } = useSelector(state =>
@@ -114,7 +120,6 @@ const PrinterTemplates = () => {
     }, []);
 
     const setIsEditing = value => {
-        console.log('setIsEditing', value);
         setEditingRows(prev => (value ? prev + 1 : Math.max(prev - 1, 0)));
     };
     const handleAddClick = () => {
@@ -162,23 +167,12 @@ const PrinterTemplates = () => {
         });
     };
 
-    const handleDeleteClick = ({ id, api }) => {
-        const row = api.getRow(id);
-        actionDispatch({
-            type: 'delete',
-            row,
-        });
-    };
-
     const { row } = useDataTableRow(printerTemplateList, transformRow);
-    const shouldDisableDelete = row => row?.users_count > 0;
     // const shouldDisableEdit = row => userUID === row?.user_uid;
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
         handleEditClick,
-        handleDeleteClick,
-        shouldDisableDelete,
         // shouldDisableEdit,
         actionDataFieldKeys: { valueKey: 'printer_template_id' },
         actionTooltips: pageLocale.form.actionTooltips,
@@ -220,7 +214,7 @@ const PrinterTemplates = () => {
                     props={actionState?.props}
                     isBusy={dialogueBusy}
                     noMinContentWidth
-                    sx={dialogStyles}
+                    styles={dialogStyles}
                 />
                 <UpdateDialog
                     id={componentId}
@@ -237,7 +231,7 @@ const PrinterTemplates = () => {
                     props={actionState?.props}
                     isBusy={dialogueBusy}
                     noMinContentWidth
-                    sx={dialogStyles}
+                    styles={dialogStyles}
                     disabledState={{ actionButton: editingRows > 0 }}
                 />
                 <ConfirmationBox

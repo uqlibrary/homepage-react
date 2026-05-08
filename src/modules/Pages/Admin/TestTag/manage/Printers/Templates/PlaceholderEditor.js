@@ -1,27 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import { styled } from '@mui/material/styles';
 
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/CheckOutlined';
-import CancelIcon from '@mui/icons-material/Close';
 
-import { GridRowModes, DataGrid, GridToolbarContainer, GridActionsCellItem, GridEditInputCell } from '@mui/x-data-grid';
+import { GridRowModes, DataGrid } from '@mui/x-data-grid';
 
+import AddToolbar from './AddToolbar';
 import * as actions from 'data/actions';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useConfirmationAlert } from '../../../helpers/hooks';
 
-import { isEmptyStr } from '../../../helpers/helpers';
+import { placeholderEditorColumns } from './configure';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import { randomId, getCleanVarName } from './utils';
+import { validateTemplateUserVariable } from './utils';
 
 const FormLabelText = styled(Typography, {
     shouldForwardProp: prop => prop !== 'error',
@@ -32,45 +27,8 @@ const FormLabelText = styled(Typography, {
     display: 'block', // Optional: forces label to own line
 }));
 
-const AddToolbar = props => {
-    const { rows, setRows, setRowModesModel } = props;
-
-    const handleClick = () => {
-        const id = randomId(rows);
-        setRows(oldRows => [
-            {
-                printer_template_var_id: id,
-                printer_template_var_name: '',
-                printer_template_var_label: '',
-                printer_template_var_value: '',
-                isNew: true,
-                isAdded: true,
-            },
-            ...oldRows,
-        ]);
-        setRowModesModel(oldModel => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'printer_template_var_name' },
-        }));
-    };
-
-    return (
-        <GridToolbarContainer>
-            <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-                Add template variable
-            </Button>
-        </GridToolbarContainer>
-    );
-};
-AddToolbar.propTypes = {
-    setRowModesModel: PropTypes.func.isRequired,
-    rows: PropTypes.array.isRequired,
-    setRows: PropTypes.func.isRequired,
-};
-
 const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing }) => {
     const [rows, setRows] = React.useState(value);
-    const [editRowsModel, setEditRowsModel] = useState({});
     const [rowModesModel, setRowModesModel] = useState({});
 
     const onCloseConfirmationAlert = () => actions.clearPrinterTemplateListError();
@@ -82,14 +40,9 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing }) => {
     });
 
     const processRowUpdate = newRow => {
-        console.log('processRowUpdate', newRow);
-        const nameInvalid =
-            isEmptyStr(newRow.printer_template_var_name) || newRow.printer_template_var_name?.length > 255;
-        const labelInvalid =
-            isEmptyStr(newRow.printer_template_var_label) || newRow.printer_template_var_label?.length > 255;
-        const valueInvalid = !Number.isInteger(Number(newRow.printer_template_var_value));
+        const invalidRow = validateTemplateUserVariable(newRow);
 
-        if (nameInvalid || labelInvalid || valueInvalid) {
+        if (invalidRow) {
             openConfirmationAlert('All fields must be completed before saving.', 'error');
             throw new Error('All fields must be completed before saving.');
         }
@@ -116,145 +69,41 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing }) => {
         event.defaultMuiPrevented = true;
     };
 
-    const handleEditClick = id => () => {
-        setIsEditing?.(true);
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-    };
+    const columns = useMemo(() => {
+        const handleEditClick = id => () => {
+            setIsEditing?.(true);
+            setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+        };
 
-    const handleSaveClick = id => () => {
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    };
-    const handleDeleteClick = id => () => {
-        const newRows = rows.filter(row => row.printer_template_var_id !== id);
-        setRows(newRows);
-        onChange(null, newRows);
-    };
-    const handleCancelClick = id => () => {
-        setIsEditing?.(false);
-        setRowModesModel({
-            ...rowModesModel,
-            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        const handleSaveClick = id => () => {
+            setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+        };
+        const handleDeleteClick = id => () => {
+            const newRows = rows.filter(row => row.printer_template_var_id !== id);
+            setRows(newRows);
+            onChange(null, newRows);
+        };
+        const handleCancelClick = id => () => {
+            setIsEditing?.(false);
+            setRowModesModel({
+                ...rowModesModel,
+                [id]: { mode: GridRowModes.View, ignoreModifications: true },
+            });
+
+            const editedRow = rows.find(row => row.printer_template_var_id === id);
+            if (editedRow.isNew) {
+                setRows(rows.filter(row => row.printer_template_var_id !== id));
+            }
+        };
+
+        return placeholderEditorColumns({
+            rowModesModel,
+            handleSaveClick,
+            handleCancelClick,
+            handleEditClick,
+            handleDeleteClick,
         });
-
-        const editedRow = rows.find(row => row.printer_template_var_id === id);
-        if (editedRow.isNew) {
-            setRows(rows.filter(row => row.printer_template_var_id !== id));
-        }
-    };
-
-    const columns = [
-        {
-            field: 'printer_template_var_id',
-            headerName: 'ID',
-            hide: true,
-            editable: false,
-            type: 'number',
-            resizable: false,
-        },
-        {
-            field: 'printer_template_var_name',
-            headerName: 'Variable',
-            width: 175,
-            editable: true,
-            type: 'string',
-            resizable: false,
-            valueGetter: params => getCleanVarName(params.row.printer_template_var_name),
-            // eslint-disable-next-line no-unused-vars
-            renderEditCell: ({ hasChanged, otherFieldsProps, ...params }) => (
-                <GridEditInputCell
-                    {...params}
-                    inputProps={{
-                        maxLength: 255,
-                    }}
-                />
-            ),
-            preProcessEditCellProps: params => {
-                const hasError = isEmptyStr(params.props.value) || params.props.value.length > 255;
-                return { ...params.props, error: hasError };
-            },
-        },
-        {
-            field: 'printer_template_var_label',
-            headerName: 'Description',
-            flex: 1,
-            editable: true,
-            type: 'string',
-            resizable: false,
-            // eslint-disable-next-line no-unused-vars
-            renderEditCell: ({ hasChanged, otherFieldsProps, ...params }) => (
-                <GridEditInputCell
-                    {...params}
-                    inputProps={{
-                        maxLength: 255,
-                    }}
-                />
-            ),
-            preProcessEditCellProps: params => {
-                const hasError = isEmptyStr(params.props.value) || params.props.value.length > 255;
-                return { ...params.props, error: hasError };
-            },
-        },
-
-        {
-            field: 'printer_template_var_value',
-            headerName: 'Value',
-            width: 125,
-            editable: true,
-            type: 'number',
-            resizable: false,
-            preProcessEditCellProps: params => {
-                let hasError = false;
-                try {
-                    hasError = !Number.isInteger(Number(params.props.value));
-                } catch (error) {
-                    hasError = true;
-                }
-                return { ...params.props, error: hasError };
-            },
-        },
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: '',
-            width: 100,
-            cellClassName: 'actions',
-            getActions: ({ id }) => {
-                const anyInEditMode = Object.keys(rowModesModel).some(
-                    key => rowModesModel[key].mode === GridRowModes.Edit,
-                );
-                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-                if (isInEditMode) {
-                    return [
-                        <GridActionsCellItem icon={<SaveIcon />} label="Save" onClick={handleSaveClick(id)} />,
-                        <GridActionsCellItem
-                            icon={<CancelIcon />}
-                            label="Cancel"
-                            onClick={handleCancelClick(id)}
-                            color="inherit"
-                        />,
-                    ];
-                }
-
-                return [
-                    <GridActionsCellItem
-                        icon={<EditIcon />}
-                        label="Edit"
-                        onClick={handleEditClick(id)}
-                        color="inherit"
-                        disabled={anyInEditMode}
-                    />,
-                    <GridActionsCellItem
-                        icon={<DeleteIcon />}
-                        label="Delete"
-                        onClick={handleDeleteClick(id)}
-                        color="inherit"
-                        disabled={anyInEditMode}
-                    />,
-                ];
-            },
-            resizable: false,
-        },
-    ];
+    }, [onChange, rowModesModel, rows, setIsEditing]);
 
     return (
         <>
@@ -279,8 +128,6 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing }) => {
                     columns={columns}
                     editMode="row"
                     getRowId={row => row.printer_template_var_id}
-                    editRowsModel={editRowsModel}
-                    onEditRowsModelChange={model => setEditRowsModel(model)}
                     rowModesModel={rowModesModel}
                     onRowModesModelChange={newModel => setRowModesModel(newModel)}
                     onRowEditStart={handleRowEditStart}
@@ -326,4 +173,4 @@ PlaceholderEditor.propTypes = {
     setIsEditing: PropTypes.func,
 };
 
-export default PlaceholderEditor;
+export default React.memo(PlaceholderEditor);

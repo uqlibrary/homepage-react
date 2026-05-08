@@ -18,9 +18,11 @@ import { filterComponentProps } from './utils';
 
 const rootId = 'update_dialog';
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
+const StyledDialog = styled(Dialog, {
+    shouldForwardProp: prop => prop !== 'styles',
+})(({ styles, fullScreen, theme }) => ({
     padding: '6px',
-    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: '50vh' },
+    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: fullScreen ? '100%' : '50vh' },
     '& .footerActions': {
         padding: '8px 16px',
     },
@@ -29,6 +31,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
             marginTop: theme.spacing(2),
         },
     },
+    ...styles,
 }));
 
 export const UpdateDialogue = ({
@@ -48,9 +51,12 @@ export const UpdateDialogue = ({
     row,
     props,
     isBusy = false,
-    sx,
+    styles,
     disabledState = { actionButton: false, cancelButton: false },
 }) => {
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
+
     const componentId = `${rootId}-${id}`;
 
     const [dataColumns, setDataColumns] = React.useState({});
@@ -58,8 +64,6 @@ export const UpdateDialogue = ({
     const [editableFields, setEditableFields] = React.useState([]);
     const [data, setData] = React.useState({});
     const [isValid, setIsValid] = React.useState(false);
-    const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.only('xs')) || false;
 
     React.useEffect(() => {
         /* istanbul ignore else */
@@ -111,7 +115,13 @@ export const UpdateDialogue = ({
         }));
     };
     return (
-        <StyledDialog open={isOpen} id={`${componentId}`} data-testid={`${componentId}`} sx={sx}>
+        <StyledDialog
+            open={isOpen}
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
+            styles={styles}
+            fullScreen={isMobileView}
+        >
             <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                 {title}
             </DialogTitle>
@@ -257,7 +267,7 @@ UpdateDialogue.propTypes = {
     props: PropTypes.object,
     fieldProps: PropTypes.object,
     isBusy: PropTypes.bool,
-    sx: PropTypes.object,
+    styles: PropTypes.object,
     disabledState: PropTypes.shape({
         actionButton: PropTypes.bool,
         cancelButton: PropTypes.bool,
