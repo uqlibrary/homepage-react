@@ -135,7 +135,10 @@ export default {
             component: (props, _, __, action) => (
                 <Accordion defaultExpanded={action === 'add'}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
-                        Printer template code
+                        {
+                            locale.pages.manage.printertemplates.placeholderEditor.form.columns.printer_template_code
+                                .label
+                        }
                     </AccordionSummary>
                     <AccordionDetails>
                         <TextField
@@ -181,7 +184,7 @@ export const placeholderEditorColumns = ({
 }) => [
     {
         field: 'printer_template_var_id',
-        headerName: 'ID',
+        headerName: locale.pages.manage.printertemplates.placeholderEditor.form.columns.printer_template_var_id.label,
         hide: true,
         editable: false,
         type: 'number',
@@ -189,7 +192,7 @@ export const placeholderEditorColumns = ({
     },
     {
         field: 'printer_template_var_name',
-        headerName: 'Variable',
+        headerName: locale.pages.manage.printertemplates.placeholderEditor.form.columns.printer_template_var_name.label,
         width: 175,
         minWidth: 150,
         editable: true,
@@ -212,7 +215,8 @@ export const placeholderEditorColumns = ({
     },
     {
         field: 'printer_template_var_label',
-        headerName: 'Description',
+        headerName:
+            locale.pages.manage.printertemplates.placeholderEditor.form.columns.printer_template_var_label.label,
         minWidth: 150,
         flex: 1,
         editable: true,
@@ -235,8 +239,10 @@ export const placeholderEditorColumns = ({
 
     {
         field: 'printer_template_var_value',
-        headerName: 'Value',
-        width: 125,
+        headerName:
+            locale.pages.manage.printertemplates.placeholderEditor.form.columns.printer_template_var_value.label,
+        width: 100,
+        minWidth: 100,
         editable: true,
         type: 'number',
         resizable: false,
@@ -254,17 +260,22 @@ export const placeholderEditorColumns = ({
         field: 'actions',
         type: 'actions',
         headerName: '',
-        width: 100,
+        width: 80,
+        minWidth: 80,
         cellClassName: 'actions',
         getActions: ({ id }) => {
             const anyInEditMode = Object.keys(rowModesModel).some(key => rowModesModel[key].mode === GridRowModes.Edit);
             const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
             if (isInEditMode) {
                 return [
-                    <GridActionsCellItem icon={<SaveIcon />} label="Save" onClick={handleSaveClick(id)} />,
+                    <GridActionsCellItem
+                        icon={<SaveIcon />}
+                        label={locale.pages.manage.printertemplates.buttons.save.label}
+                        onClick={handleSaveClick(id)}
+                    />,
                     <GridActionsCellItem
                         icon={<CancelIcon />}
-                        label="Cancel"
+                        label={locale.pages.manage.printertemplates.buttons.cancel.label}
                         onClick={handleCancelClick(id)}
                         color="inherit"
                     />,
@@ -274,14 +285,14 @@ export const placeholderEditorColumns = ({
             return [
                 <GridActionsCellItem
                     icon={<EditIcon />}
-                    label="Edit"
+                    label={locale.pages.manage.printertemplates.buttons.edit.label}
                     onClick={handleEditClick(id)}
                     color="inherit"
                     disabled={anyInEditMode}
                 />,
                 <GridActionsCellItem
                     icon={<DeleteIcon />}
-                    label="Delete"
+                    label={locale.pages.manage.printertemplates.buttons.delete.label}
                     onClick={handleDeleteClick(id)}
                     color="inherit"
                     disabled={anyInEditMode}

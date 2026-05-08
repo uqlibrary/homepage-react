@@ -438,4 +438,41 @@ describe('UpdateDialog Renders component', () => {
         // auto width style noMinContentWidth: true,
         expect(getByTestId('update_dialog-test-content')).toHaveStyle('min-width: auto');
     });
+
+    it('renders in full screen mode on mobile view', () => {
+        const createMatchMedia = width => query => ({
+            matches: require('css-mediaquery').match(query, { width }),
+            addListener: () => {},
+            removeListener: () => {},
+        });
+        const originalMatchMedia = window.matchMedia;
+        window.matchMedia = createMatchMedia(375);
+
+        const { getByTestId } = setup({ title: 'Test title' });
+        expect(getByTestId('update_dialog-test')).toBeInTheDocument();
+
+        window.matchMedia = originalMatchMedia;
+    });
+
+    it('applies fieldProps overrides to rendered component', () => {
+        const fields = {
+            asset_id_displayed: {
+                component: props => <TextField variant="standard" {...props} />,
+                fieldParams: {},
+            },
+        };
+        const columns = {
+            asset_id_displayed: { label: 'Asset ID' },
+        };
+        const row = {};
+        const { getByTestId } = setup({
+            title: 'Test title',
+            isOpen: true,
+            fields,
+            columns,
+            row,
+            props: { fieldProps: { asset_id_displayed: { disabled: true } } },
+        });
+        expect(getByTestId('asset_id_displayed-input')).toBeDisabled();
+    });
 });

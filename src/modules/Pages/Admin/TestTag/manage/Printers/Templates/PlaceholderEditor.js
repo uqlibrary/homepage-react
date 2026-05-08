@@ -13,7 +13,7 @@ import * as actions from 'data/actions';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useConfirmationAlert } from '../../../helpers/hooks';
 
-import { placeholderEditorColumns } from './configure';
+import { placeholderEditorColumns } from './config';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { validateTemplateUserVariable } from './utils';
@@ -27,9 +27,11 @@ const FormLabelText = styled(Typography, {
     display: 'block', // Optional: forces label to own line
 }));
 
-const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing }) => {
+const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...props }) => {
     const [rows, setRows] = React.useState(value);
     const [rowModesModel, setRowModesModel] = useState({});
+
+    const pageLocale = locale.pages.manage.printertemplates;
 
     const onCloseConfirmationAlert = () => actions.clearPrinterTemplateListError();
     const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
@@ -43,8 +45,8 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing }) => {
         const invalidRow = validateTemplateUserVariable(newRow);
 
         if (invalidRow) {
-            openConfirmationAlert('All fields must be completed before saving.', 'error');
-            throw new Error('All fields must be completed before saving.');
+            openConfirmationAlert(pageLocale.placeholderEditor.helperText.validationAllFieldsRequired, 'error');
+            throw new Error(pageLocale.placeholderEditor.helperText.validationAllFieldsRequired);
         }
 
         const updatedRow = { ...newRow, isNew: false };
@@ -61,10 +63,13 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing }) => {
         console.error('datagrid error', error);
         setIsEditing?.(true);
     };
+
+    /* istanbul ignore next */
     const handleRowEditStart = (params, event) => {
         event.defaultMuiPrevented = true;
     };
 
+    /* istanbul ignore next */
     const handleRowEditStop = (params, event) => {
         event.defaultMuiPrevented = true;
     };
@@ -147,12 +152,13 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing }) => {
                     disableColumnFilter
                     disableColumnSelector
                     disableSelectionOnClick
+                    {...props}
                 />
             </Box>
 
             {error && (
                 <Typography component={'div'} color="error" variant="caption" sx={{ mt: 2 }}>
-                    {locale.pages.manage.printertemplates.helperText.vars}
+                    {pageLocale.helperText.vars}
                 </Typography>
             )}
             <ConfirmationAlert

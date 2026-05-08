@@ -3,7 +3,6 @@ import React, { useReducer, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Grid from '@mui/material/Unstable_Grid2';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -16,13 +15,12 @@ import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/T
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionState, actionReducer } from './utils';
 import { useConfirmationAlert } from '../../../helpers/hooks';
-import config from './configure';
+import config from './config';
 import { breadcrumbs } from 'config/routes';
 
 const componentId = 'printer-template-management';
@@ -93,25 +91,6 @@ const PrinterTemplates = () => {
             .catch(error => {
                 console.error(error);
                 openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.updateFail), 'error');
-            })
-            .finally(() => {
-                setDialogueBusy(false);
-            });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const onRowDelete = React.useCallback(data => {
-        setDialogueBusy(true);
-
-        dispatch(actions.deletePrinterTemplate(data.row.printer_template_id))
-            .then(() => {
-                closeDialog();
-                openConfirmationAlert(locale.config.alerts.success(), 'success');
-                dispatch(actions.loadPrinterTemplateList());
-            })
-            .catch(error => {
-                console.error(error);
-                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.deleteFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -234,34 +213,6 @@ const PrinterTemplates = () => {
                     styles={dialogStyles}
                     disabledState={{ actionButton: editingRows > 0 }}
                 />
-                <ConfirmationBox
-                    actionButtonColor="primary"
-                    actionButtonVariant="contained"
-                    cancelButtonColor="secondary"
-                    confirmationBoxId={componentId}
-                    onCancelAction={closeDialog}
-                    onAction={onRowDelete}
-                    isOpen={actionState.isDelete}
-                    locale={
-                        !dialogueBusy
-                            ? pageLocale?.dialogDeleteConfirm
-                            : {
-                                  ...pageLocale?.dialogDeleteConfirm,
-                                  confirmButtonLabel: (
-                                      <CircularProgress
-                                          color="inherit"
-                                          size={25}
-                                          id={`${componentId}-progress`}
-                                          data-testid={`${componentId}-progress`}
-                                      />
-                                  ),
-                              }
-                    }
-                    disableButtonsWhenBusy
-                    isBusy={dialogueBusy}
-                    noMinContentWidth
-                    actionProps={{ row: actionState?.row, props: actionState?.props }}
-                />
                 <Grid container spacing={3}>
                     <Grid sx={{ flex: 1 }}>
                         <DataTable
@@ -273,7 +224,7 @@ const PrinterTemplates = () => {
                             components={{
                                 Toolbar: () => (
                                     <WithExportMenu id={componentId}>
-                                        <AddButton label={pageLocale.form.addButtonLabel} onClick={handleAddClick} />
+                                        <AddButton label={pageLocale.buttons.add.label} onClick={handleAddClick} />
                                     </WithExportMenu>
                                 ),
                             }}

@@ -6,10 +6,14 @@ import { GridRowModes, GridToolbarContainer } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
+
 import { randomId } from './utils';
 
 const AddToolbar = props => {
     const { rows, setRows, setRowModesModel } = props;
+
+    const pageLocale = locale.pages.manage.printertemplates;
 
     const handleClick = () => {
         const id = randomId(rows);
@@ -33,7 +37,7 @@ const AddToolbar = props => {
     return (
         <GridToolbarContainer>
             <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-                Add template variable
+                {pageLocale.placeholderEditor.toolbar.buttons.addVar.label}
             </Button>
         </GridToolbarContainer>
     );

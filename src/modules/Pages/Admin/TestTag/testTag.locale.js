@@ -1204,7 +1204,6 @@ export default {
                 },
                 form: {
                     actions: 'Actions',
-                    addButtonLabel: 'Add Printer Template',
                     columns: {
                         printer_template_id: {
                             label: 'ID',
@@ -1273,6 +1272,55 @@ export default {
                         'Printer template code is required and must include defined placeholder variables',
                     vars:
                         'One or more defined variables are missing from the template code. All variables must be included in the printer template code as {{VARNAME}}',
+                },
+                buttons: {
+                    add: {
+                        label: 'Add printer template',
+                    },
+                    edit: {
+                        label: 'Edit',
+                    },
+                    save: {
+                        label: 'Save',
+                    },
+                    cancel: {
+                        label: 'Cancel',
+                    },
+                    delete: {
+                        label: 'Delete',
+                    },
+                },
+
+                placeholderEditor: {
+                    form: {
+                        columns: {
+                            printer_template_var_id: {
+                                label: 'ID',
+                            },
+                            printer_template_var_name: {
+                                label: 'Variable',
+                            },
+                            printer_template_var_label: {
+                                label: 'Description',
+                            },
+                            printer_template_var_value: {
+                                label: 'Value',
+                            },
+                            printer_template_code: {
+                                label: 'Printer template code',
+                            },
+                        },
+                    },
+                    toolbar: {
+                        buttons: {
+                            addVar: {
+                                label: 'Add template variable',
+                            },
+                        },
+                    },
+                    helperText: {
+                        validationAllFieldsRequired: 'All fields must be completed before saving.',
+                    },
                 },
             },
         },
