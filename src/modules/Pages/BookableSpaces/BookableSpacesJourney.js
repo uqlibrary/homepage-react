@@ -778,6 +778,43 @@ const BookableSpacesJourney = ({
             .trim();
     }, [highlightedSpace]);
 
+    // Manage browser back button to stay within journey
+    const journeyHistoryRef = React.useRef(['landing']);
+
+    React.useEffect(() => {
+        // Update history stack when view changes
+        const currentHistory = journeyHistoryRef.current;
+        const lastView = currentHistory[currentHistory.length - 1];
+
+        if (view !== lastView) {
+            currentHistory.push(view);
+        }
+
+        // Handle browser back button
+        const handlePopState = e => {
+            e.preventDefault();
+
+            const currentHistory = journeyHistoryRef.current;
+            // Remove the current state and go to previous
+            if (currentHistory.length > 1) {
+                currentHistory.pop();
+                const previousView = currentHistory[currentHistory.length - 1];
+                setView(previousView);
+            } else {
+                // If we're at the first view in journey, push state to allow real back navigation
+                window.history.pushState(null, '', window.location.href);
+            }
+        };
+
+        // Push history state when entering journey
+        if (view !== 'landing' && journeyHistoryRef.current.length === 1) {
+            window.history.pushState({ journeyView: view }, '', window.location.href);
+        }
+
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, [view]);
+
     React.useEffect(() => {
         if (view === 'details') {
             journeyTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
