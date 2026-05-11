@@ -49,6 +49,7 @@ export const UpdateDialogue = ({
     fields,
     columns,
     row,
+    rows,
     props,
     isBusy = false,
     styles,
@@ -63,7 +64,7 @@ export const UpdateDialogue = ({
     const [dataFields, setDataFields] = React.useState({});
     const [editableFields, setEditableFields] = React.useState([]);
     const [data, setData] = React.useState({});
-    const [isValid, setIsValid] = React.useState(false);
+    const [fieldsValid, setFieldsValid] = React.useState({});
 
     React.useEffect(() => {
         /* istanbul ignore else */
@@ -80,16 +81,18 @@ export const UpdateDialogue = ({
                 ),
             );
         }
-    }, [isOpen, fields, row, columns]);
+    }, [isOpen, fields, row, rows, columns]);
 
     React.useEffect(() => {
-        setIsValid(
-            editableFields.every(field => {
-                return !dataFields[field]?.validate?.(data[field], data) ?? /* istanbul ignore next */ true;
-            }),
-        );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
+        setFieldsValid(() => {
+            const newFieldsValid = {};
+            editableFields.forEach(field => {
+                newFieldsValid[field] =
+                    !dataFields[field]?.validate?.(data[field], data, rows) ?? /* istanbul ignore next */ true;
+            });
+            return newFieldsValid;
+        });
+    }, [data, dataFields, editableFields, rows]);
 
     const _onAction = () => {
         onClose?.();
@@ -163,7 +166,7 @@ export const UpdateDialogue = ({
                                                         id: `${field}-input`,
                                                         name: field,
                                                         label: dataColumns[field].label,
-                                                        error: dataFields[field]?.validate?.(data?.[field], data),
+                                                        error: !fieldsValid[field],
                                                         checked: !!data?.[field],
                                                         onChange: handleChange(field),
                                                         onClick: _onClickAction,
@@ -226,7 +229,11 @@ export const UpdateDialogue = ({
                                         id={`${rootId}-action-button`}
                                         data-testid={`${rootId}-action-button`}
                                         fullWidth={isMobileView}
-                                        disabled={isBusy || !isValid || disabledState?.actionButton}
+                                        disabled={
+                                            isBusy ||
+                                            Object.values(fieldsValid).some(valid => !valid) ||
+                                            disabledState?.actionButton
+                                        }
                                     >
                                         {isBusy ? (
                                             <CircularProgress
@@ -257,6 +264,7 @@ UpdateDialogue.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string,
     row: PropTypes.object,
+    rows: PropTypes.array,
     isOpen: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
     hideActionButton: PropTypes.bool,

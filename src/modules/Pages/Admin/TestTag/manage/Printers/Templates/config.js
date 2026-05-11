@@ -44,7 +44,7 @@ export default {
                     }
                 />
             ),
-            validate: value => isEmptyStr(value),
+            validate: value => isEmptyStr(value) || value.length > 255,
             fieldParams: { canEdit: true, canAdd: true, renderInUpdate: true, renderInTable: true, minWidth: 250 },
         },
         identifiers: {
@@ -90,7 +90,28 @@ export default {
                     />
                 );
             },
-            validate: value => value?.length === 0 ?? false,
+            validate: (value, data, rows) => {
+                if (value?.length === 0) {
+                    return true;
+                }
+                const values = value.map(val =>
+                    typeof val === 'string' ? val : val.printer_template_identifier_value,
+                );
+                const duplicates = values.filter((val, index) => values.indexOf(val) !== index);
+                if (duplicates.length > 0) {
+                    return true;
+                }
+                if (values.some(val => isEmptyStr(val)) || values.some(val => val.length > 255)) {
+                    return true;
+                }
+                return rows
+                    ?.filter(row => row.printer_template_id !== data.printer_template_id)
+                    .some(row => {
+                        const rowValues =
+                            row.identifiers?.map(identifier => identifier.printer_template_identifier_value) ?? [];
+                        return rowValues.some(val => values.includes(val));
+                    });
+            },
             fieldParams: {
                 canEdit: true,
                 renderInTable: false,

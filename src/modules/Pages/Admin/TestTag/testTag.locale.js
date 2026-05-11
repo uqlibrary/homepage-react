@@ -1266,8 +1266,7 @@ export default {
                 },
                 helperText: {
                     printer_template_name: 'A printer template name is required',
-                    printer_template_identifier:
-                        'A printer identifier is required and must not have been used with another template.',
+                    identifiers: 'A printer identifier is required and must not have been used with another template.',
                     printer_template_code:
                         'Printer template code is required and must include defined placeholder variables',
                     vars:

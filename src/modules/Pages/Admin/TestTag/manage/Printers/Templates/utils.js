@@ -104,7 +104,6 @@ export const actionReducer = (_, action) => {
                 isDelete: false,
                 title,
                 row: { ...row, id: row.printer_template_id },
-                // row,
                 props: { ...props },
             };
         case 'delete':

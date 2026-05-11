@@ -188,6 +188,7 @@ const PrinterTemplates = () => {
                     fields={config.fields ?? /* istanbul ignore next */ []}
                     columns={pageLocale.form.columns}
                     row={actionState?.row}
+                    rows={row}
                     onCancelAction={closeDialog}
                     onAction={onRowAdd}
                     props={actionState?.props}
@@ -205,6 +206,7 @@ const PrinterTemplates = () => {
                     fields={config?.fields ?? /* istanbul ignore next */ []}
                     columns={pageLocale.form.columns}
                     row={actionState?.row}
+                    rows={row}
                     onCancelAction={closeDialog}
                     onAction={onRowEdit}
                     props={actionState?.props}

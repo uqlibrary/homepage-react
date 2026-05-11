@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 
 import { GridRowModes } from '@mui/x-data-grid';
 
-import DataTable from '../../../SharedComponents/DataTable/DataTable';
+import DataTable, { rootId as dataTableRootId } from '../../../SharedComponents/DataTable/DataTable';
 import AddToolbar from './AddToolbar';
 import * as actions from 'data/actions';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
@@ -30,7 +30,7 @@ const FormLabelText = styled(Typography, {
 
 const componentId = 'placeholder-editor';
 
-const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...props }) => {
+const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, InputLabelProps, ...props }) => {
     const [rows, setRows] = React.useState(value);
     const [rowModesModel, setRowModesModel] = useState({});
 
@@ -118,9 +118,18 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
         <Box
             sx={{
                 ...{ ...(error ? { 'div.dataGridRoot .MuiDataGrid-main': { borderColor: 'error.main' } } : {}) },
+                '.MuiDataGrid-footerContainer': { display: 'none' },
             }}
         >
-            <FormLabelText error={error}>{label}</FormLabelText>
+            <FormLabelText
+                component={'label'}
+                htmlFor={`${dataTableRootId}-${InputLabelProps.htmlFor}`}
+                id={`${dataTableRootId}-${InputLabelProps.id}`}
+                data-testid={`${dataTableRootId}-${InputLabelProps['data-testid']}`}
+                error={error}
+            >
+                {label}
+            </FormLabelText>
             <DataTable
                 id={componentId}
                 rows={rows}
@@ -161,6 +170,7 @@ PlaceholderEditor.propTypes = {
     label: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array.isRequired,
+    InputLabelProps: PropTypes.object.isRequired,
     error: PropTypes.bool,
     setIsEditing: PropTypes.func,
 };
