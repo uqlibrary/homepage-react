@@ -6,8 +6,9 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-import { GridRowModes, DataGrid } from '@mui/x-data-grid';
+import { GridRowModes } from '@mui/x-data-grid';
 
+import DataTable from '../../../SharedComponents/DataTable/DataTable';
 import AddToolbar from './AddToolbar';
 import * as actions from 'data/actions';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
@@ -26,6 +27,8 @@ const FormLabelText = styled(Typography, {
     marginBottom: theme.spacing(0.5),
     display: 'block', // Optional: forces label to own line
 }));
+
+const componentId = 'placeholder-editor';
 
 const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...props }) => {
     const [rows, setRows] = React.useState(value);
@@ -86,6 +89,7 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
         const handleDeleteClick = id => () => {
             const newRows = rows.filter(row => row.printer_template_var_id !== id);
             setRows(newRows);
+            setIsEditing?.(false);
             onChange(null, newRows);
         };
         const handleCancelClick = id => () => {
@@ -111,51 +115,33 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
     }, [onChange, rowModesModel, rows, setIsEditing]);
 
     return (
-        <>
-            <Box
-                sx={{
-                    height: 500,
-                    width: '100%',
-                    '& .actions': {
-                        color: 'text.secondary',
-                    },
-                    '& .textPrimary': {
-                        color: 'text.primary',
-                    },
-                    pb: 1,
-                    mb: 1,
-                    ...{ ...(error ? { '.MuiDataGrid-root': { borderColor: 'error.main' } } : {}) },
+        <Box
+            sx={{
+                ...{ ...(error ? { 'div.dataGridRoot .MuiDataGrid-main': { borderColor: 'error.main' } } : {}) },
+            }}
+        >
+            <FormLabelText error={error}>{label}</FormLabelText>
+            <DataTable
+                id={componentId}
+                rows={rows}
+                columns={columns}
+                rowId="printer_template_var_id"
+                rowModesModel={rowModesModel}
+                onRowModesModelChange={newModel => setRowModesModel(newModel)}
+                onRowEditStart={handleRowEditStart}
+                onRowEditStop={handleRowEditStop}
+                processRowUpdate={processRowUpdate}
+                onProcessRowUpdateError={_onError}
+                components={{
+                    Toolbar: AddToolbar,
                 }}
-            >
-                <FormLabelText error={error}>{label}</FormLabelText>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    editMode="row"
-                    getRowId={row => row.printer_template_var_id}
-                    rowModesModel={rowModesModel}
-                    onRowModesModelChange={newModel => setRowModesModel(newModel)}
-                    onRowEditStart={handleRowEditStart}
-                    onRowEditStop={handleRowEditStop}
-                    processRowUpdate={processRowUpdate}
-                    onProcessRowUpdateError={_onError}
-                    components={{
-                        Toolbar: AddToolbar,
-                    }}
-                    componentsProps={{
-                        toolbar: { rows, setRows, setRowModesModel },
-                    }}
-                    disableIgnoreModificationsIfProcessingProps
-                    experimentalFeatures={{ newEditingApi: true }}
-                    disableDensitySelector
-                    disableColumnMenu
-                    disableColumnFilter
-                    disableColumnSelector
-                    disableSelectionOnClick
-                    {...props}
-                />
-            </Box>
-
+                componentsProps={{
+                    toolbar: { rows, setRows, setRowModesModel, setIsEditing },
+                }}
+                disableIgnoreModificationsIfProcessingProps
+                experimentalFeatures={{ newEditingApi: true }}
+                {...props}
+            />
             {error && (
                 <Typography component={'div'} color="error" variant="caption" sx={{ mt: 2 }}>
                     {pageLocale.helperText.vars}
@@ -168,7 +154,7 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, ...pro
                 closeAlert={closeConfirmationAlert}
                 autoHideDuration={confirmationAlert.autoHideDuration}
             />
-        </>
+        </Box>
     );
 };
 PlaceholderEditor.propTypes = {

@@ -92,6 +92,7 @@ export const actionReducer = (_, action) => {
                     printer_template_name: '',
                     identifiers: [],
                     vars: [],
+                    printer_template_current_flag_cb: true,
                 },
                 title,
                 props: { ...props },

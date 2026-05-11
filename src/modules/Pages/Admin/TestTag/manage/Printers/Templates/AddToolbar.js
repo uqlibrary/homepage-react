@@ -11,7 +11,7 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { randomId } from './utils';
 
 const AddToolbar = props => {
-    const { rows, setRows, setRowModesModel } = props;
+    const { rows, setRows, setRowModesModel, setIsEditing } = props;
 
     const pageLocale = locale.pages.manage.printertemplates;
 
@@ -32,6 +32,7 @@ const AddToolbar = props => {
             ...oldModel,
             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'printer_template_var_name' },
         }));
+        setIsEditing(true);
     };
 
     return (
@@ -46,6 +47,7 @@ AddToolbar.propTypes = {
     setRowModesModel: PropTypes.func.isRequired,
     rows: PropTypes.array.isRequired,
     setRows: PropTypes.func.isRequired,
+    setIsEditing: PropTypes.func.isRequired,
 };
 
 export default React.memo(AddToolbar);

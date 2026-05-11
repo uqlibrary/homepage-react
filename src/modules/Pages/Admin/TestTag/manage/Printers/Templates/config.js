@@ -44,7 +44,7 @@ export default {
                     }
                 />
             ),
-            // validate: value => isInvalidTeamSlug(value),
+            validate: value => isEmptyStr(value),
             fieldParams: { canEdit: true, canAdd: true, renderInUpdate: true, renderInTable: true, minWidth: 250 },
         },
         identifiers: {
