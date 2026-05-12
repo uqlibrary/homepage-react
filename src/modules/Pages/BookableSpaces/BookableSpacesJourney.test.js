@@ -85,17 +85,17 @@ describe('BookableSpacesJourney browser back navigation', () => {
         expect(screen.getByRole('button', { name: /back to results/i })).toBeInTheDocument();
 
         act(() => {
-            window.dispatchEvent(new PopStateEvent('popstate'));
+            window.dispatchEvent(new PopStateEvent('popstate', { state: { journeyView: 'results' } }));
         });
         expect(screen.getByRole('heading', { level: 2, name: /quiet space/i })).toBeInTheDocument();
 
         act(() => {
-            window.dispatchEvent(new PopStateEvent('popstate'));
+            window.dispatchEvent(new PopStateEvent('popstate', { state: { journeyView: 'intent' } }));
         });
         expect(screen.getByText('What sort of space would you like to find?')).toBeInTheDocument();
 
         act(() => {
-            window.dispatchEvent(new PopStateEvent('popstate'));
+            window.dispatchEvent(new PopStateEvent('popstate', { state: { journeyView: 'landing' } }));
         });
         expect(screen.getByTestId('spaces-journey-landing-get-started')).toBeInTheDocument();
 

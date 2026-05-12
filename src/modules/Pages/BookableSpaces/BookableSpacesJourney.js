@@ -582,6 +582,7 @@ const intentDefinitions = [
 ];
 
 const landingHeroHighlights = ['Quiet corners', 'Bookable rooms', 'Computer access', 'Campus-aware filters'];
+const JOURNEY_VIEWS = ['landing', 'intent', 'results', 'details'];
 
 const getIntentFilterIds = (facilityGroups, intent) => {
     const ids = [];
@@ -710,11 +711,29 @@ const BookableSpacesJourney = ({
 
     // Keep browser history and journey views aligned so browser Back stays inside journey steps.
     const journeyHistoryRef = React.useRef(['landing']);
-    const isHandlingPopStateRef = React.useRef(false);
+
+    const navigateToView = React.useCallback((nextView, { pushHistory = true } = {}) => {
+        if (!JOURNEY_VIEWS.includes(nextView)) {
+            return;
+        }
+
+        const currentHistory = journeyHistoryRef.current;
+        const lastView = currentHistory[currentHistory.length - 1];
+        if (nextView === lastView) {
+            setView(nextView);
+            return;
+        }
+
+        currentHistory.push(nextView);
+        if (pushHistory) {
+            window.history.pushState({ journeyView: nextView }, '', window.location.href);
+        }
+        setView(nextView);
+    }, []);
 
     const goToIntentSelection = () => {
         setSelectedSpace(null);
-        setView('intent');
+        navigateToView('intent');
     };
 
     const handleJourneyBack = () => {
@@ -722,7 +741,7 @@ const BookableSpacesJourney = ({
             window.history.back();
             return;
         }
-        setView('landing');
+        navigateToView('landing', { pushHistory: false });
     };
 
     const goToLegacyBrowse = () => {
@@ -743,7 +762,7 @@ const BookableSpacesJourney = ({
     const handleIntentSelect = intent => {
         setSelectedIntentId(intent.id);
         applyIntentFilters(intent);
-        setView('results');
+        navigateToView('results');
     };
 
     const handleClearJourneyFilters = () => {
@@ -791,36 +810,33 @@ const BookableSpacesJourney = ({
     }, [highlightedSpace]);
 
     React.useEffect(() => {
-        const currentHistory = journeyHistoryRef.current;
-        const lastView = currentHistory[currentHistory.length - 1];
-
-        if (view !== lastView) {
-            currentHistory.push(view);
-        }
-
-        if (!isHandlingPopStateRef.current && view !== 'landing') {
-            window.history.pushState({ journeyView: view }, '', window.location.href);
-        }
-
-        isHandlingPopStateRef.current = false;
-    }, [view]);
+        // Ensure the current page entry has a landing marker for deterministic popstate handling.
+        window.history.replaceState({ journeyView: 'landing' }, '', window.location.href);
+    }, []);
 
     React.useEffect(() => {
-        const handlePopState = () => {
+        const handlePopState = event => {
             const currentHistory = journeyHistoryRef.current;
-            if (currentHistory.length <= 1) {
+            const targetView = event?.state?.journeyView;
+
+            if (!JOURNEY_VIEWS.includes(targetView)) {
                 return;
             }
 
-            currentHistory.pop();
-            const previousView = currentHistory[currentHistory.length - 1];
-            isHandlingPopStateRef.current = true;
-            setView(previousView);
+            while (currentHistory.length > 1 && currentHistory[currentHistory.length - 1] !== targetView) {
+                currentHistory.pop();
+            }
+
+            if (currentHistory[currentHistory.length - 1] !== targetView) {
+                currentHistory.push(targetView);
+            }
+
+            navigateToView(targetView, { pushHistory: false });
         };
 
         window.addEventListener('popstate', handlePopState);
         return () => window.removeEventListener('popstate', handlePopState);
-    }, []);
+    }, [navigateToView]);
 
     React.useEffect(() => {
         if (view === 'details') {
@@ -1216,7 +1232,7 @@ const BookableSpacesJourney = ({
                                             variant="contained"
                                             onClick={() => {
                                                 setSelectedSpace(highlightedSpace);
-                                                setView('details');
+                                                navigateToView('details');
                                             }}
                                             sx={{
                                                 textTransform: 'none',
@@ -1413,7 +1429,7 @@ const BookableSpacesJourney = ({
                                     key={space?.space_id}
                                     onClick={() => {
                                         setSelectedSpace(space);
-                                        setView('details');
+                                        navigateToView('details');
                                     }}
                                 >
                                     <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
