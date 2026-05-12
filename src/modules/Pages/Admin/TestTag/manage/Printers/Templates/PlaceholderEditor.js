@@ -46,7 +46,6 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, InputL
 
     const processRowUpdate = newRow => {
         const invalidRow = validateTemplateUserVariable(newRow);
-
         if (invalidRow) {
             openConfirmationAlert(pageLocale.placeholderEditor.helperText.validationAllFieldsRequired, 'error');
             throw new Error(pageLocale.placeholderEditor.helperText.validationAllFieldsRequired);
@@ -123,6 +122,7 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, InputL
         >
             <FormLabelText
                 component={'label'}
+                className={error ? 'Mui-error' : ''}
                 htmlFor={`${dataTableRootId}-${InputLabelProps.htmlFor}`}
                 id={`${dataTableRootId}-${InputLabelProps.id}`}
                 data-testid={`${dataTableRootId}-${InputLabelProps['data-testid']}`}
