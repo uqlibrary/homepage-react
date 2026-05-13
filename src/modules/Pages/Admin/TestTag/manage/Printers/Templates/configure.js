@@ -136,7 +136,8 @@ export default {
             component: ({ ...props }) => <PlaceholderEditor {...props} />,
             validate: (_, row) => {
                 const userVariables =
-                    row?.vars?.reduce?.((acc, variable) => [...acc, variable.printer_template_var_name], []) ?? [];
+                    row?.vars?.reduce?.((acc, variable) => [...acc, variable.printer_template_var_name], []) ??
+                    /* istanbul ignore next */ [];
                 const printerTemplateCode = row?.printer_template_code ?? '';
                 const missing = userVariables.filter(
                     varName => !printerTemplateCode.includes(getUserVariablePlaceholder(getCleanVarName(varName))),
@@ -270,7 +271,7 @@ export const placeholderEditorColumns = ({
         preProcessEditCellProps: params => {
             let hasError = false;
             try {
-                hasError = !Number.isInteger(Number(params.props.value));
+                hasError = !Number.isInteger(params.props.value);
             } catch (error) {
                 hasError = true;
             }

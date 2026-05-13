@@ -75,9 +75,8 @@ export const UpdateDialogue = ({
             setEditableFields(
                 Object.keys(fields).filter(
                     field =>
-                        !!(fields[field]?.fieldParams?.renderInUpdate ?? true) &&
-                        (!!(fields[field]?.fieldParams?.canEdit ?? true) ||
-                            !!(fields[field]?.fieldParams?.canAdd ?? true)),
+                        (action === 'edit' && !!(fields[field]?.fieldParams?.renderInUpdate ?? true)) ||
+                        (action === 'add' && !!(fields[field]?.fieldParams?.renderInAdd ?? true)),
                 ),
             );
         }

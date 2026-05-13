@@ -25,6 +25,7 @@ function setup(testProps = {}, renderer = rtlRender) {
             value={[]}
             setIsEditing={setIsEditing}
             disableVirtualization
+            InputLabelProps={{ htmlFor: 'test-input', id: 'test-label', 'data-testid': 'test-input-label' }}
             {...testProps}
         />,
     );

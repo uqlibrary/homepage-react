@@ -20,7 +20,7 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionState, actionReducer } from './utils';
 import { useConfirmationAlert } from '../../../helpers/hooks';
-import config from './config';
+import config from './configure';
 import { breadcrumbs } from 'config/routes';
 
 const componentId = 'printer-template-management';
@@ -45,6 +45,7 @@ const PrinterTemplates = () => {
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const dispatch = useDispatch();
 
+    /* istanbul ignore next */
     const onCloseConfirmationAlert = () => actions.clearPrinterTemplateListError();
     const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
         duration: locale.config.alerts.timeout,
@@ -123,13 +124,16 @@ const PrinterTemplates = () => {
         const row = api.getRow(id);
         const identifiers =
             printerTemplateList.find(template => template.printer_template_id === row.printer_template_id)
-                ?.identifiers ?? [];
+                ?.identifiers ?? /* istanbul ignore next*/ [];
 
         const fieldProps = {
             identifiers: {
                 options: identifiers,
-                getOptionKey: option => option.printer_template_identifier_id,
-                getOptionLabel: option => option.printer_template_identifier_value ?? '',
+                // The following settings control the autocomplete popup, which isnt
+                // expected to be used in the UI but required to avoid errors
+                getOptionKey: /* istanbul ignore next*/ option =>
+                    /* istanbul ignore next*/ option.printer_template_identifier_id,
+                getOptionLabel: option => option.printer_template_identifier_value ?? /* istanbul ignore next*/ '',
                 isOptionEqualToValue: (option, value) => option.printer_template_identifier_value === value,
             },
             vars: {

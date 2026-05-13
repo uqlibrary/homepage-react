@@ -6,6 +6,8 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { isEmptyStr } from '../../helpers/helpers';
+
 const defaultLocale = {
     cancelButtonLabel: 'test cancel',
     confirmButtonLabel: 'test confirm',
@@ -346,10 +348,8 @@ describe('UpdateDialog Renders component', () => {
     });
 
     it('will fire validate function for fields', () => {
-        let valid = true;
-        const validateFn = jest.fn(() => {
-            valid = !valid;
-            return valid;
+        const validateFn = jest.fn(text => {
+            return isEmptyStr(text);
         });
         const fields = {
             asset_id_displayed: {
@@ -374,14 +374,16 @@ describe('UpdateDialog Renders component', () => {
         expect(validateFn).toHaveBeenCalled();
 
         expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
+        expect(getByTestId('asset_id_displayed-input')).toHaveAttribute('aria-invalid', 'true');
 
         act(() => {
             fireEvent.click(getByTestId('asset_id_displayed-input'));
             fireEvent.change(getByTestId('asset_id_displayed-input'), { target: { value: 'Test 1' } });
         });
 
-        expect(validateFn).toHaveBeenLastCalledWith('Test 1', { asset_id_displayed: 'Test 1' });
+        expect(validateFn).toHaveBeenLastCalledWith('Test 1', { asset_id_displayed: 'Test 1' }, undefined);
         expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+        expect(getByTestId('asset_id_displayed-input')).not.toHaveAttribute('aria-invalid', 'true');
     });
 
     it('shows spinner in action button when busy', () => {

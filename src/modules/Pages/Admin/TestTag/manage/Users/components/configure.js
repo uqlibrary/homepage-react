@@ -72,10 +72,7 @@ export default {
                     {...props}
                 />
             ),
-            validate: value => {
-                console.log(value);
-                return typeof value === 'string' ? isEmptyStr(value) : isEmptyObject(value);
-            },
+            validate: value => (typeof value === 'string' ? isEmptyStr(value) : isEmptyObject(value)),
             fieldParams: {
                 canEdit: true,
                 renderInTable: false,

@@ -161,7 +161,7 @@ describe('utils', () => {
 
         const transformedRequest = transformUpdateRequest(inputRequest);
         expect(transformedRequest).toEqual(expectedOutput);
-        console.log(inputRequest);
+
         inputRequest.can_admin_cb = true;
         inputRequest.can_inspect_cb = true;
         inputRequest.can_alter_cb = true;

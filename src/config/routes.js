@@ -33,7 +33,6 @@ export const flattedPathConfigExact = [
     '/admin/testntag/manage/inspectiondevices',
     '/admin/testntag/manage/bulkassetupdate',
     '/admin/testntag/manage/inspectiondetails',
-    '/admin/testntag/manage/teams',
     '/admin/testntag/manage/printertemplates',
     '/admin/testntag/report/recalibrationsdue',
     '/admin/testntag/report/inspectionsdue',

@@ -14,7 +14,7 @@ import * as actions from 'data/actions';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useConfirmationAlert } from '../../../helpers/hooks';
 
-import { placeholderEditorColumns } from './config';
+import { placeholderEditorColumns } from './configure';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { validateTemplateUserVariable } from './utils';

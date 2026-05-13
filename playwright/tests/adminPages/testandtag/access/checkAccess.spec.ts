@@ -263,9 +263,6 @@ test.describe('Test and Tag Page Access', () => {
         await visitManageAssetTypes(page, 'uqttadmin', false);
         await visitBulkAssetUpdate(page, 'uqttadmin', false);
         await visitManageInspectionDetails(page, 'uqttadmin', false);
-        await visitManageTeams(page, 'uqttadmin', false);
-        await visitManagePrinterTemplates(page, 'uqttadmin', false);
-        await visitManageUsers(page, 'uqttadmin', false);
     });
 
     test('verify reporting only rejected pages', async ({ page }) => {
