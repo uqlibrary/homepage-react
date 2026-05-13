@@ -33,6 +33,7 @@ export const pathConfig = {
         testntagreportrecalibrationssdue: '/admin/testntag/report/recalibrationsdue',
         testntagmanageusers: '/admin/testntag/manage/users',
         testntagmanageteams: '/admin/testntag/manage/teams',
+        testntagmanageprintertemplates: '/admin/testntag/manage/printertemplates',
         dlorScheduler: '/admin/dlor/schedule',
     },
     bookExamBooth: '/book-exam-booth',
