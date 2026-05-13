@@ -70,10 +70,10 @@ export const training_object = {
         "venue": "Online, Zoom",
         "bookingType": 1,
         "bookingSettings": {
-            "bookings": 0,
-            "bookingLimit": null,
-            "placesRemaining": null,
-            "isBookingAvailable": true,
+            "bookings": 30,
+            "bookingLimit": 30,
+            "placesRemaining": 0,
+            "isBookingAvailable": false,
             "bookingsOpen": "2020-10-26T14:13:00+10:00",
             "bookingsClose": "2020-11-24T13:00:00+10:00"
         },
