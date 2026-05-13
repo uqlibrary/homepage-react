@@ -147,13 +147,13 @@ test.describe('Training', () => {
         await expect(
             page
                 .locator('div[data-testid="training-events-detail-2870806"]')
-                .getByText(/Event is fully booked/)
+                .getByText(/Places still available/)
                 .first(),
         ).toBeVisible();
         await expect(
             page
                 .getByTestId('training-event-detail-training-login-button')
-                .getByText(/Log in to join wait list/)
+                .getByText(/Log in and book now/)
                 .first(),
         ).toBeVisible();
         // date is correct

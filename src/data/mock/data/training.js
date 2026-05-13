@@ -30,6 +30,7 @@ export const training_object = {
             "bookings": 25,
             "bookingLimit": 40,
             "placesRemaining": 15,
+            "isBookingAvailable": true,
             "bookingsOpen": "2020-06-24T00:00:00+10:00",
             "bookingsClose": "2020-11-23T16:00:00+10:00"
         },
@@ -72,6 +73,7 @@ export const training_object = {
             "bookings": 0,
             "bookingLimit": null,
             "placesRemaining": null,
+            "isBookingAvailable": true,
             "bookingsOpen": "2020-10-26T14:13:00+10:00",
             "bookingsClose": "2020-11-24T13:00:00+10:00"
         },
@@ -150,6 +152,7 @@ export const training_object = {
             "bookings": 20,
             "bookingLimit": 30,
             "placesRemaining": 10,
+            "isBookingAvailable": true,
             "bookingsOpen": "2020-10-26T14:16:00+10:00",
             "bookingsClose": "2020-11-25T09:30:00+10:00"
         },
@@ -192,6 +195,7 @@ export const training_object = {
             "bookings": 10,
             "bookingLimit": 30,
             "placesRemaining": 20,
+            "isBookingAvailable": true,
             "bookingsOpen": "2020-10-14T00:00:00+10:00",
             "bookingsClose": "2020-11-25T14:00:00+10:00"
         },
@@ -234,6 +238,7 @@ export const training_object = {
             "bookings": 20,
             "bookingLimit": 40,
             "placesRemaining": 20,
+            "isBookingAvailable": true,
             "bookingsOpen": "2020-06-24T00:00:00+10:00",
             "bookingsClose": "2020-11-26T12:00:00+10:00"
         },
@@ -276,6 +281,7 @@ export const training_object = {
             "bookings": 13,
             "bookingLimit": 30,
             "placesRemaining": 17,
+            "isBookingAvailable": true,
             "bookingsOpen": "2020-10-26T14:09:00+10:00",
             "bookingsClose": "2020-11-30T09:30:00+10:00"
         },
@@ -318,6 +324,7 @@ export const training_object = {
             "bookings": 13,
             "bookingLimit": 30,
             "placesRemaining": 17,
+            "isBookingAvailable": true,
             "bookingsOpen": "2020-10-26T14:15:00+10:00",
             "bookingsClose": "2020-11-30T13:00:00+10:00"
         },
@@ -360,6 +367,7 @@ export const training_object = {
             "bookings": 19,
             "bookingLimit": 30,
             "placesRemaining": 11,
+            "isBookingAvailable": true,
             "bookingsOpen": "2020-11-08T14:59:00+10:00",
             "bookingsClose": "2020-11-30T13:00:00+10:00"
         },
@@ -402,6 +410,7 @@ export const training_object = {
             "bookings": 15,
             "bookingLimit": 40,
             "placesRemaining": 25,
+            "isBookingAvailable": true,
             "bookingsOpen": "2020-06-24T00:00:00+10:00",
             "bookingsClose": "2020-12-01T09:00:00+10:00"
         },
@@ -447,6 +456,7 @@ export const training_object_hospital = [
             "bookings": 1,
             "bookingLimit": 60,
             "placesRemaining": 59,
+            "isBookingAvailable": true,
             "bookingsOpen": "2024-09-27T12:58:00+10:00",
             "bookingsClose": "2024-10-22T13:00:00+10:00"
         },
@@ -511,6 +521,7 @@ export const training_object_hospital = [
             "bookings": 0,
             "bookingLimit": 60,
             "placesRemaining": 60,
+            "isBookingAvailable": true,
             "bookingsOpen": "2024-09-27T13:01:00+10:00",
             "bookingsClose": "2024-10-30T14:00:00+10:00"
         },
