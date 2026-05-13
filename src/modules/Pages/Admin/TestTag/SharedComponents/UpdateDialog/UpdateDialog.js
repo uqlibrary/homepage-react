@@ -18,9 +18,11 @@ import { filterComponentProps } from './utils';
 
 const rootId = 'update_dialog';
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
+const StyledDialog = styled(Dialog, {
+    shouldForwardProp: prop => prop !== 'styles',
+})(({ styles, fullScreen, theme }) => ({
     padding: '6px',
-    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: '50vh' },
+    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: fullScreen ? '100%' : '50vh' },
     '& .footerActions': {
         padding: '8px 16px',
     },
@@ -29,6 +31,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
             marginTop: theme.spacing(2),
         },
     },
+    ...styles,
 }));
 
 export const UpdateDialogue = ({
@@ -46,18 +49,22 @@ export const UpdateDialogue = ({
     fields,
     columns,
     row,
+    rows,
     props,
     isBusy = false,
+    styles,
+    disabledState = { actionButton: false, cancelButton: false },
 }) => {
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
+
     const componentId = `${rootId}-${id}`;
 
     const [dataColumns, setDataColumns] = React.useState({});
     const [dataFields, setDataFields] = React.useState({});
     const [editableFields, setEditableFields] = React.useState([]);
     const [data, setData] = React.useState({});
-    const [isValid, setIsValid] = React.useState(false);
-    const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.only('xs')) || false;
+    const [fieldsValid, setFieldsValid] = React.useState({});
 
     React.useEffect(() => {
         /* istanbul ignore else */
@@ -68,22 +75,23 @@ export const UpdateDialogue = ({
             setEditableFields(
                 Object.keys(fields).filter(
                     field =>
-                        !!(fields[field]?.fieldParams?.renderInUpdate ?? true) &&
-                        (!!(fields[field]?.fieldParams?.canEdit ?? true) ||
-                            !!(fields[field]?.fieldParams?.canAdd ?? true)),
+                        (action === 'edit' && !!(fields[field]?.fieldParams?.renderInUpdate ?? true)) ||
+                        (action === 'add' && !!(fields[field]?.fieldParams?.renderInAdd ?? true)),
                 ),
             );
         }
-    }, [isOpen, fields, row, columns]);
+    }, [isOpen, fields, row, rows, columns]);
 
     React.useEffect(() => {
-        setIsValid(
-            editableFields.every(field => {
-                return !dataFields[field]?.validate?.(data[field], data) ?? /* istanbul ignore next */ true;
-            }),
-        );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
+        setFieldsValid(() => {
+            const newFieldsValid = {};
+            editableFields.forEach(field => {
+                newFieldsValid[field] =
+                    !dataFields[field]?.validate?.(data[field], data, rows) ?? /* istanbul ignore next */ true;
+            });
+            return newFieldsValid;
+        });
+    }, [data, dataFields, editableFields, rows]);
 
     const _onAction = () => {
         onClose?.();
@@ -99,21 +107,23 @@ export const UpdateDialogue = ({
         e.stopPropagation();
     };
 
-    const handleChange = (event, value) => {
-        const isCheckbox = event.target.type === 'checkbox';
-        const isOption = event.target.getAttribute?.('role') === 'option';
-        const dataKey = isOption ? event.target.id.split('-')[0] : event.target.name;
-        const optionKey = fields?.[dataKey]?.fieldParams?.optionKey;
-        // eslint-disable-next-line no-nested-ternary
-        const newValue = isOption ? value?.[optionKey] : isCheckbox ? event.target.checked : event.target.value;
+    const handleChange = field => (event, value) => {
+        const isCheckbox = event?.target?.type === 'checkbox';
+        const newValue = isCheckbox ? event.target.checked : value || event.target.value;
 
         setData(prevState => ({
             ...prevState,
-            [dataKey]: newValue,
+            [field]: newValue,
         }));
     };
     return (
-        <StyledDialog open={isOpen} id={`${componentId}`} data-testid={`${componentId}`}>
+        <StyledDialog
+            open={isOpen}
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
+            styles={styles}
+            fullScreen={isMobileView}
+        >
             <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                 {title}
             </DialogTitle>
@@ -155,9 +165,9 @@ export const UpdateDialogue = ({
                                                         id: `${field}-input`,
                                                         name: field,
                                                         label: dataColumns[field].label,
-                                                        error: dataFields[field]?.validate?.(data?.[field], data),
+                                                        error: !fieldsValid[field],
                                                         checked: !!data?.[field],
-                                                        onChange: handleChange,
+                                                        onChange: handleChange(field),
                                                         onClick: _onClickAction,
                                                         InputLabelProps: {
                                                             shrink: true,
@@ -178,6 +188,7 @@ export const UpdateDialogue = ({
                                                     }),
                                                     data,
                                                     row,
+                                                    action,
                                                 )}
                                             </>
                                         )}
@@ -199,7 +210,7 @@ export const UpdateDialogue = ({
                                         id={`${rootId}-cancel-button`}
                                         data-testid={`${rootId}-cancel-button`}
                                         fullWidth={isMobileView}
-                                        disabled={isBusy}
+                                        disabled={isBusy || disabledState?.cancelButton}
                                     >
                                         {locale.cancelButtonLabel}
                                     </Button>
@@ -217,7 +228,11 @@ export const UpdateDialogue = ({
                                         id={`${rootId}-action-button`}
                                         data-testid={`${rootId}-action-button`}
                                         fullWidth={isMobileView}
-                                        disabled={isBusy || !isValid}
+                                        disabled={
+                                            isBusy ||
+                                            Object.values(fieldsValid).some(valid => !valid) ||
+                                            disabledState?.actionButton
+                                        }
                                     >
                                         {isBusy ? (
                                             <CircularProgress
@@ -248,6 +263,7 @@ UpdateDialogue.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string,
     row: PropTypes.object,
+    rows: PropTypes.array,
     isOpen: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
     hideActionButton: PropTypes.bool,
@@ -258,6 +274,11 @@ UpdateDialogue.propTypes = {
     props: PropTypes.object,
     fieldProps: PropTypes.object,
     isBusy: PropTypes.bool,
+    styles: PropTypes.object,
+    disabledState: PropTypes.shape({
+        actionButton: PropTypes.bool,
+        cancelButton: PropTypes.bool,
+    }),
 };
 
 export default React.memo(UpdateDialogue);
