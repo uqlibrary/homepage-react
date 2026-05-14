@@ -2104,6 +2104,11 @@ mock.onGet('exams/course/FREN1010/summary')
             .split('/')
             .pop()
             .split('?')[0];
+        if (spaceUuid === 'error') {
+            return [500, { status: 'error', message: 'Server error' }];
+        } else if (spaceUuid === '404') {
+            return [404, { status: 'error', message: 'Not Found' }];
+        }
         const result = bookableSpaces_all.data.locations.find(space => space.space_uuid === spaceUuid) || {};
         return [200, { data: result }];
     })

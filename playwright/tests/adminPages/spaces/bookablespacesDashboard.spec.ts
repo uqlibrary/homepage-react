@@ -1155,6 +1155,7 @@ test.describe('Spaces Admin - manage locations', () => {
                 { checked: true, space_id: '14' },
                 { checked: false, space_id: '43534' },
                 { checked: false, space_id: '123456' },
+                { checked: false, space_id: '999999' },
                 { checked: false, space_id: '1234544' }, // changed
             ];
             await assertExpectedDataSentToServer(page, expectedValues);
