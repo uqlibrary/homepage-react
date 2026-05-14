@@ -3,6 +3,7 @@ import { destroy, get, post, put } from 'repositories/generic';
 import {
     SPACES_ADD_LOCATION_API,
     SPACES_SINGLE_API,
+    SPACES_ADMIN_SINGLE_API,
     SPACES_OUTAGES_API,
     SPACES_OUTAGE_API,
     SPACES_FLOOR_OUTAGES_API,
@@ -29,11 +30,13 @@ const checkExpireSession = (dispatch, error) => {
     }
 };
 
-export function loadABookableSpacesRoom(spacesUuid) {
+export function loadABookableSpacesRoom(spacesUuid, { useAdminEndpoint = false } = {}) {
     return dispatch => {
         // dispatch({ type: actions.SPACES_ROOM_GET_CLEAR });
         dispatch({ type: actions.SPACES_ROOM_GET_LOADING });
-        const url = SPACES_SINGLE_API({ uuid: spacesUuid });
+        const url = useAdminEndpoint
+            ? SPACES_ADMIN_SINGLE_API({ uuid: spacesUuid })
+            : SPACES_SINGLE_API({ uuid: spacesUuid });
         console.log('loadABookableSpacesRoom call:', url);
         return get(url)
             .then(response => {

@@ -93,7 +93,7 @@ export const BookableSpacesEditSpace = ({
     useEffect(() => {
         if (!!spaceUuid) {
             setFormValues({});
-            actions.loadABookableSpacesRoom(spaceUuid);
+            actions.loadABookableSpacesRoom(spaceUuid, { useAdminEndpoint: true });
         }
     }, [actions, spaceUuid]);
 
