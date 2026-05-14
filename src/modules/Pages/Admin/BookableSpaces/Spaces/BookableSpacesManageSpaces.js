@@ -229,6 +229,7 @@ export const BookableSpacesManageSpaces = ({
     actions,
     bookableSpacesRoomList,
     bookableSpacesRoomListIncludesDrafts,
+    bookableSpacesRoomListIncludesDeleted,
     bookableSpacesRoomListLoading,
     bookableSpacesRoomListError,
     weeklyHours,
@@ -418,9 +419,10 @@ export const BookableSpacesManageSpaces = ({
             (bookableSpacesRoomListLoading === false &&
                 bookableSpacesRoomListError === false &&
                 !!bookableSpacesRoomList &&
-                bookableSpacesRoomListIncludesDrafts !== true)
+                (bookableSpacesRoomListIncludesDrafts !== true ||
+                    bookableSpacesRoomListIncludesDeleted !== includeDeleted))
         ) {
-            actions.loadAllBookableSpacesRooms({ includeDrafts: true, includeDeleted });
+            actions.loadAllBookableSpacesRooms({ includeDrafts: true, includeDeleted, useAdminEndpoint: true });
         }
         if (weeklyHoursError === null && weeklyHoursLoading === null && weeklyHours === null) {
             actions.loadWeeklyHours();
@@ -764,7 +766,11 @@ export const BookableSpacesManageSpaces = ({
             displayToastMessage('Space has been deleted.', true, null);
             // Reload with includeDeleted to show the deleted row
             const showDeletedFilter = selectedFilters?.find(f => f?.filterType === 'showDeleted');
-            actions.loadAllBookableSpacesRooms({ includeDrafts: true, includeDeleted: showDeletedFilter?.filterValue === true });
+            actions.loadAllBookableSpacesRooms({
+                includeDrafts: true,
+                includeDeleted: showDeletedFilter?.filterValue === true,
+                useAdminEndpoint: true,
+            });
         }).catch(error => {
             console.error('Error deleting space:', error);
             displayToastMessage('Error deleting space. Please try again.', false, error);
@@ -882,7 +888,12 @@ export const BookableSpacesManageSpaces = ({
             } finally {
                 setCurrentEditColumn(null);
                 showSavingProgress(false);
-                actions.loadAllBookableSpacesRooms({ includeDrafts: true });
+                const showDeletedFilter = selectedFilters?.find(f => f?.filterType === 'showDeleted');
+                actions.loadAllBookableSpacesRooms({
+                    includeDrafts: true,
+                    includeDeleted: showDeletedFilter?.filterValue === true,
+                    useAdminEndpoint: true,
+                });
             }
         };
 
@@ -1654,6 +1665,7 @@ BookableSpacesManageSpaces.propTypes = {
     actions: PropTypes.any,
     bookableSpacesRoomList: PropTypes.any,
     bookableSpacesRoomListIncludesDrafts: PropTypes.bool,
+    bookableSpacesRoomListIncludesDeleted: PropTypes.bool,
     bookableSpacesRoomListLoading: PropTypes.bool,
     bookableSpacesRoomListError: PropTypes.any,
     weeklyHours: PropTypes.any,

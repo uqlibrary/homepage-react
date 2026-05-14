@@ -3,7 +3,6 @@ import { destroy, get, post, put } from 'repositories/generic';
 import {
     SPACES_ADD_LOCATION_API,
     SPACES_SINGLE_API,
-    SPACES_ADMIN_SINGLE_API,
     SPACES_OUTAGES_API,
     SPACES_OUTAGE_API,
     SPACES_FLOOR_OUTAGES_API,
@@ -50,6 +49,7 @@ export function loadABookableSpacesRoom(spacesUuid) {
                     type: actions.SPACES_ROOM_GET_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -105,12 +105,12 @@ export function saveBulkFilterTypes(facilityTypeId, request) {
     };
 }
 
-export function loadAllBookableSpacesRooms({ includeDrafts, includeDeleted } = {}) {
+export function loadAllBookableSpacesRooms({ includeDrafts, includeDeleted, useAdminEndpoint = false } = {}) {
     console.log('loadAllBookableSpacesRooms RELOAD SPACES', { includeDrafts, includeDeleted });
     return dispatch => {
         // dispatch({ type: actions.SPACES_ROOM_LIST_CLEAR });
         dispatch({ type: actions.SPACES_ROOM_LIST_LOADING });
-        const request = includeDeleted 
+        const request = useAdminEndpoint
             ? SPACES_ADMIN_ALL_API({ includeDrafts, includeDeleted })
             : SPACES_ALL_API({ includeDrafts });
         console.log('loadAllBookableSpacesRooms start', request);
