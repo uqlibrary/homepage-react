@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import { Grid } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -42,6 +47,7 @@ import {
 } from 'helpers/general';
 
 import {
+    displayToastMessage,
     displayToastErrorMessage,
     spacesAdminLink,
     validLibraryList,
@@ -322,6 +328,7 @@ export const EditSpaceForm = ({
     const [location, setLocation] = useState({});
 
     const [isConfirmationOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    const [isUndeleteConfirmationOpen, showUndeleteConfirmation, hideUndeleteConfirmation] = useConfirmationState();
     const [errorMessages, setErrorMessages] = useState([]);
     const [showSpaceDescriptionCheckbox, setShowSpaceDescriptionCheckbox] = useState(!!formValues?.space_description);
     const spaceDescriptionStateKeyRef = useRef(`${mode}:${formValues?.space_uuid || 'new'}`);
@@ -1506,6 +1513,44 @@ export const EditSpaceForm = ({
             </StyledUqTightLink>
         );
     };
+
+    const handleUndeleteClick = () => {
+        showUndeleteConfirmation();
+    };
+
+    const confirmUndelete = () => {
+        hideUndeleteConfirmation();
+        if (!formValues?.space_id) {
+            console.error('Space ID not found');
+            return;
+        }
+        actions.updateSpaceDeletedState(formValues.space_id, false);
+    };
+
+    const undeleteConfirmationDialog = () => {
+        return (
+            <Dialog open={isUndeleteConfirmationOpen} onClose={hideUndeleteConfirmation} data-testid="spaces-undelete-dialog">
+                <DialogContent>
+                    <DialogContentText data-testid="spaces-undelete-dialog-message">
+                        Do you wish to restore this deleted space?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions data-testid="spaces-undelete-dialog-actions">
+                    <Button onClick={hideUndeleteConfirmation} data-testid="spaces-undelete-cancel-button">
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={confirmUndelete}
+                        color="primary"
+                        variant="contained"
+                        data-testid="spaces-undelete-confirm-button"
+                    >
+                        Restore
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
     const saveButton = (disabled = false) => {
         return (
             <div>
@@ -1568,6 +1613,7 @@ export const EditSpaceForm = ({
                 }
                 cancelButtonColor="accent"
             />
+            {undeleteConfirmationDialog()}
 
             <SpacesAdminPage
                 systemTitle="Spaces"
@@ -1706,6 +1752,34 @@ export const EditSpaceForm = ({
                                                 spaces list until draft mode is turned off.
                                             </Typography>
                                         </StyledDraftModeNotice>
+                                    </Box>
+                                )}
+                                {formValues?.space_deleted === true && (
+                                    <Box sx={{ mt: 2 }} data-testid="space-deleted-notice">
+                                        <StyledErrorAttentionMessageDiv data-testid="space-deleted-notice-panel">
+                                            <HighlightOffIcon
+                                                style={{ color: '#000' }}
+                                                data-testid="space-deleted-notice-icon"
+                                            />
+                                            <Box sx={{ flex: 1 }}>
+                                                <Typography
+                                                    component={'p'}
+                                                    variant={'body2'}
+                                                    data-testid="space-deleted-notice-text"
+                                                    sx={{ mb: 1 }}
+                                                >
+                                                    This Space has been deleted and is not visible to users. You can restore it using the button below.
+                                                </Typography>
+                                                <StyledPrimaryButton
+                                                    onClick={handleUndeleteClick}
+                                                    size="small"
+                                                    data-testid="space-undelete-button"
+                                                    sx={{ mt: 1 }}
+                                                >
+                                                    Restore Space
+                                                </StyledPrimaryButton>
+                                            </Box>
+                                        </StyledErrorAttentionMessageDiv>
                                     </Box>
                                 )}
                                 {spaceUnavailabilityStatus === 'Upcoming' && (

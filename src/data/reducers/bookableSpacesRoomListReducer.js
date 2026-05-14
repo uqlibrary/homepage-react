@@ -3,6 +3,7 @@ import * as actions from 'data/actions/actionTypes';
 export const initialState = {
     bookableSpacesRoomList: null,
     bookableSpacesRoomListIncludesDrafts: null,
+    bookableSpacesRoomListIncludesDeleted: null,
     bookableSpacesRoomListLoading: null,
     bookableSpacesRoomListError: null,
     bookableSpacesRoomAdding: null,
@@ -42,6 +43,7 @@ const handlers = {
         bookableSpacesRoomListError: false,
         bookableSpacesRoomList: action.payload,
         bookableSpacesRoomListIncludesDrafts: !!action.includeDrafts,
+        bookableSpacesRoomListIncludesDeleted: !!action.includeDeleted,
     }),
     [actions.SPACES_ROOM_LIST_FAILED]: (state, action) => ({
         ...initialState,

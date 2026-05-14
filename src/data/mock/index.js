@@ -1706,8 +1706,19 @@ mock.onGet('exams/course/FREN1010/summary')
                 config?.params?.include_drafts === 'true' ||
                 (config?.url || '').includes('include_drafts=true');
 
+            const locations = (bookableSpaces_all?.data?.locations || []).filter(space => !space?.space_deleted);
+
             if (includeDrafts) {
-                return [200, bookableSpaces_all];
+                return [
+                    200,
+                    {
+                        ...bookableSpaces_all,
+                        data: {
+                            ...bookableSpaces_all?.data,
+                            locations,
+                        },
+                    },
+                ];
             }
 
             return [
@@ -1716,7 +1727,7 @@ mock.onGet('exams/course/FREN1010/summary')
                     ...bookableSpaces_all,
                     data: {
                         ...bookableSpaces_all?.data,
-                        locations: (bookableSpaces_all?.data?.locations || []).filter(space => !space?.space_draftmode),
+                        locations: locations.filter(space => !space?.space_draftmode),
                     },
                 },
             ];
@@ -2066,6 +2077,53 @@ mock.onGet('exams/course/FREN1010/summary')
             responseType === 'bulkFacilitiesUpdateError' ? {} : { status: 'OK' },
         ]),
     )
+    // SPACES_ADMIN_ALL_API - returns all spaces including drafts/deleted for admin
+    .onGet(/bookable_spaces\/admin\/spaces\/all.*/)
+    .reply(config => {
+        const includeDeleted =
+            config?.params?.include_deleted === true ||
+            config?.params?.include_deleted === 'true' ||
+            (config?.url || '').includes('include_deleted=true');
+        const includeDrafts =
+            config?.params?.include_drafts === true ||
+            config?.params?.include_drafts === 'true' ||
+            (config?.url || '').includes('include_drafts=true');
+        let locations = bookableSpaces_all?.data?.locations || [];
+        if (!includeDrafts) {
+            locations = locations.filter(space => !space?.space_draftmode);
+        }
+        if (!includeDeleted) {
+            locations = locations.filter(space => !space?.space_deleted);
+        }
+        return [200, { ...bookableSpaces_all, data: { ...bookableSpaces_all?.data, locations } }];
+    })
+    // SPACES_ADMIN_SINGLE_API - returns a single space by uuid for admin (includes deleted metadata)
+    .onGet(/bookable_spaces\/admin\/space\/.*/)
+    .reply(config => {
+        const spaceUuid = config.url
+            .split('/')
+            .pop()
+            .split('?')[0];
+        const result = bookableSpaces_all.data.locations.find(space => space.space_uuid === spaceUuid) || {};
+        return [200, { data: result }];
+    })
+    // SPACES_MODIFY_LOCATION_API (PUT) - handles soft-delete toggle and other space updates
+    .onPut(/bookable_spaces\/space\/\d+.*/)
+    .reply(config => {
+        const spaceId = Number(
+            config.url
+                .split('/')
+                .pop()
+                .split('?')[0],
+        );
+        const body = JSON.parse(config.data || '{}');
+        const space = bookableSpaces_all.data.locations.find(s => s.space_id === spaceId);
+        if (!space) {
+            return [404, { message: 'Space not found' }];
+        }
+        Object.assign(space, body);
+        return [200, { status: 'OK', data: space }];
+    })
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);
