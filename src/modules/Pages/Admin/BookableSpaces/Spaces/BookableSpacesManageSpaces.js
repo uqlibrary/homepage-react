@@ -4,6 +4,7 @@ import { useCookies } from 'react-cookie';
 import { useAccountContext } from 'context';
 
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -407,6 +408,9 @@ export const BookableSpacesManageSpaces = ({
         addBreadcrumbsToSiteHeader([
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Manage Spaces</span></li>',
         ]);
+        const showDeletedFilter = selectedFilters?.find(f => f?.filterType === 'showDeleted');
+        const includeDeleted = showDeletedFilter?.filterValue === true;
+        
         if (
             (bookableSpacesRoomListError === null &&
                 bookableSpacesRoomListLoading === null &&
@@ -416,7 +420,7 @@ export const BookableSpacesManageSpaces = ({
                 !!bookableSpacesRoomList &&
                 bookableSpacesRoomListIncludesDrafts !== true)
         ) {
-            actions.loadAllBookableSpacesRooms({ includeDrafts: true });
+            actions.loadAllBookableSpacesRooms({ includeDrafts: true, includeDeleted });
         }
         if (weeklyHoursError === null && weeklyHoursLoading === null && weeklyHours === null) {
             actions.loadWeeklyHours();
@@ -425,7 +429,7 @@ export const BookableSpacesManageSpaces = ({
             actions.loadAllFacilityTypes();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [selectedFilters]);
 
     const showSpaceByPagination = (index, pageNumLocal, rowsPerPageLocal) => {
         return index >= pageNumLocal * rowsPerPageLocal && index < (pageNumLocal + 1) * rowsPerPageLocal;
@@ -468,6 +472,7 @@ export const BookableSpacesManageSpaces = ({
         { filterType: 'floor', filterValue: FLOOR_ID_UNSELECTED },
         { filterType: 'spaceType', filterValue: SPACE_TYPE_ID_UNSELECTED },
         { filterType: 'draftOnly', filterValue: false },
+        { filterType: 'showDeleted', filterValue: false },
     ]);
     const setSelectedFilters = newFilter => {
         console.log('setSelectedFilters', newFilter);
@@ -502,6 +507,11 @@ export const BookableSpacesManageSpaces = ({
                 }
             } else if (f?.filterType === 'draftOnly' && f?.filterValue === true) {
                 if (!space?.space_draftmode) {
+                    showSpaceByFilter = false;
+                }
+            } else if (f?.filterType === 'showDeleted' && f?.filterValue === false) {
+                // Hide deleted spaces unless showDeleted filter is true
+                if (space?.space_deleted === true) {
                     showSpaceByFilter = false;
                 }
             }
@@ -749,8 +759,15 @@ export const BookableSpacesManageSpaces = ({
         if (!deleteCandidate) {
             return;
         }
-        actions.deleteBookableSpace(deleteCandidate.spaceId).then(() => {
-            actions.loadAllBookableSpacesRooms({ includeDrafts: true });
+        // Use soft delete - set space_deleted flag to true
+        actions.updateSpaceDeletedState(deleteCandidate.spaceId, true).then(() => {
+            displayToastMessage('Space has been deleted.', true, null);
+            // Reload with includeDeleted to show the deleted row
+            const showDeletedFilter = selectedFilters?.find(f => f?.filterType === 'showDeleted');
+            actions.loadAllBookableSpacesRooms({ includeDrafts: true, includeDeleted: showDeletedFilter?.filterValue === true });
+        }).catch(error => {
+            console.error('Error deleting space:', error);
+            displayToastMessage('Error deleting space. Please try again.', false, error);
         });
         setDeleteCandidate(null);
     };
@@ -1080,6 +1097,21 @@ export const BookableSpacesManageSpaces = ({
                                 }
                             />
                         </div>
+                        <div data-testid="filter-by-deleted-wrapper">
+                            <FormControlLabel
+                                label="Show deleted spaces"
+                                control={
+                                    <Checkbox
+                                        checked={
+                                            selectedFilters?.find(f => f?.filterType === 'showDeleted')?.filterValue ||
+                                            false
+                                        }
+                                        onChange={selectFilter('showDeleted')}
+                                        data-testid="filter-by-deleted"
+                                    />
+                                }
+                            />
+                        </div>
                     </div>
                     <StyledTableContainer className="tableContainer">
                         <Table
@@ -1363,9 +1395,20 @@ export const BookableSpacesManageSpaces = ({
                                                                     data-testid={`space-${bookableSpace?.space_id}-draftmode-icon`}
                                                                 />
                                                             )}
-                                                            <span data-testid={`space-${bookableSpace?.space_id}-name`}>
-                                                                {bookableSpace?.space_name}
-                                                            </span>
+                                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                                                <span data-testid={`space-${bookableSpace?.space_id}-name`}>
+                                                                    {bookableSpace?.space_name}
+                                                                </span>
+                                                                {bookableSpace?.space_deleted === true && (
+                                                                    <Chip
+                                                                        label="Deleted"
+                                                                        size="small"
+                                                                        color="error"
+                                                                        variant="outlined"
+                                                                        data-testid={`space-${bookableSpace?.space_id}-deleted-chip`}
+                                                                    />
+                                                                )}
+                                                            </div>
                                                             <IconButton
                                                                 color="primary"
                                                                 data-testid={`edit-space-${bookableSpace?.space_id}-button`}

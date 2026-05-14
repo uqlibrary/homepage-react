@@ -149,6 +149,8 @@ export const BookableSpacesEditSpace = ({
                 space_type: bookableSpaceGetResult?.data?.space_type,
                 space_type_id: bookableSpaceGetResult?.data?.space_type_id,
                 space_uuid: bookableSpaceGetResult?.data?.space_uuid,
+                space_deleted: bookableSpaceGetResult?.data?.space_deleted || false,
+                space_deleted_at: bookableSpaceGetResult?.data?.space_deleted_at || null,
             });
         }
     }, [bookableSpaceGetting, bookableSpaceGetError, bookableSpaceGetResult]);

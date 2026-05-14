@@ -1339,6 +1339,54 @@ export default {
                         "facility_type_name": "Contains Artwork"
                     }
                 ],
+            }, {
+                space_id: 999999,
+                space_uuid: "test-delete-space-uuid",
+                space_name: "DELETE_TEST_SPACE",
+                space_precise: "For testing soft-delete functionality",
+                space_description: "<p>This is a test space used exclusively for testing the soft-delete mechanism. It can be safely deleted and restored.</p>",
+                space_photo_url: "",
+                space_photo_description: "",
+                space_opening_hours_id: null,
+                space_services_page: "",
+                created_at: "2025-12-01 10:00:00",
+                updated_at: "2025-12-14 09:30:00",
+                "space_capacity": 2,
+                space_latitude: "-27.49700",
+                space_longitude: "153.01200",
+                space_zlevel: 1,
+                space_type: "Meeting room",
+                space_floor_id: 1,
+                space_floor_name: "1",
+                space_is_ground_floor: 0,
+                space_library_id: 1,
+                space_library_name: "Test Library",
+                space_building_name: "Test Building",
+                space_building_number: "TEST",
+                space_campus_id: 1,
+                space_type_id: 3,
+                space_type_details: {
+                    "space_type_id": 3,
+                    "space_type_name": "Meeting room",
+                    "space_type_description": "Designed for meetings and collaborative work, these spaces typically include seating areas, tables, and other amenities to support discussions and group activities."
+                },
+                space_campus_name: "St Lucia",
+                "space_campus_number": "01",
+                space_draftmode: false,
+                space_deleted: true,
+                space_deleted_at: "2025-12-14 09:15:00",
+                "space_external_book_url": 'https://uqbookit.uq.edu.au/#/app/booking-types/999',
+                space_outages: [],
+                facility_types: [
+                    {
+                        "facility_type_id": 23,
+                        "facility_type_name": "Toilets, female"
+                    },
+                    {
+                        "facility_type_id": 22,
+                        "facility_type_name": "Toilets, male"
+                    }
+                ],
             }]
     }
 }

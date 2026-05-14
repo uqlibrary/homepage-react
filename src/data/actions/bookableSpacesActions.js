@@ -3,6 +3,7 @@ import { destroy, get, post, put } from 'repositories/generic';
 import {
     SPACES_ADD_LOCATION_API,
     SPACES_SINGLE_API,
+    SPACES_ADMIN_SINGLE_API,
     SPACES_OUTAGES_API,
     SPACES_OUTAGE_API,
     SPACES_FLOOR_OUTAGES_API,
@@ -10,6 +11,7 @@ import {
     SPACES_CAMPUS_OUTAGES_API,
     SPACES_MODIFY_LOCATION_API,
     SPACES_ALL_API,
+    SPACES_ADMIN_ALL_API,
     SPACES_SITE_API,
     UPLOAD_PUBLIC_FILES_API,
     SPACES_SPACETYPE_CREATE_API,
@@ -103,12 +105,14 @@ export function saveBulkFilterTypes(facilityTypeId, request) {
     };
 }
 
-export function loadAllBookableSpacesRooms({ includeDrafts } = {}) {
-    console.log('loadAllBookableSpacesRooms RELOAD SPACES');
+export function loadAllBookableSpacesRooms({ includeDrafts, includeDeleted } = {}) {
+    console.log('loadAllBookableSpacesRooms RELOAD SPACES', { includeDrafts, includeDeleted });
     return dispatch => {
         // dispatch({ type: actions.SPACES_ROOM_LIST_CLEAR });
         dispatch({ type: actions.SPACES_ROOM_LIST_LOADING });
-        const request = SPACES_ALL_API({ includeDrafts });
+        const request = includeDeleted 
+            ? SPACES_ADMIN_ALL_API({ includeDrafts, includeDeleted })
+            : SPACES_ALL_API({ includeDrafts });
         console.log('loadAllBookableSpacesRooms start', request);
         return get(request)
             .then(response => {
@@ -117,6 +121,7 @@ export function loadAllBookableSpacesRooms({ includeDrafts } = {}) {
                     type: actions.SPACES_ROOM_LIST_LOADED,
                     payload: response,
                     includeDrafts: includeDrafts === true,
+                    includeDeleted: includeDeleted === true,
                 });
             })
             .catch(error => {
@@ -671,6 +676,38 @@ export function deleteBookableSpaceType(spaceTypeId) {
             .catch(error => {
                 dispatch({
                     type: actions.SPACES_LOCATION_DELETE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function updateSpaceDeletedState(spaceId, isDeleted) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_LOCATION_UPDATING });
+        console.log('updateSpaceDeletedState calling', spaceId, isDeleted);
+        const url = SPACES_MODIFY_LOCATION_API({ type: 'space', id: spaceId });
+        const payload = { space_deleted: isDeleted };
+        return put(url, payload)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_LOCATION_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_LOCATION_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_LOCATION_UPDATE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
