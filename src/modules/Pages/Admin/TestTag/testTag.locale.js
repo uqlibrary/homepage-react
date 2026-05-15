@@ -20,6 +20,7 @@ import PrinterTemplateIcon from '@mui/icons-material/ReceiptLongOutlined';
 import Box from '@mui/material/Box';
 
 import { PERMISSIONS } from './config/auth';
+import { PRINTER_TEMPLATE_SYSTEM_VARIABLES } from './config/labelPrinting';
 
 export default {
     config: {
@@ -1268,7 +1269,10 @@ export default {
                     printer_template_name: 'A printer template name is required',
                     identifiers: 'A printer identifier is required and must not have been used with another template.',
                     printer_template_code:
-                        'Printer template code is required and must include defined placeholder variables',
+                        'Printer template code is required and must include user defined placeholder variables',
+                    printer_template_code_helperText: `You may include common system placeholders ${PRINTER_TEMPLATE_SYSTEM_VARIABLES.join(
+                        ', ',
+                    )}`,
                     vars:
                         'One or more defined variables are missing from the template code. All variables must be included in the printer template code as {{VARNAME}}',
                 },

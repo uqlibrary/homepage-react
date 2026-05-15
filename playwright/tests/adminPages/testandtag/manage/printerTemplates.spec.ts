@@ -271,7 +271,7 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 await assertErrorStateForField(
                     page,
                     'printer_template_code-label',
-                    'Printer template code is required and must include defined placeholder variables',
+                    'Printer template code is required and must include user defined placeholder variables',
                     true,
                     false,
                 );
@@ -283,7 +283,7 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 await assertErrorStateForField(
                     page,
                     'printer_template_code-label',
-                    'Printer template code is required and must include defined placeholder variables',
+                    'Printer template code is required and must include user defined placeholder variables',
                     false,
                 );
 
@@ -550,7 +550,7 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 await assertErrorStateForField(
                     page,
                     'printer_template_code-label',
-                    'Printer template code is required and must include defined placeholder variables',
+                    'Printer template code is required and must include user defined placeholder variables',
                     false,
                 );
                 await page.getByRole('button', { name: 'Printer template code' }).click();
@@ -560,7 +560,7 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 await assertErrorStateForField(
                     page,
                     'printer_template_code-label',
-                    'Printer template code is required and must include defined placeholder variables',
+                    'Printer template code is required and must include user defined placeholder variables',
                 );
                 await assertErrorStateForField(
                     page,
@@ -571,7 +571,7 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 await assertErrorStateForField(
                     page,
                     'printer_template_code-label',
-                    'Printer template code is required and must include defined placeholder variables',
+                    'Printer template code is required and must include user defined placeholder variables',
                     false,
                     false,
                 );
