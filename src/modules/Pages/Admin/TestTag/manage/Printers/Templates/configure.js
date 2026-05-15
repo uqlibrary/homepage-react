@@ -169,11 +169,11 @@ export default {
                             required
                             multiline
                             minRows={4}
-                            inputProps={{ ...props.inputProps, maxLength: 1000 }}
+                            inputProps={{ ...props.inputProps }}
                             helperText={
                                 props.error
                                     ? locale.pages.manage.printertemplates.helperText.printer_template_code
-                                    : locale.pages.general.helperText.maxChars(1000)
+                                    : locale.pages.manage.printertemplates.helperText.printer_template_code_helperText
                             }
                         />
                     </AccordionDetails>
