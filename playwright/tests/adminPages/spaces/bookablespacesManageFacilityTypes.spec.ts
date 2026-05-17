@@ -627,6 +627,27 @@ test.describe('Spaces Admin - edit facility type dialog', () => {
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
+    test('can edit facility type and set hide in filter list', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        const facilityTypeId = '17';
+
+        await expect(page.getByTestId(`edit-facility-type-${facilityTypeId}-button`)).toBeVisible();
+        await page.getByTestId(`edit-facility-type-${facilityTypeId}-button`).click();
+
+        await expect(page.getByTestId('hide_in_public_filter_list')).toBeVisible();
+        await page.getByTestId('hide_in_public_filter_list').check();
+        await page.getByTestId('dialog-save-button').click();
+
+        await assertToastHasMessage(page, 'Facility type updated');
+
+        const expectedValues = {
+            facility_type_name: 'Low noise level',
+            facility_type_id: facilityTypeId,
+            hide_in_public_filter_list: true,
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
     test('the edit facility type dialog is accessible', async ({ page }) => {
         const facilityTypeId = '17';
 
@@ -820,6 +841,30 @@ test.describe('Spaces Admin - adding new facility types', () => {
         const expectedValues = {
             facility_type__group_id: noiseLevelGroupId,
             facility_type_name: 'New type',
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('can save new type with hide in filter list enabled', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        const noiseLevelGroupId = '5';
+        const noiseLevelGroupName = 'Acceptable noise';
+
+        await expect(page.getByTestId('add-facility-type-heading')).not.toBeVisible();
+        await page.getByTestId(`add-group-${noiseLevelGroupId}-button`).click();
+
+        await expect(page.getByTestId('add-facility-type-heading')).toBeVisible();
+        await expect(page.getByTestId('add-facility-type-heading')).toHaveText(
+            `Add a Facility Type to ${noiseLevelGroupName}`,
+        );
+        await page.getByRole('textbox', { name: 'New Facility type for Group' }).fill('New hidden type');
+        await page.getByTestId('hide_in_public_filter_list').check();
+        await page.getByTestId('dialog-save-button').click();
+
+        const expectedValues = {
+            facility_type__group_id: noiseLevelGroupId,
+            facility_type_name: 'New hidden type',
+            hide_in_public_filter_list: true,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });

@@ -367,16 +367,23 @@ export const BookableSpacesManageFacilities = ({
     };
 
     const saveChangeToFacilityType = () => {
+        const hideInPublicFilterList = !!document.getElementById('hide_in_public_filter_list')?.checked;
         const valuesToSend = {
             facility_type_name: document.getElementById('facility_type_name')?.value,
             facility_type_id: document.getElementById('facility_type_id')?.value,
+            hide_in_public_filter_list: hideInPublicFilterList,
         };
 
         closeDialog();
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+            const valuesToSaveInCookie = {
+                facility_type_name: valuesToSend?.facility_type_name,
+                facility_type_id: valuesToSend?.facility_type_id,
+                ...(hideInPublicFilterList ? { hide_in_public_filter_list: true } : {}),
+            };
+            setCookie('CYPRESS_DATA_SAVED', valuesToSaveInCookie);
         }
 
         !!valuesToSend?.facility_type_name &&
@@ -452,6 +459,21 @@ export const BookableSpacesManageFacilities = ({
                     <label for="facility_type_name">Facility type name</label>
                     <input type="text" name="facility_type_name" id="facility_type_name" data-testid="facility_type_name" value="${facilityTypeDetails?.facility_type_name}" required />
                 </div>
+                <div class="dialogRow">
+                    <label for="hide_in_public_filter_list">
+                        <input
+                            type="checkbox"
+                            name="hide_in_public_filter_list"
+                            id="hide_in_public_filter_list"
+                            data-testid="hide_in_public_filter_list"
+                            ${facilityTypeDetails?.hide_in_public_filter_list ? 'checked' : ''}
+                        />
+                        Hide in filter list
+                    </label>
+                    <div style="margin-top: 0.5rem; color: #666;">
+                        Hidden from public Spaces filter (this filter will still show in the description)
+                    </div>
+                </div>
             </div>`;
         const dialogBodyElement = document.getElementById('dialogBody');
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
@@ -499,6 +521,7 @@ export const BookableSpacesManageFacilities = ({
         const valuesToSend = {
             facility_type__group_id: data?.facility_type__group_id,
             facility_type_name: data?.facility_type_name,
+            ...(data?.hide_in_public_filter_list === 'on' ? { hide_in_public_filter_list: true } : {}),
         };
 
         // showSavingProgress(true);
@@ -545,6 +568,20 @@ export const BookableSpacesManageFacilities = ({
                 <div class="dialogRow">
                     <label for="newFacilityType">New Facility type for Group</label>
                     <input type="text" name="facility_type_name" id="newFacilityType" data-testid="facility_type_name" value="" required />
+                </div>
+                <div class="dialogRow">
+                    <label for="hide_in_public_filter_list">
+                        <input
+                            type="checkbox"
+                            name="hide_in_public_filter_list"
+                            id="hide_in_public_filter_list"
+                            data-testid="hide_in_public_filter_list"
+                        />
+                        Hide in filter list
+                    </label>
+                    <div style="margin-top: 0.5rem; color: #666;">
+                        Hidden from public Spaces filter (this filter will still show in the description)
+                    </div>
                 </div>
             </div>`;
 
