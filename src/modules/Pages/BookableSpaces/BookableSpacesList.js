@@ -728,9 +728,13 @@ export const BookableSpacesList = ({
                 facility_type_groups: facilityTypeList?.data?.facility_type_groups
                     ?.map(group => ({
                         ...group,
-                        facility_type_children: (group?.facility_type_children || [])?.filter(child =>
-                            spaceFiltersSet?.has(child?.facility_type_id),
-                        ),
+                        facility_type_children: (group?.facility_type_children || [])?.filter(child => {
+                            const isHiddenInPublicFilterList =
+                                child?.hide_in_public_filter_list === true ||
+                                child?.hide_in_public_filter_list === 1 ||
+                                child?.hide_in_public_filter_list === '1';
+                            return spaceFiltersSet?.has(child?.facility_type_id) && !isHiddenInPublicFilterList;
+                        }),
                     }))
                     ?.filter(group => group?.facility_type_children?.length > 0),
             },
