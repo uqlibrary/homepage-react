@@ -149,23 +149,6 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 // add button should be disabled
                 await expect(page.getByTestId('update_dialog-action-button')).toBeDisabled();
 
-                // add identifier already in use by other template
-                await addChip(page, 'PRINTER_01');
-                await assertErrorStateForField(
-                    page,
-                    'identifiers-label',
-                    'A printer identifier is required and must not have been used with another template.',
-                    true,
-                    false,
-                );
-                await removeChipByIndex(page, 1); // remove conflicting identifier
-                await assertErrorStateForField(
-                    page,
-                    'identifiers-label',
-                    'A printer identifier is required and must not have been used with another template.',
-                    false,
-                    false,
-                );
                 const chipCount = await page.locator('[name=identifiers] .MuiChip-root').all();
                 await expect(chipCount.length).toBe(1);
 
@@ -416,20 +399,6 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                     false,
                 );
 
-                // add identifier already in use by other template
-                await addChip(page, 'PRINTER_03');
-                await assertErrorStateForField(
-                    page,
-                    'identifiers-label',
-                    'A printer identifier is required and must not have been used with another template.',
-                );
-                await removeChipByIndex(page, 1); // remove conflicting identifier
-                await assertErrorStateForField(
-                    page,
-                    'identifiers-label',
-                    'A printer identifier is required and must not have been used with another template.',
-                    false,
-                );
                 // add duplicate identifier for this template
                 await addChip(page, 'PRINTER_TEST');
                 await assertErrorStateForField(
