@@ -236,12 +236,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     const bookingText = ev => {
         /*
           if bookingSettings is null then bookings are not required
-          if bookingSettings has a placesRemaining child *and it is > 0" then there are places still available
-          if bookingSettings has a placesRemaining child *and it is zero* then the course is fully booked
+          if bookingSettings.isBookingAvailable is true then there are places still available (includes unlimited bookings where placesRemaining is null)
+          if bookingSettings.isBookingAvailable is false then the course is fully booked
          */
         const placesRemainingText = { display: 'Booking is not required', button: 'Log in for more details' };
         if (ev.bookingSettings !== null) {
-            if (ev.bookingSettings.placesRemaining > 0) {
+            if (ev.bookingSettings.isBookingAvailable) {
                 placesRemainingText.display = 'Places still available';
                 placesRemainingText.button = 'Log in and book now';
             } else {

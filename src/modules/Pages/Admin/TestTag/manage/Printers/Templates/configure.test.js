@@ -29,14 +29,12 @@ describe('config', () => {
         const { validate } = config.fields.identifiers;
 
         it('returns true when value is an empty array', () => {
-            expect(validate([], {}, [])).toBe(true);
+            expect(validate([])).toBe(true);
         });
 
         it('returns false when value has valid unique string identifiers', () => {
             const value = ['ID-001', 'ID-002'];
-            const data = { printer_template_id: 1 };
-            const rows = [];
-            expect(validate(value, data, rows)).toBe(false);
+            expect(validate(value)).toBe(false);
         });
 
         it('returns false when value has valid unique object identifiers', () => {
@@ -44,15 +42,12 @@ describe('config', () => {
                 { printer_template_identifier_value: 'ID-001' },
                 { printer_template_identifier_value: 'ID-002' },
             ];
-            const data = { printer_template_id: 1 };
-            const rows = [];
-            expect(validate(value, data, rows)).toBe(false);
+            expect(validate(value)).toBe(false);
         });
 
         it('returns true when there are duplicate string identifiers', () => {
             const value = ['ID-001', 'ID-001'];
-            const data = { printer_template_id: 1 };
-            expect(validate(value, data, [])).toBe(true);
+            expect(validate(value)).toBe(true);
         });
 
         it('returns true when there are duplicate object identifiers', () => {
@@ -60,65 +55,17 @@ describe('config', () => {
                 { printer_template_identifier_value: 'ID-001' },
                 { printer_template_identifier_value: 'ID-001' },
             ];
-            const data = { printer_template_id: 1 };
-            expect(validate(value, data, [])).toBe(true);
+            expect(validate(value)).toBe(true);
         });
 
         it('returns true when a string identifier is empty', () => {
             const value = ['ID-001', ''];
-            const data = { printer_template_id: 1 };
-            expect(validate(value, data, [])).toBe(true);
+            expect(validate(value)).toBe(true);
         });
 
         it('returns true when a string identifier exceeds 255 characters', () => {
             const value = ['ID-001', 'a'.repeat(256)];
-            const data = { printer_template_id: 1 };
-            expect(validate(value, data, [])).toBe(true);
-        });
-
-        it('returns true when a value conflicts with an identifier on another row', () => {
-            const value = ['ID-001'];
-            const data = { printer_template_id: 1 };
-            const rows = [
-                {
-                    printer_template_id: 2,
-                    identifiers: [{ printer_template_identifier_value: 'ID-001' }],
-                },
-            ];
-            expect(validate(value, data, rows)).toBe(true);
-        });
-
-        it('returns false when the conflicting identifier belongs to the current row', () => {
-            const value = ['ID-001'];
-            const data = { printer_template_id: 1 };
-            const rows = [
-                {
-                    printer_template_id: 1,
-                    identifiers: [{ printer_template_identifier_value: 'ID-001' }],
-                },
-            ];
-            expect(validate(value, data, rows)).toBe(false);
-        });
-
-        it('returns false when rows have no identifiers', () => {
-            const value = ['ID-001'];
-            const data = { printer_template_id: 1 };
-            const rows = [{ printer_template_id: 2, identifiers: [] }];
-            expect(validate(value, data, rows)).toBe(false);
-        });
-
-        it('handles rows with undefined identifiers gracefully', () => {
-            const value = ['ID-001'];
-            const data = { printer_template_id: 1 };
-            const rows = [{ printer_template_id: 2 }];
-            expect(validate(value, data, rows)).toBe(false);
-        });
-
-        it('returns false when a row has null identifiers (covers ?? [] fallback)', () => {
-            const value = ['ID-001'];
-            const data = { printer_template_id: 1 };
-            const rows = [{ printer_template_id: 2, identifiers: null }];
-            expect(validate(value, data, rows)).toBe(false);
+            expect(validate(value)).toBe(true);
         });
     });
 

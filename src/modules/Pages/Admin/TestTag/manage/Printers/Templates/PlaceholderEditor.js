@@ -145,7 +145,7 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, InputL
                     Toolbar: AddToolbar,
                 }}
                 componentsProps={{
-                    toolbar: { rows, setRows, setRowModesModel, setIsEditing },
+                    toolbar: { rows, setRows, setRowModesModel, setIsEditing, id: componentId },
                 }}
                 disableIgnoreModificationsIfProcessingProps
                 experimentalFeatures={{ newEditingApi: true }}
