@@ -90,7 +90,7 @@ export default {
                     />
                 );
             },
-            validate: (value, data, rows) => {
+            validate: value => {
                 if (value?.length === 0) {
                     return true;
                 }
@@ -104,13 +104,7 @@ export default {
                 if (values.some(val => isEmptyStr(val)) || values.some(val => val.length > 255)) {
                     return true;
                 }
-                return rows
-                    ?.filter(row => row.printer_template_id !== data.printer_template_id)
-                    .some(row => {
-                        const rowValues =
-                            row.identifiers?.map(identifier => identifier.printer_template_identifier_value) ?? [];
-                        return rowValues.some(val => values.includes(val));
-                    });
+                return false;
             },
             fieldParams: {
                 canEdit: true,
