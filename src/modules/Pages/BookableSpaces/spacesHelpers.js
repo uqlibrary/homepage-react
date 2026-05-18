@@ -72,6 +72,7 @@ export const getFlatFacilityTypeList = facilityTypes => {
                 facility_type_id: child?.facility_type_id,
                 facility_type_name: child?.facility_type_name,
                 facility_special_action: child?.facility_special_action,
+                hide_in_public_filter_list: child?.hide_in_public_filter_list,
             }));
         }) || []
     );
