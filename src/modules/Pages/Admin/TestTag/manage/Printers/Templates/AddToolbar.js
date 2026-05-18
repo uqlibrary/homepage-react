@@ -11,7 +11,7 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { randomId } from './utils';
 
 const AddToolbar = props => {
-    const { rows, setRows, setRowModesModel, setIsEditing } = props;
+    const { id, rows, setRows, setRowModesModel, setIsEditing } = props;
 
     const pageLocale = locale.pages.manage.printertemplates;
 
@@ -37,13 +37,20 @@ const AddToolbar = props => {
 
     return (
         <GridToolbarContainer>
-            <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+            <Button
+                id={`${id}-add-button`}
+                data-testid={`${id}-add-button`}
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={handleClick}
+            >
                 {pageLocale.placeholderEditor.toolbar.buttons.addVar.label}
             </Button>
         </GridToolbarContainer>
     );
 };
 AddToolbar.propTypes = {
+    id: PropTypes.string.isRequired,
     setRowModesModel: PropTypes.func.isRequired,
     rows: PropTypes.array.isRequired,
     setRows: PropTypes.func.isRequired,
