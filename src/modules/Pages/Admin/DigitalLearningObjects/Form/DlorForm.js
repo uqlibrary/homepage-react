@@ -621,6 +621,21 @@ export const DlorForm = ({
                         )}
                     </FormControl>
                 </Grid>
+                {mode === 'edit' && (
+                    <Grid item xs={12}>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="object_publishing_user_email">Object owner email</InputLabel>
+                            <Input
+                                id="object_publishing_user_email"
+                                data-testid="object-publishing-user-email"
+                                value={formValues?.object_publishing_user_email || ''}
+                                onChange={handleChange('object_publishing_user_email')}
+                                sx={{ width: '30em', maxWidth: '100%' }}
+                                type="email"
+                            />
+                        </FormControl>
+                    </Grid>
+                )}
                 <Grid item xs={12} sx={{ minHeight: '95px' }}>
                     <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
                     <Select
@@ -859,13 +874,17 @@ export const DlorForm = ({
     );
 
     useEffect(() => {
-        if (formDefaults?.object_publishing_user !== formValues?.object_publishing_user) {
+        if (
+            formDefaults?.object_publishing_user !== formValues?.object_publishing_user ||
+            formDefaults?.object_publishing_user_email !== formValues?.object_publishing_user_email
+        ) {
             setFormValues(prevValues => ({
                 ...prevValues,
                 object_publishing_user: formDefaults.object_publishing_user,
+                object_publishing_user_email: formDefaults.object_publishing_user_email,
             }));
         }
-    }, [formDefaults.object_publishing_user]);
+    }, [formDefaults.object_publishing_user, formDefaults.object_publishing_user_email]);
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
         const rawSummary = html2text.fromString(enteredDescription);
@@ -1830,6 +1849,7 @@ export const DlorForm = ({
 
         if (mode === 'add') {
             delete valuesToSend.notificationText;
+            delete valuesToSend.object_publishing_user_email;
         } else if (!isNotifying) {
             valuesToSend.notificationText = '';
         }

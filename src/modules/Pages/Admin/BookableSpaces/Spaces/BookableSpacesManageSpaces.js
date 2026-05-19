@@ -420,6 +420,17 @@ export const BookableSpacesManageSpaces = ({
     const showSpaceByPagination = (index, pageNumLocal, rowsPerPageLocal) => {
         return index >= pageNumLocal * rowsPerPageLocal && index < (pageNumLocal + 1) * rowsPerPageLocal;
     };
+
+    const isSpaceDeleted = space => {
+        const deletedValue = space?.space_deleted;
+        return (
+            deletedValue === true ||
+            deletedValue === 1 ||
+            deletedValue === '1' ||
+            deletedValue === 'true'
+        );
+    };
+
     React.useEffect(() => {
         if (
             bookableSpacesRoomListError === false &&
@@ -430,13 +441,19 @@ export const BookableSpacesManageSpaces = ({
             if (campusListError === null && campusListLoading === null && campusList === null) {
                 actions.loadBookableSpaceCampusChildren();
             }
-            // initialise the shown rows to the first N according to the paginator widget
+            // Apply active filters before pagination so a soft-deleted row does not reappear post-refresh.
             const usableRows = [];
-            getSortedSpaces(bookableSpacesRoomList?.data?.locations, sortType, sortDirection)?.map((space, index) => {
+            let filteredIndex = 0;
+            getSortedSpaces(bookableSpacesRoomList?.data?.locations, sortType, sortDirection)?.forEach(space => {
+                const showByFilter = doesSpaceShow(space, selectedFilters);
                 usableRows?.push({
                     spaceId: space?.space_id,
-                    showSpace: showSpaceByPagination(index, pageNum, rowsPerPage),
+                    showSpace: showByFilter && showSpaceByPagination(filteredIndex, pageNum, rowsPerPage),
                 });
+
+                if (showByFilter) {
+                    filteredIndex++;
+                }
             });
             setDisplayedRows(usableRows);
         }
@@ -448,6 +465,7 @@ export const BookableSpacesManageSpaces = ({
         campusListError,
         campusListLoading,
         campusList,
+        selectedFilters,
         sortType,
         sortDirection,
     ]);
@@ -497,7 +515,7 @@ export const BookableSpacesManageSpaces = ({
                 }
             } else if (f?.filterType === 'showDeleted' && f?.filterValue === false) {
                 // Hide deleted spaces unless showDeleted filter is true
-                if (space?.space_deleted === true) {
+                if (isSpaceDeleted(space)) {
                     showSpaceByFilter = false;
                 }
             }
@@ -1402,7 +1420,7 @@ export const BookableSpacesManageSpaces = ({
                                                                 >
                                                                     {bookableSpace?.space_name}
                                                                 </span>
-                                                                {bookableSpace?.space_deleted === true && (
+                                                                {isSpaceDeleted(bookableSpace) && (
                                                                     <Chip
                                                                         label="Deleted"
                                                                         size="small"

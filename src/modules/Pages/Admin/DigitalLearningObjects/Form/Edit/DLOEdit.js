@@ -106,6 +106,7 @@ export const DLOEdit = ({
         object_link_url: dlorItem?.object_link_url,
         object_download_instructions: dlorItem?.object_download_instructions || 'Add this object to your course.',
         object_publishing_user: dlorItem?.owner?.publishing_user_username,
+        object_publishing_user_email: dlorItem?.object_publishing_user_email || dlorItem?.owner?.publishing_user_email,
         object_status: dlorItem?.object_status,
         object_restrict_to: dlorItem?.object_restrict_to,
         object_review_date_next: dlorItem?.object_review_date_next,
