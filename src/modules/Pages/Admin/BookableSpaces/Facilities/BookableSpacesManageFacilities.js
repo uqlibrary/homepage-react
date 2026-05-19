@@ -40,7 +40,13 @@ import {
     displayToastMessage,
     showGenericConfirmAndDeleteDialog,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
-import { getFlatFacilityTypeList } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import {
+    FILTER_DISPLAY_ON_ADVANCED,
+    FILTER_DISPLAY_ON_BOTH,
+    FILTER_DISPLAY_ON_SIMPLE,
+    getFlatFacilityTypeList,
+    normalizeFilterDisplayOn,
+} from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { a11yProps, reverseA11yProps } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { TabPanel } from 'modules/Pages/LearningResources/shared/TabPanel';
 
@@ -238,6 +244,29 @@ export const BookableSpacesManageFacilities = ({
 
     const [cookies, setCookie] = useCookies();
 
+    const getFilterDisplayOnOptions = selectedValue => {
+        const resolvedSelected = normalizeFilterDisplayOn(selectedValue);
+        return [
+            {
+                value: FILTER_DISPLAY_ON_SIMPLE,
+                label: 'Simple',
+            },
+            {
+                value: FILTER_DISPLAY_ON_ADVANCED,
+                label: 'Advanced',
+            },
+            {
+                value: FILTER_DISPLAY_ON_BOTH,
+                label: 'Both',
+            },
+        ]
+            .map(option => {
+                const selected = option.value === resolvedSelected ? 'selected' : '';
+                return `<option value="${option.value}" ${selected}>${option.label}</option>`;
+            })
+            .join('');
+    };
+
     const tabOnLoad = 'editGroupsTab';
     const [topmenu, setCurrentTopTab] = useState(tabOnLoad);
     const handleTopTabChange = (event, topMenuTabId) => {
@@ -368,10 +397,12 @@ export const BookableSpacesManageFacilities = ({
 
     const saveChangeToFacilityType = () => {
         const hideInPublicFilterList = !!document.getElementById('hide_in_public_filter_list')?.checked;
+        const filterDisplayOn = normalizeFilterDisplayOn(document.getElementById('filter_display_on')?.value);
         const valuesToSend = {
             facility_type_name: document.getElementById('facility_type_name')?.value,
             facility_type_id: document.getElementById('facility_type_id')?.value,
             hide_in_public_filter_list: hideInPublicFilterList,
+            filter_display_on: filterDisplayOn,
         };
 
         closeDialog();
@@ -381,6 +412,7 @@ export const BookableSpacesManageFacilities = ({
             const valuesToSaveInCookie = {
                 facility_type_name: valuesToSend?.facility_type_name,
                 facility_type_id: valuesToSend?.facility_type_id,
+                filter_display_on: valuesToSend?.filter_display_on,
                 ...(hideInPublicFilterList ? { hide_in_public_filter_list: true } : {}),
             };
             setCookie('CYPRESS_DATA_SAVED', valuesToSaveInCookie);
@@ -452,12 +484,21 @@ export const BookableSpacesManageFacilities = ({
         // show the form
         const flatFacilityTypeList = getFlatFacilityTypeList(facilityTypeList);
         const facilityTypeDetails = flatFacilityTypeList?.find(item => item?.facility_type_id === facilityTypeId);
+        const filterDisplayOnOptions = getFilterDisplayOnOptions(facilityTypeDetails?.filter_display_on);
         const formBody = `<div>
                 <h2 data-testid="add-facility-type-heading">Edit a Facility Type</h2>
                 <input type="hidden" name="facility_type_id" id="facility_type_id" value="${facilityTypeId}" />
                 <div class="dialogRow">
                     <label for="facility_type_name">Facility type name</label>
-                    <input type="text" name="facility_type_name" id="facility_type_name" data-testid="facility_type_name" value="${facilityTypeDetails?.facility_type_name}" required />
+                    <input type="text" name="facility_type_name" id="facility_type_name" data-testid="facility_type_name" value="${
+                        facilityTypeDetails?.facility_type_name
+                    }" required />
+                </div>
+                <div class="dialogRow">
+                    <label for="filter_display_on">Filter applies to view:</label>
+                    <select name="filter_display_on" id="filter_display_on" data-testid="filter_display_on">
+                        ${filterDisplayOnOptions}
+                    </select>
                 </div>
                 <div class="dialogRow">
                     <label for="hide_in_public_filter_list">
@@ -521,6 +562,7 @@ export const BookableSpacesManageFacilities = ({
         const valuesToSend = {
             facility_type__group_id: data?.facility_type__group_id,
             facility_type_name: data?.facility_type_name,
+            filter_display_on: normalizeFilterDisplayOn(data?.filter_display_on),
             ...(data?.hide_in_public_filter_list === 'on' ? { hide_in_public_filter_list: true } : {}),
         };
 
@@ -562,12 +604,19 @@ export const BookableSpacesManageFacilities = ({
             g => g?.facility_type_group_id === parseInt(groupId, 10),
         );
         const groupname = thisGroup?.facility_type_group_name;
+        const filterDisplayOnOptions = getFilterDisplayOnOptions(FILTER_DISPLAY_ON_BOTH);
         const formBody = `<div>
                 <h2 data-testid="add-facility-type-heading">Add a Facility Type to ${groupname}</h2>
                 <input type="hidden" name="facility_type__group_id" value="${groupId}" />
                 <div class="dialogRow">
                     <label for="newFacilityType">New Facility type for Group</label>
                     <input type="text" name="facility_type_name" id="newFacilityType" data-testid="facility_type_name" value="" required />
+                </div>
+                <div class="dialogRow">
+                    <label for="filter_display_on">Filter applies to view:</label>
+                    <select name="filter_display_on" id="filter_display_on" data-testid="filter_display_on">
+                        ${filterDisplayOnOptions}
+                    </select>
                 </div>
                 <div class="dialogRow">
                     <label for="hide_in_public_filter_list">
@@ -631,6 +680,7 @@ export const BookableSpacesManageFacilities = ({
                 const typeValuesToSend = {
                     facility_type__group_id: response?.data?.facility_type_group_id,
                     facility_type_name: data?.facility_type_name,
+                    filter_display_on: normalizeFilterDisplayOn(data?.filter_display_on),
                 };
                 // const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
                 // if (
@@ -679,6 +729,7 @@ export const BookableSpacesManageFacilities = ({
         return true;
     };
     const openDialogAddGroup = () => {
+        const filterDisplayOnOptions = getFilterDisplayOnOptions(FILTER_DISPLAY_ON_BOTH);
         const formBody = `<div id="add-new-facility-group-form" style="margin-bottom: 2rem; display: block;">
             <h3>New Facility type group</h3>
             <div class="dialogRow">
@@ -691,6 +742,14 @@ export const BookableSpacesManageFacilities = ({
                 <label for="firstGroupEntry">Name of first Facility type in this new group</label>
                 <div>
                     <input aria-invalid="false" id="firstGroupEntry" name="facility_type_name" type="text" maxlength="255" data-testid="new-group-first" required>
+                </div>
+            </div>
+            <div class="dialogRow">
+                <label for="filter_display_on">Filter applies to view:</label>
+                <div>
+                    <select name="filter_display_on" id="filter_display_on" data-testid="filter_display_on">
+                        ${filterDisplayOnOptions}
+                    </select>
                 </div>
             </div>
         </div>`;

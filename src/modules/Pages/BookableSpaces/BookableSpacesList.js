@@ -30,9 +30,13 @@ import {
     FILTER_BOOKABLE_TYPE_ID,
     FILTER_CAPACITY_TYPE_ID,
     FILTER_CURRENTLY_OPEN_ACTION_NAME,
+    FILTER_DISPLAY_ON_ADVANCED,
+    FILTER_DISPLAY_ON_BOTH,
+    FILTER_DISPLAY_ON_SIMPLE,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
     getFlatFacilityTypeList,
     isBookable,
+    normalizeFilterDisplayOn,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { CAMPUS_DUTTON_PARK } from 'config/locale';
@@ -733,7 +737,16 @@ export const BookableSpacesList = ({
                                 child?.hide_in_public_filter_list === true ||
                                 child?.hide_in_public_filter_list === 1 ||
                                 child?.hide_in_public_filter_list === '1';
-                            return spaceFiltersSet?.has(child?.facility_type_id) && !isHiddenInPublicFilterList;
+                            const displayOn = normalizeFilterDisplayOn(child?.filter_display_on);
+                            const isVisibleInCurrentView =
+                                displayOn === FILTER_DISPLAY_ON_BOTH ||
+                                (useJourneyExperience && displayOn === FILTER_DISPLAY_ON_SIMPLE) ||
+                                (!useJourneyExperience && displayOn === FILTER_DISPLAY_ON_ADVANCED);
+                            return (
+                                spaceFiltersSet?.has(child?.facility_type_id) &&
+                                !isHiddenInPublicFilterList &&
+                                isVisibleInCurrentView
+                            );
                         }),
                     }))
                     ?.filter(group => group?.facility_type_children?.length > 0),
@@ -755,6 +768,7 @@ export const BookableSpacesList = ({
                     facility_type_name: 'Currently open',
                     facility_special_action: FILTER_CURRENTLY_OPEN_ACTION_NAME,
                     facility_type: FACILITY_TYPE_CHECKBOX,
+                    filter_display_on: FILTER_DISPLAY_ON_BOTH,
                 },
             ],
         };
@@ -774,12 +788,14 @@ export const BookableSpacesList = ({
                     facility_type_name: 'Bookable',
                     facility_special_action: FILTER_BOOKABLE_ACTION_NAME,
                     facility_type: FACILITY_TYPE_CHECKBOX,
+                    filter_display_on: FILTER_DISPLAY_ON_BOTH,
                 },
                 {
                     facility_type_id: FILTER_CAPACITY_TYPE_ID, // must be unique!
                     facility_type_name: 'Space capacity',
                     facility_special_action: FILTER_SPACE_CAPACITY_ACTION_NAME,
                     facility_type: FACILITY_TYPE_SLIDER,
+                    filter_display_on: FILTER_DISPLAY_ON_BOTH,
                 },
             ],
         };
@@ -794,7 +810,7 @@ export const BookableSpacesList = ({
     };
     const filteredFacilityTypeList = React.useMemo(
         () => getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList),
-        [bookableSpacesRoomList, facilityTypeList, selectedCampus],
+        [bookableSpacesRoomList, facilityTypeList, selectedCampus, useJourneyExperience],
     );
 
     React.useEffect(() => {

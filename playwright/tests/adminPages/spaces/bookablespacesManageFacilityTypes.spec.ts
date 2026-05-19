@@ -624,6 +624,7 @@ test.describe('Spaces Admin - edit facility type dialog', () => {
         const expectedValues = {
             facility_type_name: 'prepend Low noise level',
             facility_type_id: facilityTypeId,
+            filter_display_on: 'both',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -645,6 +646,7 @@ test.describe('Spaces Admin - edit facility type dialog', () => {
             facility_type_name: 'Low noise level',
             facility_type_id: facilityTypeId,
             hide_in_public_filter_list: true,
+            filter_display_on: 'both',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -841,6 +843,7 @@ test.describe('Spaces Admin - adding new facility types', () => {
         const expectedValues = {
             facility_type__group_id: noiseLevelGroupId,
             facility_type_name: 'New type',
+            filter_display_on: 'both',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -865,6 +868,7 @@ test.describe('Spaces Admin - adding new facility types', () => {
             facility_type__group_id: noiseLevelGroupId,
             facility_type_name: 'New hidden type',
             hide_in_public_filter_list: true,
+            filter_display_on: 'both',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });

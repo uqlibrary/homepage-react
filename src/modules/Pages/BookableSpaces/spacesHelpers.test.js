@@ -1,4 +1,12 @@
-import { getFriendlyFloorName, getOrdinalSuffixFor, isInt } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import {
+    FILTER_DISPLAY_ON_ADVANCED,
+    FILTER_DISPLAY_ON_BOTH,
+    FILTER_DISPLAY_ON_SIMPLE,
+    getFriendlyFloorName,
+    getOrdinalSuffixFor,
+    isInt,
+    normalizeFilterDisplayOn,
+} from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 describe('spaces helpers', () => {
     it('creates ordinal numbers correctly', () => {
@@ -144,5 +152,20 @@ describe('spaces helpers', () => {
         expect(getFriendlyFloorName({ space_floor_name: '3', space_is_ground_floor: false })).toEqual('Level 3');
         expect(getFriendlyFloorName({ space_is_ground_floor: true })).toEqual('Ground floor');
         expect(getFriendlyFloorName({ space_floor_name: '3A', space_is_ground_floor: true })).toEqual('Ground floor');
+    });
+
+    it('normalizes filter display on values', () => {
+        // Valid values should pass through
+        expect(normalizeFilterDisplayOn(FILTER_DISPLAY_ON_SIMPLE)).toEqual(FILTER_DISPLAY_ON_SIMPLE);
+        expect(normalizeFilterDisplayOn(FILTER_DISPLAY_ON_ADVANCED)).toEqual(FILTER_DISPLAY_ON_ADVANCED);
+        expect(normalizeFilterDisplayOn(FILTER_DISPLAY_ON_BOTH)).toEqual(FILTER_DISPLAY_ON_BOTH);
+
+        // Invalid values should default to both
+        expect(normalizeFilterDisplayOn(null)).toEqual(FILTER_DISPLAY_ON_BOTH);
+        expect(normalizeFilterDisplayOn(undefined)).toEqual(FILTER_DISPLAY_ON_BOTH);
+        expect(normalizeFilterDisplayOn('')).toEqual(FILTER_DISPLAY_ON_BOTH);
+        expect(normalizeFilterDisplayOn('invalid')).toEqual(FILTER_DISPLAY_ON_BOTH);
+        expect(normalizeFilterDisplayOn('Simple')).toEqual(FILTER_DISPLAY_ON_BOTH); // case sensitive
+        expect(normalizeFilterDisplayOn('ADVANCED')).toEqual(FILTER_DISPLAY_ON_BOTH); // case sensitive
     });
 });
