@@ -23,12 +23,12 @@ describe('useLabelPrinterTemplate', () => {
         jest.clearAllMocks();
     });
 
-    describe('getLabelPrinterTemplate', () => {
+    describe('getLabelPrinterFormattedTemplate', () => {
         it('should return formatted template for existing printer', () => {
             const { result } = setup();
 
             const data = { name: 'GK420t', asset_id: 'A-001', location: 'Floor 1' };
-            const template = result.current.getLabelPrinterTemplate('GK420t', data);
+            const template = result.current.getLabelPrinterFormattedTemplate('GK420t', data);
 
             expect(template).toEqual({
                 name: 'GK420t',
@@ -40,7 +40,7 @@ describe('useLabelPrinterTemplate', () => {
             const { result } = setup();
 
             const data = { name: 'Test', asset_id: 'A-001', location: 'Floor 1' };
-            const template = result.current.getLabelPrinterTemplate('GK420T', data);
+            const template = result.current.getLabelPrinterFormattedTemplate('GK420T', data);
 
             expect(template).toEqual({
                 name: 'GK420T',
@@ -52,7 +52,7 @@ describe('useLabelPrinterTemplate', () => {
             const { result } = setup();
 
             const data = { name: 'Test' };
-            const template = result.current.getLabelPrinterTemplate('non-existent', data);
+            const template = result.current.getLabelPrinterFormattedTemplate('non-existent', data);
 
             expect(template).toBeNull();
         });
@@ -61,7 +61,7 @@ describe('useLabelPrinterTemplate', () => {
             const { result } = setup();
 
             const data = { asset_id: 'A-002', date: '2026-01-22' };
-            const template = result.current.getLabelPrinterTemplate('Zebra-Printer', data);
+            const template = result.current.getLabelPrinterFormattedTemplate('Zebra-Printer', data);
 
             expect(template).toEqual({
                 name: 'Zebra-Printer',
@@ -72,7 +72,7 @@ describe('useLabelPrinterTemplate', () => {
         it('should handle empty data object', () => {
             const { result } = setup();
 
-            const template = result.current.getLabelPrinterTemplate('test-printer', {});
+            const template = result.current.getLabelPrinterFormattedTemplate('test-printer', {});
 
             expect(template).toEqual({
                 name: 'test-printer',
@@ -84,7 +84,7 @@ describe('useLabelPrinterTemplate', () => {
             const { result } = setup();
 
             const data = { value: 'Test Value' };
-            const template = result.current.getLabelPrinterTemplate('TEST-PRINTER', data);
+            const template = result.current.getLabelPrinterFormattedTemplate('TEST-PRINTER', data);
 
             expect(template.name).toBe('TEST-PRINTER');
         });
@@ -96,7 +96,7 @@ describe('useLabelPrinterTemplate', () => {
             const { result } = setup({ templates: customTemplates });
 
             const data = { item: 'Test' };
-            const template = result.current.getLabelPrinterTemplate('Printer-123', data);
+            const template = result.current.getLabelPrinterFormattedTemplate('Printer-123', data);
 
             expect(template).toEqual({
                 name: 'Printer-123',
@@ -112,7 +112,7 @@ describe('useLabelPrinterTemplate', () => {
                 asset_id: 'ASSET-12345',
                 location: 'Building A, Floor 2, Room 201',
             };
-            const template = result.current.getLabelPrinterTemplate('gk420t', data);
+            const template = result.current.getLabelPrinterFormattedTemplate('gk420t', data);
 
             expect(template.formattedTemplate).toContain('Zebra GK420t');
             expect(template.formattedTemplate).toContain('ASSET-12345');
@@ -122,11 +122,11 @@ describe('useLabelPrinterTemplate', () => {
         it('should return function that maintains reference stability', () => {
             const { result, rerender } = setup();
 
-            const initialGetTemplate = result.current.getLabelPrinterTemplate;
+            const initialGetTemplate = result.current.getLabelPrinterFormattedTemplate;
 
             rerender(mockTemplateStore);
 
-            const rerenderGetTemplate = result.current.getLabelPrinterTemplate;
+            const rerenderGetTemplate = result.current.getLabelPrinterFormattedTemplate;
 
             expect(initialGetTemplate).toBe(rerenderGetTemplate);
         });
@@ -137,7 +137,7 @@ describe('useLabelPrinterTemplate', () => {
             };
             const { result } = setup({ templates: customTemplates });
 
-            const template = result.current.getLabelPrinterTemplate('PRINTER_TEST_1', { data: 'value' });
+            const template = result.current.getLabelPrinterFormattedTemplate('PRINTER_TEST_1', { data: 'value' });
 
             expect(template).toEqual({
                 name: 'PRINTER_TEST_1',

@@ -1,47 +1,69 @@
-import { useState, useCallback } from 'react';
-import { normalisePrinterNameKey, normalisePlaceholderKey } from './utils/helpers';
+import { useMemo, useEffect, useState, useCallback } from 'react';
+
+import { useSelector } from 'react-redux';
+
+import { normalisePlaceholderKey } from './utils/helpers';
 
 export const formatTemplateString = (template, data) => {
     let formattedTemplate = template;
     Object.keys(data).forEach(key => {
         const normalKey = normalisePlaceholderKey(key);
-        const regex = new RegExp(`{{${normalKey}}}`, 'g');
+        const regex = new RegExp(`{*${normalKey}*}`, 'g');
         formattedTemplate = formattedTemplate.replace(regex, data[key]);
     });
     return formattedTemplate;
 };
 
-const useLabelPrinterTemplate = templates => {
+const transformTemplateListToStore = templateList => {
+    return templateList.map(template => ({
+        id: template.printer_template_id,
+        name: template.printer_template_name,
+        code: template.printer_template_rendered,
+        printers: template.identifiers.map(identifier => identifier.printer_template_identifier_value),
+    }));
+};
+
+export const useLabelPrinterTemplateStore = actions => {
+    const { printerTemplateList, printerTemplateListLoading, printerTemplateListError } = useSelector(state =>
+        state.get?.('testTagPrinterTemplateReducer'),
+    );
+
+    useEffect(() => {
+        if ((!printerTemplateList?.length || printerTemplateList?.length === 0) && !printerTemplateListLoading) {
+            actions.loadPrinterTemplateList();
+        }
+    }, [printerTemplateList, printerTemplateListLoading, actions]);
+
+    const transformedTemplateStore = useMemo(() => transformTemplateListToStore(printerTemplateList), [
+        printerTemplateList,
+    ]);
+    return { printerTemplateList: transformedTemplateStore, printerTemplateListLoading, printerTemplateListError };
+};
+
+export const useLabelPrinterTemplate = templates => {
     const [templateStore] = useState(templates || {});
 
-    const getLabelPrinterTemplate = useCallback(
-        (printerKey, data) => {
-            const normalisedKey = normalisePrinterNameKey(printerKey);
-            const printerTemplate = templateStore?.[normalisedKey];
+    const getLabelPrinterFormattedTemplate = useCallback(
+        (templateId, data) => {
+            const printerTemplate = templateStore?.find?.(template => template.id === templateId)?.code;
             if (printerTemplate) {
                 const formattedTemplate = formatTemplateString(printerTemplate, data);
-                return { name: printerKey, formattedTemplate: formattedTemplate };
+                return { id: templateId, formattedTemplate: formattedTemplate };
             }
             return null;
         },
         [templateStore],
     );
 
-    const hasLabelPrinterTemplate = useCallback(
-        key => {
-            const normalisedKey = normalisePrinterNameKey(key);
-            return Object.keys(templateStore).some(storeKey => {
-                const regex = new RegExp(storeKey, 'i');
-                return regex.test(normalisedKey);
-            });
+    const getAllLabelTemplatesForPrinter = useCallback(
+        printerName => {
+            return templateStore?.filter(template => template.printers.includes(printerName));
         },
         [templateStore],
     );
 
     return {
-        getLabelPrinterTemplate,
-        hasLabelPrinterTemplate,
+        getLabelPrinterFormattedTemplate,
+        getAllLabelTemplatesForPrinter,
     };
 };
-
-export default useLabelPrinterTemplate;

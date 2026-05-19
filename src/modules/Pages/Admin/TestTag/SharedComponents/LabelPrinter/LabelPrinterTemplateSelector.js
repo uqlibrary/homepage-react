@@ -8,9 +8,9 @@ import Popper from '@mui/material/Popper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-const rootId = 'label_printer_selector';
+const rootId = 'label_printer_template_selector';
 
-const LabelPrinterSelector = ({ id, list, value, onChange, error, disabled, fullWidth = true, classNames, locale }) => {
+const LabelPrinterTemplateSelector = ({ id, list, value, onChange, error, disabled, fullWidth = true, classNames }) => {
     const componentId = `${rootId}-${id}`;
     const customPopper = props => (
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
@@ -27,13 +27,10 @@ const LabelPrinterSelector = ({ id, list, value, onChange, error, disabled, full
                 }}
                 className={classNames?.autocomplete}
                 options={list ?? /* istanbul ignore next */ []}
-                value={value ? list?.find(option => option.name === value) : null}
+                value={list?.find(option => option.id === value?.templateId)}
                 onChange={onChange}
-                getOptionLabel={option =>
-                    option.noconfig ? `${option.name} (${locale?.unknownPrinter})` : option.name
-                }
+                getOptionLabel={option => option.name}
                 fullWidth={fullWidth}
-                isOptionEqualToValue={(option, value) => option.name === value}
                 autoHighlight
                 renderInput={params => {
                     return (
@@ -60,7 +57,7 @@ const LabelPrinterSelector = ({ id, list, value, onChange, error, disabled, full
                                     id: `${componentId}-input`,
                                     'data-testid': `${componentId}-input`,
                                 }}
-                                label="Printer"
+                                label="Template"
                                 error={error}
                             />
                         </Box>
@@ -73,16 +70,15 @@ const LabelPrinterSelector = ({ id, list, value, onChange, error, disabled, full
         </FormControl>
     );
 };
-LabelPrinterSelector.propTypes = {
+LabelPrinterTemplateSelector.propTypes = {
     id: PropTypes.string.isRequired,
     list: PropTypes.array,
     onChange: PropTypes.func,
     disabled: PropTypes.bool,
     error: PropTypes.bool,
     fullWidth: PropTypes.bool,
-    value: PropTypes.string,
+    value: PropTypes.object,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
-    locale: PropTypes.object,
 };
 
-export default LabelPrinterSelector;
+export default LabelPrinterTemplateSelector;
