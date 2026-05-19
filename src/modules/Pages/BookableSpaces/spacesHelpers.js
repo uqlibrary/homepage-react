@@ -10,6 +10,19 @@ export const FILTER_SPACE_CAPACITY_ACTION_NAME = 'capacity';
 export const FACILITY_TYPE_CHECKBOX = 'checkbox';
 export const FACILITY_TYPE_SLIDER = 'slider';
 
+export const FILTER_DISPLAY_ON_SIMPLE = 'simple';
+export const FILTER_DISPLAY_ON_ADVANCED = 'advanced';
+export const FILTER_DISPLAY_ON_BOTH = 'both';
+
+export const normalizeFilterDisplayOn = value => {
+    const validDisplayOnValues = [
+        FILTER_DISPLAY_ON_SIMPLE,
+        FILTER_DISPLAY_ON_ADVANCED,
+        FILTER_DISPLAY_ON_BOTH,
+    ];
+    return validDisplayOnValues.includes(value) ? value : FILTER_DISPLAY_ON_BOTH;
+};
+
 export function getOrdinalSuffixFor(number) {
     const mod10 = number % 10;
     const mod100 = number % 100;
@@ -73,6 +86,7 @@ export const getFlatFacilityTypeList = facilityTypes => {
                 facility_type_name: child?.facility_type_name,
                 facility_special_action: child?.facility_special_action,
                 hide_in_public_filter_list: child?.hide_in_public_filter_list,
+                filter_display_on: normalizeFilterDisplayOn(child?.filter_display_on),
             }));
         }) || []
     );
