@@ -19,9 +19,9 @@ export const extractCorePrinterName = printerName => {
     return parts[0];
 };
 
-export const printerToCookieString = printer => {
-    const printerNameShort = extractCorePrinterName(printer.name);
-    return JSON.stringify({ ...printer, shortName: printerNameShort });
+export const printerToCookieString = preference => {
+    const printerNameShort = extractCorePrinterName(preference.name);
+    return JSON.stringify({ ...preference, shortName: printerNameShort });
 };
 
 export const parsePrinterFromCookieString = cookieValue => {
@@ -37,8 +37,8 @@ export const parsePrinterFromCookieString = cookieValue => {
 export const useLabelPrinterPreference = cookieName => {
     const [cookies, setCookie] = useCookies([cookieName]);
     const setPrinterPreference = useCallback(
-        printer => {
-            const encodedPrinter = printerToCookieString(printer);
+        preference => {
+            const encodedPrinter = printerToCookieString(preference);
             setCookie(cookieName, encodedPrinter, { path: '/' });
         },
         [cookieName, setCookie],

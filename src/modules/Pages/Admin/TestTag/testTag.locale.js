@@ -431,7 +431,7 @@ export default {
             },
             labelPrinting: {
                 unknownPrinter: 'unconfigured',
-                selectPrinter: 'Label printer selection',
+                selectPrinter: 'Label printing',
                 printButton: 'Print tag',
             },
         },

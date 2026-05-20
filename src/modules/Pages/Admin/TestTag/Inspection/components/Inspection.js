@@ -187,9 +187,7 @@ const Inspection = ({
         shouldOverridePrinterDevEnv: true,
     });
     const [printerPreference, setPrinterPreference] = useLabelPrinterPreference(COOKIE_PRINTER_PREFERENCE);
-    const { getLabelPrinterFormattedTemplate, getAllLabelTemplatesForPrinter } = useLabelPrinterTemplate(
-        printerTemplateList,
-    );
+    const { getLabelPrinterFormattedTemplate } = useLabelPrinterTemplate(printerTemplateList);
     console.log(printerTemplateList, printerPreference);
     const inspectionLocale = locale.pages.inspect;
 
@@ -344,6 +342,7 @@ const Inspection = ({
                                 testDate: successData.action_date,
                                 dueDate: successData.asset_next_test_due_date,
                             });
+                            console.log(template, printerPreference);
                             if (!template?.formattedTemplate) {
                                 console.error(
                                     `Selected template ${printerPreference.templateId} was not available for printer ${printerPreference.name}`,
@@ -410,7 +409,7 @@ const Inspection = ({
                     printerPreference={printerPreference}
                     onPrinterTemplateSelectionChange={setPrinterPreference}
                     availablePrinters={availablePrinters}
-                    availableTemplates={getAllLabelTemplatesForPrinter(printerPreference?.shortName)}
+                    templateStore={printerTemplateList}
                     noMinContentWidth={isMobileView}
                 />
                 <EventPanel

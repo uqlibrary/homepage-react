@@ -18,6 +18,7 @@ import inspectLocale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 import { LabelPrinterSelector, LabelPrinterTemplateSelector } from '../../SharedComponents/LabelPrinter';
+import { useLabelPrinterTemplate } from '../../SharedComponents/LabelPrinter/hooks/useLabelPrinterTemplate';
 
 const MIN_CONTENT_WIDTH = 400;
 
@@ -48,7 +49,7 @@ export const InspectionSuccessPrintDialog = ({
     onPrinterTemplateSelectionChange = null,
     printerPreference = null,
     availablePrinters = [],
-    availableTemplates = [],
+    templateStore = [],
 }) => {
     const inspectionLocale = inspectLocale.pages.inspect;
     const [selectedPrinter, setSelectedPrinter] = useState(printerPreference);
@@ -56,9 +57,11 @@ export const InspectionSuccessPrintDialog = ({
         selectedPrinter,
         availablePrinters,
     ]);
-    // here - templates arent populating when printer selected
-    // due to us not passing the selcted printed back up the chain now.
-    // probs should do that and see what happens
+    const { getAllLabelTemplatesForPrinter } = useLabelPrinterTemplate(templateStore);
+    const availableTemplates = useMemo(() => getAllLabelTemplatesForPrinter(selectedPrinter?.name), [
+        getAllLabelTemplatesForPrinter,
+        selectedPrinter,
+    ]);
     console.log(selectedPrinter, availablePrinters, printerError, availableTemplates);
     const [expanded, setExpanded] = useState(false);
 
@@ -79,7 +82,14 @@ export const InspectionSuccessPrintDialog = ({
         setSelectedPrinter(newValue);
     };
     const _onPrinterTemplateSelectionChange = (event, newValue) => {
-        onPrinterTemplateSelectionChange?.({ ...selectedPrinter, templateId: newValue });
+        console.log(newValue);
+        const newPreference = {
+            name: selectedPrinter?.name,
+            shortName: selectedPrinter?.shortName,
+            templateId: newValue.id,
+        };
+        setSelectedPrinter(newPreference);
+        onPrinterTemplateSelectionChange?.(newPreference);
     };
 
     return (
@@ -121,7 +131,7 @@ export const InspectionSuccessPrintDialog = ({
                     </Grid>
                 </Grid>
             </DialogActions>
-
+            {console.log(availableTemplates)}
             <Accordion expanded={printerError || expanded} onChange={handleExpand}>
                 <AccordionSummary
                     expandIcon={<ArrowDownwardIcon />}
@@ -144,9 +154,9 @@ export const InspectionSuccessPrintDialog = ({
                     <LabelPrinterTemplateSelector
                         id={inspectionSuccessPrintDialogId}
                         list={availableTemplates}
-                        value={selectedPrinter}
+                        value={selectedPrinter?.templateId}
                         onChange={_onPrinterTemplateSelectionChange}
-                        disabled={printerError || !!!selectedPrinter?.templateId}
+                        disabled={printerError}
                     />
                 </AccordionDetails>
             </Accordion>
@@ -166,7 +176,7 @@ InspectionSuccessPrintDialog.propTypes = {
     onPrinterTemplateSelectionChange: PropTypes.func,
     printerPreference: PropTypes.object,
     availablePrinters: PropTypes.array,
-    availableTemplates: PropTypes.array,
+    templateStore: PropTypes.array,
 };
 
 export default React.memo(InspectionSuccessPrintDialog);

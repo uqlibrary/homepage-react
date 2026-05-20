@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState, useCallback } from 'react';
+import { useMemo, useEffect, useCallback } from 'react';
 
 import { useSelector } from 'react-redux';
 
@@ -8,7 +8,7 @@ export const formatTemplateString = (template, data) => {
     let formattedTemplate = template;
     Object.keys(data).forEach(key => {
         const normalKey = normalisePlaceholderKey(key);
-        const regex = new RegExp(`{*${normalKey}*}`, 'g');
+        const regex = new RegExp(`\\{\\*${normalKey}\\*\\}`, 'g');
         formattedTemplate = formattedTemplate.replace(regex, data[key]);
     });
     return formattedTemplate;
@@ -40,12 +40,11 @@ export const useLabelPrinterTemplateStore = actions => {
     return { printerTemplateList: transformedTemplateStore, printerTemplateListLoading, printerTemplateListError };
 };
 
-export const useLabelPrinterTemplate = templates => {
-    const [templateStore] = useState(templates || {});
-
+export const useLabelPrinterTemplate = templateStore => {
     const getLabelPrinterFormattedTemplate = useCallback(
         (templateId, data) => {
             const printerTemplate = templateStore?.find?.(template => template.id === templateId)?.code;
+            console.log(printerTemplate, templateId, templateStore, data);
             if (printerTemplate) {
                 const formattedTemplate = formatTemplateString(printerTemplate, data);
                 return { id: templateId, formattedTemplate: formattedTemplate };

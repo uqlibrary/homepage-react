@@ -27,7 +27,7 @@ const LabelPrinterTemplateSelector = ({ id, list, value, onChange, error, disabl
                 }}
                 className={classNames?.autocomplete}
                 options={list ?? /* istanbul ignore next */ []}
-                value={list?.find(option => option.id === value?.templateId)}
+                value={list?.find(option => option.id === value)}
                 onChange={onChange}
                 getOptionLabel={option => option.name}
                 fullWidth={fullWidth}
