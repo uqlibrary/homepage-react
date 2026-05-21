@@ -33,24 +33,12 @@ export const getAvailablePrinters = async printerInstance => {
  */
 const useLabelPrinter = ({
     printerCode = 'zebra',
-    // templateStore = {},
     shouldRemoveNoNamePrinters = true,
     shouldDisableUnknownPrinters = true,
     shouldOverridePrinterDevEnv = false,
 }) => {
     const [availablePrinters, setAvailablePrinters] = useState([]);
-    // const { hasLabelPrinterTemplate } = useLabelPrinterTemplate(templateStore);
 
-    // const disabledUnknownPrinters = useCallback(
-    //     (printersList, shouldDisableUnknownPrinters) => {
-    //         if (!shouldDisableUnknownPrinters) return printersList;
-    //         return printersList.map(printer => ({
-    //             ...printer,
-    //             noconfig: !hasLabelPrinterTemplate(printer.name),
-    //         }));
-    //     },
-    //     [hasLabelPrinterTemplate],
-    // );
     const printerInstance = useMemo(() => {
         const isLocalEnvironment = isLocal();
         const isTestEnvironment = isTest();
@@ -65,13 +53,12 @@ const useLabelPrinter = ({
                 if (!Array.isArray(printers)) return Promise.reject('Printer list is not an array');
                 return removeNoNamePrinters(printers, shouldRemoveNoNamePrinters);
             })
-            // .then(printers => disabledUnknownPrinters(printers, shouldDisableUnknownPrinters))
             .then(setAvailablePrinters)
             .catch(error => {
                 console.error('Error fetching available printers:', error);
                 setAvailablePrinters([]);
             });
-    }, [/* disabledUnknownPrinters,*/ printerInstance, shouldDisableUnknownPrinters, shouldRemoveNoNamePrinters]);
+    }, [printerInstance, shouldDisableUnknownPrinters, shouldRemoveNoNamePrinters]);
 
     return {
         printerCode,

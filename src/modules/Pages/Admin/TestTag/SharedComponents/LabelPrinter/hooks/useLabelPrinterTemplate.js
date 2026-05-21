@@ -44,7 +44,7 @@ export const useLabelPrinterTemplate = templateStore => {
     const getLabelPrinterFormattedTemplate = useCallback(
         (templateId, data) => {
             const printerTemplate = templateStore?.find?.(template => template.id === templateId)?.code;
-            console.log(printerTemplate, templateId, templateStore, data);
+
             if (printerTemplate) {
                 const formattedTemplate = formatTemplateString(printerTemplate, data);
                 return { id: templateId, formattedTemplate: formattedTemplate };
