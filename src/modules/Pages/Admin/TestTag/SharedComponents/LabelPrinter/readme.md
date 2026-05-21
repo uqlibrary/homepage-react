@@ -76,10 +76,14 @@ For the MVP first version of this component, it was not expected that there woul
 
 Printers, in the coding sense, are defined as functions. Each printer must return an expected set of properties and functions in order to be useable to the calling code base. See the definition of printers/ZebraClass for more information. They are enumerated in to a collection of known printers called a "printer registry", which also defines which method exported from the printer class to instantiate. 
 
-For Zebra printers, a 3rd party wrapper package [zebra-browser-print-wrapper-https](https://github.com/PavelKaraivanov/zebra-browser-print-wrapper-https) has been used to simplify communication to an underlying series of printer protocols.
+~~For Zebra printers, a 3rd party wrapper package [zebra-browser-print-wrapper-https](https://github.com/PavelKaraivanov/zebra-browser-print-wrapper-https) has been used to simplify communication to an underlying series of printer protocols.~~
 
-> Note: the use of `zebra-browser-print-wrapper-https` is to enable communication between a website running under https, as in this scenario all communications to the Browser Print app will also be made over https.
-If your site is not running under https, you may need to use an alternative package [zebra-browser-print-wrapper-https](https://github.com/lhilario/zebra-browser-print-wrapper), which will require some changes to this component.
+~~Note: the use of `zebra-browser-print-wrapper-https` is to enable communication between a website running under https, as in this scenario all communications to the Browser Print app will also be made over https.
+If your site is not running under https, you may need to use an alternative package [zebra-browser-print-wrapper](https://github.com/lhilario/zebra-browser-print-wrapper), which will require some changes to this component.~~ 
+
+> **Update May 2026**
+>
+> Due to issues upgrading Node to v24 caused by https://github.com/PavelKaraivanov/zebra-browser-print-wrapper-https (specifically an incompatible dependency in the package.json), and due to the package having not been updated in over 5 years, we have since moved the code of the core repo zebra-browser-print-wrapper (also not updated in 5 years) directly in to our repo, and removed the npm dependencies. The code can be found in the `./printers/webInterface/ZebraBrowserPrintWrapper` folder.
 
  While this wrapper returns functions after instantiation, the Printer Registry has been designed to also allow hook-based 3rd party libraries to be used. At the time of writing, this custom hook has been declared as "useCreatePrinter" and defined within each printer class, but the printer functionality could also be used directly without this hook if desired.
 
