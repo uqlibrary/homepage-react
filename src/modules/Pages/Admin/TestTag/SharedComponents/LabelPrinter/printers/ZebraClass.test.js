@@ -8,7 +8,7 @@ const mockCheckPrinterStatus = jest.fn();
 const mockSetPrinter = jest.fn();
 const mockPrint = jest.fn();
 
-jest.mock('zebra-browser-print-wrapper-https', () => {
+jest.mock('./webInterface/ZebraBrowserPrintWrapper', () => {
     return jest.fn().mockImplementation(() => ({
         getAvailablePrinters: mockGetAvailablePrinters,
         getDefaultPrinter: mockGetDefaultPrinter,
