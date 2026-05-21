@@ -8,6 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Grid from '@mui/material/Grid';
 import Hidden from '@mui/material/Hidden';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -29,6 +30,11 @@ export const hasPrinterError = (printerPreference, availablePrinters = []) => {
         availablePrinters?.every(printer => !!!printer?.name) ||
         availablePrinters?.findIndex(printer => printer?.name === printerPreference?.name) === -1
     );
+};
+
+export const hasTemplateError = printerPreference => {
+    const pref = !!!printerPreference ? {} : printerPreference;
+    return !Object.hasOwn(pref, 'templateId');
 };
 
 export const InspectionSuccessPrintDialog = ({
@@ -57,12 +63,14 @@ export const InspectionSuccessPrintDialog = ({
         selectedPrinter,
         availablePrinters,
     ]);
+    const templateError = useMemo(() => hasTemplateError(selectedPrinter), [selectedPrinter]);
+
     const { getAllLabelTemplatesForPrinter } = useLabelPrinterTemplate(templateStore);
     const availableTemplates = useMemo(() => getAllLabelTemplatesForPrinter(selectedPrinter?.name), [
         getAllLabelTemplatesForPrinter,
         selectedPrinter,
     ]);
-    console.log(selectedPrinter, availablePrinters, printerError, availableTemplates);
+
     const [expanded, setExpanded] = useState(false);
 
     const handleExpand = (event, isExpanded) => {
@@ -78,15 +86,16 @@ export const InspectionSuccessPrintDialog = ({
     };
 
     const onPrinterSelectionChange = (event, newValue) => {
-        console.log(newValue);
-        setSelectedPrinter(newValue);
+        setSelectedPrinter({
+            name: newValue?.name,
+        });
     };
     const _onPrinterTemplateSelectionChange = (event, newValue) => {
-        console.log(newValue);
         const newPreference = {
             name: selectedPrinter?.name,
             shortName: selectedPrinter?.shortName,
             templateId: newValue.id,
+            templateName: newValue.name,
         };
         setSelectedPrinter(newPreference);
         onPrinterTemplateSelectionChange?.(newPreference);
@@ -124,40 +133,47 @@ export const InspectionSuccessPrintDialog = ({
                             fullWidth
                             id="confirm-alternate-action"
                             data-testid={`confirm-alternate-${inspectionSuccessPrintDialogId}`}
-                            disabled={printerError || (disableButtonsWhenBusy && isBusy)}
+                            disabled={printerError || templateError || (disableButtonsWhenBusy && isBusy)}
                         >
                             {inspectionLocale.labelPrinting.printButton}
                         </StyledSecondaryButton>
                     </Grid>
                 </Grid>
             </DialogActions>
-            {console.log(availableTemplates)}
-            <Accordion expanded={printerError || expanded} onChange={handleExpand}>
+            <Accordion expanded={printerError || templateError || expanded} onChange={handleExpand}>
                 <AccordionSummary
                     expandIcon={<ArrowDownwardIcon />}
                     aria-controls="printer-selector-content"
                     id="printerSelectorContainer"
                 >
-                    <Typography sx={{ color: theme => (printerError ? theme.palette.error.main : 'inherit') }}>
-                        {inspectionLocale.labelPrinting.selectPrinter}
+                    <Typography
+                        sx={{ color: theme => (printerError || templateError ? theme.palette.error.main : 'inherit') }}
+                    >
+                        {inspectionLocale.labelPrinting.selectPrinterLabel({
+                            printer: selectedPrinter?.name,
+                            template: selectedPrinter?.templateName,
+                        })}
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <LabelPrinterSelector
                         id={inspectionSuccessPrintDialogId}
                         list={availablePrinters}
-                        value={selectedPrinter?.name}
+                        value={selectedPrinter?.name ?? null}
                         onChange={onPrinterSelectionChange}
                         locale={inspectionLocale.labelPrinting}
                         error={printerError}
                     />
-                    <LabelPrinterTemplateSelector
-                        id={inspectionSuccessPrintDialogId}
-                        list={availableTemplates}
-                        value={selectedPrinter?.templateId}
-                        onChange={_onPrinterTemplateSelectionChange}
-                        disabled={printerError}
-                    />
+                    <Box sx={{ mt: 2 }}>
+                        <LabelPrinterTemplateSelector
+                            id={inspectionSuccessPrintDialogId}
+                            list={availableTemplates}
+                            value={selectedPrinter?.templateId ?? null}
+                            onChange={_onPrinterTemplateSelectionChange}
+                            disabled={printerError}
+                            error={templateError}
+                        />
+                    </Box>
                 </AccordionDetails>
             </Accordion>
         </Dialog>

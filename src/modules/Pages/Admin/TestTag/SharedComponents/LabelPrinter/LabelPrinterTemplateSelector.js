@@ -77,7 +77,7 @@ LabelPrinterTemplateSelector.propTypes = {
     disabled: PropTypes.bool,
     error: PropTypes.bool,
     fullWidth: PropTypes.bool,
-    value: PropTypes.object,
+    value: PropTypes.number,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
 };
 

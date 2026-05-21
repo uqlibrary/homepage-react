@@ -18,8 +18,6 @@ export const getAvailablePrinters = async printerInstance => {
  * A Hook to manage label printer selection and preferences.
  *
  * @param {string} printerCode - The code of the printer to use (e.g., 'zebra', 'emulator'). Default 'zebra'.
- * @param {object} templateStore - An object containing label templates for different printers.
- * Default is an empty object.
  * @param {boolean} shouldRemoveNoNamePrinters - Flag to remove printers without a name. Default true.
  * @param {boolean} shouldDisableUnknownPrinters - Flag to disable printers that are not
  * configured in the registry. Default true.

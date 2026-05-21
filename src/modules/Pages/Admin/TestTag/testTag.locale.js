@@ -431,7 +431,8 @@ export default {
             },
             labelPrinting: {
                 unknownPrinter: 'unconfigured',
-                selectPrinter: 'Label printing',
+                selectPrinterLabel: ({ printer, template }) =>
+                    `Label printing ${!!printer ? `- ${printer}` : ''}${!!template ? ` (${template})` : ''}`,
                 printButton: 'Print tag',
             },
         },
