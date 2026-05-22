@@ -126,3 +126,42 @@ export const validateTemplateUserVariable = row => {
 
     return nameInvalid || labelInvalid || valueInvalid;
 };
+
+export const hasPrinterError = (printerPreference, availablePrinters = []) => {
+    return (
+        !!!printerPreference ||
+        availablePrinters?.length === 0 ||
+        availablePrinters?.every(printer => !!!printer?.name) ||
+        availablePrinters?.findIndex(printer => printer?.name === printerPreference?.name) === -1
+    );
+};
+
+export const formatTemplate = (template, templateData, inspectionData) => {
+    let result = template;
+
+    if (Array.isArray(templateData)) {
+        for (const item of templateData) {
+            const placeholder = item.printer_template_var_name;
+            const value = item.printer_template_var_value;
+            if (placeholder) {
+                result = result.replaceAll(placeholder, value);
+            }
+        }
+    }
+
+    if (inspectionData && typeof inspectionData === 'object') {
+        for (const [key, value] of Object.entries(inspectionData)) {
+            result = result.replaceAll(`{*${key.toLocaleUpperCase()}*}`, value);
+        }
+    }
+
+    return result;
+};
+
+export const getLabelDates = date => {
+    const testDate = date.toISOString().split('T')[0]; // YYYY-MM-DD
+    const dueDate = `${date.getFullYear()}${date.toLocaleString('en-AU', { month: 'short' })}${String(
+        date.getDate(),
+    ).padStart(2, '0')}`; // YYYYMonDD
+    return { testDate, dueDate };
+};

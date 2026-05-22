@@ -1,4 +1,4 @@
-import React, { useReducer, useMemo, useRef, useCallback } from 'react';
+import React, { useEffect, useReducer, useMemo, useRef, useCallback } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -20,7 +20,16 @@ import { useConfirmationState } from 'hooks';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
-import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionState, actionReducer } from './utils';
+import {
+    transformRow,
+    transformUpdateRequest,
+    transformAddRequest,
+    emptyActionState,
+    actionReducer,
+    hasPrinterError,
+    getLabelDates,
+    formatTemplate,
+} from './utils';
 import { useConfirmationAlert, useAccountUser } from '../../../helpers/hooks';
 import config from './configure';
 import { breadcrumbs } from 'config/routes';
@@ -33,37 +42,6 @@ import { getDefaultDeptPrinter } from '../../../helpers/labelPrinting';
 import { COOKIE_PRINTER_PREFERENCE } from '../../../config/labelPrinting';
 
 const componentId = 'printer-template-management';
-
-export const hasPrinterError = (printerPreference, availablePrinters = []) => {
-    return (
-        !!!printerPreference ||
-        availablePrinters?.length === 0 ||
-        availablePrinters?.every(printer => !!!printer?.name) ||
-        availablePrinters?.findIndex(printer => printer?.name === printerPreference?.name) === -1
-    );
-};
-
-export const hydrateTemplate = (template, templateData, inspectionData) => {
-    let result = template;
-
-    if (Array.isArray(templateData)) {
-        for (const item of templateData) {
-            const placeholder = item.printer_template_var_name;
-            const value = item.printer_template_var_value;
-            if (placeholder) {
-                result = result.replaceAll(placeholder, value);
-            }
-        }
-    }
-
-    if (inspectionData && typeof inspectionData === 'object') {
-        for (const [key, value] of Object.entries(inspectionData)) {
-            result = result.replaceAll(`{*${key.toLocaleUpperCase()}*}`, value);
-        }
-    }
-
-    return result;
-};
 
 const PrinterTemplates = () => {
     const theme = useTheme();
@@ -213,7 +191,6 @@ const PrinterTemplates = () => {
     };
 
     const { row } = useDataTableRow(printerTemplateList, transformRow);
-    // const shouldDisableEdit = row => userUID === row?.user_uid;
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -222,13 +199,13 @@ const PrinterTemplates = () => {
         actionTooltips: pageLocale.form.actionTooltips,
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         dispatch(actions.loadPrinterTemplateList()).catch(error => {
             console.error(error);
             openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.loadFail), 'error');
@@ -245,11 +222,8 @@ const PrinterTemplates = () => {
     };
     const handlePrint = () => {
         const now = new Date();
-        const testDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
-        const dueDate = `${now.getFullYear()}${now.toLocaleString('en-AU', { month: 'short' })}${String(
-            now.getDate(),
-        ).padStart(2, '0')}`; // YYYYMonDD
-        const formattedTemplate = hydrateTemplate(
+        const { testDate, dueDate } = getLabelDates(now);
+        const formattedTemplate = formatTemplate(
             testPrintData.current.printer_template_code,
             testPrintData.current.vars,
             {
@@ -291,6 +265,7 @@ const PrinterTemplates = () => {
                 testPrintData.current = '';
             });
     };
+
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -305,7 +280,7 @@ const PrinterTemplates = () => {
                     onClose={hideConfirmation}
                     isOpen={isOpen}
                     locale={{
-                        confirmationTitle: 'Select printer',
+                        ...pageLocale?.dialogSelectPrinter,
                         confirmationMessage: (
                             <LabelPrinterSelector
                                 id={componentId}
@@ -313,13 +288,11 @@ const PrinterTemplates = () => {
                                 value={selectedPrinter?.name ?? null}
                                 onChange={onPrinterSelectionChange}
                                 locale={{
-                                    printerLabel: 'Printer',
+                                    printerLabel: pageLocale.printerLabel,
                                 }}
                                 error={printerError}
                             />
                         ),
-                        confirmButtonLabel: 'Print',
-                        cancelButtonLabel: 'Cancel',
                     }}
                 />
                 <UpdateDialog

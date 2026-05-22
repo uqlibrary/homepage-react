@@ -1254,6 +1254,11 @@ export default {
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: 'Edit printer template',
                 },
+                dialogSelectPrinter: {
+                    confirmationTitle: 'Select printer',
+                    confirmButtonLabel: 'Print',
+                    cancelButtonLabel: 'Cancel',
+                },
                 snackbar: {
                     loadFail: 'unable to load printer template list',
                     addSuccess: 'Printer template added successfully',
@@ -1297,7 +1302,7 @@ export default {
                         label: 'Delete',
                     },
                 },
-
+                printerLabel: 'Printer',
                 placeholderEditor: {
                     form: {
                         columns: {
