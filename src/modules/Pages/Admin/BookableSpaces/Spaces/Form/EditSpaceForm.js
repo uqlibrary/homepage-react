@@ -447,8 +447,14 @@ export const EditSpaceForm = ({
 
     function validatePanelLocation(currentValues, errorMessages = []) {
         console.log('validatePanelLocation currentValues=', currentValues);
+        if (!currentValues?.campus_id) {
+            errorMessages?.push({ field: 'campus_id', message: 'A campus is required.' });
+        }
+        if (!currentValues?.library_id) {
+            errorMessages?.push({ field: 'library_id', message: 'A library is required.' });
+        }
         if (!currentValues?.space_floor_id && !currentValues?.floor_id) {
-            errorMessages?.push({ field: 'space_floor_id', message: 'A location is required.' });
+            errorMessages?.push({ field: 'space_floor_id', message: 'A floor is required.' });
         }
         if (!currentValues?.space_latitude || !currentValues?.space_longitude) {
             errorMessages?.push({ field: 'space_latitude', message: 'Please locate the Space on the map' });
@@ -885,6 +891,9 @@ export const EditSpaceForm = ({
         const validationResult = validateForm({
             ...valuesToSend,
             isBookableCheckbox: formValues.isBookableCheckbox,
+            campus_id: formValues?.campus_id,
+            library_id: formValues?.library_id,
+            floor_id: formValues?.floor_id,
         });
         if (validationResult !== true) {
             setErrorMessages(validationResult);
@@ -1529,7 +1538,11 @@ export const EditSpaceForm = ({
 
     const undeleteConfirmationDialog = () => {
         return (
-            <Dialog open={isUndeleteConfirmationOpen} onClose={hideUndeleteConfirmation} data-testid="spaces-undelete-dialog">
+            <Dialog
+                open={isUndeleteConfirmationOpen}
+                onClose={hideUndeleteConfirmation}
+                data-testid="spaces-undelete-dialog"
+            >
                 <DialogContent>
                     <DialogContentText data-testid="spaces-undelete-dialog-message">
                         Do you wish to restore this deleted space?
@@ -1768,7 +1781,8 @@ export const EditSpaceForm = ({
                                                     data-testid="space-deleted-notice-text"
                                                     sx={{ mb: 1 }}
                                                 >
-                                                    This Space has been deleted and is not visible to users. You can restore it using the button below.
+                                                    This Space has been deleted and is not visible to users. You can
+                                                    restore it using the button below.
                                                 </Typography>
                                                 <StyledPrimaryButton
                                                     onClick={handleUndeleteClick}
