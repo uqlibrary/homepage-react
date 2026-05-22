@@ -172,6 +172,7 @@ export const InspectionSuccessPrintDialog = ({
                             onChange={_onPrinterTemplateSelectionChange}
                             disabled={printerError}
                             error={templateError}
+                            locale={inspectionLocale.labelPrinting}
                         />
                     </Box>
                 </AccordionDetails>

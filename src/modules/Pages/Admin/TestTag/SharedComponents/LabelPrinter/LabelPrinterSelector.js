@@ -29,9 +29,7 @@ const LabelPrinterSelector = ({ id, list, value, onChange, error, disabled, full
                 options={list ?? /* istanbul ignore next */ []}
                 value={value ? list?.find(option => option.name === value) : null}
                 onChange={onChange}
-                getOptionLabel={option =>
-                    option.noconfig ? `${option.name} (${locale?.unknownPrinter})` : option.name
-                }
+                getOptionLabel={option => option.name}
                 fullWidth={fullWidth}
                 isOptionEqualToValue={(option, value) => option.name === value}
                 autoHighlight
@@ -60,7 +58,7 @@ const LabelPrinterSelector = ({ id, list, value, onChange, error, disabled, full
                                     id: `${componentId}-input`,
                                     'data-testid': `${componentId}-input`,
                                 }}
-                                label="Printer"
+                                label={locale.printerLabel}
                                 error={error}
                             />
                         </Box>

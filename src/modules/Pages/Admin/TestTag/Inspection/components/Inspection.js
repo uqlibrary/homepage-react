@@ -20,7 +20,7 @@ import AssetPanel from './AssetPanel';
 
 import { statusEnum } from '../utils/helpers';
 import { scrollToTopOfPage } from 'helpers/general';
-import { useValidation, useLabelPrinterPreference } from '../utils/hooks';
+import { useValidation } from '../utils/hooks';
 import { useLocation, useForm, useConfirmationAlert, useAccountUser } from '../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { transformer } from '../utils/transformers';
@@ -35,10 +35,10 @@ import {
     useLabelPrinter,
     useLabelPrinterTemplate,
     useLabelPrinterTemplateStore,
+    useLabelPrinterPreference,
 } from '../../SharedComponents/LabelPrinter';
-// import * as _labelPrintertemplates from './labelPrinterTemplates';
 import { getDeptLabelPrintingEnabled, getDefaultDeptPrinter } from '../../helpers/labelPrinting';
-import { COOKIE_PRINTER_PREFERENCE } from './config';
+import { COOKIE_PRINTER_PREFERENCE } from '../../config/labelPrinting';
 
 const componentId = 'inspection';
 
@@ -183,7 +183,6 @@ const Inspection = ({
 
     const { printer, availablePrinters } = useLabelPrinter({
         printerCode: deptPrinterDefault,
-        // templateStore: labelPrintertemplates,
         shouldOverridePrinterDevEnv: true,
     });
     const [printerPreference, setPrinterPreference] = useLabelPrinterPreference(COOKIE_PRINTER_PREFERENCE);

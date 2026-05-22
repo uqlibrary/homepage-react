@@ -430,7 +430,8 @@ export default {
                 },
             },
             labelPrinting: {
-                unknownPrinter: 'unconfigured',
+                printerLabel: 'Printer',
+                templateLabel: 'Template',
                 selectPrinterLabel: ({ printer, template }) =>
                     `Label printing ${!!printer ? `- ${printer}` : ''}${!!template ? ` (${template})` : ''}`,
                 printButton: 'Print tag',
@@ -1243,11 +1244,13 @@ export default {
                 },
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
+                    accessoryButtonLabel: 'Print test label',
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: 'Add new printer template',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
+                    accessoryButtonLabel: 'Print test label',
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: 'Edit printer template',
                 },

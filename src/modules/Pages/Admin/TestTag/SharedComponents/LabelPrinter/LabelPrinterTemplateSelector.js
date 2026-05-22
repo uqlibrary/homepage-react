@@ -10,7 +10,17 @@ import Typography from '@mui/material/Typography';
 
 const rootId = 'label_printer_template_selector';
 
-const LabelPrinterTemplateSelector = ({ id, list, value, onChange, error, disabled, fullWidth = true, classNames }) => {
+const LabelPrinterTemplateSelector = ({
+    id,
+    list,
+    value,
+    onChange,
+    error,
+    disabled,
+    fullWidth = true,
+    classNames,
+    locale,
+}) => {
     const componentId = `${rootId}-${id}`;
     const customPopper = props => (
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
@@ -57,7 +67,7 @@ const LabelPrinterTemplateSelector = ({ id, list, value, onChange, error, disabl
                                     id: `${componentId}-input`,
                                     'data-testid': `${componentId}-input`,
                                 }}
-                                label="Template"
+                                label={locale.templateLabel}
                                 error={error}
                             />
                         </Box>
@@ -79,6 +89,7 @@ LabelPrinterTemplateSelector.propTypes = {
     fullWidth: PropTypes.bool,
     value: PropTypes.number,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
+    locale: PropTypes.object,
 };
 
 export default LabelPrinterTemplateSelector;

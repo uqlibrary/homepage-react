@@ -1,4 +1,4 @@
-import React, { useReducer, useMemo } from 'react';
+import React, { useReducer, useMemo, useRef, useCallback } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -15,20 +15,74 @@ import { AddButton, WithExportMenu } from '../../../SharedComponents/DataTable/T
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+import { ConfirmationBox } from '../../../../../../SharedComponents/Toolbox/ConfirmDialogBox';
+import { useConfirmationState } from 'hooks';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionState, actionReducer } from './utils';
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useConfirmationAlert, useAccountUser } from '../../../helpers/hooks';
 import config from './configure';
 import { breadcrumbs } from 'config/routes';
+import {
+    useLabelPrinter,
+    useLabelPrinterPreference,
+    LabelPrinterSelector,
+} from '../../../SharedComponents/LabelPrinter';
+import { getDefaultDeptPrinter } from '../../../helpers/labelPrinting';
+import { COOKIE_PRINTER_PREFERENCE } from '../../../config/labelPrinting';
 
 const componentId = 'printer-template-management';
 
+export const hasPrinterError = (printerPreference, availablePrinters = []) => {
+    return (
+        !!!printerPreference ||
+        availablePrinters?.length === 0 ||
+        availablePrinters?.every(printer => !!!printer?.name) ||
+        availablePrinters?.findIndex(printer => printer?.name === printerPreference?.name) === -1
+    );
+};
+
+export const hydrateTemplate = (template, templateData, inspectionData) => {
+    let result = template;
+
+    if (Array.isArray(templateData)) {
+        for (const item of templateData) {
+            const placeholder = item.printer_template_var_name;
+            const value = item.printer_template_var_value;
+            if (placeholder) {
+                result = result.replaceAll(placeholder, value);
+            }
+        }
+    }
+
+    if (inspectionData && typeof inspectionData === 'object') {
+        for (const [key, value] of Object.entries(inspectionData)) {
+            result = result.replaceAll(`{*${key.toLocaleUpperCase()}*}`, value);
+        }
+    }
+
+    return result;
+};
+
 const PrinterTemplates = () => {
     const theme = useTheme();
+    const { user } = useAccountUser();
+    const deptPrinterDefault = getDefaultDeptPrinter(user?.user_department);
     const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
+    const [printerPreference] = useLabelPrinterPreference(COOKIE_PRINTER_PREFERENCE);
 
+    const [selectedPrinter, setSelectedPrinter] = React.useState(printerPreference);
+    const { printer, availablePrinters } = useLabelPrinter({
+        printerCode: deptPrinterDefault,
+        shouldOverridePrinterDevEnv: true,
+    });
+    const printerError = useMemo(() => hasPrinterError(selectedPrinter, availablePrinters), [
+        selectedPrinter,
+        availablePrinters,
+    ]);
+    const testPrintData = useRef('');
+    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const dialogStyles = useMemo(
         () => ({
             '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: isMobileView ? '100%' : '75vh' },
@@ -47,19 +101,27 @@ const PrinterTemplates = () => {
 
     /* istanbul ignore next */
     const onCloseConfirmationAlert = () => actions.clearPrinterTemplateListError();
+    const errorMessageFormatter = useMemo(() => locale.config.alerts.error, []);
     const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: printerTemplateListError,
-        errorMessageFormatter: locale.config.alerts.error,
+        errorMessageFormatter,
     });
     const [editingRows, setEditingRows] = React.useState(0);
 
-    const closeDialog = React.useCallback(() => {
+    const closeDialog = useCallback(() => {
         actionDispatch({ type: 'clear' });
     }, []);
 
-    const onRowAdd = React.useCallback(data => {
+    const showAlert = useCallback(
+        (alert, type = 'error') => {
+            openConfirmationAlert(type === 'error' ? errorMessageFormatter(alert) : alert, type);
+        },
+        [openConfirmationAlert, errorMessageFormatter],
+    );
+
+    const onRowAdd = useCallback(data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
         const wrappedRequest = transformAddRequest(request);
@@ -79,7 +141,7 @@ const PrinterTemplates = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const onRowEdit = React.useCallback(data => {
+    const onRowEdit = useCallback(data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
         const wrappedRequest = transformUpdateRequest(request);
@@ -156,7 +218,6 @@ const PrinterTemplates = () => {
         config,
         locale: pageLocale.form.columns,
         handleEditClick,
-        // shouldDisableEdit,
         actionDataFieldKeys: { valueKey: 'printer_template_id' },
         actionTooltips: pageLocale.form.actionTooltips,
     });
@@ -175,6 +236,61 @@ const PrinterTemplates = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch]);
 
+    const onPrint = data => {
+        testPrintData.current = data;
+        showConfirmation();
+    };
+    const onPrinterSelectionChange = (_, printer) => {
+        setSelectedPrinter(printer);
+    };
+    const handlePrint = () => {
+        const now = new Date();
+        const testDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
+        const dueDate = `${now.getFullYear()}${now.toLocaleString('en-AU', { month: 'short' })}${String(
+            now.getDate(),
+        ).padStart(2, '0')}`; // YYYYMonDD
+        const formattedTemplate = hydrateTemplate(
+            testPrintData.current.printer_template_code,
+            testPrintData.current.vars,
+            {
+                userid: user.user_uid,
+                assetId: `${user.user_department}000000`,
+                testDate,
+                dueDate,
+            },
+        );
+        printer
+            ?.setPrinter(selectedPrinter)
+            .then(() => {
+                printer.getConnectionStatus().then(status => {
+                    if (status.ready) {
+                        printer
+                            .print(formattedTemplate)
+                            .then(() => {
+                                hideConfirmation();
+                                showAlert(
+                                    locale.pages.general.labelPrinting.printJobSent(printerPreference.name),
+                                    'info',
+                                );
+                            })
+                            .catch(error => {
+                                console.error('Print job error:', error);
+                                showAlert(locale.pages.general.labelPrinting.error.printJobError);
+                            });
+                    } else {
+                        console.error('Printer is not ready: ' + JSON.stringify(status.errors));
+                        showAlert(locale.pages.general.labelPrinting.error.printerNotReady);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Printer connection error:', error);
+                showAlert(locale.pages.general.labelPrinting.error.noConnection);
+            })
+            .finally(() => {
+                testPrintData.current = '';
+            });
+    };
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -182,6 +298,30 @@ const PrinterTemplates = () => {
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
             <StandardCard noHeader>
+                <ConfirmationBox
+                    confirmationBoxId="label-printer"
+                    onAction={handlePrint}
+                    onCancelAction={hideConfirmation}
+                    onClose={hideConfirmation}
+                    isOpen={isOpen}
+                    locale={{
+                        confirmationTitle: 'Select printer',
+                        confirmationMessage: (
+                            <LabelPrinterSelector
+                                id={componentId}
+                                list={availablePrinters}
+                                value={selectedPrinter?.name ?? null}
+                                onChange={onPrinterSelectionChange}
+                                locale={{
+                                    printerLabel: 'Printer',
+                                }}
+                                error={printerError}
+                            />
+                        ),
+                        confirmButtonLabel: 'Print',
+                        cancelButtonLabel: 'Cancel',
+                    }}
+                />
                 <UpdateDialog
                     id={componentId}
                     title={actionState.title}
@@ -194,11 +334,14 @@ const PrinterTemplates = () => {
                     row={actionState?.row}
                     rows={row}
                     onCancelAction={closeDialog}
+                    onAccessoryAction={onPrint}
                     onAction={onRowAdd}
                     props={actionState?.props}
                     isBusy={dialogueBusy}
                     noMinContentWidth
                     styles={dialogStyles}
+                    disabledState={{ actionButton: editingRows > 0, accessoryButton: editingRows > 0 }}
+                    hideAccessoryButton={false}
                 />
                 <UpdateDialog
                     id={componentId}
@@ -212,12 +355,14 @@ const PrinterTemplates = () => {
                     row={actionState?.row}
                     rows={row}
                     onCancelAction={closeDialog}
+                    onAccessoryAction={onPrint}
                     onAction={onRowEdit}
                     props={actionState?.props}
                     isBusy={dialogueBusy}
                     noMinContentWidth
                     styles={dialogStyles}
-                    disabledState={{ actionButton: editingRows > 0 }}
+                    disabledState={{ actionButton: editingRows > 0, accessoryButton: editingRows > 0 }}
+                    hideAccessoryButton={false}
                 />
                 <Grid container spacing={3}>
                     <Grid sx={{ flex: 1 }}>
