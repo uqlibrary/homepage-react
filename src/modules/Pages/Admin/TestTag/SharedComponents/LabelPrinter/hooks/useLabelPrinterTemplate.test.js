@@ -1,12 +1,28 @@
 import { renderHook } from '@testing-library/react';
-import useLabelPrinterTemplate, { formatTemplateString } from './useLabelPrinterTemplate';
+import useLabelPrinterTemplate, {
+    useLabelPrinterTemplateStore,
+    transformTemplateListToStore,
+    formatTemplateString,
+} from './useLabelPrinterTemplate';
+import { useSelector } from 'react-redux';
 
-const mockTemplateStore = {
-    gk420t: 'Printer: {{NAME}}\nAsset: {{ASSET_ID}}\nLocation: {{LOCATION}}',
-    'zebra-printer': 'Asset ID: {{ASSET_ID}}\nInspection Date: {{DATE}}',
-    'test-printer': 'Simple template with {{VALUE}}',
-    _19j153101586: 'Printer: {{NAME}}\nAsset: {{ASSET_ID}}\nLocation: {{LOCATION}}',
-};
+jest.mock('react-redux', () => ({
+    useSelector: jest.fn(),
+}));
+
+const mockTemplateStore = [
+    { id: 1, name: 'gk420t', code: 'Printer: {*NAME*}\nAsset: {*ASSET_ID*}\nLocation: {*LOCATION*}' },
+    { id: 2, name: 'zebra-printer', code: 'Asset ID: {*ASSET_ID*}\nInspection Date: {*DATE*}' },
+    { id: 3, name: 'test-printer', code: 'Simple template with {*VALUE*}' },
+    { id: 4, name: '19j153101586', code: 'Printer: {*NAME*}\nAsset: {*ASSET_ID*}\nLocation: {*LOCATION*}' },
+];
+
+const mockTemplateStoreWithPrinters = [
+    { id: 1, name: 'Template A', code: 'Code A', printers: ['GK420t', 'Zebra'] },
+    { id: 2, name: 'Template B', code: 'Code B', printers: ['GK420t'] },
+    { id: 3, name: 'Template C', code: 'Code C', printers: ['Zebra'] },
+    { id: 4, name: 'Template D', code: 'Code D', printers: [] },
+];
 
 function setup(testProps = {}) {
     const { templates = mockTemplateStore } = testProps;
@@ -27,12 +43,12 @@ describe('useLabelPrinterTemplate', () => {
         it('should return formatted template for existing printer', () => {
             const { result } = setup();
 
-            const data = { name: 'GK420t', asset_id: 'A-001', location: 'Floor 1' };
-            const template = result.current.getLabelPrinterFormattedTemplate('GK420t', data);
+            const data = { name: 'gk420t', asset_id: 'A-001', location: 'Floor 1' };
+            const template = result.current.getLabelPrinterFormattedTemplate(1, data);
 
             expect(template).toEqual({
-                name: 'GK420t',
-                formattedTemplate: 'Printer: GK420t\nAsset: A-001\nLocation: Floor 1',
+                id: 1,
+                formattedTemplate: 'Printer: gk420t\nAsset: A-001\nLocation: Floor 1',
             });
         });
 
@@ -40,10 +56,10 @@ describe('useLabelPrinterTemplate', () => {
             const { result } = setup();
 
             const data = { name: 'Test', asset_id: 'A-001', location: 'Floor 1' };
-            const template = result.current.getLabelPrinterFormattedTemplate('GK420T', data);
+            const template = result.current.getLabelPrinterFormattedTemplate(1, data);
 
             expect(template).toEqual({
-                name: 'GK420T',
+                id: 1,
                 formattedTemplate: 'Printer: Test\nAsset: A-001\nLocation: Floor 1',
             });
         });
@@ -52,7 +68,7 @@ describe('useLabelPrinterTemplate', () => {
             const { result } = setup();
 
             const data = { name: 'Test' };
-            const template = result.current.getLabelPrinterFormattedTemplate('non-existent', data);
+            const template = result.current.getLabelPrinterFormattedTemplate(0, data);
 
             expect(template).toBeNull();
         });
@@ -61,10 +77,10 @@ describe('useLabelPrinterTemplate', () => {
             const { result } = setup();
 
             const data = { asset_id: 'A-002', date: '2026-01-22' };
-            const template = result.current.getLabelPrinterFormattedTemplate('Zebra-Printer', data);
+            const template = result.current.getLabelPrinterFormattedTemplate(2, data);
 
             expect(template).toEqual({
-                name: 'Zebra-Printer',
+                id: 2,
                 formattedTemplate: 'Asset ID: A-002\nInspection Date: 2026-01-22',
             });
         });
@@ -72,11 +88,11 @@ describe('useLabelPrinterTemplate', () => {
         it('should handle empty data object', () => {
             const { result } = setup();
 
-            const template = result.current.getLabelPrinterFormattedTemplate('test-printer', {});
+            const template = result.current.getLabelPrinterFormattedTemplate(3, {});
 
             expect(template).toEqual({
-                name: 'test-printer',
-                formattedTemplate: 'Simple template with {{VALUE}}',
+                id: 3,
+                formattedTemplate: 'Simple template with {*VALUE*}',
             });
         });
 
@@ -84,37 +100,22 @@ describe('useLabelPrinterTemplate', () => {
             const { result } = setup();
 
             const data = { value: 'Test Value' };
-            const template = result.current.getLabelPrinterFormattedTemplate('TEST-PRINTER', data);
+            const template = result.current.getLabelPrinterFormattedTemplate(3, data);
 
-            expect(template.name).toBe('TEST-PRINTER');
-        });
-
-        it('should handle printer with hyphens and numbers', () => {
-            const customTemplates = {
-                'printer-123': 'Template for {{ITEM}}',
-            };
-            const { result } = setup({ templates: customTemplates });
-
-            const data = { item: 'Test' };
-            const template = result.current.getLabelPrinterFormattedTemplate('Printer-123', data);
-
-            expect(template).toEqual({
-                name: 'Printer-123',
-                formattedTemplate: 'Template for Test',
-            });
+            expect(template.id).toBe(3);
         });
 
         it('should handle complex data with multiple fields', () => {
             const { result } = setup();
 
             const data = {
-                name: 'Zebra GK420t',
+                name: 'Zebra gk420t',
                 asset_id: 'ASSET-12345',
                 location: 'Building A, Floor 2, Room 201',
             };
-            const template = result.current.getLabelPrinterFormattedTemplate('gk420t', data);
+            const template = result.current.getLabelPrinterFormattedTemplate(1, data);
 
-            expect(template.formattedTemplate).toContain('Zebra GK420t');
+            expect(template.formattedTemplate).toContain('Zebra gk420t');
             expect(template.formattedTemplate).toContain('ASSET-12345');
             expect(template.formattedTemplate).toContain('Building A, Floor 2, Room 201');
         });
@@ -130,122 +131,10 @@ describe('useLabelPrinterTemplate', () => {
 
             expect(initialGetTemplate).toBe(rerenderGetTemplate);
         });
-
-        it('should handle printer key with underscores', () => {
-            const customTemplates = {
-                printer_test_1: 'Template {{DATA}}',
-            };
-            const { result } = setup({ templates: customTemplates });
-
-            const template = result.current.getLabelPrinterFormattedTemplate('PRINTER_TEST_1', { data: 'value' });
-
-            expect(template).toEqual({
-                name: 'PRINTER_TEST_1',
-                formattedTemplate: 'Template value',
-            });
-        });
     });
-
-    describe('hasLabelPrinterTemplate', () => {
-        it('should return true for existing printer template', () => {
-            const { result } = setup();
-
-            const hasTemplate = result.current.hasLabelPrinterTemplate('gk420t');
-
-            expect(hasTemplate).toBe(true);
-        });
-
-        it('should return true for existing printer template that starts with a number', () => {
-            const { result } = setup();
-
-            const hasTemplate = result.current.hasLabelPrinterTemplate('19j153101586');
-
-            expect(hasTemplate).toBe(true);
-        });
-
-        it('should return false for non-existent printer template', () => {
-            const { result } = setup();
-
-            const hasTemplate = result.current.hasLabelPrinterTemplate('non-existent');
-
-            expect(hasTemplate).toBe(false);
-        });
-
-        it('should normalise printer key', () => {
-            const { result } = setup();
-
-            const hasTemplate = result.current.hasLabelPrinterTemplate('GK420T');
-
-            expect(hasTemplate).toBe(true);
-        });
-
-        it('should handle mixed case printer keys', () => {
-            const { result } = setup();
-
-            const hasTemplate = result.current.hasLabelPrinterTemplate('Zebra-Printer');
-
-            expect(hasTemplate).toBe(true);
-        });
-
-        it('should return false for empty string', () => {
-            const { result } = setup();
-
-            const hasTemplate = result.current.hasLabelPrinterTemplate('');
-
-            expect(hasTemplate).toBe(false);
-        });
-
-        it('should handle printer key with special characters', () => {
-            const customTemplates = {
-                'printer-test_123': 'Template',
-            };
-            const { result } = setup({ templates: customTemplates });
-
-            const hasTemplate = result.current.hasLabelPrinterTemplate('Printer-Test_123');
-
-            expect(hasTemplate).toBe(true);
-        });
-
-        it('should return false for undefined template store', () => {
-            const { result } = setup({ templates: undefined });
-
-            const hasTemplate = result.current.hasLabelPrinterTemplate('any-printer');
-
-            expect(hasTemplate).toBe(false);
-        });
-
-        it('should return false for null template store', () => {
-            const { result } = setup({ templates: null });
-
-            const hasTemplate = result.current.hasLabelPrinterTemplate('any-printer');
-
-            expect(hasTemplate).toBe(false);
-        });
-
-        it('should return function that maintains reference stability', () => {
-            const { result, rerender } = setup();
-
-            const initialHasTemplate = result.current.hasLabelPrinterTemplate;
-
-            rerender(mockTemplateStore);
-
-            const rerenderHasTemplate = result.current.hasLabelPrinterTemplate;
-
-            expect(initialHasTemplate).toBe(rerenderHasTemplate);
-        });
-
-        it('should check all templates in store', () => {
-            const { result } = setup();
-
-            expect(result.current.hasLabelPrinterTemplate('gk420t')).toBe(true);
-            expect(result.current.hasLabelPrinterTemplate('zebra-printer')).toBe(true);
-            expect(result.current.hasLabelPrinterTemplate('test-printer')).toBe(true);
-        });
-    });
-
     describe('formatTemplateString helper', () => {
         it('should replace placeholders with provided data', () => {
-            const template = 'Hello {{NAME}}, your ID is {{ID}}';
+            const template = 'Hello {*NAME*}, your ID is {*ID*}';
             const data = { name: 'John', id: '12345' };
 
             const result = formatTemplateString(template, data);
@@ -254,7 +143,7 @@ describe('useLabelPrinterTemplate', () => {
         });
 
         it('should handle multiple occurrences of the same placeholder', () => {
-            const template = '{{NAME}} - {{NAME}} - {{NAME}}';
+            const template = '{*NAME*} - {*NAME*} - {*NAME*}';
             const data = { name: 'Test' };
 
             const result = formatTemplateString(template, data);
@@ -263,7 +152,7 @@ describe('useLabelPrinterTemplate', () => {
         });
 
         it('should normalise placeholder keys', () => {
-            const template = 'Value: {{VALUE}}';
+            const template = 'Value: {*VALUE*}';
             const data = { value: 'test-value' };
 
             const result = formatTemplateString(template, data);
@@ -281,12 +170,12 @@ describe('useLabelPrinterTemplate', () => {
         });
 
         it('should handle empty data object', () => {
-            const template = 'Static text {{PLACEHOLDER}}';
+            const template = 'Static text {*PLACEHOLDER*}';
             const data = {};
 
             const result = formatTemplateString(template, data);
 
-            expect(result).toBe('Static text {{PLACEHOLDER}}');
+            expect(result).toBe('Static text {*PLACEHOLDER*}');
         });
 
         it('should handle template without placeholders', () => {
@@ -299,7 +188,7 @@ describe('useLabelPrinterTemplate', () => {
         });
 
         it('should handle special characters in data values', () => {
-            const template = 'Value: {{DATA}}';
+            const template = 'Value: {*DATA*}';
             const data = { data: 'Test $pecial Ch@rs!' };
 
             const result = formatTemplateString(template, data);
@@ -308,7 +197,7 @@ describe('useLabelPrinterTemplate', () => {
         });
 
         it('should handle numeric data values', () => {
-            const template = 'Number: {{NUM}} and String: {{STR}}';
+            const template = 'Number: {*NUM*} and String: {*STR*}';
             const data = { num: 123, str: 'text' };
 
             const result = formatTemplateString(template, data);
@@ -317,7 +206,7 @@ describe('useLabelPrinterTemplate', () => {
         });
 
         it('should handle placeholders with mixed case in data keys', () => {
-            const template = 'Asset: {{ASSET_ID}}';
+            const template = 'Asset: {*ASSET_ID*}';
             const data = { asset_id: 'A-12345' };
 
             const result = formatTemplateString(template, data);
@@ -326,12 +215,221 @@ describe('useLabelPrinterTemplate', () => {
         });
 
         it('should handle placeholders with underscores', () => {
-            const template = '{{FIRST_NAME}} {{LAST_NAME}}';
+            const template = '{*FIRST_NAME*} {*LAST_NAME*}';
             const data = { first_name: 'John', last_name: 'Doe' };
 
             const result = formatTemplateString(template, data);
 
             expect(result).toBe('John Doe');
+        });
+    });
+
+    describe('getAllLabelTemplatesForPrinter', () => {
+        it('should return templates matching the given printer name', () => {
+            const { result } = setup({ templates: mockTemplateStoreWithPrinters });
+
+            const templates = result.current.getAllLabelTemplatesForPrinter('GK420t');
+
+            expect(templates).toEqual([
+                { id: 1, name: 'Template A', code: 'Code A', printers: ['GK420t', 'Zebra'] },
+                { id: 2, name: 'Template B', code: 'Code B', printers: ['GK420t'] },
+            ]);
+        });
+
+        it('should return empty array when no templates match', () => {
+            const { result } = setup({ templates: mockTemplateStoreWithPrinters });
+
+            const templates = result.current.getAllLabelTemplatesForPrinter('UnknownPrinter');
+
+            expect(templates).toEqual([]);
+        });
+
+        it('should return only templates whose printers include the given printer', () => {
+            const { result } = setup({ templates: mockTemplateStoreWithPrinters });
+
+            const templates = result.current.getAllLabelTemplatesForPrinter('Zebra');
+
+            expect(templates).toHaveLength(2);
+            expect(templates.every(template => template.printers.includes('Zebra'))).toBe(true);
+        });
+
+        it('should not include templates without the given printer', () => {
+            const { result } = setup({ templates: mockTemplateStoreWithPrinters });
+
+            const templates = result.current.getAllLabelTemplatesForPrinter('GK420t');
+
+            expect(templates.find(template => template.id === 3)).toBeUndefined();
+            expect(templates.find(template => template.id === 4)).toBeUndefined();
+        });
+
+        it('should return empty array when template store is empty', () => {
+            const { result } = setup({ templates: [] });
+
+            const templates = result.current.getAllLabelTemplatesForPrinter('GK420t');
+
+            expect(templates).toEqual([]);
+        });
+
+        it('should return undefined when template store is undefined', () => {
+            const { result } = renderHook(() => useLabelPrinterTemplate(undefined));
+
+            const templates = result.current.getAllLabelTemplatesForPrinter('GK420t');
+
+            expect(templates).toBeUndefined();
+        });
+    });
+
+    describe('transformTemplateListToStore', () => {
+        it('should transform a raw template to store format', () => {
+            const rawList = [
+                {
+                    printer_template_id: 1,
+                    printer_template_name: 'GK420t Template',
+                    printer_template_rendered: 'Hello {*NAME*}',
+                    identifiers: [{ printer_template_identifier_value: 'GK420t' }],
+                },
+            ];
+
+            const result = transformTemplateListToStore(rawList);
+
+            expect(result).toEqual([{ id: 1, name: 'GK420t Template', code: 'Hello {*NAME*}', printers: ['GK420t'] }]);
+        });
+
+        it('should map multiple identifiers to the printers array', () => {
+            const rawList = [
+                {
+                    printer_template_id: 2,
+                    printer_template_name: 'Multi Printer',
+                    printer_template_rendered: 'Code',
+                    identifiers: [
+                        { printer_template_identifier_value: 'GK420t' },
+                        { printer_template_identifier_value: 'Zebra' },
+                    ],
+                },
+            ];
+
+            const result = transformTemplateListToStore(rawList);
+
+            expect(result[0].printers).toEqual(['GK420t', 'Zebra']);
+        });
+
+        it('should handle a template with no identifiers', () => {
+            const rawList = [
+                {
+                    printer_template_id: 3,
+                    printer_template_name: 'No Printers',
+                    printer_template_rendered: 'Code',
+                    identifiers: [],
+                },
+            ];
+
+            const result = transformTemplateListToStore(rawList);
+
+            expect(result[0].printers).toEqual([]);
+        });
+
+        it('should return empty array for an empty template list', () => {
+            const result = transformTemplateListToStore([]);
+
+            expect(result).toEqual([]);
+        });
+
+        it('should transform multiple templates preserving order', () => {
+            const rawList = [
+                {
+                    printer_template_id: 1,
+                    printer_template_name: 'Template A',
+                    printer_template_rendered: 'Code A',
+                    identifiers: [{ printer_template_identifier_value: 'P1' }],
+                },
+                {
+                    printer_template_id: 2,
+                    printer_template_name: 'Template B',
+                    printer_template_rendered: 'Code B',
+                    identifiers: [{ printer_template_identifier_value: 'P2' }],
+                },
+            ];
+
+            const result = transformTemplateListToStore(rawList);
+
+            expect(result).toHaveLength(2);
+            expect(result[0]).toEqual({ id: 1, name: 'Template A', code: 'Code A', printers: ['P1'] });
+            expect(result[1]).toEqual({ id: 2, name: 'Template B', code: 'Code B', printers: ['P2'] });
+        });
+    });
+
+    describe('useLabelPrinterTemplateStore', () => {
+        const mockActions = { loadPrinterTemplateList: jest.fn() };
+
+        const mockRawTemplateList = [
+            {
+                printer_template_id: 1,
+                printer_template_name: 'Template',
+                printer_template_rendered: 'Code',
+                identifiers: [{ printer_template_identifier_value: 'GK420t' }],
+            },
+        ];
+
+        it('should return transformed printerTemplateList from Redux store', () => {
+            useSelector.mockReturnValue({
+                printerTemplateList: mockRawTemplateList,
+                printerTemplateListLoading: false,
+                printerTemplateListError: null,
+            });
+
+            const { result } = renderHook(() => useLabelPrinterTemplateStore(mockActions));
+
+            expect(result.current.printerTemplateList).toEqual([
+                { id: 1, name: 'Template', code: 'Code', printers: ['GK420t'] },
+            ]);
+        });
+
+        it('should return empty transformed list when store list is empty', () => {
+            useSelector.mockReturnValue({
+                printerTemplateList: [],
+                printerTemplateListLoading: false,
+                printerTemplateListError: null,
+            });
+
+            const { result } = renderHook(() => useLabelPrinterTemplateStore(mockActions));
+
+            expect(result.current.printerTemplateList).toEqual([]);
+        });
+
+        it('should call loadPrinterTemplateList when list is empty and not loading', () => {
+            useSelector.mockReturnValue({
+                printerTemplateList: [],
+                printerTemplateListLoading: false,
+                printerTemplateListError: null,
+            });
+
+            renderHook(() => useLabelPrinterTemplateStore(mockActions));
+
+            expect(mockActions.loadPrinterTemplateList).toHaveBeenCalledTimes(1);
+        });
+
+        it('should NOT call loadPrinterTemplateList when list already has items', () => {
+            useSelector.mockReturnValue({
+                printerTemplateList: mockRawTemplateList,
+                printerTemplateListLoading: false,
+                printerTemplateListError: null,
+            });
+
+            renderHook(() => useLabelPrinterTemplateStore(mockActions));
+
+            expect(mockActions.loadPrinterTemplateList).not.toHaveBeenCalled();
+        });
+
+        it('should NOT call loadPrinterTemplateList when loading is in progress', () => {
+            useSelector.mockReturnValue({
+                printerTemplateList: [],
+                printerTemplateListLoading: true,
+                printerTemplateListError: null,
+            });
+
+            renderHook(() => useLabelPrinterTemplateStore(mockActions));
+
+            expect(mockActions.loadPrinterTemplateList).not.toHaveBeenCalled();
         });
     });
 });

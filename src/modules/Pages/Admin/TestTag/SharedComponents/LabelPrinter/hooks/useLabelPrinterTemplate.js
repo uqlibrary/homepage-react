@@ -14,7 +14,7 @@ export const formatTemplateString = (template, data) => {
     return formattedTemplate;
 };
 
-const transformTemplateListToStore = templateList => {
+export const transformTemplateListToStore = templateList => {
     return templateList.map(template => ({
         id: template.printer_template_id,
         name: template.printer_template_name,
@@ -56,7 +56,7 @@ export const useLabelPrinterTemplate = templateStore => {
 
     const getAllLabelTemplatesForPrinter = useCallback(
         printerName => {
-            return templateStore?.filter(template => template.printers.includes(printerName));
+            return templateStore?.filter?.(template => template.printers.includes(printerName));
         },
         [templateStore],
     );
@@ -66,3 +66,5 @@ export const useLabelPrinterTemplate = templateStore => {
         getAllLabelTemplatesForPrinter,
     };
 };
+
+export default useLabelPrinterTemplate;

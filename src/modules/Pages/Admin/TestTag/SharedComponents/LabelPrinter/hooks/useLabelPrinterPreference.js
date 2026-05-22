@@ -23,7 +23,7 @@ export const parsePrinterFromCookieString = cookieValue => {
     }
 };
 
-const useLabelPrinterPreference = cookieName => {
+export const useLabelPrinterPreference = cookieName => {
     const [cookies, setCookie] = useCookies([cookieName]);
     const setPrinterPreference = useCallback(
         preference => {

@@ -63,7 +63,7 @@ describe('Tests custom hooks', () => {
                 const [, setPrinterPreference] = result.current;
 
                 act(() => {
-                    setPrinterPreference('GK420t ZPL Printer');
+                    setPrinterPreference({ name: 'GK420t ZPL Printer' });
                 });
 
                 expect(mockSetCookie).toHaveBeenCalledWith(
@@ -80,7 +80,7 @@ describe('Tests custom hooks', () => {
                 const [, setPrinterPreference] = result.current;
 
                 act(() => {
-                    setPrinterPreference('Test Printer');
+                    setPrinterPreference({ name: 'Test Printer' });
                 });
 
                 expect(mockSetCookie).toHaveBeenCalledWith(customCookieName, expect.any(String), { path: '/' });
@@ -92,11 +92,11 @@ describe('Tests custom hooks', () => {
                 const [, setPrinterPreference] = result.current;
 
                 act(() => {
-                    setPrinterPreference('Printer 1');
+                    setPrinterPreference({ name: 'Printer 1' });
                 });
 
                 act(() => {
-                    setPrinterPreference('Printer 2');
+                    setPrinterPreference({ name: 'Printer 2' });
                 });
 
                 expect(mockSetCookie).toHaveBeenCalledTimes(2);
@@ -147,7 +147,7 @@ describe('Tests custom hooks', () => {
                 const [, setPrinterPreference] = result.current;
 
                 act(() => {
-                    setPrinterPreference('GK420t ZPL Printer (USB)');
+                    setPrinterPreference({ name: 'GK420t ZPL Printer (USB)' });
                 });
 
                 const encodedValue = mockSetCookie.mock.calls[0][1];
@@ -165,7 +165,7 @@ describe('Tests custom hooks', () => {
                 const [, setPrinterPreference] = result.current;
 
                 act(() => {
-                    setPrinterPreference('Printer-123/v2 (USB-Port)');
+                    setPrinterPreference({ name: 'Printer-123/v2 (USB-Port)' });
                 });
 
                 expect(mockSetCookie).toHaveBeenCalledWith(
@@ -183,11 +183,11 @@ describe('Tests custom hooks', () => {
                 const [, setPrinter2] = result2.current;
 
                 act(() => {
-                    setPrinter1('Printer 1');
+                    setPrinter1({ name: 'Printer 1' });
                 });
 
                 act(() => {
-                    setPrinter2('Printer 2');
+                    setPrinter2({ name: 'Printer 2' });
                 });
 
                 expect(mockSetCookie).toHaveBeenCalledWith('cookie1', expect.any(String), { path: '/' });
@@ -239,7 +239,7 @@ describe('Tests custom hooks', () => {
 
         describe('printerToCookieString helper', () => {
             it('should convert printer name to cookie string format', () => {
-                const result = printerToCookieString('GK420t ZPL Printer');
+                const result = printerToCookieString({ name: 'GK420t ZPL Printer' });
                 const parsed = JSON.parse(result);
 
                 expect(parsed).toHaveProperty('name', 'GK420t ZPL Printer');
@@ -247,7 +247,7 @@ describe('Tests custom hooks', () => {
             });
 
             it('should handle single word printer name', () => {
-                const result = printerToCookieString('Zebra');
+                const result = printerToCookieString({ name: 'Zebra' });
                 const parsed = JSON.parse(result);
 
                 expect(parsed).toEqual({
@@ -257,7 +257,7 @@ describe('Tests custom hooks', () => {
             });
 
             it('should handle empty printer name', () => {
-                const result = printerToCookieString('');
+                const result = printerToCookieString({ name: '' });
                 const parsed = JSON.parse(result);
 
                 expect(parsed).toEqual({
