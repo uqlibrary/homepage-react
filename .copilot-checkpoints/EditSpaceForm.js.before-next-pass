@@ -47,6 +47,7 @@ import {
 } from 'helpers/general';
 
 import {
+    displayToastMessage,
     displayToastErrorMessage,
     spacesAdminLink,
     validLibraryList,
@@ -245,16 +246,6 @@ const StyledErrorSummaryBox = styled('div')(({ theme }) => ({
         margin: 0,
         paddingLeft: '1.1rem',
     },
-    '& li button': {
-        border: 0,
-        background: 'transparent',
-        color: '#000',
-        cursor: 'pointer',
-        padding: 0,
-        textAlign: 'left',
-        font: 'inherit',
-        textDecoration: 'underline',
-    },
     '& li': {
         marginBottom: '0.2rem',
         margin: 0,
@@ -370,7 +361,6 @@ export const EditSpaceForm = ({
     const [isConfirmationOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [isUndeleteConfirmationOpen, showUndeleteConfirmation, hideUndeleteConfirmation] = useConfirmationState();
     const [errorMessages, setErrorMessages] = useState([]);
-    const [hasAttemptedSave, setHasAttemptedSave] = useState(false);
     const [showSpaceDescriptionCheckbox, setShowSpaceDescriptionCheckbox] = useState(!!formValues?.space_description);
     const spaceDescriptionStateKeyRef = useRef(`${mode}:${formValues?.space_uuid || 'new'}`);
 
@@ -381,7 +371,6 @@ export const EditSpaceForm = ({
     const editModeOutageTabId = 3;
     const editModeImageryTabId = 4;
     const [activeStep, setActiveStep] = useState(0);
-    const [panelId, setPanel] = useState(0);
 
     const addModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Imagery'];
     const editModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Closures', 'Imagery'];
@@ -606,54 +595,6 @@ export const EditSpaceForm = ({
         new Set((currentValidationMessages || []).map(m => m?.message).filter(Boolean)),
     );
     const hasValidationErrors = currentValidationMessages.length > 0;
-
-    const fieldNavigationMap = {
-        space_name: { addTab: firstTabId, editTab: firstTabId, selector: '#space_name' },
-        space_type_id: { addTab: firstTabId, editTab: firstTabId, selector: '#add-space-type-input' },
-        space_external_book_url: { addTab: firstTabId, editTab: firstTabId, selector: '#space_external_book_url' },
-        space_capacity: { addTab: firstTabId, editTab: firstTabId, selector: '#space-capacity' },
-        campus_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-campus-input' },
-        library_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-library-input' },
-        space_floor_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-floor-input' },
-        floor_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-floor-input' },
-        space_services_page: { addTab: thirdTabId, editTab: thirdTabId, selector: '#space_services_page' },
-        space_opening_hours_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-springshare-input' },
-        space_photo_url: {
-            addTab: addModeLastTabId,
-            editTab: editModeImageryTabId,
-            selector: '[data-testid="image-upload-dropzone"]',
-        },
-        space_photo_description: {
-            addTab: addModeLastTabId,
-            editTab: editModeImageryTabId,
-            selector: '#space_photo_description',
-        },
-    };
-
-    const navigateToError = error => {
-        const config = fieldNavigationMap?.[error?.field];
-        if (!config) {
-            return;
-        }
-
-        const targetTab = mode === 'edit' ? config?.editTab : config?.addTab;
-        if (mode === 'edit') {
-            setPanel(targetTab);
-        } else {
-            setActiveStep(targetTab);
-        }
-
-        // Allow tab content to render before trying to focus the invalid input.
-        setTimeout(() => {
-            const targetElement = document.querySelector(config?.selector);
-            if (!!targetElement && typeof targetElement.focus === 'function') {
-                targetElement.focus();
-            }
-            if (!!targetElement && typeof targetElement.scrollIntoView === 'function') {
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }, 0);
-    };
 
     const getBookingUrlQuerystringWarning = spaceExternalBookUrl => {
         if (!spaceExternalBookUrl) {
@@ -967,8 +908,6 @@ export const EditSpaceForm = ({
     };
 
     const handleSaveClick = () => {
-        setHasAttemptedSave(true);
-
         const valuesToSend = {};
         valuesToSend.space_name = formValues?.space_name;
         valuesToSend.space_type_id = formValues?.space_type_id || selectedSpaceType?.space_type_id || null;
@@ -1001,10 +940,6 @@ export const EditSpaceForm = ({
         });
         if (validationResult !== true) {
             setErrorMessages(validationResult);
-
-            if (validationResult?.length > 0) {
-                navigateToError(validationResult[0]);
-            }
 
             document.activeElement.blur();
             const message =
@@ -1074,6 +1009,8 @@ export const EditSpaceForm = ({
             'aria-controls': `spacesform-tabpanel-${index}`,
         };
     }
+
+    const [panelId, setPanel] = useState(0);
 
     const handleTabChange = (event, newPanelId) => {
         setPanel(newPanelId);
@@ -1671,8 +1608,7 @@ export const EditSpaceForm = ({
         );
     };
     const saveButton = (disabled = false) => {
-        const isSaveDisabled =
-            disabled || (mode === 'edit' ? hasValidationErrors : hasAttemptedSave && hasValidationErrors);
+        const isSaveDisabled = disabled || hasValidationErrors;
 
         return (
             <StyledPrimaryButton
@@ -1686,9 +1622,7 @@ export const EditSpaceForm = ({
     };
 
     const renderValidationSummary = () => {
-        const shouldShowSummary = mode === 'edit' ? uniqueErrorMessages?.length > 0 : hasAttemptedSave;
-
-        if (!shouldShowSummary || uniqueErrorMessages?.length === 0) {
+        if (uniqueErrorMessages?.length === 0) {
             return null;
         }
 
@@ -1701,19 +1635,8 @@ export const EditSpaceForm = ({
                     </Typography>
                 </div>
                 <ul>
-                    {currentValidationMessages?.map((error, index) => {
-                        const message = error?.message;
-                        if (!message) {
-                            return null;
-                        }
-
-                        return (
-                            <li key={`error-${index}`}>
-                                <button type="button" onClick={() => navigateToError(error)}>
-                                    {message}
-                                </button>
-                            </li>
-                        );
+                    {uniqueErrorMessages?.map((message, index) => {
+                        return <li key={`error-${index}`}>{message}</li>;
                     })}
                 </ul>
             </StyledErrorSummaryBox>
@@ -1838,7 +1761,7 @@ export const EditSpaceForm = ({
                                         </StyledSecondaryButton>
                                         <Box sx={{ flex: '1 1 auto' }} />
                                         {activeStep === addModeLastTabId ? (
-                                            saveButton()
+                                            saveButton(hasValidationErrors)
                                         ) : (
                                             <StyledPrimaryButton
                                                 onClick={handleNext}
