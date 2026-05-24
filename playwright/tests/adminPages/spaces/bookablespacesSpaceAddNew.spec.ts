@@ -120,7 +120,8 @@ test.describe('Spaces Admin - add new space', () => {
         await page.getByTestId('spaces-form-next-button').click(); // to final step, imagery
 
         const saveButton = page.getByTestId('admin-spaces-save-button-submit');
-        await expect(saveButton).toBeDisabled();
+        await expect(saveButton).toBeEnabled();
+        await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible();
     });
     test('add spaces page is accessible', async ({ page }) => {
         await assertAccessibility(page, '[data-testid="SpacesAdminPage"]');
@@ -474,16 +475,16 @@ test.describe('Spaces Admin - add new space', () => {
         await page.getByTestId('spaces-form-next-button').click(); // to final step, imagery
 
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeDisabled();
-        await expect(page.getByTestId('spaces-button-error-list')).toBeVisible();
-        await expect(page.getByTestId('spaces-button-error-list').locator('[data-error-count="2"]')).toBeDefined();
-        await expect(page.getByTestId('spaces-button-error-list')).toContainText('These errors occurred');
-        await expect(page.getByTestId('spaces-button-error-list')).toContainText('A Name is required.');
-        await expect(page.getByTestId('spaces-button-error-list')).toContainText('A Type is required.');
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeEnabled();
+        await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible();
 
-        await page.getByTestId('spaces-form-back-button').click(); // to locations
-        await page.getByTestId('spaces-form-back-button').click(); // to facility types
-        await page.getByTestId('spaces-form-back-button').click(); // to about
+        // add mode should only show summary and disable save after an attempted save
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // failed save should bring focus back to the first invalid tab/field
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-name').locator('..').getByText('A Name is required.')).toBeVisible();
+        await expect(page.getByTestId('space-type').locator('..').getByText('A Type is required.')).toBeVisible();
 
         // user enters the name, but there is still an error
         const spaceNameInputField = page.getByTestId('space-name').locator('input');
@@ -502,10 +503,8 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeDisabled();
         await expect(page.getByTestId('spaces-button-error-list')).toBeVisible();
-        await expect(page.getByTestId('spaces-button-error-list').locator('[data-error-count="1"]')).toBeDefined();
-        await expect(page.getByTestId('spaces-button-error-list')).toContainText('These errors occurred');
+        await expect(page.getByTestId('spaces-button-error-list')).toContainText('Please fix 1 error.');
         await expect(page.getByTestId('spaces-button-error-list')).toContainText('A Type is required.');
-        // await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible(); // wait for it to close
 
         await page.getByTestId('spaces-form-back-button').click(); // to locations
         await page.getByTestId('spaces-form-back-button').click(); // to facility types

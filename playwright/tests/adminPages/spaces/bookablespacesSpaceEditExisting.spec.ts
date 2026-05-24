@@ -1235,19 +1235,13 @@ test.describe('booking link controller works properly', () => {
         await expect(page.getByTestId('booking-link-details')).toBeVisible();
 
         await expect(page.getByTestId('spaces-button-error-list')).toBeVisible();
-        await expect(page.getByTestId('spaces-button-error-list')).toContainText('These errors occurred');
+        await expect(page.getByTestId('spaces-button-error-list')).toContainText('Please fix 1 error.');
         await expect(page.getByTestId('spaces-button-error-list')).toContainText(
             'Provide the booking link, or uncheck the checkbox',
         );
 
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        await page.getByTestId('admin-spaces-save-button-submit').click();
-
-        await expect(page.getByTestId('toast-message')).toBeVisible();
-        await expect(page.getByTestId('toast-message')).toContainText('These errors occurred');
-        await expect(page.getByTestId('toast-message')).toContainText(
-            'Provide the booking link, or uncheck the checkbox',
-        );
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeDisabled();
 
         // ok, save failed - now enter a url
         await bookingUrlField.click();
@@ -1255,6 +1249,7 @@ test.describe('booking link controller works properly', () => {
 
         // save our changes
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeEnabled();
         await page.getByTestId('admin-spaces-save-button-submit').click();
 
         // check the data we pretended to send to the server matches what we expect
