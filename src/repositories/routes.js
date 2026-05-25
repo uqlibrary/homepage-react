@@ -373,6 +373,7 @@ export const SPACES_ADD_LOCATION_API = ({ type }) => ({ apiUrl: `bookable_spaces
 export const SPACES_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `bookable_spaces/${type}/${id}` });
 
 export const SPACES_SITE_API = () => ({ apiUrl: 'bookable_spaces/campus/all' });
+export const SPACES_ARCHIBUS_TREE_API = () => ({ apiUrl: 'bookable_spaces/archibus/tree' });
 export const SPACES_SPACETYPE_CREATE_API = () => ({ apiUrl: 'bookable_spaces/space_type' });
 export const SPACES_SPACETYPE_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });
 export const SPACES_SPACETYPE_DELETE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });

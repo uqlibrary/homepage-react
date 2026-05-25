@@ -34,6 +34,9 @@ export const BookableSpacesEditSpace = ({
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
+    bookableSpacesArchibusTree,
+    bookableSpacesArchibusTreeLoading,
+    bookableSpacesArchibusTreeError,
     facilityTypeList,
     facilityTypeListLoading,
     facilityTypeListError,
@@ -53,6 +56,12 @@ export const BookableSpacesEditSpace = ({
     );
     console.log('Edit campusList:', campusListLoading, campusListError, campusList);
     console.log('Edit weeklyHours:', weeklyHoursLoading, weeklyHoursError, weeklyHours, weeklyHours?.locations);
+    console.log(
+        'Edit archibusTree:',
+        bookableSpacesArchibusTreeLoading,
+        bookableSpacesArchibusTreeError,
+        bookableSpacesArchibusTree,
+    );
     console.log('Edit facilityTypeList:', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
     console.log(
         'Edit bookableSpacesRoomList:',
@@ -89,6 +98,16 @@ export const BookableSpacesEditSpace = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (
+            bookableSpacesArchibusTreeLoading === null &&
+            bookableSpacesArchibusTreeError === null &&
+            bookableSpacesArchibusTree === null
+        ) {
+            actions.loadBookableSpacesArchibusTree(); // get site/building/room tree
+        }
+    }, [actions, bookableSpacesArchibusTree, bookableSpacesArchibusTreeError, bookableSpacesArchibusTreeLoading]);
 
     useEffect(() => {
         if (!!spaceUuid) {
@@ -146,6 +165,7 @@ export const BookableSpacesEditSpace = ({
                 space_photo_url: bookableSpaceGetResult?.data?.space_photo_url,
                 space_precise: bookableSpaceGetResult?.data?.space_precise,
                 space_services_page: bookableSpaceGetResult?.data?.space_services_page,
+                archibus_room_id: bookableSpaceGetResult?.data?.archibus_room_id || null,
                 space_type: bookableSpaceGetResult?.data?.space_type,
                 space_type_id: bookableSpaceGetResult?.data?.space_type_id,
                 space_uuid: bookableSpaceGetResult?.data?.space_uuid,
@@ -275,6 +295,9 @@ export const BookableSpacesEditSpace = ({
                 springshareList={springshareList}
                 currentCampusList={currentCampusList}
                 initialCampus={safeCampusIndex(currentCampusList, formValues?.campus_id)}
+                bookableSpacesArchibusTree={bookableSpacesArchibusTree}
+                bookableSpacesArchibusTreeLoading={bookableSpacesArchibusTreeLoading}
+                bookableSpacesArchibusTreeError={bookableSpacesArchibusTreeError}
                 spaceOutageList={spaceOutageList}
                 spaceOutageListLoading={spaceOutageListLoading}
                 spaceOutageListError={spaceOutageListError}
@@ -298,6 +321,9 @@ BookableSpacesEditSpace.propTypes = {
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.any,
     weeklyHoursError: PropTypes.any,
+    bookableSpacesArchibusTree: PropTypes.any,
+    bookableSpacesArchibusTreeLoading: PropTypes.any,
+    bookableSpacesArchibusTreeError: PropTypes.any,
     facilityTypeList: PropTypes.any,
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,

@@ -19,6 +19,7 @@ import {
     SPACES_SPACETYPE_DELETE_API,
     SPACES_FAVOURITES_API,
     SPACES_BULK_FACILITIES_API,
+    SPACES_ARCHIBUS_TREE_API,
 } from 'repositories/routes';
 import { API_URL } from 'config';
 
@@ -534,6 +535,26 @@ export function loadBookableSpaceCampusChildren() {
             .catch(error => {
                 dispatch({
                     type: actions.SPACES_CAMPUS_LIST_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadBookableSpacesArchibusTree() {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_ARCHIBUS_TREE_LOADING });
+        return get(SPACES_ARCHIBUS_TREE_API())
+            .then(response => {
+                dispatch({
+                    type: actions.SPACES_ARCHIBUS_TREE_LOADED,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_ARCHIBUS_TREE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

@@ -302,6 +302,9 @@ export const EditSpaceForm = ({
     bookableSpacesRoomAddResult,
     currentCampusList,
     initialCampus,
+    bookableSpacesArchibusTree,
+    bookableSpacesArchibusTreeLoading,
+    bookableSpacesArchibusTreeError,
     bookableSpacesRoomList,
     bookableSpacesRoomListLoading,
     bookableSpacesRoomListError,
@@ -335,6 +338,12 @@ export const EditSpaceForm = ({
         bookableSpacesRoomUpdateResult,
     );
     console.log('TOP EditSpaceForm currentCampusList', currentCampusList);
+    console.log(
+        'TOP EditSpaceForm bookableSpacesArchibusTree',
+        bookableSpacesArchibusTreeLoading,
+        bookableSpacesArchibusTreeError,
+        bookableSpacesArchibusTree,
+    );
     console.log('TOP EditSpaceForm formValues', Object.keys(formValues)?.length, formValues);
     console.log(
         'TOP EditSpaceForm bookableSpacesRoomList',
@@ -897,6 +906,151 @@ export const EditSpaceForm = ({
         return selectedSpaceType?.space_type_description || '';
     }, [selectedSpaceType]);
 
+    const archibusSiteList = React.useMemo(() => {
+        if (Array.isArray(bookableSpacesArchibusTree?.data?.sites)) {
+            return bookableSpacesArchibusTree?.data?.sites;
+        }
+        return [];
+    }, [bookableSpacesArchibusTree]);
+
+    const [selectedArchibusSiteId, setSelectedArchibusSiteId] = useState('');
+    const [selectedArchibusBuildingId, setSelectedArchibusBuildingId] = useState('');
+
+    const getArchibusSiteCode = React.useCallback(site => {
+        return site?.siteCode ?? site?.site_id_displayed ?? site?.site_code ?? site?.siteId;
+    }, []);
+
+    const getArchibusSiteLabel = React.useCallback(
+        site => {
+            const name = site?.siteName || site?.site_name || 'Unnamed site';
+            const code = getArchibusSiteCode(site);
+            return !!code ? `${name} (${code})` : name;
+        },
+        [getArchibusSiteCode],
+    );
+
+    const getArchibusBuildingCode = React.useCallback(building => {
+        return (
+            building?.buildingCode ?? building?.building_id_displayed ?? building?.building_code ?? building?.buildingId
+        );
+    }, []);
+
+    const getArchibusBuildingLabel = React.useCallback(
+        building => {
+            const name = building?.libraryName || building?.buildingName || 'Unnamed building';
+            const code = getArchibusBuildingCode(building);
+            return !!code ? `${name} (${code})` : name;
+        },
+        [getArchibusBuildingCode],
+    );
+
+    const getArchibusRoomValue = React.useCallback(room => {
+        const candidates = [
+            room?.id,
+            room?.roomDbId,
+            room?.roomDatabaseId,
+            room?.databaseId,
+            room?.room_id,
+            room?.roomId,
+        ];
+        return candidates.find(candidate => candidate !== undefined && candidate !== null);
+    }, []);
+
+    const getArchibusPathByRoomId = React.useCallback(
+        roomId => {
+            const roomIdAsString = String(roomId);
+            for (const site of archibusSiteList || []) {
+                for (const building of site?.buildings || []) {
+                    const room = (building?.rooms || []).find(
+                        candidate => String(getArchibusRoomValue(candidate)) === roomIdAsString,
+                    );
+                    if (!!room) {
+                        return {
+                            site,
+                            building,
+                            room,
+                        };
+                    }
+                }
+            }
+            return null;
+        },
+        [archibusSiteList, getArchibusRoomValue],
+    );
+
+    const selectedArchibusSite = React.useMemo(() => {
+        return archibusSiteList?.find(site => String(site?.siteId) === String(selectedArchibusSiteId)) || null;
+    }, [archibusSiteList, selectedArchibusSiteId]);
+
+    const archibusBuildingList = React.useMemo(() => {
+        return selectedArchibusSite?.buildings || [];
+    }, [selectedArchibusSite]);
+
+    const selectedArchibusBuilding = React.useMemo(() => {
+        return (
+            archibusBuildingList?.find(
+                building => String(building?.buildingId) === String(selectedArchibusBuildingId),
+            ) || null
+        );
+    }, [archibusBuildingList, selectedArchibusBuildingId]);
+
+    const archibusRoomList = React.useMemo(() => {
+        return selectedArchibusBuilding?.rooms || [];
+    }, [selectedArchibusBuilding]);
+
+    useEffect(() => {
+        const selectedRoomId = formValues?.archibus_room_id;
+        if (selectedRoomId === undefined || selectedRoomId === null || String(selectedRoomId) === '') {
+            return;
+        }
+
+        const currentRoomStillValid = archibusRoomList?.some(
+            room => String(getArchibusRoomValue(room)) === String(selectedRoomId),
+        );
+        if (currentRoomStillValid) {
+            return;
+        }
+
+        const matchingPath = getArchibusPathByRoomId(selectedRoomId);
+        if (!!matchingPath) {
+            setSelectedArchibusSiteId(String(matchingPath?.site?.siteId || ''));
+            setSelectedArchibusBuildingId(String(matchingPath?.building?.buildingId || ''));
+        }
+    }, [archibusRoomList, formValues?.archibus_room_id, getArchibusPathByRoomId, getArchibusRoomValue]);
+
+    const handleArchibusSiteChange = e => {
+        const nextSiteId = String(e?.target?.value || '');
+        const nextSite = archibusSiteList?.find(site => String(site?.siteId) === nextSiteId) || null;
+        const nextBuildings = nextSite?.buildings || [];
+        const nextBuildingId = String(nextBuildings?.[0]?.buildingId || '');
+
+        setSelectedArchibusSiteId(nextSiteId);
+        setSelectedArchibusBuildingId(nextBuildingId);
+        setFormValues({
+            ...formValues,
+            archibus_room_id: null,
+        });
+    };
+
+    const handleArchibusBuildingChange = e => {
+        const nextBuildingId = String(e?.target?.value || '');
+
+        setSelectedArchibusBuildingId(nextBuildingId);
+        setFormValues({
+            ...formValues,
+            archibus_room_id: null,
+        });
+    };
+
+    const handleArchibusRoomChange = e => {
+        const selectedRoomId = String(e?.target?.value || '');
+
+        setFormValues({
+            ...formValues,
+            archibus_room_id: selectedRoomId ? Number(selectedRoomId) : null,
+        });
+    };
+
     const reportCurrentLibraryAboutPage = location => (
         <>
             {location?.currentLibrary?.library_about_page_default ? (
@@ -987,6 +1141,12 @@ export const EditSpaceForm = ({
             ? formValues?.space_external_book_url
             : null;
         valuesToSend.space_draftmode = !!formValues?.space_draftmode;
+        valuesToSend.archibus_room_id =
+            formValues?.archibus_room_id !== undefined &&
+            formValues?.archibus_room_id !== null &&
+            String(formValues?.archibus_room_id) !== ''
+                ? Number(formValues?.archibus_room_id)
+                : null;
         valuesToSend.facility_types = formValues?.facility_types?.map(ft => ft?.facility_type_id);
         valuesToSend.space_id = formValues?.space_id;
         valuesToSend.uploadedFile = formValues.uploadedFile;
@@ -1056,6 +1216,7 @@ export const EditSpaceForm = ({
             ...updatedLocation,
         });
         validateForm(formValues);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentCampusList, formValues]);
 
     const handleSuppliedFiles = files => {
@@ -1080,6 +1241,134 @@ export const EditSpaceForm = ({
     };
 
     const bookableCheckboxLabel = 'This Space is bookable';
+    const renderArchibusRoomMappingFields = () => {
+        return (
+            <>
+                <Grid item xs={12}>
+                    <Typography component={'h4'} variant={'subtitle1'}>
+                        Archibus room mapping
+                    </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel
+                            id="add-space-select-archibus-site-label"
+                            htmlFor="add-space-select-archibus-site-input"
+                        >
+                            Site
+                        </InputLabel>
+                        <Select
+                            id="add-space-select-archibus-site"
+                            labelId="add-space-select-archibus-site-label"
+                            data-testid="add-space-select-archibus-site"
+                            value={selectedArchibusSiteId}
+                            onChange={handleArchibusSiteChange}
+                            disabled={bookableSpacesArchibusTreeLoading || !!bookableSpacesArchibusTreeError}
+                            inputProps={{
+                                id: 'add-space-select-archibus-site-input',
+                                'aria-labelledby': 'add-space-select-archibus-site-label',
+                            }}
+                        >
+                            {!!archibusSiteList &&
+                                archibusSiteList?.length > 0 &&
+                                archibusSiteList?.map(site => (
+                                    <MenuItem value={String(site?.siteId)} key={`select-archibus-site-${site?.siteId}`}>
+                                        {getArchibusSiteLabel(site)}
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel
+                            id="add-space-select-archibus-building-label"
+                            htmlFor="add-space-select-archibus-building-input"
+                        >
+                            Building
+                        </InputLabel>
+                        <Select
+                            id="add-space-select-archibus-building"
+                            labelId="add-space-select-archibus-building-label"
+                            data-testid="add-space-select-archibus-building"
+                            value={selectedArchibusBuildingId}
+                            onChange={handleArchibusBuildingChange}
+                            disabled={
+                                !selectedArchibusSiteId ||
+                                bookableSpacesArchibusTreeLoading ||
+                                !!bookableSpacesArchibusTreeError
+                            }
+                            inputProps={{
+                                id: 'add-space-select-archibus-building-input',
+                                'aria-labelledby': 'add-space-select-archibus-building-label',
+                            }}
+                        >
+                            {!!archibusBuildingList &&
+                                archibusBuildingList?.length > 0 &&
+                                archibusBuildingList?.map(building => (
+                                    <MenuItem
+                                        value={String(building?.buildingId)}
+                                        key={`select-archibus-building-${building?.buildingId}`}
+                                    >
+                                        {getArchibusBuildingLabel(building)}
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel
+                            id="add-space-select-archibus-room-label"
+                            htmlFor="add-space-select-archibus-room-input"
+                        >
+                            Room ID
+                        </InputLabel>
+                        <Select
+                            id="add-space-select-archibus-room"
+                            labelId="add-space-select-archibus-room-label"
+                            data-testid="add-space-select-archibus-room"
+                            value={
+                                formValues?.archibus_room_id !== undefined &&
+                                formValues?.archibus_room_id !== null &&
+                                String(formValues?.archibus_room_id) !== ''
+                                    ? String(formValues?.archibus_room_id)
+                                    : ''
+                            }
+                            onChange={handleArchibusRoomChange}
+                            disabled={
+                                !selectedArchibusBuildingId ||
+                                bookableSpacesArchibusTreeLoading ||
+                                !!bookableSpacesArchibusTreeError
+                            }
+                            inputProps={{
+                                id: 'add-space-select-archibus-room-input',
+                                'aria-labelledby': 'add-space-select-archibus-room-label',
+                            }}
+                        >
+                            {!!archibusRoomList &&
+                                archibusRoomList?.length > 0 &&
+                                archibusRoomList?.map(room => {
+                                    const roomValue = getArchibusRoomValue(room);
+                                    return (
+                                        <MenuItem value={String(roomValue)} key={`select-archibus-room-${roomValue}`}>
+                                            {room?.roomCode || room?.roomName || 'Unnamed room'}
+                                        </MenuItem>
+                                    );
+                                })}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                {!!bookableSpacesArchibusTreeError && (
+                    <Grid item xs={12}>
+                        <StyledErrorMessageTypography component={'div'}>
+                            Archibus room data could not be loaded. You can still edit and save other space details.
+                        </StyledErrorMessageTypography>
+                    </Grid>
+                )}
+            </>
+        );
+    };
     const aboutPanel = () => {
         const bookingUrlQuerystringWarning = getBookingUrlQuerystringWarning(formValues?.space_external_book_url);
         // const selectedFacilityTypes = formValues?.facility_types || [];
@@ -1166,6 +1455,7 @@ export const EditSpaceForm = ({
                         </Typography>
                     </Grid>
                 )}
+                {renderArchibusRoomMappingFields()}
                 <Grid item xs={12}>
                     <FormControlLabel
                         control={
@@ -2025,6 +2315,9 @@ EditSpaceForm.propTypes = {
     bookableSpacesRoomAddResult: PropTypes.any,
     currentCampusList: PropTypes.any,
     initialCampus: PropTypes.number,
+    bookableSpacesArchibusTree: PropTypes.any,
+    bookableSpacesArchibusTreeLoading: PropTypes.any,
+    bookableSpacesArchibusTreeError: PropTypes.any,
     bookableSpacesRoomList: PropTypes.any,
     bookableSpacesRoomListLoading: PropTypes.any,
     bookableSpacesRoomListError: PropTypes.any,

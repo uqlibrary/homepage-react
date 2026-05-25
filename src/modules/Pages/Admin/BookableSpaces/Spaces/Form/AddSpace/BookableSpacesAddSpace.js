@@ -33,6 +33,9 @@ export const BookableSpacesAddSpace = ({
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
+    bookableSpacesArchibusTree,
+    bookableSpacesArchibusTreeLoading,
+    bookableSpacesArchibusTreeError,
     facilityTypeList,
     facilityTypeListLoading,
     facilityTypeListError,
@@ -51,6 +54,12 @@ export const BookableSpacesAddSpace = ({
         bookableSpacesRoomList,
     );
     console.log('BookableSpacesAddSpace weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+    console.log(
+        'BookableSpacesAddSpace archibusTree',
+        bookableSpacesArchibusTreeLoading,
+        bookableSpacesArchibusTreeError,
+        bookableSpacesArchibusTree,
+    );
     console.log(
         'BookableSpacesAddSpace facilityTypeList',
         facilityTypeListLoading,
@@ -95,6 +104,16 @@ export const BookableSpacesAddSpace = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        if (
+            bookableSpacesArchibusTreeLoading === null &&
+            bookableSpacesArchibusTreeError === null &&
+            bookableSpacesArchibusTree === null
+        ) {
+            actions.loadBookableSpacesArchibusTree(); // get site/building/room tree
+        }
+    }, [actions, bookableSpacesArchibusTree, bookableSpacesArchibusTreeError, bookableSpacesArchibusTreeLoading]);
+
     const [currentCampusList, setCurrentCampusListState] = useState([]);
     useEffect(() => {
         if (campusListLoading === false && campusListError === false && campusList?.length > 0) {
@@ -133,6 +152,7 @@ export const BookableSpacesAddSpace = ({
                 ['space_latitude']: _mostRecentSpace?.space_latitude,
                 ['space_longitude']: _mostRecentSpace?.space_longitude,
                 ['space_zlevel']: _mostRecentSpace?.space_zlevel,
+                ['archibus_room_id']: _mostRecentSpace?.archibus_room_id || null,
                 ['space_capacity']: 0, // default value
                 ['space_draftmode']: false,
             };
@@ -235,6 +255,9 @@ export const BookableSpacesAddSpace = ({
                             ? safeCampusIndex(currentCampusList, formValues?.campus_id)
                             : null
                     }
+                    bookableSpacesArchibusTree={bookableSpacesArchibusTree}
+                    bookableSpacesArchibusTreeLoading={bookableSpacesArchibusTreeLoading}
+                    bookableSpacesArchibusTreeError={bookableSpacesArchibusTreeError}
                     mode="add"
                 />
             </>
@@ -256,6 +279,9 @@ BookableSpacesAddSpace.propTypes = {
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.any,
     weeklyHoursError: PropTypes.any,
+    bookableSpacesArchibusTree: PropTypes.any,
+    bookableSpacesArchibusTreeLoading: PropTypes.any,
+    bookableSpacesArchibusTreeError: PropTypes.any,
     facilityTypeList: PropTypes.any,
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
