@@ -238,6 +238,8 @@ export const UpdateDialogue = ({
                                     fullWidth={isMobileView}
                                     sx={{ justifySelf: 'flex-center', display: 'flex' }}
                                     onClick={_onAccessoryAction}
+                                    id={`${rootId}-accessory-button`}
+                                    data-testid={`${rootId}-accessory-button`}
                                     disabled={isBusy || isInvalidForm || disabledState?.accessoryButton}
                                 >
                                     {locale.accessoryButtonLabel}

@@ -136,6 +136,10 @@ describe('PrinterTemplates', () => {
     it('opens Add dialog when Add button is clicked', async () => {
         const { getByTestId, getByText } = setup();
 
+        await waitFor(() => {
+            expect(getByTestId('printer-template-management-data-table-toolbar-add-button')).toBeEnabled();
+        });
+
         await userEvent.click(getByTestId('printer-template-management-data-table-toolbar-add-button'));
 
         await waitFor(() => {
@@ -147,6 +151,10 @@ describe('PrinterTemplates', () => {
     it('closes Add dialog when Cancel button is clicked', async () => {
         const { getByTestId, queryByTestId } = setup();
 
+        await waitFor(() => {
+            expect(getByTestId('printer-template-management-data-table-toolbar-add-button')).toBeEnabled();
+        });
+
         await userEvent.click(getByTestId('printer-template-management-data-table-toolbar-add-button'));
         expect(queryByTestId('printer_template_name-input')).toBeInTheDocument();
 
@@ -156,6 +164,10 @@ describe('PrinterTemplates', () => {
 
     it('calls addPrinterTemplate with correct data on Add submit', async () => {
         const { getByTestId } = setup();
+
+        await waitFor(() => {
+            expect(getByTestId('printer-template-management-data-table-toolbar-add-button')).toBeEnabled();
+        });
 
         await userEvent.click(getByTestId('printer-template-management-data-table-toolbar-add-button'));
 
@@ -192,6 +204,10 @@ describe('PrinterTemplates', () => {
 
         const { getByTestId, getByText } = setup();
 
+        await waitFor(() => {
+            expect(getByTestId('printer-template-management-data-table-toolbar-add-button')).toBeEnabled();
+        });
+
         await userEvent.click(getByTestId('printer-template-management-data-table-toolbar-add-button'));
 
         await waitFor(() => {
@@ -212,6 +228,59 @@ describe('PrinterTemplates', () => {
         expect(
             getByText(locale.config.alerts.error(locale.pages.manage.printertemplates.snackbar.addFail)),
         ).toBeInTheDocument();
+    });
+
+    it('shows printer selector dialog when print button is clicked in Add mode', async () => {
+        const { getByTestId, queryByTestId, getByRole, getByText } = setup();
+
+        await waitFor(() => {
+            expect(getByTestId('printer-template-management-data-table-toolbar-add-button')).toBeEnabled();
+        });
+
+        await userEvent.click(getByTestId('printer-template-management-data-table-toolbar-add-button'));
+
+        await waitFor(() => {
+            expect(getByTestId('printer_template_name-input')).toBeInTheDocument();
+        });
+
+        // Fill printer_template_name
+        await userEvent.type(getByTestId('printer_template_name-input'), 'New Template');
+
+        // Add an identifier chip via freeSolo
+        await userEvent.type(getByTestId('identifiers-input'), 'NEW_PRINTER');
+        await userEvent.keyboard('{Enter}');
+
+        // Type in template code (accordion is expanded by default for 'add')
+        await userEvent.type(getByTestId('printer_template_code-input'), '^XA^XZ');
+
+        expect(getByTestId('update_dialog-accessory-button')).not.toHaveAttribute('disabled');
+
+        await userEvent.click(getByTestId('update_dialog-accessory-button'));
+
+        await waitFor(() => {
+            expect(getByTestId('dialogbox-label-printer')).toBeInTheDocument();
+        });
+        await userEvent.click(getByTestId('label_printer_selector-printer-template-management-input'));
+        await userEvent.click(getByRole('option', { name: 'Emulator' }));
+
+        expect(getByTestId('label_printer_selector-printer-template-management-input')).toHaveValue('Emulator');
+
+        // coverage
+        await userEvent.click(getByTestId('cancel-label-printer'));
+        await waitFor(() => {
+            expect(queryByTestId('dialogbox-label-printer')).not.toBeInTheDocument();
+        });
+
+        // reopen
+        await userEvent.click(getByTestId('update_dialog-accessory-button'));
+
+        await waitFor(() => {
+            expect(getByTestId('dialogbox-label-printer')).toBeInTheDocument();
+        });
+        expect(getByTestId('label_printer_selector-printer-template-management-input')).toHaveValue('Emulator');
+
+        await userEvent.click(getByTestId('confirm-label-printer'));
+        expect(getByText('Encountered an error: Unable to send the print job. Please try again.')).toBeInTheDocument();
     });
 
     it('opens Edit dialog when edit button is clicked', async () => {
@@ -260,6 +329,35 @@ describe('PrinterTemplates', () => {
                 expect.objectContaining({ printer_template_name: 'Updated Template Name' }),
             );
         });
+    });
+
+    it('shows printer selector dialog when print button is clicked in Edit mode', async () => {
+        const { getByTestId, getByRole, getByText } = setup();
+
+        await waitFor(() => {
+            expect(getByText('UQL Standard Template')).toBeVisible();
+        });
+
+        await userEvent.click(getByTestId('action_cell-1-edit-button'));
+
+        await waitFor(() => {
+            expect(getByTestId('printer_template_name-input')).toBeInTheDocument();
+        });
+
+        expect(getByTestId('update_dialog-accessory-button')).not.toHaveAttribute('disabled');
+
+        await userEvent.click(getByTestId('update_dialog-accessory-button'));
+
+        await waitFor(() => {
+            expect(getByTestId('dialogbox-label-printer')).toBeInTheDocument();
+        });
+        await userEvent.click(getByTestId('label_printer_selector-printer-template-management-input'));
+        await userEvent.click(getByRole('option', { name: 'Emulator' }));
+
+        expect(getByTestId('label_printer_selector-printer-template-management-input')).toHaveValue('Emulator');
+
+        await userEvent.click(getByTestId('confirm-label-printer'));
+        expect(getByText('Encountered an error: Unable to send the print job. Please try again.')).toBeInTheDocument();
     });
 
     it('shows error alert when updatePrinterTemplate fails', async () => {

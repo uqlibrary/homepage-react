@@ -1,7 +1,6 @@
-import { useEffect, useState, useMemo /* , useCallback*/ } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 import printerRegistry from '../printers';
-// import { useLabelPrinterTemplate } from './useLabelPrinterTemplate';
 
 import { isLocal, isTest } from 'helpers/general';
 
@@ -19,8 +18,6 @@ export const getAvailablePrinters = async printerInstance => {
  *
  * @param {string} printerCode - The code of the printer to use (e.g., 'zebra', 'emulator'). Default 'zebra'.
  * @param {boolean} shouldRemoveNoNamePrinters - Flag to remove printers without a name. Default true.
- * @param {boolean} shouldDisableUnknownPrinters - Flag to disable printers that are not
- * configured in the registry. Default true.
  * @param {boolean} shouldOverridePrinterDevEnv - Flag to force use of Emulator printer in
  * development environment. Default false.
  *
@@ -32,7 +29,6 @@ export const getAvailablePrinters = async printerInstance => {
 const useLabelPrinter = ({
     printerCode = 'zebra',
     shouldRemoveNoNamePrinters = true,
-    shouldDisableUnknownPrinters = true,
     shouldOverridePrinterDevEnv = false,
 }) => {
     const [availablePrinters, setAvailablePrinters] = useState([]);
@@ -56,7 +52,7 @@ const useLabelPrinter = ({
                 console.error('Error fetching available printers:', error);
                 setAvailablePrinters([]);
             });
-    }, [printerInstance, shouldDisableUnknownPrinters, shouldRemoveNoNamePrinters]);
+    }, [printerInstance, shouldRemoveNoNamePrinters]);
 
     return {
         printerCode,

@@ -67,13 +67,14 @@ const selectOptionFromListByIndex = index => {
 const waitForElementToBeRemovedIfPresent = async testId =>
     screen.queryByTestId(testId) && (await waitForElementToBeRemoved(() => screen.queryByTestId(testId)));
 
+const user = userEvent.setup();
 module.exports = {
     ...domTestingLib,
     ...reactTestingLib,
     rtlRender,
     WithRouter,
     WithReduxStore,
-    userEvent,
+    userEvent: user,
     preview,
     enableJestPreviewOnTestFailure,
     selectOptionFromListByIndex,

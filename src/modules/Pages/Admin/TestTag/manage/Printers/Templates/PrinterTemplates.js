@@ -142,7 +142,7 @@ const PrinterTemplates = () => {
     const setIsEditing = value => {
         setEditingRows(prev => (value ? prev + 1 : Math.max(prev - 1, 0)));
     };
-    const handleAddClick = () => {
+    const handleAddClick = useCallback(() => {
         const fieldProps = {
             identifiers: {
                 options: [],
@@ -158,37 +158,40 @@ const PrinterTemplates = () => {
             title: pageLocale.dialogAdd?.confirmationTitle,
             fieldProps,
         });
-    };
+    }, [pageLocale.dialogAdd?.confirmationTitle]);
 
-    const handleEditClick = ({ id, api }) => {
-        const row = api.getRow(id);
-        const identifiers =
-            printerTemplateList.find(template => template.printer_template_id === row.printer_template_id)
-                ?.identifiers ?? /* istanbul ignore next*/ [];
+    const handleEditClick = useCallback(
+        ({ id, api }) => {
+            const row = api.getRow(id);
+            const identifiers =
+                printerTemplateList.find(template => template.printer_template_id === row.printer_template_id)
+                    ?.identifiers ?? /* istanbul ignore next*/ [];
 
-        const fieldProps = {
-            identifiers: {
-                options: identifiers,
-                // The following settings control the autocomplete popup, which isnt
-                // expected to be used in the UI but required to avoid errors
-                getOptionKey: /* istanbul ignore next*/ option =>
-                    /* istanbul ignore next*/ option.printer_template_identifier_id,
-                getOptionLabel: option => option.printer_template_identifier_value ?? /* istanbul ignore next*/ '',
-                isOptionEqualToValue: (option, value) => option.printer_template_identifier_value === value,
-            },
-            vars: {
-                setIsEditing,
-            },
-        };
+            const fieldProps = {
+                identifiers: {
+                    options: identifiers,
+                    // The following settings control the autocomplete popup, which isnt
+                    // expected to be used in the UI but required to avoid errors
+                    getOptionKey: /* istanbul ignore next*/ option =>
+                        /* istanbul ignore next*/ option.printer_template_identifier_id,
+                    getOptionLabel: option => option.printer_template_identifier_value ?? /* istanbul ignore next*/ '',
+                    isOptionEqualToValue: (option, value) => option.printer_template_identifier_value === value,
+                },
+                vars: {
+                    setIsEditing,
+                },
+            };
 
-        setEditingRows(0);
-        actionDispatch({
-            type: 'edit',
-            title: pageLocale.dialogEdit?.confirmationTitle,
-            row,
-            fieldProps,
-        });
-    };
+            setEditingRows(0);
+            actionDispatch({
+                type: 'edit',
+                title: pageLocale.dialogEdit?.confirmationTitle,
+                row,
+                fieldProps,
+            });
+        },
+        [pageLocale.dialogEdit?.confirmationTitle, printerTemplateList],
+    );
 
     const { row } = useDataTableRow(printerTemplateList, transformRow);
     const { columns } = useDataTableColumns({
@@ -213,14 +216,18 @@ const PrinterTemplates = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch]);
 
-    const onPrint = data => {
-        testPrintData.current = data;
-        showConfirmation();
-    };
-    const onPrinterSelectionChange = (_, printer) => {
+    const onPrint = useCallback(
+        data => {
+            testPrintData.current = data;
+            showConfirmation();
+        },
+        [showConfirmation],
+    );
+    const onPrinterSelectionChange = useCallback((_, printer) => {
         setSelectedPrinter(printer);
-    };
-    const handlePrint = () => {
+    }, []);
+
+    const handlePrint = useCallback(() => {
         const now = new Date();
         const { testDate, dueDate } = getLabelDates(now);
         const formattedTemplate = formatTemplate(
@@ -264,7 +271,7 @@ const PrinterTemplates = () => {
             .finally(() => {
                 testPrintData.current = '';
             });
-    };
+    }, [hideConfirmation, printer, printerPreference, selectedPrinter, showAlert, user]);
 
     return (
         <StandardAuthPage
@@ -348,7 +355,11 @@ const PrinterTemplates = () => {
                             components={{
                                 Toolbar: () => (
                                     <WithExportMenu id={componentId}>
-                                        <AddButton label={pageLocale.buttons.add.label} onClick={handleAddClick} />
+                                        <AddButton
+                                            label={pageLocale.buttons.add.label}
+                                            onClick={handleAddClick}
+                                            disabled={printerTemplateListLoading}
+                                        />
                                     </WithExportMenu>
                                 ),
                             }}

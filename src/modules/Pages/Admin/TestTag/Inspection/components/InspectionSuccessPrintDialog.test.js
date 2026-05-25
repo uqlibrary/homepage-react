@@ -15,16 +15,21 @@ function setup(testProps = {}, renderer = rtlRender) {
     };
 
     const availablePrinters = [{ name: 'Printer1' }, { name: 'Printer2' }, { name: 'Printer3' }];
-
+    const templateStore = [
+        { id: 1, name: 'Template1', printers: ['Printer1', 'Printer2'] },
+        { id: 2, name: 'Template2', printers: ['Printer2', 'Printer3'] },
+        { id: 3, name: 'Template3', printers: ['Printer1'] },
+    ];
     const defaultProps = {
         inspectionSuccessPrintDialogId: 'test',
         isOpen: true,
         locale: defaultLocale,
         availablePrinters,
-        printerPreference: 'Printer1',
+        templateStore,
+        printerPreference: { name: 'Printer1', shortName: 'Printer1', templateId: 1 },
         onPrint: jest.fn(),
         onClose: jest.fn(),
-        onPrinterSelectionChange: jest.fn(),
+        onPrinterTemplateSelectionChange: jest.fn(),
         ...testProps,
     };
 
@@ -37,7 +42,7 @@ describe('InspectionSuccessPrintDialog', () => {
     });
 
     const expandPrinterAccordion = () => {
-        const accordionButton = screen.getByRole('button', { name: /label printer selection/i });
+        const accordionButton = screen.getByRole('button', { name: /Label printing/i });
         expect(accordionButton).toBeInTheDocument();
 
         // Click to expand - accordion content should become visible
@@ -114,22 +119,24 @@ describe('InspectionSuccessPrintDialog', () => {
         expandPrinterAccordion();
     });
 
-    it('calls onPrinterSelectionChange when printer is selected', async () => {
-        const onPrinterSelectionChange = jest.fn();
+    it('calls onPrinterTemplateSelectionChange when printer is selected', async () => {
+        const onPrinterTemplateSelectionChange = jest.fn();
 
-        const { getByTestId } = setup({ onPrinterSelectionChange });
+        const { getByTestId } = setup({ onPrinterTemplateSelectionChange });
 
         expandPrinterAccordion();
 
-        fireEvent.mouseDown(getByTestId('label_printer_selector-test-input'));
-
+        // mock sets template to id=1, change to id=3
+        fireEvent.mouseDown(getByTestId('label_printer_template_selector-test-input'));
         selectOptionFromListByIndex(1);
 
-        expect(onPrinterSelectionChange).toHaveBeenCalledWith('Printer2');
+        expect(onPrinterTemplateSelectionChange).toHaveBeenCalledWith(
+            expect.objectContaining({ templateId: 3, templateName: 'Template3' }),
+        );
     });
 
     it('handles null callback functions gracefully', () => {
-        const { getByTestId } = setup({ onPrint: null, onClose: null, onPrinterSelectionChange: null });
+        const { getByTestId } = setup({ onPrint: null, onClose: null, onPrinterTemplateSelectionChange: null });
 
         expandPrinterAccordion();
 
@@ -147,7 +154,11 @@ describe('InspectionSuccessPrintDialog', () => {
     });
 
     it('handles completely undefined callback functions', () => {
-        const { getByTestId } = setup({ onPrint: undefined, onClose: undefined, onPrinterSelectionChange: undefined });
+        const { getByTestId } = setup({
+            onPrint: undefined,
+            onClose: undefined,
+            onPrinterTemplateSelectionChange: undefined,
+        });
 
         expandPrinterAccordion();
 
@@ -171,7 +182,7 @@ describe('InspectionSuccessPrintDialog', () => {
     });
 
     it('accordion remains expandable even when no printer error', () => {
-        const { getByTestId } = setup({ printerPreference: 'Printer1' });
+        const { getByTestId } = setup({ printerPreference: { name: 'Printer1', templateId: 1 } });
 
         // ensure accordion is initially collapsed
         expect(document.querySelector('#printerSelectorContainer')).toHaveAttribute('aria-expanded', 'false');
@@ -228,123 +239,82 @@ describe('InspectionSuccessPrintDialog', () => {
         });
 
         it('returns true when availablePrinters array is empty', () => {
-            expect(hasPrinterError('Printer1', [])).toBe(true);
-        });
-
-        it('returns true when all printers have noconfig set to true', () => {
-            const noconfigPrinters = [
-                { name: 'Printer1', noconfig: true },
-                { name: 'Printer2', noconfig: true },
-            ];
-            expect(hasPrinterError('Printer1', noconfigPrinters)).toBe(true);
+            expect(hasPrinterError({ name: 'Printer1' }, [])).toBe(true);
         });
 
         it('returns true when all printers have no name property', () => {
-            const printersWithoutNames = [{ noconfig: false }, { noconfig: false }];
-            expect(hasPrinterError('Printer1', printersWithoutNames)).toBe(true);
+            const printersWithoutNames = [{ random: true }, { random: false }];
+            expect(hasPrinterError({ name: 'Printer1' }, printersWithoutNames)).toBe(true);
         });
 
         it('returns true when all printers have undefined name', () => {
             const printersWithUndefinedNames = [{ name: undefined }, { name: undefined }];
-            expect(hasPrinterError('Printer1', printersWithUndefinedNames)).toBe(true);
+            expect(hasPrinterError({ name: 'Printer1' }, printersWithUndefinedNames)).toBe(true);
         });
 
         it('returns true when all printers have null name', () => {
             const printersWithNullNames = [{ name: null }, { name: null }];
-            expect(hasPrinterError('Printer1', printersWithNullNames)).toBe(true);
-        });
-
-        it('returns true when mix of noconfig and missing names', () => {
-            const mixedPrinters = [{ name: 'Printer1', noconfig: true }, { name: undefined }, { noconfig: false }];
-            expect(hasPrinterError('Printer2', mixedPrinters)).toBe(true);
+            expect(hasPrinterError({ name: 'Printer1' }, printersWithNullNames)).toBe(true);
         });
 
         it('returns true when printerPreference does not match any available printer', () => {
-            expect(hasPrinterError('NonExistentPrinter', validPrinters)).toBe(true);
-        });
-
-        it('returns true when selected printer has noconfig set to true', () => {
-            const printersWithNoconfig = [
-                { name: 'Printer1', noconfig: true },
-                { name: 'Printer2', noconfig: false },
-            ];
-            expect(hasPrinterError('Printer1', printersWithNoconfig)).toBe(true);
+            expect(hasPrinterError({ name: 'NonExistentPrinter' }, validPrinters)).toBe(true);
         });
 
         it('returns false when printerPreference matches a valid printer', () => {
-            expect(hasPrinterError('Printer1', validPrinters)).toBe(false);
+            expect(hasPrinterError({ name: 'Printer1' }, validPrinters)).toBe(false);
         });
-
-        it('returns false when printerPreference matches a printer without noconfig', () => {
-            const printersWithSomeNoconfig = [
-                { name: 'Printer1', noconfig: true },
-                { name: 'Printer2' },
-                { name: 'Printer3' },
-            ];
-            expect(hasPrinterError('Printer2', printersWithSomeNoconfig)).toBe(false);
-        });
-
-        it('returns false when printerPreference matches a printer with noconfig explicitly false', () => {
-            const printersWithExplicitNoconfig = [
-                { name: 'Printer1', noconfig: false },
-                { name: 'Printer2', noconfig: true },
-            ];
-            expect(hasPrinterError('Printer1', printersWithExplicitNoconfig)).toBe(false);
-        });
-
         it('handles printers with only some having names correctly', () => {
             const mixedPrinters = [{ name: 'Printer1' }, { name: undefined }, { name: 'Printer2' }];
             // Should return false since there's at least one valid printer and it matches
-            expect(hasPrinterError('Printer1', mixedPrinters)).toBe(false);
+            expect(hasPrinterError({ name: 'Printer1' }, mixedPrinters)).toBe(false);
             // Should return true since Printer3 doesn't exist
-            expect(hasPrinterError('Printer3', mixedPrinters)).toBe(true);
+            expect(hasPrinterError({ name: 'Printer3' }, mixedPrinters)).toBe(true);
         });
 
         it('handles empty string printerPreference even with valid printers', () => {
-            expect(hasPrinterError('', validPrinters)).toBe(true);
+            expect(hasPrinterError({ name: '' }, validPrinters)).toBe(true);
         });
 
         it('returns false for valid scenario with multiple printers', () => {
             const largePrinterList = [
-                { name: 'Printer1', noconfig: false },
+                { name: 'Printer1' },
                 { name: 'Printer2' },
-                { name: 'Printer3', noconfig: false },
+                { name: 'Printer3' },
                 { name: 'Printer4' },
             ];
-            expect(hasPrinterError('Printer2', largePrinterList)).toBe(false);
-            expect(hasPrinterError('Printer3', largePrinterList)).toBe(false);
+            expect(hasPrinterError({ name: 'Printer2' }, largePrinterList)).toBe(false);
+            expect(hasPrinterError({ name: 'Printer3' }, largePrinterList)).toBe(false);
         });
 
         describe('coverage', () => {
             it('returns true when availablePrinters parameter is not provided (uses default)', () => {
                 // Test the default parameter branch
-                expect(hasPrinterError('Printer1')).toBe(true);
+                expect(hasPrinterError({ name: 'Printer1' })).toBe(true);
             });
 
             it('handles array with null/undefined printer objects', () => {
                 const printersWithNullEntries = [{ name: 'Printer1' }, null, undefined, { name: 'Printer2' }];
                 // The optional chaining printer?.name should handle null/undefined entries
-                expect(hasPrinterError('Printer1', printersWithNullEntries)).toBe(false);
-                expect(hasPrinterError('Printer2', printersWithNullEntries)).toBe(false);
+                expect(hasPrinterError({ name: 'Printer1' }, printersWithNullEntries)).toBe(false);
+                expect(hasPrinterError({ name: 'Printer2' }, printersWithNullEntries)).toBe(false);
             });
 
             it('handles array with only null/undefined entries', () => {
                 const onlyNullEntries = [null, undefined, null];
                 // Should return true since no valid printers exist
-                expect(hasPrinterError('Printer1', onlyNullEntries)).toBe(true);
+                expect(hasPrinterError({ name: 'Printer1' }, onlyNullEntries)).toBe(true);
             });
 
-            it('handles mixed array with null entries and noconfig printers', () => {
+            it('handles mixed array with null entries', () => {
                 const mixedArray = [
                     null,
-                    { name: 'Printer1', noconfig: true },
+                    { name: 'Printer1', templateId: 1 },
                     undefined,
-                    { name: 'Printer2', noconfig: false },
+                    { name: 'Printer2', templateId: 2 },
                 ];
-                // Should return false for Printer2 since it's valid
-                expect(hasPrinterError('Printer2', mixedArray)).toBe(false);
-                // Should return true for Printer1 since it has noconfig
-                expect(hasPrinterError('Printer1', mixedArray)).toBe(true);
+                expect(hasPrinterError({ name: 'Printer2' }, mixedArray)).toBe(false);
+                expect(hasPrinterError({ name: 'Printer1' }, mixedArray)).toBe(false);
             });
         });
     });
