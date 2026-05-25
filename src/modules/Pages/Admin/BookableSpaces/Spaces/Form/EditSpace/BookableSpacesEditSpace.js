@@ -204,8 +204,7 @@ export const BookableSpacesEditSpace = ({
         !!bookableSpaceGetError ||
         !bookableSpaceGetResult?.data ||
         !!facilityTypeListError ||
-        !!weeklyHoursError ||
-        !formValues?.campus_id
+        !!weeklyHoursError
     ) {
         return (
             <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>

@@ -47,7 +47,6 @@ import {
 } from 'helpers/general';
 
 import {
-    displayToastMessage,
     displayToastErrorMessage,
     spacesAdminLink,
     validLibraryList,
@@ -224,6 +223,47 @@ const StyledWarningListBox = styled('div')(({ theme }) => ({
         flexShrink: 0,
     },
 }));
+const StyledErrorSummaryBox = styled('div')(({ theme }) => ({
+    marginTop: '0.75rem',
+    padding: '0.7rem 0.9rem',
+    borderRadius: '6px',
+    backgroundColor: '#fbeaea',
+    border: `1px solid ${theme.palette.error.main}`,
+    textAlign: 'left',
+    width: '100%',
+    '& .summary-header': {
+        display: 'flex',
+        alignItems: 'center',
+        columnGap: '0.5rem',
+        marginBottom: '0.35rem',
+    },
+    '& .summary-header p': {
+        margin: 0,
+        fontWeight: 600,
+    },
+    '& ul': {
+        margin: 0,
+        paddingLeft: '1.1rem',
+    },
+    '& li button': {
+        border: 0,
+        background: 'transparent',
+        color: '#000',
+        cursor: 'pointer',
+        padding: 0,
+        textAlign: 'left',
+        font: 'inherit',
+        textDecoration: 'underline',
+    },
+    '& li': {
+        marginBottom: '0.2rem',
+        margin: 0,
+        lineHeight: 1.35,
+    },
+    '& li:last-of-type': {
+        marginBottom: 0,
+    },
+}));
 
 function CustomTabPanel(props) {
     const { children, value, index, keepMounted = false, testId, ...other } = props;
@@ -330,6 +370,7 @@ export const EditSpaceForm = ({
     const [isConfirmationOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [isUndeleteConfirmationOpen, showUndeleteConfirmation, hideUndeleteConfirmation] = useConfirmationState();
     const [errorMessages, setErrorMessages] = useState([]);
+    const [hasAttemptedSave, setHasAttemptedSave] = useState(false);
     const [showSpaceDescriptionCheckbox, setShowSpaceDescriptionCheckbox] = useState(!!formValues?.space_description);
     const spaceDescriptionStateKeyRef = useRef(`${mode}:${formValues?.space_uuid || 'new'}`);
 
@@ -340,6 +381,7 @@ export const EditSpaceForm = ({
     const editModeOutageTabId = 3;
     const editModeImageryTabId = 4;
     const [activeStep, setActiveStep] = useState(0);
+    const [panelId, setPanel] = useState(0);
 
     const addModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Imagery'];
     const editModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Closures', 'Imagery'];
@@ -447,8 +489,14 @@ export const EditSpaceForm = ({
 
     function validatePanelLocation(currentValues, errorMessages = []) {
         console.log('validatePanelLocation currentValues=', currentValues);
+        if (!currentValues?.campus_id) {
+            errorMessages?.push({ field: 'campus_id', message: 'A campus is required.' });
+        }
+        if (!currentValues?.library_id) {
+            errorMessages?.push({ field: 'library_id', message: 'A library is required.' });
+        }
         if (!currentValues?.space_floor_id && !currentValues?.floor_id) {
-            errorMessages?.push({ field: 'space_floor_id', message: 'A location is required.' });
+            errorMessages?.push({ field: 'space_floor_id', message: 'A floor is required.' });
         }
         if (!currentValues?.space_latitude || !currentValues?.space_longitude) {
             errorMessages?.push({ field: 'space_latitude', message: 'Please locate the Space on the map' });
@@ -476,8 +524,7 @@ export const EditSpaceForm = ({
         return errorMessages;
     }
 
-    const validateForm = valuesToValidate => {
-        console.log('validateForm valuesToValidate=', valuesToValidate);
+    const collectValidationMessages = valuesToValidate => {
         const messages = [];
 
         validatePanelAbout(valuesToValidate, messages)?.forEach(m => {
@@ -487,7 +534,6 @@ export const EditSpaceForm = ({
             }
             messages?.push(m);
         });
-        console.log('validateForm messages=', messages);
 
         validatePanelFacilityTypes(valuesToValidate, messages)?.forEach(m => {
             const findIndex = messages?.findIndex(e => e?.field === m?.field);
@@ -512,6 +558,14 @@ export const EditSpaceForm = ({
             }
             messages?.push(m);
         });
+
+        return messages;
+    };
+
+    const validateForm = valuesToValidate => {
+        console.log('validateForm valuesToValidate=', valuesToValidate);
+        const messages = collectValidationMessages(valuesToValidate);
+        console.log('validateForm messages=', messages);
 
         console.log('validateForm errorMessages=', messages);
 
@@ -545,6 +599,60 @@ export const EditSpaceForm = ({
 
     const reportErrorMessage = fieldName => {
         return errorMessages?.find(m => m?.field === fieldName)?.message;
+    };
+
+    const currentValidationMessages = collectValidationMessages(formValues);
+    const uniqueErrorMessages = Array.from(
+        new Set((currentValidationMessages || []).map(m => m?.message).filter(Boolean)),
+    );
+    const hasValidationErrors = currentValidationMessages.length > 0;
+
+    const fieldNavigationMap = {
+        space_name: { addTab: firstTabId, editTab: firstTabId, selector: '#space_name' },
+        space_type_id: { addTab: firstTabId, editTab: firstTabId, selector: '#add-space-type-input' },
+        space_external_book_url: { addTab: firstTabId, editTab: firstTabId, selector: '#space_external_book_url' },
+        space_capacity: { addTab: firstTabId, editTab: firstTabId, selector: '#space-capacity' },
+        campus_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-campus-input' },
+        library_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-library-input' },
+        space_floor_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-floor-input' },
+        floor_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-floor-input' },
+        space_services_page: { addTab: thirdTabId, editTab: thirdTabId, selector: '#space_services_page' },
+        space_opening_hours_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-springshare-input' },
+        space_photo_url: {
+            addTab: addModeLastTabId,
+            editTab: editModeImageryTabId,
+            selector: '[data-testid="image-upload-dropzone"]',
+        },
+        space_photo_description: {
+            addTab: addModeLastTabId,
+            editTab: editModeImageryTabId,
+            selector: '#space_photo_description',
+        },
+    };
+
+    const navigateToError = error => {
+        const config = fieldNavigationMap?.[error?.field];
+        if (!config) {
+            return;
+        }
+
+        const targetTab = mode === 'edit' ? config?.editTab : config?.addTab;
+        if (mode === 'edit') {
+            setPanel(targetTab);
+        } else {
+            setActiveStep(targetTab);
+        }
+
+        // Allow tab content to render before trying to focus the invalid input.
+        setTimeout(() => {
+            const targetElement = document.querySelector(config?.selector);
+            if (!!targetElement && typeof targetElement.focus === 'function') {
+                targetElement.focus();
+            }
+            if (!!targetElement && typeof targetElement.scrollIntoView === 'function') {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 0);
     };
 
     const getBookingUrlQuerystringWarning = spaceExternalBookUrl => {
@@ -859,6 +967,8 @@ export const EditSpaceForm = ({
     };
 
     const handleSaveClick = () => {
+        setHasAttemptedSave(true);
+
         const valuesToSend = {};
         valuesToSend.space_name = formValues?.space_name;
         valuesToSend.space_type_id = formValues?.space_type_id || selectedSpaceType?.space_type_id || null;
@@ -885,9 +995,16 @@ export const EditSpaceForm = ({
         const validationResult = validateForm({
             ...valuesToSend,
             isBookableCheckbox: formValues.isBookableCheckbox,
+            campus_id: formValues?.campus_id,
+            library_id: formValues?.library_id,
+            floor_id: formValues?.floor_id,
         });
         if (validationResult !== true) {
             setErrorMessages(validationResult);
+
+            if (validationResult?.length > 0) {
+                navigateToError(validationResult[0]);
+            }
 
             document.activeElement.blur();
             const message =
@@ -957,8 +1074,6 @@ export const EditSpaceForm = ({
             'aria-controls': `spacesform-tabpanel-${index}`,
         };
     }
-
-    const [panelId, setPanel] = useState(0);
 
     const handleTabChange = (event, newPanelId) => {
         setPanel(newPanelId);
@@ -1529,7 +1644,11 @@ export const EditSpaceForm = ({
 
     const undeleteConfirmationDialog = () => {
         return (
-            <Dialog open={isUndeleteConfirmationOpen} onClose={hideUndeleteConfirmation} data-testid="spaces-undelete-dialog">
+            <Dialog
+                open={isUndeleteConfirmationOpen}
+                onClose={hideUndeleteConfirmation}
+                data-testid="spaces-undelete-dialog"
+            >
                 <DialogContent>
                     <DialogContentText data-testid="spaces-undelete-dialog-message">
                         Do you wish to restore this deleted space?
@@ -1552,25 +1671,52 @@ export const EditSpaceForm = ({
         );
     };
     const saveButton = (disabled = false) => {
+        const isSaveDisabled =
+            disabled || (mode === 'edit' ? hasValidationErrors : hasAttemptedSave && hasValidationErrors);
+
         return (
-            <div>
-                <StyledPrimaryButton
-                    data-testid="admin-spaces-save-button-submit"
-                    variant="contained"
-                    children="Save"
-                    disabled={disabled}
-                    onClick={() => handleSaveClick()}
-                />
-                {errorMessages?.length > 0 && (
-                    <div data-testid="spaces-button-error-list">
-                        <h2 data-error-count={errorMessages?.length}>Errors</h2>
-                        <p>These errors occurred:</p>
-                        {errorMessages?.map((m, index) => {
-                            return <p key={`error-${index}`}>{m?.message}</p>;
-                        })}
-                    </div>
-                )}
-            </div>
+            <StyledPrimaryButton
+                data-testid="admin-spaces-save-button-submit"
+                variant="contained"
+                children="Save"
+                disabled={isSaveDisabled}
+                onClick={() => handleSaveClick()}
+            />
+        );
+    };
+
+    const renderValidationSummary = () => {
+        const shouldShowSummary = mode === 'edit' ? uniqueErrorMessages?.length > 0 : hasAttemptedSave;
+
+        if (!shouldShowSummary || uniqueErrorMessages?.length === 0) {
+            return null;
+        }
+
+        return (
+            <StyledErrorSummaryBox data-testid="spaces-button-error-list" role="alert" aria-live="polite">
+                <div className="summary-header">
+                    <ErrorOutlineIcon />
+                    <Typography component={'p'} data-error-count={uniqueErrorMessages?.length}>
+                        Please fix {uniqueErrorMessages?.length} error{uniqueErrorMessages?.length === 1 ? '' : 's'}.
+                    </Typography>
+                </div>
+                <ul>
+                    {currentValidationMessages?.map((error, index) => {
+                        const message = error?.message;
+                        if (!message) {
+                            return null;
+                        }
+
+                        return (
+                            <li key={`error-${index}`}>
+                                <button type="button" onClick={() => navigateToError(error)}>
+                                    {message}
+                                </button>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </StyledErrorSummaryBox>
         );
     };
 
@@ -1692,7 +1838,7 @@ export const EditSpaceForm = ({
                                         </StyledSecondaryButton>
                                         <Box sx={{ flex: '1 1 auto' }} />
                                         {activeStep === addModeLastTabId ? (
-                                            saveButton(errorMessages?.length > 0)
+                                            saveButton()
                                         ) : (
                                             <StyledPrimaryButton
                                                 onClick={handleNext}
@@ -1702,6 +1848,7 @@ export const EditSpaceForm = ({
                                             </StyledPrimaryButton>
                                         )}
                                     </Box>
+                                    {activeStep === addModeLastTabId && renderValidationSummary()}
                                 </Grid>
                             </Grid>
                         </form>
@@ -1768,7 +1915,8 @@ export const EditSpaceForm = ({
                                                     data-testid="space-deleted-notice-text"
                                                     sx={{ mb: 1 }}
                                                 >
-                                                    This Space has been deleted and is not visible to users. You can restore it using the button below.
+                                                    This Space has been deleted and is not visible to users. You can
+                                                    restore it using the button below.
                                                 </Typography>
                                                 <StyledPrimaryButton
                                                     onClick={handleUndeleteClick}
@@ -1856,8 +2004,11 @@ export const EditSpaceForm = ({
                             <Grid item xs={6}>
                                 {cancelButton()}
                             </Grid>
-                            <Grid item xs={6} align="right">
-                                {saveButton()}
+                            <Grid item xs={6} style={{ textAlign: 'right' }}>
+                                <Box sx={{ display: 'inline-flex' }}>{saveButton()}</Box>
+                            </Grid>
+                            <Grid item xs={12}>
+                                {renderValidationSummary()}
                             </Grid>
                         </Grid>
                     </>
