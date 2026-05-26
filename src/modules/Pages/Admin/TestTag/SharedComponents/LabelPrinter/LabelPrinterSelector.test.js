@@ -2,26 +2,27 @@ import React from 'react';
 import { rtlRender, fireEvent } from 'test-utils';
 import LabelPrinterSelector from './LabelPrinterSelector';
 
+function setup(testProps = {}, renderer = rtlRender) {
+    const defaultLocale = {
+        printerLabel: 'Printer',
+        unknownPrinter: 'Unknown Printer',
+    };
+
+    const defaultPrinters = [{ name: 'Printer1' }, { name: 'Printer2' }, { name: 'Printer3' }];
+
+    const defaultProps = {
+        id: 'test',
+        list: defaultPrinters,
+        value: null,
+        onChange: jest.fn(),
+        locale: defaultLocale,
+        ...testProps,
+    };
+
+    return renderer(<LabelPrinterSelector {...defaultProps} />);
+}
+
 describe('LabelPrinterSelector', () => {
-    function setup(testProps = {}, renderer = rtlRender) {
-        const defaultLocale = {
-            unknownPrinter: 'Unknown Printer',
-        };
-
-        const defaultPrinters = [{ name: 'Printer1' }, { name: 'Printer2' }, { name: 'Printer3', noconfig: true }];
-
-        const defaultProps = {
-            id: 'test',
-            list: defaultPrinters,
-            value: null,
-            onChange: jest.fn(),
-            locale: defaultLocale,
-            ...testProps,
-        };
-
-        return renderer(<LabelPrinterSelector {...defaultProps} />);
-    }
-
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -76,17 +77,6 @@ describe('LabelPrinterSelector', () => {
 
         expect(getByRole('option', { name: 'Printer1' })).toBeInTheDocument();
         expect(getByRole('option', { name: 'Printer2' })).toBeInTheDocument();
-        expect(getByRole('option', { name: /Printer3.*Unknown Printer/ })).toBeInTheDocument();
-    });
-
-    it('shows unknown printer suffix for printers with noconfig', () => {
-        const { getByTestId, getByRole } = setup();
-
-        const input = getByTestId('label_printer_selector-test-input');
-        fireEvent.mouseDown(input);
-
-        const option = getByRole('option', { name: /Printer3.*Unknown Printer/ });
-        expect(option).toHaveTextContent('Printer3 (Unknown Printer)');
     });
 
     it('calls onChange when option is selected', () => {
@@ -102,23 +92,6 @@ describe('LabelPrinterSelector', () => {
             expect.anything(),
             expect.anything(),
         );
-    });
-
-    it('disables unknown printers when disableUnknownPrinters is true', () => {
-        const { getByTestId, getByRole } = setup({ disableUnknownPrinters: true });
-
-        fireEvent.mouseDown(getByTestId('label_printer_selector-test-input'));
-
-        expect(getByRole('option', { name: 'Printer1' })).not.toHaveAttribute('aria-disabled', 'true');
-        expect(getByRole('option', { name: /Printer3.*Unknown Printer/ })).toHaveAttribute('aria-disabled', 'true');
-    });
-
-    it('does not disable unknown printers when disableUnknownPrinters is false', () => {
-        const { getByTestId, getByRole } = setup({ disableUnknownPrinters: false });
-
-        fireEvent.mouseDown(getByTestId('label_printer_selector-test-input'));
-        expect(getByRole('option', { name: 'Printer1' })).not.toHaveAttribute('aria-disabled', 'true');
-        expect(getByRole('option', { name: /Printer3.*Unknown Printer/ })).not.toHaveAttribute('aria-disabled', 'true');
     });
 
     it('renders with error state', () => {

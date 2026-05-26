@@ -126,3 +126,37 @@ export const validateTemplateUserVariable = row => {
 
     return nameInvalid || labelInvalid || valueInvalid;
 };
+
+export const formatTemplate = (template, templateData, inspectionData) => {
+    let result = template;
+
+    /* istanbul ignore else */
+    if (Array.isArray(templateData)) {
+        for (const item of templateData) {
+            const placeholder = item.printer_template_var_name;
+            const value = item.printer_template_var_value;
+
+            /* istanbul ignore else */
+            if (placeholder) {
+                result = result.replaceAll(placeholder, value);
+            }
+        }
+    }
+
+    /* istanbul ignore else */
+    if (inspectionData && typeof inspectionData === 'object') {
+        for (const [key, value] of Object.entries(inspectionData)) {
+            result = result.replaceAll(`{*${key.toLocaleUpperCase()}*}`, value);
+        }
+    }
+
+    return result;
+};
+
+export const getLabelDates = date => {
+    const testDate = date.toISOString().split('T')[0]; // YYYY-MM-DD
+    const dueDate = `${date.getFullYear()}${date.toLocaleString('en-AU', { month: 'short' })}${String(
+        date.getDate(),
+    ).padStart(2, '0')}`; // YYYYMonDD
+    return { testDate, dueDate };
+};

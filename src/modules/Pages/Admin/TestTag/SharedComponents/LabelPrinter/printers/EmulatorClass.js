@@ -38,11 +38,7 @@ export const createPrinter = () => {
     const code = 'emulator';
 
     const getAvailablePrinters = async () => {
-        return await [
-            printerDescriptor,
-            { ...printerDescriptor, name: 'New printer' },
-            { ...printerDescriptor, name: null },
-        ];
+        return await [printerDescriptor, { ...printerDescriptor, name: null }];
     };
 
     const getConnectionStatus = async () => {
