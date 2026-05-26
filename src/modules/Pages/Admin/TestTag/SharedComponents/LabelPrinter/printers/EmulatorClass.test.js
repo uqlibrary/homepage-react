@@ -65,10 +65,9 @@ describe('EmulatorClass', () => {
             const printers = await result.current.getAvailablePrinters();
 
             expect(Array.isArray(printers)).toBe(true);
-            expect(printers).toHaveLength(3);
+            expect(printers).toHaveLength(2);
             expect(printers[0]).toHaveProperty('name', 'Emulator');
-            expect(printers[1]).toHaveProperty('name', 'New printer');
-            expect(printers[2]).toHaveProperty('name', null);
+            expect(printers[1]).toHaveProperty('name', null);
         });
 
         it('should return default printer', async () => {

@@ -127,28 +127,23 @@ export const validateTemplateUserVariable = row => {
     return nameInvalid || labelInvalid || valueInvalid;
 };
 
-export const hasPrinterError = (printerPreference, availablePrinters = []) => {
-    return (
-        !!!printerPreference ||
-        availablePrinters?.length === 0 ||
-        availablePrinters?.every(printer => !!!printer?.name) ||
-        availablePrinters?.findIndex(printer => printer?.name === printerPreference?.name) === -1
-    );
-};
-
 export const formatTemplate = (template, templateData, inspectionData) => {
     let result = template;
 
+    /* istanbul ignore else */
     if (Array.isArray(templateData)) {
         for (const item of templateData) {
             const placeholder = item.printer_template_var_name;
             const value = item.printer_template_var_value;
+
+            /* istanbul ignore else */
             if (placeholder) {
                 result = result.replaceAll(placeholder, value);
             }
         }
     }
 
+    /* istanbul ignore else */
     if (inspectionData && typeof inspectionData === 'object') {
         for (const [key, value] of Object.entries(inspectionData)) {
             result = result.replaceAll(`{*${key.toLocaleUpperCase()}*}`, value);

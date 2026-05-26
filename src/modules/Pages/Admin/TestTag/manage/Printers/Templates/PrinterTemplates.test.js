@@ -33,11 +33,36 @@ jest.mock('./PlaceholderEditor', () => {
     };
 });
 
+const mockSetCookie = jest.fn();
+const mockCookies = {};
+jest.mock('react-cookie', () => ({
+    useCookies: jest.fn(() => [mockCookies, mockSetCookie]),
+}));
+
 jest.mock('data/actions', () => ({
     loadPrinterTemplateList: jest.fn(() => () => Promise.resolve()),
     addPrinterTemplate: jest.fn(() => () => Promise.resolve()),
     updatePrinterTemplate: jest.fn(() => () => Promise.resolve()),
     clearPrinterTemplateListError: jest.fn(() => () => Promise.resolve()),
+}));
+
+const mockGetConnectionStatus = jest.fn();
+const mockPrint = jest.fn().mockResolvedValue('ok');
+const mockSetPrinter = jest.fn().mockResolvedValue({ name: 'Emulator' });
+
+jest.mock('../../../SharedComponents/LabelPrinter', () => ({
+    ...jest.requireActual('../../../SharedComponents/LabelPrinter'),
+    useLabelPrinter: jest.fn(() => ({
+        printerCode: 'Emulator',
+        printer: {
+            code: 'emulator',
+            getAvailablePrinters: jest.fn().mockResolvedValue([{ name: 'Emulator' }]),
+            getConnectionStatus: mockGetConnectionStatus,
+            setPrinter: mockSetPrinter,
+            print: mockPrint,
+        },
+        availablePrinters: [{ name: 'Emulator' }, { name: 'GK420t' }],
+    })),
 }));
 
 const actions = require('data/actions');
@@ -75,10 +100,17 @@ describe('PrinterTemplates', () => {
         actions.loadPrinterTemplateList.mockReturnValue(() => Promise.resolve());
         actions.addPrinterTemplate.mockReturnValue(() => Promise.resolve());
         actions.updatePrinterTemplate.mockReturnValue(() => Promise.resolve());
+        mockCookies.TNT_LABEL_PRINTER_PREFERENCE = {
+            name: 'Emulator',
+            shortName: 'Emulator',
+            templateId: 1,
+            templateName: 'Zebra',
+        };
     });
 
     afterEach(() => {
         jest.clearAllMocks();
+        delete mockCookies.TNT_LABEL_PRINTER_PREFERENCE;
     });
 
     it('renders component with template list', () => {
@@ -231,6 +263,12 @@ describe('PrinterTemplates', () => {
     });
 
     it('shows printer selector dialog when print button is clicked in Add mode', async () => {
+        global.fetch = jest.fn();
+        const mockResponse = { ok: true };
+        global.fetch.mockResolvedValue(mockResponse);
+        // Override the mock to return ready: false for this test
+        mockGetConnectionStatus.mockResolvedValue({ ready: true });
+
         const { getByTestId, queryByTestId, getByRole, getByText } = setup();
 
         await waitFor(() => {
@@ -280,9 +318,97 @@ describe('PrinterTemplates', () => {
         expect(getByTestId('label_printer_selector-printer-template-management-input')).toHaveValue('Emulator');
 
         await userEvent.click(getByTestId('confirm-label-printer'));
-        expect(getByText('Encountered an error: Unable to send the print job. Please try again.')).toBeInTheDocument();
+
+        expect(getByText('Print job sent to Emulator.')).toBeInTheDocument();
     });
 
+    // coverage for print errors
+    describe('coverage - print errors', () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+        afterAll(() => {
+            mockGetConnectionStatus.mockResolvedValue({ ready: true });
+        });
+
+        it('should show alert when printer is not ready', async () => {
+            global.fetch = jest.fn();
+            const mockResponse = { ok: true };
+            global.fetch.mockResolvedValueOnce(mockResponse);
+            // Override the mock to return ready: false for this test
+            mockGetConnectionStatus.mockResolvedValue({ ready: false });
+
+            const { getByTestId, getByRole, getByText, queryByTestId } = setup();
+
+            await waitFor(() => {
+                expect(getByText('UQL Standard Template')).toBeVisible();
+            });
+
+            await userEvent.click(getByTestId('action_cell-1-edit-button'));
+
+            await waitFor(() => {
+                expect(getByTestId('printer_template_name-input')).toBeInTheDocument();
+            });
+
+            expect(getByTestId('update_dialog-accessory-button')).not.toHaveAttribute('disabled');
+
+            await userEvent.click(getByTestId('update_dialog-accessory-button'));
+
+            await waitFor(() => {
+                expect(getByTestId('dialogbox-label-printer')).toBeInTheDocument();
+            });
+            await userEvent.click(getByTestId('label_printer_selector-printer-template-management-input'));
+            await userEvent.click(getByRole('option', { name: 'Emulator' }));
+
+            expect(getByTestId('label_printer_selector-printer-template-management-input')).toHaveValue('Emulator');
+
+            await userEvent.click(getByTestId('confirm-label-printer'));
+
+            await waitFor(() => {
+                expect(queryByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+                    'The selected printer is not ready.',
+                );
+            });
+        }, 20000);
+        it('should show alert when printer connection fails', async () => {
+            global.fetch = jest.fn();
+            const mockResponse = { ok: false };
+            global.fetch.mockResolvedValueOnce(mockResponse);
+            mockSetPrinter.mockRejectedValueOnce({ ok: false });
+
+            const { getByTestId, getByRole, getByText, queryByTestId } = setup();
+
+            await waitFor(() => {
+                expect(getByText('UQL Standard Template')).toBeVisible();
+            });
+
+            await userEvent.click(getByTestId('action_cell-1-edit-button'));
+
+            await waitFor(() => {
+                expect(getByTestId('printer_template_name-input')).toBeInTheDocument();
+            });
+
+            expect(getByTestId('update_dialog-accessory-button')).not.toHaveAttribute('disabled');
+
+            await userEvent.click(getByTestId('update_dialog-accessory-button'));
+
+            await waitFor(() => {
+                expect(getByTestId('dialogbox-label-printer')).toBeInTheDocument();
+            });
+            await userEvent.click(getByTestId('label_printer_selector-printer-template-management-input'));
+            await userEvent.click(getByRole('option', { name: 'Emulator' }));
+
+            expect(getByTestId('label_printer_selector-printer-template-management-input')).toHaveValue('Emulator');
+
+            await userEvent.click(getByTestId('confirm-label-printer'));
+
+            await waitFor(() => {
+                expect(queryByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+                    'Unable to connect to the selected printer',
+                );
+            });
+        }, 20000);
+    });
     it('opens Edit dialog when edit button is clicked', async () => {
         const { getByTestId, getByText } = setup();
 
@@ -332,6 +458,11 @@ describe('PrinterTemplates', () => {
     });
 
     it('shows printer selector dialog when print button is clicked in Edit mode', async () => {
+        global.fetch = jest.fn();
+        const mockResponse = { ok: true };
+        global.fetch.mockResolvedValue(mockResponse);
+        // Override the mock to return ready: false for this test
+        mockGetConnectionStatus.mockResolvedValue({ ready: true });
         const { getByTestId, getByRole, getByText } = setup();
 
         await waitFor(() => {
@@ -357,7 +488,7 @@ describe('PrinterTemplates', () => {
         expect(getByTestId('label_printer_selector-printer-template-management-input')).toHaveValue('Emulator');
 
         await userEvent.click(getByTestId('confirm-label-printer'));
-        expect(getByText('Encountered an error: Unable to send the print job. Please try again.')).toBeInTheDocument();
+        expect(getByText('Print job sent to Emulator.')).toBeInTheDocument();
     });
 
     it('shows error alert when updatePrinterTemplate fails', async () => {

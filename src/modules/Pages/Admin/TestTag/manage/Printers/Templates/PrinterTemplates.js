@@ -26,7 +26,6 @@ import {
     transformAddRequest,
     emptyActionState,
     actionReducer,
-    hasPrinterError,
     getLabelDates,
     formatTemplate,
 } from './utils';
@@ -40,6 +39,7 @@ import {
 } from '../../../SharedComponents/LabelPrinter';
 import { getDefaultDeptPrinter } from '../../../helpers/labelPrinting';
 import { COOKIE_PRINTER_PREFERENCE } from '../../../config/labelPrinting';
+import { hasPrinterError } from '../../../helpers/labelPrinting';
 
 const componentId = 'printer-template-management';
 
@@ -230,16 +230,18 @@ const PrinterTemplates = () => {
     const handlePrint = useCallback(() => {
         const now = new Date();
         const { testDate, dueDate } = getLabelDates(now);
+
         const formattedTemplate = formatTemplate(
             testPrintData.current.printer_template_code,
             testPrintData.current.vars,
             {
-                userid: user.user_uid,
+                userid: user.user_licence_number,
                 assetId: `${user.user_department}000000`,
                 testDate,
                 dueDate,
             },
         );
+
         printer
             ?.setPrinter(selectedPrinter)
             .then(() => {

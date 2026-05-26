@@ -20,22 +20,9 @@ import inspectLocale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 import { LabelPrinterSelector, LabelPrinterTemplateSelector } from '../../SharedComponents/LabelPrinter';
 import { useLabelPrinterTemplate } from '../../SharedComponents/LabelPrinter/hooks/useLabelPrinterTemplate';
+import { hasPrinterError, hasTemplateError } from '../../helpers/labelPrinting';
 
 const MIN_CONTENT_WIDTH = 400;
-
-export const hasPrinterError = (printerPreference, availablePrinters = []) => {
-    return (
-        !!!printerPreference ||
-        availablePrinters?.length === 0 ||
-        availablePrinters?.every(printer => !!!printer?.name) ||
-        availablePrinters?.findIndex(printer => printer?.name === printerPreference?.name) === -1
-    );
-};
-
-export const hasTemplateError = printerPreference => {
-    const pref = !!!printerPreference ? {} : printerPreference;
-    return !Object.hasOwn(pref, 'templateId');
-};
 
 export const InspectionSuccessPrintDialog = ({
     inspectionSuccessPrintDialogId,

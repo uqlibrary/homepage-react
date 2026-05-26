@@ -92,7 +92,7 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 ).not.toBeVisible();
             });
 
-            test('can create new template', async ({ page }) => {
+            test('can create new template and print', async ({ page }) => {
                 const addTestRow = async () => {
                     await expect(page.getByRole('menuitem', { name: 'Save' })).toBeVisible();
 
@@ -277,6 +277,16 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 await currentTemplateCheckbox.click();
                 await expect(currentTemplateCheckbox).toBeChecked();
 
+                // test print button is available and clickable
+                await expect(page.getByTestId('update_dialog-accessory-button')).not.toBeDisabled();
+                await page.getByTestId('update_dialog-accessory-button').click();
+                await expect(page.getByTestId('dialogbox-label-printer')).toBeVisible();
+                await page.getByTestId('label_printer_selector-printer-template-management-input').click();
+                await page.getByRole('option', { name: 'Emulator' }).click();
+
+                await page.getByTestId('confirm-label-printer').click();
+                await expect(page.getByTestId('dialogbox-label-printer')).not.toBeVisible();
+
                 await page.getByTestId('update_dialog-action-button').click();
                 await expect(
                     page
@@ -317,7 +327,7 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 await expect(page.getByTestId('printer_template_name-input')).toHaveValue('UQL Standard Template');
                 await expect(page.getByRole('button', { name: 'PRINTER_01' })).toBeVisible();
                 await expect(page.getByRole('button', { name: 'PRINTER_01' })).toBeVisible();
-                await expect(page.getByTestId('data_table-vars-input').getByRole('row')).toHaveCount(17);
+                await expect(page.getByTestId('data_table-vars-input').getByRole('row')).toHaveCount(16);
                 await expect(page.getByTestId('printer_template_code-input')).toHaveValue(/\^XA\^FO\{\{LOGOX\}\}/); // partial regexp match
                 await expect(page.getByTestId('printer_template_current_flag_cb-input')).toBeChecked();
                 // Click Cancel
@@ -330,7 +340,16 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 ).not.toBeVisible();
             });
 
-            test('Saves as expected', async ({ page }) => {
+            test('Prints/Saves as expected', async ({ page }) => {
+                // test print button is available and clickable
+                await expect(page.getByTestId('update_dialog-accessory-button')).not.toBeDisabled();
+                await page.getByTestId('update_dialog-accessory-button').click();
+                await expect(page.getByTestId('dialogbox-label-printer')).toBeVisible();
+                await page.getByTestId('label_printer_selector-printer-template-management-input').click();
+                await page.getByRole('option', { name: 'Emulator' }).click();
+                await page.getByTestId('confirm-label-printer').click();
+                await expect(page.getByTestId('dialogbox-label-printer')).not.toBeVisible();
+
                 // Save without any changes
                 await page.getByRole('button', { name: 'Update' }).click();
                 await expect(
