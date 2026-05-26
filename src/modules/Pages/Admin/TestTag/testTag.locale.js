@@ -438,7 +438,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `Asset type management for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `Asset type management for ${dept}`,
                     addButtonLabel: 'Add asset type',
                 },
                 addAsset: {
@@ -689,7 +689,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `Testing device management for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `Testing device management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -767,7 +767,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `Test note management for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `Test note management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -808,7 +808,7 @@ export default {
                         helperText: 'Scan or enter a new ID to search',
                         placeholder: 'Enter at least 3 characters',
                     },
-
+                    includeAllTeams: 'All team assets',
                     actionTooltips: {
                         edit: 'Edit test notes',
                     },
@@ -846,7 +846,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `Bulk asset management for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `Bulk asset management for ${dept}`,
                 },
                 form: {
                     columns: {
@@ -906,6 +906,7 @@ export default {
                             previous: 'Back',
                             submit: 'Bulk Update',
                         },
+                        includeAllTeams: 'All team assets',
                         one: {
                             title: 'Step 1: Choose assets to update in bulk',
                             addText: 'ADD NEW ASSET',
@@ -934,6 +935,7 @@ export default {
                                 assetType: 'Update Asset Type',
                                 notes: 'Clear test notes',
                                 assetStatus: 'Update Asset Status',
+                                assetTeam: 'Update Asset Team',
                             },
                             locationType: {
                                 title: 'Location',
@@ -1197,7 +1199,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `Testing devices due recalibration report for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `Testing devices due recalibration report for ${dept}`,
                 },
                 form: {
                     columns: {
@@ -1233,7 +1235,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `Asset tests due report for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `Asset tests due report for ${dept}`,
                 },
                 form: {
                     title: 'Filter',
@@ -1270,7 +1272,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `Tests by licenced users report for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `Tests by licenced users report for ${dept}`,
                 },
                 form: {
                     title: 'Filter',
@@ -1325,7 +1327,7 @@ export default {
                     },
                 ],
                 header: {
-                    pageSubtitle: (team, dept) => `Asset tests report for ${team} (${dept})`,
+                    pageSubtitle: (_, dept) => `Asset tests report for ${dept}`,
                 },
                 form: {
                     title: 'Filters',

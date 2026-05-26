@@ -10,10 +10,7 @@ test.describe('Test and Tag Manage Inspection Notes', () => {
 
     const checkBaseline = async (page: Page) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(
-            page,
-            locale.pages.manage.inspectiondetails.header.pageSubtitle('Work Station Support', 'Library'),
-        );
+        await assertTitles(page, locale.pages.manage.inspectiondetails.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
     };
 
@@ -29,6 +26,38 @@ test.describe('Test and Tag Manage Inspection Notes', () => {
         await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL000010')).toBeVisible();
         await expect((await getFieldValue(page, 'asset_id_displayed', 9)).getByText('UQL000019')).toBeVisible();
         await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–10 of 10')).toBeVisible();
+    });
+
+    test('allows wildcard searching of assets across all teams', async ({ page }) => {
+        await checkBaseline(page);
+        // Check the "All team assets" checkbox
+
+        const checkbox = page.getByRole('checkbox', { name: 'All team assets' });
+        if (await checkbox.isChecked()) {
+            await checkbox.uncheck();
+        }
+
+        // Enter search criteria
+        await page.getByTestId('asset_selector-inspection-details-input').fill('UQL00SP29'); // wont return any results without the "All team assets" checkbox selected
+        await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL00SP29')).not.toBeVisible();
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('0–0 of 0')).toBeVisible();
+
+        await checkbox.check();
+
+        await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL00SP29')).toBeVisible();
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–1 of 1')).toBeVisible();
+
+        // now test clear button works as expected with "All team assets" checkbox selected
+        await page.getByTestId('asset_selector-inspection-details-input').click();
+        await page.getByRole('button', { name: 'Clear' }).click();
+        await expect(page.getByTestId('asset_selector-inspection-details-input')).toHaveValue('');
+        await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL00SP29')).not.toBeVisible();
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('0–0 of 0')).toBeVisible();
+
+        await checkbox.uncheck();
+        await expect(page.getByTestId('asset_selector-inspection-details-input')).toHaveValue(''); // still empty
+        await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL00SP29')).not.toBeVisible();
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('0–0 of 0')).toBeVisible();
     });
 
     test('allows searching and editing of discard assets', async ({ page }) => {

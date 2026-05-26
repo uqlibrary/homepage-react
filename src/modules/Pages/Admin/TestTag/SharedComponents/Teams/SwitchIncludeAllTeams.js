@@ -5,7 +5,7 @@ import { useCookies } from 'react-cookie';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 
-import { COOKIE_INCLUDE_ALL_TEAMS } from '../config';
+const COOKIE_INCLUDE_ALL_TEAMS = 'TNT_ALL_TEAMS';
 
 const rootId = 'all-teams-switch';
 const SwitchIncludeAllTeams = ({

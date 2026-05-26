@@ -8,12 +8,13 @@ env:
     SENTRY_AUTH_TOKEN: "/CodeBuild/homepage/SENTRY_AUTH_TOKEN"
     SENTRY_ORG: "/CodeBuild/homepage/SENTRY_ORG"
     SENTRY_PROJECT: "/CodeBuild/homepage/SENTRY_PROJECT"
+    BARCODE_SCANNER_WASM_PATH: "/CodeBuild/homepage/BARCODE_SCANNER_WASM_PATH"
 phases:
   install:
     runtime-versions:
-      nodejs: 22
+      nodejs: 24
     commands:
-      - n 22.22.2
+      - n 24.15.0
       - set
       - sysctl fs.inotify.max_user_watches
       - sysctl fs.inotify.max_user_watches=524288
