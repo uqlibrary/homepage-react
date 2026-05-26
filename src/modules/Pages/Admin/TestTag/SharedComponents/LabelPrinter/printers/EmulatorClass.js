@@ -57,17 +57,14 @@ export const createPrinter = () => {
         return await selectedPrinter;
     };
 
-    const print = async data => {
+    const print = async data =>
         await fetch(printerAddress, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/zpl',
             },
             body: data,
-        }).then(response => {
-            return response;
         });
-    };
 
     return {
         code,
