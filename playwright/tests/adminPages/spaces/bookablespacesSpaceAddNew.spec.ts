@@ -173,6 +173,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_description: null,
             space_draftmode: false,
             space_capacity: '2',
+            archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -328,6 +329,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_zlevel: 1,
             space_draftmode: false,
             space_capacity: '8',
+            archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });

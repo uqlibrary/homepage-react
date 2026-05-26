@@ -516,6 +516,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_opening_hours_id: -1,
             space_services_page: '',
             uploadedFile: [],
+            archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -890,6 +891,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_longitude: LAW_DEFAULT_LONGITUDE,
             space_zlevel: 1,
             space_capacity: '32',
+            archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -1016,6 +1018,7 @@ test.describe('Spaces admin - edit other spaces', () => {
             ...originalMockData(testSpaceUuid),
             space_capacity: Number(spaceCapacityValue),
             space_external_book_url: null,
+            archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -1054,6 +1057,7 @@ test.describe('Spaces admin - edit other spaces', () => {
         const expectedValues = {
             ...originalMockData(testSpaceUuid),
             space_capacity: '8',
+            archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -1096,6 +1100,7 @@ test.describe('Spaces admin - edit other spaces', () => {
             ...originalMockData(testSpaceuuid),
             space_opening_hours_id: -1,
             space_capacity: newCapacityValue,
+            archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -1128,6 +1133,7 @@ test.describe('Spaces admin - edit other spaces', () => {
         const expectedValues = {
             ...originalMockData(testSpaceuuid),
             space_capacity: 0,
+            archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -1173,6 +1179,7 @@ test.describe('booking link controller works properly', () => {
             space_draftmode: true,
             space_capacity: 7,
             space_external_book_url: null,
+            archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -1206,6 +1213,7 @@ test.describe('booking link controller works properly', () => {
             ...originalMockData(testSpaceUuid),
             // space_type_id: originalMockData('97fd5_nm39_gh29')?.space_type_id,
             // space_draftmode: false,
+            archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -1257,6 +1265,7 @@ test.describe('booking link controller works properly', () => {
         const expectedValues = {
             ...originalMockData(testSpaceUuid),
             space_external_book_url: 'http://example.com',
+            archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
