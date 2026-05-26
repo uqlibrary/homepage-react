@@ -370,6 +370,45 @@ describe('PrinterTemplates', () => {
                 );
             });
         }, 20000);
+        it('should show alert when print job fails', async () => {
+            global.fetch = jest.fn();
+            const mockResponse = { ok: true };
+            global.fetch.mockResolvedValueOnce(mockResponse);
+            mockGetConnectionStatus.mockResolvedValue({ ready: true });
+            mockPrint.mockRejectedValueOnce({ ok: false });
+
+            const { getByTestId, getByRole, getByText, queryByTestId } = setup();
+
+            await waitFor(() => {
+                expect(getByText('UQL Standard Template')).toBeVisible();
+            });
+
+            await userEvent.click(getByTestId('action_cell-1-edit-button'));
+
+            await waitFor(() => {
+                expect(getByTestId('printer_template_name-input')).toBeInTheDocument();
+            });
+
+            expect(getByTestId('update_dialog-accessory-button')).not.toHaveAttribute('disabled');
+
+            await userEvent.click(getByTestId('update_dialog-accessory-button'));
+
+            await waitFor(() => {
+                expect(getByTestId('dialogbox-label-printer')).toBeInTheDocument();
+            });
+            await userEvent.click(getByTestId('label_printer_selector-printer-template-management-input'));
+            await userEvent.click(getByRole('option', { name: 'Emulator' }));
+
+            expect(getByTestId('label_printer_selector-printer-template-management-input')).toHaveValue('Emulator');
+
+            await userEvent.click(getByTestId('confirm-label-printer'));
+
+            await waitFor(() => {
+                expect(queryByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+                    'Unable to send the print job.',
+                );
+            });
+        }, 20000);
         it('should show alert when printer connection fails', async () => {
             global.fetch = jest.fn();
             const mockResponse = { ok: false };
