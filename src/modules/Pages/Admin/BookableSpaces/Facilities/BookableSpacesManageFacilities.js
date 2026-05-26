@@ -49,6 +49,7 @@ import {
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { a11yProps, reverseA11yProps } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { TabPanel } from 'modules/Pages/LearningResources/shared/TabPanel';
+import { buildFacilityGroupOrderPayload, orderFacilityTypeGroups } from './facilityGroupOrderHelpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -333,13 +334,9 @@ export const BookableSpacesManageFacilities = ({
         }, 1000); // make the reload less abrupt
     };
 
-    const [sortList, setSortList2] = useState({});
-    const setSortList = request => {
-        console.log('setSortList', [...request?.data]);
-        setSortList2(request?.data);
-
-        !!request?.update && updateGroupOrder(request?.data);
-    };
+    const orderedFacilityTypeGroups = React.useMemo(() => {
+        return orderFacilityTypeGroups(facilityTypeList?.data?.facility_type_groups || []);
+    }, [facilityTypeList?.data?.facility_type_groups]);
 
     React.useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -367,15 +364,6 @@ export const BookableSpacesManageFacilities = ({
         ) {
             setFormValues({
                 ['facility_types']: getFlatFacilityTypeList(facilityTypeList),
-            });
-            setSortList({
-                data: facilityTypeList?.data?.facility_type_groups.map(g => {
-                    return {
-                        facility_type_group_id: g?.facility_type_group_id,
-                        facility_type_group_order: g?.facility_type_group_order,
-                    };
-                }),
-                update: false,
             });
         }
     }, [facilityTypeListLoading, facilityTypeListError, facilityTypeList]);
@@ -1013,30 +1001,33 @@ export const BookableSpacesManageFacilities = ({
     };
 
     const moveItem = (fromIndex, toIndex) => {
-        const newSortList = [...sortList];
-
-        const sourceItemIndex = newSortList?.findIndex(item => item?.facility_type_group_order === fromIndex + 1);
-        if (sourceItemIndex === -1) {
-            console.warn(`Item with facility_type_group_order ${fromIndex} not found`);
+        const totalGroups = orderedFacilityTypeGroups?.length || 0;
+        if (fromIndex === toIndex) {
             return;
         }
 
-        const [sourceItem] = newSortList?.splice(sourceItemIndex, 1);
+        if (fromIndex < 0 || toIndex < 0 || fromIndex >= totalGroups || toIndex >= totalGroups) {
+            console.warn('Invalid group index for drag-and-drop reorder', {
+                fromIndex,
+                toIndex,
+                totalGroups,
+            });
+            return;
+        }
 
-        newSortList?.push({
-            facility_type_group_id: sourceItem?.facility_type_group_id,
-            facility_type_group_order: toIndex === 1 ? 0 : toIndex,
-        });
+        const reorderedGroups = [...orderedFacilityTypeGroups];
+        const [movedGroup] = reorderedGroups.splice(fromIndex, 1);
 
-        newSortList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order);
+        if (!movedGroup?.facility_type_group_id) {
+            console.warn('Moved group missing facility_type_group_id', movedGroup);
+            return;
+        }
 
-        newSortList?.forEach((item, index) => {
-            item.facility_type_group_order = index + 1;
-        });
+        reorderedGroups.splice(toIndex, 0, movedGroup);
 
-        const result = [...newSortList]?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order);
+        const valuesToSend = buildFacilityGroupOrderPayload(reorderedGroups);
 
-        setSortList({ data: result, update: true });
+        updateGroupOrder(valuesToSend);
     };
 
     return (
@@ -1146,21 +1137,16 @@ export const BookableSpacesManageFacilities = ({
                                             <DndProvider backend={HTML5Backend}>
                                                 <div data-testid="spaces-dragLandingAarea">
                                                     <ul>
-                                                        {facilityTypeList?.data?.facility_type_groups
-                                                            ?.sort(
-                                                                (a, b) =>
-                                                                    a?.facility_type_group_order -
-                                                                    b?.facility_type_group_order,
-                                                            )
-                                                            ?.map((item, index) => (
-                                                                <DraggableListItem
-                                                                    key={`draggable-facility-group-type-${index}`}
-                                                                    item={item}
-                                                                    index={index}
-                                                                    moveItem={moveItem}
-                                                                    // handleChange={handleChange}
-                                                                />
-                                                            ))}
+                                                        {orderedFacilityTypeGroups?.map((item, index) => (
+                                                            <DraggableListItem
+                                                                key={`draggable-facility-group-type-${item?.facility_type_group_id ||
+                                                                    index}`}
+                                                                item={item}
+                                                                index={index}
+                                                                moveItem={moveItem}
+                                                                // handleChange={handleChange}
+                                                            />
+                                                        ))}
                                                     </ul>
                                                 </div>
                                             </DndProvider>
@@ -1184,14 +1170,7 @@ export const BookableSpacesManageFacilities = ({
                                                 Add and Edit Filter types
                                             </Typography>
                                             <Grid container>
-                                                {(
-                                                    facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
-                                                        b?.facility_type_children?.length >
-                                                        a?.facility_type_children?.length
-                                                            ? -1
-                                                            : 1,
-                                                    ) || []
-                                                )?.map(group => {
+                                                {(orderedFacilityTypeGroups || [])?.map(group => {
                                                     return (
                                                         <Grid
                                                             item
