@@ -155,8 +155,8 @@ export const formatTemplate = (template, templateData, inspectionData) => {
 
 export const getLabelDates = date => {
     const testDate = date.toISOString().split('T')[0]; // YYYY-MM-DD
-    const dueDate = `${date.getFullYear()}${date.toLocaleString('en-AU', { month: 'short' })}${String(
-        date.getDate(),
-    ).padStart(2, '0')}`; // YYYYMonDD
+    const nextYear = new Date(date);
+    nextYear.setFullYear(nextYear.getFullYear() + 1);
+    const dueDate = nextYear.toISOString().split('T')[0]; // YYYY-MM-DD + 1 year
     return { testDate, dueDate };
 };
