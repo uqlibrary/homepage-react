@@ -330,24 +330,25 @@ const Inspection = ({
                 showAlert(locale.pages.general.labelPrinting.error.noPrinterSelected);
                 return;
             }
+
+            console.error('========= VAR DUMP =========');
+            console.error('/nRaw printer object/n');
+            console.error(printer);
+
+            console.error('/n= Available printers /n');
+            console.error(availablePrinters);
+
+            console.error('/n= Selected printer /n');
+            console.error(selectedPrinter);
+
+            console.error('/n= Available templates /n');
+            console.error(printerTemplateList);
+
+            console.error('========= END DUMP =========');
+
             printer
                 ?.setPrinter(selectedPrinter)
                 .then(() => {
-                    console.error('========= VAR DUMP =========');
-                    console.error('/nRaw printer object/n');
-                    console.error(printer);
-
-                    console.error('/n= Available printers /n');
-                    console.error(availablePrinters);
-
-                    console.error('/n= Selected printer /n');
-                    console.error(selectedPrinter);
-
-                    console.error('/n= Available templates /n');
-                    console.error(printerTemplateList);
-
-                    console.error('========= END DUMP =========');
-
                     printer.getConnectionStatus().then(status => {
                         if (status.ready) {
                             const template = getLabelPrinterFormattedTemplate(printerPreference.templateId, {
