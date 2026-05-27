@@ -60,6 +60,7 @@ import {
 } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceLocationMap';
+import { orderFacilityTypeGroups } from 'modules/Pages/Admin/BookableSpaces/Facilities/facilityGroupOrderHelpers';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
@@ -1072,50 +1073,45 @@ export const EditSpaceForm = ({
             return <p>No filter types in system.</p>;
         }
 
-        const facilityTypeGroups = facilityTypeList?.data?.facility_type_groups || [];
-        const sortedUsedGroups = [...facilityTypeGroups]?.sort(
-            (a, b) => a?.facility_type_group_order - b?.facility_type_group_order,
-        );
+        const sortedUsedGroups = orderFacilityTypeGroups(facilityTypeList?.data?.facility_type_groups || []);
 
         return (
             <>
-                {sortedUsedGroups
-                    ?.sort((a, b) => a?.facility_type_children.length - b?.facility_type_children.length)
-                    .map(group => (
-                        <StyledFacilityGroupCheckboxBlock key={group?.facility_type_group_id}>
-                            <Typography component={'h5'} variant={'h6'} style={{ fontWeight: '400' }}>
-                                {group?.facility_type_group_name}
-                            </Typography>
-                            <ul data-testid="facility-type-checkbox-list">
-                                {group?.facility_type_children && group?.facility_type_children?.length > 0 ? (
-                                    group?.facility_type_children?.map(facilityType => {
-                                        const isChecked = () =>
-                                            formValues?.facility_types?.find(
-                                                ft => ft?.facility_type_id === facilityType?.facility_type_id,
-                                            );
-                                        return (
-                                            <li
-                                                key={`facility-type-listitem-${facilityType?.facility_type_id}`}
-                                                data-testid={`facility-type-listitem-${facilityType?.facility_type_id}`}
-                                            >
-                                                <InputLabel title={facilityType?.facility_type_name}>
-                                                    <Checkbox
-                                                        checked={!!isChecked()}
-                                                        data-testid={`filtertype-${facilityType?.facility_type_id}`}
-                                                        id={`filtertype-${facilityType?.facility_type_id}`}
-                                                        onChange={handleChange('facility_type_id')}
-                                                    />
-                                                    {facilityType?.facility_type_name}
-                                                </InputLabel>
-                                            </li>
+                {sortedUsedGroups?.map(group => (
+                    <StyledFacilityGroupCheckboxBlock key={group?.facility_type_group_id}>
+                        <Typography component={'h5'} variant={'h6'} style={{ fontWeight: '400' }}>
+                            {group?.facility_type_group_name}
+                        </Typography>
+                        <ul data-testid="facility-type-checkbox-list">
+                            {group?.facility_type_children && group?.facility_type_children?.length > 0 ? (
+                                group?.facility_type_children?.map(facilityType => {
+                                    const isChecked = () =>
+                                        formValues?.facility_types?.find(
+                                            ft => ft?.facility_type_id === facilityType?.facility_type_id,
                                         );
-                                    })
-                                ) : (
-                                    <li className="no-items">No facility types available</li>
-                                )}
-                            </ul>
-                        </StyledFacilityGroupCheckboxBlock>
-                    ))}
+                                    return (
+                                        <li
+                                            key={`facility-type-listitem-${facilityType?.facility_type_id}`}
+                                            data-testid={`facility-type-listitem-${facilityType?.facility_type_id}`}
+                                        >
+                                            <InputLabel title={facilityType?.facility_type_name}>
+                                                <Checkbox
+                                                    checked={!!isChecked()}
+                                                    data-testid={`filtertype-${facilityType?.facility_type_id}`}
+                                                    id={`filtertype-${facilityType?.facility_type_id}`}
+                                                    onChange={handleChange('facility_type_id')}
+                                                />
+                                                {facilityType?.facility_type_name}
+                                            </InputLabel>
+                                        </li>
+                                    );
+                                })
+                            ) : (
+                                <li className="no-items">No facility types available</li>
+                            )}
+                        </ul>
+                    </StyledFacilityGroupCheckboxBlock>
+                ))}
             </>
         );
     };
