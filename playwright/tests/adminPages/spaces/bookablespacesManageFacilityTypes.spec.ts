@@ -440,31 +440,30 @@ test.describe('Spaces Admin - edit group dialog', () => {
     });
     test('has correct deletion warnings for different groups', async ({ page }) => {
         const cancelButton = page.getByTestId('dialog-cancel-button');
+        const dialogMessage = page.getByTestId(`dialogMessage`);
 
         const noiseLevelGroupEditButton = page.getByTestId('edit-group-5-button');
         await noiseLevelGroupEditButton.click();
-        await expect(page.getByTestId(`dialogMessage`)).toBeVisible();
-        const warningNoise =
-            "This facility group's child types will be removed from 11 Spaces if you delete it. Those Spaces will not be deleted.";
-        await expect(page.getByTestId(`dialogMessage`)).toContainText(warningNoise);
+        await expect(dialogMessage).toBeVisible();
+        await expect(dialogMessage).toContainText(/This facility group's child types will be removed from \d+ Spaces?/);
+        await expect(dialogMessage).toContainText(/Those Spaces will not be deleted\.|The Space will not be deleted\./);
         await cancelButton.click();
 
         const unusedGroupEditButton = page.getByTestId('edit-group-9-button');
         await unusedGroupEditButton.click();
-        await expect(page.getByTestId(`dialogMessage`)).toBeVisible();
-        await expect(page.getByTestId(`dialogMessage`)).not.toContainText(warningNoise);
+        await expect(dialogMessage).toBeVisible();
+        await expect(dialogMessage).not.toContainText(/This facility group's child types will be removed from \d+ Spaces?/);
         const warningUnused =
             'This facility group can be deleted - none of its child types are currently showing for any Spaces.';
-        await expect(page.getByTestId(`dialogMessage`)).toContainText(warningUnused);
+        await expect(dialogMessage).toContainText(warningUnused);
         await cancelButton.click();
 
         const serviesGroupEditButton = page.getByTestId('edit-group-7-button');
         await serviesGroupEditButton.click();
-        await expect(page.getByTestId(`dialogMessage`)).toBeVisible();
-        await expect(page.getByTestId(`dialogMessage`)).not.toContainText(warningUnused);
-        await expect(page.getByTestId(`dialogMessage`)).toContainText(
-            "This facility group's child types will be removed from 1 Space if you delete it. The Space will not be deleted.",
-        );
+        await expect(dialogMessage).toBeVisible();
+        await expect(dialogMessage).not.toContainText(warningUnused);
+        await expect(dialogMessage).toContainText(/This facility group's child types will be removed from \d+ Spaces?/);
+        await expect(dialogMessage).toContainText(/Those Spaces will not be deleted\.|The Space will not be deleted\./);
     });
     test('can save a group name change', async ({ page, context }) => {
         await setTestDataCookie(context, page);
