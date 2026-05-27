@@ -241,25 +241,17 @@ const PrinterTemplates = () => {
                 dueDate,
             },
         );
-        console.error('========= VAR DUMP =========');
-        console.error('/nRaw printer object/n');
-        console.error(printer);
 
-        console.error('/n= Available printers /n');
-        console.error(availablePrinters);
-
-        console.error('/n= Selected printer /n');
-        console.error(selectedPrinter);
-
-        console.error('/n= Available templates /n');
-        console.error(printerTemplateList);
-
-        console.error('/n= Selected template data formatted /n');
-        console.error(formattedTemplate);
-        console.error('========= END DUMP =========');
+        const _selectedPrinter = availablePrinters.find(printer => printer.name === selectedPrinter.name);
+        /* istanbul ignore next */
+        if (!_selectedPrinter) {
+            console.error('Selected printer not found in available printers', _selectedPrinter, availablePrinters);
+            showAlert(locale.pages.general.labelPrinting.error.noPrinterSelected);
+            return;
+        }
 
         printer
-            ?.setPrinter(selectedPrinter)
+            ?.setPrinter(_selectedPrinter)
             .then(() => {
                 printer.getConnectionStatus().then(status => {
                     if (status.ready) {
@@ -268,7 +260,7 @@ const PrinterTemplates = () => {
                             .then(() => {
                                 hideConfirmation();
                                 showAlert(
-                                    locale.pages.general.labelPrinting.printJobSent(selectedPrinter.name),
+                                    locale.pages.general.labelPrinting.printJobSent(_selectedPrinter.name),
                                     'info',
                                 );
                             })
