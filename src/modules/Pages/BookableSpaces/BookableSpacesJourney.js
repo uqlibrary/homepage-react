@@ -185,12 +185,14 @@ const StyledLandingHeroInner = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledLandingFeatureCard = styled('article')(({ theme }) => ({
+const StyledLandingFeatureCard = styled('a')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100%',
     overflow: 'hidden',
     borderRadius: '16px',
+    textDecoration: 'none',
+    color: 'inherit',
     backgroundColor: '#fff',
     border: `1px solid ${theme.palette.designSystem.borderColor}`,
     boxShadow: '0 10px 24px rgba(31, 18, 48, 0.08)',
@@ -601,6 +603,7 @@ const BookableSpacesJourney = ({
     filteredSpaceLocations,
     totalSpaceCount,
     highlightedSpace,
+    servicesAndSpacesArticles,
     selectedFacilityTypes,
     setSelectedFacilityTypes,
     filteredFacilityTypeList,
@@ -632,7 +635,7 @@ const BookableSpacesJourney = ({
     const canShowAdvancedFilters = view === 'results';
 
     const selectedIntent = intentDefinitions.find(intent => intent.id === selectedIntentId) || null;
-
+    console.log('articles', servicesAndSpacesArticles);
     const detailImages = React.useMemo(() => {
         if (!selectedSpace) return [];
 
@@ -775,31 +778,18 @@ const BookableSpacesJourney = ({
         setSelectedIntentId(null);
     };
 
-    const landingHighlights = [
-        {
-            eyebrow: 'Explore',
-            title: 'Discover spaces faster',
-            text:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-            image: journeyFallbackImage,
-            imagePosition: '18% center',
-        },
-        {
-            eyebrow: 'Choose',
-            title: 'Match to your study style',
-            text:
-                'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-            image: journeyFallbackImage,
-            imagePosition: 'center center',
-        },
-        {
-            eyebrow: 'Relax',
-            title: 'Study in comfort',
-            text: 'Find spaces with the facilities and atmosphere that make it easier to settle in and stay focused.',
-            image: journeyFallbackImage,
-            imagePosition: '82% center',
-        },
-    ];
+    const landingHighlights = React.useMemo(
+        () =>
+            (servicesAndSpacesArticles || []).slice(0, 3).map(article => ({
+                eyebrow: article?.categories?.[0] || 'Services and spaces',
+                title: article?.title || 'Library update',
+                text: article?.description || '',
+                image: article?.image || journeyFallbackImage,
+                imagePosition: 'center',
+                canonicalUrl: article?.canonical_url || null,
+            })),
+        [servicesAndSpacesArticles],
+    );
 
     const highlightSpaceDescription = React.useMemo(() => {
         if (!highlightedSpace?.space_description) return '';
@@ -1066,8 +1056,9 @@ const BookableSpacesJourney = ({
                         >
                             {landingHighlights.map((item, index) => (
                                 <StyledLandingFeatureCard
-                                    key={item.title}
+                                    key={item.canonicalUrl || item.title || index}
                                     data-testid={`spaces-journey-landing-feature-card-${index + 1}`}
+                                    href={item.canonicalUrl || undefined}
                                 >
                                     <StyledLandingFeatureImage
                                         data-testid={`spaces-journey-landing-feature-image-${index + 1}`}
@@ -1760,6 +1751,7 @@ BookableSpacesJourney.propTypes = {
     filteredSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
     highlightedSpace: PropTypes.object,
+    servicesAndSpacesArticles: PropTypes.array,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
     filteredFacilityTypeList: PropTypes.object,

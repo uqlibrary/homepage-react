@@ -84,4 +84,55 @@ export const drupalArticles = [
       "Training"
     ]
   },
+  {
+    "title": "ARTICLE 3",
+    "description": "",
+    "canonical_url": "https://dev-library-uq.pantheonsite.io/stories/building-works-biological-sciences-library-april-december-2024",
+    "image": "/images/teaser-biological-sciences-library-building-works.jpg?h=a81fead4&itok=BfGhvM9v",
+    "promoted": false,
+    "sticky": false,
+    "date_created": "2024-08-07T03:00:07+00:00",
+    "date_modified": "2024-08-07T03:28:45+00:00",
+    "read_time": "2 minutes",
+    "audience": [
+      "Test audience group"
+    ],
+    "categories": [
+      "Services and spaces"
+    ]
+  },
+  {
+    "title": "ARTICLE 1",
+    "description": "",
+    "canonical_url": "https://dev-library-uq.pantheonsite.io/stories/building-works-biological-sciences-library-april-december-2024",
+    "image": "/images/Rae-George-Hammer.jpg?h=cdbb3bd1&itok=TCOrFqaN",
+    "promoted": false,
+    "sticky": false,
+    "date_created": "2024-08-07T03:00:07+00:00",
+    "date_modified": "2024-08-07T03:28:45+00:00",
+    "read_time": "2 minutes",
+    "audience": [
+      "Test audience group"
+    ],
+    "categories": [
+      "Services and spaces"
+    ]
+  },
+  {
+    "title": "ARTICLE 2",
+    "description": "",
+    "canonical_url": "https://dev-library-uq.pantheonsite.io/stories/building-works-biological-sciences-library-april-december-2024",
+    "image": "/images/teaser-biological-sciences-library-building-works.jpg?h=a81fead4&itok=BfGhvM9v",
+    "promoted": false,
+    "sticky": false,
+    "date_created": "2024-08-07T03:00:07+00:00",
+    "date_modified": "2024-08-07T03:28:45+00:00",
+    "read_time": "2 minutes",
+    "audience": [
+      "Test audience group"
+    ],
+    "categories": [
+      "Services and spaces"
+    ]
+  },
 ];

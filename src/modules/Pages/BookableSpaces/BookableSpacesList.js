@@ -1,8 +1,12 @@
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { loadDrupalArticles } from 'data/actions/drupalArticlesActions';
+
 import { useCookies } from 'react-cookie';
 import { useLocation } from 'react-router-dom';
+
+import { useDispatch } from 'react-redux';
 
 import { Button, Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -179,6 +183,9 @@ export const BookableSpacesList = ({
     facilityTypeListLoading,
     facilityTypeListError,
     spacesFavouritesList,
+    drupalArticleList,
+    drupalArticlesError,
+    drupalArticlesLoading,
 }) => {
     const { account } = useAccountContext();
     const location = useLocation();
@@ -196,6 +203,23 @@ export const BookableSpacesList = ({
         bookableSpacesRoomListError,
         bookableSpacesRoomList,
     );
+
+    const dispatch = useDispatch();
+    React.useEffect(() => {
+        if (!drupalArticleList || drupalArticleList?.length < 1) {
+            dispatch(loadDrupalArticles());
+        }
+    }, [drupalArticleList, dispatch]);
+
+    const servicesAndSpacesArticles = React.useMemo(
+        () =>
+            drupalArticleList?.filter(article =>
+                article?.categories?.some(cat => cat.toLowerCase() === 'services and spaces'),
+            ) ?? [],
+        [drupalArticleList],
+    );
+
+    console.log('servicesAndSpacesArticles', servicesAndSpacesArticles);
 
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -964,6 +988,7 @@ export const BookableSpacesList = ({
                             filteredSpaceLocations={sortedSpaceLocations}
                             totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}
                             highlightedSpace={highlightedSpace}
+                            servicesAndSpacesArticles={servicesAndSpacesArticles}
                             selectedFacilityTypes={selectedFacilityTypes}
                             setSelectedFacilityTypes={setSelectedFacilityTypes}
                             filteredFacilityTypeList={filteredFacilityTypeList}
@@ -1137,6 +1162,9 @@ BookableSpacesList.propTypes = {
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
+    drupalArticleList: PropTypes.array,
+    drupalArticlesLoading: PropTypes.bool,
+    drupalArticlesError: PropTypes.bool,
 };
 
 export default React.memo(BookableSpacesList);
