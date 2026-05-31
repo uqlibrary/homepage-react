@@ -6,6 +6,8 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { isEmptyStr } from '../../helpers/helpers';
+
 const defaultLocale = {
     cancelButtonLabel: 'test cancel',
     confirmButtonLabel: 'test confirm',
@@ -346,10 +348,8 @@ describe('UpdateDialog Renders component', () => {
     });
 
     it('will fire validate function for fields', () => {
-        let valid = true;
-        const validateFn = jest.fn(() => {
-            valid = !valid;
-            return valid;
+        const validateFn = jest.fn(text => {
+            return isEmptyStr(text);
         });
         const fields = {
             asset_id_displayed: {
@@ -374,14 +374,16 @@ describe('UpdateDialog Renders component', () => {
         expect(validateFn).toHaveBeenCalled();
 
         expect(getByTestId('update_dialog-action-button')).toHaveAttribute('disabled');
+        expect(getByTestId('asset_id_displayed-input')).toHaveAttribute('aria-invalid', 'true');
 
         act(() => {
             fireEvent.click(getByTestId('asset_id_displayed-input'));
             fireEvent.change(getByTestId('asset_id_displayed-input'), { target: { value: 'Test 1' } });
         });
 
-        expect(validateFn).toHaveBeenLastCalledWith('Test 1', { asset_id_displayed: 'Test 1' });
+        expect(validateFn).toHaveBeenLastCalledWith('Test 1', { asset_id_displayed: 'Test 1' }, undefined);
         expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+        expect(getByTestId('asset_id_displayed-input')).not.toHaveAttribute('aria-invalid', 'true');
     });
 
     it('shows spinner in action button when busy', () => {
@@ -437,5 +439,42 @@ describe('UpdateDialog Renders component', () => {
         expect(queryByTestId('update_dialog-action-button')).not.toBeInTheDocument();
         // auto width style noMinContentWidth: true,
         expect(getByTestId('update_dialog-test-content')).toHaveStyle('min-width: auto');
+    });
+
+    it('renders in full screen mode on mobile view', () => {
+        const createMatchMedia = width => query => ({
+            matches: require('css-mediaquery').match(query, { width }),
+            addListener: () => {},
+            removeListener: () => {},
+        });
+        const originalMatchMedia = window.matchMedia;
+        window.matchMedia = createMatchMedia(375);
+
+        const { getByTestId } = setup({ title: 'Test title' });
+        expect(getByTestId('update_dialog-test')).toBeInTheDocument();
+
+        window.matchMedia = originalMatchMedia;
+    });
+
+    it('applies fieldProps overrides to rendered component', () => {
+        const fields = {
+            asset_id_displayed: {
+                component: props => <TextField variant="standard" {...props} />,
+                fieldParams: {},
+            },
+        };
+        const columns = {
+            asset_id_displayed: { label: 'Asset ID' },
+        };
+        const row = {};
+        const { getByTestId } = setup({
+            title: 'Test title',
+            isOpen: true,
+            fields,
+            columns,
+            row,
+            props: { fieldProps: { asset_id_displayed: { disabled: true } } },
+        });
+        expect(getByTestId('asset_id_displayed-input')).toBeDisabled();
     });
 });
