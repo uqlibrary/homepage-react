@@ -203,9 +203,7 @@
         "redux-thunk": "^2.4.2",
         "regenerator-runtime": "^0.13.11",
         "throttle-debounce": "^5.0.0",
-        "vendor-copy": "^2.0.1",
-        "zebra-browser-print-wrapper": "^0.1.4",
-        "zebra-browser-print-wrapper-https": "^0.1.6"
+        "vendor-copy": "^2.0.1"
     },
     "overrides": {
         "istanbul-lib-instrument": "6.0.3",
@@ -213,8 +211,8 @@
         "istanbul-lib-coverage": "3.2.2"
     },
     "engines": {
-        "npm": ">=10.9.3",
-        "node": ">=22"
+        "npm": ">=11.12.1",
+        "node": ">=24"
     },
     "babel": {
         "presets": [
