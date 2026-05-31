@@ -7,6 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ComputerIcon from '@mui/icons-material/Computer';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import PersonIcon from '@mui/icons-material/Person';
@@ -583,6 +584,14 @@ const intentDefinitions = [
     },
 ];
 
+const favouriteIntentDefinition = {
+    id: 'favourite',
+    label: 'Favourite spaces',
+    description: 'Start with spaces you have already saved to your favourites.',
+    icon: FavoriteIcon,
+    matchers: [],
+};
+
 const landingHeroHighlights = ['Quiet corners', 'Bookable rooms', 'Computer access', 'Campus-aware filters'];
 const JOURNEY_VIEWS = ['landing', 'intent', 'results', 'details'];
 
@@ -603,6 +612,8 @@ const BookableSpacesJourney = ({
     filteredSpaceLocations,
     totalSpaceCount,
     highlightedSpace,
+    isLoggedIn,
+    spacesFavouritesList,
     servicesAndSpacesArticles,
     selectedFacilityTypes,
     setSelectedFacilityTypes,
@@ -624,6 +635,8 @@ const BookableSpacesJourney = ({
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
+    onFavouriteToggle,
+    isFavouriteActionInProgress,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm'));
@@ -633,8 +646,39 @@ const BookableSpacesJourney = ({
     const [selectedSpace, setSelectedSpace] = React.useState(null);
     const [showAdvancedFilters, setShowAdvancedFilters] = React.useState(false);
     const canShowAdvancedFilters = view === 'results';
+    const hasFavourites = isLoggedIn && (spacesFavouritesList?.length || 0) > 0;
 
-    const selectedIntent = intentDefinitions.find(intent => intent.id === selectedIntentId) || null;
+    const availableIntentDefinitions = React.useMemo(
+        () => (hasFavourites ? [favouriteIntentDefinition, ...intentDefinitions] : intentDefinitions),
+        [hasFavourites],
+    );
+
+    const selectedIntent = availableIntentDefinitions.find(intent => intent.id === selectedIntentId) || null;
+    const favouriteSpaceIds = React.useMemo(
+        () => new Set((spacesFavouritesList || []).map(favourite => String(favourite?.space_id))),
+        [spacesFavouritesList],
+    );
+    const intentSpaceLocations = React.useMemo(() => {
+        if (selectedIntentId !== favouriteIntentDefinition.id) {
+            return filteredSpaceLocations || [];
+        }
+        return (filteredSpaceLocations || []).filter(space => favouriteSpaceIds.has(String(space?.space_id)));
+    }, [filteredSpaceLocations, favouriteSpaceIds, selectedIntentId]);
+    const isSelectedSpaceFavourite = favouriteSpaceIds.has(String(selectedSpace?.space_id));
+    const handleJourneyFavouriteToggle = async space => {
+        if (!space?.space_id || !onFavouriteToggle || !isLoggedIn) {
+            return;
+        }
+        const action = favouriteSpaceIds.has(String(space.space_id)) ? 'removeSpaceFavourite' : 'addSpaceFavourite';
+        await onFavouriteToggle(action, space.space_id);
+    };
+    let favouriteButtonLabel = 'Add to favourites';
+    if (isSelectedSpaceFavourite) {
+        favouriteButtonLabel = 'Remove from favourites';
+    }
+    if (isFavouriteActionInProgress) {
+        favouriteButtonLabel = 'Updating favourites...';
+    }
     console.log('articles', servicesAndSpacesArticles);
     const detailImages = React.useMemo(() => {
         if (!selectedSpace) return [];
@@ -764,7 +808,16 @@ const BookableSpacesJourney = ({
 
     const handleIntentSelect = intent => {
         setSelectedIntentId(intent.id);
-        applyIntentFilters(intent);
+        if (intent.id === favouriteIntentDefinition.id) {
+            const clearedFilters = (selectedFacilityTypes || []).map(filter => ({
+                ...filter,
+                selected: false,
+                unselected: false,
+            }));
+            setSelectedFacilityTypes(clearedFilters);
+        } else {
+            applyIntentFilters(intent);
+        }
         navigateToView('results');
     };
 
@@ -1324,7 +1377,7 @@ const BookableSpacesJourney = ({
                             What sort of space would you like to find?
                         </Typography>
                         <Grid container spacing={3}>
-                            {intentDefinitions.map(intent => {
+                            {availableIntentDefinitions.map(intent => {
                                 const IconComponent = intent.icon;
                                 return (
                                     <Grid item xs={12} sm={6} md={4} key={intent.id}>
@@ -1402,7 +1455,7 @@ const BookableSpacesJourney = ({
                         )}
 
                         <Typography variant="body2" sx={{ color: '#666' }}>
-                            Showing {filteredSpaceLocations?.length || 0}
+                            Showing {intentSpaceLocations?.length || 0}
                             {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
                         </Typography>
                         <Stack direction="row" spacing={1}>
@@ -1415,7 +1468,7 @@ const BookableSpacesJourney = ({
                             </Button>
                         </Stack>
                         <Stack spacing={1.5}>
-                            {filteredSpaceLocations?.map(space => (
+                            {intentSpaceLocations?.map(space => (
                                 <StyledResultCardButton
                                     key={space?.space_id}
                                     onClick={() => {
@@ -1443,12 +1496,28 @@ const BookableSpacesJourney = ({
                                                 mt: 0.5,
                                             }}
                                         >
-                                            <SpaceOpenStatusChip
-                                                space={space}
-                                                weeklyHours={weeklyHours}
-                                                weeklyHoursLoading={weeklyHoursLoading}
-                                                weeklyHoursError={weeklyHoursError}
-                                            />
+                                            <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                                                {favouriteSpaceIds.has(String(space?.space_id)) && (
+                                                    <Chip
+                                                        data-testid={`spaces-journey-favourite-chip-${space?.space_id}`}
+                                                        label="Favourite"
+                                                        size="small"
+                                                        sx={{
+                                                            backgroundColor: '#fff8e1',
+                                                            color: '#7a5a00',
+                                                            borderColor: '#ffe082',
+                                                            border: '1px solid',
+                                                            fontWeight: 700,
+                                                        }}
+                                                    />
+                                                )}
+                                                <SpaceOpenStatusChip
+                                                    space={space}
+                                                    weeklyHours={weeklyHours}
+                                                    weeklyHoursLoading={weeklyHoursLoading}
+                                                    weeklyHoursError={weeklyHoursError}
+                                                />
+                                            </Stack>
                                         </Box>
                                         {!!space?.space_type_details?.space_type_description && (
                                             <Typography
@@ -1556,6 +1625,20 @@ const BookableSpacesJourney = ({
                                                 {selectedSpace?.space_type_details?.space_type_name ||
                                                     selectedSpace?.space_type}
                                             </Typography>
+                                            {isSelectedSpaceFavourite && (
+                                                <Chip
+                                                    data-testid={`spaces-journey-favourite-chip-${selectedSpace?.space_id}`}
+                                                    label="Favourite"
+                                                    size="small"
+                                                    sx={{
+                                                        backgroundColor: '#fff8e1',
+                                                        color: '#7a5a00',
+                                                        borderColor: '#ffe082',
+                                                        border: '1px solid',
+                                                        fontWeight: 700,
+                                                    }}
+                                                />
+                                            )}
                                             <SpaceOpenStatusChip
                                                 space={selectedSpace}
                                                 weeklyHours={weeklyHours}
@@ -1589,6 +1672,19 @@ const BookableSpacesJourney = ({
                                                     .trim()}
                                             </Typography>
                                         )}
+                                    </Box>
+                                )}
+
+                                {isLoggedIn && !!selectedSpace?.space_id && (
+                                    <Box>
+                                        <Button
+                                            variant={isSelectedSpaceFavourite ? 'contained' : 'outlined'}
+                                            disabled={isFavouriteActionInProgress}
+                                            onClick={() => handleJourneyFavouriteToggle(selectedSpace)}
+                                            sx={{ textTransform: 'none' }}
+                                        >
+                                            {favouriteButtonLabel}
+                                        </Button>
                                     </Box>
                                 )}
                             </Stack>
@@ -1751,6 +1847,8 @@ BookableSpacesJourney.propTypes = {
     filteredSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
     highlightedSpace: PropTypes.object,
+    isLoggedIn: PropTypes.bool,
+    spacesFavouritesList: PropTypes.array,
     servicesAndSpacesArticles: PropTypes.array,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
@@ -1772,6 +1870,8 @@ BookableSpacesJourney.propTypes = {
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
+    onFavouriteToggle: PropTypes.func,
+    isFavouriteActionInProgress: PropTypes.bool,
 };
 
 export default React.memo(BookableSpacesJourney);

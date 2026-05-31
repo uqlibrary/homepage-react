@@ -988,6 +988,8 @@ export const BookableSpacesList = ({
                             filteredSpaceLocations={sortedSpaceLocations}
                             totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}
                             highlightedSpace={highlightedSpace}
+                            isLoggedIn={isLoggedIn}
+                            spacesFavouritesList={spacesFavouritesList}
                             servicesAndSpacesArticles={servicesAndSpacesArticles}
                             selectedFacilityTypes={selectedFacilityTypes}
                             setSelectedFacilityTypes={setSelectedFacilityTypes}
@@ -1009,6 +1011,8 @@ export const BookableSpacesList = ({
                             weeklyHours={weeklyHours}
                             weeklyHoursLoading={weeklyHoursLoading}
                             weeklyHoursError={weeklyHoursError}
+                            onFavouriteToggle={handleFavouriteAction}
+                            isFavouriteActionInProgress={isFavouriteActionInProgress}
                         />
                     );
                 } else {
