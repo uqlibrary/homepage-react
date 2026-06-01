@@ -25,6 +25,7 @@ export { default as testTagBulkAssetUpdateReducer } from './testTagBulkAssetUpda
 export { default as testTagInspectionDetailsUpdateReducer } from './testTagInspectionDetailsUpdateReducer';
 export { default as testTagUserListReducer } from './testTagUserListReducer';
 export { default as testTagTeamListReducer } from './testTagTeamListReducer';
+export { default as testTagPrinterTemplateReducer } from './testTagPrinterTemplateReducer';
 export { default as dlorListReducer } from './dlorListReducer';
 export { default as dlorFilterListReducer } from './dlorFilterListReducer';
 export { default as dlorGetSingleReducer } from './dlorGetSingleReducer';

@@ -29,6 +29,7 @@ export const transformUpdateRequest = request => {
     request.privileges.can_see_reports = request?.can_see_reports_cb ? 1 : 0;
 
     request.user_current_flag = request?.user_current_flag_cb ? 1 : 0;
+    request.user_team = request?.user_team?.team_slug;
 
     delete request.can_admin;
     delete request.can_admin_cb;
@@ -55,8 +56,12 @@ export const transformAddRequest = request => {
     request.privileges.can_inspect = request?.can_inspect_cb ? 1 : 0;
     request.privileges.can_alter = request?.can_alter_cb ? 1 : 0;
     request.privileges.can_see_reports = request?.can_see_reports_cb ? 1 : 0;
+
     // Assign user Current flag.
     request.user_current_flag = request?.user_current_flag_cb ? 1 : 0;
+
+    request.user_team = request?.user_team?.team_slug;
+
     // Delete remainder of root note elements used by other checkboxes, or in FE captured by request{} object.
     delete request.can_admin;
     delete request.can_admin_cb;

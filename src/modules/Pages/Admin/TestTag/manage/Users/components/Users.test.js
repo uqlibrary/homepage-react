@@ -9,6 +9,7 @@ import {
     waitFor,
     WithReduxStore,
     selectOptionFromListByIndex,
+    preview,
 } from 'test-utils';
 import Immutable from 'immutable';
 
@@ -282,6 +283,7 @@ describe('Manage Users', () => {
             user_name: 'TEST USER',
             user_uid: 'uqtestuser',
         };
+        preview.debug();
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
             expect(actions.addUser).toHaveBeenCalledWith(expected);
