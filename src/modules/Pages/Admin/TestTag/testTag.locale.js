@@ -430,8 +430,10 @@ export default {
                 },
             },
             labelPrinting: {
-                unknownPrinter: 'unconfigured',
-                selectPrinter: 'Label printer selection',
+                printerLabel: 'Printer',
+                templateLabel: 'Template',
+                selectPrinterLabel: ({ printer, template }) =>
+                    `Label printing ${!!printer ? `- ${printer}` : ''}${!!template ? ` (${template})` : ''}`,
                 printButton: 'Print tag',
             },
         },
@@ -1242,13 +1244,20 @@ export default {
                 },
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
+                    accessoryButtonLabel: 'Print test label',
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: 'Add new printer template',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
+                    accessoryButtonLabel: 'Print test label',
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: 'Edit printer template',
+                },
+                dialogSelectPrinter: {
+                    confirmationTitle: 'Select printer',
+                    confirmButtonLabel: 'Print',
+                    cancelButtonLabel: 'Cancel',
                 },
                 snackbar: {
                     loadFail: 'unable to load printer template list',
@@ -1293,7 +1302,7 @@ export default {
                         label: 'Delete',
                     },
                 },
-
+                printerLabel: 'Printer',
                 placeholderEditor: {
                     form: {
                         columns: {

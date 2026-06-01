@@ -10,6 +10,8 @@ import {
     transformAddRequest,
     actionReducer,
     validateTemplateUserVariable,
+    formatTemplate,
+    getLabelDates,
 } from './utils';
 
 describe('utils', () => {
@@ -410,6 +412,91 @@ describe('utils', () => {
 
         it('returns true when value is a float string', () => {
             expect(validateTemplateUserVariable({ ...validRow, printer_template_var_value: '1.5' })).toEqual(true);
+        });
+    });
+
+    describe('formatTemplate', () => {
+        it('replaces user variable placeholders with their values', () => {
+            const template = 'Hello {{NAME}}, you are {{AGE}} years old.';
+            const templateData = [
+                { printer_template_var_name: '{{NAME}}', printer_template_var_value: 'Alice' },
+                { printer_template_var_name: '{{AGE}}', printer_template_var_value: '30' },
+            ];
+            expect(formatTemplate(template, templateData, {})).toEqual('Hello Alice, you are 30 years old.');
+        });
+
+        it('replaces inspection data placeholders with their values', () => {
+            const template = 'Asset: {*ASSET_ID*}, Location: {*LOCATION*}';
+            expect(formatTemplate(template, [], { asset_id: 'UQL001', location: 'Room 1' })).toEqual(
+                'Asset: UQL001, Location: Room 1',
+            );
+        });
+
+        it('replaces both user variable and inspection placeholders', () => {
+            const template = '{{LABEL}}: {*ASSET_ID*}';
+            const templateData = [{ printer_template_var_name: '{{LABEL}}', printer_template_var_value: 'ID' }];
+            expect(formatTemplate(template, templateData, { asset_id: 'UQL999' })).toEqual('ID: UQL999');
+        });
+
+        it('returns template unchanged when templateData is empty and inspectionData is empty', () => {
+            const template = 'No placeholders here';
+            expect(formatTemplate(template, [], {})).toEqual('No placeholders here');
+        });
+
+        it('replaces all occurrences of a placeholder', () => {
+            const template = '{{NAME}} and {{NAME}}';
+            const templateData = [{ printer_template_var_name: '{{NAME}}', printer_template_var_value: 'Bob' }];
+            expect(formatTemplate(template, templateData, {})).toEqual('Bob and Bob');
+        });
+
+        it('handles non-array templateData gracefully', () => {
+            const template = 'Hello {*NAME*}';
+            expect(formatTemplate(template, null, { name: 'World' })).toEqual('Hello World');
+        });
+
+        it('handles null inspectionData gracefully', () => {
+            const template = '{{FOO}}';
+            const templateData = [{ printer_template_var_name: '{{FOO}}', printer_template_var_value: 'bar' }];
+            expect(formatTemplate(template, templateData, null)).toEqual('bar');
+        });
+
+        it('skips placeholder when printer_template_var_name is falsy', () => {
+            const template = 'unchanged';
+            const templateData = [{ printer_template_var_name: '', printer_template_var_value: 'value' }];
+            expect(formatTemplate(template, templateData, {})).toEqual('unchanged');
+        });
+    });
+
+    describe('getLabelDates', () => {
+        it('returns testDate as YYYY-MM-DD of the given date', () => {
+            const date = new Date('2024-06-15T00:00:00.000Z');
+            const { testDate } = getLabelDates(date);
+            expect(testDate).toEqual('2024-06-15');
+        });
+
+        it('returns dueDate as YYYY-MM-DD one year after the given date', () => {
+            const date = new Date('2024-06-15T00:00:00.000Z');
+            const { dueDate } = getLabelDates(date);
+            expect(dueDate).toEqual('2025-06-15');
+        });
+
+        it('handles leap year: Feb 29 due date overflows to Mar 1 in a non-leap year', () => {
+            const date = new Date('2024-02-29T00:00:00.000Z');
+            const { dueDate } = getLabelDates(date);
+            expect(dueDate).toEqual('2025-03-01');
+        });
+
+        it('handles end of year: Dec 31 + 1 year = Dec 31 next year', () => {
+            const date = new Date('2023-12-31T00:00:00.000Z');
+            const { dueDate } = getLabelDates(date);
+            expect(dueDate).toEqual('2024-12-31');
+        });
+
+        it('returns both testDate and dueDate correctly together', () => {
+            const date = new Date('2025-01-01T00:00:00.000Z');
+            const { testDate, dueDate } = getLabelDates(date);
+            expect(testDate).toEqual('2025-01-01');
+            expect(dueDate).toEqual('2026-01-01');
         });
     });
 });

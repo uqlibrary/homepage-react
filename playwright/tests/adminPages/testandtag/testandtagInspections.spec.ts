@@ -673,11 +673,20 @@ test.describe('Test and Tag Admin Inspection page', () => {
                     ).toBeVisible();
 
                     await expect(page.getByTestId('confirm-alternate-inspection-printer-save-success')).toBeDisabled();
+                    // select printer
                     await page.getByTestId('label_printer_selector-inspection-printer-save-success-input').click();
                     await page.getByRole('option', { name: 'Emulator' }).click();
                     await expect(
                         page.getByTestId('label_printer_selector-inspection-printer-save-success-input'),
                     ).toHaveValue('Emulator');
+                    // select template
+                    await page
+                        .getByTestId('label_printer_template_selector-inspection-printer-save-success-input')
+                        .click();
+                    await page.getByRole('option', { name: 'Zebra GK420t' }).click();
+                    await expect(
+                        page.getByTestId('label_printer_template_selector-inspection-printer-save-success-input'),
+                    ).toHaveValue('Zebra GK420t');
 
                     await expect(
                         page.getByTestId('confirm-alternate-inspection-printer-save-success'),

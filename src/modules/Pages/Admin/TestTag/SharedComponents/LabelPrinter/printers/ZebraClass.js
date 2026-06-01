@@ -65,7 +65,6 @@ export const createPrinter = () => {
 
     const print = async data => {
         try {
-            console.log('Sending print data to printer...');
             await printer.print(data);
         } catch (error) {
             console.error('Failed to print:', error.message);
