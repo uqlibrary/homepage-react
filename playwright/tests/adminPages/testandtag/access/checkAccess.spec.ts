@@ -217,6 +217,18 @@ test.describe('Test and Tag Page Access', () => {
         await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
     };
 
+    const visitManageTeams = async (page: Page, user: string, expectedAllowed = true) => {
+        await page.goto(`/admin/testntag/manage/teams?user=${user}`);
+        const standardPage = page.getByTestId('StandardPage');
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+    };
+
+    const visitManagePrinterTemplates = async (page: Page, user: string, expectedAllowed = true) => {
+        await page.goto(`/admin/testntag/manage/printertemplates?user=${user}`);
+        const standardPage = page.getByTestId('StandardPage');
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+    };
+
     const visitManageUsers = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/users?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
@@ -235,6 +247,8 @@ test.describe('Test and Tag Page Access', () => {
         await visitBulkAssetUpdate(page, 'uqtesttag', true);
         await visitManageInspectionDetails(page, 'uqtesttag', true);
         await visitManageLocations(page, 'uqtesttag', true);
+        await visitManageTeams(page, 'uqtesttag', true);
+        await visitManagePrinterTemplates(page, 'uqtesttag', true);
         await visitManageUsers(page, 'uqtesttag', true);
     });
 

@@ -23,15 +23,40 @@ jest.mock('react-cookie', () => ({
     useCookies: jest.fn(() => [mockCookies, mockSetCookie]),
 }));
 
+const mockTemplateStore = [
+    {
+        id: 1,
+        name: 'gk420t',
+        code: 'Printer: {*NAME*}\nAsset: {*ASSET_ID*}\nLocation: {*LOCATION*}',
+        printers: ['GK420t', 'Zebra'],
+    },
+    { id: 2, name: 'zebra-printer', code: 'Asset ID: {*ASSET_ID*}\nInspection Date: {*DATE*}', printers: ['Zebra'] },
+    {
+        id: 3,
+        name: '19j153101586',
+        code: 'Printer: {*NAME*}\nAsset: {*ASSET_ID*}\nLocation: {*LOCATION*}',
+        printers: ['GK420t'],
+    },
+];
+
 // Mock useLabelPrinter hook with controllable printer instance
 const mockGetConnectionStatus = jest.fn();
 const mockPrint = jest.fn();
-const mockSetPrinterPreference = jest.fn();
 const mockSetPrinter = jest.fn().mockResolvedValue({ name: 'Emulator' });
+const mockLabelPrinterTemplateStore = jest.fn().mockReturnValue({
+    printerTemplateList: mockTemplateStore,
+    printerTemplateListLoading: false,
+    printerTemplateListError: null,
+});
+const mockGetLabelPrinterFormattedTemplate = jest.fn().mockReturnValue({ id: 1, formattedTemplate: 'mock-template' });
 
-jest.mock('../../SharedComponents/LabelPrinter/hooks/useLabelPrinter', () => {
-    return jest.fn(() => ({
-        printerCode: 'emulator',
+jest.mock('../../SharedComponents/LabelPrinter', () => ({
+    ...jest.requireActual('../../SharedComponents/LabelPrinter'),
+    useLabelPrinterTemplate: jest.fn(() => ({
+        getLabelPrinterFormattedTemplate: mockGetLabelPrinterFormattedTemplate,
+    })),
+    useLabelPrinter: jest.fn(() => ({
+        printerCode: 'Emulator',
         printer: {
             code: 'emulator',
             getAvailablePrinters: jest.fn().mockResolvedValue([{ name: 'Emulator' }]),
@@ -39,19 +64,10 @@ jest.mock('../../SharedComponents/LabelPrinter/hooks/useLabelPrinter', () => {
             setPrinter: mockSetPrinter,
             print: mockPrint,
         },
-        printerPreference: 'Emulator',
-        setPrinterPreference: mockSetPrinterPreference,
-        availablePrinters: [{ name: 'Emulator' }],
-    }));
-});
-
-const mockGetLabelPrinterTemplate = jest.fn().mockReturnValue({ name: 'emulator', formattedTemplate: 'mock-template' });
-jest.mock('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterTemplate', () => {
-    return jest.fn(() => ({
-        ...jest.requireActual('../../SharedComponents/LabelPrinter/hooks/useLabelPrinterTemplate'),
-        getLabelPrinterTemplate: mockGetLabelPrinterTemplate,
-    }));
-});
+        availablePrinters: [{ name: 'Emulator' }, { name: 'GK420t' }],
+    })),
+    useLabelPrinterTemplateStore: jest.fn(() => mockLabelPrinterTemplateStore),
+}));
 
 const currentRetestList = [
     { value: '3', label: '3 months' },
@@ -709,7 +725,12 @@ describe('Inspection component', () => {
 
         beforeEach(() => {
             jest.clearAllMocks();
-            mockCookies.TNT_LABEL_PRINTER_PREFERENCE = { name: 'Emulator', shortName: 'Emulator' };
+            mockCookies.TNT_LABEL_PRINTER_PREFERENCE = {
+                name: 'Emulator',
+                shortName: 'Emulator',
+                templateId: 1,
+                templateName: 'Zebra',
+            };
             // Default mock returns ready: true
             mockGetConnectionStatus.mockResolvedValue({ ready: true });
             mockPrint.mockResolvedValue({ ok: true });
@@ -924,7 +945,7 @@ describe('Inspection component', () => {
             const saveActionFn = jest.fn(() => Promise.resolve(mockSuccessData));
             defaults.actions.saveInspection = saveActionFn;
             mockPrint.mockRejectedValueOnce({ ok: false });
-            mockGetLabelPrinterTemplate.mockReturnValueOnce({});
+            mockGetLabelPrinterFormattedTemplate.mockReturnValueOnce({});
 
             const { getByTestId, queryByTestId } = setup({
                 ...defaults,

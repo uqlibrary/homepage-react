@@ -20,7 +20,7 @@ import AssetPanel from './AssetPanel';
 
 import { statusEnum } from '../utils/helpers';
 import { scrollToTopOfPage } from 'helpers/general';
-import { useValidation, useLabelPrinterPreference } from '../utils/hooks';
+import { useValidation } from '../utils/hooks';
 import { useLocation, useForm, useConfirmationAlert, useAccountUser } from '../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { transformer } from '../utils/transformers';
@@ -30,12 +30,15 @@ import { PERMISSIONS } from '../../config/auth';
 import { useConfirmationState } from 'hooks';
 import { breadcrumbs } from 'config/routes';
 
-import LabelLogo from './LabelLogo';
 import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
-import { useLabelPrinter, useLabelPrinterTemplate } from '../../SharedComponents/LabelPrinter';
-import * as labelPrintertemplates from './labelPrinterTemplates';
+import {
+    useLabelPrinter,
+    useLabelPrinterTemplate,
+    useLabelPrinterTemplateStore,
+    useLabelPrinterPreference,
+} from '../../SharedComponents/LabelPrinter';
 import { getDeptLabelPrintingEnabled, getDefaultDeptPrinter } from '../../helpers/labelPrinting';
-import { COOKIE_PRINTER_PREFERENCE } from './config';
+import { COOKIE_PRINTER_PREFERENCE } from '../../config/labelPrinting';
 
 const componentId = 'inspection';
 
@@ -176,13 +179,14 @@ const Inspection = ({
     const { user } = useAccountUser();
     const deptPrinterDefault = getDefaultDeptPrinter(user?.user_department);
     const deptPrintingEnabled = getDeptLabelPrintingEnabled(user?.user_department);
+    const { printerTemplateList } = useLabelPrinterTemplateStore(actions);
+
     const { printer, availablePrinters } = useLabelPrinter({
         printerCode: deptPrinterDefault,
-        templateStore: labelPrintertemplates,
         shouldOverridePrinterDevEnv: true,
     });
     const [printerPreference, setPrinterPreference] = useLabelPrinterPreference(COOKIE_PRINTER_PREFERENCE);
-    const { getLabelPrinterTemplate } = useLabelPrinterTemplate(labelPrintertemplates);
+    const { getLabelPrinterFormattedTemplate } = useLabelPrinterTemplate(printerTemplateList);
 
     const inspectionLocale = locale.pages.inspect;
 
@@ -326,20 +330,22 @@ const Inspection = ({
                 showAlert(locale.pages.general.labelPrinting.error.noPrinterSelected);
                 return;
             }
+
             printer
                 ?.setPrinter(selectedPrinter)
                 .then(() => {
                     printer.getConnectionStatus().then(status => {
                         if (status.ready) {
-                            const template = getLabelPrinterTemplate(printerPreference.shortName, {
-                                logo: LabelLogo,
+                            const template = getLabelPrinterFormattedTemplate(printerPreference.templateId, {
                                 userId: successData.user_licence_number,
                                 assetId: successData.asset_id_displayed,
                                 testDate: successData.action_date,
                                 dueDate: successData.asset_next_test_due_date,
                             });
                             if (!template?.formattedTemplate) {
-                                console.error('No template found for printer:', printerPreference.shortName);
+                                console.error(
+                                    `Selected template ${printerPreference.templateId} was not available for printer ${printerPreference.name}`,
+                                );
                                 showAlert(locale.pages.general.labelPrinting.error.noLabelTemplate);
                                 return;
                             }
@@ -347,7 +353,7 @@ const Inspection = ({
                                 .print(template.formattedTemplate)
                                 .then(() => {
                                     showAlert(
-                                        locale.pages.general.labelPrinting.printJobSent(printerPreference.name),
+                                        locale.pages.general.labelPrinting.printJobSent(selectedPrinter.name),
                                         'info',
                                     );
                                 })
@@ -369,7 +375,7 @@ const Inspection = ({
             console.error('Printing error:', error);
             showAlert(locale.pages.general.labelPrinting.error.uncaughtException);
         }
-    }, [availablePrinters, getLabelPrinterTemplate, printer, printerPreference, showAlert, successData]);
+    }, [availablePrinters, getLabelPrinterFormattedTemplate, printer, printerPreference, showAlert, successData]);
 
     return (
         <StandardAuthPage
@@ -399,10 +405,10 @@ const Inspection = ({
                     onClose={hideSuccessMessage}
                     isOpen={isPrinterSaveSuccessDialogOpen}
                     locale={successDialogLocale}
-                    shouldDisableUnknownPrinters
-                    printerPreference={printerPreference?.name}
-                    onPrinterSelectionChange={setPrinterPreference}
+                    printerPreference={printerPreference}
+                    onPrinterTemplateSelectionChange={setPrinterPreference}
                     availablePrinters={availablePrinters}
+                    templateStore={printerTemplateList}
                     noMinContentWidth={isMobileView}
                 />
                 <EventPanel

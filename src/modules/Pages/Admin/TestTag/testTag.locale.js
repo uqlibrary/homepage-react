@@ -15,10 +15,12 @@ import BulkUpdateIcon from '@mui/icons-material/DynamicFeed';
 import AssetsInspectedByDateIcon from '@mui/icons-material/EventNote';
 import InspectionByUserIcon from '@mui/icons-material/VerifiedUser';
 import AssetIcon from '@mui/icons-material/Power';
+import PrinterTemplateIcon from '@mui/icons-material/ReceiptLongOutlined';
 // import Box from '@material-ui/core/Box';
 import Box from '@mui/material/Box';
 
 import { PERMISSIONS } from './config/auth';
+import { PRINTER_TEMPLATE_SYSTEM_VARIABLES } from './config/labelPrinting';
 
 export default {
     config: {
@@ -214,6 +216,13 @@ export default {
                             icon: <TeamsIcon />,
                             permissions: [PERMISSIONS.can_admin],
                             path: pathConfig.admin.testntagmanageteams,
+                        },
+                        {
+                            id: 'printertemplates',
+                            title: 'Printer Templates',
+                            icon: <PrinterTemplateIcon />,
+                            permissions: [PERMISSIONS.can_admin],
+                            path: pathConfig.admin.testntagmanageprintertemplates,
                         },
                     ],
                 },
@@ -421,8 +430,10 @@ export default {
                 },
             },
             labelPrinting: {
-                unknownPrinter: 'unconfigured',
-                selectPrinter: 'Label printer selection',
+                printerLabel: 'Printer',
+                templateLabel: 'Template',
+                selectPrinterLabel: ({ printer, template }) =>
+                    `Label printing ${!!printer ? `- ${printer}` : ''}${!!template ? ` (${template})` : ''}`,
                 printButton: 'Print tag',
             },
         },
@@ -1182,6 +1193,146 @@ export default {
                 helperText: {
                     team_slug: 'A team ID must contain only lower case letters and numbers',
                     team_display_name: 'A team display name is required',
+                },
+            },
+            printertemplates: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage - Printer Templates',
+                        icon: <PrinterTemplateIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: (_, dept) => `Printer template management for ${dept}`,
+                },
+                form: {
+                    actions: 'Actions',
+                    columns: {
+                        printer_template_id: {
+                            label: 'ID',
+                        },
+                        printer_template_name: {
+                            label: 'Printer template name',
+                        },
+                        printer_template_label: {
+                            label: 'Printer template label',
+                        },
+                        identifiers: {
+                            label: 'Printer identifiers',
+                        },
+                        identifiers_str: {
+                            label: 'Printer identifiers',
+                        },
+                        printer_template_current_flag: {
+                            label: 'Active',
+                        },
+                        printer_template_current_flag_cb: {
+                            label: 'Active',
+                        },
+                        printer_template_code: {
+                            label: 'Template code',
+                        },
+                        vars: {
+                            label: 'Template variables',
+                        },
+                    },
+                    actionTooltips: {
+                        edit: 'Edit printer template variables',
+                        advedit: 'Edit printer template code',
+                        delete: 'Disable printer template',
+                    },
+                },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    accessoryButtonLabel: 'Print test label',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Add new printer template',
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    accessoryButtonLabel: 'Print test label',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Edit printer template',
+                },
+                dialogSelectPrinter: {
+                    confirmationTitle: 'Select printer',
+                    confirmButtonLabel: 'Print',
+                    cancelButtonLabel: 'Cancel',
+                },
+                snackbar: {
+                    loadFail: 'unable to load printer template list',
+                    addSuccess: 'Printer template added successfully',
+                    addFail: 'Unable to add the printer template',
+                    updateSuccess: 'Printer template updated successfully',
+                    updateFail: 'Unable to update the printer template',
+                    deleteSuccess: 'Printer template deleted successfully',
+                    deleteFail: 'Unable to delete the printer template',
+                },
+                dialogDeleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to disable this printer template?',
+                    confirmationTitle: 'Disable printer template',
+                },
+                helperText: {
+                    printer_template_name: 'A printer template name is required',
+                    identifiers: 'A printer identifier is required and must not have been used with another template.',
+                    printer_template_code:
+                        'Printer template code is required and must include user defined placeholder variables',
+                    printer_template_code_helperText: `You may include common system placeholders ${PRINTER_TEMPLATE_SYSTEM_VARIABLES.join(
+                        ', ',
+                    )}`,
+                    vars:
+                        'One or more defined variables are missing from the template code. All variables must be included in the printer template code as {{VARNAME}}',
+                },
+                buttons: {
+                    add: {
+                        label: 'Add printer template',
+                    },
+                    edit: {
+                        label: 'Edit',
+                    },
+                    save: {
+                        label: 'Save',
+                    },
+                    cancel: {
+                        label: 'Cancel',
+                    },
+                    delete: {
+                        label: 'Delete',
+                    },
+                },
+                printerLabel: 'Printer',
+                placeholderEditor: {
+                    form: {
+                        columns: {
+                            printer_template_var_id: {
+                                label: 'ID',
+                            },
+                            printer_template_var_name: {
+                                label: 'Variable',
+                            },
+                            printer_template_var_label: {
+                                label: 'Description',
+                            },
+                            printer_template_var_value: {
+                                label: 'Value',
+                            },
+                            printer_template_code: {
+                                label: 'Printer template code',
+                            },
+                        },
+                    },
+                    toolbar: {
+                        buttons: {
+                            addVar: {
+                                label: 'Add template variable',
+                            },
+                        },
+                    },
+                    helperText: {
+                        validationAllFieldsRequired: 'All fields must be completed before saving.',
+                    },
                 },
             },
         },

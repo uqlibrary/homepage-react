@@ -37,6 +37,10 @@ import {
     TEST_TAG_UPDATE_TEAM_API,
     TEST_TAG_ADD_TEAM_API,
     TEST_TAG_DELETE_TEAM_API,
+    TEST_TAG_PRINTER_TEMPLATE_LIST_API,
+    TEST_TAG_UPDATE_PRINTER_TEMPLATE_API,
+    TEST_TAG_ADD_PRINTER_TEMPLATE_API,
+    TEST_TAG_DELETE_PRINTER_TEMPLATE_API,
 } from 'repositories/routes';
 import { checkExpireSession } from './actionhelpers';
 
@@ -1129,6 +1133,122 @@ export function deleteTeam(team) {
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_TEAM_LIST_DELETE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+/* Manage Printer Templates */
+export function loadPrinterTemplateList() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_LOADING });
+        return get(TEST_TAG_PRINTER_TEMPLATE_LIST_API())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function clearPrinterTemplateListError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_CLEAR_ERROR });
+    };
+}
+
+export function updatePrinterTemplate(printerTemplateId, request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_UPDATING });
+        return put(TEST_TAG_UPDATE_PRINTER_TEMPLATE_API(printerTemplateId), request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function addPrinterTemplate(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_ADDING });
+        return post(TEST_TAG_ADD_PRINTER_TEMPLATE_API(), request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_ADDED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_ADD_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_ADD_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function deletePrinterTemplate(printerTemplate) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_DELETING });
+        return destroy(TEST_TAG_DELETE_PRINTER_TEMPLATE_API(printerTemplate))
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_DELETED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_DELETE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_PRINTER_TEMPLATE_LIST_DELETE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

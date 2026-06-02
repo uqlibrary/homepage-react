@@ -57,6 +57,7 @@ import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
 import test_tag_team_list_uql from './data/records/testAndTag/test_tag_team_list_uql';
 import test_tag_team_list_pf from './data/records/testAndTag/test_tag_team_list_pf';
+import test_tag_printer_templates_uql from './data/records/testAndTag/test_tag_printer_templates_uql';
 
 import dlor_all from './data/records/dlor/dlor_all';
 import dlor_filter_list from './data/records/dlor/dlor_filter_list';
@@ -1639,6 +1640,28 @@ mock.onGet('exams/course/FREN1010/summary')
     .onDelete(/test-and-tag\/team\/TESTFAIL/)
     .reply(withDelay([400, {}]))
     .onDelete(/test-and-tag\/team\/[a-zA-Z0-9]+/)
+    .reply(
+        withDelay([
+            200,
+            {
+                status: 'OK',
+            },
+        ]),
+    )
+    .onGet(routes.TEST_TAG_PRINTER_TEMPLATE_LIST_API().apiUrl)
+    .reply(() => [200, test_tag_printer_templates_uql])
+    .onPost(routes.TEST_TAG_ADD_PRINTER_TEMPLATE_API().apiUrl)
+    .reply(
+        withDelay([
+            200,
+            {
+                status: 'OK',
+            },
+        ]),
+    )
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_UPDATE_PRINTER_TEMPLATE_API('.*').apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(new RegExp(panelRegExp(routes.TEST_TAG_DELETE_PRINTER_TEMPLATE_API('.*').apiUrl)))
     .reply(
         withDelay([
             200,

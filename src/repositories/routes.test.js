@@ -303,6 +303,7 @@ describe('Backend routes method', () => {
         reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
         expect(reportByFilters.apiUrl).toEqual('test-and-tag/asset/search/mine');
     });
+
     describe('coverage', () => {
         it('should return valid path for routes', () => {
             expect(routes.TEST_TAG_SAVE_ASSETTYPE_API(100)).toEqual({ apiUrl: 'test-and-tag/asset-type/100' });
@@ -343,6 +344,16 @@ describe('Backend routes method', () => {
             expect(routes.TEST_TAG_ADD_TEAM_API()).toEqual({ apiUrl: 'test-and-tag/team' });
             expect(routes.TEST_TAG_UPDATE_TEAM_API('WSS')).toEqual({ apiUrl: 'test-and-tag/team/WSS' });
             expect(routes.TEST_TAG_DELETE_TEAM_API('WSS')).toEqual({ apiUrl: 'test-and-tag/team/WSS' });
+            expect(routes.TEST_TAG_PRINTER_TEMPLATE_LIST_API()).toEqual({
+                apiUrl: 'test-and-tag/printer-template/current/mine',
+            });
+            expect(routes.TEST_TAG_ADD_PRINTER_TEMPLATE_API()).toEqual({ apiUrl: 'test-and-tag/printer-template' });
+            expect(routes.TEST_TAG_UPDATE_PRINTER_TEMPLATE_API(5)).toEqual({
+                apiUrl: 'test-and-tag/printer-template/5',
+            });
+            expect(routes.TEST_TAG_DELETE_PRINTER_TEMPLATE_API(5)).toEqual({
+                apiUrl: 'test-and-tag/printer-template/5',
+            });
             expect(routes.TEST_TAG_REPORT_UTILITY_LICENCED_USERS()).toEqual({
                 apiUrl: 'test-and-tag/report/licenced-inspectors',
             });

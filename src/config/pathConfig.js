@@ -38,6 +38,7 @@ export const pathConfig = {
         bookableSpacesManageFacilityTypes: '/admin/spaces/manage/facilitytypes',
         bookableSpacesEdit: spaceUuid => `/admin/spaces/edit/${spaceUuid}`,
         testntagmanageteams: '/admin/testntag/manage/teams',
+        testntagmanageprintertemplates: '/admin/testntag/manage/printertemplates',
         dlorScheduler: '/admin/dlor/schedule',
         bookableSpaceTypesDashboard: '/admin/spacetypes',
     },
