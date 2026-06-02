@@ -70,6 +70,10 @@ describe('BookableSpacesJourney browser back navigation', () => {
         weeklyHoursError: null,
     };
 
+    beforeEach(() => {
+        window.history.replaceState({}, '', '/#/spaces');
+    });
+
     it('keeps browser back navigation inside journey steps before leaving the page', () => {
         const pushStateSpy = jest.spyOn(window.history, 'pushState');
 
@@ -101,5 +105,38 @@ describe('BookableSpacesJourney browser back navigation', () => {
 
         expect(pushStateSpy).toHaveBeenCalledTimes(3);
         pushStateSpy.mockRestore();
+    });
+
+    it('writes permalink query params as users progress through the journey', () => {
+        rtlRender(<BookableSpacesJourney {...defaultProps} />);
+
+        fireEvent.click(screen.getByTestId('spaces-journey-landing-get-started'));
+        expect(window.location.search).toContain('journeyStep=intent');
+
+        fireEvent.click(screen.getByRole('button', { name: /quiet space/i }));
+        expect(window.location.search).toContain('journeyStep=results');
+        expect(window.location.search).toContain('journeyIntent=quiet');
+
+        fireEvent.click(screen.getByRole('button', { name: /quiet study room a/i }));
+        expect(window.location.search).toContain('journeyStep=details');
+        expect(window.location.search).toContain('journeyIntent=quiet');
+        expect(window.location.search).toContain('journeySpace=101');
+    });
+
+    it('restores results and selected intent from permalink params', () => {
+        window.history.replaceState({}, '', '/spaces?journeyStep=results&journeyIntent=quiet');
+
+        rtlRender(<BookableSpacesJourney {...defaultProps} />);
+
+        expect(screen.getByRole('heading', { level: 2, name: /quiet space/i })).toBeInTheDocument();
+    });
+
+    it('restores details view and selected space from permalink params', () => {
+        window.history.replaceState({}, '', '/spaces?journeyStep=details&journeyIntent=quiet&journeySpace=101');
+
+        rtlRender(<BookableSpacesJourney {...defaultProps} />);
+
+        expect(screen.getByRole('button', { name: /back to results/i })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: /quiet study room a/i })).toBeInTheDocument();
     });
 });
