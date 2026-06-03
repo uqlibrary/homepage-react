@@ -497,8 +497,7 @@ export const EditSpaceForm = ({
         return errorMessages;
     }
 
-    function validatePanelLocation(currentValues, errorMessages = []) {
-        console.log('validatePanelLocation currentValues=', currentValues);
+    function validatePanelLocationSelectors(currentValues, errorMessages = []) {
         if (!currentValues?.campus_id) {
             errorMessages?.push({ field: 'campus_id', message: 'A campus is required.' });
         }
@@ -508,6 +507,10 @@ export const EditSpaceForm = ({
         if (!currentValues?.space_floor_id && !currentValues?.floor_id) {
             errorMessages?.push({ field: 'space_floor_id', message: 'A floor is required.' });
         }
+        return errorMessages;
+    }
+
+    function validatePanelLocationDetails(currentValues, errorMessages = []) {
         if (!currentValues?.space_latitude || !currentValues?.space_longitude) {
             errorMessages?.push({ field: 'space_latitude', message: 'Please locate the Space on the map' });
         }
@@ -518,6 +521,12 @@ export const EditSpaceForm = ({
             });
         }
         return errorMessages;
+    }
+
+    function validatePanelLocation(currentValues, errorMessages = []) {
+        console.log('validatePanelLocation currentValues=', currentValues);
+        validatePanelLocationSelectors(currentValues, errorMessages);
+        return validatePanelLocationDetails(currentValues, errorMessages);
     }
 
     function validatePanelImagery(currentValues, errorMessages = []) {
@@ -622,10 +631,10 @@ export const EditSpaceForm = ({
         space_type_id: { addTab: firstTabId, editTab: firstTabId, selector: '#add-space-type-input' },
         space_external_book_url: { addTab: firstTabId, editTab: firstTabId, selector: '#space_external_book_url' },
         space_capacity: { addTab: firstTabId, editTab: firstTabId, selector: '#space-capacity' },
-        campus_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-campus-input' },
-        library_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-library-input' },
-        space_floor_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-floor-input' },
-        floor_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-select-floor-input' },
+        campus_id: { addTab: firstTabId, editTab: thirdTabId, selector: '#add-space-select-campus-input' },
+        library_id: { addTab: firstTabId, editTab: thirdTabId, selector: '#add-space-select-library-input' },
+        space_floor_id: { addTab: firstTabId, editTab: thirdTabId, selector: '#add-space-select-floor-input' },
+        floor_id: { addTab: firstTabId, editTab: thirdTabId, selector: '#add-space-select-floor-input' },
         space_services_page: { addTab: thirdTabId, editTab: thirdTabId, selector: '#space_services_page' },
         space_opening_hours_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-springshare-input' },
         space_photo_url: {
@@ -1365,6 +1374,116 @@ export const EditSpaceForm = ({
             </>
         );
     };
+    const renderCampusBuildingFloorFields = () => {
+        return (
+            <>
+                <Grid item xs={4}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel id="add-space-select-campus-label" htmlFor="add-space-select-campus-input">
+                            Campus *
+                        </InputLabel>
+                        <Select
+                            id="add-space-select-campus"
+                            labelId="add-space-select-campus-label"
+                            data-testid="add-space-select-campus"
+                            value={formValues?.campus_id}
+                            onChange={handleChange('campus_id')}
+                            required
+                            inputProps={{
+                                id: 'add-space-select-campus-input',
+                                'aria-labelledby': 'add-space-select-campus-label',
+                            }}
+                        >
+                            {!!currentCampusList &&
+                                currentCampusList?.length > 0 &&
+                                currentCampusList?.map((campus, index) => (
+                                    <MenuItem value={campus?.campus_id} key={`select-campus-${index}`}>
+                                        {campus?.campus_name}
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('campus_id')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel id="add-space-select-library-label" htmlFor="add-space-select-library-input">
+                            Library *
+                        </InputLabel>
+                        <Select
+                            id="add-space-select-library"
+                            labelId="add-space-select-library-label"
+                            data-testid="add-space-select-library"
+                            value={formValues?.library_id}
+                            onChange={handleChange('library_id')}
+                            required
+                            inputProps={{
+                                id: 'add-space-select-library-input',
+                                'aria-labelledby': 'add-space-select-library-label',
+                            }}
+                        >
+                            {!!location.currentCampusLibraries &&
+                                location.currentCampusLibraries?.length > 0 &&
+                                location.currentCampusLibraries?.map((library, index) => (
+                                    <MenuItem value={library?.library_id} key={`select-library-${index}`}>
+                                        {library?.library_name || library?.building_name}
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('library_id')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel id="add-space-select-floor-label" htmlFor="add-space-select-floor-input">
+                            Level *
+                        </InputLabel>
+                        <Select
+                            id="add-space-select-floor"
+                            labelId="add-space-select-floor-label"
+                            data-testid="add-space-select-floor"
+                            value={formValues?.floor_id}
+                            onChange={handleChange('floor_id')}
+                            required
+                            inputProps={{
+                                id: 'add-space-select-floor-input',
+                                'aria-labelledby': 'add-space-select-floor-label',
+                            }}
+                        >
+                            {!!location?.currentLibrary &&
+                                !!location?.currentLibraryFloors &&
+                                location?.currentLibraryFloors?.length > 0 &&
+                                location?.currentLibraryFloors?.map((floor, index) => {
+                                    const libraryName =
+                                        location?.currentLibrary?.library_name ||
+                                        location?.currentLibrary?.building_name;
+                                    return (
+                                        <MenuItem value={floor?.floor_id} key={`select-floor-${index}`}>
+                                            {floor?.floor_name}{' '}
+                                            {location?.currentLibrary?.ground_floor_id === floor?.floor_id
+                                                ? ' (Ground floor)'
+                                                : ''}
+                                            {`${
+                                                window.location.host === 'localhost:2020' // to make the Select more readable to we poor devs, also makes more accurate test
+                                                    ? ' [' + libraryName + ' - ' + floor?.floor_id + ']'
+                                                    : ''
+                                            }`}
+                                        </MenuItem>
+                                    );
+                                })}
+                        </Select>
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('space_floor_id')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                </Grid>
+            </>
+        );
+    };
     const aboutPanel = () => {
         const bookingUrlQuerystringWarning = getBookingUrlQuerystringWarning(formValues?.space_external_book_url);
         // const selectedFacilityTypes = formValues?.facility_types || [];
@@ -1451,6 +1570,7 @@ export const EditSpaceForm = ({
                         </Typography>
                     </Grid>
                 )}
+                {mode === 'add' && renderCampusBuildingFloorFields()}
                 {renderArchibusRoomMappingFields()}
                 <Grid item xs={12}>
                     <FormControlLabel
@@ -1636,110 +1756,7 @@ export const EditSpaceForm = ({
                         Location
                     </Typography>
                 </Grid>
-                <Grid item xs={4}>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel id="add-space-select-campus-label" htmlFor="add-space-select-campus-input">
-                            Campus *
-                        </InputLabel>
-                        <Select
-                            id="add-space-select-campus"
-                            labelId="add-space-select-campus-label"
-                            data-testid="add-space-select-campus"
-                            value={formValues?.campus_id}
-                            onChange={handleChange('campus_id')}
-                            required
-                            inputProps={{
-                                id: 'add-space-select-campus-input',
-                                'aria-labelledby': 'add-space-select-campus-label',
-                            }}
-                        >
-                            {!!currentCampusList &&
-                                currentCampusList?.length > 0 &&
-                                currentCampusList?.map((campus, index) => (
-                                    <MenuItem value={campus?.campus_id} key={`select-campus-${index}`}>
-                                        {campus?.campus_name}
-                                    </MenuItem>
-                                ))}
-                        </Select>
-                        <StyledErrorMessageTypography component={'div'}>
-                            {reportErrorMessage('??')}
-                        </StyledErrorMessageTypography>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={4}>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel id="add-space-select-library-label" htmlFor="add-space-select-library-input">
-                            Library *
-                        </InputLabel>
-                        <Select
-                            id="add-space-select-library"
-                            labelId="add-space-select-library-label"
-                            data-testid="add-space-select-library"
-                            value={formValues?.library_id}
-                            onChange={handleChange('library_id')}
-                            required
-                            inputProps={{
-                                id: 'add-space-select-library-input',
-                                'aria-labelledby': 'add-space-select-library-label',
-                            }}
-                        >
-                            {!!location.currentCampusLibraries &&
-                                location.currentCampusLibraries?.length > 0 &&
-                                location.currentCampusLibraries?.map((library, index) => (
-                                    <MenuItem value={library?.library_id} key={`select-library-${index}`}>
-                                        {library?.library_name || library?.building_name}
-                                    </MenuItem>
-                                ))}
-                        </Select>
-                        <StyledErrorMessageTypography component={'div'}>
-                            {reportErrorMessage('??')}
-                        </StyledErrorMessageTypography>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={4}>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel id="add-space-select-floor-label" htmlFor="add-space-select-floor-input">
-                            Level *
-                        </InputLabel>
-                        <Select
-                            id="add-space-select-floor"
-                            labelId="add-space-select-floor-label"
-                            data-testid="add-space-select-floor"
-                            value={formValues?.floor_id}
-                            onChange={handleChange('floor_id')}
-                            required
-                            inputProps={{
-                                id: 'add-space-select-floor-input',
-                                'aria-labelledby': 'add-space-select-floor-label',
-                            }}
-                        >
-                            {!!location?.currentLibrary &&
-                                !!location?.currentLibraryFloors &&
-                                location?.currentLibraryFloors?.length > 0 &&
-                                location?.currentLibraryFloors?.map((floor, index) => {
-                                    const libraryName =
-                                        location?.currentLibrary?.library_name ||
-                                        location?.currentLibrary?.building_name;
-                                    return (
-                                        <MenuItem value={floor?.floor_id} key={`select-floor-${index}`}>
-                                            {floor?.floor_name}{' '}
-                                            {location?.currentLibrary?.ground_floor_id === floor?.floor_id
-                                                ? ' (Ground floor)'
-                                                : ''}
-                                            {`${
-                                                window.location.host === 'localhost:2020' // to make the Select more readable to we poor devs, also makes more accurate test
-                                                    ? ' [' + libraryName + ' - ' + floor?.floor_id + ']'
-                                                    : ''
-                                            }`}
-                                        </MenuItem>
-                                    );
-                                })}
-                        </Select>
-                        <StyledErrorMessageTypography component={'div'}>
-                            {reportErrorMessage('??')}
-                        </StyledErrorMessageTypography>
-                    </FormControl>
-                </Grid>
+                {mode === 'edit' && renderCampusBuildingFloorFields()}
                 <Grid item xs={12}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="space_precise">
@@ -2008,13 +2025,17 @@ export const EditSpaceForm = ({
 
     function panelErrorCount(tabId) {
         if (tabId === firstTabId) {
-            const abouterrorcount = validatePanelAbout(formValues);
-            console.log('abouterrorcount=', abouterrorcount);
-            return abouterrorcount?.length;
+            const aboutErrorMessages = validatePanelAbout(formValues, []);
+            const firstStepErrorMessages =
+                mode === 'add' ? validatePanelLocationSelectors(formValues, aboutErrorMessages) : aboutErrorMessages;
+            console.log('abouterrorcount=', firstStepErrorMessages);
+            return firstStepErrorMessages?.length;
         } else if (tabId === secondTabId) {
             return validatePanelFacilityTypes(formValues)?.length;
         } else if (tabId === thirdTabId) {
-            return validatePanelLocation(formValues)?.length;
+            const thirdStepErrorMessages =
+                mode === 'add' ? validatePanelLocationDetails(formValues, []) : validatePanelLocation(formValues, []);
+            return thirdStepErrorMessages?.length;
         } else {
             // tabId must = 3 in add mode
             return validatePanelImagery(formValues)?.length;
