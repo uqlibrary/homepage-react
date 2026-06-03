@@ -145,12 +145,6 @@ export default {
                 const anyInvalidRows = row?.vars?.some(variable => validateTemplateUserVariable(variable));
 
                 // then check if there are any variables in the template code that are not defined by the user
-                // const templateVariables = printerTemplateCode
-                //     .match(/{{\s*[\w-]+\s*}}/g)
-                //     ?.map(variable => getSafeUserVariableNamePlaceholder(variable));
-                // const missingInUserVariables =
-                //     templateVariables?.filter(varName => !userVariables.includes(varName)) ??
-                //     /* istanbul ignore next */ [];
                 const missingInUserVariables = getMissingUserVarsInPastedCode(row?.vars ?? [], printerTemplateCode);
                 return missing.length > 0 || anyInvalidRows || missingInUserVariables.length > 0;
             },
@@ -181,7 +175,7 @@ export default {
                             inputProps={{
                                 ...props.inputProps,
                                 onPaste: e => {
-                                    const clipboardData = e.clipboardData || window.clipboardData;
+                                    const clipboardData = e.clipboardData;
                                     const pastedData = clipboardData.getData('Text');
                                     dispatch(
                                         actions.printerTemplatePasteDetected({ field: props.name, value: pastedData }),
