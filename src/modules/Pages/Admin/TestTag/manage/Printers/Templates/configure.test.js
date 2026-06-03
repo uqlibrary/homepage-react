@@ -72,33 +72,15 @@ describe('config', () => {
     describe('fields.vars.validate', () => {
         const { validate } = config.fields.vars;
 
+        const validVar = (name, label = 'Label', value = '0') => ({
+            printer_template_var_name: name,
+            printer_template_var_label: label,
+            printer_template_var_value: value,
+        });
+
         it('returns false when vars is empty and code is empty', () => {
             const row = { vars: [], printer_template_code: '' };
             expect(validate(null, row)).toBe(false);
-        });
-
-        it('returns false when all variable placeholders are present in the code', () => {
-            const row = {
-                vars: [{ printer_template_var_name: 'assetid' }, { printer_template_var_name: 'location' }],
-                printer_template_code: 'Asset: {{ASSETID}} at {{LOCATION}}',
-            };
-            expect(validate(null, row)).toBe(false);
-        });
-
-        it('returns true when a variable placeholder is missing from the code', () => {
-            const row = {
-                vars: [{ printer_template_var_name: 'assetid' }, { printer_template_var_name: 'location' }],
-                printer_template_code: 'Asset: {{ASSETID}}',
-            };
-            expect(validate(null, row)).toBe(true);
-        });
-
-        it('returns true when all placeholders are missing from the code', () => {
-            const row = {
-                vars: [{ printer_template_var_name: 'assetid' }],
-                printer_template_code: 'No placeholders here',
-            };
-            expect(validate(null, row)).toBe(true);
         });
 
         it('returns false when vars is undefined', () => {
@@ -106,12 +88,50 @@ describe('config', () => {
             expect(validate(null, row)).toBe(false);
         });
 
-        it('handles variable names with spaces and braces, matching clean placeholder', () => {
+        it('returns false when all variable placeholders are present in the code', () => {
             const row = {
-                vars: [{ printer_template_var_name: 'my var' }],
-                printer_template_code: '{{MYVAR}}',
+                vars: [validVar('{{ASSETID}}'), validVar('{{LOCATION}}')],
+                printer_template_code: 'Asset: {{ASSETID}} at {{LOCATION}}',
             };
             expect(validate(null, row)).toBe(false);
+        });
+
+        it('returns true when a user var placeholder is missing from the code', () => {
+            const row = {
+                vars: [validVar('{{ASSETID}}'), validVar('{{LOCATION}}')],
+                printer_template_code: 'Asset: {{ASSETID}}',
+            };
+            expect(validate(null, row)).toBe(true);
+        });
+
+        it('returns true when all user var placeholders are missing from the code', () => {
+            const row = {
+                vars: [validVar('{{ASSETID}}')],
+                printer_template_code: 'No placeholders here',
+            };
+            expect(validate(null, row)).toBe(true);
+        });
+
+        it('returns true when code contains a placeholder not defined in vars', () => {
+            const row = {
+                vars: [validVar('{{ASSETID}}')],
+                printer_template_code: '{{ASSETID}} {{LOCATION}}',
+            };
+            expect(validate(null, row)).toBe(true);
+        });
+
+        it('returns true when a var row has invalid fields', () => {
+            const row = {
+                vars: [
+                    {
+                        printer_template_var_name: '{{ASSETID}}',
+                        printer_template_var_label: '',
+                        printer_template_var_value: '0',
+                    },
+                ],
+                printer_template_code: '{{ASSETID}}',
+            };
+            expect(validate(null, row)).toBe(true);
         });
     });
 

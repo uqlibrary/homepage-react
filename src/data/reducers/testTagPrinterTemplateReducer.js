@@ -107,3 +107,28 @@ export default function testTagPrinterTemplateReducer(state = initialState, acti
     }
     return handler(state, action);
 }
+
+export const pasteDataInitialState = {
+    field: null,
+    value: null,
+};
+
+const pasteHandlers = {
+    [actions.TESTTAG_PRINTER_TEMPLATE_PASTE_DETECTED]: (state, action) => ({
+        ...pasteDataInitialState,
+        ...state,
+        field: action.payload.field,
+        value: action.payload.value,
+    }),
+    [actions.TESTTAG_PRINTER_TEMPLATE_PASTE_CLEAR]: () => ({
+        ...pasteDataInitialState,
+    }),
+};
+
+export function testTagPrinterTemplatePasteDataReducer(state = pasteDataInitialState, action) {
+    const handler = pasteHandlers[action.type];
+    if (!handler) {
+        return state;
+    }
+    return handler(state, action);
+}
