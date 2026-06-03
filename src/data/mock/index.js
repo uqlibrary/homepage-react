@@ -85,6 +85,7 @@ import facilityTypes_all from './data/records/bookableSpaces/facilityTypes_all';
 import location_sites_all from './data/records/bookableSpaces/location_sites_all';
 import newSpace from './data/records/bookableSpaces/newSpace';
 import spaces_favourites from './data/records/bookableSpaces/spaces_favourites';
+import archibusTreeSites from './data/records/bookableSpaces/archibusTreeSites';
 import { dlorDashboardSiteUsage } from './data/dlor/dlorDashboardSiteUsage';
 
 const moment = require('moment');
@@ -1763,46 +1764,7 @@ mock.onGet('exams/course/FREN1010/summary')
             {
                 status: 'OK',
                 data: {
-                    sites: [
-                        {
-                            siteId: 'S-STLUCIA',
-                            siteCode: '001',
-                            siteName: 'St Lucia',
-                            buildings: [
-                                {
-                                    buildingId: 'B-CENTRAL',
-                                    buildingCode: '001',
-                                    libraryName: 'Central Library',
-                                    buildingName: 'Duhig Tower',
-                                    rooms: [
-                                        { roomId: 1001, roomCode: 'ROOM_2.10' },
-                                        { roomId: 1002, roomCode: 'ROOM_2.11' },
-                                    ],
-                                },
-                                {
-                                    buildingId: 'B-BIOL',
-                                    buildingCode: '025',
-                                    libraryName: 'Biological Sciences Library',
-                                    buildingName: 'Goddard Building',
-                                    rooms: [{ roomId: 2001, roomCode: 'ROOM_101' }],
-                                },
-                            ],
-                        },
-                        {
-                            siteId: 'S-HERSTON',
-                            siteCode: '025',
-                            siteName: 'Herston',
-                            buildings: [
-                                {
-                                    buildingId: 'B-HER-LIB',
-                                    buildingCode: '123',
-                                    libraryName: 'Herston Health Sciences Library',
-                                    buildingName: 'Oral Health Centre',
-                                    rooms: [{ roomId: 3001, roomCode: 'ROOM_L1-12' }],
-                                },
-                            ],
-                        },
-                    ],
+                    sites: archibusTreeSites,
                 },
             },
         ];

@@ -5,6 +5,7 @@ import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
+import Autocomplete from '@mui/material/Autocomplete';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -631,10 +632,10 @@ export const EditSpaceForm = ({
         space_type_id: { addTab: firstTabId, editTab: firstTabId, selector: '#add-space-type-input' },
         space_external_book_url: { addTab: firstTabId, editTab: firstTabId, selector: '#space_external_book_url' },
         space_capacity: { addTab: firstTabId, editTab: firstTabId, selector: '#space-capacity' },
-        campus_id: { addTab: firstTabId, editTab: thirdTabId, selector: '#add-space-select-campus-input' },
-        library_id: { addTab: firstTabId, editTab: thirdTabId, selector: '#add-space-select-library-input' },
-        space_floor_id: { addTab: firstTabId, editTab: thirdTabId, selector: '#add-space-select-floor-input' },
-        floor_id: { addTab: firstTabId, editTab: thirdTabId, selector: '#add-space-select-floor-input' },
+        campus_id: { addTab: firstTabId, editTab: firstTabId, selector: '#add-space-select-campus-input' },
+        library_id: { addTab: firstTabId, editTab: firstTabId, selector: '#add-space-select-library-input' },
+        space_floor_id: { addTab: firstTabId, editTab: firstTabId, selector: '#add-space-select-floor-input' },
+        floor_id: { addTab: firstTabId, editTab: firstTabId, selector: '#add-space-select-floor-input' },
         space_services_page: { addTab: thirdTabId, editTab: thirdTabId, selector: '#space_services_page' },
         space_opening_hours_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-springshare-input' },
         space_photo_url: {
@@ -930,29 +931,13 @@ export const EditSpaceForm = ({
         return site?.siteCode ?? site?.site_id_displayed ?? site?.site_code ?? site?.siteId;
     }, []);
 
-    const getArchibusSiteLabel = React.useCallback(
-        site => {
-            const name = site?.siteName || site?.site_name || 'Unnamed site';
-            const code = getArchibusSiteCode(site);
-            return !!code ? `${name} (${code})` : name;
-        },
-        [getArchibusSiteCode],
-    );
-
-    const getArchibusBuildingCode = React.useCallback(building => {
-        return (
-            building?.buildingCode ?? building?.building_id_displayed ?? building?.building_code ?? building?.buildingId
-        );
+    const normalizeComparableText = React.useCallback(value => {
+        return (value || '')
+            .toString()
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '');
     }, []);
-
-    const getArchibusBuildingLabel = React.useCallback(
-        building => {
-            const name = building?.libraryName || building?.buildingName || 'Unnamed building';
-            const code = getArchibusBuildingCode(building);
-            return !!code ? `${name} (${code})` : name;
-        },
-        [getArchibusBuildingCode],
-    );
 
     const getArchibusRoomValue = React.useCallback(room => {
         const candidates = [
@@ -992,21 +977,112 @@ export const EditSpaceForm = ({
         return archibusSiteList?.find(site => String(site?.siteId) === String(selectedArchibusSiteId)) || null;
     }, [archibusSiteList, selectedArchibusSiteId]);
 
-    const archibusBuildingList = React.useMemo(() => {
-        return selectedArchibusSite?.buildings || [];
-    }, [selectedArchibusSite]);
-
     const selectedArchibusBuilding = React.useMemo(() => {
         return (
-            archibusBuildingList?.find(
+            (selectedArchibusSite?.buildings || [])?.find(
                 building => String(building?.buildingId) === String(selectedArchibusBuildingId),
             ) || null
         );
-    }, [archibusBuildingList, selectedArchibusBuildingId]);
+    }, [selectedArchibusSite, selectedArchibusBuildingId]);
 
     const archibusRoomList = React.useMemo(() => {
         return selectedArchibusBuilding?.rooms || [];
     }, [selectedArchibusBuilding]);
+
+    const allArchibusRoomOptions = React.useMemo(() => {
+        const options = [];
+
+        for (const site of archibusSiteList || []) {
+            for (const building of site?.buildings || []) {
+                for (const room of building?.rooms || []) {
+                    const roomId = getArchibusRoomValue(room);
+                    if (roomId === undefined || roomId === null) {
+                        continue;
+                    }
+
+                    options.push({
+                        roomId: Number(roomId),
+                        roomName: room?.roomCode || room?.roomName || '',
+                    });
+                }
+            }
+        }
+
+        const seenRoomIds = new Set();
+        return options.filter(option => {
+            const key = String(option?.roomId);
+            if (seenRoomIds.has(key)) {
+                return false;
+            }
+            seenRoomIds.add(key);
+            return true;
+        });
+    }, [archibusSiteList, getArchibusRoomValue]);
+
+    const selectedArchibusRoomOption = React.useMemo(() => {
+        const selectedRoomId = formValues?.archibus_room_id;
+        if (selectedRoomId === undefined || selectedRoomId === null || String(selectedRoomId) === '') {
+            return null;
+        }
+
+        return allArchibusRoomOptions.find(option => String(option?.roomId) === String(selectedRoomId)) || null;
+    }, [allArchibusRoomOptions, formValues?.archibus_room_id]);
+
+    const selectedCampus = React.useMemo(() => {
+        return currentCampusList?.find(campus => String(campus?.campus_id) === String(formValues?.campus_id)) || null;
+    }, [currentCampusList, formValues?.campus_id]);
+
+    const archibusSiteIdForSelectedCampus = React.useMemo(() => {
+        if (!selectedCampus || !Array.isArray(archibusSiteList) || archibusSiteList?.length === 0) {
+            return '';
+        }
+
+        const campusName = normalizeComparableText(selectedCampus?.campus_name);
+        const campusCode = normalizeComparableText(selectedCampus?.campus_id);
+        const campusNameAliases = {
+            herston: ['royalbrisbaneandwomenshospital'],
+        };
+        const acceptedCampusNames = [campusName, ...(campusNameAliases[campusName] || [])].filter(Boolean);
+        const matchingSite =
+            archibusSiteList?.find(site =>
+                acceptedCampusNames.includes(normalizeComparableText(site?.siteName || site?.site_name)),
+            ) ||
+            archibusSiteList?.find(site => normalizeComparableText(getArchibusSiteCode(site)) === campusCode) ||
+            null;
+
+        return String(matchingSite?.siteId || '');
+    }, [archibusSiteList, getArchibusSiteCode, normalizeComparableText, selectedCampus]);
+
+    useEffect(() => {
+        if (!!formValues?.archibus_room_id) {
+            return;
+        }
+
+        if (!archibusSiteIdForSelectedCampus || !Array.isArray(archibusSiteList) || archibusSiteList?.length === 0) {
+            return;
+        }
+
+        const currentSiteStillMatchesCampus =
+            String(selectedArchibusSiteId) === String(archibusSiteIdForSelectedCampus);
+        const nextSite = archibusSiteList?.find(
+            site => String(site?.siteId) === String(archibusSiteIdForSelectedCampus),
+        );
+        const nextBuildingId = String(nextSite?.buildings?.[0]?.buildingId || '');
+
+        if (currentSiteStillMatchesCampus && String(selectedArchibusBuildingId) === nextBuildingId) {
+            return;
+        }
+
+        setSelectedArchibusSiteId(String(archibusSiteIdForSelectedCampus));
+        setSelectedArchibusBuildingId(nextBuildingId);
+    }, [
+        archibusSiteIdForSelectedCampus,
+        archibusSiteList,
+        formValues,
+        selectedArchibusBuildingId,
+        selectedArchibusSiteId,
+        setFormValues,
+    ]);
 
     useEffect(() => {
         const selectedRoomId = formValues?.archibus_room_id;
@@ -1028,36 +1104,15 @@ export const EditSpaceForm = ({
         }
     }, [archibusRoomList, formValues?.archibus_room_id, getArchibusPathByRoomId, getArchibusRoomValue]);
 
-    const handleArchibusSiteChange = e => {
-        const nextSiteId = String(e?.target?.value || '');
-        const nextSite = archibusSiteList?.find(site => String(site?.siteId) === nextSiteId) || null;
-        const nextBuildings = nextSite?.buildings || [];
-        const nextBuildingId = String(nextBuildings?.[0]?.buildingId || '');
-
-        setSelectedArchibusSiteId(nextSiteId);
-        setSelectedArchibusBuildingId(nextBuildingId);
-        setFormValues({
-            ...formValues,
-            archibus_room_id: null,
-        });
-    };
-
-    const handleArchibusBuildingChange = e => {
-        const nextBuildingId = String(e?.target?.value || '');
-
-        setSelectedArchibusBuildingId(nextBuildingId);
-        setFormValues({
-            ...formValues,
-            archibus_room_id: null,
-        });
-    };
-
-    const handleArchibusRoomChange = e => {
-        const selectedRoomId = String(e?.target?.value || '');
+    const handleArchibusRoomChange = (event, selectedOption) => {
+        const selectedRoomId = selectedOption?.roomId;
+        const selectedRoomName = selectedOption?.roomName || '';
+        const shouldPopulateSpaceName = mode === 'add' && !!selectedRoomId;
 
         setFormValues({
             ...formValues,
-            archibus_room_id: selectedRoomId ? Number(selectedRoomId) : null,
+            archibus_room_id: selectedRoomId !== undefined && selectedRoomId !== null ? Number(selectedRoomId) : null,
+            space_name: shouldPopulateSpaceName ? selectedRoomName : formValues?.space_name,
         });
     };
 
@@ -1250,119 +1305,24 @@ export const EditSpaceForm = ({
         return (
             <>
                 <Grid item xs={12}>
-                    <Typography component={'h4'} variant={'subtitle1'}>
-                        Archibus room mapping
-                    </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel
-                            id="add-space-select-archibus-site-label"
-                            htmlFor="add-space-select-archibus-site-input"
-                        >
-                            Site
-                        </InputLabel>
-                        <Select
-                            id="add-space-select-archibus-site"
-                            labelId="add-space-select-archibus-site-label"
-                            data-testid="add-space-select-archibus-site"
-                            value={selectedArchibusSiteId}
-                            onChange={handleArchibusSiteChange}
-                            disabled={bookableSpacesArchibusTreeLoading || !!bookableSpacesArchibusTreeError}
-                            inputProps={{
-                                id: 'add-space-select-archibus-site-input',
-                                'aria-labelledby': 'add-space-select-archibus-site-label',
-                            }}
-                        >
-                            {!!archibusSiteList &&
-                                archibusSiteList?.length > 0 &&
-                                archibusSiteList?.map(site => (
-                                    <MenuItem value={String(site?.siteId)} key={`select-archibus-site-${site?.siteId}`}>
-                                        {getArchibusSiteLabel(site)}
-                                    </MenuItem>
-                                ))}
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={4}>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel
-                            id="add-space-select-archibus-building-label"
-                            htmlFor="add-space-select-archibus-building-input"
-                        >
-                            Building
-                        </InputLabel>
-                        <Select
-                            id="add-space-select-archibus-building"
-                            labelId="add-space-select-archibus-building-label"
-                            data-testid="add-space-select-archibus-building"
-                            value={selectedArchibusBuildingId}
-                            onChange={handleArchibusBuildingChange}
-                            disabled={
-                                !selectedArchibusSiteId ||
-                                bookableSpacesArchibusTreeLoading ||
-                                !!bookableSpacesArchibusTreeError
-                            }
-                            inputProps={{
-                                id: 'add-space-select-archibus-building-input',
-                                'aria-labelledby': 'add-space-select-archibus-building-label',
-                            }}
-                        >
-                            {!!archibusBuildingList &&
-                                archibusBuildingList?.length > 0 &&
-                                archibusBuildingList?.map(building => (
-                                    <MenuItem
-                                        value={String(building?.buildingId)}
-                                        key={`select-archibus-building-${building?.buildingId}`}
-                                    >
-                                        {getArchibusBuildingLabel(building)}
-                                    </MenuItem>
-                                ))}
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={4}>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel
-                            id="add-space-select-archibus-room-label"
-                            htmlFor="add-space-select-archibus-room-input"
-                        >
-                            Room ID
-                        </InputLabel>
-                        <Select
-                            id="add-space-select-archibus-room"
-                            labelId="add-space-select-archibus-room-label"
-                            data-testid="add-space-select-archibus-room"
-                            value={
-                                formValues?.archibus_room_id !== undefined &&
-                                formValues?.archibus_room_id !== null &&
-                                String(formValues?.archibus_room_id) !== ''
-                                    ? String(formValues?.archibus_room_id)
-                                    : ''
-                            }
-                            onChange={handleArchibusRoomChange}
-                            disabled={
-                                !selectedArchibusBuildingId ||
-                                bookableSpacesArchibusTreeLoading ||
-                                !!bookableSpacesArchibusTreeError
-                            }
-                            inputProps={{
-                                id: 'add-space-select-archibus-room-input',
-                                'aria-labelledby': 'add-space-select-archibus-room-label',
-                            }}
-                        >
-                            {!!archibusRoomList &&
-                                archibusRoomList?.length > 0 &&
-                                archibusRoomList?.map(room => {
-                                    const roomValue = getArchibusRoomValue(room);
-                                    return (
-                                        <MenuItem value={String(roomValue)} key={`select-archibus-room-${roomValue}`}>
-                                            {room?.roomCode || room?.roomName || 'Unnamed room'}
-                                        </MenuItem>
-                                    );
-                                })}
-                        </Select>
-                    </FormControl>
+                    <Autocomplete
+                        id="add-space-select-archibus-room"
+                        data-testid="add-space-select-archibus-room"
+                        options={allArchibusRoomOptions}
+                        value={selectedArchibusRoomOption}
+                        onChange={handleArchibusRoomChange}
+                        getOptionLabel={option => `${option?.roomName || ''}`}
+                        isOptionEqualToValue={(option, value) => String(option?.roomId) === String(value?.roomId)}
+                        disabled={bookableSpacesArchibusTreeLoading || !!bookableSpacesArchibusTreeError}
+                        renderOption={(props, option) => {
+                            return (
+                                <li {...props} key={`archibus-room-option-${option?.roomId}`}>
+                                    <Typography component={'div'}>{option?.roomName || ''}</Typography>
+                                </li>
+                            );
+                        }}
+                        renderInput={params => <TextField {...params} label="Room ID" variant="standard" />}
+                    />
                 </Grid>
                 {!!bookableSpacesArchibusTreeError && (
                     <Grid item xs={12}>
@@ -1515,6 +1475,13 @@ export const EditSpaceForm = ({
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
+                    <Typography component={'h4'} variant={'subtitle1'}>
+                        Archibus room mapping
+                    </Typography>
+                </Grid>
+                {renderCampusBuildingFloorFields()}
+                {renderArchibusRoomMappingFields()}
+                <Grid item xs={12}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="space_name">Space name *</InputLabel>
                         <Input
@@ -1570,8 +1537,6 @@ export const EditSpaceForm = ({
                         </Typography>
                     </Grid>
                 )}
-                {mode === 'add' && renderCampusBuildingFloorFields()}
-                {renderArchibusRoomMappingFields()}
                 <Grid item xs={12}>
                     <FormControlLabel
                         control={
@@ -1756,7 +1721,6 @@ export const EditSpaceForm = ({
                         Location
                     </Typography>
                 </Grid>
-                {mode === 'edit' && renderCampusBuildingFloorFields()}
                 <Grid item xs={12}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="space_precise">

@@ -33,6 +33,8 @@ const chooseAnySpaceType = async (page: Page) => {
     return Number(selectedSpaceTypeId);
 };
 
+const selectCombobox = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('[role="combobox"]');
+
 const ensureSpaceTypeSelected = async (page: Page) => {
     await page.getByTestId(TAB_ABOUT).click();
     const nativeSpaceTypeInput = page.locator('#add-space-type-input');
@@ -131,15 +133,17 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
             numberFacilityTypesInMockFacilityTypes,
         );
 
-        // change to Location tab
-        await page.getByTestId(TABS_LOCATION_HOURS).click();
+        await page.getByTestId(TAB_ABOUT).click();
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
+        await expect(selectCombobox('add-space-select-campus', page)).toContainText('St Lucia');
         await expect(page.getByTestId('add-space-select-library').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-library')).toContainText('Walter Harrison Law Library');
+        await expect(selectCombobox('add-space-select-library', page)).toContainText('Walter Harrison Law Library');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('Walter Harrison Law Library - 1');
+        await expect(selectCombobox('add-space-select-floor', page)).toContainText('Walter Harrison Law Library - 1');
+
+        // change to Location tab
+        await page.getByTestId(TABS_LOCATION_HOURS).click();
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toHaveValue('Westernmost corner');
         await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
@@ -223,15 +227,17 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
             numberFacilityTypesInMockFacilityTypes,
         );
 
-        // change to Location tab
-        await page.getByTestId(TABS_LOCATION_HOURS).click();
+        await page.getByTestId(TAB_ABOUT).click();
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('Dutton Park');
+        await expect(selectCombobox('add-space-select-campus', page)).toContainText('Dutton Park');
         await expect(page.getByTestId('add-space-select-library').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-library')).toContainText('Dutton Park Health Sciences');
+        await expect(selectCombobox('add-space-select-library', page)).toContainText('Dutton Park Health Sciences');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('Dutton Park Health Sciences - 65');
+        await expect(selectCombobox('add-space-select-floor', page)).toContainText('Dutton Park Health Sciences - 65');
+
+        // change to Location tab
+        await page.getByTestId(TABS_LOCATION_HOURS).click();
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeEmpty();
 
@@ -304,15 +310,17 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
             numberFacilityTypesInMockFacilityTypes,
         );
 
-        // change to Location tab
-        await page.getByTestId(TABS_LOCATION_HOURS).click();
+        await page.getByTestId(TAB_ABOUT).click();
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
+        await expect(selectCombobox('add-space-select-campus', page)).toContainText('St Lucia');
         await expect(page.getByTestId('add-space-select-library').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-library')).toContainText('imaginary Liveris Library');
+        await expect(selectCombobox('add-space-select-library', page)).toContainText('imaginary Liveris Library');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('imaginary Liveris Library - 72');
+        await expect(selectCombobox('add-space-select-floor', page)).toContainText('imaginary Liveris Library - 72');
+
+        // change to Location tab
+        await page.getByTestId(TABS_LOCATION_HOURS).click();
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toHaveValue('Eastern corner');
         await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
@@ -550,8 +558,7 @@ test.describe('Spaces Admin - edit space', () => {
         // other panel fields NOT visible
         await expect(firstFacilityTypeCheckbox).toBeDefined();
         await expect(firstFacilityTypeCheckbox).not.toBeVisible();
-        await expect(LocationCampusSelector).toBeDefined();
-        await expect(LocationCampusSelector).not.toBeVisible();
+        await expect(LocationCampusSelector).toBeVisible();
         await expect(photoDescriptionField).toBeDefined();
         await expect(photoDescriptionField).not.toBeVisible();
 
@@ -607,7 +614,7 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId(TAB_IMAGERY)).toHaveAttribute('aria-selected', 'false');
 
         // panel 3 fields visible
-        await expect(LocationCampusSelector).toBeVisible();
+        await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
 
         // other panel fields NOT visible
         await expect(spaceNameField).toBeDefined();
@@ -823,8 +830,7 @@ test.describe('Spaces Admin - edit space', () => {
             .click();
         finalFilters = originalFilters.filter(f => f !== ADJUSTABLE_DESKS);
 
-        // change to Location tab
-        await page.getByTestId(TABS_LOCATION_HOURS).click();
+        await page.getByTestId(TAB_ABOUT).click();
 
         await page.getByRole('combobox', { name: 'Campus * St Lucia' }).click();
         await page.getByRole('option', { name: 'Gatton' }).click();
@@ -832,6 +838,9 @@ test.describe('Spaces Admin - edit space', () => {
         await page.getByRole('option', { name: 'Library Warehouse' }).click();
         await page.getByRole('combobox', { name: 'Level * 1 [Library Warehouse' }).click();
         await page.getByRole('option', { name: '[Library Warehouse - 32]' }).click();
+
+        // change to Location tab
+        await page.getByTestId(TABS_LOCATION_HOURS).click();
 
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
         await page
