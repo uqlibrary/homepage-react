@@ -1,11 +1,15 @@
 import React from 'react';
-import { rtlRender, userEvent, waitFor } from 'test-utils';
+import Immutable from 'immutable';
+import { rtlRender, WithReduxStore, userEvent, waitFor } from 'test-utils';
 import PlaceholderEditor from './PlaceholderEditor';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 jest.mock('data/actions', () => ({
     clearPrinterTemplateListError: jest.fn(() => () => Promise.resolve()),
+    clearPrinterTemplatePasteData: jest.fn(() => () => Promise.resolve()),
 }));
+
+const actions = require('data/actions');
 
 const existingRow = {
     printer_template_var_id: 1,
@@ -17,17 +21,25 @@ const existingRow = {
 let onChange;
 let setIsEditing;
 
+const defaultState = {
+    testTagPrinterTemplatePasteDataReducer: { field: null, value: null },
+};
+
 function setup(testProps = {}, renderer = rtlRender) {
+    const { state = {}, ...props } = testProps;
+    const newState = { ...defaultState, ...state };
     return renderer(
-        <PlaceholderEditor
-            label="Test Label"
-            onChange={onChange}
-            value={[]}
-            setIsEditing={setIsEditing}
-            disableVirtualization
-            InputLabelProps={{ htmlFor: 'test-input', id: 'test-label', 'data-testid': 'test-input-label' }}
-            {...testProps}
-        />,
+        <WithReduxStore initialState={Immutable.Map(newState)}>
+            <PlaceholderEditor
+                label="Test Label"
+                onChange={onChange}
+                value={[]}
+                setIsEditing={setIsEditing}
+                disableVirtualization
+                InputLabelProps={{ htmlFor: 'test-input', id: 'test-label', 'data-testid': 'test-input-label' }}
+                {...props}
+            />
+        </WithReduxStore>,
     );
 }
 
@@ -99,7 +111,9 @@ describe('PlaceholderEditor', () => {
         await waitFor(() => expect(getByRole('menuitem', { name: 'Save' })).toBeInTheDocument());
         await userEvent.click(getByRole('menuitem', { name: 'Save' }));
         await waitFor(() => {
-            expect(onChange).toHaveBeenCalledWith(null, [{ ...existingRow, isNew: false }]);
+            expect(onChange).toHaveBeenCalledWith(null, [
+                { ...existingRow, printer_template_var_name: '{{TEST_VAR}}', isNew: false },
+            ]);
         });
     });
 
@@ -167,7 +181,11 @@ describe('PlaceholderEditor', () => {
         await userEvent.click(getByRole('menuitem', { name: 'Edit' }));
         await waitFor(() => expect(getByRole('menuitem', { name: 'Save' })).toBeInTheDocument());
         await userEvent.click(getByRole('menuitem', { name: 'Save' }));
-        await waitFor(() => expect(onChange).toHaveBeenCalledWith(null, [{ ...existingRow, isNew: false }]));
+        await waitFor(() =>
+            expect(onChange).toHaveBeenCalledWith(null, [
+                { ...existingRow, printer_template_var_name: '{{TEST_VAR}}', isNew: false },
+            ]),
+        );
     });
 
     it('works without setIsEditing prop when cancelling', async () => {
@@ -176,5 +194,143 @@ describe('PlaceholderEditor', () => {
         await waitFor(() => expect(getByRole('menuitem', { name: 'Cancel' })).toBeInTheDocument());
         await userEvent.click(getByRole('menuitem', { name: 'Cancel' }));
         await waitFor(() => expect(getByRole('menuitem', { name: 'Edit' })).toBeInTheDocument());
+    });
+
+    describe('paste event handling', () => {
+        it('does not update rows when paste field does not match printer_template_code', () => {
+            setup({
+                value: [],
+                state: {
+                    testTagPrinterTemplatePasteDataReducer: {
+                        field: 'some_other_field',
+                        value: '{{NEWVAR}} template',
+                    },
+                },
+            });
+            expect(onChange).not.toHaveBeenCalled();
+        });
+
+        it('does not update rows when paste contains no placeholders', () => {
+            setup({
+                value: [],
+                state: {
+                    testTagPrinterTemplatePasteDataReducer: {
+                        field: 'printer_template_code',
+                        value: '^XA ^XZ no placeholders here',
+                    },
+                },
+            });
+            expect(onChange).not.toHaveBeenCalled();
+        });
+
+        it('does not add rows when paste contains only existing placeholders', () => {
+            const existingVarRow = { ...existingRow, printer_template_var_name: '{{BARCODE}}' };
+            setup({
+                value: [existingVarRow],
+                state: {
+                    testTagPrinterTemplatePasteDataReducer: {
+                        field: 'printer_template_code',
+                        value: '{{BARCODE}} only',
+                    },
+                },
+            });
+            expect(onChange).not.toHaveBeenCalled();
+        });
+
+        it('adds a new row and calls onChange when paste contains a new placeholder', async () => {
+            const { getByText } = setup({
+                value: [],
+                state: {
+                    testTagPrinterTemplatePasteDataReducer: {
+                        field: 'printer_template_code',
+                        value: '^XA {{BARCODE}} ^XZ',
+                    },
+                },
+            });
+            await waitFor(() => {
+                expect(onChange).toHaveBeenCalledWith(
+                    null,
+                    expect.arrayContaining([
+                        expect.objectContaining({
+                            printer_template_var_name: '{{BARCODE}}',
+                            printer_template_var_label: '',
+                            printer_template_var_value: '',
+                        }),
+                    ]),
+                );
+            });
+            expect(getByText('BARCODE')).toBeInTheDocument();
+        });
+
+        it('adds multiple new rows for multiple new placeholders in paste', async () => {
+            setup({
+                value: [],
+                state: {
+                    testTagPrinterTemplatePasteDataReducer: {
+                        field: 'printer_template_code',
+                        value: '{{BARCODE}} and {{ASSET}}',
+                    },
+                },
+            });
+            await waitFor(() => {
+                expect(onChange).toHaveBeenCalledWith(
+                    null,
+                    expect.arrayContaining([
+                        expect.objectContaining({ printer_template_var_name: '{{BARCODE}}' }),
+                        expect.objectContaining({ printer_template_var_name: '{{ASSET}}' }),
+                    ]),
+                );
+            });
+        });
+
+        it('adds only missing placeholders when paste contains mix of new and existing', async () => {
+            const existingVarRow = { ...existingRow, printer_template_var_name: '{{BARCODE}}' };
+            setup({
+                value: [existingVarRow],
+                state: {
+                    testTagPrinterTemplatePasteDataReducer: {
+                        field: 'printer_template_code',
+                        value: '{{BARCODE}} {{NEWVAR}}',
+                    },
+                },
+            });
+            await waitFor(() => {
+                expect(onChange).toHaveBeenCalledWith(null, [
+                    existingVarRow,
+                    expect.objectContaining({ printer_template_var_name: '{{NEWVAR}}' }),
+                ]);
+            });
+            expect(onChange.mock.calls[0][1]).toHaveLength(2);
+        });
+
+        it('dispatches clearPrinterTemplatePasteData when paste with new placeholders is processed', async () => {
+            setup({
+                value: [],
+                state: {
+                    testTagPrinterTemplatePasteDataReducer: {
+                        field: 'printer_template_code',
+                        value: '{{BARCODE}}',
+                    },
+                },
+            });
+            await waitFor(() => {
+                expect(actions.clearPrinterTemplatePasteData).toHaveBeenCalled();
+            });
+        });
+
+        it('dispatches clearPrinterTemplatePasteData even when paste has no new placeholders', async () => {
+            setup({
+                value: [],
+                state: {
+                    testTagPrinterTemplatePasteDataReducer: {
+                        field: 'printer_template_code',
+                        value: '^XA ^XZ',
+                    },
+                },
+            });
+            await waitFor(() => {
+                expect(actions.clearPrinterTemplatePasteData).toHaveBeenCalled();
+            });
+        });
     });
 });

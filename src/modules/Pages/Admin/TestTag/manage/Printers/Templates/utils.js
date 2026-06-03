@@ -19,7 +19,7 @@ export const transformRow = row => {
     }));
 };
 
-export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {} };
+export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {}, key: null };
 
 export const transformUpdateRequest = request => {
     request.printer_template_current_flag = request?.printer_template_current_flag_cb ? 1 : 0;
@@ -96,6 +96,7 @@ export const actionReducer = (_, action) => {
                 },
                 title,
                 props: { ...props },
+                key: `add-${Date.now()}`,
             };
         case 'edit':
             return {
@@ -105,6 +106,7 @@ export const actionReducer = (_, action) => {
                 title,
                 row: { ...row, id: row.printer_template_id },
                 props: { ...props },
+                key: `edit-${row.printer_template_id}-${Date.now()}`,
             };
         case 'delete':
             return { isAdd: false, isEdit: false, isDelete: true, title, row, props: { ...props } };
@@ -159,4 +161,37 @@ export const getLabelDates = date => {
     nextYear.setFullYear(nextYear.getFullYear() + 1);
     const dueDate = nextYear.toISOString().split('T')[0]; // YYYY-MM-DD + 1 year
     return { testDate, dueDate };
+};
+
+export const getUserVariablesFromRow = row =>
+    row?.vars?.reduce?.((acc, variable) => [...acc, variable.printer_template_var_name], []) ??
+    /* istanbul ignore next */ [];
+
+export const getMissingUserVarsInCode = (userVariables, printerTemplateCode) =>
+    userVariables.filter(varName => !printerTemplateCode.includes(getSafeUserVariableNamePlaceholder(varName)));
+
+export const getMissingUserVarsInPastedCode = (rows, printerTemplatePasteValue) => {
+    const existingNames = rows.map(row => row.printer_template_var_name);
+    const placeholders = [...new Set(printerTemplatePasteValue.match(/\{\{[^}]+\}\}/g) ?? [])];
+    return placeholders.filter(p => !existingNames.includes(p));
+};
+export const getUniqueTemplateIds = row => {
+    const usedIds = new Set(row.map(row => row.printer_template_var_id));
+    return usedIds;
+};
+export const getRowsToAddForMissingVars = (missingVars, currentRows) => {
+    const unavailableIds = getUniqueTemplateIds(currentRows);
+    let nextId = 1;
+    const newRows = missingVars.map(name => {
+        while (unavailableIds.has(nextId)) nextId++;
+        const id = nextId++;
+        unavailableIds.add(id);
+        return {
+            printer_template_var_id: id,
+            printer_template_var_label: '',
+            printer_template_var_name: name,
+            printer_template_var_value: '',
+        };
+    });
+    return newRows;
 };

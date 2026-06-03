@@ -1256,3 +1256,15 @@ export function deletePrinterTemplate(printerTemplate) {
             });
     };
 }
+
+export function printerTemplatePasteDetected(data) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_PRINTER_TEMPLATE_PASTE_DETECTED, payload: data });
+    };
+}
+
+export function clearPrinterTemplatePasteData() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_PRINTER_TEMPLATE_PASTE_CLEAR });
+    };
+}

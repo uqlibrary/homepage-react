@@ -9,6 +9,11 @@ test.describe('Test and Tag Manage Printer Templates', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
     });
 
+    const addToClipboard = async (page: Page, value: string) => {
+        await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+        return await page.evaluate(text => navigator.clipboard.writeText(text), value);
+    };
+
     test('page is accessible and renders base', async ({ page }) => {
         await assertTitles(page, locale.pages.manage.printertemplates.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
@@ -298,6 +303,41 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                     'Request successfully completed',
                 );
             });
+
+            test('handles clipboard paste in template code field', async ({ page }) => {
+                await expect(page.getByTestId('printer_template_name-input')).toHaveValue('');
+                await expect(page.locator('.MuiChip-root')).not.toBeVisible();
+                await expect(page.getByTestId('data_table-vars-input').getByRole('row')).toHaveCount(1); // inc header
+                await expect(page.getByTestId('printer_template_code-input')).toHaveValue('');
+                await expect(page.getByTestId('printer_template_current_flag_cb-input')).toBeChecked();
+
+                await expect(page.getByTestId('update_dialog-action-button')).toBeDisabled();
+
+                // populate the clipboard with template code
+                await addToClipboard(page, '^XA^FO{{TESTVAR1}}^ADN,36,20^FD{{TESTVAR2}}^FS^XZ');
+                await page.getByTestId('printer_template_code-input').click();
+                await page.keyboard.press('ControlOrMeta+V');
+                await expect(page.getByTestId('printer_template_code-input')).toHaveValue(
+                    '^XA^FO{{TESTVAR1}}^ADN,36,20^FD{{TESTVAR2}}^FS^XZ',
+                );
+                // user vars list should auto populate with detected user variables
+                await expect(page.getByTestId('data_table-vars-input').getByRole('row')).toHaveCount(3); // inc header
+                await expect(
+                    (await getFieldValue(page, 'printer_template_var_name', 0)).getByText('TESTVAR1'),
+                ).toBeVisible();
+                await expect(
+                    (await getFieldValue(page, 'printer_template_var_name', 1)).getByText('TESTVAR2'),
+                ).toBeVisible();
+                // Auto population does not add all data required for each added var row,
+                // so there should be an error visible to prompt the user
+                await assertErrorStateForField(
+                    page,
+                    'data_table-vars-label',
+                    'One or more defined variables are missing from the template code. All variables must be included in the printer template code as {{VARNAME}}',
+                    true,
+                    false,
+                );
+            });
         });
 
         test.describe('Editing a printer template', () => {
@@ -580,6 +620,48 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 await expect(currentTemplateCheckbox).not.toBeChecked();
                 await currentTemplateCheckbox.click();
                 await expect(currentTemplateCheckbox).toBeChecked();
+            });
+
+            test('handles clipboard paste in template code field', async ({ page }) => {
+                await expect(page.getByTestId('printer_template_name-input')).toHaveValue('UQL Standard Template');
+                await expect(page.getByRole('button', { name: 'PRINTER_01' })).toBeVisible();
+                await expect(page.getByRole('button', { name: 'PRINTER_01' })).toBeVisible();
+                await expect(page.getByTestId('data_table-vars-input').getByRole('row')).toHaveCount(16);
+                await expect(page.getByTestId('printer_template_code-input')).toHaveValue(/\^XA\^FO\{\{LOGOX\}\}/); // partial regexp match
+                await expect(page.getByTestId('printer_template_current_flag_cb-input')).toBeChecked();
+
+                await expect(page.getByTestId('update_dialog-action-button')).not.toBeDisabled();
+
+                // populate the clipboard with template code
+                await addToClipboard(page, '^XA^FO{{TESTVAR1}}^ADN,36,20^FD{{TESTVAR2}}^FS^XZ');
+                // expand accordion
+                await page.getByRole('button', { name: 'Printer template code' }).click();
+                await page.getByTestId('printer_template_code-input').click();
+                await page.keyboard.press('ControlOrMeta+A');
+                await page.keyboard.press('ControlOrMeta+V');
+                await expect(page.getByTestId('printer_template_code-input')).toHaveValue(
+                    '^XA^FO{{TESTVAR1}}^ADN,36,20^FD{{TESTVAR2}}^FS^XZ',
+                );
+                // user vars list should auto populate with detected user variables, but not remove
+                // existing vars
+                await expect(page.getByTestId('data_table-vars-input').getByRole('row')).toHaveCount(18); // inc header
+                await expect(
+                    (await getFieldValue(page, 'printer_template_var_name', 15)).getByText('TESTVAR1'),
+                ).toBeVisible();
+                await expect(
+                    (await getFieldValue(page, 'printer_template_var_name', 16)).getByText('TESTVAR2'),
+                ).toBeVisible();
+                // Auto population does not add all data required for each added var row,
+                // so there should be an error visible to prompt the user
+                await assertErrorStateForField(
+                    page,
+                    'data_table-vars-label',
+                    'One or more defined variables are missing from the template code. All variables must be included in the printer template code as {{VARNAME}}',
+                    true,
+                    false,
+                );
+
+                await expect(page.getByTestId('update_dialog-action-button')).toBeDisabled();
             });
         });
     });
