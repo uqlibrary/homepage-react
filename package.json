@@ -169,7 +169,7 @@
         "babel-plugin-add-module-exports": "^1.0.4",
         "chart.js": "^4.5.1",
         "chartgpu-react": "^0.1.0",
-        "copy-webpack-plugin": "^12.0.2",
+        "copy-webpack-plugin": "^14.0.0",
         "core-js": "^3.36.0",
         "fuse.js": "^7.1.0",
         "history": "^4.7.2",
