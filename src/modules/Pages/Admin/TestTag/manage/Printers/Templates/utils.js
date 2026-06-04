@@ -119,7 +119,7 @@ export const actionReducer = (_, action) => {
 
 export const validateTemplateUserVariable = row => {
     const nameInvalid = isEmptyStr(row.printer_template_var_name) || row.printer_template_var_name?.length > 255;
-    const labelInvalid = isEmptyStr(row.printer_template_var_label) || row.printer_template_var_label?.length > 255;
+    const labelInvalid = row.printer_template_var_label?.length > 255;
     const valueInvalid =
         row.printer_template_var_value === null ||
         row.printer_template_var_value === undefined ||

@@ -120,7 +120,46 @@ describe('config', () => {
             expect(validate(null, row)).toBe(true);
         });
 
-        it('returns true when a var row has invalid fields', () => {
+        it('returns true when a var row has an empty printer_template_var_name', () => {
+            const row = {
+                vars: [
+                    {
+                        printer_template_var_name: '',
+                        printer_template_var_label: '',
+                        printer_template_var_value: '0',
+                    },
+                ],
+                printer_template_code: '{{ASSETID}}',
+            };
+            expect(validate(null, row)).toBe(true);
+        });
+        it('returns true when a var row has an empty printer_template_var_value', () => {
+            const row = {
+                vars: [
+                    {
+                        printer_template_var_name: '{{ASSETID}}',
+                        printer_template_var_label: '',
+                        printer_template_var_value: '',
+                    },
+                ],
+                printer_template_code: '{{ASSETID}}',
+            };
+            expect(validate(null, row)).toBe(true);
+        });
+        it('returns true when all var rows are empty', () => {
+            const row = {
+                vars: [
+                    {
+                        printer_template_var_name: '',
+                        printer_template_var_label: '',
+                        printer_template_var_value: '',
+                    },
+                ],
+                printer_template_code: '{{ASSETID}}',
+            };
+            expect(validate(null, row)).toBe(true);
+        });
+        it('returns false when a var row has an empty label (label is not required)', () => {
             const row = {
                 vars: [
                     {
@@ -131,7 +170,7 @@ describe('config', () => {
                 ],
                 printer_template_code: '{{ASSETID}}',
             };
-            expect(validate(null, row)).toBe(true);
+            expect(validate(null, row)).toBe(false);
         });
     });
 
@@ -204,9 +243,9 @@ describe('config', () => {
                 expect(result.error).toBe(false);
             });
 
-            it('returns error: true for an empty string', () => {
+            it('returns error: false for an empty string (label is not required)', () => {
                 const result = testFunction({ props: { value: '' } });
-                expect(result.error).toBe(true);
+                expect(result.error).toBe(false);
             });
 
             it('returns error: true when value exceeds 255 characters', () => {

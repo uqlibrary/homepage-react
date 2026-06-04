@@ -391,8 +391,8 @@ describe('utils', () => {
             );
         });
 
-        it('returns true when label is empty', () => {
-            expect(validateTemplateUserVariable({ ...validRow, printer_template_var_label: '' })).toEqual(true);
+        it('returns false when label is empty', () => {
+            expect(validateTemplateUserVariable({ ...validRow, printer_template_var_label: '' })).toEqual(false);
         });
 
         it('returns true when label exceeds 255 characters', () => {
