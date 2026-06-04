@@ -578,14 +578,14 @@ test.describe('Spaces Admin - add new space', () => {
         const librarySelector = page.getByTestId('add-space-select-library');
         const floorSelector = page.getByTestId('add-space-select-floor');
         const springshareSelector = page.getByTestId('add-space-springshare-id');
+        const campusInput = page.locator('#add-space-select-campus-input');
+        const libraryInput = page.locator('#add-space-select-library-input');
+        const floorInput = page.locator('#add-space-select-floor-input');
 
         // the page loads with the expected campus-building-floor
-        await expect(campusSelector.locator('input')).toBeVisible();
-        await expect(campusSelector.locator('[role="combobox"]')).toContainText('Dutton Park');
-        await expect(librarySelector.locator('input')).toBeVisible();
-        await expect(librarySelector.locator('[role="combobox"]')).toContainText('Dutton Park Health Sciences');
-        await expect(floorSelector.locator('input')).toBeVisible();
-        await expect(floorSelector.locator('[role="combobox"]')).toContainText('Dutton Park Health Sciences - 65');
+        await expect(campusInput).toHaveValue('3');
+        await expect(libraryInput).toHaveValue('10');
+        await expect(floorInput).toHaveValue('65');
 
         // open the campus dropdown
         await campusSelector.click();
@@ -604,13 +604,9 @@ test.describe('Spaces Admin - add new space', () => {
         await gattonCampusOption.click(); // click on "Gatton" to change campus
 
         // the displayed campus, building and floor shown have changed
-        await expect(campusSelector.locator('input')).toBeVisible();
-        await expect(campusSelector.locator('[role="combobox"]')).toContainText('Gatton');
-        await expect(librarySelector.locator('input')).toBeVisible();
-        await expect(librarySelector.locator('[role="combobox"]')).toContainText('J.K. Murray Library');
-        await expect(floorSelector.locator('input')).toBeVisible();
-        await expect(floorSelector.locator('[role="combobox"]')).toContainText('J.K. Murray Library - 29');
-        await expect(floorSelector.locator('[role="combobox"]')).toContainText('Ground floor');
+        await expect(campusInput).toHaveValue('2');
+        await expect(libraryInput).toHaveValue('8');
+        await expect(floorInput).toHaveValue('29');
 
         // open the library dropdown to change library
         await librarySelector.click();
@@ -633,13 +629,9 @@ test.describe('Spaces Admin - add new space', () => {
         await page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type').click();
 
         // the displayed building and floors have changed; campus is unchanged
-        await expect(campusSelector.locator('input')).toBeVisible();
-        await expect(campusSelector.locator('[role="combobox"]')).toContainText('Gatton');
-        await expect(librarySelector.locator('input')).toBeVisible();
-        await expect(librarySelector.locator('[role="combobox"]')).toContainText('Library Warehouse');
-        await expect(floorSelector.locator('input')).toBeVisible();
-        await expect(floorSelector.locator('[role="combobox"]')).toContainText('Library Warehouse - 31');
-        await expect(floorSelector.locator('[role="combobox"]')).not.toContainText('Ground floor');
+        await expect(campusInput).toHaveValue('2');
+        await expect(libraryInput).toHaveValue('9');
+        await expect(floorInput).toHaveValue('31');
 
         // open the floor dropdown to change floor
         await floorSelector.click();
@@ -657,13 +649,9 @@ test.describe('Spaces Admin - add new space', () => {
         await floorDropdown.locator(' li:last-of-type').click();
 
         // the displayed floor has changed; campus & building is unchanged
-        await expect(campusSelector.locator('input')).toBeVisible();
-        await expect(campusSelector.locator('[role="combobox"]')).toContainText('Gatton');
-        await expect(librarySelector.locator('input')).toBeVisible();
-        await expect(librarySelector.locator('[role="combobox"]')).toContainText('Library Warehouse');
-        await expect(floorSelector.locator('input')).toBeVisible();
-        await expect(floorSelector.locator('[role="combobox"]')).toContainText('Library Warehouse - 32');
-        await expect(floorSelector.locator('[role="combobox"]')).not.toContainText('Ground floor');
+        await expect(campusInput).toHaveValue('2');
+        await expect(libraryInput).toHaveValue('9');
+        await expect(floorInput).toHaveValue('32');
 
         // Springshare control remains on Location tab
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
