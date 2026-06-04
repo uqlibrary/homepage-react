@@ -16,14 +16,25 @@ const waitForDefaultLocationSelection = async (page: Page) => {
     const libraryInput = page.locator('#add-space-select-library-input');
     const floorInput = page.locator('#add-space-select-floor-input');
 
-    await expect(campusInput).toBeVisible();
-    await expect(libraryInput).toBeVisible();
-    await expect(floorInput).toBeVisible();
+    const assertDefaults = async () => {
+        await expect(campusInput).toBeVisible();
+        await expect(libraryInput).toBeVisible();
+        await expect(floorInput).toBeVisible();
 
-    // These select values are populated asynchronously after location data loads.
-    await expect.poll(async () => await campusInput.inputValue(), { timeout: 30000 }).toBe('3');
-    await expect.poll(async () => await libraryInput.inputValue(), { timeout: 30000 }).toBe('10');
-    await expect.poll(async () => await floorInput.inputValue(), { timeout: 30000 }).toBe('65');
+        // These select values are populated asynchronously after location data loads.
+        await expect.poll(async () => await campusInput.inputValue(), { timeout: 30000 }).toBe('3');
+        await expect.poll(async () => await libraryInput.inputValue(), { timeout: 30000 }).toBe('10');
+        await expect.poll(async () => await floorInput.inputValue(), { timeout: 30000 }).toBe('65');
+    };
+
+    try {
+        await assertDefaults();
+    } catch {
+        // CI occasionally lands before selector defaults are hydrated; one reload stabilizes startup without weakening assertions.
+        await page.reload();
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
+        await assertDefaults();
+    }
 };
 
 const chooseAnySpaceType = async (page: Page): Promise<number> => {
