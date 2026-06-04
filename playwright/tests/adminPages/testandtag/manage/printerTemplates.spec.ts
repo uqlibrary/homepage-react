@@ -505,7 +505,7 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 );
                 await page.getByRole('menuitem', { name: 'Cancel' }).click();
                 await expect(page.getByRole('menuitem', { name: 'Save' })).not.toBeVisible();
-                const addTestRow = async () => {
+                const addTestRow = async (skipLabel = false) => {
                     await expect(page.getByRole('menuitem', { name: 'Save' })).toBeVisible();
 
                     await page
@@ -513,9 +513,11 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                         .pressSequentially('testname', { delay: 50 });
                     await page.keyboard.press('Tab');
 
-                    await page
-                        .locator('[data-field="printer_template_var_label"] input')
-                        .pressSequentially('test label', { delay: 50 });
+                    if (!skipLabel) {
+                        await page
+                            .locator('[data-field="printer_template_var_label"] input')
+                            .pressSequentially('test label', { delay: 50 });
+                    }
                     await page.keyboard.press('Tab');
 
                     await page
@@ -554,7 +556,7 @@ test.describe('Test and Tag Manage Printer Templates', () => {
 
                 // add row again
                 await page.getByRole('button', { name: 'Add template variable' }).click();
-                await addTestRow();
+                await addTestRow(true);
                 await page.getByRole('menuitem', { name: 'Save' }).click();
                 await assertErrorStateForField(
                     page,

@@ -266,11 +266,10 @@ export const placeholderEditorColumns = ({
             />
         ),
         preProcessEditCellProps: params => {
-            const hasError = isEmptyStr(params.props.value) || params.props.value.length > 255;
+            const hasError = params.props.value.length > 255;
             return { ...params.props, error: hasError };
         },
     },
-
     {
         field: 'printer_template_var_value',
         headerName:
