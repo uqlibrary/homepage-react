@@ -1446,7 +1446,6 @@ export const EditSpaceForm = ({
     };
     const aboutPanel = () => {
         const bookingUrlQuerystringWarning = getBookingUrlQuerystringWarning(formValues?.space_external_book_url);
-        // to delete
         // const selectedFacilityTypes = formValues?.facility_types || [];
         // const selectedFacilityTypeIds = selectedFacilityTypes
         //     .map(ft => ft?.facility_type_id)
