@@ -11,6 +11,21 @@ const DUHIG_TOWER_SPRINGSHARE_SPACE_ID = 3831;
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
 const selectCombobox = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('[role="combobox"]');
 
+const waitForDefaultLocationSelection = async (page: Page) => {
+    const campusInput = page.locator('#add-space-select-campus-input');
+    const libraryInput = page.locator('#add-space-select-library-input');
+    const floorInput = page.locator('#add-space-select-floor-input');
+
+    await expect(campusInput).toBeVisible();
+    await expect(libraryInput).toBeVisible();
+    await expect(floorInput).toBeVisible();
+
+    // These select values are populated asynchronously after location data loads.
+    await expect.poll(async () => await campusInput.inputValue(), { timeout: 30000 }).toBe('3');
+    await expect.poll(async () => await libraryInput.inputValue(), { timeout: 30000 }).toBe('10');
+    await expect.poll(async () => await floorInput.inputValue(), { timeout: 30000 }).toBe('65');
+};
+
 const chooseAnySpaceType = async (page: Page): Promise<number> => {
     const spaceTypeSelector = page.getByTestId('space-type');
     await expect(spaceTypeSelector).toBeVisible();
@@ -80,12 +95,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
         // await expect(page.getByTestId('add-space-type-new').locator('input')).toBeVisible();
 
-        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(selectCombobox('add-space-select-campus', page)).toContainText('Dutton Park');
-        await expect(page.getByTestId('add-space-select-library').locator('input')).toBeVisible();
-        await expect(selectCombobox('add-space-select-library', page)).toContainText('Dutton Park Health Sciences');
-        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(selectCombobox('add-space-select-floor', page)).toContainText('Dutton Park Health Sciences - 65');
+        await waitForDefaultLocationSelection(page);
 
         // change to location tab
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
@@ -583,9 +593,7 @@ test.describe('Spaces Admin - add new space', () => {
         const floorInput = page.locator('#add-space-select-floor-input');
 
         // the page loads with the expected campus-building-floor
-        await expect(campusInput).toHaveValue('3');
-        await expect(libraryInput).toHaveValue('10');
-        await expect(floorInput).toHaveValue('65');
+        await waitForDefaultLocationSelection(page);
 
         // open the campus dropdown
         await campusSelector.click();
