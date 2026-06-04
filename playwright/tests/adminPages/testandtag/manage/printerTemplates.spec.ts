@@ -325,9 +325,11 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                 await expect(
                     (await getFieldValue(page, 'printer_template_var_name', 0)).getByText('TESTVAR1'),
                 ).toBeVisible();
+                await expect((await getFieldValue(page, 'printer_template_var_value', 0)).getByText('0')).toBeVisible();
                 await expect(
                     (await getFieldValue(page, 'printer_template_var_name', 1)).getByText('TESTVAR2'),
                 ).toBeVisible();
+                await expect((await getFieldValue(page, 'printer_template_var_value', 1)).getByText('0')).toBeVisible();
                 // Auto population does not add all data required for each added var row,
                 // so there should be an error visible to prompt the user
                 await assertErrorStateForField(
@@ -651,7 +653,13 @@ test.describe('Test and Tag Manage Printer Templates', () => {
                     (await getFieldValue(page, 'printer_template_var_name', 15)).getByText('TESTVAR1'),
                 ).toBeVisible();
                 await expect(
+                    (await getFieldValue(page, 'printer_template_var_value', 15)).getByText('0'),
+                ).toBeVisible();
+                await expect(
                     (await getFieldValue(page, 'printer_template_var_name', 16)).getByText('TESTVAR2'),
+                ).toBeVisible();
+                await expect(
+                    (await getFieldValue(page, 'printer_template_var_value', 16)).getByText('0'),
                 ).toBeVisible();
                 // Auto population does not add all data required for each added var row,
                 // so there should be an error visible to prompt the user
