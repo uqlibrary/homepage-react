@@ -259,14 +259,21 @@ export const BookableSpacesList = ({
 
     const goToJourney = () => {
         const url = new URL(window.location.href);
+        const setJourneyIntentStep = params => {
+            params.delete('advanced');
+            params.set('journeyStep', 'intent');
+            params.delete('journeyIntent');
+            params.delete('journeySpace');
+        };
+
         if (url.hash.includes('?')) {
             const [hashPath, hashQuery] = url.hash.split('?');
             const hashParams = new URLSearchParams(hashQuery);
-            hashParams.delete('advanced');
+            setJourneyIntentStep(hashParams);
             const remaining = hashParams.toString();
             url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
         } else {
-            url.searchParams.delete('advanced');
+            setJourneyIntentStep(url.searchParams);
         }
         window.location.assign(url.toString());
     };
