@@ -15,7 +15,7 @@ const existingRow = {
     printer_template_var_id: 1,
     printer_template_var_name: 'TEST_VAR',
     printer_template_var_label: 'Test Variable',
-    printer_template_var_value: '10',
+    printer_template_var_value: 10,
 };
 
 let onChange;

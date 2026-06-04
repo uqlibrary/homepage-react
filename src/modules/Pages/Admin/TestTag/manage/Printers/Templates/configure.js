@@ -279,11 +279,13 @@ export const placeholderEditorColumns = ({
         editable: true,
         type: 'number',
         resizable: false,
+        valueGetter: params => Number(params.row.printer_template_var_value),
         preProcessEditCellProps: params => {
             let hasError = false;
             try {
                 hasError = !Number.isInteger(params.props.value);
             } catch (error) {
+                console.error(error);
                 hasError = true;
             }
             return { ...params.props, error: hasError };
