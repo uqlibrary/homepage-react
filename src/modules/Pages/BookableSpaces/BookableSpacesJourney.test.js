@@ -2,8 +2,9 @@ import React from 'react';
 
 import { act, fireEvent, rtlRender, screen } from 'test-utils';
 
-jest.mock('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg', () =>
-    'mock-journey-hero-image',
+jest.mock(
+    '../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
+    () => 'mock-journey-hero-image',
 );
 jest.mock('../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-journey-detail-image');
 
@@ -138,5 +139,38 @@ describe('BookableSpacesJourney browser back navigation', () => {
 
         expect(screen.getByRole('button', { name: /back to results/i })).toBeInTheDocument();
         expect(screen.getByRole('heading', { level: 2, name: /quiet study room a/i })).toBeInTheDocument();
+    });
+
+    it('hides blank campus options and excludes spaces on invalid campuses in results', () => {
+        const orphanSpace = {
+            ...baseSpace,
+            space_id: 202,
+            space_name: 'Orphaned Space',
+            space_campus_id: 999,
+        };
+
+        const props = {
+            ...defaultProps,
+            filteredSpaceLocations: [baseSpace, orphanSpace],
+            totalSpaceCount: 2,
+            campusList: [
+                { campus_id: 1, campus_name: 'St Lucia' },
+                { campus_id: 2, campus_name: 'Gatton' },
+                { campus_id: 999, campus_name: '' },
+            ],
+        };
+
+        rtlRender(<BookableSpacesJourney {...props} />);
+
+        fireEvent.click(screen.getByTestId('spaces-journey-landing-get-started'));
+        fireEvent.click(screen.getByRole('button', { name: /quiet space/i }));
+
+        const campusSection = screen.getByText('Campus').closest('div');
+        expect(campusSection.querySelectorAll('button')).toHaveLength(2);
+        expect(screen.getByRole('button', { name: 'St Lucia' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Gatton' })).toBeInTheDocument();
+
+        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.queryByText('Orphaned Space')).not.toBeInTheDocument();
     });
 });

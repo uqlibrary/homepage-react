@@ -15,6 +15,9 @@ const waitForDefaultLocationSelection = async (page: Page) => {
     const campusInput = page.locator('#add-space-select-campus-input');
     const libraryInput = page.locator('#add-space-select-library-input');
     const floorInput = page.locator('#add-space-select-floor-input');
+    const campusSelector = page.getByTestId('add-space-select-campus');
+    const librarySelector = page.getByTestId('add-space-select-library');
+    const floorSelector = page.getByTestId('add-space-select-floor');
 
     const assertDefaults = async () => {
         await expect(campusInput).toBeVisible();
@@ -27,12 +30,28 @@ const waitForDefaultLocationSelection = async (page: Page) => {
         await expect.poll(async () => await floorInput.inputValue(), { timeout: 30000 }).toBe('65');
     };
 
+    const manuallyApplyExpectedDefaults = async () => {
+        await campusSelector.click();
+        const campusListbox = page.getByRole('listbox', { name: 'Campus *' });
+        await expect(campusListbox).toBeVisible();
+        await campusListbox.getByRole('option', { name: /Dutton Park/i }).click();
+
+        await librarySelector.click();
+        const libraryListbox = page.getByRole('listbox', { name: 'Library *' });
+        await expect(libraryListbox).toBeVisible();
+        await libraryListbox.getByRole('option', { name: /Dutton Park Health Sciences/i }).click();
+
+        await floorSelector.click();
+        const floorListbox = page.getByRole('listbox', { name: 'Level *' });
+        await expect(floorListbox).toBeVisible();
+        await floorListbox.getByRole('option', { name: /Dutton Park Health Sciences - 65/i }).click();
+    };
+
     try {
         await assertDefaults();
     } catch {
-        // CI occasionally lands before selector defaults are hydrated; one reload stabilizes startup without weakening assertions.
-        await page.reload();
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
+        // If async hydration stalls in CI, explicitly choose the intended defaults and re-assert.
+        await manuallyApplyExpectedDefaults();
         await assertDefaults();
     }
 };

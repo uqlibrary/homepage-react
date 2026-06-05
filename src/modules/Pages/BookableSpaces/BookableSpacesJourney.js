@@ -731,12 +731,31 @@ const BookableSpacesJourney = ({
         () => new Set((spacesFavouritesList || []).map(favourite => String(favourite?.space_id))),
         [spacesFavouritesList],
     );
+    const validCampusList = React.useMemo(
+        () =>
+            (campusList || []).filter(campus => {
+                const hasId = campus?.campus_id !== null && campus?.campus_id !== undefined;
+                const hasName = typeof campus?.campus_name === 'string' && campus.campus_name.trim().length > 0;
+                return hasId && hasName;
+            }),
+        [campusList],
+    );
+    const validCampusIds = React.useMemo(() => new Set(validCampusList.map(campus => String(campus.campus_id))), [
+        validCampusList,
+    ]);
     const intentSpaceLocations = React.useMemo(() => {
-        if (selectedIntentId !== favouriteIntentDefinition.id) {
-            return filteredSpaceLocations || [];
+        const spacesWithIntentApplied =
+            selectedIntentId !== favouriteIntentDefinition.id
+                ? filteredSpaceLocations || []
+                : (filteredSpaceLocations || []).filter(space => favouriteSpaceIds.has(String(space?.space_id)));
+
+        // Exclude orphaned spaces with no valid campus assignment from journey results.
+        if (validCampusIds.size === 0) {
+            return spacesWithIntentApplied;
         }
-        return (filteredSpaceLocations || []).filter(space => favouriteSpaceIds.has(String(space?.space_id)));
-    }, [filteredSpaceLocations, favouriteSpaceIds, selectedIntentId]);
+
+        return spacesWithIntentApplied.filter(space => validCampusIds.has(String(space?.space_campus_id)));
+    }, [filteredSpaceLocations, favouriteSpaceIds, selectedIntentId, validCampusIds]);
     const isSelectedSpaceFavourite = favouriteSpaceIds.has(String(selectedSpace?.space_id));
     const handleJourneyFavouriteToggle = async space => {
         if (!space?.space_id || !onFavouriteToggle || !isLoggedIn) {
@@ -1600,13 +1619,13 @@ const BookableSpacesJourney = ({
                         </Typography>
 
                         {/* Campus picker — visible inline on results, not buried in advanced filters */}
-                        {campusList?.length > 1 && (
+                        {validCampusList?.length > 1 && (
                             <Box>
                                 <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.75, color: '#1f1230' }}>
                                     Campus
                                 </Typography>
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                    {campusList.map(campus => (
+                                    {validCampusList.map(campus => (
                                         <Button
                                             key={campus.campus_id}
                                             variant={selectedCampus === campus.campus_id ? 'contained' : 'outlined'}

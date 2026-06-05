@@ -703,6 +703,18 @@ export const EditSpaceForm = ({
         return null;
     };
 
+    function findCampusById(campusId) {
+        return currentCampusList?.find(campus => String(campus?.campus_id) === String(campusId)) || null;
+    }
+
+    function findLibraryById(libraries, libraryId) {
+        return libraries?.find(library => String(library?.library_id) === String(libraryId)) || null;
+    }
+
+    function findFloorById(floors, floorId) {
+        return floors?.find(floor => String(floor?.floor_id) === String(floorId)) || null;
+    }
+
     const handleChange = _prop => e => {
         let theNewValue =
             e?.target?.hasOwnProperty('checked') && e?.target?.type !== 'radio' ? e?.target?.checked : e?.target?.value;
@@ -764,17 +776,14 @@ export const EditSpaceForm = ({
             const springshareElement = document.querySelector('.asLoaded');
             removeClass(springshareElement, 'asLoaded');
         } else if (_prop === 'campus_id') {
-            updatedLocation.currentCampus =
-                !!formValues?.campus_id && !!currentCampusList && currentCampusList.length > 0
-                    ? currentCampusList?.find(c => c?.campus_id === theNewValue)
-                    : {};
+            updatedLocation.currentCampus = findCampusById(theNewValue) || {};
             updatedLocation.campus_id = updatedLocation?.currentCampus?.campus_id;
 
-            updatedLocation.currentCampusLibraries = validLibraryList(updatedLocation?.currentCampus?.libraries);
+            updatedLocation.currentCampusLibraries = validLibraryList(updatedLocation?.currentCampus?.libraries || []);
             updatedLocation.currentLibrary = updatedLocation?.currentCampusLibraries?.at(0);
             updatedLocation.library_id = updatedLocation?.currentLibrary?.library_id;
 
-            updatedLocation.currentLibraryFloors = updatedLocation?.currentLibrary?.floors;
+            updatedLocation.currentLibraryFloors = updatedLocation?.currentLibrary?.floors || [];
             updatedLocation.currentFloor = updatedLocation?.currentLibraryFloors?.at(0);
             updatedLocation.floor_id = updatedLocation?.currentFloor?.floor_id;
             setLocation({
@@ -784,19 +793,14 @@ export const EditSpaceForm = ({
             const springshareElement = document.querySelector('.asLoaded');
             addClass(springshareElement, 'asLoaded');
         } else if (_prop === 'library_id') {
-            updatedLocation.currentCampus =
-                !!formValues?.campus_id && !!currentCampusList && currentCampusList.length > 0
-                    ? currentCampusList?.find(c => c?.campus_id === formValues?.campus_id)
-                    : {};
+            updatedLocation.currentCampus = findCampusById(formValues?.campus_id) || {};
             updatedLocation.campus_id = updatedLocation?.currentCampus?.campus_id;
 
             updatedLocation.currentCampusLibraries = validLibraryList(updatedLocation?.currentCampus?.libraries || []);
-            updatedLocation.currentLibrary = updatedLocation?.currentCampusLibraries?.find(
-                l => l?.library_id === theNewValue,
-            );
+            updatedLocation.currentLibrary = findLibraryById(updatedLocation?.currentCampusLibraries, theNewValue);
             updatedLocation.library_id = updatedLocation?.currentLibrary?.library_id;
 
-            updatedLocation.currentLibraryFloors = updatedLocation?.currentLibrary?.floors;
+            updatedLocation.currentLibraryFloors = updatedLocation?.currentLibrary?.floors || [];
             updatedLocation.currentFloor = updatedLocation?.currentLibraryFloors?.at(0);
             updatedLocation.floor_id = updatedLocation?.currentFloor?.floor_id;
             setLocation({
@@ -1253,13 +1257,9 @@ export const EditSpaceForm = ({
     };
 
     useEffect(() => {
-        const currentCampus =
-            (!!currentCampusList &&
-                currentCampusList.length > 0 &&
-                currentCampusList?.find(c => c?.campus_id === formValues?.campus_id)) ||
-            {};
+        const currentCampus = findCampusById(formValues?.campus_id) || {};
         const currentCampusLibraries = validLibraryList(currentCampus?.libraries || []);
-        const currentLibrary = currentCampusLibraries?.find(l => l?.library_id === formValues?.library_id) || {};
+        const currentLibrary = findLibraryById(currentCampusLibraries, formValues?.library_id) || {};
 
         const updatedLocation = {};
         updatedLocation.currentCampus = currentCampus;
@@ -1269,8 +1269,8 @@ export const EditSpaceForm = ({
         updatedLocation.currentLibrary = currentLibrary;
         updatedLocation.library_id = currentLibrary?.library_id;
 
-        updatedLocation.currentLibraryFloors = currentLibrary?.floors;
-        updatedLocation.currentFloor = currentLibrary?.floors?.find(f => f?.floor_id === formValues?.floor_id);
+        updatedLocation.currentLibraryFloors = currentLibrary?.floors || [];
+        updatedLocation.currentFloor = findFloorById(currentLibrary?.floors || [], formValues?.floor_id);
         updatedLocation.floor_id = formValues?.floor_id;
         setLocation({
             ...updatedLocation,
