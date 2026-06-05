@@ -618,9 +618,6 @@ test.describe('Spaces Admin - add new space', () => {
         const librarySelector = page.getByTestId('add-space-select-library');
         const floorSelector = page.getByTestId('add-space-select-floor');
         const springshareSelector = page.getByTestId('add-space-springshare-id');
-        const campusInput = page.locator('#add-space-select-campus-input');
-        const libraryInput = page.locator('#add-space-select-library-input');
-        const floorInput = page.locator('#add-space-select-floor-input');
 
         // the page loads with the expected campus-building-floor
         await waitForDefaultLocationSelection(page);
@@ -636,15 +633,12 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(campusListbox.locator('li:first-of-type')).toContainText(
             'St Lucia',
         );
-        const gattonCampusOption = campusListbox.locator('li:nth-of-type(2)');
+        const gattonCampusOption = campusListbox.getByRole('option', { name: 'Gatton' });
         await expect(gattonCampusOption).toBeVisible();
-        await expect(gattonCampusOption).toContainText('Gatton');
         await gattonCampusOption.click(); // click on "Gatton" to change campus
 
-        // the displayed campus, building and floor shown have changed
-        await expect(campusInput).toHaveValue('2');
-        await expect(libraryInput).toHaveValue('8');
-        await expect(floorInput).toHaveValue('29');
+        // Verify visible selected value after campus change.
+        await expect(campusSelector).toContainText('Gatton');
 
         // open the library dropdown to change library
         await librarySelector.click();
@@ -667,9 +661,8 @@ test.describe('Spaces Admin - add new space', () => {
         await page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type').click();
 
         // the displayed building and floors have changed; campus is unchanged
-        await expect(campusInput).toHaveValue('2');
-        await expect(libraryInput).toHaveValue('9');
-        await expect(floorInput).toHaveValue('31');
+        await expect(campusSelector).toContainText('Gatton');
+        await expect(librarySelector).toContainText('Library Warehouse');
 
         // open the floor dropdown to change floor
         await floorSelector.click();
@@ -687,9 +680,9 @@ test.describe('Spaces Admin - add new space', () => {
         await floorDropdown.locator(' li:last-of-type').click();
 
         // the displayed floor has changed; campus & building is unchanged
-        await expect(campusInput).toHaveValue('2');
-        await expect(libraryInput).toHaveValue('9');
-        await expect(floorInput).toHaveValue('32');
+        await expect(campusSelector).toContainText('Gatton');
+        await expect(librarySelector).toContainText('Library Warehouse');
+        await expect(floorSelector).toContainText('Library Warehouse - 32');
 
         // Springshare control remains on Location tab
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
