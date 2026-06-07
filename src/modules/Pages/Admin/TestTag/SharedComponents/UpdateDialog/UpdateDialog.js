@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -58,6 +59,7 @@ export const UpdateDialogue = ({
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
+    const dispatch = useDispatch();
 
     const componentId = `${rootId}-${id}`;
 
@@ -67,7 +69,7 @@ export const UpdateDialogue = ({
     const [data, setData] = React.useState({});
     const [fieldsValid, setFieldsValid] = React.useState({});
 
-    React.useEffect(() => {
+    useEffect(() => {
         /* istanbul ignore else */
         if (isOpen) {
             setDataColumns(columns);
@@ -83,7 +85,7 @@ export const UpdateDialogue = ({
         }
     }, [isOpen, fields, row, rows, columns, action]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setFieldsValid(() => {
             const newFieldsValid = {};
             editableFields.forEach(field => {
@@ -94,34 +96,39 @@ export const UpdateDialogue = ({
         });
     }, [data, dataFields, editableFields, rows]);
 
-    const _onAction = () => {
+    const _onAction = useCallback(() => {
         onClose?.();
         onAction?.(data);
-    };
+    }, [onClose, onAction, data]);
 
-    const _onAccessoryAction = () => {
+    const _onAccessoryAction = useCallback(() => {
         onClose?.();
         onAccessoryAction?.(data);
-    };
+    }, [onClose, onAccessoryAction, data]);
 
-    const _onCancelAction = () => {
+    const _onCancelAction = useCallback(() => {
         onClose?.();
         onCancelAction?.();
-    };
+    }, [onClose, onCancelAction]);
 
-    const _onClickAction = e => {
+    const _onClickAction = useCallback(e => {
         e.stopPropagation();
-    };
+    }, []);
 
-    const handleChange = field => (event, value) => {
-        const isCheckbox = event?.target?.type === 'checkbox';
-        const newValue = isCheckbox ? event.target.checked : value || event.target.value;
-
-        setData(prevState => ({
-            ...prevState,
-            [field]: newValue,
-        }));
-    };
+    const fieldHandlers = useMemo(
+        () =>
+            Object.fromEntries(
+                editableFields.map(field => [
+                    field,
+                    (event, value) => {
+                        const isCheckbox = event?.target?.type === 'checkbox';
+                        const newValue = isCheckbox ? event.target.checked : value || event.target.value;
+                        setData(prevState => ({ ...prevState, [field]: newValue }));
+                    },
+                ]),
+            ),
+        [editableFields],
+    );
 
     const isInvalidForm = Object.values(fieldsValid).some(valid => !valid);
     return (
@@ -175,7 +182,7 @@ export const UpdateDialogue = ({
                                                         label: dataColumns[field].label,
                                                         error: !fieldsValid[field],
                                                         checked: !!data?.[field],
-                                                        onChange: handleChange(field),
+                                                        onChange: fieldHandlers[field],
                                                         onClick: _onClickAction,
                                                         InputLabelProps: {
                                                             shrink: true,
@@ -197,6 +204,7 @@ export const UpdateDialogue = ({
                                                     data,
                                                     row,
                                                     action,
+                                                    dispatch,
                                                 )}
                                             </>
                                         )}
