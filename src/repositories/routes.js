@@ -12,7 +12,7 @@ export const AUTHOR_API = ({ authorId }) => ({ apiUrl: `fez-authors/${authorId}`
 export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
     // default, see TRAINING_FILTER_GENERAL
     apiUrl: 'training_events',
-    options: { params: { take: numEvents, 'filterIds[]': filterId, ts: `${new Date().getTime()}` } },
+    options: { params: { take: numEvents, 'filterIds[]': filterId } },
 });
 
 // Papercut balance API
@@ -231,6 +231,12 @@ export const TEST_TAG_TEAM_LIST_API = () => ({ apiUrl: 'test-and-tag/teams/all' 
 export const TEST_TAG_UPDATE_TEAM_API = team => ({ apiUrl: `test-and-tag/team/${team}` });
 export const TEST_TAG_ADD_TEAM_API = () => ({ apiUrl: 'test-and-tag/team' });
 export const TEST_TAG_DELETE_TEAM_API = team => ({ apiUrl: `test-and-tag/team/${team}` });
+
+/* printer template management */
+export const TEST_TAG_PRINTER_TEMPLATE_LIST_API = () => ({ apiUrl: 'test-and-tag/printer-template/current/mine' });
+export const TEST_TAG_ADD_PRINTER_TEMPLATE_API = () => ({ apiUrl: 'test-and-tag/printer-template' });
+export const TEST_TAG_UPDATE_PRINTER_TEMPLATE_API = id => ({ apiUrl: `test-and-tag/printer-template/${id}` });
+export const TEST_TAG_DELETE_PRINTER_TEMPLATE_API = id => ({ apiUrl: `test-and-tag/printer-template/${id}` });
 
 export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' }); // is admin in staging
 export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/public/list/current' });

@@ -282,6 +282,7 @@ describe('Manage Users', () => {
             user_name: 'TEST USER',
             user_uid: 'uqtestuser',
         };
+
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
             expect(actions.addUser).toHaveBeenCalledWith(expected);

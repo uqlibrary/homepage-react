@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { isTest } from '../../../../../../helpers/general';
 
-const rootId = 'data_table';
+export const rootId = 'data_table';
 
 const StyledWrapper = styled(Box)(() => ({
     display: 'flex',

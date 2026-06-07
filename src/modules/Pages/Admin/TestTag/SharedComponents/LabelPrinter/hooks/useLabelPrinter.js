@@ -1,7 +1,6 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 import printerRegistry from '../printers';
-import useLabelPrinterTemplate from './useLabelPrinterTemplate';
 
 import { isLocal, isTest } from 'helpers/general';
 
@@ -18,11 +17,7 @@ export const getAvailablePrinters = async printerInstance => {
  * A Hook to manage label printer selection and preferences.
  *
  * @param {string} printerCode - The code of the printer to use (e.g., 'zebra', 'emulator'). Default 'zebra'.
- * @param {object} templateStore - An object containing label templates for different printers.
- * Default is an empty object.
  * @param {boolean} shouldRemoveNoNamePrinters - Flag to remove printers without a name. Default true.
- * @param {boolean} shouldDisableUnknownPrinters - Flag to disable printers that are not
- * configured in the registry. Default true.
  * @param {boolean} shouldOverridePrinterDevEnv - Flag to force use of Emulator printer in
  * development environment. Default false.
  *
@@ -33,24 +28,11 @@ export const getAvailablePrinters = async printerInstance => {
  */
 const useLabelPrinter = ({
     printerCode = 'zebra',
-    templateStore = {},
     shouldRemoveNoNamePrinters = true,
-    shouldDisableUnknownPrinters = true,
     shouldOverridePrinterDevEnv = false,
 }) => {
     const [availablePrinters, setAvailablePrinters] = useState([]);
-    const { hasLabelPrinterTemplate } = useLabelPrinterTemplate(templateStore);
 
-    const disabledUnknownPrinters = useCallback(
-        (printersList, shouldDisableUnknownPrinters) => {
-            if (!shouldDisableUnknownPrinters) return printersList;
-            return printersList.map(printer => ({
-                ...printer,
-                noconfig: !hasLabelPrinterTemplate(printer.name),
-            }));
-        },
-        [hasLabelPrinterTemplate],
-    );
     const printerInstance = useMemo(() => {
         const isLocalEnvironment = isLocal();
         const isTestEnvironment = isTest();
@@ -65,13 +47,12 @@ const useLabelPrinter = ({
                 if (!Array.isArray(printers)) return Promise.reject('Printer list is not an array');
                 return removeNoNamePrinters(printers, shouldRemoveNoNamePrinters);
             })
-            .then(printers => disabledUnknownPrinters(printers, shouldDisableUnknownPrinters))
             .then(setAvailablePrinters)
             .catch(error => {
                 console.error('Error fetching available printers:', error);
                 setAvailablePrinters([]);
             });
-    }, [disabledUnknownPrinters, printerInstance, shouldDisableUnknownPrinters, shouldRemoveNoNamePrinters]);
+    }, [printerInstance, shouldRemoveNoNamePrinters]);
 
     return {
         printerCode,

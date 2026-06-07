@@ -38,11 +38,7 @@ export const createPrinter = () => {
     const code = 'emulator';
 
     const getAvailablePrinters = async () => {
-        return await [
-            printerDescriptor,
-            { ...printerDescriptor, name: 'New printer' },
-            { ...printerDescriptor, name: null },
-        ];
+        return await [printerDescriptor, { ...printerDescriptor, name: null }];
     };
 
     const getConnectionStatus = async () => {
@@ -61,17 +57,14 @@ export const createPrinter = () => {
         return await selectedPrinter;
     };
 
-    const print = async data => {
+    const print = async data =>
         await fetch(printerAddress, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/zpl',
             },
             body: data,
-        }).then(response => {
-            return response;
         });
-    };
 
     return {
         code,
