@@ -1,16 +1,24 @@
 export const zeroPaddedYear = value => (value ? ('0000' + value).substr(-4) : '*');
 import { API_URL } from '../config';
 
+const getMillisecondCacheBuster = () => {
+    return `${new Date().getTime()}`;
+};
+const getMinuteCachebuster = () => {
+    return `${Math.floor(Date.now() / 60000)}`;
+};
 export const CURRENT_ACCOUNT_API = () => ({
     apiUrl: 'account',
-    options: { params: { ts: `${new Date().getTime()}` } },
+    options: { params: { ts: getMillisecondCacheBuster() } },
 });
-export const CURRENT_AUTHOR_API = () => ({ apiUrl: 'fez-authors' });
-export const AUTHOR_API = ({ authorId }) => ({ apiUrl: `fez-authors/${authorId}` });
+export const CURRENT_AUTHOR_API = () => ({
+    apiUrl: 'fez-authors',
+    options: { params: { ts: getMillisecondCacheBuster() } },
+});
 
 // Training API
 export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
-    // default, see TRAINING_FILTER_GENERAL
+    // default 104: see TRAINING_FILTER_GENERAL
     apiUrl: 'training_events',
     options: { params: { take: numEvents, 'filterIds[]': filterId } },
 });
@@ -18,7 +26,7 @@ export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
 // Papercut balance API
 export const PRINTING_API = () => ({
     apiUrl: 'papercut/balance',
-    options: { params: { ts: `${new Date().getTime()}` } },
+    options: { params: { ts: getMinuteCachebuster() } },
 });
 
 // eSpace Possible records
@@ -60,7 +68,7 @@ export const LEARNING_RESOURCES_COURSE_SUGGESTIONS_API = ({ keyword }) => ({
 // Library hours
 export const LIB_HOURS_API = () => ({
     apiUrl: 'library_hours/day',
-    options: { params: { ts: `${new Date().getTime()}` } },
+    options: { params: { ts: getMinuteCachebuster() } },
 });
 
 // file uploading apis
@@ -316,5 +324,5 @@ export const JOURNAL_SEARCH_API = () => ({ apiUrl: 'https://api.library.uq.edu.a
 // Loans API
 export const LOANS_API = () => ({
     apiUrl: 'account/loans',
-    options: { params: { ts: `${new Date().getTime()}` } },
+    options: { params: { ts: getMinuteCachebuster() } },
 });
