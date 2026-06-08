@@ -255,9 +255,7 @@ export function loadPrintBalance() {
  * Loads the training events data
  * @returns {function(*)}
  */
-export function loadTrainingEvents(account) {
-    const trainingfilterId =
-        !!account && !!account.trainingfilterId ? account.trainingfilterId : TRAINING_FILTER_GENERAL;
+export function loadTrainingEvents(trainingfilterId) {
     return dispatch => {
         dispatch({ type: actions.TRAINING_LOADING });
         return get(TRAINING_API(100, trainingfilterId))

@@ -24,7 +24,13 @@ import {
 } from 'data/actions';
 
 import { loadDlorStatistics } from 'data/actions/dlorActions';
-import { canSeeLearningResourcesPanel, isEspaceAuthor, canSeeReadPublish, canSeeTrainingPanel } from 'helpers/access';
+import {
+    canSeeLearningResourcesPanel,
+    isEspaceAuthor,
+    canSeeReadPublish,
+    canSeeTrainingPanel,
+    TRAINING_FILTER_GENERAL,
+} from 'helpers/access';
 import UtilityBar from './publicComponents/UtilityBar/UtilityBar';
 
 import EspaceLinks from './loggedinComponents/EspaceLinks';
@@ -164,8 +170,11 @@ export const HomePage = ({
     }, [accountLoading, dispatch]);
 
     useEffect(() => {
-        if (accountLoading === false) {
-            dispatch(loadTrainingEvents(account));
+        if (accountLoading === false && !!account) {
+            // account required as we currently only show training to logged-in users, don't waste a call for no reason
+            /* istanbul ignore next */
+            const trainingfilterId = !!account?.trainingfilterId ? account.trainingfilterId : TRAINING_FILTER_GENERAL;
+            dispatch(loadTrainingEvents(trainingfilterId));
         }
     }, [account, accountLoading, dispatch]);
     useEffect(() => {
