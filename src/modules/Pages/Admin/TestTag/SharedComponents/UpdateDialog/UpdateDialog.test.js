@@ -1,6 +1,7 @@
 import React from 'react';
+import Immutable from 'immutable';
 import UpdateDialog from './UpdateDialog';
-import { rtlRender, act, fireEvent, waitFor } from 'test-utils';
+import { rtlRender, WithReduxStore, act, fireEvent, waitFor } from 'test-utils';
 
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
@@ -17,7 +18,9 @@ function setup(testProps = {}, renderer = rtlRender) {
     const { ...props } = testProps;
 
     return renderer(
-        <UpdateDialog action="add" locale={defaultLocale} fields={{}} columns={{}} id="test" isOpen {...props} />,
+        <WithReduxStore initialState={Immutable.Map({})}>
+            <UpdateDialog action="add" locale={defaultLocale} fields={{}} columns={{}} id="test" isOpen {...props} />,
+        </WithReduxStore>,
     );
 }
 
