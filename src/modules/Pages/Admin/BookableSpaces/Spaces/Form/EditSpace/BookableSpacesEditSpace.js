@@ -46,6 +46,11 @@ export const BookableSpacesEditSpace = ({
     spaceOutageList,
     spaceOutageListLoading,
     spaceOutageListError,
+    spaceNotesList,
+    spaceNotesListLoading,
+    spaceNotesListError,
+    spaceNoteAdding,
+    spaceNoteAddError,
 }) => {
     console.log(
         'Edit bookableSpaceGet:',
@@ -301,6 +306,11 @@ export const BookableSpacesEditSpace = ({
                 spaceOutageList={spaceOutageList}
                 spaceOutageListLoading={spaceOutageListLoading}
                 spaceOutageListError={spaceOutageListError}
+                spaceNotesList={spaceNotesList}
+                spaceNotesListLoading={spaceNotesListLoading}
+                spaceNotesListError={spaceNotesListError}
+                spaceNoteAdding={spaceNoteAdding}
+                spaceNoteAddError={spaceNoteAddError}
                 mode="edit"
             />
         );
@@ -336,6 +346,11 @@ BookableSpacesEditSpace.propTypes = {
     spaceOutageList: PropTypes.any,
     spaceOutageListLoading: PropTypes.any,
     spaceOutageListError: PropTypes.any,
+    spaceNotesList: PropTypes.any,
+    spaceNotesListLoading: PropTypes.any,
+    spaceNotesListError: PropTypes.any,
+    spaceNoteAdding: PropTypes.any,
+    spaceNoteAddError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesEditSpace);

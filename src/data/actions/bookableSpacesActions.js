@@ -4,6 +4,7 @@ import {
     SPACES_ADD_LOCATION_API,
     SPACES_SINGLE_API,
     SPACES_ADMIN_SINGLE_API,
+    SPACES_ADMIN_NOTES_API,
     SPACES_OUTAGES_API,
     SPACES_OUTAGE_API,
     SPACES_FLOOR_OUTAGES_API,
@@ -73,6 +74,59 @@ export function loadBookableSpaceOutages(spaceId) {
             .catch(error => {
                 dispatch({
                     type: actions.SPACES_OUTAGE_LIST_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function loadBookableSpaceNotes(spaceId) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_NOTES_LIST_LOADING });
+        const url = SPACES_ADMIN_NOTES_API({ spaceId });
+        return get(url)
+            .then(response => {
+                dispatch({
+                    type: actions.SPACES_NOTES_LIST_LOADED,
+                    payload: Array.isArray(response?.data) ? response.data : response?.data?.notes || [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_NOTES_LIST_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function createBookableSpaceNote(spaceId, request) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_NOTE_ADDING });
+        const url = SPACES_ADMIN_NOTES_API({ spaceId });
+        return post(url, request)
+            .then(response => {
+                if (response?.status?.toLowerCase?.() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_NOTE_ADDED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_NOTE_ADD_FAILED,
+                        payload: response?.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_NOTE_ADD_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

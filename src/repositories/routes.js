@@ -341,6 +341,7 @@ export const SPACES_ADMIN_ALL_API = ({ includeDrafts, includeDeleted } = {}) => 
 });
 export const SPACES_SINGLE_API = ({ uuid }) => ({ apiUrl: `bookable_spaces/space/${uuid}` });
 export const SPACES_ADMIN_SINGLE_API = ({ uuid }) => ({ apiUrl: `bookable_spaces/admin/space/${uuid}` });
+export const SPACES_ADMIN_NOTES_API = ({ spaceId }) => ({ apiUrl: `bookable_spaces/admin/space/${spaceId}/notes` });
 export const SPACES_OUTAGES_API = ({ spaceId }) => ({ apiUrl: `bookable_spaces/space/${spaceId}/outages` });
 export const SPACES_OUTAGE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_outage/${id}` });
 export const SPACES_FLOOR_OUTAGES_API = ({ floorId }) => ({ apiUrl: `bookable_spaces/floor/${floorId}/outages` });

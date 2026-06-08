@@ -86,6 +86,7 @@ import location_sites_all from './data/records/bookableSpaces/location_sites_all
 import newSpace from './data/records/bookableSpaces/newSpace';
 import spaces_favourites from './data/records/bookableSpaces/spaces_favourites';
 import archibusTreeSites from './data/records/bookableSpaces/archibusTreeSites';
+import space_notes from './data/records/bookableSpaces/space_notes';
 import { dlorDashboardSiteUsage } from './data/dlor/dlorDashboardSiteUsage';
 
 const moment = require('moment');
@@ -149,6 +150,7 @@ const collectMockSpaceOutages = spaces =>
         })),
     );
 let mockSpaceOutageRecords = collectMockSpaceOutages(bookableSpaces_all?.data?.locations);
+let mockSpaceNoteRecords = cloneMockValue(space_notes?.data || []);
 const getMockSpaceOutagesForSpace = spaceId =>
     mockSpaceOutageRecords
         .filter(outage => String(outage?.space_id) === String(spaceId))
@@ -159,6 +161,18 @@ const getNextMockSpaceOutageId = () => {
     const highestKnownId = mockSpaceOutageRecords.reduce((currentHighest, outage) => {
         return Math.max(currentHighest, Number(outage?.space_outage_id) || 0);
     }, 9000);
+    return highestKnownId + 1;
+};
+const getMockSpaceNotesForSpace = spaceId =>
+    mockSpaceNoteRecords
+        .filter(note => String(note?.space_note_space_id) === String(spaceId))
+        .sort((leftNote, rightNote) =>
+            String(rightNote?.space_note_created_at).localeCompare(String(leftNote?.space_note_created_at)),
+        );
+const getNextMockSpaceNoteId = () => {
+    const highestKnownId = mockSpaceNoteRecords.reduce((currentHighest, note) => {
+        return Math.max(currentHighest, Number(note?.space_note_id) || 0);
+    }, 1000);
     return highestKnownId + 1;
 };
 
@@ -1829,6 +1843,30 @@ mock.onGet('exams/course/FREN1010/summary')
             outage => String(outage?.space_outage_id) !== String(outageId),
         );
         return [200, { status: 'OK' }];
+    })
+    .onGet(/bookable_spaces\/admin\/space\/\d+\/notes.*/)
+    .reply(config => {
+        const urlParts = config.url.split('/');
+        const spaceId = urlParts[urlParts.length - 2];
+        return [200, { status: 'OK', data: getMockSpaceNotesForSpace(spaceId) }];
+    })
+    .onPost(/bookable_spaces\/admin\/space\/\d+\/notes.*/)
+    .reply(config => {
+        const body = JSON.parse(config.data || '{}');
+        const urlParts = config.url.split('/');
+        const spaceId = Number(urlParts[urlParts.length - 2]);
+
+        const newNote = {
+            space_note_id: getNextMockSpaceNoteId(),
+            space_note_space_id: Number(body?.space_note_space_id || spaceId),
+            space_note_user: body?.space_note_user || 'uqtest1',
+            space_note_note: body?.space_note_note || '',
+            space_note_created_at: new Date().toISOString(),
+        };
+
+        mockSpaceNoteRecords = [newNote, ...mockSpaceNoteRecords];
+
+        return [200, { status: 'OK', data: newNote }];
     })
     // SPACES_SINGLE_API
     .onGet(/bookable_spaces\/space\/.*/)

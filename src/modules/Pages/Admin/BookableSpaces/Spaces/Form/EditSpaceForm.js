@@ -22,9 +22,16 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import { styled, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
 
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -32,6 +39,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import parse from 'html-react-parser';
 
 import { useAccountContext } from 'context';
 import { useConfirmationState } from 'hooks';
@@ -322,6 +330,11 @@ export const EditSpaceForm = ({
     spaceOutageList,
     spaceOutageListLoading,
     spaceOutageListError,
+    spaceNotesList,
+    spaceNotesListLoading,
+    spaceNotesListError,
+    spaceNoteAdding,
+    spaceNoteAddError,
     bookableSpacesRoomUpdating,
     bookableSpacesRoomUpdateError,
     bookableSpacesRoomUpdateResult,
@@ -388,14 +401,16 @@ export const EditSpaceForm = ({
     const firstTabId = 0;
     const secondTabId = 1;
     const thirdTabId = 2;
-    const addModeLastTabId = 3;
+    const addModeImageryTabId = 3;
     const editModeOutageTabId = 3;
     const editModeImageryTabId = 4;
+    const editModeNotesTabId = 5;
     const [activeStep, setActiveStep] = useState(0);
     const [panelId, setPanel] = useState(0);
+    const [spaceNoteDraft, setSpaceNoteDraft] = useState('');
 
     const addModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Imagery'];
-    const editModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Closures', 'Imagery'];
+    const editModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Closures', 'Imagery', 'Notes'];
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
@@ -451,6 +466,20 @@ export const EditSpaceForm = ({
             showConfirmation();
         }
     }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult, showConfirmation]);
+
+    useEffect(() => {
+        const spaceId = formValues?.space_id;
+        if (!!spaceId) {
+            actions.loadBookableSpaceNotes(spaceId);
+        }
+    }, [actions, formValues?.space_id]);
+
+    useEffect(() => {
+        const spaceId = formValues?.space_id;
+        if (!spaceId) {
+            setSpaceNoteDraft('');
+        }
+    }, [formValues?.space_id]);
 
     useEffect(() => {
         const nextStateKey = `${mode}:${formValues?.space_uuid || 'new'}`;
@@ -639,12 +668,12 @@ export const EditSpaceForm = ({
         space_services_page: { addTab: thirdTabId, editTab: thirdTabId, selector: '#space_services_page' },
         space_opening_hours_id: { addTab: thirdTabId, editTab: thirdTabId, selector: '#add-space-springshare-input' },
         space_photo_url: {
-            addTab: addModeLastTabId,
+            addTab: addModeImageryTabId,
             editTab: editModeImageryTabId,
             selector: '[data-testid="image-upload-dropzone"]',
         },
         space_photo_description: {
-            addTab: addModeLastTabId,
+            addTab: addModeImageryTabId,
             editTab: editModeImageryTabId,
             selector: '#space_photo_description',
         },
@@ -1885,6 +1914,151 @@ export const EditSpaceForm = ({
             />
         );
     };
+
+    const formatNoteDate = noteDate => {
+        if (!noteDate) {
+            return '';
+        }
+        const parsedDate = new Date(noteDate);
+        if (Number.isNaN(parsedDate.getTime())) {
+            return String(noteDate);
+        }
+        return parsedDate.toLocaleString('en-AU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
+
+    const handleAddSpaceNote = async () => {
+        const spaceId = formValues?.space_id;
+        const trimmedNoteText = (spaceNoteDraft || '').trim();
+        if (!spaceId || trimmedNoteText.length === 0) {
+            return;
+        }
+
+        await actions.createBookableSpaceNote(spaceId, {
+            space_note_space_id: Number(spaceId),
+            space_note_user: account?.id || 'uqtest1',
+            space_note_note: trimmedNoteText,
+        });
+
+        setSpaceNoteDraft('');
+        await actions.loadBookableSpaceNotes(spaceId);
+    };
+
+    const notesPanel = () => {
+        const notesList = Array.isArray(spaceNotesList) ? spaceNotesList : [];
+
+        return (
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Typography component={'h3'} variant={'h6'}>
+                        Notes
+                    </Typography>
+                </Grid>
+                {!formValues?.space_id && (
+                    <Grid item xs={12}>
+                        <Typography component={'p'} data-testid="space-notes-requires-save-message">
+                            Save the space first, then use this tab to add internal admin notes.
+                        </Typography>
+                    </Grid>
+                )}
+                {!!formValues?.space_id && (
+                    <>
+                        <Grid item xs={12}>
+                            <label htmlFor="space_note_note">New note</label>
+                            <CKEditor
+                                id="space_note_note"
+                                editor={ClassicEditor}
+                                config={editorConfig}
+                                data={spaceNoteDraft}
+                                onReady={editor => {
+                                    editor.editing.view.change(writer => {
+                                        writer.setStyle('height', '180px', editor.editing.view.document.getRoot());
+                                    });
+
+                                    const editableElement = editor.ui.getEditableElement();
+                                    editableElement?.addEventListener('click', event => {
+                                        const anchorElement = event?.target?.closest?.('a');
+                                        if (!!anchorElement) {
+                                            event.preventDefault();
+                                        }
+                                    });
+                                }}
+                                onChange={(event, editor) => {
+                                    const htmlData = editor.getData();
+                                    setSpaceNoteDraft(htmlData);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <StyledPrimaryButton
+                                    data-testid="admin-spaces-add-note-button"
+                                    onClick={handleAddSpaceNote}
+                                    disabled={spaceNoteAdding || (spaceNoteDraft || '').trim().length === 0}
+                                >
+                                    Add note
+                                </StyledPrimaryButton>
+                            </Box>
+                            {!!spaceNoteAddError && (
+                                <StyledErrorMessageTypography component={'div'}>
+                                    {spaceNoteAddError}
+                                </StyledErrorMessageTypography>
+                            )}
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography component={'h4'} variant={'subtitle1'} sx={{ marginBottom: '0.5rem' }}>
+                                Existing notes
+                            </Typography>
+                            {!!spaceNotesListLoading && <Typography component={'p'}>Loading notes...</Typography>}
+                            {!!spaceNotesListError && (
+                                <StyledErrorMessageTypography component={'div'}>
+                                    {spaceNotesListError}
+                                </StyledErrorMessageTypography>
+                            )}
+                            {!spaceNotesListLoading && !spaceNotesListError && notesList.length === 0 && (
+                                <Typography component={'p'} data-testid="space-notes-empty-message">
+                                    No notes yet.
+                                </Typography>
+                            )}
+                            {!spaceNotesListLoading && !spaceNotesListError && notesList.length > 0 && (
+                                <TableContainer component={Paper}>
+                                    <Table size="small" data-testid="space-notes-table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Date</TableCell>
+                                                <TableCell>Author</TableCell>
+                                                <TableCell>Note</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {notesList.map((note, index) => (
+                                                <TableRow key={`space-note-${note?.space_note_id || index}`}>
+                                                    <TableCell data-testid={`space-note-date-${index}`}>
+                                                        {formatNoteDate(note?.space_note_created_at)}
+                                                    </TableCell>
+                                                    <TableCell data-testid={`space-note-author-${index}`}>
+                                                        {note?.space_note_user}
+                                                    </TableCell>
+                                                    <TableCell data-testid={`space-note-note-${index}`}>
+                                                        {parse(note?.space_note_note || '')}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            )}
+                        </Grid>
+                    </>
+                )}
+            </Grid>
+        );
+    };
     const cancelButton = () => {
         return (
             <StyledUqTightLink
@@ -2000,8 +2174,10 @@ export const EditSpaceForm = ({
             const thirdStepErrorMessages =
                 mode === 'add' ? validatePanelLocationDetails(formValues, []) : validatePanelLocation(formValues, []);
             return thirdStepErrorMessages?.length;
+        } else if (mode === 'edit' && (tabId === editModeOutageTabId || tabId === editModeNotesTabId)) {
+            return 0;
         } else {
-            // tabId must = 3 in add mode
+            // imagery tab
             return validatePanelImagery(formValues)?.length;
         }
     }
@@ -2092,7 +2268,7 @@ export const EditSpaceForm = ({
                                 {activeStep === firstTabId && aboutPanel()}
                                 {activeStep === secondTabId && facilityTypePanel()}
                                 {activeStep === thirdTabId && locationPanel()}
-                                {activeStep === addModeLastTabId && imageryPanel()}
+                                {activeStep === addModeImageryTabId && imageryPanel()}
                                 <Grid item xs={12}>
                                     <Box
                                         id={'button-wrapper'}
@@ -2108,7 +2284,7 @@ export const EditSpaceForm = ({
                                             Back
                                         </StyledSecondaryButton>
                                         <Box sx={{ flex: '1 1 auto' }} />
-                                        {activeStep === addModeLastTabId ? (
+                                        {activeStep === addModeImageryTabId ? (
                                             saveButton()
                                         ) : (
                                             <StyledPrimaryButton
@@ -2119,7 +2295,7 @@ export const EditSpaceForm = ({
                                             </StyledPrimaryButton>
                                         )}
                                     </Box>
-                                    {activeStep === addModeLastTabId && renderValidationSummary()}
+                                    {activeStep === addModeImageryTabId && renderValidationSummary()}
                                 </Grid>
                             </Grid>
                         </form>
@@ -2269,6 +2445,13 @@ export const EditSpaceForm = ({
                                 >
                                     {imageryPanel()}
                                 </CustomTabPanel>
+                                <CustomTabPanel
+                                    value={panelId}
+                                    index={editModeNotesTabId}
+                                    testId="spaces-tabpanel-notes"
+                                >
+                                    {notesPanel()}
+                                </CustomTabPanel>
                             </Box>
                         </form>
                         <Grid container spacing={3}>
@@ -2319,6 +2502,11 @@ EditSpaceForm.propTypes = {
     spaceOutageList: PropTypes.any,
     spaceOutageListLoading: PropTypes.any,
     spaceOutageListError: PropTypes.any,
+    spaceNotesList: PropTypes.any,
+    spaceNotesListLoading: PropTypes.any,
+    spaceNotesListError: PropTypes.any,
+    spaceNoteAdding: PropTypes.any,
+    spaceNoteAddError: PropTypes.any,
 };
 
 export default React.memo(EditSpaceForm);

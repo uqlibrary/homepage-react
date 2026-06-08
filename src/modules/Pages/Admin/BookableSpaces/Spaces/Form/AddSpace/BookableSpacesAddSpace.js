@@ -39,6 +39,11 @@ export const BookableSpacesAddSpace = ({
     facilityTypeList,
     facilityTypeListLoading,
     facilityTypeListError,
+    spaceNotesList,
+    spaceNotesListLoading,
+    spaceNotesListError,
+    spaceNoteAdding,
+    spaceNoteAddError,
 }) => {
     console.log(
         'addBookableSpaceLocation',
@@ -258,6 +263,11 @@ export const BookableSpacesAddSpace = ({
                     bookableSpacesArchibusTree={bookableSpacesArchibusTree}
                     bookableSpacesArchibusTreeLoading={bookableSpacesArchibusTreeLoading}
                     bookableSpacesArchibusTreeError={bookableSpacesArchibusTreeError}
+                    spaceNotesList={spaceNotesList}
+                    spaceNotesListLoading={spaceNotesListLoading}
+                    spaceNotesListError={spaceNotesListError}
+                    spaceNoteAdding={spaceNoteAdding}
+                    spaceNoteAddError={spaceNoteAddError}
                     mode="add"
                 />
             </>
@@ -285,6 +295,11 @@ BookableSpacesAddSpace.propTypes = {
     facilityTypeList: PropTypes.any,
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
+    spaceNotesList: PropTypes.any,
+    spaceNotesListLoading: PropTypes.any,
+    spaceNotesListError: PropTypes.any,
+    spaceNoteAdding: PropTypes.any,
+    spaceNoteAddError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesAddSpace);
