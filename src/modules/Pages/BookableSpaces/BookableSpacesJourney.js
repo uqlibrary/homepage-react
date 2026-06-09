@@ -15,13 +15,12 @@ import TuneIcon from '@mui/icons-material/Tune';
 import TvIcon from '@mui/icons-material/Tv';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
-import { pluralise } from 'helpers/general';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
-import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
-import { spaceOpeningHours, getSpaceHoursStatus } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { getSpaceHoursStatus } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
+import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
 const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
-const journeyFallbackDetailImage = require('../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
 const StyledJourneyWrapper = styled('div')(({ theme }) => ({
     backgroundColor: '#fff',
@@ -478,25 +477,6 @@ const StyledAdvancedFiltersPanel = styled(StyledDetailSurface)(({ theme }) => ({
     },
 }));
 
-const StyledDetailImage = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: '12px',
-    overflow: 'hidden',
-    backgroundColor: '#d5d5da',
-    aspectRatio: '4 / 3',
-    [theme.breakpoints.up('md')]: {
-        aspectRatio: '16 / 10',
-    },
-    '& img': {
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        display: 'block',
-    },
-}));
-
 const HOURS_STATUS_CONFIG = {
     open: {
         label: 'Open now',
@@ -513,6 +493,26 @@ const HOURS_STATUS_CONFIG = {
 };
 
 const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHoursError }) => {
+    const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
+    if (visibleOutage?.status === 'Current') {
+        return (
+            <Chip
+                data-testid={'spaces-journey-open-status-chip-current-outage'}
+                label="Currently closed"
+                size="small"
+                sx={{
+                    fontWeight: 700,
+                    fontSize: '0.75rem',
+                    letterSpacing: '0.01em',
+                    backgroundColor: '#fdecea',
+                    color: '#b71c1c',
+                    borderColor: '#ffcdd2',
+                    border: '1px solid',
+                }}
+            />
+        );
+    }
+
     if (weeklyHoursLoading || weeklyHoursError || !weeklyHours) return null;
     const status = getSpaceHoursStatus(space, weeklyHours);
     if (!status) return null;
@@ -772,64 +772,6 @@ const BookableSpacesJourney = ({
         favouriteButtonLabel = 'Updating favourites...';
     }
     console.log('articles', servicesAndSpacesArticles);
-    const detailImages = React.useMemo(() => {
-        if (!selectedSpace) return [];
-
-        const resolvedImages = [];
-        const pushImage = image => {
-            if (!image) return;
-            if (typeof image === 'string') {
-                resolvedImages.push({
-                    src: image,
-                    alt: selectedSpace?.space_photo_description || selectedSpace?.space_name || 'Space image',
-                });
-                return;
-            }
-            if (typeof image === 'object') {
-                const src = image.src || image.url || image.space_photo_url;
-                if (!src) return;
-                resolvedImages.push({
-                    src,
-                    alt:
-                        image.alt ||
-                        image.description ||
-                        selectedSpace?.space_photo_description ||
-                        selectedSpace?.space_name ||
-                        'Space image',
-                });
-            }
-        };
-
-        [selectedSpace?.space_photo_urls, selectedSpace?.space_photos, selectedSpace?.space_images].forEach(
-            candidate => {
-                if (Array.isArray(candidate)) {
-                    candidate.forEach(pushImage);
-                }
-            },
-        );
-
-        pushImage(selectedSpace?.space_photo_url);
-
-        const uniqueImages = resolvedImages.filter(
-            (image, index, arr) => !!image?.src && arr.findIndex(i => i.src === image.src) === index,
-        );
-
-        if (uniqueImages.length === 0) {
-            return [
-                {
-                    src: journeyFallbackDetailImage,
-                    alt: 'Placeholder image for this space',
-                },
-            ];
-        }
-
-        return uniqueImages;
-    }, [selectedSpace]);
-
-    const spaceHours = React.useMemo(
-        () => (!weeklyHoursLoading && !weeklyHoursError ? spaceOpeningHours(selectedSpace, weeklyHours) || [] : []),
-        [selectedSpace, weeklyHours, weeklyHoursLoading, weeklyHoursError],
-    );
 
     React.useEffect(() => {
         if (!canShowAdvancedFilters && showAdvancedFilters) {
@@ -1656,378 +1598,128 @@ const BookableSpacesJourney = ({
                             </Button>
                         </Stack>
                         <Stack spacing={1.5}>
-                            {intentSpaceLocations?.map(space => (
-                                <StyledResultCardButton
-                                    key={space?.space_id}
-                                    onClick={() => {
-                                        setSelectedSpace(space);
-                                        navigateToView('details', {
-                                            intentId: selectedIntentId,
-                                            spaceId: space?.space_id,
-                                        });
-                                    }}
-                                >
-                                    <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
-                                        <Typography sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5 }}>
-                                            {space?.space_name}
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
-                                            {space?.space_library_name}
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ color: '#999' }}>
-                                            {space?.space_type_details?.space_type_name || space?.space_type}
-                                        </Typography>
-                                        <Box
-                                            sx={{
-                                                mb:
-                                                    space?.space_type_details?.space_type_description ||
-                                                    space?.space_description
-                                                        ? 1
-                                                        : 0,
-                                                mt: 0.5,
-                                            }}
-                                        >
-                                            <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
-                                                {favouriteSpaceIds.has(String(space?.space_id)) && (
-                                                    <Chip
-                                                        data-testid={`spaces-journey-favourite-chip-${space?.space_id}`}
-                                                        label="Favourite"
-                                                        size="small"
-                                                        sx={{
-                                                            backgroundColor: '#fff8e1',
-                                                            color: '#7a5a00',
-                                                            borderColor: '#ffe082',
-                                                            border: '1px solid',
-                                                            fontWeight: 700,
-                                                        }}
-                                                    />
-                                                )}
-                                                <SpaceOpenStatusChip
-                                                    space={space}
-                                                    weeklyHours={weeklyHours}
-                                                    weeklyHoursLoading={weeklyHoursLoading}
-                                                    weeklyHoursError={weeklyHoursError}
-                                                />
-                                            </Stack>
-                                        </Box>
-                                        {!!space?.space_type_details?.space_type_description && (
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ color: '#4f4d57', mb: space?.space_description ? 0.75 : 0 }}
+                            {intentSpaceLocations?.map(space => {
+                                const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
+                                return (
+                                    <StyledResultCardButton
+                                        key={space?.space_id}
+                                        onClick={() => {
+                                            setSelectedSpace(space);
+                                            navigateToView('details', {
+                                                intentId: selectedIntentId,
+                                                spaceId: space?.space_id,
+                                            });
+                                        }}
+                                    >
+                                        <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
+                                            <Typography sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5 }}>
+                                                {space?.space_name}
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
+                                                {space?.space_library_name}
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ color: '#999' }}>
+                                                {space?.space_type_details?.space_type_name || space?.space_type}
+                                            </Typography>
+                                            <Box
+                                                sx={{
+                                                    mb:
+                                                        space?.space_type_details?.space_type_description ||
+                                                        space?.space_description
+                                                            ? 1
+                                                            : 0,
+                                                    mt: 0.5,
+                                                }}
                                             >
-                                                {space.space_type_details.space_type_description}
-                                            </Typography>
-                                        )}
-                                        {!!space?.space_description && (
-                                            <Typography variant="body2" sx={{ color: '#666', fontStyle: 'italic' }}>
-                                                {String(space.space_description)
-                                                    .replace(/<[^>]*>/g, ' ')
-                                                    .trim()}
-                                            </Typography>
-                                        )}
-                                    </Box>
-                                </StyledResultCardButton>
-                            ))}
+                                                <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                                                    {favouriteSpaceIds.has(String(space?.space_id)) && (
+                                                        <Chip
+                                                            data-testid={`spaces-journey-favourite-chip-${space?.space_id}`}
+                                                            label="Favourite"
+                                                            size="small"
+                                                            sx={{
+                                                                backgroundColor: '#fff8e1',
+                                                                color: '#7a5a00',
+                                                                borderColor: '#ffe082',
+                                                                border: '1px solid',
+                                                                fontWeight: 700,
+                                                            }}
+                                                        />
+                                                    )}
+                                                    <SpaceOpenStatusChip
+                                                        space={space}
+                                                        weeklyHours={weeklyHours}
+                                                        weeklyHoursLoading={weeklyHoursLoading}
+                                                        weeklyHoursError={weeklyHoursError}
+                                                    />
+                                                    {!!visibleOutage && (
+                                                        <Chip
+                                                            data-testid={`spaces-journey-outage-chip-${space?.space_id}`}
+                                                            label={
+                                                                visibleOutage.status === 'Current'
+                                                                    ? 'Current closure'
+                                                                    : 'Upcoming closure'
+                                                            }
+                                                            size="small"
+                                                            sx={{
+                                                                backgroundColor:
+                                                                    visibleOutage.status === 'Current'
+                                                                        ? '#fdecea'
+                                                                        : '#fff8e1',
+                                                                color:
+                                                                    visibleOutage.status === 'Current'
+                                                                        ? '#b71c1c'
+                                                                        : '#7a5a00',
+                                                                border:
+                                                                    visibleOutage.status === 'Current'
+                                                                        ? '1px solid #ffcdd2'
+                                                                        : '1px solid #ffe082',
+                                                                fontWeight: 700,
+                                                            }}
+                                                        />
+                                                    )}
+                                                </Stack>
+                                            </Box>
+                                            {!!space?.space_type_details?.space_type_description && (
+                                                <Typography
+                                                    variant="body2"
+                                                    sx={{ color: '#4f4d57', mb: space?.space_description ? 0.75 : 0 }}
+                                                >
+                                                    {space.space_type_details.space_type_description}
+                                                </Typography>
+                                            )}
+                                            {!!space?.space_description && (
+                                                <Typography variant="body2" sx={{ color: '#666', fontStyle: 'italic' }}>
+                                                    {String(space.space_description)
+                                                        .replace(/<[^>]*>/g, ' ')
+                                                        .trim()}
+                                                </Typography>
+                                            )}
+                                        </Box>
+                                    </StyledResultCardButton>
+                                );
+                            })}
                         </Stack>
                     </>
                 )}
 
                 {view === 'details' && !!selectedSpace && (
-                    <>
-                        <Button
-                            variant="text"
-                            startIcon={<ArrowBackIcon />}
-                            onClick={handleJourneyBack}
-                            sx={{ textTransform: 'none', alignSelf: 'flex-start' }}
-                        >
-                            Back to results
-                        </Button>
-
-                        {/* Hero: image + title/meta side by side on desktop */}
-                        <Box
-                            sx={{
-                                display: 'grid',
-                                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-                                gap: '1.5rem',
-                                alignItems: 'start',
-                            }}
-                        >
-                            <StyledDetailImage>
-                                {detailImages?.[0]?.src ? (
-                                    <img
-                                        src={detailImages[0].src}
-                                        alt={detailImages[0].alt}
-                                        onError={event => {
-                                            event.currentTarget.onerror = null;
-                                            event.currentTarget.src = journeyFallbackDetailImage;
-                                        }}
-                                    />
-                                ) : (
-                                    <Box
-                                        sx={{
-                                            width: '100%',
-                                            height: '100%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            color: '#53515b',
-                                            fontWeight: 600,
-                                        }}
-                                    >
-                                        No image available
-                                    </Box>
-                                )}
-                            </StyledDetailImage>
-
-                            <Stack spacing={2} sx={{ pt: { xs: 0, md: 0.5 } }}>
-                                <Box>
-                                    <Typography
-                                        component="h2"
-                                        variant="h5"
-                                        sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5, lineHeight: 1.2 }}
-                                    >
-                                        {selectedSpace?.space_name}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
-                                        {selectedSpace?.space_library_name}
-                                    </Typography>
-                                    {!!(
-                                        selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type
-                                    ) && (
-                                        <Stack
-                                            direction="row"
-                                            spacing={1}
-                                            alignItems="center"
-                                            sx={{ flexWrap: 'wrap' }}
-                                        >
-                                            <Typography
-                                                variant="caption"
-                                                sx={{
-                                                    display: 'inline-block',
-                                                    px: 1.25,
-                                                    py: 0.25,
-                                                    borderRadius: '20px',
-                                                    backgroundColor: '#ede8f5',
-                                                    color: '#51247a',
-                                                    fontWeight: 600,
-                                                    letterSpacing: 0.3,
-                                                }}
-                                            >
-                                                {selectedSpace?.space_type_details?.space_type_name ||
-                                                    selectedSpace?.space_type}
-                                            </Typography>
-                                            {isSelectedSpaceFavourite && (
-                                                <Chip
-                                                    data-testid={`spaces-journey-favourite-chip-${selectedSpace?.space_id}`}
-                                                    label="Favourite"
-                                                    size="small"
-                                                    sx={{
-                                                        backgroundColor: '#fff8e1',
-                                                        color: '#7a5a00',
-                                                        borderColor: '#ffe082',
-                                                        border: '1px solid',
-                                                        fontWeight: 700,
-                                                    }}
-                                                />
-                                            )}
-                                            <SpaceOpenStatusChip
-                                                space={selectedSpace}
-                                                weeklyHours={weeklyHours}
-                                                weeklyHoursLoading={weeklyHoursLoading}
-                                                weeklyHoursError={weeklyHoursError}
-                                            />
-                                        </Stack>
-                                    )}
-                                </Box>
-
-                                {!!(
-                                    selectedSpace?.space_type_details?.space_type_description ||
-                                    selectedSpace?.space_description
-                                ) && (
-                                    <Box sx={{ borderLeft: '3px solid #51247a', pl: 1.5 }}>
-                                        {!!selectedSpace?.space_type_details?.space_type_description && (
-                                            <Typography
-                                                variant="body2"
-                                                sx={{
-                                                    color: '#4f4d57',
-                                                    mb: selectedSpace?.space_description ? 1 : 0,
-                                                }}
-                                            >
-                                                {selectedSpace.space_type_details.space_type_description}
-                                            </Typography>
-                                        )}
-                                        {!!selectedSpace?.space_description && (
-                                            <Typography variant="body2" sx={{ color: '#666' }}>
-                                                {String(selectedSpace.space_description)
-                                                    .replace(/<[^>]*>/g, ' ')
-                                                    .trim()}
-                                            </Typography>
-                                        )}
-                                    </Box>
-                                )}
-
-                                {isLoggedIn && !!selectedSpace?.space_id && (
-                                    <Box>
-                                        <Button
-                                            variant={isSelectedSpaceFavourite ? 'contained' : 'outlined'}
-                                            disabled={isFavouriteActionInProgress}
-                                            onClick={() => handleJourneyFavouriteToggle(selectedSpace)}
-                                            sx={{ textTransform: 'none' }}
-                                        >
-                                            {favouriteButtonLabel}
-                                        </Button>
-                                    </Box>
-                                )}
-                            </Stack>
-                        </Box>
-
-                        {/* Space details section — journey-only, no shared component */}
-                        <StyledDetailSurface>
-                            <Typography
-                                component="h3"
-                                variant="h6"
-                                sx={{
-                                    fontWeight: 700,
-                                    mb: 2,
-                                    color: '#1f1230',
-                                    pb: 1,
-                                    borderBottom: '1px solid #ddd8e4',
-                                }}
-                            >
-                                Space details
-                            </Typography>
-                            <Stack spacing={2.5}>
-                                {/* Booking */}
-                                {!!selectedSpace?.space_external_book_url ? (
-                                    <Box>
-                                        <Button
-                                            variant="contained"
-                                            component="a"
-                                            href={selectedSpace.space_external_book_url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            sx={{ textTransform: 'none' }}
-                                        >
-                                            Book this space
-                                        </Button>
-                                    </Box>
-                                ) : (
-                                    <Typography variant="body2" sx={{ color: '#4f4d57' }}>
-                                        No booking required.
-                                    </Typography>
-                                )}
-
-                                {/* Capacity */}
-                                {!!(selectedSpace?.space_capacity && selectedSpace.space_capacity > 0) && (
-                                    <Typography variant="body2" sx={{ color: '#4f4d57' }}>
-                                        <strong>Capacity:</strong> {selectedSpace.space_capacity}{' '}
-                                        {pluralise('person', selectedSpace.space_capacity, 'people')}
-                                    </Typography>
-                                )}
-
-                                {/* Facilities */}
-                                {selectedSpace?.facility_types?.length > 0 && (
-                                    <Box>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{ fontWeight: 600, mb: 0.75, color: '#1f1230' }}
-                                        >
-                                            Facilities
-                                        </Typography>
-                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                            {selectedSpace.facility_types.map(f => (
-                                                <Chip
-                                                    key={f.facility_type_id}
-                                                    label={f.facility_type_name}
-                                                    size="small"
-                                                    variant="outlined"
-                                                    sx={{ borderColor: '#c9bfdf', color: '#51247a' }}
-                                                />
-                                            ))}
-                                        </Box>
-                                    </Box>
-                                )}
-
-                                {/* Opening hours — vertical list, never a table */}
-                                {spaceHours.length > 0 && (
-                                    <Box>
-                                        <Typography variant="body2" sx={{ fontWeight: 600, mb: 1, color: '#1f1230' }}>
-                                            {selectedSpace?.space_library_name} opening hours
-                                        </Typography>
-                                        <Stack spacing={0}>
-                                            {spaceHours.map((d, i) => {
-                                                const isToday = d?.dayName === 'Today';
-                                                return (
-                                                    <Box
-                                                        key={i}
-                                                        sx={{
-                                                            display: 'grid',
-                                                            gridTemplateColumns: '7.5rem 1fr',
-                                                            gap: '0.5rem',
-                                                            py: 0.75,
-                                                            borderBottom:
-                                                                i < spaceHours.length - 1
-                                                                    ? '1px solid #f0ecf7'
-                                                                    : 'none',
-                                                            backgroundColor: isToday ? '#f9f6fe' : 'transparent',
-                                                            px: isToday ? 1 : 0,
-                                                            borderRadius: isToday ? '4px' : 0,
-                                                            mx: isToday ? -1 : 0,
-                                                        }}
-                                                    >
-                                                        <Typography
-                                                            variant="body2"
-                                                            sx={{
-                                                                fontWeight: isToday ? 700 : 400,
-                                                                color: isToday ? '#51247a' : '#1f1230',
-                                                            }}
-                                                        >
-                                                            {d?.dayName}
-                                                        </Typography>
-                                                        <Typography
-                                                            variant="body2"
-                                                            sx={{
-                                                                color: isToday ? '#51247a' : '#4f4d57',
-                                                                fontWeight: isToday ? 600 : 400,
-                                                            }}
-                                                        >
-                                                            {d?.rendered}
-                                                        </Typography>
-                                                    </Box>
-                                                );
-                                            })}
-                                        </Stack>
-                                    </Box>
-                                )}
-                            </Stack>
-                        </StyledDetailSurface>
-
-                        {/* Map section */}
-                        <StyledDetailSurface sx={{ p: 0, overflow: 'hidden' }}>
-                            <Typography
-                                component="h3"
-                                variant="h6"
-                                sx={{
-                                    fontWeight: 700,
-                                    color: '#1f1230',
-                                    px: '1.5rem',
-                                    pt: '1.25rem',
-                                    pb: '1rem',
-                                    borderBottom: '1px solid #ddd8e4',
-                                }}
-                            >
-                                Location
-                            </Typography>
-                            <div style={{ height: isMobileView ? '260px' : '340px' }}>
-                                <BookableSpacesMap
-                                    sortedSpaceLocations={[selectedSpace]}
-                                    spacesFavouritesList={null}
-                                    onMarkerClick={() => null}
-                                    centreLatLong={selectedSpace}
-                                />
-                            </div>
-                        </StyledDetailSurface>
-                    </>
+                    <JourneySpaceDetailsView
+                        selectedSpace={selectedSpace}
+                        weeklyHours={weeklyHours}
+                        weeklyHoursLoading={weeklyHoursLoading}
+                        weeklyHoursError={weeklyHoursError}
+                        showBackButton
+                        backLabel="Back to results"
+                        onBack={handleJourneyBack}
+                        showFavouriteControls
+                        isLoggedIn={isLoggedIn}
+                        isSelectedSpaceFavourite={isSelectedSpaceFavourite}
+                        favouriteButtonLabel={favouriteButtonLabel}
+                        isFavouriteActionInProgress={isFavouriteActionInProgress}
+                        onFavouriteToggle={handleJourneyFavouriteToggle}
+                        showMap
+                    />
                 )}
             </StyledJourneyPanel>
         </StyledJourneyWrapper>

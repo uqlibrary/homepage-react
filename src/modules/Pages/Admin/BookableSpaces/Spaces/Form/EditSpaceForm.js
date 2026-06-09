@@ -10,6 +10,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { Grid } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -70,6 +71,7 @@ import {
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceLocationMap';
 import { orderFacilityTypeGroups } from 'modules/Pages/Admin/BookableSpaces/Facilities/facilityGroupOrderHelpers';
+import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
@@ -326,6 +328,9 @@ export const EditSpaceForm = ({
     saveToDb,
     pageTitle,
     currentPageSlug,
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
     springshareList,
     spaceOutageList,
     spaceOutageListLoading,
@@ -408,6 +413,7 @@ export const EditSpaceForm = ({
     const [activeStep, setActiveStep] = useState(0);
     const [panelId, setPanel] = useState(0);
     const [spaceNoteDraft, setSpaceNoteDraft] = useState('');
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
     const addModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Imagery'];
     const editModeTabLabels = ['About', 'Facility types', 'Location & Hours', 'Closures', 'Imagery', 'Notes'];
@@ -950,6 +956,106 @@ export const EditSpaceForm = ({
         return selectedSpaceType?.space_type_description || '';
     }, [selectedSpaceType]);
 
+    const generatedPreviewImageUrlRef = useRef('');
+    const previewImageUrl = React.useMemo(() => {
+        if (formValues?.space_photo_url) {
+            return formValues.space_photo_url;
+        }
+
+        const uploadedFile = formValues?.uploadedFile?.[0];
+        if (!uploadedFile) {
+            if (generatedPreviewImageUrlRef.current) {
+                URL.revokeObjectURL(generatedPreviewImageUrlRef.current);
+                generatedPreviewImageUrlRef.current = '';
+            }
+            return '';
+        }
+
+        if (uploadedFile?.preview) {
+            if (generatedPreviewImageUrlRef.current) {
+                URL.revokeObjectURL(generatedPreviewImageUrlRef.current);
+                generatedPreviewImageUrlRef.current = '';
+            }
+            return uploadedFile.preview;
+        }
+
+        if (generatedPreviewImageUrlRef.current) {
+            URL.revokeObjectURL(generatedPreviewImageUrlRef.current);
+        }
+        generatedPreviewImageUrlRef.current = URL.createObjectURL(uploadedFile);
+        return generatedPreviewImageUrlRef.current;
+    }, [formValues?.space_photo_url, formValues?.uploadedFile]);
+
+    useEffect(() => {
+        return () => {
+            if (generatedPreviewImageUrlRef.current) {
+                URL.revokeObjectURL(generatedPreviewImageUrlRef.current);
+                generatedPreviewImageUrlRef.current = '';
+            }
+        };
+    }, []);
+
+    const previewSpace = React.useMemo(() => {
+        const previewFloorName =
+            location?.currentFloor?.floor_name ||
+            currentCampusList
+                ?.find(campus => String(campus?.campus_id) === String(formValues?.campus_id))
+                ?.libraries?.find(library => String(library?.library_id) === String(formValues?.library_id))
+                ?.floors?.find(floor => String(floor?.floor_id) === String(formValues?.floor_id))?.floor_name ||
+            formValues?.floor_name ||
+            '';
+
+        const previewLibrary = location?.currentLibrary || {};
+        const previewCampus = location?.currentCampus || {};
+
+        return {
+            space_id: formValues?.space_id || 'preview',
+            space_uuid: formValues?.space_uuid || 'preview',
+            space_name: formValues?.space_name || 'Preview space',
+            space_precise: formValues?.space_precise || '',
+            space_description: showSpaceDescriptionCheckbox ? formValues?.space_description || '' : '',
+            space_photo_url: previewImageUrl,
+            space_photo_description: formValues?.space_photo_description || '',
+            space_opening_hours_id: formValues?.space_opening_hours_id,
+            space_services_page: formValues?.space_services_page || '',
+            space_capacity: Number(formValues?.space_capacity || 0),
+            space_latitude: formValues?.space_latitude,
+            space_longitude: formValues?.space_longitude,
+            space_zlevel: formValues?.space_zlevel,
+            space_external_book_url: formValues?.space_external_book_url || null,
+            space_type_id: formValues?.space_type_id || selectedSpaceType?.space_type_id || null,
+            space_type: formValues?.space_type || selectedSpaceType?.space_type_name || '',
+            space_type_details: {
+                space_type_id: formValues?.space_type_id || selectedSpaceType?.space_type_id || null,
+                space_type_name: formValues?.space_type || selectedSpaceType?.space_type_name || '',
+                space_type_description: selectedSpaceTypeDescription || '',
+            },
+            space_floor_id: formValues?.floor_id,
+            space_floor_name: previewFloorName,
+            space_is_ground_floor: String(previewLibrary?.ground_floor_id || '') === String(formValues?.floor_id || ''),
+            space_library_id: formValues?.library_id,
+            space_library_name: previewLibrary?.library_name || formValues?.library_name || '',
+            space_building_name: previewLibrary?.building_name || formValues?.building_name || '',
+            space_building_number: previewLibrary?.building_number || formValues?.building_number || '',
+            space_campus_id: formValues?.campus_id,
+            space_campus_name: previewCampus?.campus_name || formValues?.campus_name || '',
+            facility_types: formValues?.facility_types || [],
+            space_outages: mode === 'edit' ? spaceOutageList || [] : [],
+        };
+    }, [
+        currentCampusList,
+        formValues,
+        location?.currentCampus,
+        location?.currentFloor,
+        location?.currentLibrary,
+        mode,
+        previewImageUrl,
+        selectedSpaceType,
+        selectedSpaceTypeDescription,
+        showSpaceDescriptionCheckbox,
+        spaceOutageList,
+    ]);
+
     const archibusSiteList = React.useMemo(() => {
         if (Array.isArray(bookableSpacesArchibusTree?.data?.sites)) {
             return bookableSpacesArchibusTree?.data?.sites;
@@ -1328,6 +1434,9 @@ export const EditSpaceForm = ({
     const handleTabChange = (event, newPanelId) => {
         setPanel(newPanelId);
     };
+
+    const openPreview = () => setIsPreviewOpen(true);
+    const closePreview = () => setIsPreviewOpen(false);
 
     const bookableCheckboxLabel = 'This Space is bookable';
     const renderArchibusRoomMappingFields = () => {
@@ -2126,6 +2235,44 @@ export const EditSpaceForm = ({
         );
     };
 
+    const previewButton = () => {
+        return (
+            <StyledSecondaryButton data-testid="admin-spaces-preview-button" onClick={openPreview} sx={{ mr: 1 }}>
+                Preview
+            </StyledSecondaryButton>
+        );
+    };
+
+    const previewDialog = () => {
+        return (
+            <Dialog
+                open={isPreviewOpen}
+                onClose={closePreview}
+                fullWidth
+                maxWidth="md"
+                data-testid="spaces-preview-dialog"
+            >
+                <DialogTitle data-testid="spaces-preview-dialog-title">Space preview</DialogTitle>
+                <DialogContent dividers>
+                    <JourneySpaceDetailsView
+                        selectedSpace={previewSpace}
+                        weeklyHours={weeklyHours}
+                        weeklyHoursLoading={weeklyHoursLoading}
+                        weeklyHoursError={weeklyHoursError}
+                        showBackButton={false}
+                        showFavouriteControls={false}
+                        showMap
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closePreview} data-testid="spaces-preview-dialog-close-button">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
+
     const renderValidationSummary = () => {
         const shouldShowSummary = mode === 'edit' ? uniqueErrorMessages?.length > 0 : hasAttemptedSave;
 
@@ -2207,6 +2354,7 @@ export const EditSpaceForm = ({
                 cancelButtonColor="accent"
             />
             {undeleteConfirmationDialog()}
+            {previewDialog()}
 
             <SpacesAdminPage
                 systemTitle="Spaces"
@@ -2285,7 +2433,10 @@ export const EditSpaceForm = ({
                                         </StyledSecondaryButton>
                                         <Box sx={{ flex: '1 1 auto' }} />
                                         {activeStep === addModeImageryTabId ? (
-                                            saveButton()
+                                            <>
+                                                {previewButton()}
+                                                {saveButton()}
+                                            </>
                                         ) : (
                                             <StyledPrimaryButton
                                                 onClick={handleNext}
@@ -2459,7 +2610,10 @@ export const EditSpaceForm = ({
                                 {cancelButton()}
                             </Grid>
                             <Grid item xs={6} style={{ textAlign: 'right' }}>
-                                <Box sx={{ display: 'inline-flex' }}>{saveButton()}</Box>
+                                <Box sx={{ display: 'inline-flex' }}>
+                                    {previewButton()}
+                                    {saveButton()}
+                                </Box>
                             </Grid>
                             <Grid item xs={12}>
                                 {renderValidationSummary()}
@@ -2499,6 +2653,9 @@ EditSpaceForm.propTypes = {
     mode: PropTypes.string,
     bookableSpaceGetError: PropTypes.any,
     springshareList: PropTypes.any,
+    weeklyHours: PropTypes.any,
+    weeklyHoursLoading: PropTypes.any,
+    weeklyHoursError: PropTypes.any,
     spaceOutageList: PropTypes.any,
     spaceOutageListLoading: PropTypes.any,
     spaceOutageListError: PropTypes.any,
