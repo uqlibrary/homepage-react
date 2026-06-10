@@ -1938,6 +1938,7 @@ mock.onGet('exams/course/FREN1010/summary')
                     {
                         facility_type_group_id: 4,
                         facility_type_group_name: 'Noise level',
+                        facility_type_group_help: 'Choose the typical noise level for this area.',
                         facility_type_group_order: 1,
                         facility_type_group_type: 'choose-one',
                         facility_type_children: [
@@ -1988,7 +1989,8 @@ mock.onGet('exams/course/FREN1010/summary')
         }
     })
     .onPost(routes.SPACES_FACILITY_TYPE_GROUP_CREATE_API().apiUrl)
-    .reply(() => {
+    .reply(config => {
+        const requestBody = config?.data ? JSON.parse(config.data) : {};
         if (responseType === 'error') {
             return [500, {}];
         } else if (responseType === 'empty') {
@@ -1998,7 +2000,8 @@ mock.onGet('exams/course/FREN1010/summary')
         } else {
             // some random data
             const result = {
-                facility_type_group_name: 'new group name',
+                facility_type_group_name: requestBody?.facility_type_group_name || 'new group name',
+                facility_type_group_help: requestBody?.facility_type_group_help || null,
                 facility_type_group_id: 88,
                 facility_type_group_order: 99,
                 facility_type_group_type: 'choose-many',
@@ -2007,7 +2010,8 @@ mock.onGet('exams/course/FREN1010/summary')
         }
     })
     .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_SINGLE_API({ id: '.*' }).apiUrl)))
-    .reply(() => {
+    .reply(config => {
+        const requestBody = config?.data ? JSON.parse(config.data) : {};
         if (responseType === 'error') {
             return [500, {}];
         } else if (responseType === 'empty') {
@@ -2019,7 +2023,8 @@ mock.onGet('exams/course/FREN1010/summary')
         } else {
             // some random data
             const result = {
-                facility_type_group_name: 'edited group name',
+                facility_type_group_name: requestBody?.facility_type_group_name || 'edited group name',
+                facility_type_group_help: requestBody?.facility_type_group_help || null,
                 facility_type_group_id: 88,
                 facility_type_group_order: 99,
                 facility_type_group_type: 'choose-many',

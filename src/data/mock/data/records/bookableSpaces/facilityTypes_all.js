@@ -5,6 +5,7 @@ export default {
         {
             "facility_type_group_id": 7,
             "facility_type_group_name": "Services",
+            "facility_type_group_help": "Services available in or near this space.",
             "facility_type_group_order": 9,
             "facility_type_group_loads_open": 0,
             "facility_type_group_type": "choose-many",
@@ -108,6 +109,7 @@ export default {
         {
             "facility_type_group_id": 3,
             "facility_type_group_name": "Space features",
+            "facility_type_group_help": "Physical features and equipment available in the space.",
             "facility_type_group_order": 8,
             "facility_type_group_loads_open": 1,
             "facility_type_group_type": "choose-many",
@@ -218,6 +220,7 @@ export default {
         {
             "facility_type_group_id": 5,
             "facility_type_group_name": "Acceptable noise",
+            "facility_type_group_help": "How much conversation and ambient sound is usually acceptable.",
             "facility_type_group_order": 6,
             "facility_type_group_loads_open": 1,
             "facility_type_group_type": "choose-many",

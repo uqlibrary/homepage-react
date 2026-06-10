@@ -68,6 +68,13 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
             padding: '0.5rem',
             width: '90%',
         },
+        '& textarea': {
+            padding: '0.5rem',
+            width: '90%',
+            minHeight: '5rem',
+            fontFamily: 'inherit',
+            resize: 'vertical',
+        },
         '& input:not(:valid)': {
             outline: '1px solid red',
         },
@@ -244,6 +251,14 @@ export const BookableSpacesManageFacilities = ({
     );
 
     const [cookies, setCookie] = useCookies();
+
+    const escapeDialogText = value => {
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    };
 
     const getFilterDisplayOnOptions = selectedValue => {
         const resolvedSelected = normalizeFilterDisplayOn(selectedValue);
@@ -479,7 +494,7 @@ export const BookableSpacesManageFacilities = ({
                 <div class="dialogRow">
                     <label for="facility_type_name">Facility type name</label>
                     <input type="text" name="facility_type_name" id="facility_type_name" data-testid="facility_type_name" value="${
-                        facilityTypeDetails?.facility_type_name
+                        escapeDialogText(facilityTypeDetails?.facility_type_name)
                     }" required />
                 </div>
                 <div class="dialogRow">
@@ -656,6 +671,7 @@ export const BookableSpacesManageFacilities = ({
 
         const groupValuesToSend = {
             facility_type_group_name: data?.facility_type_group_name,
+            facility_type_group_help: data?.facility_type_group_help?.trim() || null,
             facility_type_group_order: 0,
             // 'facility_type_group_type' => (one of: 'choose-one', 'choose-many'), // TODO
         };
@@ -733,6 +749,12 @@ export const BookableSpacesManageFacilities = ({
                 </div>
             </div>
             <div class="dialogRow">
+                <label for="facility_type_group_help">Filter group description (optional)</label>
+                <div>
+                    <textarea id="facility_type_group_help" name="facility_type_group_help" data-testid="facility_type_group_help"></textarea>
+                </div>
+            </div>
+            <div class="dialogRow">
                 <label for="filter_display_on">Filter applies to view:</label>
                 <div>
                     <select name="filter_display_on" id="filter_display_on" data-testid="filter_display_on">
@@ -774,6 +796,7 @@ export const BookableSpacesManageFacilities = ({
 
         const valuesToSend = {
             facility_type_group_name: data?.facility_type_group_name,
+            facility_type_group_help: data?.facility_type_group_help?.trim() || null,
             facility_type_group_loads_open: data?.facility_type_group_loads_open,
         };
 
@@ -877,6 +900,14 @@ export const BookableSpacesManageFacilities = ({
                 <label for="facility_type_group_name">Facility type group Name</label>
                 <div>
                     <input type="text" data-testid="facility_type_group_name" value="${facilityGroupName}" id="facility_type_group_name" name="facility_type_group_name" maxlength="255" required>
+                </div>
+            </div>
+            <div class="dialogRow">
+                <label for="facility_type_group_help">Filter group description (optional)</label>
+                <div>
+                    <textarea id="facility_type_group_help" name="facility_type_group_help" data-testid="facility_type_group_help">${escapeDialogText(
+                        thisGroup?.facility_type_group_help,
+                    )}</textarea>
                 </div>
             </div>
             <div class="dialogRow">
