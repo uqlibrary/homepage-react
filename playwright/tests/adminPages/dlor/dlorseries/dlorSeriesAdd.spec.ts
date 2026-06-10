@@ -9,6 +9,8 @@ test.describe('Digital Learning Hub admin Series management - add item', () => {
     });
     test.describe('Series management', () => {
         test.beforeEach(async ({ page }) => {
+            page.on('console', msg => console.log('[browser]', msg.text()));
+            page.on('pageerror', err => console.log('[pageerror]', err));
             await page.goto(`http://localhost:2020/admin/dlor/series/add?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
         });

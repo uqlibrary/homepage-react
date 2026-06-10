@@ -115,6 +115,8 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
 
     test.describe('successfully mock to db', () => {
         test.beforeEach(async ({ page, context }) => {
+            page.on('console', msg => console.log('[browser]', msg.text()));
+            page.on('pageerror', err => console.log('[pageerror]', err));
             await context.addCookies([
                 {
                     name: 'CYPRESS_TEST_DATA',
