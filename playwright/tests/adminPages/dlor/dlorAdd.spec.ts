@@ -11,6 +11,8 @@ test.describe('Add an object to the Digital Learning Hub', () => {
     test.describe('adding a new object', () => {
         test.describe('successfully', () => {
             test.beforeEach(async ({ page }) => {
+                page.on('console', msg => console.log('[browser]', msg.text()));
+                page.on('pageerror', err => console.log('[pageerror]', err));
                 await page.goto(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
                 await page.setViewportSize({ width: 1300, height: 2000 });
             });
