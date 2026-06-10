@@ -33,8 +33,7 @@ import {
 import { breadcrumbs } from 'config/routes';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { ClassicEditor, Essentials, Heading, Indent, Bold, Italic, Link, List } from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useAccountContext } from 'context';
 
 const StyledDraggableListItem = styled('li')(({ theme }) => ({
@@ -189,8 +188,18 @@ export const DLOSeriesEdit = ({
     };
 
     const editorConfig = {
-        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials ],
-        toolbar: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+        removePlugins: [
+            'Image',
+            'ImageCaption',
+            'ImageStyle',
+            'ImageToolbar',
+            'ImageUpload',
+            'EasyImage',
+            'CKFinder',
+            'BlockQuote',
+            'Table',
+            'MediaEmbed',
+        ],
         heading: {
             options: [
                 { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -198,7 +207,6 @@ export const DLOSeriesEdit = ({
                 { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
             ],
         },
-        licenseKey: 'GPL',
     };
 
     useEffect(() => {
