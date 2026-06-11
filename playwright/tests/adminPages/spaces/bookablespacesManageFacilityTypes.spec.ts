@@ -482,6 +482,7 @@ test.describe('Spaces Admin - edit group dialog', () => {
         const expectedValues = {
             facility_type_group_name: 'Noise level appended',
             facility_type_group_loads_open: '1',
+            facility_type_group_help: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -501,6 +502,7 @@ test.describe('Spaces Admin - edit group dialog', () => {
         const expectedValues = {
             facility_type_group_name: 'Acceptable noise',
             facility_type_group_loads_open: '0',
+            facility_type_group_help: 'How much conversation and ambient sound is usually acceptable.',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -520,6 +522,7 @@ test.describe('Spaces Admin - edit group dialog', () => {
         const expectedValues = {
             facility_type_group_name: 'On this floor',
             facility_type_group_loads_open: '1',
+            facility_type_group_help: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
