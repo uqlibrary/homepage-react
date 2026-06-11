@@ -9,9 +9,7 @@ import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import { useAccountContext } from 'context';
 
-import {
-    isDlorAdminUser,
-} from 'helpers/access';
+import { isDlorAdminUser } from 'helpers/access';
 
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
@@ -31,15 +29,17 @@ const StyledTitleBox = styled(Box)(() => ({
 
 export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
     const { account } = useAccountContext();
-    console.log("ACCOUNT IN BREADCRUMBS", account)
+    console.log('ACCOUNT IN BREADCRUMBS', account);
     return (
         <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
             <Grid item xs={11}>
                 <StyledTitleBox>
                     <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
                         {/* istanbul ignore next */}
-                        <a data-testid="dlor-breadcrumb-admin-homelink" href={ dlorAdminLink(undefined, account) }>
-                            {isDlorAdminUser(account) ? /* istanbul ignore next */ `Digital Learning Hub admin` : /* istanbul ignore next */ `Digital Learning Hub`}
+                        <a data-testid="dlor-breadcrumb-admin-homelink" href={dlorAdminLink(undefined, account)}>
+                            {isDlorAdminUser(account)
+                                ? /* istanbul ignore next */ 'Digital Learning Hub admin'
+                                : /* istanbul ignore next */ 'Digital Learning Hub'}
                         </a>
                         {breadCrumbList.map((b, index) => {
                             const entryId = !!b.id
@@ -79,9 +79,7 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
                 </StyledTitleBox>
             </Grid>
             <Grid item xs={1}>
-                { isDlorAdminUser(account) && (
-                    <VisitHomepage />
-                )}
+                {isDlorAdminUser(account) && <VisitHomepage />}
             </Grid>
         </Grid>
     );

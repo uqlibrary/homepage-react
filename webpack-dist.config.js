@@ -220,10 +220,7 @@ const webpackConfig = {
             },
             {
                 test: /\.css$/,
-                include: [
-                    resolve(__dirname, 'node_modules/@ckeditor'),
-                    resolve(__dirname, 'node_modules/ckeditor5')
-                ],
+                include: [resolve(__dirname, 'node_modules/@ckeditor'), resolve(__dirname, 'node_modules/ckeditor5')],
                 use: [MiniCssExtractPlugin.loader, 'css-loader'],
             },
             {
