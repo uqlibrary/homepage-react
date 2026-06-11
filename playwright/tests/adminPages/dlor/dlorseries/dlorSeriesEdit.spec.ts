@@ -115,8 +115,35 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
 
     test.describe('successfully mock to db', () => {
         test.beforeEach(async ({ page, context }) => {
-            page.on('console', msg => console.log('[browser]', msg.text()));
-            page.on('pageerror', err => console.log('[pageerror]', err));
+            await page.addInitScript(() => {
+                window.__pwReloadCount = (window.__pwReloadCount || 0) + 1;
+                window.__pwLastInitTime = Date.now();
+            });
+            page.on('console', msg => {
+                const type = msg.type();
+                const text = msg.text();
+
+                if (type === 'error') {
+                    console.log('❌ console.error:', text);
+                } else if (type === 'warning') {
+                    console.log('⚠️ console.warn:', text);
+                } else {
+                    console.log('console.log:', text);
+                }
+            });
+            page.on('pageerror', err => { console.log('💥 pageerror:', err); });
+
+            page.on('framenavigated', frame => { console.log('🔁 navigated:', frame.url()); });
+            page.on('requestfailed', request => {
+                console.log(
+                    '❌ request failed:',
+                    request.url(),
+                    request.failure()?.errorText,
+                );
+            });
+
+            page.on('close', () => { console.log('🚪 page closed'); });
+            page.on('crash', () => { console.log('💣 page crashed'); });
             await context.addCookies([
                 {
                     name: 'CYPRESS_TEST_DATA',
@@ -176,6 +203,8 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
 
             // form reloads
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}`);
+            // CKEditor should show
+            await expect(page.locator('[class="ck ck-editor__main"]')).toBeVisible();
             await expect(page.getByTestId('StandardPage-title')).toHaveText(/Digital Learning Hub - Edit Series/);
             await expect(page.getByTestId('series-name').locator('input')).toHaveValue('Advanced literature searching');
         });
