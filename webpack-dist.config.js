@@ -219,6 +219,14 @@ const webpackConfig = {
                 },
             },
             {
+                test: /\.css$/,
+                include: [
+                    resolve(__dirname, 'node_modules/@ckeditor'),
+                    resolve(__dirname, 'node_modules/ckeditor5')
+                ],
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+            },
+            {
                 test: /\.scss/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             },
