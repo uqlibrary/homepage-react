@@ -326,7 +326,7 @@ export const DlorForm = ({
     };
 
     const editorConfig = {
-        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials ],
+        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials],
         toolbar: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
         heading: {
             options: [
