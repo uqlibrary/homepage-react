@@ -17,7 +17,7 @@ import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAd
 import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
 
 const StyledTitleBox = styled(Box)(() => ({
-    '& p:first-child': {
+    '& p:first-of-type': {
         display: 'flex',
         alignItems: 'center',
         padding: 0,
@@ -61,9 +61,9 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
                                 return `${entryId}${shortType}-${index}`;
                             };
                             return (
-                                <>
+                                <React.Fragment key={`breadcrumb-${index}`}>
                                     <ArrowForwardIcon sx={{ height: '15px' }} />
-                                    <span key={`breadcrumb-${index}`} key={`${entryId}-span`}>
+                                    <span key={`${entryId}-span`}>
                                         {!!b.link ? (
                                             <a data-testid={getDataTestid('link')} href={b.link}>
                                                 {b.title}
@@ -72,7 +72,7 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
                                             <span data-testid={getDataTestid('label')}>{b.title}</span>
                                         )}
                                     </span>
-                                </>
+                                </React.Fragment>
                             );
                         })}
                     </Typography>
