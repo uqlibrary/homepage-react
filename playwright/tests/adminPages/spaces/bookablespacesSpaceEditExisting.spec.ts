@@ -16,6 +16,7 @@ const LAW_DEFAULT_LATITUDE = '-27.49718';
 const LAW_DEFAULT_LONGITUDE = '153.01214';
 
 const DUHIG_TOWER_SPRINGSHARE_SPACE_ID = 3831;
+const EDIT_SPACE_VIEWPORT = { width: 1300, height: 1000 };
 
 import { Page } from '@playwright/test';
 
@@ -34,6 +35,31 @@ const chooseAnySpaceType = async (page: Page) => {
 };
 
 const selectCombobox = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('[role="combobox"]');
+
+const openEditSpacePage = async (
+    page: Page,
+    spaceUuid: string,
+    search = '?user=libSpaces',
+    options: { waitForTitle?: boolean; waitForForm?: boolean } = {},
+) => {
+    const { waitForTitle = true, waitForForm = true } = options;
+    await page.goto(`/admin/spaces/edit/${spaceUuid}${search}`);
+    await page.setViewportSize(EDIT_SPACE_VIEWPORT);
+    await expect(page).toHaveURL(new RegExp(`/admin/spaces/edit/${spaceUuid}`), { timeout: 30_000 });
+    if (waitForTitle) {
+        await expect(page.getByTestId('admin-spaces-page-title')).toBeVisible({ timeout: 30_000 });
+    }
+    if (waitForForm) {
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible({ timeout: 30_000 });
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible({ timeout: 30_000 });
+    }
+};
+
+const waitForSaveOutcomeDialog = async (page: Page, expectedTitleText: string) => {
+    await expect(page.getByTestId('dialogbox-spaces-save-outcome')).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByTestId('message-title')).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByTestId('message-title')).toContainText(expectedTitleText);
+};
 
 const ensureSpaceTypeSelected = async (page: Page) => {
     await page.getByTestId(TAB_ABOUT).click();
@@ -113,13 +139,7 @@ test.describe('Spaces Admin - edit spaces', () => {
 });
 test.describe('Spaces Admin - edit pages load with correct data', () => {
     test('Library Space 1 edit page loads correctly', async ({ page }) => {
-        await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
-        await page.setViewportSize({
-            width: 1300,
-            height: 1000,
-        });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await openEditSpacePage(page, 'f98g_fwas_5g33');
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
         await expect(page.getByRole('combobox', { name: 'Choose an existing Space type *' })).toBeVisible();
@@ -206,13 +226,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
     test('Library Space 2 edit page loads correctly', async ({ page }) => {
-        await page.goto('/admin/spaces/edit/df40_2jsf_zdk5?user=libSpaces');
-        await page.setViewportSize({
-            width: 1300,
-            height: 1000,
-        });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await openEditSpacePage(page, 'df40_2jsf_zdk5');
 
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('6078');
@@ -289,13 +303,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
     test('Library Space 3, Andrew Liveris building, edit page loads correctly', async ({ page }) => {
-        await page.goto('/admin/spaces/edit/97fd5_nm39_gh29?user=libSpaces');
-        await page.setViewportSize({
-            width: 1300,
-            height: 1000,
-        });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await openEditSpacePage(page, '97fd5_nm39_gh29');
 
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('46-342/343');
@@ -382,11 +390,9 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
     });
 });
 test.describe('Spaces Admin - edit space', () => {
-    test.beforeEach(async ({ page }) => {
-        await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+    test.beforeEach(async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+        await openEditSpacePage(page, 'f98g_fwas_5g33');
     });
 
     test('edit spaces page is accessible', async ({ page }) => {
@@ -697,9 +703,7 @@ test.describe('Spaces Admin - edit space', () => {
         const scheduledRows = await page.locator('[data-testid^="space-outage-row-"]').count();
         expect(scheduledRows).toBeGreaterThanOrEqual(1);
 
-        await page.goto('/admin/spaces/edit/97fd5_nm39_gh29?user=libSpaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await openEditSpacePage(page, '97fd5_nm39_gh29');
         await ensureSpaceTypeSelected(page);
 
         await page.getByTestId(TAB_UNAVAILABILITY).click();
@@ -725,9 +729,7 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await page.getByTestId('admin-spaces-save-button-submit').click();
 
-        await expect(page.getByTestId('dialogbox-spaces-save-outcome')).toBeVisible({ timeout: 30_000 });
-        await expect(page.getByTestId('message-title')).toBeVisible({ timeout: 30_000 });
-        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+        await waitForSaveOutcomeDialog(page, 'The Space has been updated');
         await expect(page.getByTestId('confirm-spaces-save-outcome')).toBeVisible();
         await expect(page.getByTestId('confirm-spaces-save-outcome')).toContainText('Return to dashboard');
         await expect(page.getByTestId('cancel-spaces-save-outcome')).toBeVisible();
@@ -745,8 +747,7 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await page.getByTestId('admin-spaces-save-button-submit').click();
 
-        await expect(page.getByTestId('message-title')).toBeVisible();
-        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+        await waitForSaveOutcomeDialog(page, 'The Space has been updated');
         await expect(page.getByTestId('confirm-spaces-save-outcome')).toBeVisible();
         await expect(page.getByTestId('confirm-spaces-save-outcome')).toContainText('Return to dashboard');
         await expect(page.getByTestId('cancel-spaces-save-outcome')).toBeVisible();
@@ -878,8 +879,7 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await page.getByTestId('admin-spaces-save-button-submit').click();
 
-        await expect(page.getByTestId('message-title')).toBeVisible();
-        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+        await waitForSaveOutcomeDialog(page, 'The Space has been updated');
 
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
@@ -911,9 +911,7 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await page.getByTestId('admin-spaces-save-button-submit').click();
 
-        await expect(page.getByTestId('dialogbox-spaces-save-outcome')).toBeVisible({ timeout: 30_000 });
-        await expect(page.getByTestId('message-title')).toBeVisible({ timeout: 30_000 });
-        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+        await waitForSaveOutcomeDialog(page, 'The Space has been updated');
 
         await assertAccessibility(page, '[data-testid="dialogbox-spaces-save-outcome"]');
     });
@@ -921,7 +919,7 @@ test.describe('Spaces Admin - edit space', () => {
     test.describe('Spaces Admin - load errors', () => {
         test('edit space - error locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/error?user=libSpaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
+            await page.setViewportSize(EDIT_SPACE_VIEWPORT);
 
             await expect(page.getByTestId('load-space-form-error')).toBeVisible({ timeout: 30_000 });
             await expect(page.getByTestId('load-space-form-error')).toContainText(
@@ -931,18 +929,18 @@ test.describe('Spaces Admin - edit space', () => {
         });
         test('edit space - 404 locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/missingRecord?user=libSpaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
+            await page.setViewportSize(EDIT_SPACE_VIEWPORT);
 
             await expect(page.getByTestId('missing-record')).toBeVisible({ timeout: 30_000 });
             await expect(page.getByTestId('missing-record')).toContainText('There is no Space with ID "missingRecord"'); // 'missingRecord' is the id in mock when it is missing
         });
         test('edit space - weeklyHours api error', async ({ page }) => {
-            await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces&responseType=weeklyHoursError');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            // wait for page to load
-            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+            await openEditSpacePage(page, 'f98g_fwas_5g33', '?user=libSpaces&responseType=weeklyHoursError', {
+                waitForTitle: false,
+                waitForForm: false,
+            });
 
-            await expect(page.getByTestId('load-space-form-error')).toBeVisible();
+            await expect(page.getByTestId('load-space-form-error')).toBeVisible({ timeout: 30_000 });
             await expect(page.getByTestId('load-space-form-error')).toContainText(
                 'Something went wrong - please try again later.',
             );
@@ -954,10 +952,7 @@ test.describe('Spaces Admin - edit space', () => {
 
     test.describe('Spaces Admin - save errors', () => {
         test('edit space - server 500', async ({ page }) => {
-            await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces&responseType=spaceUpdate500Error');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            // wait for page to load
-            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+            await openEditSpacePage(page, 'f98g_fwas_5g33', '?user=libSpaces&responseType=spaceUpdate500Error');
 
             const facilityTypeId = '7';
             const label = 'On-desk power point';
@@ -976,8 +971,8 @@ test.describe('Spaces Admin - edit space', () => {
             await expect(page.getByTestId('admin-spaces-save-button-submit')).toContainText('Save');
             await page.getByTestId('admin-spaces-save-button-submit').click();
 
-            await expect(page.getByTestId('message-title')).toBeVisible();
-            await expect(page.getByTestId('message-title')).toContainText(
+            await waitForSaveOutcomeDialog(
+                page,
                 'An error has occurred during the request and this request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.',
             );
         });
@@ -990,10 +985,7 @@ test.describe('Spaces admin - edit other spaces', () => {
 
         await setTestDataCookie(context, page);
 
-        await page.goto(`/admin/spaces/edit/${testSpaceUuid}?user=libSpaces`);
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await openEditSpacePage(page, testSpaceUuid);
 
         await expect(page.getByTestId(TAB_ABOUT).locator('.MuiBadge-badge')).not.toBeVisible();
         await page.getByTestId('space-can-book').scrollIntoViewIfNeeded();
@@ -1036,10 +1028,7 @@ test.describe('Spaces admin - edit other spaces', () => {
 
         await setTestDataCookie(context, page);
 
-        await page.goto(`/admin/spaces/edit/${testSpaceUuid}?user=libSpaces`);
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await openEditSpacePage(page, testSpaceUuid);
 
         await expect(page.getByTestId(TAB_ABOUT).locator('.MuiBadge-badge')).not.toBeVisible();
         await page.getByTestId('space-can-book').scrollIntoViewIfNeeded();
@@ -1076,10 +1065,7 @@ test.describe('Spaces admin - edit other spaces', () => {
 
         await setTestDataCookie(context, page);
 
-        await page.goto('/admin/spaces/edit/' + testSpaceuuid + '?user=libSpaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await openEditSpacePage(page, testSpaceuuid);
 
         await expect(page.getByTestId(TAB_ABOUT).locator('.MuiBadge-badge')).not.toBeVisible();
         await page.getByTestId('space-can-book').scrollIntoViewIfNeeded();
@@ -1120,10 +1106,7 @@ test.describe('Spaces admin - edit other spaces', () => {
 
         await setTestDataCookie(context, page);
 
-        await page.goto(`/admin/spaces/edit/${testSpaceuuid}?user=libSpaces`);
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await openEditSpacePage(page, testSpaceuuid);
         await page.getByTestId('space-can-book').scrollIntoViewIfNeeded();
         await expect(capacityNumberField).toBeVisible();
         await expect(capacityNumberField).toHaveValue('1');
@@ -1154,10 +1137,7 @@ test.describe('booking link controller works properly', () => {
 
         const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
 
-        await page.goto(`/admin/spaces/edit/${testSpaceUuid}?user=libSpaces`);
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await openEditSpacePage(page, testSpaceUuid);
 
         // bookable is checked
         await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
@@ -1196,13 +1176,7 @@ test.describe('booking link controller works properly', () => {
 
         await setTestDataCookie(context, page);
 
-        await page.goto(`/admin/spaces/edit/${testSpaceUuid}?user=libSpaces`);
-        await page.setViewportSize({
-            width: 1300,
-            height: 1000,
-        });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await openEditSpacePage(page, testSpaceUuid);
 
         // bookable is checked
         await expect(page.getByTestId('space-can-book').locator('input')).not.toBeChecked();
@@ -1231,13 +1205,7 @@ test.describe('booking link controller works properly', () => {
         const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
 
         const testSpaceUuid = '97fd5_nm39_gh29';
-        await page.goto(`/admin/spaces/edit/${testSpaceUuid}?user=libSpaces`);
-        await page.setViewportSize({
-            width: 1300,
-            height: 1000,
-        });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+        await openEditSpacePage(page, testSpaceUuid);
 
         // bookable is not checked
         await expect(page.getByTestId('space-can-book').locator('input')).not.toBeChecked();
