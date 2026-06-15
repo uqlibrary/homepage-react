@@ -79,13 +79,15 @@ const SpaceLocationMap = ({
     }, []);
 
     React.useEffect(() => {
-        if (!isMazeMapScriptReady || !mapContainer) return;
+        if (!isMazeMapScriptReady || !mapContainer) {
+            return () => {};
+        }
 
         const { lng, lat } = getInitialLngLat();
 
         mazeMapInstanceRef.current = new window.Mazemap.Map({
             container: mapContainer,
-            campuses: 'all',
+            campuses: 'uq',
             center: { lng, lat },
             zoom: 17,
             zLevel: formValues?.space_zlevel ?? 1,
@@ -100,7 +102,9 @@ const SpaceLocationMap = ({
         return () => {
             draggableMarkerRef.current?.remove();
             draggableMarkerRef.current = null;
-            otherMarkersRef.current.forEach(m => m.remove());
+            otherMarkersRef.current.forEach(m => {
+                m.remove();
+            });
             otherMarkersRef.current = [];
             mazeMapInstanceRef.current?.remove();
             mazeMapInstanceRef.current = null;

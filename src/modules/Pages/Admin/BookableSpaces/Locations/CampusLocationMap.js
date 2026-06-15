@@ -58,7 +58,7 @@ const CampusLocationMap = ({ campusCentre = null } = {}) => {
 
         mazeMapInstanceRef.current = new window.Mazemap.Map({
             container: mapContainer,
-            campuses: 'all',
+            campuses: 'uq',
             center: { lng: initialLng, lat: initialLat },
             zoom: 15,
             zLevel: 1,
