@@ -143,7 +143,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('add-space-pretty-location').locator('.location-campus')).toContainText(
             'Dutton Park',
         );
-            await expect(page.getByTestId('add-space-springshare-id')).toContainText('Dutton Park Health Sciences');
+        await expect(page.getByTestId('add-space-springshare-id')).toContainText('Dutton Park Health Sciences');
 
         const mapTab = (tabId: number) =>
             page.getByTestId('spaces-campus-maps-tabs').locator(`button:nth-of-type(${tabId})`);
@@ -529,8 +529,18 @@ test.describe('Spaces Admin - add new space', () => {
 
         // failed save should bring focus back to the first invalid tab/field
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-name').locator('..').getByText('A Name is required.')).toBeVisible();
-        await expect(page.getByTestId('space-type').locator('..').getByText('A Type is required.')).toBeVisible();
+        await expect(
+            page
+                .getByTestId('space-name')
+                .locator('..')
+                .getByText('A Name is required.'),
+        ).toBeVisible();
+        await expect(
+            page
+                .getByTestId('space-type')
+                .locator('..')
+                .getByText('A Type is required.'),
+        ).toBeVisible();
 
         // user enters the name, but there is still an error
         const spaceNameInputField = page.getByTestId('space-name').locator('input');
@@ -630,9 +640,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(campusListbox).toBeVisible();
         await expect(campusListbox.locator(' > *')).toHaveCount(3);
         await expect(campusListbox.locator('li:first-of-type')).toBeVisible();
-        await expect(campusListbox.locator('li:first-of-type')).toContainText(
-            'St Lucia',
-        );
+        await expect(campusListbox.locator('li:first-of-type')).toContainText('St Lucia');
         const gattonCampusOption = campusListbox.getByRole('option', { name: 'Gatton' });
         await expect(gattonCampusOption).toBeVisible();
         await gattonCampusOption.click(); // click on "Gatton" to change campus
@@ -649,13 +657,9 @@ test.describe('Spaces Admin - add new space', () => {
 
         await expect(libraryListbox.locator(' > *')).toHaveCount(2);
         await expect(libraryListbox.locator('li:first-child')).toBeVisible();
-        await expect(libraryListbox.locator('li:first-of-type')).toContainText(
-            'J.K. Murray Library',
-        );
+        await expect(libraryListbox.locator('li:first-of-type')).toContainText('J.K. Murray Library');
         await expect(libraryListbox.locator('li:last-of-type')).toBeVisible();
-        await expect(libraryListbox.locator('li:last-of-type')).toContainText(
-            'Library Warehouse',
-        );
+        await expect(libraryListbox.locator('li:last-of-type')).toContainText('Library Warehouse');
 
         // choose 'Warehouse' in the library dropdown to change the library and floor
         await page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type').click();
