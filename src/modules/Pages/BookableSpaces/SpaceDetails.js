@@ -74,11 +74,11 @@ const StyledOutageNotice = styled('div')(() => ({
     },
 }));
 const StyledLocationImg = styled('img')(({ theme }) => ({
+    display: 'block',
+    width: '100%',
     maxWidth: '100%',
+    height: 'auto',
     marginTop: '1rem',
-    '&.hasMinWidth': {
-        minWidth: '400px',
-    },
     [theme.breakpoints.down('sm')]: {
         display: 'none',
     },
@@ -333,7 +333,6 @@ const SpaceDetails = ({
                         <StyledLocationImg
                             src={bookableSpace?.space_photo_url}
                             alt={bookableSpace?.space_photo_description}
-                            className={isCollapsed ? null : 'hasMinWidth'}
                         />
                     )}
                     {bookableSpace?.facility_types?.length > 0 && (
