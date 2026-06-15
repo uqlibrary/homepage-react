@@ -242,6 +242,5 @@ describe('Alert', () => {
         fireEvent.click(getByText(/Click me/));
         expect(actionFn).toHaveBeenCalledTimes(1);
         expect(getByTestId('error-icon')).toBeInTheDocument();
-
     });
 });

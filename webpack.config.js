@@ -59,15 +59,17 @@ module.exports = {
         // stats: 'errors-only',
         // watchContentBase: false,
         // disableHostCheck: true,
-        proxy: [{
-            context: ['/api/staging'],
-            target: 'https://api.library.uq.edu.au',
-            secure: false,
-            changeOrigin: true,
-            pathRewrite: {
-                '^/api/staging': '',
+        proxy: [
+            {
+                context: ['/api/staging'],
+                target: 'https://api.library.uq.edu.au',
+                secure: false,
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api/staging': '',
+                },
             },
-        }],
+        ],
         // static: {
         //     directory: path.join(__dirname, 'public'),
         //     watch: false,

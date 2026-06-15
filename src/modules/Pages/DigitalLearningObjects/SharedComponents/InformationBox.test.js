@@ -20,7 +20,7 @@ describe('InformationBox', () => {
             identifier: 'info-box',
             linkUrl: 'https://example.com',
             linkText: 'Example Link',
-        }
+        };
         render(<InformationBox {...testProps} />);
         expect(screen.getByText('No help is available')).toBeTruthy();
     });
@@ -45,7 +45,7 @@ describe('InformationBox', () => {
         const testProps = {
             linkUrl: 'https://example.com',
             linkText: 'Example Link',
-        }
+        };
         render(<InformationBox {...testProps} />);
         expect(screen.getByTestId('dlor-default-helper')).toBeTruthy();
     });
