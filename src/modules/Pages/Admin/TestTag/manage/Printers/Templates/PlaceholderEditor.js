@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { styled } from '@mui/material/styles';
 
@@ -17,7 +18,12 @@ import { useConfirmationAlert } from '../../../helpers/hooks';
 import { placeholderEditorColumns } from './configure';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import { validateTemplateUserVariable } from './utils';
+import {
+    validateTemplateUserVariable,
+    getSafeUserVariableNamePlaceholder,
+    getMissingUserVarsInPastedCode,
+    getRowsToAddForMissingVars,
+} from './utils';
 
 const FormLabelText = styled(Typography, {
     shouldForwardProp: prop => prop !== 'error',
@@ -32,6 +38,15 @@ const componentId = 'placeholder-editor';
 
 const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, InputLabelProps, ...props }) => {
     const [rows, setRows] = React.useState(value);
+    const rowsRef = React.useRef(rows);
+    const printerTemplatePasteData = useSelector(state => state.get('testTagPrinterTemplatePasteDataReducer'));
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        rowsRef.current = rows;
+    }, [rows]);
+
     const [rowModesModel, setRowModesModel] = useState({});
 
     const pageLocale = locale.pages.manage.printertemplates;
@@ -45,13 +60,18 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, InputL
     });
 
     const processRowUpdate = newRow => {
+        // validates the new row while still in edit mode
         const invalidRow = validateTemplateUserVariable(newRow);
         if (invalidRow) {
             openConfirmationAlert(pageLocale.placeholderEditor.helperText.validationAllFieldsRequired, 'error');
             throw new Error(pageLocale.placeholderEditor.helperText.validationAllFieldsRequired);
         }
 
-        const updatedRow = { ...newRow, isNew: false };
+        const updatedRow = {
+            ...newRow,
+            printer_template_var_name: getSafeUserVariableNamePlaceholder(newRow.printer_template_var_name),
+            isNew: false,
+        };
         const newRows = rows.map(row =>
             row.printer_template_var_id === newRow.printer_template_var_id ? updatedRow : row,
         );
@@ -60,6 +80,27 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, InputL
         setIsEditing?.(false);
         return updatedRow;
     };
+
+    // When a paste event is detected in the template code field, check for
+    // any new placeholder variables and add them to the rows.
+    useEffect(() => {
+        /* istanbul ignore if */
+        if (!printerTemplatePasteData) return;
+        if (printerTemplatePasteData.field !== 'printer_template_code') return;
+        const pasteValue = printerTemplatePasteData.value;
+        // make sure we clear the redux data so it doesnt persist between dialog opens
+        dispatch(actions.clearPrinterTemplatePasteData());
+
+        const currentRows = rowsRef.current;
+        const missing = getMissingUserVarsInPastedCode(currentRows, pasteValue);
+        if (missing.length === 0) return;
+
+        const newRows = getRowsToAddForMissingVars(missing, currentRows);
+        const next = [...currentRows, ...newRows];
+        setRows(next);
+        onChange(null, next);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [printerTemplatePasteData]);
 
     const _onError = error => {
         console.error('datagrid error', error);
@@ -173,6 +214,7 @@ PlaceholderEditor.propTypes = {
     InputLabelProps: PropTypes.object.isRequired,
     error: PropTypes.bool,
     setIsEditing: PropTypes.func,
+    data: PropTypes.object,
 };
 
 export default React.memo(PlaceholderEditor);

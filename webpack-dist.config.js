@@ -223,10 +223,10 @@ const webpackConfig = {
                 },
             },
             {
-                test: /\.css/,
-                use: ['style-loader', 'css-loader'],
+                test: /\.css$/,
+                include: [resolve(__dirname, 'node_modules/@ckeditor'), resolve(__dirname, 'node_modules/ckeditor5')],
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
             },
-
             {
                 test: /\.scss/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],

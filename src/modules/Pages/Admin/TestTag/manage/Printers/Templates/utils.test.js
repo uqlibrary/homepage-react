@@ -12,6 +12,11 @@ import {
     validateTemplateUserVariable,
     formatTemplate,
     getLabelDates,
+    getMissingUserVarsInPastedCode,
+    getUniqueTemplateIds,
+    getRowsToAddForMissingVars,
+    getMissingUserVarsInCode,
+    getUserVariablesFromRow,
 } from './utils';
 
 describe('utils', () => {
@@ -297,33 +302,39 @@ describe('utils', () => {
         it('handles add action correctly', () => {
             const action = { type: 'add', title: 'Add Template' };
             const result = actionReducer(emptyActionState, action);
-            expect(result).toEqual({
-                isAdd: true,
-                isEdit: false,
-                isDelete: false,
-                title: 'Add Template',
-                row: {
-                    printer_template_name: '',
-                    identifiers: [],
-                    vars: [],
-                    printer_template_current_flag_cb: true,
-                },
-                props: {},
-            });
+            expect(result).toEqual(
+                expect.objectContaining({
+                    isAdd: true,
+                    isEdit: false,
+                    isDelete: false,
+                    title: 'Add Template',
+                    row: {
+                        printer_template_name: '',
+                        identifiers: [],
+                        vars: [],
+                        printer_template_current_flag_cb: true,
+                    },
+                    props: {},
+                    key: expect.stringMatching(/^add-\d+$/),
+                }),
+            );
         });
 
         it('handles edit action correctly', () => {
             const row = { printer_template_id: 7, printer_template_name: 'My Template' };
             const action = { type: 'edit', title: 'Edit Template', row };
             const result = actionReducer(emptyActionState, action);
-            expect(result).toEqual({
-                isAdd: false,
-                isEdit: true,
-                isDelete: false,
-                title: 'Edit Template',
-                row: { ...row, id: 7 },
-                props: {},
-            });
+            expect(result).toEqual(
+                expect.objectContaining({
+                    isAdd: false,
+                    isEdit: true,
+                    isDelete: false,
+                    title: 'Edit Template',
+                    row: { ...row, id: 7 },
+                    props: {},
+                    key: expect.stringMatching(/^edit-7-\d+$/),
+                }),
+            );
         });
 
         it('handles delete action correctly', () => {
@@ -380,8 +391,8 @@ describe('utils', () => {
             );
         });
 
-        it('returns true when label is empty', () => {
-            expect(validateTemplateUserVariable({ ...validRow, printer_template_var_label: '' })).toEqual(true);
+        it('returns false when label is empty', () => {
+            expect(validateTemplateUserVariable({ ...validRow, printer_template_var_label: '' })).toEqual(false);
         });
 
         it('returns true when label exceeds 255 characters', () => {
@@ -497,6 +508,168 @@ describe('utils', () => {
             const { testDate, dueDate } = getLabelDates(date);
             expect(testDate).toEqual('2025-01-01');
             expect(dueDate).toEqual('2026-01-01');
+        });
+    });
+
+    describe('getMissingUserVarsInPastedCode', () => {
+        const existingRows = [
+            { printer_template_var_name: '{{BARCODE}}' },
+            { printer_template_var_name: '{{LOCATION}}' },
+        ];
+
+        it('returns placeholders in pasted text not already in rows', () => {
+            const pasteValue = 'Print {{BARCODE}} at {{ASSET}} for {{UNIT}}';
+            expect(getMissingUserVarsInPastedCode(existingRows, pasteValue)).toEqual(['{{ASSET}}', '{{UNIT}}']);
+        });
+
+        it('returns empty array when all placeholders already exist in rows', () => {
+            const pasteValue = 'Use {{BARCODE}} and {{LOCATION}}';
+            expect(getMissingUserVarsInPastedCode(existingRows, pasteValue)).toEqual([]);
+        });
+
+        it('returns empty array when pasted text has no placeholders', () => {
+            expect(getMissingUserVarsInPastedCode(existingRows, 'no placeholders here')).toEqual([]);
+        });
+
+        it('deduplicates placeholders in pasted text', () => {
+            const pasteValue = '{{NEW}} and {{NEW}} again';
+            expect(getMissingUserVarsInPastedCode(existingRows, pasteValue)).toEqual(['{{NEW}}']);
+        });
+
+        it('returns empty array when rows is empty and paste has no placeholders', () => {
+            expect(getMissingUserVarsInPastedCode([], 'plain text')).toEqual([]);
+        });
+
+        it('returns all placeholders when rows is empty', () => {
+            const pasteValue = '{{A}} and {{B}}';
+            expect(getMissingUserVarsInPastedCode([], pasteValue)).toEqual(['{{A}}', '{{B}}']);
+        });
+    });
+
+    describe('getUniqueTemplateIds', () => {
+        it('returns a Set of all printer_template_var_id values', () => {
+            const rows = [
+                { printer_template_var_id: 1 },
+                { printer_template_var_id: 3 },
+                { printer_template_var_id: 7 },
+            ];
+            const result = getUniqueTemplateIds(rows);
+            expect(result).toBeInstanceOf(Set);
+            expect([...result]).toEqual([1, 3, 7]);
+        });
+
+        it('returns an empty Set for an empty array', () => {
+            expect([...getUniqueTemplateIds([])]).toEqual([]);
+        });
+
+        it('handles duplicate ids by returning unique values only', () => {
+            const rows = [
+                { printer_template_var_id: 2 },
+                { printer_template_var_id: 2 },
+                { printer_template_var_id: 5 },
+            ];
+            const result = getUniqueTemplateIds(rows);
+            expect([...result]).toEqual([2, 5]);
+        });
+    });
+
+    describe('getRowsToAddForMissingVars', () => {
+        it('creates new rows for each missing var with unique IDs', () => {
+            const currentRows = [
+                { printer_template_var_id: 1, printer_template_var_name: '{{BARCODE}}' },
+                { printer_template_var_id: 2, printer_template_var_name: '{{LOCATION}}' },
+            ];
+            const missing = ['{{ASSET}}', '{{UNIT}}'];
+            const result = getRowsToAddForMissingVars(missing, currentRows);
+            expect(result).toHaveLength(2);
+            expect(result[0]).toEqual({
+                printer_template_var_id: 3,
+                printer_template_var_label: '',
+                printer_template_var_name: '{{ASSET}}',
+                printer_template_var_value: '',
+            });
+            expect(result[1]).toEqual({
+                printer_template_var_id: 4,
+                printer_template_var_label: '',
+                printer_template_var_name: '{{UNIT}}',
+                printer_template_var_value: '',
+            });
+        });
+
+        it('skips already-used IDs when assigning new IDs', () => {
+            const currentRows = [{ printer_template_var_id: 1 }, { printer_template_var_id: 3 }];
+            const result = getRowsToAddForMissingVars(['{{NEW}}'], currentRows);
+            expect(result[0].printer_template_var_id).toEqual(2);
+        });
+
+        it('returns empty array when missing vars is empty', () => {
+            const currentRows = [{ printer_template_var_id: 1 }];
+            expect(getRowsToAddForMissingVars([], currentRows)).toEqual([]);
+        });
+
+        it('starts from ID 1 when current rows is empty', () => {
+            const result = getRowsToAddForMissingVars(['{{FIRST}}'], []);
+            expect(result[0].printer_template_var_id).toEqual(1);
+        });
+
+        it('sets label and value to empty strings', () => {
+            const result = getRowsToAddForMissingVars(['{{X}}'], []);
+            expect(result[0].printer_template_var_label).toEqual('');
+            expect(result[0].printer_template_var_value).toEqual('');
+        });
+    });
+
+    describe('getUserVariablesFromRow', () => {
+        it('returns an array of printer_template_var_name from vars', () => {
+            const row = {
+                vars: [{ printer_template_var_name: '{{BARCODE}}' }, { printer_template_var_name: '{{LOCATION}}' }],
+            };
+            expect(getUserVariablesFromRow(row)).toEqual(['{{BARCODE}}', '{{LOCATION}}']);
+        });
+
+        it('returns empty array when vars is an empty array', () => {
+            expect(getUserVariablesFromRow({ vars: [] })).toEqual([]);
+        });
+
+        it('returns empty array when vars is undefined', () => {
+            expect(getUserVariablesFromRow({})).toEqual([]);
+        });
+
+        it('returns empty array when row is undefined', () => {
+            expect(getUserVariablesFromRow(undefined)).toEqual([]);
+        });
+
+        it('returns empty array when row is null', () => {
+            expect(getUserVariablesFromRow(null)).toEqual([]);
+        });
+    });
+
+    describe('getMissingUserVarsInCode', () => {
+        it('returns vars whose placeholder is not found in the code', () => {
+            const userVariables = ['{{BARCODE}}', '{{LOCATION}}'];
+            const code = 'Print {{BARCODE}} here';
+            expect(getMissingUserVarsInCode(userVariables, code)).toEqual(['{{LOCATION}}']);
+        });
+
+        it('returns empty array when all vars are present in the code', () => {
+            const userVariables = ['{{BARCODE}}', '{{LOCATION}}'];
+            const code = '{{BARCODE}} at {{LOCATION}}';
+            expect(getMissingUserVarsInCode(userVariables, code)).toEqual([]);
+        });
+
+        it('returns all vars when none are present in the code', () => {
+            const userVariables = ['{{BARCODE}}', '{{LOCATION}}'];
+            expect(getMissingUserVarsInCode(userVariables, 'no placeholders')).toEqual(['{{BARCODE}}', '{{LOCATION}}']);
+        });
+
+        it('returns empty array when userVariables is empty', () => {
+            expect(getMissingUserVarsInCode([], '{{BARCODE}}')).toEqual([]);
+        });
+
+        it('applies getSafeUserVariableNamePlaceholder before matching — strips braces for lookup', () => {
+            const userVariables = ['BARCODE'];
+            const code = 'Print {{BARCODE}} here';
+            expect(getMissingUserVarsInCode(userVariables, code)).toEqual([]);
         });
     });
 });

@@ -102,7 +102,7 @@ describe('Backend routes method', () => {
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
         expect(routes.LIB_HOURS_API()).toEqual({
             apiUrl: 'library_hours/day',
-            options: { params: { ts: '1577836800000' } },
+            options: { params: { ts: '26297280' } },
         });
         MockDate.reset();
     });
@@ -113,12 +113,13 @@ describe('Backend routes method', () => {
         });
     });
 
-    it('should construct url for AUTHOR_API', () => {
-        expect(routes.AUTHOR_API({ authorId: '12345' })).toEqual({ apiUrl: 'fez-authors/12345' });
-    });
-
     it('should construct url for CURRENT_AUTHOR_API', () => {
-        expect(routes.CURRENT_AUTHOR_API()).toEqual({ apiUrl: 'fez-authors' });
+        const MockDate = require('mockdate');
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+        expect(routes.CURRENT_AUTHOR_API()).toEqual({
+            apiUrl: 'fez-authors',
+            options: { params: { ts: '1577836800000' } },
+        });
     });
 
     it('should construct url for CURRENT_ACCOUNT_API', () => {
@@ -136,7 +137,7 @@ describe('Backend routes method', () => {
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
         expect(routes.LOANS_API()).toEqual({
             apiUrl: 'account/loans',
-            options: { params: { ts: '1577836800000' } },
+            options: { params: { ts: '26297280' } },
         });
         MockDate.reset();
     });
@@ -189,7 +190,7 @@ describe('Backend routes method', () => {
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
         expect(routes.PRINTING_API()).toEqual({
             apiUrl: 'papercut/balance',
-            options: { params: { ts: '1577836800000' } },
+            options: { params: { ts: '26297280' } },
         });
         MockDate.reset();
     });

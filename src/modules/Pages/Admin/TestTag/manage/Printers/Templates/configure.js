@@ -1,4 +1,5 @@
 import React from 'react';
+import * as actions from 'data/actions';
 
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -21,7 +22,13 @@ import PlaceholderEditor from './PlaceholderEditor';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { isEmptyStr } from '../../../helpers/helpers';
 
-import { getCleanVarName, getUserVariablePlaceholder } from './utils';
+import {
+    getCleanVarName,
+    getUserVariablesFromRow,
+    getMissingUserVarsInCode,
+    validateTemplateUserVariable,
+    getMissingUserVarsInPastedCode,
+} from './utils';
 
 export default {
     sort: {
@@ -127,16 +134,19 @@ export default {
             },
         },
         vars: {
-            component: ({ ...props }) => <PlaceholderEditor {...props} />,
+            component: (props, data) => <PlaceholderEditor {...props} data={data} />,
             validate: (_, row) => {
-                const userVariables =
-                    row?.vars?.reduce?.((acc, variable) => [...acc, variable.printer_template_var_name], []) ??
-                    /* istanbul ignore next */ [];
+                // first check if there are any defined variables not in the template code
+                const userVariables = getUserVariablesFromRow(row);
                 const printerTemplateCode = row?.printer_template_code ?? '';
-                const missing = userVariables.filter(
-                    varName => !printerTemplateCode.includes(getUserVariablePlaceholder(getCleanVarName(varName))),
-                );
-                return missing.length > 0;
+                const missing = getMissingUserVarsInCode(userVariables, printerTemplateCode);
+
+                // then check if each row is valid in its own right (all values provided)
+                const anyInvalidRows = row?.vars?.some(variable => validateTemplateUserVariable(variable));
+
+                // then check if there are any variables in the template code that are not defined by the user
+                const missingInUserVariables = getMissingUserVarsInPastedCode(row?.vars ?? [], printerTemplateCode);
+                return missing.length > 0 || anyInvalidRows || missingInUserVariables.length > 0;
             },
             fieldParams: {
                 canEdit: true,
@@ -147,8 +157,7 @@ export default {
             },
         },
         printer_template_code: {
-            // eslint-disable-next-line no-unused-vars
-            component: (props, _, __, action) => (
+            component: (props, _, __, action, dispatch) => (
                 <Accordion defaultExpanded={action === 'add'}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
                         {
@@ -163,7 +172,16 @@ export default {
                             required
                             multiline
                             minRows={4}
-                            inputProps={{ ...props.inputProps }}
+                            inputProps={{
+                                ...props.inputProps,
+                                onPaste: e => {
+                                    const clipboardData = e.clipboardData;
+                                    const pastedData = clipboardData.getData('Text');
+                                    dispatch(
+                                        actions.printerTemplatePasteDetected({ field: props.name, value: pastedData }),
+                                    );
+                                },
+                            }}
                             helperText={
                                 props.error
                                     ? locale.pages.manage.printertemplates.helperText.printer_template_code
@@ -248,11 +266,10 @@ export const placeholderEditorColumns = ({
             />
         ),
         preProcessEditCellProps: params => {
-            const hasError = isEmptyStr(params.props.value) || params.props.value.length > 255;
+            const hasError = params.props.value.length > 255;
             return { ...params.props, error: hasError };
         },
     },
-
     {
         field: 'printer_template_var_value',
         headerName:
@@ -262,11 +279,13 @@ export const placeholderEditorColumns = ({
         editable: true,
         type: 'number',
         resizable: false,
+        valueGetter: params => Number(params.row.printer_template_var_value),
         preProcessEditCellProps: params => {
             let hasError = false;
             try {
                 hasError = !Number.isInteger(params.props.value);
             } catch (error) {
+                console.error(error);
                 hasError = true;
             }
             return { ...params.props, error: hasError };

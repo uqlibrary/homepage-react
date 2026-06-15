@@ -30,7 +30,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { ClassicEditor, Essentials, Heading, Indent, Bold, Italic, Link, List } from 'ckeditor5';
+import 'ckeditor5/ckeditor5.css';
 
 import { isValidUrl, scrollToTopOfPage, slugifyName } from 'helpers/general';
 
@@ -323,18 +324,8 @@ export const DlorForm = ({
     };
 
     const editorConfig = {
-        removePlugins: [
-            'Image',
-            'ImageCaption',
-            'ImageStyle',
-            'ImageToolbar',
-            'ImageUpload',
-            'EasyImage',
-            'CKFinder',
-            'BlockQuote',
-            'Table',
-            'MediaEmbed',
-        ],
+        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials],
+        toolbar: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
         heading: {
             options: [
                 { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -353,6 +344,7 @@ export const DlorForm = ({
                 },
             },
         },
+        licenseKey: 'GPL',
     };
 
     const isValidUsername = testUserName => {
@@ -1451,10 +1443,9 @@ export const DlorForm = ({
         setIsNotificationLightboxOpen(false);
     };
 
-    const handleNotifyChange = e => {
-        e.preventDefault();
-        setIsNotifying(!!e.target.checked);
-        !!e.target.checked && openNotifyLightbox();
+    const handleNotifyChange = ({ target: { checked } }) => {
+        setIsNotifying(checked);
+        checked && openNotifyLightbox();
     };
 
     const stepPanelContentFilters = (
