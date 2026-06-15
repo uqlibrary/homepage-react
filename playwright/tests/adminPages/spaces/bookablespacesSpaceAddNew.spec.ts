@@ -234,7 +234,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(descriptionCheckbox).toBeVisible();
         await descriptionCheckbox.check();
 
-        const descriptionField = page.getByRole('textbox', { name: 'Editor editing area: main' });
+        const descriptionField = page.getByRole('textbox', { name: /Editing area: main/i });
         await descriptionField.fill('This is a sunny corner in the Law library where you blah blah blah');
 
         const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');

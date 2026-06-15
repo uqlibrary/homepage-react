@@ -39,7 +39,8 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { ClassicEditor, Essentials, Heading, Indent, Bold, Italic, Link, List } from 'ckeditor5';
+import 'ckeditor5/ckeditor5.css';
 import parse from 'html-react-parser';
 
 import { useAccountContext } from 'context';
@@ -421,18 +422,8 @@ export const EditSpaceForm = ({
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
     const editorConfig = {
-        removePlugins: [
-            'Image',
-            'ImageCaption',
-            'ImageStyle',
-            'ImageToolbar',
-            'ImageUpload',
-            'EasyImage',
-            'CKFinder',
-            'BlockQuote',
-            'Table',
-            'MediaEmbed',
-        ],
+        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials],
+        toolbar: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
         heading: {
             options: [
                 { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -440,6 +431,7 @@ export const EditSpaceForm = ({
                 { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
             ],
         },
+        licenseKey: 'GPL',
     };
 
     const [isBookable, setIsBookable2] = useState();

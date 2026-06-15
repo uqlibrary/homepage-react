@@ -421,9 +421,9 @@ test.describe('Spaces Admin - edit space', () => {
         // clear as many of the non-required fields as is possible and confirm will submit
 
         // clear description field manually!
-        await page.getByRole('textbox', { name: 'Editor editing area: main' }).click();
-        await page.getByRole('textbox', { name: 'Editor editing area: main' }).press('ControlOrMeta+a');
-        await page.getByRole('textbox', { name: 'Editor editing area: main' }).press('ControlOrMeta+x');
+        await page.getByRole('textbox', { name: /Editing area: main/i }).click();
+        await page.getByRole('textbox', { name: /Editing area: main/i }).press('ControlOrMeta+a');
+        await page.getByRole('textbox', { name: /Editing area: main/i }).press('ControlOrMeta+x');
 
         await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
         await page
@@ -768,7 +768,7 @@ test.describe('Spaces Admin - edit space', () => {
         const selectedSpaceTypeId = await chooseDifferentSpaceType(page);
 
         await page.getByText('Ut enim ad minim veniam, quis').click();
-        const descriptionField = page.getByRole('textbox', { name: 'Editor editing area: main' });
+        const descriptionField = page.getByRole('textbox', { name: /Editing area: main/i });
         await descriptionField.press('ControlOrMeta+a');
         await descriptionField.fill('a long description that has a number of words');
 
