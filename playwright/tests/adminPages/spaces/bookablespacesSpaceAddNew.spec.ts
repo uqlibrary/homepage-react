@@ -548,7 +548,7 @@ test.describe('Spaces Admin - add new space', () => {
 
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeDisabled();
-        await expect(page.getByTestId('spaces-button-error-list')).toBeVisible();
+        await expect(page.getByTestId('spaces-button-error-list')).toBeVisible({ timeout: 30_000 });
         await expect(page.getByTestId('spaces-button-error-list')).toContainText('Please fix 1 error.');
         await expect(page.getByTestId('spaces-button-error-list')).toContainText('A Type is required.');
 

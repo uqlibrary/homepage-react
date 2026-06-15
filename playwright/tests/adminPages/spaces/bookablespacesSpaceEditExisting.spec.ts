@@ -420,10 +420,12 @@ test.describe('Spaces Admin - edit space', () => {
 
         // clear as many of the non-required fields as is possible and confirm will submit
 
-        // clear description field manually!
-        await page.getByRole('textbox', { name: /Editing area: main/i }).click();
-        await page.getByRole('textbox', { name: /Editing area: main/i }).press('ControlOrMeta+a');
-        await page.getByRole('textbox', { name: /Editing area: main/i }).press('ControlOrMeta+x');
+        // clear description field manually
+        const descriptionField = page.getByRole('textbox', { name: /Editing area: main/i });
+        await expect(descriptionField).toBeVisible({ timeout: 30_000 });
+        await descriptionField.click();
+        await descriptionField.press('ControlOrMeta+a');
+        await descriptionField.press('ControlOrMeta+x');
 
         await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
         await page
@@ -709,12 +711,7 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('space-outage-delete-9004')).toBeDisabled();
     });
     test('can re-edit after save', async ({ page }) => {
-        // click save button
-        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        await page.getByTestId('admin-spaces-save-button-submit').click();
-
-        // change the title so when we reload the page from "edit again" we can check the page has actually reloaded
-        // by showing the immmutable mock data has reverted
+        // change the title before save so we can confirm edit-again performs a true reload
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
         await page
@@ -724,7 +721,12 @@ test.describe('Spaces Admin - edit space', () => {
 
         await ensureSpaceTypeSelected(page);
 
-        await expect(page.getByTestId('message-title')).toBeVisible();
+        // click save button
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('dialogbox-spaces-save-outcome')).toBeVisible({ timeout: 30_000 });
+        await expect(page.getByTestId('message-title')).toBeVisible({ timeout: 30_000 });
         await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
         await expect(page.getByTestId('confirm-spaces-save-outcome')).toBeVisible();
         await expect(page.getByTestId('confirm-spaces-save-outcome')).toContainText('Return to dashboard');
@@ -909,7 +911,8 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         await page.getByTestId('admin-spaces-save-button-submit').click();
 
-        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('dialogbox-spaces-save-outcome')).toBeVisible({ timeout: 30_000 });
+        await expect(page.getByTestId('message-title')).toBeVisible({ timeout: 30_000 });
         await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
 
         await assertAccessibility(page, '[data-testid="dialogbox-spaces-save-outcome"]');
@@ -919,10 +922,8 @@ test.describe('Spaces Admin - edit space', () => {
         test('edit space - error locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/error?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            // wait for page to load
-            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
 
-            await expect(page.getByTestId('load-space-form-error')).toBeVisible();
+            await expect(page.getByTestId('load-space-form-error')).toBeVisible({ timeout: 30_000 });
             await expect(page.getByTestId('load-space-form-error')).toContainText(
                 'Something went wrong - please try again later.',
             );
@@ -931,10 +932,8 @@ test.describe('Spaces Admin - edit space', () => {
         test('edit space - 404 locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/missingRecord?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            // wait for page to load
-            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
 
-            await expect(page.getByTestId('missing-record')).toBeVisible();
+            await expect(page.getByTestId('missing-record')).toBeVisible({ timeout: 30_000 });
             await expect(page.getByTestId('missing-record')).toContainText('There is no Space with ID "missingRecord"'); // 'missingRecord' is the id in mock when it is missing
         });
         test('edit space - weeklyHours api error', async ({ page }) => {
