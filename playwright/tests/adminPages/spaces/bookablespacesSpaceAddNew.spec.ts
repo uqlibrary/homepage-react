@@ -12,6 +12,7 @@ const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName
 const selectCombobox = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('[role="combobox"]');
 
 const waitForDefaultLocationSelection = async (page: Page) => {
+    const DEFAULT_SELECTION_TIMEOUT_MS = 8000;
     const campusInput = page.locator('#add-space-select-campus-input');
     const libraryInput = page.locator('#add-space-select-library-input');
     const floorInput = page.locator('#add-space-select-floor-input');
@@ -25,9 +26,16 @@ const waitForDefaultLocationSelection = async (page: Page) => {
         await expect(floorInput).toBeVisible();
 
         // These select values are populated asynchronously after location data loads.
-        await expect.poll(async () => await campusInput.inputValue(), { timeout: 30000 }).toBe('3');
-        await expect.poll(async () => await libraryInput.inputValue(), { timeout: 30000 }).toBe('10');
-        await expect.poll(async () => await floorInput.inputValue(), { timeout: 30000 }).toBe('65');
+        await expect
+            .poll(
+                async () => ({
+                    campus: await campusInput.inputValue(),
+                    library: await libraryInput.inputValue(),
+                    floor: await floorInput.inputValue(),
+                }),
+                { timeout: DEFAULT_SELECTION_TIMEOUT_MS },
+            )
+            .toEqual({ campus: '3', library: '10', floor: '65' });
     };
 
     const manuallyApplyExpectedDefaults = async () => {
