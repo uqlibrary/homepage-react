@@ -49,7 +49,7 @@
     "devDependencies": {
         "@axe-core/playwright": "^4.11.0",
         "@babel/cli": "^7.23.9",
-        "@babel/core": "^7.23.9",
+        "@babel/core": "^7.29.6",
         "@babel/eslint-parser": "^7.23.9",
         "@babel/plugin-proposal-decorators": "^7.23.9",
         "@babel/plugin-proposal-do-expressions": "^7.23.3",
