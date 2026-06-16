@@ -80,6 +80,12 @@ const STEP_IMAGERY = 'tab-imagery';
 const PACE_DEFAULT_LATITUDE = '-27.50008';
 const PACE_DEFAULT_LONGITUDE = '153.03024';
 
+const waitForAddSpacePageReady = async (page: Page) => {
+    // The add form can remain on a global loading screen in CI before admin content mounts.
+    await expect(page.getByTestId('SpacesAdminPage')).toBeVisible({ timeout: 60000 });
+    await expect(page.getByTestId('admin-spaces-page-title')).toContainText(/Add a new Space/i, { timeout: 60000 });
+};
+
 test.describe('Spaces Admin - add new space', () => {
     test('can navigate from dashboard to add new', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
@@ -107,8 +113,7 @@ test.describe('Spaces Admin - add new space', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('/admin/spaces/add?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        // wait for page to load
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
+        await waitForAddSpacePageReady(page);
     });
     test('add new space appears as expected onload', async ({ page }) => {
         await expect(page.getByTestId(STEP_ABOUT)).toBeVisible();
