@@ -132,14 +132,17 @@ export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) =>
                                       undefined,
                                       getSpaceOutageShowTimePublic(visibleOutage.outage),
                                   )}.`
-                                  : `Closed ${formatSpaceOutageRangeForPublicNotice(
+                                : `Closed ${formatSpaceOutageRangeForPublicNotice(
                                       visibleOutage.outage?.space_outage_start,
                                       visibleOutage.outage?.space_outage_end,
                                       getSpaceOutageShowTimePublic(visibleOutage.outage),
                                   )}.`}
                         </Typography>
                         {!!visibleOutage.reason && (
-                            <Typography variant="body2" data-testid={`space-${space?.space_id}-map-popup-outage-reason`}>
+                            <Typography
+                                variant="body2"
+                                data-testid={`space-${space?.space_id}-map-popup-outage-reason`}
+                            >
                                 Reason: {visibleOutage.reason}
                             </Typography>
                         )}
@@ -335,13 +338,10 @@ const BookableSpacesMap = React.forwardRef(
                 return;
             }
 
-            const selectedCampusId = Number(centreLatLong?.space_campus_id);
-            const mapCampuses = Number.isFinite(selectedCampusId) && selectedCampusId > 0 ? [selectedCampusId] : 'all';
-
             try {
                 mazeMapInstanceRef.current = new window.Mazemap.Map({
                     container: 'mazemap-container',
-                    campuses: mapCampuses,
+                    campuses: 'uq',
                     center: { lat: centreLatLong.space_latitude, lng: centreLatLong.space_longitude },
                     zoom: zoomLevelForCampus(centreLatLong.space_campus_name),
                     zLevel: centreLatLong?.space_zlevel ?? 1,
@@ -458,7 +458,11 @@ const BookableSpacesMap = React.forwardRef(
         return (
             <StyledMapWrapperDiv id="mazemap-container" ref={setMapContainer}>
                 {showResetButton && (
-                    <StyledResetMapButton type="button" onClick={resetMapPosition} data-testid="reset-map-position-button">
+                    <StyledResetMapButton
+                        type="button"
+                        onClick={resetMapPosition}
+                        data-testid="reset-map-position-button"
+                    >
                         Reset map
                     </StyledResetMapButton>
                 )}
