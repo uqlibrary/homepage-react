@@ -29,26 +29,20 @@ import { setIn } from 'immutable';
 
 import { useAccountContext } from 'context';
 
-
-export const DLOFilterManage = ({
-    actions,
-    dlorFilterListLoading,
-    dlorFilterListError,
-    dlorFilterList,
-}) => {
+export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterListError, dlorFilterList }) => {
     const { account } = useAccountContext();
-    console.log("actions", actions)
+    console.log('actions', actions);
     useEffect(() => {
         console.log(dlorFilterList, dlorFilterListLoading, dlorFilterListError);
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
-    }, [dlorFilterList, dlorFilterListLoading, dlorFilterListError]); 
+    }, [dlorFilterList, dlorFilterListLoading, dlorFilterListError]);
 
-    const [editBoxOpened, setEditBoxOpened] = useState(false);  
-    const [formMode, setFormMode] = useState('edit');  
+    const [editBoxOpened, setEditBoxOpened] = useState(false);
+    const [formMode, setFormMode] = useState('edit');
     const [inputValue, setInputValue] = useState('');
-    const [facetOrder, setFacetOrder] = useState(0); 
+    const [facetOrder, setFacetOrder] = useState(0);
     const [facetName, setFacetName] = useState('');
     const [facetHelp, setFacetHelp] = useState('');
     const [facetTypeName, setFacetTypeName] = useState('');
@@ -57,31 +51,27 @@ export const DLOFilterManage = ({
     const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
     const [facetShowHelp, setFacetShowHelp] = useState(false);
 
-    const handleChange = (event) => {
+    const handleChange = event => {
         setInputValue(event.target.value);
     };
-    
+
     /* istanbul ignore next */
-    const handleFacetOrderChange = (event) => {
+    const handleFacetOrderChange = event => {
         setFacetOrder(event.target.value || 0);
     };
-    const handleFacetHelpChange = (event) => {
+    const handleFacetHelpChange = event => {
         setFacetHelp(event.target.value || /* istanbul ignore next */ '');
     };
 
-    const updateFacet = (id) => {
+    const updateFacet = id => {
         const payload = {
             facet_name: inputValue,
             facet_order: facetOrder,
             facet_help: facetHelp,
             facet_show_help: facetShowHelp,
         };
-        actions.updateFacet(id, payload)
-        .then(
-            handleClose()
-        )
-
-    }
+        actions.updateFacet(id, payload).then(handleClose());
+    };
 
     const addNewFacet = () => {
         const payload = {
@@ -92,23 +82,17 @@ export const DLOFilterManage = ({
             facet_help: facetHelp,
             facet_show_help: facetShowHelp,
         };
-        console.log("THE PAYLOAD IS", payload);
-        actions.createFacet(payload)
-        .then(
-            handleClose()
-        )
-    }
+        console.log('THE PAYLOAD IS', payload);
+        actions.createFacet(payload).then(handleClose());
+    };
 
-    const handleDeleteFacet = (id) => { 
-        console.log("delete facet", id);
-        actions.deleteFacet(id)
-        .then(
-            setConfirmDeleteModal(false)
-        )
-    }
+    const handleDeleteFacet = id => {
+        console.log('delete facet', id);
+        actions.deleteFacet(id).then(setConfirmDeleteModal(false));
+    };
 
     const handleClose = () => {
-        console.log("testing");
+        console.log('testing');
         setEditBoxOpened(false);
         setFormMode('edit');
         setInputValue('');
@@ -120,18 +104,16 @@ export const DLOFilterManage = ({
         setFacetShowHelp(false);
     };
 
-    const handleEditFacet = (facet) => {
-        setEditBoxOpened(true); 
+    const handleEditFacet = facet => {
+        setEditBoxOpened(true);
         setFormMode('edit');
         setInputValue(facet?.facet_name);
         setFacetOrder(facet?.facet_order || /* istanbul ignore next */ 0);
-        setFacetHelp(facet?.facet_help ||  /* istanbul ignore next */ '');
+        setFacetHelp(facet?.facet_help || /* istanbul ignore next */ '');
         setFacetName(facet?.facet_name);
         setFacet(facet);
         setFacetShowHelp(!!facet?.facet_show_help);
     };
-
-    
 
     return (
         <StandardPage title="Digital Learning Hub - Facet Management">
@@ -143,73 +125,84 @@ export const DLOFilterManage = ({
                 ]}
             />
             <Grid container alignItems="center">
-                {!!dlorFilterList && dlorFilterList.length > 0 && dlorFilterList.map(facetType => (
-                    <React.Fragment key={facetType.facet_type_name}>
-                        <Grid item xs={11}>
-                            <Typography component='h3' sx={{fontWeight: 'bold'}} data-testid={`facet-type-${facetType.facet_type_id}-name`}>
-                                {facetType?.facet_type_name}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <IconButton color='primary' onClick={() => {
-                                setFormMode('add'); 
-                                setFacetTypeName(facetType.facet_type_name);
-                                setFacetTypeId(facetType.facet_type_id);
-                                setEditBoxOpened(true)
-                            }}
-                            data-testid={`add-facet-${facetType.facet_type_id}`}>   
-                                <AddIcon />
-                            </IconButton>
-                        </Grid>
-                       
-                        {!!facetType.facet_list && facetType.facet_list.length > 0 && facetType.facet_list.map((facet, index) => (
-                            <React.Fragment key={facet.facet_name}>
-                                 <Grid
-                                    container
-                                    sx={{ backgroundColor: index % 2 === 0 ? 'white' : '#f0f0f0' }}
+                {!!dlorFilterList &&
+                    dlorFilterList.length > 0 &&
+                    dlorFilterList.map(facetType => (
+                        <React.Fragment key={facetType.facet_type_name}>
+                            <Grid item xs={11}>
+                                <Typography
+                                    component="h3"
+                                    sx={{ fontWeight: 'bold' }}
+                                    data-testid={`facet-type-${facetType.facet_type_id}-name`}
                                 >
-                                    <Grid
-                                        item
-                                        xs={8}
-                                        sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
-                                    >
-                                        <Typography component='p'>
-                                            {facet?.facet_name}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        xs={2}
-                                        sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
-                                    >
-                                        <Typography component='p'>
-                                            {facet?.facet_use_count || 0} {facet?.facet_use_count === 1 ? 'object' : 'objects'}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                        <IconButton color='secondary' onClick={() => handleEditFacet(facet)}
-                                            data-testid={`edit-facet-${facet.facet_id}`}
-                                        >
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Grid>
-                                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                        <IconButton color='secondary' onClick={() =>{ 
-                                            console.log('Delete facet'); 
-                                            setFacet(facet);
-                                            setConfirmDeleteModal(true);
-                                            //handleDeleteFacet(facet?.facet_id)
-                                        }}
-                                            data-testid={`delete-facet-${facet.facet_id}`}
-                                        >
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </Grid>
-                                </Grid>
-                            </React.Fragment>
-                        ))}
-                    </React.Fragment>
-                ))}
+                                    {facetType?.facet_type_name}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <IconButton
+                                    color="primary"
+                                    onClick={() => {
+                                        setFormMode('add');
+                                        setFacetTypeName(facetType.facet_type_name);
+                                        setFacetTypeId(facetType.facet_type_id);
+                                        setEditBoxOpened(true);
+                                    }}
+                                    data-testid={`add-facet-${facetType.facet_type_id}`}
+                                >
+                                    <AddIcon />
+                                </IconButton>
+                            </Grid>
+
+                            {!!facetType.facet_list &&
+                                facetType.facet_list.length > 0 &&
+                                facetType.facet_list.map((facet, index) => (
+                                    <React.Fragment key={facet.facet_name}>
+                                        <Grid container sx={{ backgroundColor: index % 2 === 0 ? 'white' : '#f0f0f0' }}>
+                                            <Grid
+                                                item
+                                                xs={8}
+                                                sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
+                                            >
+                                                <Typography component="p">{facet?.facet_name}</Typography>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={2}
+                                                sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
+                                            >
+                                                <Typography component="p">
+                                                    {facet?.facet_use_count || 0}{' '}
+                                                    {facet?.facet_use_count === 1 ? 'object' : 'objects'}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                <IconButton
+                                                    color="secondary"
+                                                    onClick={() => handleEditFacet(facet)}
+                                                    data-testid={`edit-facet-${facet.facet_id}`}
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Grid>
+                                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                <IconButton
+                                                    color="secondary"
+                                                    onClick={() => {
+                                                        console.log('Delete facet');
+                                                        setFacet(facet);
+                                                        setConfirmDeleteModal(true);
+                                                        // handleDeleteFacet(facet?.facet_id)
+                                                    }}
+                                                    data-testid={`delete-facet-${facet.facet_id}`}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Grid>
+                                        </Grid>
+                                    </React.Fragment>
+                                ))}
+                        </React.Fragment>
+                    ))}
             </Grid>
             {/* The modal edit form */}
             <Modal
@@ -232,17 +225,25 @@ export const DLOFilterManage = ({
                     }}
                 >
                     <Typography variant="h4" id="modal-modal-title">
-                        {formMode === "edit" ? `Edit facet ` : `Add new facet`}
+                        {formMode === 'edit' ? 'Edit facet ' : 'Add new facet'}
                     </Typography>
-                    
-                    <Typography variant="p" id="modal-modal-existingName" sx={{ marginBottom: '20px', display: 'block' }}>
-                    {formMode === "edit" ? (
-                        <>Original Name: <b>{facetName}</b></>
-                    ) : (
-                        <>In filter group: <b>{facetTypeName}</b></>
-                    )}
+
+                    <Typography
+                        variant="p"
+                        id="modal-modal-existingName"
+                        sx={{ marginBottom: '20px', display: 'block' }}
+                    >
+                        {formMode === 'edit' ? (
+                            <>
+                                Original Name: <b>{facetName}</b>
+                            </>
+                        ) : (
+                            <>
+                                In filter group: <b>{facetTypeName}</b>
+                            </>
+                        )}
                     </Typography>
-                    
+
                     <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="facet_name">New facet name *</InputLabel>
                         <Input
@@ -278,7 +279,7 @@ export const DLOFilterManage = ({
                     <FormControl variant="standard" fullWidth sx={{ marginTop: '16px' }}>
                         <label>
                             <input
-                                id='facet_show_help'
+                                id="facet_show_help"
                                 type="checkbox"
                                 checked={facetShowHelp}
                                 onChange={e => setFacetShowHelp(e.target.checked)}
@@ -302,7 +303,7 @@ export const DLOFilterManage = ({
                             data-analyticsid="admin-dlor-filter-confirm-button"
                             variant="contained"
                             children="Confirm"
-                            disabled = {!inputValue}
+                            disabled={!inputValue}
                             onClick={() => {
                                 if (formMode === 'edit') {
                                     console.log('Confirm', facet.facet_id);
@@ -318,20 +319,20 @@ export const DLOFilterManage = ({
             </Modal>
             {/* The modal delete confirmation */}
             <ConfirmationBox
-                                    actionButtonColor="primary"
-                                    actionButtonVariant="contained"
-                                    confirmationBoxId="alert-edit-save-succeeded"
-                                    onAction={() => handleDeleteFacet(facet.facet_id)}
-                                    onClose={() => setEditBoxOpened(false)}
-                                    onCancelAction={() => setConfirmDeleteModal(false)}
-                                    isOpen={confirmDeleteModal}
-                                    locale={{
-                                        confirmationTitle: 'Delete facet',
-                                        confirmationMessage: `Are you sure you want to delete the facet "${facet?.facet_name}"?`,
-                                        confirmButtonLabel: 'Delete',
-                                        cancelButtonLabel: 'Cancel',
-                                    }}
-                                />
+                actionButtonColor="primary"
+                actionButtonVariant="contained"
+                confirmationBoxId="alert-edit-save-succeeded"
+                onAction={() => handleDeleteFacet(facet.facet_id)}
+                onClose={() => setEditBoxOpened(false)}
+                onCancelAction={() => setConfirmDeleteModal(false)}
+                isOpen={confirmDeleteModal}
+                locale={{
+                    confirmationTitle: 'Delete facet',
+                    confirmationMessage: `Are you sure you want to delete the facet "${facet?.facet_name}"?`,
+                    confirmButtonLabel: 'Delete',
+                    cancelButtonLabel: 'Cancel',
+                }}
+            />
         </StandardPage>
     );
 };

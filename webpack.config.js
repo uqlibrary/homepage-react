@@ -46,7 +46,9 @@ module.exports = {
         historyApiFallback: true,
         host: url,
         // hot: true,
-        https: false,
+        server: {
+            type: 'http',
+        },
         // inline: true,
         // lazy: false,
         // noInfo: true,
@@ -57,16 +59,17 @@ module.exports = {
         // stats: 'errors-only',
         // watchContentBase: false,
         // disableHostCheck: true,
-        proxy: {
-            '/api/staging': {
+        proxy: [
+            {
+                context: ['/api/staging'],
                 target: 'https://api.library.uq.edu.au',
                 secure: false,
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/api': '',
+                    '^/api/staging': '',
                 },
             },
-        },
+        ],
         // static: {
         //     directory: path.join(__dirname, 'public'),
         //     watch: false,
