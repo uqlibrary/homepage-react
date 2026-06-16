@@ -39,6 +39,24 @@ const StyledMapWrapperDiv = styled('div')(() => ({
     },
 }));
 
+const StyledResetMapButton = styled('button')(() => ({
+    position: 'absolute',
+    left: '50%',
+    bottom: '14px',
+    transform: 'translateX(-50%)',
+    zIndex: 20,
+    border: '1px solid #d8d8d8',
+    borderRadius: '999px',
+    background: '#ffffff',
+    color: '#1f1f1f',
+    fontSize: '12px',
+    fontWeight: 600,
+    lineHeight: 1,
+    padding: '8px 12px',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.18)',
+    cursor: 'pointer',
+}));
+
 const StyledPopupContent = styled('div')(() => ({
     padding: '2px 4px',
     fontSize: '0.85rem',
@@ -150,6 +168,8 @@ const BookableSpacesMap = React.forwardRef(
         const selectedMarkerElRef = useRef(null);
         const activePopupRef = useRef(null);
         const activePopupRootRef = useRef(null);
+        const initialViewRef = useRef(null);
+        const [showResetButton, setShowResetButton] = React.useState(false);
 
         const ZOOM_CAMPUS_MANY_BUILDINGS = 17;
         const ZOOM_CAMPUS_ONE_BUILDING = 20;
@@ -164,10 +184,45 @@ const BookableSpacesMap = React.forwardRef(
             activePopupRef.current = null;
         };
 
+        const isNearInitialCenter = map => {
+            const initialView = initialViewRef.current;
+            if (!map || !initialView) return true;
+
+            const center = map.getCenter?.();
+            if (!center) return true;
+
+            const lngDiff = Math.abs(center.lng - initialView.lng);
+            const latDiff = Math.abs(center.lat - initialView.lat);
+            return lngDiff < 0.0002 && latDiff < 0.0002;
+        };
+
+        const updateResetButtonVisibility = map => {
+            setShowResetButton(!isNearInitialCenter(map));
+        };
+
+        const resetMapPosition = () => {
+            const map = mazeMapInstanceRef.current;
+            const initialView = initialViewRef.current;
+            if (!map || !initialView) return;
+
+            map.flyTo({
+                center: [initialView.lng, initialView.lat],
+                zoom: initialView.zoom,
+                curve: 0.5,
+                speed: 1.6,
+            });
+            if (Number.isFinite(initialView.zLevel)) {
+                map.setZLevel(initialView.zLevel);
+            }
+            setShowResetButton(false);
+        };
+
         const disableMazeMap = React.useCallback(() => {
             clearActivePopup();
             mazeMapInstanceRef.current?.remove?.();
             mazeMapInstanceRef.current = null;
+            initialViewRef.current = null;
+            setShowResetButton(false);
             setIsMazeMapReady(false);
             setIsMazeMapAvailable(false);
         }, []);
@@ -298,8 +353,19 @@ const BookableSpacesMap = React.forwardRef(
             }
 
             mazeMapInstanceRef.current.on('load', () => {
+                initialViewRef.current = {
+                    lng: Number(centreLatLong.space_longitude),
+                    lat: Number(centreLatLong.space_latitude),
+                    zoom: zoomLevelForCampus(centreLatLong.space_campus_name),
+                    zLevel: Number(centreLatLong?.space_zlevel ?? 1),
+                };
+                updateResetButtonVisibility(mazeMapInstanceRef.current);
                 mazeMapInstanceRef.current.resize();
                 setIsMazeMapReady(true);
+            });
+
+            mazeMapInstanceRef.current.on('moveend', () => {
+                updateResetButtonVisibility(mazeMapInstanceRef.current);
             });
 
             mazeMapInstanceRef.current.on('error', () => {
@@ -311,6 +377,8 @@ const BookableSpacesMap = React.forwardRef(
                 clearActivePopup();
                 mazeMapInstanceRef.current?.remove();
                 mazeMapInstanceRef.current = null;
+                initialViewRef.current = null;
+                setShowResetButton(false);
                 setIsMazeMapReady(false);
             };
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -387,7 +455,15 @@ const BookableSpacesMap = React.forwardRef(
             return <StyledMapWrapperDiv id="mazemap-container" data-testid="mazemap-unavailable" />;
         }
 
-        return <StyledMapWrapperDiv id="mazemap-container" ref={setMapContainer} />;
+        return (
+            <StyledMapWrapperDiv id="mazemap-container" ref={setMapContainer}>
+                {showResetButton && (
+                    <StyledResetMapButton type="button" onClick={resetMapPosition} data-testid="reset-map-position-button">
+                        Reset map
+                    </StyledResetMapButton>
+                )}
+            </StyledMapWrapperDiv>
+        );
     },
 );
 

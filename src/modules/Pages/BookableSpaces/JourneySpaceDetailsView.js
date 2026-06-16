@@ -19,6 +19,21 @@ import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
 
 const journeyFallbackDetailImage = require('../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
+const HOURS_STATUS_CONFIG = {
+    open: {
+        label: 'Open now',
+        sx: { backgroundColor: '#e9f8ef', color: '#0d6b2f', borderColor: '#b6e3c4', border: '1px solid' },
+    },
+    'closing-soon': {
+        label: 'Closing soon',
+        sx: { backgroundColor: '#fff8e1', color: '#e65100', borderColor: '#ffe082', border: '1px solid' },
+    },
+    closed: {
+        label: 'Currently closed',
+        sx: { backgroundColor: '#f6f2fb', color: '#4c3a63', borderColor: '#d8c8ec', border: '1px solid' },
+    },
+};
+
 const StyledDetailSurface = styled('div')(({ theme }) => ({
     backgroundColor: '#f9f8fa',
     color: '#1f1230',
@@ -72,17 +87,15 @@ const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHou
     const status = !weeklyHoursLoading && !weeklyHoursError ? getSpaceHoursStatus(space, weeklyHours) : null;
     if (!status) return null;
 
-    const isOpen = status?.isOpen;
-    const label = isOpen ? `Open now${status?.closingLabel ? `, ${status.closingLabel}` : ''}` : 'Currently closed';
+    const config = HOURS_STATUS_CONFIG[status];
+    if (!config) return null;
 
     return (
         <Chip
             size="small"
-            label={label}
+            label={config.label}
             sx={{
-                backgroundColor: isOpen ? '#e9f8ef' : '#f6f2fb',
-                color: isOpen ? '#0d6b2f' : '#4c3a63',
-                border: isOpen ? '1px solid #b6e3c4' : '1px solid #d8c8ec',
+                ...config.sx,
                 fontWeight: 600,
             }}
         />

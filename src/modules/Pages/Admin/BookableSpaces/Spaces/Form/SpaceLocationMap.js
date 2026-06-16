@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { styled } from '@mui/material/styles';
@@ -48,12 +49,45 @@ const SpaceLocationMap = ({
 
     const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
     const [isMazeMapReady, setIsMazeMapReady] = React.useState(false);
+    const [showResetButton, setShowResetButton] = React.useState(false);
     const [mapContainer, setMapContainer] = React.useState(null);
     const mazeMapInstanceRef = React.useRef(null);
     const draggableMarkerRef = React.useRef(null);
     const otherMarkersRef = React.useRef([]);
+    const initialViewRef = React.useRef(null);
 
     const [mapCampusId, setMapCampusId] = useState(0);
+
+    const isNearInitialCenter = React.useCallback(map => {
+        const initialView = initialViewRef.current;
+        if (!map || !initialView) return true;
+
+        const center = map.getCenter?.();
+        if (!center) return true;
+
+        const lngDiff = Math.abs(center.lng - initialView.lng);
+        const latDiff = Math.abs(center.lat - initialView.lat);
+        return lngDiff < 0.0002 && latDiff < 0.0002;
+    }, []);
+
+    const updateResetButtonVisibility = React.useCallback(
+        map => {
+            setShowResetButton(!isNearInitialCenter(map));
+        },
+        [isNearInitialCenter],
+    );
+
+    const resetMapPosition = React.useCallback(() => {
+        const map = mazeMapInstanceRef.current;
+        const initialView = initialViewRef.current;
+        if (!map || !initialView) return;
+
+        map.flyTo({ center: [initialView.lng, initialView.lat], zoom: initialView.zoom });
+        if (Number.isFinite(initialView.zLevel)) {
+            map.setZLevel(initialView.zLevel);
+        }
+        setShowResetButton(false);
+    }, []);
 
     React.useEffect(() => {
         // Always reload the script rather than reusing window.Mazemap — after
@@ -94,8 +128,21 @@ const SpaceLocationMap = ({
             RTLTextPlugin: null,
         });
 
+        initialViewRef.current = {
+            lng,
+            lat,
+            zoom: 17,
+            zLevel: Number(formValues?.space_zlevel ?? 1),
+        };
+        setShowResetButton(false);
+
+        mazeMapInstanceRef.current.on('moveend', () => {
+            updateResetButtonVisibility(mazeMapInstanceRef.current);
+        });
+
         mazeMapInstanceRef.current.on('load', () => {
             mazeMapInstanceRef.current.resize();
+            updateResetButtonVisibility(mazeMapInstanceRef.current);
             setIsMazeMapReady(true);
         });
 
@@ -108,6 +155,8 @@ const SpaceLocationMap = ({
             otherMarkersRef.current = [];
             mazeMapInstanceRef.current?.remove();
             mazeMapInstanceRef.current = null;
+            initialViewRef.current = null;
+            setShowResetButton(false);
             setIsMazeMapReady(false);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,6 +243,13 @@ const SpaceLocationMap = ({
 
         mazeMapInstanceRef.current.flyTo({ center: coords, zoom: 17 });
         draggableMarkerRef.current?.setLngLat([coords.lng, coords.lat]);
+        initialViewRef.current = {
+            lng: Number(coords.lng),
+            lat: Number(coords.lat),
+            zoom: 17,
+            zLevel: Number(mazeMapInstanceRef.current.zLevel ?? formValues?.space_zlevel ?? 1),
+        };
+        setShowResetButton(false);
 
         setFormValues(prev => ({
             ...prev,
@@ -227,7 +283,28 @@ const SpaceLocationMap = ({
                     </StyledTabs>
                 </Box>
             </Box>
-            <div id="space-location-mazemap" ref={setMapContainer} style={{ width: '100%', height: '500px' }} />
+            <div style={{ position: 'relative' }}>
+                <div id="space-location-mazemap" ref={setMapContainer} style={{ width: '100%', height: '500px' }} />
+                {showResetButton && (
+                    <Button
+                        variant="contained"
+                        size="small"
+                        onClick={resetMapPosition}
+                        data-testid="reset-map-position-button"
+                        sx={{
+                            position: 'absolute',
+                            bottom: 12,
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            zIndex: 20,
+                            borderRadius: '999px',
+                            textTransform: 'none',
+                        }}
+                    >
+                        Reset map
+                    </Button>
+                )}
+            </div>
             <Typography component={'p'}>
                 Click on the map to move the marker to the location for this Space as precisely as you can!
             </Typography>
