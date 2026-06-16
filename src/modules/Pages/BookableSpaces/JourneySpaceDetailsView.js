@@ -22,7 +22,7 @@ const journeyFallbackDetailImage = require('../../../../public/images/digital-le
 const HOURS_STATUS_CONFIG = {
     open: {
         label: 'Open now',
-        sx: { backgroundColor: '#e9f8ef', color: '#0d6b2f', borderColor: '#b6e3c4', border: '1px solid' },
+        sx: { backgroundColor: '#e8f5e9', color: '#1b5e20', borderColor: '#a5d6a7', border: '1px solid' },
     },
     'closing-soon': {
         label: 'Closing soon',
@@ -30,7 +30,7 @@ const HOURS_STATUS_CONFIG = {
     },
     closed: {
         label: 'Currently closed',
-        sx: { backgroundColor: '#f6f2fb', color: '#4c3a63', borderColor: '#d8c8ec', border: '1px solid' },
+        sx: { backgroundColor: '#fdecea', color: '#b71c1c', borderColor: '#ffcdd2', border: '1px solid' },
     },
 };
 
