@@ -330,8 +330,10 @@ export const BookableSpacesList = ({
     );
 
     const [cookies, setCookie] = useCookies();
-    const correctedCampusId = campusId =>
-        campusList?.find(c => c.campus_id === campusId) ? campusId : FIRST_CAMPUS_ID;
+    const correctedCampusId = campusId => {
+        const normalizedCampusId = Number(campusId);
+        return campusList?.find(c => c.campus_id === normalizedCampusId) ? normalizedCampusId : FIRST_CAMPUS_ID;
+    };
     const getCampusInitialState = () => {
         const spacesPreferredCampus = cookies.UQLspacesPreferredCampus;
         if (!!spacesPreferredCampus) {
@@ -361,7 +363,8 @@ export const BookableSpacesList = ({
             };
         }
 
-        const spacesListForCampus = spacesList?.filter(s => s.space_campus_id === selectedCampusId);
+        const normalizedSelectedCampusId = Number(selectedCampusId);
+        const spacesListForCampus = spacesList?.filter(s => s.space_campus_id === normalizedSelectedCampusId);
 
         /* eslint-disable camelcase */
         const buildingsOnCampus =
@@ -439,13 +442,16 @@ export const BookableSpacesList = ({
         return formattedGeolocatedLocation(
             radiansToDegrees(lat),
             radiansToDegrees(lon),
-            selectedCampusId,
+            normalizedSelectedCampusId,
             buildingsOnCampus.at(0).building_campus_name,
         );
     }
 
     const handleCampusSelection = e => {
-        const campusId = e?.target?.value;
+        const campusId = Number(e?.target?.value);
+        if (Number.isNaN(campusId)) {
+            return;
+        }
         console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
         console.log('BookableSpacesList campus::handleCampusSelection bookableSpacesRoomList=', bookableSpacesRoomList);
         setSelectedCampus(campusId);
@@ -465,7 +471,10 @@ export const BookableSpacesList = ({
     };
 
     const handleLibrarySelection = e => {
-        const libraryId = e?.target?.value;
+        const libraryId = Number(e?.target?.value);
+        if (Number.isNaN(libraryId)) {
+            return;
+        }
         setSelectedLibrary(libraryId);
 
         if (libraryId === ALL_LIBRARIES_ID) {
