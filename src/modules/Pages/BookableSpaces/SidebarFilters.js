@@ -738,6 +738,35 @@ export const SidebarFilters = ({
 
     const renderFilterActionButtons = ({ isBottom = false } = {}) => {
         if (isBottom && !showBottomActionButtons) return null;
+        if (isBottom && showBottomActionButtons && !checkFiltersList?.length) {
+            return !!onApplyAllFilters ? (
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: '1rem',
+                        paddingTop: '1rem',
+                        borderTop: '1px solid rgba(0, 0, 0, 0.12)',
+                    }}
+                >
+                    <StyledPrimaryButton
+                        id="button-close-filters-bottom"
+                        data-testid="button-close-filters-bottom"
+                        onClick={onApplyAllFilters}
+                        style={{
+                            padding: '0.5rem 1rem',
+                            margin: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            columnGap: '0.5rem',
+                        }}
+                    >
+                        <span>Close filters</span>
+                    </StyledPrimaryButton>
+                </div>
+            ) : null;
+        }
         if (!checkFiltersList?.length) return null;
 
         const wrapperStyles = isBottom
