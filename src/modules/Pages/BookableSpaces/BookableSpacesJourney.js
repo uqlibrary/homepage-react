@@ -736,7 +736,8 @@ const BookableSpacesJourney = ({
             (campusList || []).filter(campus => {
                 const hasId = campus?.campus_id !== null && campus?.campus_id !== undefined;
                 const hasName = typeof campus?.campus_name === 'string' && campus.campus_name.trim().length > 0;
-                return hasId && hasName;
+                const hasSpaces = Number(campus?.campus_space_count) > 0;
+                return hasId && hasName && hasSpaces;
             }),
         [campusList],
     );

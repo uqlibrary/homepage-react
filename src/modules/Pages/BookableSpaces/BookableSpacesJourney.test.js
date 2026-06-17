@@ -165,9 +165,9 @@ describe('BookableSpacesJourney browser back navigation', () => {
             filteredSpaceLocations: [baseSpace, orphanSpace],
             totalSpaceCount: 2,
             campusList: [
-                { campus_id: 1, campus_name: 'St Lucia' },
-                { campus_id: 2, campus_name: 'Gatton' },
-                { campus_id: 999, campus_name: '' },
+                { campus_id: 1, campus_name: 'St Lucia', campus_space_count: 1 },
+                { campus_id: 2, campus_name: 'Gatton', campus_space_count: 1 },
+                { campus_id: 999, campus_name: '', campus_space_count: 0 },
             ],
         };
 
@@ -183,5 +183,36 @@ describe('BookableSpacesJourney browser back navigation', () => {
 
         expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
         expect(screen.queryByText('Orphaned Space')).not.toBeInTheDocument();
+    });
+
+    it('does not show campuses that have no spaces in the inline campus picker', () => {
+        const props = {
+            ...defaultProps,
+            filteredSpaceLocations: [
+                baseSpace,
+                {
+                    ...baseSpace,
+                    space_id: 202,
+                    space_name: 'Gatton Space',
+                    space_campus_id: 2,
+                    space_campus_name: 'Gatton',
+                },
+            ],
+            totalSpaceCount: 2,
+            campusList: [
+                { campus_id: 1, campus_name: 'St Lucia', campus_space_count: 10 },
+                { campus_id: 2, campus_name: 'Gatton', campus_space_count: 4 },
+                { campus_id: 3, campus_name: 'Dutton Park', campus_space_count: 0 },
+            ],
+        };
+
+        rtlRender(<BookableSpacesJourney {...props} />);
+
+        fireEvent.click(screen.getByTestId('spaces-journey-landing-get-started'));
+        fireEvent.click(screen.getByRole('button', { name: /quiet space/i }));
+
+        expect(screen.getByRole('button', { name: 'St Lucia' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Gatton' })).toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Dutton Park' })).not.toBeInTheDocument();
     });
 });
