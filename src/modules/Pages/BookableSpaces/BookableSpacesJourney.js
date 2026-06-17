@@ -1220,6 +1220,7 @@ const BookableSpacesJourney = ({
                             selectedLibrary={selectedLibrary}
                             handleLibrarySelection={handleLibrarySelection}
                             onApplyAllFilters={() => setShowAdvancedFilters(false)}
+                            showBottomActionButtons
                         />
                     </StyledAdvancedFiltersPanel>
                 )}
@@ -1600,103 +1601,113 @@ const BookableSpacesJourney = ({
                         <Stack spacing={1.5}>
                             {intentSpaceLocations?.map(space => {
                                 const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
+                                const bookableSpaceUrl = space?.space_external_book_url;
                                 return (
-                                    <StyledResultCardButton
-                                        key={space?.space_id}
-                                        onClick={() => {
-                                            setSelectedSpace(space);
-                                            navigateToView('details', {
-                                                intentId: selectedIntentId,
-                                                spaceId: space?.space_id,
-                                            });
-                                        }}
-                                    >
-                                        <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
-                                            <Typography sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5 }}>
-                                                {space?.space_name}
-                                            </Typography>
-                                            <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
-                                                {space?.space_library_name}
-                                            </Typography>
-                                            <Typography variant="body2" sx={{ color: '#999' }}>
-                                                {space?.space_type_details?.space_type_name || space?.space_type}
-                                            </Typography>
-                                            <Box
-                                                sx={{
-                                                    mb:
-                                                        space?.space_type_details?.space_type_description ||
-                                                        space?.space_description
-                                                            ? 1
-                                                            : 0,
-                                                    mt: 0.5,
-                                                }}
-                                            >
-                                                <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
-                                                    {favouriteSpaceIds.has(String(space?.space_id)) && (
-                                                        <Chip
-                                                            data-testid={`spaces-journey-favourite-chip-${space?.space_id}`}
-                                                            label="Favourite"
-                                                            size="small"
-                                                            sx={{
-                                                                backgroundColor: '#fff8e1',
-                                                                color: '#7a5a00',
-                                                                borderColor: '#ffe082',
-                                                                border: '1px solid',
-                                                                fontWeight: 700,
-                                                            }}
-                                                        />
-                                                    )}
-                                                    <SpaceOpenStatusChip
-                                                        space={space}
-                                                        weeklyHours={weeklyHours}
-                                                        weeklyHoursLoading={weeklyHoursLoading}
-                                                        weeklyHoursError={weeklyHoursError}
-                                                    />
-                                                    {!!visibleOutage && (
-                                                        <Chip
-                                                            data-testid={`spaces-journey-outage-chip-${space?.space_id}`}
-                                                            label={
-                                                                visibleOutage.status === 'Current'
-                                                                    ? 'Current closure'
-                                                                    : 'Upcoming closure'
-                                                            }
-                                                            size="small"
-                                                            sx={{
-                                                                backgroundColor:
-                                                                    visibleOutage.status === 'Current'
-                                                                        ? '#fdecea'
-                                                                        : '#fff8e1',
-                                                                color:
-                                                                    visibleOutage.status === 'Current'
-                                                                        ? '#b71c1c'
-                                                                        : '#7a5a00',
-                                                                border:
-                                                                    visibleOutage.status === 'Current'
-                                                                        ? '1px solid #ffcdd2'
-                                                                        : '1px solid #ffe082',
-                                                                fontWeight: 700,
-                                                            }}
-                                                        />
-                                                    )}
-                                                </Stack>
-                                            </Box>
-                                            {!!space?.space_type_details?.space_type_description && (
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{ color: '#4f4d57', mb: space?.space_description ? 0.75 : 0 }}
+                                    <Stack key={space?.space_id} spacing={1}>
+                                        <StyledResultCardButton
+                                            onClick={() => {
+                                                setSelectedSpace(space);
+                                                navigateToView('details', {
+                                                    intentId: selectedIntentId,
+                                                    spaceId: space?.space_id,
+                                                });
+                                            }}
+                                        >
+                                            <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
+                                                <Typography sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5 }}>
+                                                    {space?.space_name}
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
+                                                    {space?.space_library_name}
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ color: '#999' }}>
+                                                    {space?.space_type_details?.space_type_name || space?.space_type}
+                                                </Typography>
+                                                <Box
+                                                    sx={{
+                                                        mb:
+                                                            space?.space_type_details?.space_type_description ||
+                                                            space?.space_description
+                                                                ? 1
+                                                                : 0,
+                                                        mt: 0.5,
+                                                    }}
                                                 >
-                                                    {space.space_type_details.space_type_description}
-                                                </Typography>
-                                            )}
-                                            {!!space?.space_description && (
-                                                <Typography variant="body2" sx={{ color: '#666', fontStyle: 'italic' }}>
-                                                    {String(space.space_description)
-                                                        .replace(/<[^>]*>/g, ' ')
-                                                        .trim()}
-                                                </Typography>
-                                            )}
-                                        </Box>
-                                    </StyledResultCardButton>
+                                                    <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                                                        {favouriteSpaceIds.has(String(space?.space_id)) && (
+                                                            <Chip
+                                                                data-testid={`spaces-journey-favourite-chip-${space?.space_id}`}
+                                                                label="Favourite"
+                                                                size="small"
+                                                                sx={{
+                                                                    backgroundColor: '#fff8e1',
+                                                                    color: '#7a5a00',
+                                                                    borderColor: '#ffe082',
+                                                                    border: '1px solid',
+                                                                    fontWeight: 700,
+                                                                }}
+                                                            />
+                                                        )}
+                                                        <SpaceOpenStatusChip
+                                                            space={space}
+                                                            weeklyHours={weeklyHours}
+                                                            weeklyHoursLoading={weeklyHoursLoading}
+                                                            weeklyHoursError={weeklyHoursError}
+                                                        />
+                                                        {!!visibleOutage && visibleOutage.status !== 'Current' && (
+                                                            <Chip
+                                                                data-testid={`spaces-journey-outage-chip-${space?.space_id}`}
+                                                                label="Upcoming closure"
+                                                                size="small"
+                                                                sx={{
+                                                                    backgroundColor: '#fff8e1',
+                                                                    color: '#7a5a00',
+                                                                    border: '1px solid #ffe082',
+                                                                    fontWeight: 700,
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </Stack>
+                                                </Box>
+                                                {!!space?.space_type_details?.space_type_description && (
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{
+                                                            color: '#4f4d57',
+                                                            mb: space?.space_description ? 0.75 : 0,
+                                                        }}
+                                                    >
+                                                        {space.space_type_details.space_type_description}
+                                                    </Typography>
+                                                )}
+                                                {!!space?.space_description && (
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{ color: '#666', fontStyle: 'italic' }}
+                                                    >
+                                                        {String(space.space_description)
+                                                            .replace(/<[^>]*>/g, ' ')
+                                                            .trim()}
+                                                    </Typography>
+                                                )}
+                                                {!!bookableSpaceUrl && (
+                                                    <Box sx={{ mt: 1.5, pt: 1.5, borderTop: '1px solid #e0e0e0' }}>
+                                                        <Button
+                                                            component="a"
+                                                            href={bookableSpaceUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            variant="contained"
+                                                            size="small"
+                                                            sx={{ textTransform: 'none' }}
+                                                        >
+                                                            Book this space
+                                                        </Button>
+                                                    </Box>
+                                                )}
+                                            </Box>
+                                        </StyledResultCardButton>
+                                    </Stack>
                                 );
                             })}
                         </Stack>

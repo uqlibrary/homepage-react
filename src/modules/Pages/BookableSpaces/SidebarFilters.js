@@ -257,6 +257,7 @@ export const SidebarFilters = ({
     selectedLibrary,
     handleLibrarySelection,
     onApplyAllFilters,
+    showBottomActionButtons = false,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
     const [defaultCampus, setDefaultCampus] = React.useState(1);
@@ -735,6 +736,81 @@ export const SidebarFilters = ({
 
     const hasActiveFilters = selectedFacilityTypes?.some(f => !!f?.selected || !!f?.unselected);
 
+    const renderFilterActionButtons = ({ isBottom = false } = {}) => {
+        if (isBottom && !showBottomActionButtons) return null;
+        if (!checkFiltersList?.length) return null;
+
+        const wrapperStyles = isBottom
+            ? {
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  flexWrap: 'wrap',
+                  marginTop: '1rem',
+                  paddingTop: '1rem',
+                  borderTop: '1px solid rgba(0, 0, 0, 0.12)',
+              }
+            : {
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  flexWrap: 'wrap',
+              };
+
+        return !!onApplyAllFilters ? (
+            <div style={wrapperStyles}>
+                <StyledPrimaryButton
+                    id={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
+                    data-testid={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
+                    onClick={deSelectAll}
+                    style={{
+                        padding: '0.5rem 1rem',
+                        margin: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        columnGap: '0.5rem',
+                    }}
+                >
+                    <ReplayIcon style={{ fontSize: '16px' }} />
+                    <span>Remove all filters</span>
+                </StyledPrimaryButton>
+                <StyledPrimaryButton
+                    onClick={onApplyAllFilters}
+                    style={{
+                        padding: '0.5rem 1rem',
+                        margin: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        columnGap: '0.5rem',
+                    }}
+                >
+                    <span>Apply all filters</span>
+                </StyledPrimaryButton>
+            </div>
+        ) : (
+            <div style={wrapperStyles}>
+                <StyledPrimaryButton
+                    id={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
+                    data-testid={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
+                    onClick={deSelectAll}
+                    style={{
+                        padding: '0.5rem 1rem',
+                        marginRight: 'auto',
+                        marginLeft: 'auto',
+                        display: 'flex',
+                        alignItems: 'center',
+                        columnGap: '0.5rem',
+                    }}
+                >
+                    <ReplayIcon style={{ fontSize: '16px' }} />
+                    <span>Remove all filters</span>
+                </StyledPrimaryButton>
+            </div>
+        );
+    };
+
     const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
     const checkFiltersList = selectedFacilityTypes?.filter(f => !!f?.selected || !!f?.unselected);
 
@@ -759,63 +835,7 @@ export const SidebarFilters = ({
                         <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
                             {showCartoucheList(flatFacilityTypeList)}
                         </StyledCartoucheList>
-                        {checkFiltersList?.length > 0 &&
-                            (!!onApplyAllFilters ? (
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        gap: '0.75rem',
-                                        flexWrap: 'wrap',
-                                    }}
-                                >
-                                    <StyledPrimaryButton
-                                        id={'button-deselect-all-filters'}
-                                        data-testid={'button-deselect-all-filters'}
-                                        onClick={deSelectAll}
-                                        style={{
-                                            padding: '0.5rem 1rem',
-                                            margin: 0,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            columnGap: '0.5rem',
-                                        }}
-                                    >
-                                        <ReplayIcon style={{ fontSize: '16px' }} />
-                                        <span>Remove all filters</span>
-                                    </StyledPrimaryButton>
-                                    <StyledPrimaryButton
-                                        onClick={onApplyAllFilters}
-                                        style={{
-                                            padding: '0.5rem 1rem',
-                                            margin: 0,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            columnGap: '0.5rem',
-                                        }}
-                                    >
-                                        <span>Apply all filters</span>
-                                    </StyledPrimaryButton>
-                                </div>
-                            ) : (
-                                <StyledPrimaryButton
-                                    id={'button-deselect-all-filters'}
-                                    data-testid={'button-deselect-all-filters'}
-                                    onClick={deSelectAll}
-                                    style={{
-                                        padding: '0.5rem 1rem',
-                                        marginRight: 'auto',
-                                        marginLeft: 'auto',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        columnGap: '0.5rem',
-                                    }}
-                                >
-                                    <ReplayIcon style={{ fontSize: '16px' }} />
-                                    <span>Remove all filters</span>
-                                </StyledPrimaryButton>
-                            ))}
+                        {renderFilterActionButtons()}
                     </>
                 )}
                 {campusList?.length > 0 && (
@@ -916,6 +936,7 @@ export const SidebarFilters = ({
                         </StyledFacilityGroup>
                     );
                 })}
+                {renderFilterActionButtons({ isBottom: true })}
             </StyledSidebarSubDiv>
             <Popover
                 open={!!facilityTypeInfoAnchorEl}
@@ -966,6 +987,7 @@ SidebarFilters.propTypes = {
     selectedLibrary: PropTypes.any,
     handleLibrarySelection: PropTypes.func,
     onApplyAllFilters: PropTypes.func,
+    showBottomActionButtons: PropTypes.bool,
 };
 
 export default React.memo(SidebarFilters);

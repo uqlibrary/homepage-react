@@ -141,6 +141,17 @@ describe('BookableSpacesJourney browser back navigation', () => {
         expect(screen.getByRole('heading', { level: 2, name: /quiet study room a/i })).toBeInTheDocument();
     });
 
+    it('shows a booking link in results for bookable spaces', () => {
+        rtlRender(<BookableSpacesJourney {...defaultProps} />);
+
+        fireEvent.click(screen.getByTestId('spaces-journey-landing-get-started'));
+        fireEvent.click(screen.getByRole('button', { name: /quiet space/i }));
+
+        const bookLink = screen.getByRole('link', { name: /book this space/i });
+        expect(bookLink).toHaveAttribute('href', baseSpace.space_external_book_url);
+        expect(bookLink).toHaveAttribute('target', '_blank');
+    });
+
     it('hides blank campus options and excludes spaces on invalid campuses in results', () => {
         const orphanSpace = {
             ...baseSpace,
