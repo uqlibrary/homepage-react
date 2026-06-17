@@ -184,8 +184,6 @@ export const BookableSpacesList = ({
     facilityTypeListError,
     spacesFavouritesList,
     drupalArticleList,
-    drupalArticlesError,
-    drupalArticlesLoading,
 }) => {
     const { account } = useAccountContext();
     const location = useLocation();
