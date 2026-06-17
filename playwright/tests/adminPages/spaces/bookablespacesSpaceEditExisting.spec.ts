@@ -734,9 +734,14 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('confirm-spaces-save-outcome')).toContainText('Return to dashboard');
         await expect(page.getByTestId('cancel-spaces-save-outcome')).toBeVisible();
         await expect(page.getByTestId('cancel-spaces-save-outcome')).toContainText('Edit record again');
-        await page.getByTestId('cancel-spaces-save-outcome').click();
+        await Promise.all([
+            page.waitForURL('**/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces', { timeout: 30_000 }),
+            page.getByTestId('cancel-spaces-save-outcome').click(),
+        ]);
 
-        await expect(page.getByTestId('message-title')).not.toBeVisible();
+        // Re-opening edit triggers a same-page reload; assert post-reload form readiness before value checks.
+        await expect(page.getByTestId('admin-spaces-page-title')).toBeVisible({ timeout: 30_000 });
+        await expect(page.getByTestId('message-title')).toBeHidden({ timeout: 30_000 });
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         // page has reloaded, not just closed dialog, as mock data has reverted
