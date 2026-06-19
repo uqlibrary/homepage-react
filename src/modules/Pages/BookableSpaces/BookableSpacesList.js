@@ -966,6 +966,24 @@ export const BookableSpacesList = ({
     };
 
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
+    const highlightedSpace = React.useMemo(() => {
+        const validHighlightedSpaces =
+            bookableSpacesRoomList?.data?.locations?.filter(
+                space => space?.space_highlighted && !space?.space_draftmode,
+            ) || [];
+
+        if (validHighlightedSpaces.length === 0) {
+            return null;
+        }
+
+        if (validHighlightedSpaces.length === 1) {
+            return validHighlightedSpaces[0];
+        }
+
+        const randomIndex = Math.floor(Math.random() * validHighlightedSpaces.length);
+        return validHighlightedSpaces[randomIndex];
+    }, [bookableSpacesRoomList?.data?.locations]);
+
     return (
         <StyledBookableSpacesListWrapperDiv>
             {(() => {
@@ -994,9 +1012,6 @@ export const BookableSpacesList = ({
                         </StandardPage>
                     );
                 } else if (useJourneyExperience) {
-                    const highlightedSpace =
-                        bookableSpacesRoomList?.data?.locations?.find(s => s.space_highlighted && !s.space_draftmode) ||
-                        null;
                     return (
                         <BookableSpacesJourney
                             filteredSpaceLocations={sortedSpaceLocations}

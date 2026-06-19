@@ -152,6 +152,12 @@ describe('BookableSpacesJourney browser back navigation', () => {
         expect(bookLink).toHaveAttribute('target', '_blank');
     });
 
+    it('hides the landing highlighted space block when no highlighted space is available', () => {
+        rtlRender(<BookableSpacesJourney {...defaultProps} highlightedSpace={null} />);
+
+        expect(screen.queryByTestId('spaces-journey-landing-highlight-panel')).not.toBeInTheDocument();
+    });
+
     it('hides blank campus options and excludes spaces on invalid campuses in results', () => {
         const orphanSpace = {
             ...baseSpace,

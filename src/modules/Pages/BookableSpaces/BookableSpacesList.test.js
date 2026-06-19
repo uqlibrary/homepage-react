@@ -7,6 +7,7 @@ import { BookableSpacesList } from './BookableSpacesList';
 const mockDispatch = jest.fn();
 const mockFlyToSpace = jest.fn();
 const mockSetCookie = jest.fn();
+const mockJourneyRender = jest.fn();
 
 jest.mock('data/actions/drupalArticlesActions', () => ({
     loadDrupalArticles: () => ({ type: 'LOAD_DRUPAL_ARTICLES' }),
@@ -31,7 +32,10 @@ jest.mock('context', () => ({
 jest.mock('@mui/material/useMediaQuery', () => jest.fn(() => false));
 
 jest.mock('modules/Pages/BookableSpaces/SidebarSpacesList', () => () => <div data-testid="mock-spaces-list" />);
-jest.mock('modules/Pages/BookableSpaces/BookableSpacesJourney', () => () => <div data-testid="mock-journey" />);
+jest.mock('modules/Pages/BookableSpaces/BookableSpacesJourney', () => props => {
+    mockJourneyRender(props);
+    return <div data-testid="mock-journey" />;
+});
 
 jest.mock('modules/Pages/BookableSpaces/SidebarFilters', () => {
     return function MockSidebarFilters(props) {
@@ -171,5 +175,99 @@ describe('BookableSpacesList campus selection', () => {
             2,
             expect.objectContaining({ expires: expect.any(Date) }),
         );
+    });
+
+    it('passes null highlightedSpace when there are no valid highlighted spaces', async () => {
+        window.history.replaceState({}, '', '/spaces');
+        const props = {
+            ...baseProps,
+            bookableSpacesRoomList: {
+                data: {
+                    locations: baseProps.bookableSpacesRoomList.data.locations.map(space => ({
+                        ...space,
+                        space_highlighted: false,
+                    })),
+                },
+            },
+        };
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={['/spaces']}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+        expect(latestProps.highlightedSpace).toBeNull();
+    });
+
+    it('passes the single valid highlighted space when exactly one is available', async () => {
+        window.history.replaceState({}, '', '/spaces');
+        const props = {
+            ...baseProps,
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[0],
+                            space_highlighted: true,
+                            space_draftmode: false,
+                        },
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[1],
+                            space_highlighted: false,
+                        },
+                    ],
+                },
+            },
+        };
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={['/spaces']}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+        expect(latestProps.highlightedSpace?.space_id).toBe(101);
+    });
+
+    it('randomises highlightedSpace when more than one valid highlighted space exists', async () => {
+        window.history.replaceState({}, '', '/spaces');
+        const randomSpy = jest.spyOn(Math, 'random').mockReturnValue(0.99);
+
+        const props = {
+            ...baseProps,
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[0],
+                            space_highlighted: true,
+                            space_draftmode: false,
+                        },
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[1],
+                            space_highlighted: true,
+                            space_draftmode: false,
+                        },
+                    ],
+                },
+            },
+        };
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={['/spaces']}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+        expect(latestProps.highlightedSpace?.space_id).toBe(201);
+
+        randomSpy.mockRestore();
     });
 });
