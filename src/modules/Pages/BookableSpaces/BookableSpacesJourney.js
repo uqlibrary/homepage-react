@@ -19,6 +19,7 @@ import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import { getSpaceHoursStatus } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+import { ArticleCard } from 'modules/SharedComponents/Toolbox/ArticleCard';
 
 const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
@@ -183,36 +184,6 @@ const StyledLandingHeroInner = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         maxWidth: '100%',
     },
-}));
-
-const StyledLandingFeatureCard = styled('a')(({ theme }) => ({
-    display: 'block',
-    fontFamily: 'Roboto, sans-serif',
-    fontWeight: 300,
-    flexDirection: 'column',
-    minHeight: '100%',
-    overflow: 'visible',
-    borderRadius: '4px',
-    textDecoration: 'none',
-    color: 'rgba(0, 0, 0, 0.87)',
-    backgroundColor: 'rgb(255, 255, 255)',
-    border: '0.666667px solid rgb(220, 220, 221)',
-    boxShadow: 'none',
-    transition: 'box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    '&:hover': {
-        boxShadow: 'none',
-    },
-}));
-
-const StyledLandingFeatureImage = styled('div')(() => ({
-    width: '100%',
-    aspectRatio: '16 / 10',
-    borderTopLeftRadius: '4px',
-    borderTopRightRadius: '4px',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundColor: '#ddd6e8',
 }));
 
 const StyledLandingHighlightPanel = styled('section')(({ theme }) => ({
@@ -774,8 +745,6 @@ const BookableSpacesJourney = ({
     if (isFavouriteActionInProgress) {
         favouriteButtonLabel = 'Updating favourites...';
     }
-    console.log('articles', servicesAndSpacesArticles);
-
     React.useEffect(() => {
         if (!canShowAdvancedFilters && showAdvancedFilters) {
             setShowAdvancedFilters(false);
@@ -903,12 +872,15 @@ const BookableSpacesJourney = ({
     const landingHighlights = React.useMemo(
         () =>
             (servicesAndSpacesArticles || []).slice(0, 3).map(article => ({
-                eyebrow: article?.categories?.[0] || 'Services and spaces',
                 title: article?.title || 'Library update',
-                text: article?.description || '',
+                description: article?.description || '',
+                categories:
+                    Array.isArray(article?.categories) && article.categories.length > 0
+                        ? article.categories
+                        : ['Services and spaces'],
                 image: article?.image || journeyFallbackImage,
                 imagePosition: 'center',
-                canonicalUrl: article?.canonical_url || null,
+                canonical_url: article?.canonical_url || null,
             })),
         [servicesAndSpacesArticles],
     );
@@ -1239,69 +1211,18 @@ const BookableSpacesJourney = ({
                             }}
                         >
                             {landingHighlights.map((item, index) => (
-                                <StyledLandingFeatureCard
-                                    key={item.canonicalUrl || item.title || index}
-                                    data-testid={`spaces-journey-landing-feature-card-${index + 1}`}
-                                    href={item.canonicalUrl || undefined}
-                                >
-                                    <StyledLandingFeatureImage
-                                        data-testid={`spaces-journey-landing-feature-image-${index + 1}`}
-                                        sx={{
-                                            backgroundImage: `url(${item.image})`,
-                                            backgroundPosition: item.imagePosition || 'center',
-                                        }}
-                                    />
-                                    <Box
-                                        data-testid={`spaces-journey-landing-feature-content-${index + 1}`}
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            flexGrow: 1,
-                                            p: { xs: '1.2rem', md: '1.4rem' },
-                                        }}
-                                    >
-                                        <Typography
-                                            component="p"
-                                            data-testid={`spaces-journey-landing-feature-eyebrow-${index + 1}`}
-                                            sx={{
-                                                m: 0,
-                                                mb: 0.55,
-                                                color: '#6a6278',
-                                                fontSize: '0.92rem',
-                                                fontWeight: 500,
-                                            }}
-                                        >
-                                            {item.eyebrow}
-                                        </Typography>
-                                        <Typography
-                                            component="h3"
-                                            data-testid={`spaces-journey-landing-feature-title-${index + 1}`}
-                                            sx={{
-                                                m: 0,
-                                                mb: 1,
-                                                color: '#20142f',
-                                                fontSize: { xs: '1.55rem', md: '1.8rem' },
-                                                lineHeight: 1.15,
-                                                fontWeight: 500,
-                                                letterSpacing: '-0.02em',
-                                            }}
-                                        >
-                                            {item.title}
-                                        </Typography>
-                                        <Typography
-                                            variant="body2"
-                                            data-testid={`spaces-journey-landing-feature-text-${index + 1}`}
-                                            sx={{
-                                                color: '#5a5861',
-                                                fontSize: '1rem',
-                                                lineHeight: 1.65,
-                                                maxWidth: { xs: '100%', lg: '30ch' },
-                                            }}
-                                        >
-                                            {item.text}
-                                        </Typography>
-                                    </Box>
-                                </StyledLandingFeatureCard>
+                                <ArticleCard
+                                    key={item.canonical_url || item.title || index}
+                                    article={item}
+                                    articleindex={index}
+                                    cardId={`spaces-journey-landing-feature-card-${index + 1}`}
+                                    linkTestId={`spaces-journey-landing-feature-link-${index + 1}`}
+                                    imageTestId={`spaces-journey-landing-feature-image-${index + 1}`}
+                                    contentTestId={`spaces-journey-landing-feature-content-${index + 1}`}
+                                    eyebrowTestId={`spaces-journey-landing-feature-eyebrow-${index + 1}`}
+                                    titleTestId={`spaces-journey-landing-feature-title-${index + 1}`}
+                                    textTestId={`spaces-journey-landing-feature-text-${index + 1}`}
+                                />
                             ))}
                         </Box>
 
