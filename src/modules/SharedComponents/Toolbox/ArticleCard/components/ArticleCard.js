@@ -14,15 +14,15 @@ const StyledArticleCardRoot = styled('div', {
 })(({ articleindex, enableFeaturedLayout, theme }) => ({
     '.article-card': {
         [theme.breakpoints.up('xs')]: {
-            border: enableFeaturedLayout && articleindex === 0 ? theme.palette.designSystem.border : theme.palette.designSystem.border,
+            border: theme.palette.designSystem.border,
             '&:hover': {
-                backgroundColor: '#fff',
+                backgroundColor: '#f3f3f4',
             },
         },
         [theme.breakpoints.up('sm')]: {
             border: theme.palette.designSystem.border,
             '&:hover': {
-                backgroundColor: '#fff',
+                backgroundColor: '#f3f3f4',
             },
         },
     },
