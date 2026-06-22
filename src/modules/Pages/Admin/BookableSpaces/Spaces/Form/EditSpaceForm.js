@@ -1338,7 +1338,7 @@ export const EditSpaceForm = ({
         valuesToSend.space_external_book_url = !!formValues?.space_external_book_url
             ? formValues?.space_external_book_url
             : null;
-        if (isHighlightedTouched || !!formValues?.space_highlighted) {
+        if (isHighlightedTouched) {
             valuesToSend.space_highlighted = !!formValues?.space_highlighted;
         }
         valuesToSend.space_draftmode = !!formValues?.space_draftmode;
