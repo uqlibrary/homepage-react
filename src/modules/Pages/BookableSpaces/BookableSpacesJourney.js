@@ -1123,8 +1123,7 @@ const BookableSpacesJourney = ({
                                             fontSize: { xs: '1rem', md: '1.08rem' },
                                         }}
                                     >
-                                        Start with your study style, then refine by campus, facilities and room type to
-                                        get to the right space faster.
+                                        Discover study space options across UQ libraries.
                                     </Typography>
                                     <Stack direction={isMobileView ? 'column' : 'row'} spacing={1.5} sx={{ mt: 3 }}>
                                         <Button
