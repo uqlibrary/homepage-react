@@ -5,7 +5,6 @@ import { Box, Button, Chip, Grid, Stack, Typography, useTheme } from '@mui/mater
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ComputerIcon from '@mui/icons-material/Computer';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -16,10 +15,12 @@ import TvIcon from '@mui/icons-material/Tv';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
+import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 import { getSpaceHoursStatus } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import { ArticleCard } from 'modules/SharedComponents/Toolbox/ArticleCard';
+import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIcon';
 
 const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
@@ -54,23 +55,126 @@ const StyledJourneyPanel = styled('div')(({ theme }) => ({
 
 // Intent card — clickable card matching UQ Library homepage card grid style
 const StyledIntentCard = styled('button')(({ theme }) => ({
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: '8px',
-    padding: '1.75rem',
-    textAlign: 'left',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    background: '#FFFFFF',
     cursor: 'pointer',
-    color: theme.palette.text.primary,
-    backgroundColor: '#fff',
-    display: 'flex',
-    flexDirection: 'column',
+    color: theme.palette.primary.main,
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+    fontSize: '20px',
+    fontWeight: 500,
+    textAlign: 'left',
+    position: 'relative',
+    appearance: 'none',
     height: '100%',
     width: '100%',
     boxSizing: 'border-box',
-    transition: 'box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out',
-    fontFamily: 'inherit',
-    '&:hover': {
-        borderColor: theme.palette.primary.main,
-        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
+    padding: 0,
+    '& .cardHeading': {
+        color: theme.palette.designSystem.headingColor,
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: '24px',
+        fontWeight: 500,
+        letterSpacing: '0.16px',
+        lineHeight: 1.2,
+        marginBlock: '8px',
+    },
+    '& svg.arrowForwardIcon': {
+        display: 'block',
+    },
+    '& .panelIcon': {
+        width: '56px',
+        height: '56px',
+        color: theme.palette.primary.main,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    '& .panelIcon > svg': {
+        fontSize: '2.5rem',
+    },
+    '& .intentDescription': {
+        color: theme.palette.designSystem.bodyCopy,
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: '16px',
+        fontWeight: 400,
+        letterSpacing: '0.16px',
+        lineHeight: '1.6',
+    },
+    [theme.breakpoints.up('uqDsTablet')]: {
+        '& .panelBodyWrapper': {
+            margin: '24px 24px 0 24px',
+        },
+        '& .intentDescription': {
+            marginTop: 0,
+            marginBottom: 0,
+            minHeight: '76px',
+        },
+        '& .arrowSvgWrapper': {
+            minHeight: '48px',
+            marginTop: '24px',
+        },
+        '& svg.arrowForwardIcon': {
+            position: 'absolute',
+            bottom: '24px',
+            left: '24px',
+        },
+    },
+    [theme.breakpoints.down('uqDsTablet')]: {
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'space-between',
+        minWidth: '90%',
+        padding: '24px',
+        '& .panelIcon': {
+            width: '40px',
+            height: '40px',
+            minWidth: '40px',
+            minHeight: '40px',
+        },
+        '& .panelIcon > svg': {
+            fontSize: '2rem',
+        },
+        '& .intentDescription': {
+            display: 'none',
+        },
+        '& svg.arrowForwardIcon': {
+            paddingLeft: '15px',
+            minWidth: '24px',
+        },
+        '& .cardHeading': {
+            fontWeight: 500,
+            fontSize: '22px',
+            marginLeft: '24px',
+        },
+        '& .panelBodyWrapper': {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
+        },
+    },
+    [theme.breakpoints.up('uqDsDesktop')]: {
+        '& svg.arrowForwardIcon': {
+            '@media (prefers-reduced-motion: no-preference)': {
+                transition: 'margin-left 200ms ease-in-out',
+            },
+        },
+        '&:hover': {
+            '& .cardHeading': {
+                textDecoration: 'underline',
+            },
+            '@media (prefers-reduced-motion: no-preference)': {
+                backgroundColor: theme.palette.designSystem.panelBackgroundColor,
+            },
+            textDecoration: 'none',
+            '& svg.arrowForwardIcon': {
+                '@media (prefers-reduced-motion: no-preference)': {
+                    marginLeft: '10px',
+                    transition: 'margin-left 200ms ease-in-out',
+                },
+            },
+        },
     },
     '&:focus-visible': {
         outline: `3px solid ${theme.palette.primary.main}`,
@@ -189,7 +293,7 @@ const StyledLandingHeroInner = styled('div')(({ theme }) => ({
 const StyledLandingHighlightPanel = styled('section')(({ theme }) => ({
     position: 'relative',
     minHeight: '300px',
-    borderRadius: '14px',
+    borderRadius: '4px',
     overflow: 'hidden',
     backgroundColor: '#34204f',
     display: 'flex',
@@ -230,6 +334,7 @@ const StyledLandingHighlightTextCard = styled('div')(({ theme }) => ({
     padding: '1.25rem 1.35rem',
     boxShadow: '0 16px 30px rgba(23, 11, 37, 0.35)',
     boxSizing: 'border-box',
+    borderRadius: '4px',
     [theme.breakpoints.down('sm')]: {
         maxWidth: '100%',
         padding: '1rem 1.05rem',
@@ -565,7 +670,6 @@ const favouriteIntentDefinition = {
     matchers: [],
 };
 
-const landingHeroHighlights = ['Quiet corners', 'Bookable rooms', 'Computer access', 'Campus-aware filters'];
 const JOURNEY_VIEWS = ['landing', 'intent', 'results', 'details'];
 const JOURNEY_QUERY_PARAM_STEP = 'journeyStep';
 const JOURNEY_QUERY_PARAM_INTENT = 'journeyIntent';
@@ -998,20 +1102,6 @@ const BookableSpacesJourney = ({
                             <StyledLandingHeroContentColumn data-testid="spaces-journey-landing-hero-content-column">
                                 <StyledLandingHeroCard data-testid="spaces-journey-landing-hero-card">
                                     <Typography
-                                        component="p"
-                                        sx={{
-                                            margin: 0,
-                                            mb: 1,
-                                            fontSize: '0.92rem',
-                                            fontWeight: 700,
-                                            letterSpacing: '0.08em',
-                                            textTransform: 'uppercase',
-                                            color: 'rgba(255, 255, 255, 0.74)',
-                                        }}
-                                    >
-                                        Study spaces
-                                    </Typography>
-                                    <Typography
                                         component="h1"
                                         sx={{
                                             margin: 0,
@@ -1021,7 +1111,7 @@ const BookableSpacesJourney = ({
                                             letterSpacing: '-0.02em',
                                         }}
                                     >
-                                        Find a learning space that suits how you want to study
+                                        Find study spaces
                                     </Typography>
                                     <Typography
                                         variant="body1"
@@ -1036,38 +1126,6 @@ const BookableSpacesJourney = ({
                                         Start with your study style, then refine by campus, facilities and room type to
                                         get to the right space faster.
                                     </Typography>
-                                    <Box
-                                        data-testid="spaces-journey-landing-hero-highlights"
-                                        sx={{
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                            gap: '0.55rem',
-                                            mt: 2,
-                                        }}
-                                    >
-                                        {landingHeroHighlights.map(item => (
-                                            <Box
-                                                key={item}
-                                                component="span"
-                                                data-testid={`spaces-journey-landing-hero-highlight-${item
-                                                    .toLowerCase()
-                                                    .replace(/[^a-z0-9]+/g, '-')}`}
-                                                sx={{
-                                                    px: 1.05,
-                                                    py: 0.45,
-                                                    borderRadius: '999px',
-                                                    border: '1px solid rgba(255, 255, 255, 0.22)',
-                                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                                    color: '#fff',
-                                                    fontSize: '0.82rem',
-                                                    fontWeight: 600,
-                                                    letterSpacing: '0.01em',
-                                                }}
-                                            >
-                                                {item}
-                                            </Box>
-                                        ))}
-                                    </Box>
                                     <Stack direction={isMobileView ? 'column' : 'row'} spacing={1.5} sx={{ mt: 3 }}>
                                         <Button
                                             data-testid="spaces-journey-landing-get-started"
@@ -1128,16 +1186,25 @@ const BookableSpacesJourney = ({
                         Find a learning space
                     </Typography>
                     {canShowAdvancedFilters && (
-                        <Button
-                            variant="outlined"
+                        <StyledSecondaryButton
                             startIcon={<TuneIcon />}
                             onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
                             sx={{
-                                textTransform: 'none',
-                                fontWeight: 600,
                                 display: 'inline-flex',
                                 alignItems: 'center',
                                 gap: 1,
+                                ...(showAdvancedFilters
+                                    ? {
+                                          backgroundColor: 'primary.main',
+                                          color: '#fff',
+                                          borderColor: 'primary.main',
+                                          '&:hover, &:focus': {
+                                              backgroundColor: 'primary.main',
+                                              color: '#fff',
+                                              borderColor: 'primary.main',
+                                          },
+                                      }
+                                    : {}),
                             }}
                             aria-label={
                                 activeFilterCount > 0
@@ -1162,14 +1229,14 @@ const BookableSpacesJourney = ({
                                         fontSize: '0.75rem',
                                         fontWeight: 700,
                                         lineHeight: 1,
-                                        backgroundColor: '#51247a',
-                                        color: '#fff',
+                                        backgroundColor: showAdvancedFilters ? '#fff' : '#51247a',
+                                        color: showAdvancedFilters ? '#51247a' : '#fff',
                                     }}
                                 >
                                     {activeFilterCount}
                                 </Box>
                             )}
-                        </Button>
+                        </StyledSecondaryButton>
                     )}
                 </Stack>
 
@@ -1364,7 +1431,7 @@ const BookableSpacesJourney = ({
                                             sx={{
                                                 backgroundColor: '#ffffff',
                                                 border: '1px solid #ddd8e4',
-                                                borderRadius: '10px',
+                                                borderRadius: '4px',
                                                 p: '1rem',
                                                 height: '100%',
                                                 boxSizing: 'border-box',
@@ -1444,28 +1511,21 @@ const BookableSpacesJourney = ({
                                 return (
                                     <Grid item xs={12} sm={6} md={4} key={intent.id}>
                                         <StyledIntentCard onClick={() => handleIntentSelect(intent)}>
-                                            <IconComponent
-                                                sx={{
-                                                    fontSize: '2.5rem',
-                                                    color: 'primary.main',
-                                                    mb: 1.5,
-                                                }}
-                                            />
-                                            <Typography
-                                                component="h3"
-                                                variant="h6"
-                                                sx={{ fontWeight: 700, mb: 1, color: '#1f1230', lineHeight: 1.2 }}
-                                            >
-                                                {intent.label}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ color: '#4f4d57', flexGrow: 1, lineHeight: 1.5 }}
-                                            >
-                                                {intent.description}
-                                            </Typography>
-                                            <Box sx={{ mt: 2 }}>
-                                                <ArrowForwardIcon sx={{ color: 'primary.main', fontSize: '1.25rem' }} />
+                                            <Box className="panelBodyWrapper">
+                                                <Box>
+                                                    <Box className="panelIcon">
+                                                        <IconComponent />
+                                                    </Box>
+                                                    <Typography component="h3" className="cardHeading">
+                                                        {intent.label}
+                                                    </Typography>
+                                                    <Typography className="intentDescription">
+                                                        {intent.description}
+                                                    </Typography>
+                                                </Box>
+                                                <Box className="arrowSvgWrapper">
+                                                    <UqArrowForwardIcon />
+                                                </Box>
                                             </Box>
                                         </StyledIntentCard>
                                     </Grid>
@@ -1500,17 +1560,33 @@ const BookableSpacesJourney = ({
                                 </Typography>
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                                     {validCampusList.map(campus => (
-                                        <Button
+                                        <StyledSecondaryButton
                                             key={campus.campus_id}
-                                            variant={selectedCampus === campus.campus_id ? 'contained' : 'outlined'}
                                             size="small"
+                                            aria-pressed={selectedCampus === campus.campus_id}
                                             onClick={() =>
                                                 handleCampusSelection({ target: { value: campus.campus_id } })
                                             }
-                                            sx={{ textTransform: 'none' }}
+                                            sx={{
+                                                minWidth: 0,
+                                                px: 1.25,
+                                                py: 0.5,
+                                                ...(selectedCampus === campus.campus_id
+                                                    ? {
+                                                          backgroundColor: 'primary.main',
+                                                          color: '#fff',
+                                                          borderColor: 'primary.main',
+                                                          '&:hover, &:focus': {
+                                                              backgroundColor: 'primary.main',
+                                                              color: '#fff',
+                                                              borderColor: 'primary.main',
+                                                          },
+                                                      }
+                                                    : {}),
+                                            }}
                                         >
                                             {campus.campus_name}
-                                        </Button>
+                                        </StyledSecondaryButton>
                                     ))}
                                 </Box>
                             </Box>
@@ -1521,13 +1597,9 @@ const BookableSpacesJourney = ({
                             {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
                         </Typography>
                         <Stack direction="row" spacing={1}>
-                            <Button
-                                variant="outlined"
-                                onClick={handleClearJourneyFilters}
-                                sx={{ textTransform: 'none' }}
-                            >
+                            <StyledSecondaryButton onClick={handleClearJourneyFilters}>
                                 Reset quick filters
-                            </Button>
+                            </StyledSecondaryButton>
                         </Stack>
                         <Stack spacing={1.5}>
                             {intentSpaceLocations?.map(space => {
@@ -1623,17 +1695,16 @@ const BookableSpacesJourney = ({
                                                 )}
                                                 {!!bookableSpaceUrl && (
                                                     <Box sx={{ mt: 1.5, pt: 1.5, borderTop: '1px solid #e0e0e0' }}>
-                                                        <Button
+                                                        <StyledPrimaryButton
                                                             component="a"
                                                             href={bookableSpaceUrl}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            variant="contained"
                                                             size="small"
                                                             sx={{ textTransform: 'none' }}
                                                         >
                                                             Book this space
-                                                        </Button>
+                                                        </StyledPrimaryButton>
                                                     </Box>
                                                 )}
                                             </Box>

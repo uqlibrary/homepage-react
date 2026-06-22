@@ -7,6 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { pluralise } from 'helpers/general';
+import { StyledPrimaryButton } from 'helpers/general';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import { getSpaceHoursStatus, spaceOpeningHours } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import {
@@ -347,14 +348,14 @@ const JourneySpaceDetailsView = ({
 
                     {showFavouriteControls && isLoggedIn && !!selectedSpace?.space_id && (
                         <Box>
-                            <Button
+                            <StyledPrimaryButton
                                 variant={isSelectedSpaceFavourite ? 'contained' : 'outlined'}
                                 disabled={isFavouriteActionInProgress}
                                 onClick={() => onFavouriteToggle?.(selectedSpace)}
                                 sx={{ textTransform: 'none' }}
                             >
                                 {favouriteButtonLabel}
-                            </Button>
+                            </StyledPrimaryButton>
                         </Box>
                     )}
                 </Stack>
@@ -377,7 +378,7 @@ const JourneySpaceDetailsView = ({
                 <Stack spacing={2.5}>
                     {!!selectedSpace?.space_external_book_url ? (
                         <Box>
-                            <Button
+                            <StyledPrimaryButton
                                 variant="contained"
                                 component="a"
                                 href={selectedSpace.space_external_book_url}
@@ -386,7 +387,7 @@ const JourneySpaceDetailsView = ({
                                 sx={{ textTransform: 'none' }}
                             >
                                 Book this space
-                            </Button>
+                            </StyledPrimaryButton>
                         </Box>
                     ) : (
                         <Typography variant="body2" sx={{ color: '#4f4d57' }}>
