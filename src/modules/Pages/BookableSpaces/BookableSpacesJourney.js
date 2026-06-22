@@ -186,27 +186,29 @@ const StyledLandingHeroInner = styled('div')(({ theme }) => ({
 }));
 
 const StyledLandingFeatureCard = styled('a')(({ theme }) => ({
-    display: 'flex',
+    display: 'block',
+    fontFamily: 'Roboto, sans-serif',
+    fontWeight: 300,
     flexDirection: 'column',
     minHeight: '100%',
-    overflow: 'hidden',
-    borderRadius: '16px',
+    overflow: 'visible',
+    borderRadius: '4px',
     textDecoration: 'none',
-    color: 'inherit',
-    backgroundColor: '#fff',
-    border: `1px solid ${theme.palette.designSystem.borderColor}`,
-    boxShadow: '0 10px 24px rgba(31, 18, 48, 0.08)',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
+    color: 'rgba(0, 0, 0, 0.87)',
+    backgroundColor: 'rgb(255, 255, 255)',
+    border: '0.666667px solid rgb(220, 220, 221)',
+    boxShadow: 'none',
+    transition: 'box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     '&:hover': {
-        transform: 'translateY(-4px)',
-        boxShadow: '0 18px 36px rgba(31, 18, 48, 0.12)',
-        borderColor: '#d2c4e7',
+        boxShadow: 'none',
     },
 }));
 
 const StyledLandingFeatureImage = styled('div')(() => ({
     width: '100%',
     aspectRatio: '16 / 10',
+    borderTopLeftRadius: '4px',
+    borderTopRightRadius: '4px',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',

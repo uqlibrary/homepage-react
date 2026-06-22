@@ -312,7 +312,6 @@ const SpaceDetails = ({
                             {getFriendlyLocationDescription(bookableSpace)}
                         </StyledFriendlyLocationDiv>
                     )}
-                    <div>[todo] Share a location option.</div>
                     {isMobileView && (
                         <OpeningHoursDown
                             weeklyHoursLoading={weeklyHoursLoading}
@@ -352,8 +351,8 @@ const SpaceDetails = ({
                             </ul>
                         </>
                     )}
-                    <div>[todo] ‘Check availability’ link to Bookit </div>
-                    <div>[todo] ‘Check availability of similar rooms’ link to Bookit </div>
+                    {/* <div>[todo] ‘Check availability’ link to Bookit </div>
+                    <div>[todo] ‘Check availability of similar rooms’ link to Bookit </div> */}
                 </StyledCollapsableSection>
             </StyledSpaceDiv>
         </div>
