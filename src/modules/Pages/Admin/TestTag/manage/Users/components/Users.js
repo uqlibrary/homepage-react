@@ -92,6 +92,9 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
         const request = structuredClone(data);
         const userID = request.user_id;
         const wrappedRequest = transformUpdateRequest(request);
+        if (!wrappedRequest.user_team?.trim?.() && data.user_team.trim?.()) {
+            wrappedRequest.user_team = data.user_team;
+        }
         actions
             .updateUser(userID, wrappedRequest)
             .then(() => {
