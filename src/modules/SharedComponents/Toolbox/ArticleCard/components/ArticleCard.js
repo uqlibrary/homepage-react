@@ -224,19 +224,24 @@ const ArticleCard = ({
                     className="article-card"
                     noPadding
                     noHeader
-                    style={{ boxShadow: 'none' }}
+                    style={{
+                        boxShadow: 'none',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}
                     standardCardId={cardId}
                     data-testid={cardTestId}
                 >
                     {useRouterLink && !!canonicalUrl ? (
                         <Link to={canonicalUrl} data-testid={linkTestId} data-analyticsid={analyticsId}
-                            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', minHeight: '100%' }}
+                            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
                         >
                             {linkContent}
                         </Link>
                     ) : (
                         <a href={canonicalUrl || undefined} data-testid={linkTestId} data-analyticsid={analyticsId}
-                            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', minHeight: '100%' }}
+                            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
                         >
                             {linkContent}
                         </a>
