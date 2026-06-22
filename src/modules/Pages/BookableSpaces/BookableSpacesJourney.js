@@ -41,7 +41,7 @@ const StyledJourneyPanel = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     rowGap: '2rem',
-    padding: '2rem',
+    padding: '4rem 2rem 2rem',
     [theme.breakpoints.down('sm')]: {
         padding: '1rem',
         rowGap: '1.25rem',
@@ -1040,7 +1040,7 @@ const BookableSpacesJourney = ({
                                         Study spaces
                                     </Typography>
                                     <Typography
-                                        component="h2"
+                                        component="h1"
                                         sx={{
                                             margin: 0,
                                             fontWeight: 400,
@@ -1142,14 +1142,14 @@ const BookableSpacesJourney = ({
                     </StyledLandingHeroInner>
                 </StyledLandingHeroShell>
             )}
-            <StyledJourneyPanel>
+            <StyledJourneyPanel data-testid="spaces-homepage-content">
                 <Stack
                     direction="row"
                     justifyContent={canShowAdvancedFilters ? 'space-between' : 'flex-start'}
                     alignItems="center"
                 >
                     <Typography
-                        component="h1"
+                        component={view === 'landing' ? 'h2' : 'h1'}
                         variant={isMobileView ? 'h5' : 'h4'}
                         sx={{ fontWeight: 700, color: '#1f1230' }}
                     >
