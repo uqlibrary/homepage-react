@@ -72,7 +72,7 @@ export default defineConfig([
             },
 
             parser: babelParser,
-            ecmaVersion: 6,
+            ecmaVersion: 2022,
             sourceType: 'module',
 
             parserOptions: {
@@ -168,7 +168,7 @@ export default defineConfig([
             'no-lone-blocks': 2,
             'no-loop-func': 2,
             'no-multi-str': 2,
-            'no-native-reassign': 2,
+            'no-global-assign': 2,
             'no-new': 2,
             'no-new-func': 2,
             'no-new-wrappers': 2,
@@ -183,7 +183,6 @@ export default defineConfig([
             'no-sequences': 2,
             'no-with': 2,
             radix: 2,
-            'vars-on-top': 2,
             yoda: 2,
 
             /**
@@ -198,7 +197,6 @@ export default defineConfig([
             'react/jsx-uses-react': 2,
             'react/jsx-uses-vars': 2,
             'react/no-did-update-set-state': 2,
-            'react/no-did-mount-set-state': 2,
 
             'react/no-multi-comp': [
                 2,
@@ -209,7 +207,7 @@ export default defineConfig([
 
             'react/no-unknown-property': 2,
             'react/prop-types': 2,
-            'react/react-in-jsx-scope': 2,
+            'react/react-in-jsx-scope': 'off',
             'react/self-closing-comp': 2,
             'react/sort-comp': 2,
             'react/jsx-wrap-multilines': 2,
@@ -238,9 +236,8 @@ export default defineConfig([
             'jsx-a11y/role-supports-aria-props': 2,
             'jsx-a11y/html-has-lang': 2,
             'jsx-a11y/click-events-have-key-events': 2,
-            'jsx-a11y/no-onchange': 2,
-            'jsx-a11y/img-has-alt': 'off',
-            'jsx-a11y/onclick-has-focus': 'off',
+            'jsx-a11y/no-interactive-element-to-noninteractive-role': 2,
+            'jsx-a11y/alt-text': 'off',
             'jsx-a11y/href-no-hash': 'off',
 
             /**
@@ -264,7 +261,7 @@ export default defineConfig([
             ],
 
             'no-nested-ternary': 2,
-            'no-object-constructor': 2,
+            'no-new-object': 2,
             'no-underscore-dangle': 0,
             'one-var': [2, 'never'],
 
@@ -373,6 +370,12 @@ export default defineConfig([
     ...tseslint.config({
         files: ['**/*.ts', '**/*.tsx'],
         extends: [js.configs.recommended, tseslint.configs.recommended],
+        rules: {
+            'no-unused-vars': 'off',
+            'no-use-before-define': 'off',
+            '@typescript-eslint/no-unused-vars': [2, { vars: 'local', args: 'after-used', caughtErrors: 'none' }],
+            '@typescript-eslint/no-use-before-define': 2,
+        },
     }),
     eslintPluginPrettierRecommended,
     ...overrides,
