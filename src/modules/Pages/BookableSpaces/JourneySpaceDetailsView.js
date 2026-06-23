@@ -191,7 +191,7 @@ const JourneySpaceDetailsView = ({
 
     return (
         <>
-            {showBackButton && (
+            {showBackButton ? (
                 <Button
                     variant="text"
                     startIcon={<ArrowBackIcon />}
@@ -200,7 +200,7 @@ const JourneySpaceDetailsView = ({
                 >
                     {backLabel}
                 </Button>
-            )}
+            ) : null}
 
             <Box
                 sx={{

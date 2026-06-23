@@ -87,7 +87,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
         expect(screen.getByRole('heading', { level: 2, name: /quiet space/i })).toBeInTheDocument();
 
         fireEvent.click(screen.getByRole('button', { name: /quiet study room a/i }));
-        expect(screen.getByRole('button', { name: /back to results/i })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 3, name: /space details/i })).toBeInTheDocument();
 
         act(() => {
             window.dispatchEvent(new PopStateEvent('popstate', { state: { journeyView: 'results' } }));
@@ -137,7 +137,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
 
         rtlRender(<BookableSpacesJourney {...defaultProps} />);
 
-        expect(screen.getByRole('button', { name: /back to results/i })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 3, name: /space details/i })).toBeInTheDocument();
         expect(screen.getByRole('heading', { level: 2, name: /quiet study room a/i })).toBeInTheDocument();
     });
 

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Box, Button, Chip, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ComputerIcon from '@mui/icons-material/Computer';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -18,6 +17,12 @@ import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 import { getSpaceHoursStatus } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
+import JourneyBreadcrumbs from 'modules/Pages/BookableSpaces/JourneyBreadcrumbs';
+import {
+    JOURNEY_VIEWS,
+    serialiseJourneyUrl,
+    parseJourneyStateFromUrl,
+} from 'modules/Pages/BookableSpaces/journeyHelpers';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import { ArticleCard } from 'modules/SharedComponents/Toolbox/ArticleCard';
 import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIcon';
@@ -35,7 +40,9 @@ const StyledJourneyWrapper = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledJourneyPanel = styled('div')(({ theme }) => ({
+const StyledJourneyPanel = styled('div', {
+    shouldForwardProp: prop => prop !== 'hasTopSpacing',
+})(({ theme, hasTopSpacing }) => ({
     maxWidth: '1200px',
     margin: '0 auto',
     width: '100%',
@@ -43,9 +50,9 @@ const StyledJourneyPanel = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     rowGap: '2rem',
-    padding: '4rem 2rem 2rem',
+    padding: `${hasTopSpacing ? '2rem' : '0'} 2rem 2rem`,
     [theme.breakpoints.down('sm')]: {
-        padding: '1rem',
+        padding: `${hasTopSpacing ? '1rem' : '0'} 1rem 1rem`,
         rowGap: '1.25rem',
     },
     [theme.breakpoints.down('md')]: {
@@ -670,76 +677,6 @@ const favouriteIntentDefinition = {
     matchers: [],
 };
 
-const JOURNEY_VIEWS = ['landing', 'intent', 'results', 'details'];
-const JOURNEY_QUERY_PARAM_STEP = 'journeyStep';
-const JOURNEY_QUERY_PARAM_INTENT = 'journeyIntent';
-const JOURNEY_QUERY_PARAM_SPACE = 'journeySpace';
-
-const getJourneySearchParams = url => {
-    if (url.hash.includes('?')) {
-        const [hashPath, hashQuery] = url.hash.split('?');
-        return {
-            usesHashQuery: true,
-            hashPath,
-            params: new URLSearchParams(hashQuery),
-        };
-    }
-
-    return {
-        usesHashQuery: false,
-        hashPath: url.hash,
-        params: url.searchParams,
-    };
-};
-
-const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
-    const url = new URL(window.location.href);
-    const { usesHashQuery, hashPath, params } = getJourneySearchParams(url);
-
-    if (view && view !== 'landing') {
-        params.set(JOURNEY_QUERY_PARAM_STEP, view);
-    } else {
-        params.delete(JOURNEY_QUERY_PARAM_STEP);
-    }
-
-    if (intentId && (view === 'results' || view === 'details')) {
-        params.set(JOURNEY_QUERY_PARAM_INTENT, String(intentId));
-    } else {
-        params.delete(JOURNEY_QUERY_PARAM_INTENT);
-    }
-
-    if (view === 'details' && spaceId) {
-        params.set(JOURNEY_QUERY_PARAM_SPACE, String(spaceId));
-    } else {
-        params.delete(JOURNEY_QUERY_PARAM_SPACE);
-    }
-
-    if (usesHashQuery) {
-        const nextHashQuery = params.toString();
-        url.hash = nextHashQuery ? `${hashPath}?${nextHashQuery}` : hashPath;
-    }
-
-    return url.toString();
-};
-
-const parseJourneyStateFromUrl = availableIntentDefinitions => {
-    const url = new URL(window.location.href);
-    const { params } = getJourneySearchParams(url);
-
-    const requestedView = params.get(JOURNEY_QUERY_PARAM_STEP);
-    const view = JOURNEY_VIEWS.includes(requestedView) ? requestedView : 'landing';
-
-    const requestedIntentId = params.get(JOURNEY_QUERY_PARAM_INTENT);
-    const intentId = availableIntentDefinitions?.some(intent => intent.id === requestedIntentId)
-        ? requestedIntentId
-        : null;
-
-    const requestedSpaceId = params.get(JOURNEY_QUERY_PARAM_SPACE);
-    const spaceId = requestedSpaceId ? String(requestedSpaceId) : null;
-
-    return { view, intentId, spaceId };
-};
-
 const findSpaceById = (spaces, targetSpaceId) => {
     if (!targetSpaceId) return null;
     return spaces?.find(space => String(space?.space_id) === String(targetSpaceId)) || null;
@@ -924,14 +861,6 @@ const BookableSpacesJourney = ({
         navigateToView('intent', { intentId: null, spaceId: null });
     };
 
-    const handleJourneyBack = () => {
-        if (journeyHistoryRef.current.length > 1) {
-            window.history.back();
-            return;
-        }
-        navigateToView('landing', { pushHistory: false });
-    };
-
     const goToLegacyBrowse = () => {
         const url = new URL(window.location.href);
         // The advanced/map view is reached by adding ?advanced=1
@@ -1095,6 +1024,14 @@ const BookableSpacesJourney = ({
 
     return (
         <StyledJourneyWrapper data-testid="spaces-journey-wrapper" ref={journeyTopRef}>
+            <JourneyBreadcrumbs
+                view={view}
+                selectedIntent={selectedIntent}
+                selectedIntentId={selectedIntentId}
+                navigateToView={navigateToView}
+                setSelectedIntentId={setSelectedIntentId}
+                setSelectedSpace={setSelectedSpace}
+            />
             {view === 'landing' && (
                 <StyledLandingHeroShell>
                     <StyledLandingHeroInner data-testid="spaces-journey-landing-hero-inner">
@@ -1171,7 +1108,7 @@ const BookableSpacesJourney = ({
                     </StyledLandingHeroInner>
                 </StyledLandingHeroShell>
             )}
-            <StyledJourneyPanel data-testid="spaces-homepage-content">
+            <StyledJourneyPanel data-testid="spaces-homepage-content" hasTopSpacing={view !== 'landing'}>
                 <Stack
                     direction="row"
                     justifyContent={canShowAdvancedFilters ? 'space-between' : 'flex-start'}
@@ -1491,16 +1428,6 @@ const BookableSpacesJourney = ({
 
                 {view === 'intent' && (
                     <>
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Button
-                                variant="text"
-                                startIcon={<ArrowBackIcon />}
-                                onClick={handleJourneyBack}
-                                sx={{ textTransform: 'none' }}
-                            >
-                                Back
-                            </Button>
-                        </Stack>
                         <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
                             What sort of space would you like to find?
                         </Typography>
@@ -1536,17 +1463,6 @@ const BookableSpacesJourney = ({
 
                 {view === 'results' && (
                     <>
-                        <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                            <Button
-                                variant="text"
-                                startIcon={<ArrowBackIcon />}
-                                onClick={handleJourneyBack}
-                                sx={{ textTransform: 'none' }}
-                            >
-                                Back
-                            </Button>
-                            {!!selectedIntent && <Chip label={selectedIntent.label} variant="outlined" />}
-                        </Stack>
                         <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
                             {selectedIntent?.label || 'Matching spaces'}
                         </Typography>
@@ -1721,9 +1637,7 @@ const BookableSpacesJourney = ({
                         weeklyHours={weeklyHours}
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
-                        showBackButton
-                        backLabel="Back to results"
-                        onBack={handleJourneyBack}
+                        showBackButton={false}
                         showFavouriteControls
                         isLoggedIn={isLoggedIn}
                         isSelectedSpaceFavourite={isSelectedSpaceFavourite}
