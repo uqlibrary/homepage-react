@@ -601,10 +601,7 @@ export const DLOList = ({
         if (params.has('filters') && params.get('filters').length > 0) {
             filtersFound = true;
             // build the facet ids into facedtypeslug-facetid
-            const facetids = params
-                .get('filters')
-                .split(',')
-                .map(Number);
+            const facetids = params.get('filters').split(',').map(Number);
             const facettypelist = facetids
                 .map(facetId => {
                     for (const facetType of dlorFilterList) {
@@ -815,8 +812,9 @@ export const DLOList = ({
         let result = '';
         /* istanbul ignore else */
         if (!!filterListTrimmed) {
-            result = filterListTrimmed?.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()
-                ?.facet_type_help_public;
+            result = filterListTrimmed
+                ?.filter(f => f?.facet_type_slug === facetTypeSlug)
+                ?.pop()?.facet_type_help_public;
         }
         return result;
     };
@@ -1269,8 +1267,9 @@ export const DLOList = ({
                     tabIndex={object.isAccessible ? '0' : '-1'}
                     isAccessible={object.isAccessible}
                     aria-disabled={!object.isAccessible}
-                    aria-label={`${object?.object_title} ${!!object?.object_series_name &&
-                        '(Series: ' + object.object_series_name + ')'} ${object?.object_summary}`}
+                    aria-label={`${object?.object_title} ${
+                        !!object?.object_series_name && '(Series: ' + object.object_series_name + ')'
+                    } ${object?.object_summary}`}
                     sx={{
                         cursor: object.isAccessible ? 'pointer' : 'not-allowed',
                     }}

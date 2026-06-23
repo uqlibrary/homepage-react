@@ -96,9 +96,7 @@ const MonthsSelector = ({
                     {nextDateTextFormatter(
                         currentValue === '-1'
                             ? ''
-                            : moment(fromDate, fromDateFormat)
-                                  .add(currentValue, 'months')
-                                  .format(dateDisplayFormat),
+                            : moment(fromDate, fromDateFormat).add(currentValue, 'months').format(dateDisplayFormat),
                     )}
                 </Typography>
             )}

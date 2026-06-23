@@ -44,9 +44,7 @@ const makeNextCalibrateDateField = () => {
                 {...props}
                 inputProps={{
                     ...props.inputProps,
-                    min: moment()
-                        .add(1, 'd')
-                        .format(dateFormat),
+                    min: moment().add(1, 'd').format(dateFormat),
                 }}
                 required
             />
@@ -63,9 +61,7 @@ const makeNextCalibrateDateField = () => {
                 if (deviceId === 'auto') {
                     // new entries valid date range: BETWEEN [now] AND [+1 year, +1 day]
                     upperRange.add(1, 'day');
-                    initialValue = moment()
-                        .add(1, 'day')
-                        .format(dateFormat);
+                    initialValue = moment().add(1, 'day').format(dateFormat);
                 }
             }
             return !(

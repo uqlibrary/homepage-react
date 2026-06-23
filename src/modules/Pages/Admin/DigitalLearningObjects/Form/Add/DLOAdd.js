@@ -54,10 +54,7 @@ export const DLOAdd = ({
     }, []);
 
     function getToday() {
-        return moment()
-            .hour(0)
-            .minute(1)
-            .format('YYYY-MM-DD');
+        return moment().hour(0).minute(1).format('YYYY-MM-DD');
     }
 
     const formDefaults = {

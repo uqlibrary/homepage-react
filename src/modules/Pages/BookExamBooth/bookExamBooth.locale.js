@@ -99,8 +99,7 @@ export default {
         </React.Fragment>
     ),
     submitButton: {
-        aria:
-            'You will be sent to UQ BookIt system to complete your booking. Select an exam booth but do not adjust the time or date. After you book, you will receive a confirmation mail',
+        aria: 'You will be sent to UQ BookIt system to complete your booking. Select an exam booth but do not adjust the time or date. After you book, you will receive a confirmation mail',
         label: 'Submit and go to UQ BookIt',
     },
 };
