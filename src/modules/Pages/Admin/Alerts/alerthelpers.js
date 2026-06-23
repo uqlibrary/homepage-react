@@ -5,9 +5,7 @@ export function getTimeNowFormatted() {
 }
 
 export function getTimeEndOfDayFormatted() {
-    return moment()
-        .endOf('day')
-        .format('YYYY-MM-DDTHH:mm');
+    return moment().endOf('day').format('YYYY-MM-DDTHH:mm');
 }
 
 // so the user doesnt lose their work by clicking on the preview button,

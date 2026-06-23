@@ -25,7 +25,7 @@ export default function EngagementSummary({ data }) {
         },
         {
             label: 'Popular objects',
-            value: Array.isArray(data.popular_objects) ? data.popular_objects.length : data.popular_objects ?? 0,
+            value: Array.isArray(data.popular_objects) ? data.popular_objects.length : (data.popular_objects ?? 0),
             color: '#ef4444',
             param: 'popular',
         },

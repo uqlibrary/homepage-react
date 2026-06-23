@@ -128,11 +128,8 @@ export const DLOAdminHomepage = ({
     const keyWordSearchRef = useRef('');
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
-    const [
-        isDeleteFailureConfirmationOpen,
-        showDeleteFailureConfirmation,
-        hideDeleteFailureConfirmation,
-    ] = useConfirmationState();
+    const [isDeleteFailureConfirmationOpen, showDeleteFailureConfirmation, hideDeleteFailureConfirmation] =
+        useConfirmationState();
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);

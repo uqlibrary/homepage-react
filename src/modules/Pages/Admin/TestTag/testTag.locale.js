@@ -1282,8 +1282,7 @@ export default {
                     printer_template_code_helperText: `You may include common system placeholders ${PRINTER_TEMPLATE_SYSTEM_VARIABLES.join(
                         ', ',
                     )}`,
-                    vars:
-                        'One or more defined variables are missing from the template code. All variables must be included in the printer template code as {{VARNAME}}',
+                    vars: 'One or more defined variables are missing from the template code. All variables must be included in the printer template code as {{VARNAME}}',
                 },
                 buttons: {
                     add: {

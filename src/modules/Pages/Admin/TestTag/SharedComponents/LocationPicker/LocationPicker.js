@@ -107,7 +107,7 @@ const LocationPicker = ({
                             value={
                                 !hasAllOption && location.site === -1
                                     ? null
-                                    : siteList?.find(site => site.site_id === location.site) ?? siteList?.[0]
+                                    : (siteList?.find(site => site.site_id === location.site) ?? siteList?.[0])
                             }
                             onChange={(_, newValue) => {
                                 setLocation({

@@ -55,10 +55,10 @@ const PrinterTemplates = () => {
         printerCode: deptPrinterDefault,
         shouldOverridePrinterDevEnv: true,
     });
-    const printerError = useMemo(() => hasPrinterError(selectedPrinter, availablePrinters), [
-        selectedPrinter,
-        availablePrinters,
-    ]);
+    const printerError = useMemo(
+        () => hasPrinterError(selectedPrinter, availablePrinters),
+        [selectedPrinter, availablePrinters],
+    );
     const testPrintData = useRef('');
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const dialogStyles = useMemo(
