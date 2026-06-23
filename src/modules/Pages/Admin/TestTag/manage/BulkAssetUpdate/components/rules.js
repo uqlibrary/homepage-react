@@ -19,9 +19,7 @@ export const excludeAssetRules = [
                     // auto exclude any asset without a next test due date
                     if (!!!asset.asset_next_test_due_date) return true;
 
-                    const targetDate = moment()
-                        .startOf('day')
-                        .add(formValues.monthRange, 'months');
+                    const targetDate = moment().startOf('day').add(formValues.monthRange, 'months');
                     const nextTestDueDate = moment(
                         asset.asset_next_test_due_date,
                         locale.config.format.dateFormatNoTime,

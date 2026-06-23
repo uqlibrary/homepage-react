@@ -105,10 +105,7 @@ export class StandardCard extends Component {
             ? this.props.standardCardId
             : `standard-card${
                   typeof title === 'string'
-                      ? `-${title
-                            ?.replace(/ /g, '-')
-                            .replace(/"/g, "'")
-                            .toLowerCase()}`
+                      ? `-${title?.replace(/ /g, '-').replace(/"/g, "'").toLowerCase()}`
                       : /* istanbul ignore next */ ''
               }`;
         const cardHeaderAction = !!headerAction ? headerAction : <></>;

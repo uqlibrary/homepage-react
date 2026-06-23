@@ -110,11 +110,8 @@ export const AlertsListAsTable = ({
     );
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
-    const [
-        isDeleteFailureConfirmationOpen,
-        showDeleteFailureConfirmation,
-        hideDeleteFailureConfirmation,
-    ] = useConfirmationState();
+    const [isDeleteFailureConfirmationOpen, showDeleteFailureConfirmation, hideDeleteFailureConfirmation] =
+        useConfirmationState();
 
     React.useEffect(() => {
         // make it redraw when all displayed rows in a table are deleted
@@ -453,22 +450,29 @@ export const AlertsListAsTable = ({
                                                         const ss = systemList.find(s => s.slug === systemSlug);
                                                         return (
                                                             <div
-                                                                key={`alert-list-system-chip-${ss?.slug ||
-                                                                    /* istanbul ignore next */ index}`}
+                                                                key={`alert-list-system-chip-${
+                                                                    ss?.slug || /* istanbul ignore next */ index
+                                                                }`}
                                                                 style={{ marginLeft: 3, display: 'inline' }}
                                                             >
                                                                 <Chip
                                                                     data-testid={`alert-list-system-chip-${
                                                                         alert.id
                                                                     }-${ss?.slug || /* istanbul ignore next */ index}`}
-                                                                    label={`System: ${ss?.title ||
+                                                                    label={`System: ${
+                                                                        ss?.title ||
                                                                         /* istanbul ignore next */ ss?.slug ||
-                                                                        /* istanbul ignore next */ 'Unrecognised'}`}
-                                                                    title={`This alert is restricted to the ${ss?.title ||
+                                                                        /* istanbul ignore next */ 'Unrecognised'
+                                                                    }`}
+                                                                    title={`This alert is restricted to the ${
+                                                                        ss?.title ||
                                                                         /* istanbul ignore next */ ss?.slug ||
-                                                                        /* istanbul ignore next */ 'Unrecognised'} system`}
-                                                                    className={`system ${!!ss?.removed &&
-                                                                        /* istanbul ignore next */ 'removedChip'}`}
+                                                                        /* istanbul ignore next */ 'Unrecognised'
+                                                                    } system`}
+                                                                    className={`system ${
+                                                                        !!ss?.removed &&
+                                                                        /* istanbul ignore next */ 'removedChip'
+                                                                    }`}
                                                                 />
                                                             </div>
                                                         );

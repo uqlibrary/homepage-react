@@ -390,10 +390,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                         // Store the complete exam object if it has a url for a paper
                         /* istanbul ignore else */
                         if (exam.paperUrl) {
-                            examDataMap
-                                .get(courseCode)
-                                .get(period)
-                                .push(exam);
+                            examDataMap.get(courseCode).get(period).push(exam);
                         }
                     });
                 });

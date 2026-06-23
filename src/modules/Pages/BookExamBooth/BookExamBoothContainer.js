@@ -33,10 +33,7 @@ const BookExamBoothContainer = () => {
      * @returns moment
      */
     const getStartTime = (startDate, startTimeHours, startTimeMinutes, setupAllowance) =>
-        moment(startDate)
-            .hour(startTimeHours)
-            .minute(startTimeMinutes)
-            .subtract(setupAllowance, 'minutes');
+        moment(startDate).hour(startTimeHours).minute(startTimeMinutes).subtract(setupAllowance, 'minutes');
 
     /**
      * Calculate and return booking end time
@@ -48,9 +45,7 @@ const BookExamBoothContainer = () => {
      * @returns moment
      */
     const getEndTime = (startDate, startTimeHours, startTimeMinutes, sessionLengthMinutes) => {
-        const startDateTime = moment(startDate)
-            .hour(startTimeHours)
-            .minute(startTimeMinutes);
+        const startDateTime = moment(startDate).hour(startTimeHours).minute(startTimeMinutes);
         const vacateAllowanceMinutes = 30; // client refers to this as the buffer time
         return startDateTime.add(sessionLengthMinutes, 'minutes').add(vacateAllowanceMinutes, 'minutes');
     };

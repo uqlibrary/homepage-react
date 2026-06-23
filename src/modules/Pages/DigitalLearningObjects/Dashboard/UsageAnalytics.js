@@ -337,82 +337,87 @@ export default function UsageAnalytics({ usageData }) {
                         <Typography variant="body2" sx={{ mb: 0.2, mt: 0, textAlign: 'center', color: '#64748b' }}>
                             Date Range: {formatDateBrisbane(startDate)} to {formatDateBrisbane(endDate)}
                         </Typography>
-                        {/* istanbul ignore next */ (() => {
-                            let peakTotal = 0;
-                            let peakDate = '';
-                            let totalCurrentPeriod = 0;
-                            let totalPrevPeriod = 0;
-                            filteredUsageData.forEach(day => {
-                                totalCurrentPeriod += day.total_views;
-                                if (day.total_views > peakTotal) {
-                                    peakTotal = day.total_views;
-                                    peakDate = day.activity_date;
-                                }
-                            });
-                            /* istanbul ignore next */
-                            prevPeriodData.forEach(day => {
-                                totalPrevPeriod += day.total_views;
-                            });
-                            /* istanbul ignore next */
-                            let totalTrend = null;
-                            /* istanbul ignore next */
-                            if (prevPeriodData.length === periodLength) {
+                        {
+                            /* istanbul ignore next */ (() => {
+                                let peakTotal = 0;
+                                let peakDate = '';
+                                let totalCurrentPeriod = 0;
+                                let totalPrevPeriod = 0;
+                                filteredUsageData.forEach(day => {
+                                    totalCurrentPeriod += day.total_views;
+                                    if (day.total_views > peakTotal) {
+                                        peakTotal = day.total_views;
+                                        peakDate = day.activity_date;
+                                    }
+                                });
                                 /* istanbul ignore next */
-                                if (totalPrevPeriod > 0) {
-                                    totalTrend = ((totalCurrentPeriod - totalPrevPeriod) / totalPrevPeriod) * 100;
-                                } else if (totalPrevPeriod === 0 && totalCurrentPeriod > 0) {
-                                    totalTrend = totalCurrentPeriod * 100;
-                                } else if (totalPrevPeriod > 0 && totalCurrentPeriod === 0) {
-                                    totalTrend = -100;
-                                } else {
-                                    totalTrend = 0;
+                                prevPeriodData.forEach(day => {
+                                    totalPrevPeriod += day.total_views;
+                                });
+                                /* istanbul ignore next */
+                                let totalTrend = null;
+                                /* istanbul ignore next */
+                                if (prevPeriodData.length === periodLength) {
+                                    /* istanbul ignore next */
+                                    if (totalPrevPeriod > 0) {
+                                        totalTrend = ((totalCurrentPeriod - totalPrevPeriod) / totalPrevPeriod) * 100;
+                                    } else if (totalPrevPeriod === 0 && totalCurrentPeriod > 0) {
+                                        totalTrend = totalCurrentPeriod * 100;
+                                    } else if (totalPrevPeriod > 0 && totalCurrentPeriod === 0) {
+                                        totalTrend = -100;
+                                    } else {
+                                        totalTrend = 0;
+                                    }
                                 }
-                            }
-                            const { trendColor, trendText } = getTrendDisplay(totalTrend);
-                            return (
-                                <>
-                                    <Typography
-                                        variant="subtitle2"
-                                        sx={{ fontWeight: 700, mb: 0, textAlign: 'center', fontSize: 13 }}
-                                    >
-                                        Total: {total}
-                                        {totalTrend !== null && (
-                                            /* istanbul ignore next */
-                                            <span
-                                                style={{
-                                                    color: trendColor,
-                                                    fontWeight: 600,
-                                                    marginLeft: 4,
-                                                    fontSize: '0.9em',
-                                                    verticalAlign: 'middle',
+                                const { trendColor, trendText } = getTrendDisplay(totalTrend);
+                                return (
+                                    <>
+                                        <Typography
+                                            variant="subtitle2"
+                                            sx={{ fontWeight: 700, mb: 0, textAlign: 'center', fontSize: 13 }}
+                                        >
+                                            Total: {total}
+                                            {totalTrend !== null && (
+                                                /* istanbul ignore next */
+                                                <span
+                                                    style={{
+                                                        color: trendColor,
+                                                        fontWeight: 600,
+                                                        marginLeft: 4,
+                                                        fontSize: '0.9em',
+                                                        verticalAlign: 'middle',
+                                                    }}
+                                                >
+                                                    {/* istanbul ignore next */}
+                                                    {trendText}
+                                                </span>
+                                            )}
+                                            <span style={{ fontSize: 13, marginLeft: 6 }}>
+                                                {' '}
+                                                Selected: {totalSelected}
+                                            </span>
+                                        </Typography>
+                                        {peakTotal > 0 && (
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
+                                                    mt: -0.5,
+                                                    mb: 0.25,
+                                                    textAlign: 'center',
+                                                    color: '#64748b',
+                                                    display: 'block',
+                                                    fontSize: 10,
                                                 }}
                                             >
-                                                {/* istanbul ignore next */}
-                                                {trendText}
-                                            </span>
+                                                Peak - {formatDateBrisbane(peakDate)} ({peakTotal} views)
+                                            </Typography>
                                         )}
-                                        <span style={{ fontSize: 13, marginLeft: 6 }}> Selected: {totalSelected}</span>
-                                    </Typography>
-                                    {peakTotal > 0 && (
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                mt: -0.5,
-                                                mb: 0.25,
-                                                textAlign: 'center',
-                                                color: '#64748b',
-                                                display: 'block',
-                                                fontSize: 10,
-                                            }}
-                                        >
-                                            Peak - {formatDateBrisbane(peakDate)} ({peakTotal} views)
-                                        </Typography>
-                                    )}
-                                    {/* istanbul ignore next */}
-                                    <Box sx={{ borderBottom: '1px solid #e0e0e0', width: '100%', my: 0.5 }} />
-                                </>
-                            );
-                        })()}
+                                        {/* istanbul ignore next */}
+                                        <Box sx={{ borderBottom: '1px solid #e0e0e0', width: '100%', my: 0.5 }} />
+                                    </>
+                                );
+                            })()
+                        }
                         {/* istanbul ignore next */}
                         <Box component="ul" sx={{ pl: 2, mt: 0.25, mb: 0, listStyle: 'none', p: 0 }}>
                             {/* istanbul ignore next */}

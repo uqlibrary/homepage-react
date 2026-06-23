@@ -91,7 +91,7 @@ const ActionCell = ({
                     {!!tooltips && !!tooltips?.edit && (
                         <Tooltip
                             title={
-                                disableEdit ? tooltips?.editDisabled ?? /* istanbul ignore next */ '' : tooltips?.edit
+                                disableEdit ? (tooltips?.editDisabled ?? /* istanbul ignore next */ '') : tooltips?.edit
                             }
                             id={'tooltip-edit'}
                             data-testid={'tooltip-edit'}
@@ -109,7 +109,7 @@ const ActionCell = ({
                         <Tooltip
                             title={
                                 disableDelete
-                                    ? tooltips?.deleteDisabled ?? /* istanbul ignore next */ ''
+                                    ? (tooltips?.deleteDisabled ?? /* istanbul ignore next */ '')
                                     : tooltips.delete
                             }
                             id={'tooltip-delete'}
