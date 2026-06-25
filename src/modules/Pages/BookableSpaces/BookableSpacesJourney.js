@@ -1187,55 +1187,78 @@ const BookableSpacesJourney = ({
                             </StyledSeeAllLink>
                         </StyledFavouritesHeaderGridItem>
                         <Grid container spacing={3} sx={{ mt: '-24px' }}>
-                            {(spacesFavouritesList || []).slice(0, 3).map((fav, idx) => {
+                            {(() => {
+                                // Build lookup of available spaces for resolving favourites
                                 const spacesForLookup = [
                                     ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
                                     ...(highlightedSpace ? [highlightedSpace] : []),
                                 ];
-                                const space = findSpaceById(spacesForLookup, fav?.space_id) || null;
-                                const landingSpaceId = space?.space_id || fav?.space_id;
-                                const landingUrl = serialiseJourneyUrl({
-                                    view: 'details',
-                                    intentId: selectedIntentId,
-                                    spaceId: landingSpaceId,
+                                // dedupe favourites by resolved `space_id` and only include favourites that map to a known space
+                                const uniq = new Map();
+                                (spacesFavouritesList || []).forEach(f => {
+                                    const candidateId = f?.space_id || f?.favourite_id || null;
+                                    if (!candidateId) return;
+                                    const resolved = findSpaceById(spacesForLookup, candidateId);
+                                    if (!resolved) return; // exclude favourites that don't resolve to a known space
+                                    // exclude spaces not in valid campus set (if such filtering is active)
+                                    if (typeof validCampusIds !== 'undefined' && validCampusIds.size > 0) {
+                                        if (!validCampusIds.has(String(resolved.space_campus_id))) return;
+                                    }
+                                    if (!uniq.has(String(resolved.space_id))) {
+                                        uniq.set(String(resolved.space_id), f);
+                                    }
                                 });
-                                return (
-                                    <SingleLinkCard
-                                        key={fav?.space_id || `fav-${idx}`}
-                                        testId={`spaces-journey-favourite-card-${idx + 1}`}
-                                        cardHeading={space?.space_name || fav?.label || String(fav?.space_id)}
-                                        landingUrl={landingUrl}
-                                        shortParagraph={space?.space_library_name || ''}
-                                        fillContainer
-                                        disableHover
-                                        onClick={() => {
-                                            if (space) {
-                                                setSelectedSpace(space);
-                                                navigateToView('details', {
-                                                    intentId: selectedIntentId,
-                                                    spaceId: space.space_id,
-                                                });
-                                            } else {
-                                                const nextSpaceId = space?.space_id || fav?.space_id;
-                                                const nextUrl = serialiseJourneyUrl({
-                                                    view: 'details',
-                                                    intentId: selectedIntentId,
-                                                    spaceId: nextSpaceId,
-                                                });
-                                                window.history.pushState(
-                                                    {
-                                                        journeyView: 'details',
-                                                        journeyIntentId: selectedIntentId,
-                                                        journeySpaceId: String(nextSpaceId),
-                                                    },
-                                                    '',
-                                                    nextUrl,
-                                                );
-                                            }
-                                        }}
-                                    />
-                                );
-                            })}
+                                const favouritesToShow = Array.from(uniq.values()).slice(0, 3);
+                                return favouritesToShow.map((fav, idx) => {
+                                    const spacesForLookup = [
+                                        ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
+                                        ...(highlightedSpace ? [highlightedSpace] : []),
+                                    ];
+                                    const space = findSpaceById(spacesForLookup, fav?.space_id) || null;
+                                    const landingSpaceId = space?.space_id || fav?.space_id;
+                                    const landingUrl = serialiseJourneyUrl({
+                                        view: 'details',
+                                        intentId: selectedIntentId,
+                                        spaceId: landingSpaceId,
+                                    });
+                                    return (
+                                        <SingleLinkCard
+                                            key={fav?.space_id || `fav-${idx}`}
+                                            testId={`spaces-journey-favourite-card-${idx + 1}`}
+                                            cardHeading={space?.space_name || fav?.label || String(fav?.space_id)}
+                                            landingUrl={landingUrl}
+                                            shortParagraph={space?.space_library_name || ''}
+                                            fillContainer
+                                            disableHover
+                                            onClick={() => {
+                                                if (space) {
+                                                    setSelectedSpace(space);
+                                                    navigateToView('details', {
+                                                        intentId: selectedIntentId,
+                                                        spaceId: space.space_id,
+                                                    });
+                                                } else {
+                                                    const nextSpaceId = space?.space_id || fav?.space_id;
+                                                    const nextUrl = serialiseJourneyUrl({
+                                                        view: 'details',
+                                                        intentId: selectedIntentId,
+                                                        spaceId: nextSpaceId,
+                                                    });
+                                                    window.history.pushState(
+                                                        {
+                                                            journeyView: 'details',
+                                                            journeyIntentId: selectedIntentId,
+                                                            journeySpaceId: String(nextSpaceId),
+                                                        },
+                                                        '',
+                                                        nextUrl,
+                                                    );
+                                                }
+                                            }}
+                                        />
+                                    );
+                                });
+                            })()}
                         </Grid>
                     </StandardPage>
                 </Box>
