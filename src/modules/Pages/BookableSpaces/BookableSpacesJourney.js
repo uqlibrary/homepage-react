@@ -27,6 +27,8 @@ import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces
 import { ArticleCard } from 'modules/SharedComponents/Toolbox/ArticleCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIcon';
+import { Link } from 'react-router-dom';
+import SingleLinkCard from '../../HomePage/publicComponents/HelpNavigation/SingleLinkCard';
 
 const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
@@ -354,6 +356,53 @@ const StyledLandingHighlightAsideContent = styled('div')(() => ({
     flexDirection: 'column',
     marginTop: 'auto',
     marginBottom: 'auto',
+}));
+
+const StyledFavouritesHeaderGridItem = styled(Grid)(({ theme }) => ({
+    marginTop: '-32px',
+    paddingBottom: theme.spacing(3),
+    '& h2': {
+        marginTop: '22px',
+        fontSize: '32px',
+        fontWeight: 500,
+        display: 'inline-block',
+        marginRight: '16px',
+    },
+    // ensure heading doesn't capture pointer above the inline link
+    '& h2, & h2 *': {
+        zIndex: 0,
+    },
+    '& a': {
+        color: theme.palette.primary.main,
+        fontWeight: 500,
+        display: 'inline-block',
+        paddingBlock: '2px',
+        textDecoration: 'underline',
+        transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
+        '&:hover': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.main,
+        },
+    },
+}));
+
+const StyledSeeAllLink = styled(Link)(({ theme }) => ({
+    marginLeft: theme.spacing(0),
+    paddingBlock: '2px',
+    display: 'inline-block',
+    textDecoration: 'underline',
+    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
+    color: theme.palette.primary.main,
+    zIndex: 1,
+    pointerEvents: 'auto',
+    '&:hover': {
+        color: '#fff',
+        backgroundColor: theme.palette.primary.main,
+        textDecoration: 'underline',
+    },
+    '&, & *': {
+        color: 'inherit',
+    },
 }));
 
 const StyledAdvancedFiltersPanel = styled(StyledDetailSurface)(({ theme }) => ({
@@ -1109,6 +1158,87 @@ const BookableSpacesJourney = ({
                     </StyledLandingHeroInner>
                 </StyledLandingHeroShell>
             )}
+            {/* personalised content — only visible on landing when logged in */}
+            {view === 'landing' && isLoggedIn && (spacesFavouritesList || []).length > 0 && (
+                <Box
+                    className="spaces-journey-favourites"
+                    sx={{
+                        backgroundColor: 'rgb(243, 243, 244)',
+                        mb: 3,
+                        pt: '32px',
+                        // keep favourite cards fully white on hover (scoped)
+                        '& a[data-testid^="spaces-journey-favourite-card-"]:hover': {
+                            backgroundColor: '#fff !important',
+                        },
+                    }}
+                >
+                    <StandardPage>
+                        <StyledFavouritesHeaderGridItem item xs={12}>
+                            <Typography component={'h2'}>Your favourite spaces</Typography>
+                            <StyledSeeAllLink
+                                to={serialiseJourneyUrl({ view: 'results', intentId: favouriteIntentDefinition.id })}
+                                onClick={e => {
+                                    e.preventDefault();
+                                    setSelectedIntentId(favouriteIntentDefinition.id);
+                                    navigateToView('results', { intentId: favouriteIntentDefinition.id });
+                                }}
+                            >
+                                See all favourites
+                            </StyledSeeAllLink>
+                        </StyledFavouritesHeaderGridItem>
+                        <Grid container spacing={3} sx={{ mt: '-24px' }}>
+                            {(spacesFavouritesList || []).slice(0, 3).map((fav, idx) => {
+                                const spacesForLookup = [
+                                    ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
+                                    ...(highlightedSpace ? [highlightedSpace] : []),
+                                ];
+                                const space = findSpaceById(spacesForLookup, fav?.space_id) || null;
+                                const landingUrl = serialiseJourneyUrl({
+                                    view: 'details',
+                                    intentId: selectedIntentId,
+                                    spaceId: fav?.space_id,
+                                });
+                                return (
+                                    <SingleLinkCard
+                                        key={fav?.space_id || `fav-${idx}`}
+                                        testId={`spaces-journey-favourite-card-${idx + 1}`}
+                                        cardHeading={space?.space_name || fav?.label || String(fav?.space_id)}
+                                        landingUrl={landingUrl}
+                                        shortParagraph={space?.space_library_name || ''}
+                                        fillContainer
+                                        disableHover
+                                        onClick={() => {
+                                            if (space) {
+                                                setSelectedSpace(space);
+                                                navigateToView('details', {
+                                                    intentId: selectedIntentId,
+                                                    spaceId: space.space_id,
+                                                });
+                                            } else {
+                                                const nextUrl = serialiseJourneyUrl({
+                                                    view: 'details',
+                                                    intentId: selectedIntentId,
+                                                    spaceId: fav?.space_id,
+                                                });
+                                                window.history.pushState(
+                                                    {
+                                                        journeyView: 'details',
+                                                        journeyIntentId: selectedIntentId,
+                                                        journeySpaceId: String(fav?.space_id),
+                                                    },
+                                                    '',
+                                                    nextUrl,
+                                                );
+                                            }
+                                        }}
+                                    />
+                                );
+                            })}
+                        </Grid>
+                    </StandardPage>
+                </Box>
+            )}
+
             <StandardPage standardPageId="spaces-journey-content-standard-page">
                 <StyledJourneyPanel data-testid="spaces-homepage-content" hasTopSpacing={view !== 'landing'}>
                     <Stack
