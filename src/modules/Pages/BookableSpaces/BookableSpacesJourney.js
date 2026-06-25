@@ -1163,13 +1163,10 @@ const BookableSpacesJourney = ({
                 <Box
                     className="spaces-journey-favourites"
                     sx={{
-                        backgroundColor: 'rgb(243, 243, 244)',
                         mb: 3,
-                        pt: '32px',
-                        // keep favourite cards fully white on hover (scoped)
-                        '& a[data-testid^="spaces-journey-favourite-card-"]:hover': {
-                            backgroundColor: '#fff !important',
-                        },
+                        pt: '64px',
+                        // '& a[data-testid^="spaces-journey-favourite-card-"]:hover': {
+                        //     backgroundColor: '#fff !important',
                     }}
                 >
                     <StandardPage>
@@ -1229,7 +1226,6 @@ const BookableSpacesJourney = ({
                                             landingUrl={landingUrl}
                                             shortParagraph={space?.space_library_name || ''}
                                             fillContainer
-                                            disableHover
                                             onClick={() => {
                                                 if (space) {
                                                     setSelectedSpace(space);
