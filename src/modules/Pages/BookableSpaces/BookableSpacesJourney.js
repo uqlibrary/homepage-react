@@ -1193,10 +1193,11 @@ const BookableSpacesJourney = ({
                                     ...(highlightedSpace ? [highlightedSpace] : []),
                                 ];
                                 const space = findSpaceById(spacesForLookup, fav?.space_id) || null;
+                                const landingSpaceId = space?.space_id || fav?.space_id;
                                 const landingUrl = serialiseJourneyUrl({
                                     view: 'details',
                                     intentId: selectedIntentId,
-                                    spaceId: fav?.space_id,
+                                    spaceId: landingSpaceId,
                                 });
                                 return (
                                     <SingleLinkCard
@@ -1215,16 +1216,17 @@ const BookableSpacesJourney = ({
                                                     spaceId: space.space_id,
                                                 });
                                             } else {
+                                                const nextSpaceId = space?.space_id || fav?.space_id;
                                                 const nextUrl = serialiseJourneyUrl({
                                                     view: 'details',
                                                     intentId: selectedIntentId,
-                                                    spaceId: fav?.space_id,
+                                                    spaceId: nextSpaceId,
                                                 });
                                                 window.history.pushState(
                                                     {
                                                         journeyView: 'details',
                                                         journeyIntentId: selectedIntentId,
-                                                        journeySpaceId: String(fav?.space_id),
+                                                        journeySpaceId: String(nextSpaceId),
                                                     },
                                                     '',
                                                     nextUrl,
