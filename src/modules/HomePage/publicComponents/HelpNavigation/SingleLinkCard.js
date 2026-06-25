@@ -180,7 +180,12 @@ const SingleLinkCard = ({
                     to={landingUrl}
                     fillContainer={fillContainer}
                     data-testid={testId}
-                    onClick={onClick}
+                    onClick={e => {
+                        if (typeof onClick === 'function') {
+                            e.preventDefault();
+                            onClick(e);
+                        }
+                    }}
                 >
                     <div className={'panelBodyWrapper'}>
                         {!!iconBackgroundImage && paneIcon(iconBackgroundImage)}

@@ -84,7 +84,15 @@ export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
         url.hash = nextHashQuery ? `${hashPath}?${nextHashQuery}` : hashPath;
     }
 
-    return url.toString();
+    // Prefer returning a relative URL so react-router `Link` and manual
+    // `history.pushState` don't cause a full-navigation or produce duplicate
+    // hashes. When using hash-based params, return only the `#...` part;
+    // otherwise return the pathname + search.
+    if (usesHashQuery) {
+        return url.hash || '';
+    }
+
+    return `${url.pathname}${url.search || ''}`;
 };
 
 export const parseJourneyStateFromUrl = availableIntentDefinitions => {
