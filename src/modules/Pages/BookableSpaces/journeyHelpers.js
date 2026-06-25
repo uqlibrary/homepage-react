@@ -4,12 +4,24 @@ export const JOURNEY_QUERY_PARAM_INTENT = 'journeyIntent';
 export const JOURNEY_QUERY_PARAM_SPACE = 'journeySpace';
 
 export const getJourneySearchParams = url => {
-    if (url.hash.includes('?')) {
-        const [hashPath, hashQuery] = url.hash.split('?');
+    // If the app is using hash-based routing (e.g. '#/spaces'), prefer storing
+    // journey params after the hash so they end up at the end of the URL.
+    // If the hash already contains a query (contains '?'), parse that; otherwise
+    // use an empty params set and mark that we should write params into the hash.
+    if (url.hash) {
+        if (url.hash.includes('?')) {
+            const [hashPath, hashQuery] = url.hash.split('?');
+            return {
+                usesHashQuery: true,
+                hashPath,
+                params: new URLSearchParams(hashQuery),
+            };
+        }
+
         return {
             usesHashQuery: true,
-            hashPath,
-            params: new URLSearchParams(hashQuery),
+            hashPath: url.hash,
+            params: new URLSearchParams(),
         };
     }
 
