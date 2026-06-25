@@ -313,6 +313,7 @@ const PrinterTemplates = () => {
                     }}
                 />
                 <UpdateDialog
+                    key={actionState.isAdd ? actionState.key : undefined}
                     id={componentId}
                     title={actionState.title}
                     action="add"
@@ -334,6 +335,7 @@ const PrinterTemplates = () => {
                     hideAccessoryButton={false}
                 />
                 <UpdateDialog
+                    key={actionState.isEdit ? actionState.key : undefined}
                     id={componentId}
                     title={actionState.title}
                     action="edit"
