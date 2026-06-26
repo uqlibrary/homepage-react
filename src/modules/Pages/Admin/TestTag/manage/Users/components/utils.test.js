@@ -84,6 +84,7 @@ describe('utils', () => {
             user_team: {
                 team_slug: 'WSS',
             },
+            user_licence_number: '',
         };
 
         const expectedOutput = {
@@ -110,6 +111,7 @@ describe('utils', () => {
         inputRequest.user_team = {
             team_slug: 'PF',
         };
+        inputRequest.user_current_flag_cb = false;
 
         expectedOutput.privileges = {
             can_admin: 1,
@@ -169,6 +171,7 @@ describe('utils', () => {
         inputRequest.user_team = {
             team_slug: 'SPACES',
         };
+        inputRequest.user_current_flag_cb = false;
 
         expectedOutput.privileges = {
             can_admin: 1,
