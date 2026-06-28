@@ -96,6 +96,64 @@ describe('DataTableHooks', () => {
             );
         });
 
+        it('renders actions column at start when actionPosition is "start"', () => {
+            const locale = {
+                asset_id_displayed: { label: 'Asset ID' },
+                asset_type_name: { label: 'Type' },
+                asset_location: { label: 'Location' },
+            };
+            const config = {
+                fields: {
+                    asset_id_displayed: { fieldParams: { renderInTable: true } },
+                    asset_type_name: { fieldParams: { renderInTable: true } },
+                    asset_location: { fieldParams: { renderInTable: true } },
+                },
+            };
+
+            const { result } = renderHook(() => useDataTableColumns({ config, locale, actionPosition: 'start' }));
+            const { columns } = result.current;
+
+            expect(columns.length).toBe(Object.keys(locale).length + 1); // 4 (3 data + 1 actions)
+            expect(columns[0]).toEqual(
+                expect.objectContaining({
+                    field: 'actions',
+                    headerClassName: 'a11yHidden',
+                }),
+            );
+            expect(columns[1]).toEqual(expect.objectContaining({ field: 'asset_id_displayed' }));
+            expect(columns[2]).toEqual(expect.objectContaining({ field: 'asset_type_name' }));
+            expect(columns[3]).toEqual(expect.objectContaining({ field: 'asset_location' }));
+        });
+
+        it('renders actions column at end when actionPosition is "end" (default)', () => {
+            const locale = {
+                asset_id_displayed: { label: 'Asset ID' },
+                asset_type_name: { label: 'Type' },
+                asset_location: { label: 'Location' },
+            };
+            const config = {
+                fields: {
+                    asset_id_displayed: { fieldParams: { renderInTable: true } },
+                    asset_type_name: { fieldParams: { renderInTable: true } },
+                    asset_location: { fieldParams: { renderInTable: true } },
+                },
+            };
+
+            const { result } = renderHook(() => useDataTableColumns({ config, locale, actionPosition: 'end' }));
+            const { columns } = result.current;
+
+            expect(columns.length).toBe(Object.keys(locale).length + 1); // 4 (3 data + 1 actions)
+            expect(columns[0]).toEqual(expect.objectContaining({ field: 'asset_id_displayed' }));
+            expect(columns[1]).toEqual(expect.objectContaining({ field: 'asset_type_name' }));
+            expect(columns[2]).toEqual(expect.objectContaining({ field: 'asset_location' }));
+            expect(columns[3]).toEqual(
+                expect.objectContaining({
+                    field: 'actions',
+                    headerClassName: 'a11yHidden',
+                }),
+            );
+        });
+
         it('renders columns without actions', () => {
             const locale = {
                 asset_id: { label: 'ID' },

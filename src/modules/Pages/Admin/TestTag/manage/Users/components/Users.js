@@ -53,7 +53,7 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
                     teamList?.find?.(team => team.team_slug === option)?.team_display_name ||
                     option?.team_display_name ||
                     '',
-                isOptionEqualToValue: (option, value) => option.team_slug === value,
+                isOptionEqualToValue: (option, value) => option.team_slug === value.team_slug,
             },
         }),
         [teamList],
@@ -62,10 +62,9 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
     const onRowAdd = React.useCallback(
         data => {
             setDialogueBusy(true);
-            const request = structuredClone(data);
-            const wrappedRequest = transformAddRequest(request);
+            const request = transformAddRequest(data);
             actions
-                .addUser(wrappedRequest)
+                .addUser(request)
                 .then(() => {
                     closeDialog();
                     openConfirmationAlert(locale.config.alerts.success(), 'success');
@@ -89,14 +88,10 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
 
     const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
-        const request = structuredClone(data);
-        const userID = request.user_id;
-        const wrappedRequest = transformUpdateRequest(request);
-        if (!wrappedRequest.user_team?.trim?.() && data.user_team.trim?.()) {
-            wrappedRequest.user_team = data.user_team;
-        }
+        const userID = data.user_id;
+        const request = transformUpdateRequest(data);
         actions
-            .updateUser(userID, wrappedRequest)
+            .updateUser(userID, request)
             .then(() => {
                 openConfirmationAlert(locale.config.alerts.success(), 'success');
                 actions.loadUserList();
@@ -125,7 +120,8 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
     };
 
     const handleEditClick = ({ id, api }) => {
-        const row = api.getRow(id);
+        const row = structuredClone(api.getRow(id));
+        row.user_team = teamList?.find?.(team => team.team_slug === row.user_team) ?? null;
         row.isSelf = row?.user_uid === userUID;
         const actionProps = {
             type: 'edit',
@@ -137,7 +133,7 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
     };
 
     const handleDeleteClick = ({ id, api }) => {
-        const row = api.getRow(id);
+        const row = structuredClone(api.getRow(id));
         actionDispatch({
             type: 'delete',
             row,
@@ -177,6 +173,7 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
         // shouldDisableEdit,
         actionDataFieldKeys: { valueKey: 'user_uid' },
         actionTooltips: pageLocale.form.actionTooltips,
+        actionPosition: 'start',
     });
 
     React.useEffect(() => {
