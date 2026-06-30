@@ -28,7 +28,6 @@ const StyledGridItem = styled(Grid, {
     },
     [theme.breakpoints.down('uqDsTablet')]: {
         display: 'block',
-        minWidth: '100%',
     },
     '& p': {
         color: theme.palette.designSystem.bodyCopy,
@@ -97,7 +96,6 @@ const StyledLink = styled(Link, {
         alignItems: 'center',
         display: 'flex',
         justifyContent: 'space-between',
-        minWidth: fillContainer ? '100%' : '90%',
         marginRight: fillContainer ? 0 : '24px',
         padding: '24px',
         '& .panelIcon': {

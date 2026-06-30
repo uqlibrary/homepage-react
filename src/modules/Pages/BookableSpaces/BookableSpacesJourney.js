@@ -30,6 +30,9 @@ import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIco
 import { Link } from 'react-router-dom';
 import SingleLinkCard from '../../HomePage/publicComponents/HelpNavigation/SingleLinkCard';
 
+// test
+const imageTest =
+    'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M10.94 4.66a2.94 2.94 0 1 1-5.88 0V1.7h5.85v2.95zm-8.4 9.63a5.46 5.46 0 0 1 10.92 0M1.71 1.71H14.3M5.06 4.23h5.85M2.54 1.71v4.2%27%3e%3c/path%3e%3cpath d=%27M5.2 9.6 8 11.77l2.8-2.17%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
 const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
 const StyledJourneyWrapper = styled('div')(({ theme }) => ({
@@ -678,43 +681,55 @@ const intentDefinitions = [
     {
         id: 'quiet',
         label: 'Quiet space',
-        description: 'Find a peaceful spot to focus. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        description: 'Find a peaceful spot to focus.',
         icon: VolumeOffIcon,
+        IconSvg:
+            'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M1.71 4.66A3.69 3.69 0 0 1 4.7 1.8a3.76 3.76 0 0 1 4.57 3.68A4.5 4.5 0 0 1 7.7 8.91a2.13 2.13 0 0 0-.98 2.03c.03.46.03.92-.02 1.35a2.51 2.51 0 0 1-4.98-.52%27%3e%3c/path%3e%3cpath d=%27M3.48 5.57c.12-.83.9-1.43 1.72-1.34.83.11 1.43.88 1.34 1.71m7.75.8h-2.52m0-2.51 1.69-1.69m-1.69 6.72 1.69 1.68%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
         matchers: [/quiet/i, /low noise/i],
     },
     {
         id: 'collaborative',
         label: 'Collaborative space',
-        description: 'Work together with your team. Sed do eiusmod tempor incididunt ut labore et dolore magna.',
+        description: 'Work together with your team.',
         icon: GroupsIcon,
+        IconSvg:
+            'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-width=%27.75%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpath d=%27M5.914 11.344 4.23 12.602v-2.516H2.543a.829.829 0 0 1-.828-.828V2.543c0-.457.37-.828.828-.828h9.227a.83.83 0 0 1 .832.828v2.516M4.23 4.23h5.856M4.23 6.742h1.684%27%3e%3c/path%3e%3cpath d=%27M14.285 11.77h-1.683v2.515l-2.516-2.515H7.57V6.742h6.715zm-1.683-3.34H9.258m3.344 1.656H9.258%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
         matchers: [/collaborative/i, /group/i, /communal/i],
     },
     {
         id: 'computer',
         label: 'Computer access',
-        description: 'Access library computers and software. Ut enim ad minim veniam, quis nostrud exercitation.',
+        description: 'Access library computers and software.',
         icon: ComputerIcon,
+        IconSvg:
+            'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cpath fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27 d=%27M13.03 9.14V3.7a.83.83 0 0 0-.83-.83H3.8a.83.83 0 0 0-.83.83v5.45zm1.17 2.6c.2.43 0 .92-.43 1.12a.73.73 0 0 1-.34.08H2.54a.83.83 0 0 1-.83-.83c0-.11.03-.22.1-.34l1.16-2.6h10.06zm-7.03-.51h1.69%27%3e%3c/path%3e%3c/svg%3e")',
         matchers: [/computer/i, /byod/i],
     },
     {
         id: 'bookable',
         label: 'Bookable room',
-        description: 'Reserve a private or group meeting room. Ullamco laboris nisi ut aliquip ex ea commodo.',
+        description: 'Reserve a private or group meeting room.',
         icon: MeetingRoomIcon,
+        IconSvg:
+            'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg stroke=%27%2351247A%27 stroke-width=%27.75%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpath d=%27M2.543 3.398H13.43a.83.83 0 0 1 .828.832v9.227a.829.829 0 0 1-.828.828H2.543a.829.829 0 0 1-.828-.828V4.23a.83.83 0 0 1 .828-.832zm-.828 3.344h12.57M5.059 4.656V1.715m5.882 2.941V1.715%27 fill=%27none%27%3e%3c/path%3e%3cpath d=%27M4.43 8.828c-.118 0-.2.086-.2.2 0 .117.082.202.2.202a.196.196 0 0 0 .199-.203c.027-.086-.086-.199-.2-.199zm0 2.942c-.118 0-.2.085-.2.203 0 .113.082.199.2.199a.195.195 0 0 0 .199-.2.196.196 0 0 0-.2-.202zM8 8.828c-.113 0-.2.086-.2.2 0 .117.087.202.2.202.113 0 .2-.085.2-.203 0-.086-.087-.199-.2-.199zm0 2.942c-.113 0-.2.085-.2.203 0 .113.087.199.2.199.113 0 .2-.086.2-.2a.196.196 0 0 0-.2-.202zm3.57-2.942a.195.195 0 0 0-.199.2c0 .117.086.202.2.202a.194.194 0 0 0 .199-.203c0-.086-.083-.199-.2-.199zm0 2.942a.196.196 0 0 0-.199.203c0 .113.086.199.2.199a.194.194 0 0 0 .199-.2.194.194 0 0 0-.2-.202zm0 0%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
         matchers: [/bookable/i, /meeting room/i, /training room/i],
     },
     {
         id: 'postgrad',
         label: 'Postgraduate space',
-        description: 'Dedicated spaces for research and higher-degree study. Duis aute irure dolor in reprehenderit.',
+        description: 'Dedicated spaces for research and higher-degree study.',
         icon: PersonIcon,
+        IconSvg:
+            'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M10.94 4.66a2.94 2.94 0 1 1-5.88 0V1.7h5.85v2.95zm-8.4 9.63a5.46 5.46 0 0 1 10.92 0M1.71 1.71H14.3M5.06 4.23h5.85M2.54 1.71v4.2%27%3e%3c/path%3e%3cpath d=%27M5.2 9.6 8 11.77l2.8-2.17%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
         matchers: [/postgraduate/i],
     },
     {
         id: 'av',
         label: 'AV equipment',
-        description: 'Spaces equipped with screens, projectors and audio. Excepteur sint occaecat cupidatat non.',
+        description: 'Spaces equipped with screens, projectors and audio.',
         icon: TvIcon,
+        IconSvg:
+            'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M3.8 10.09h8.37m-2.08 4.2H5.9l-.43-4.2h5.04zM8 4.23c.8 0 1.46.66 1.46 1.46a1.46 1.46 0 0 1-2.92 0c0-.8.66-1.46 1.46-1.46zm1.83 4.2a2.4 2.4 0 0 0-3.37-.26c-.09.09-.2.17-.26.26%27%3e%3c/path%3e%3cpath d=%27M3.8 8.43H2.54a.83.83 0 0 1-.83-.83V2.54c0-.45.38-.83.83-.83h10.89c.48 0 .86.38.86.83v5.03c0 .46-.38.83-.83.83H12.2%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
         matchers: [/av equipment/i],
     },
 ];
@@ -1158,122 +1173,148 @@ const BookableSpacesJourney = ({
                     </StyledLandingHeroInner>
                 </StyledLandingHeroShell>
             )}
-            {/* personalised content — only visible on landing when logged in */}
-            {view === 'landing' && isLoggedIn && (spacesFavouritesList || []).length > 0 && (
-                <Box
-                    className="spaces-journey-favourites"
-                    sx={{
-                        mb: 3,
-                        pt: '64px',
-                        // '& a[data-testid^="spaces-journey-favourite-card-"]:hover': {
-                        //     backgroundColor: '#fff !important',
-                    }}
-                >
-                    <StandardPage>
-                        <StyledFavouritesHeaderGridItem item xs={12}>
-                            <Typography component={'h2'}>Your favourite spaces</Typography>
-                            <StyledSeeAllLink
-                                to={serialiseJourneyUrl({ view: 'results', intentId: favouriteIntentDefinition.id })}
-                                onClick={e => {
-                                    e.preventDefault();
-                                    setSelectedIntentId(favouriteIntentDefinition.id);
-                                    navigateToView('results', { intentId: favouriteIntentDefinition.id });
-                                }}
-                            >
-                                See all favourites
-                            </StyledSeeAllLink>
-                        </StyledFavouritesHeaderGridItem>
-                        <Grid container spacing={3} sx={{ mt: '-24px' }}>
-                            {(() => {
-                                // Build lookup of available spaces for resolving favourites
-                                const spacesForLookup = [
-                                    ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
-                                    ...(highlightedSpace ? [highlightedSpace] : []),
-                                ];
-                                // dedupe favourites by resolved `space_id` and only include favourites that map to a known space
-                                const uniq = new Map();
-                                (spacesFavouritesList || []).forEach(f => {
-                                    const candidateId = f?.space_id || f?.favourite_id || null;
-                                    if (!candidateId) return;
-                                    const resolved = findSpaceById(spacesForLookup, candidateId);
-                                    if (!resolved) return; // exclude favourites that don't resolve to a known space
-                                    // exclude spaces not in valid campus set (if such filtering is active)
-                                    if (typeof validCampusIds !== 'undefined' && validCampusIds.size > 0) {
-                                        if (!validCampusIds.has(String(resolved.space_campus_id))) return;
-                                    }
-                                    if (!uniq.has(String(resolved.space_id))) {
-                                        uniq.set(String(resolved.space_id), f);
-                                    }
-                                });
-                                const favouritesToShow = Array.from(uniq.values()).slice(0, 3);
-                                return favouritesToShow.map((fav, idx) => {
+            <StandardPage standardPageId="spaces-journey-content-standard-page">
+                {/* personalised content — only visible on landing when logged in */}
+                {view === 'landing' && isLoggedIn && (spacesFavouritesList || []).length > 0 && (
+                    <>
+                        <Box
+                            className="spaces-journey-favourites"
+                            sx={{
+                                mb: 3,
+                                pt: '64px',
+                                // '& a[data-testid^="spaces-journey-favourite-card-"]:hover': {
+                                //     backgroundColor: '#fff !important',
+                            }}
+                        >
+                            <StyledFavouritesHeaderGridItem item xs={12}>
+                                <Typography component={'h2'}>Your favourite spaces</Typography>
+                                <StyledSeeAllLink
+                                    to={serialiseJourneyUrl({
+                                        view: 'results',
+                                        intentId: favouriteIntentDefinition.id,
+                                    })}
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        setSelectedIntentId(favouriteIntentDefinition.id);
+                                        navigateToView('results', { intentId: favouriteIntentDefinition.id });
+                                    }}
+                                >
+                                    See all favourites
+                                </StyledSeeAllLink>
+                            </StyledFavouritesHeaderGridItem>
+                            <Grid container spacing={3} sx={{ mt: '-24px' }}>
+                                {(() => {
+                                    // Build lookup of available spaces for resolving favourites
                                     const spacesForLookup = [
                                         ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
                                         ...(highlightedSpace ? [highlightedSpace] : []),
                                     ];
-                                    const space = findSpaceById(spacesForLookup, fav?.space_id) || null;
-                                    const landingSpaceId = space?.space_id || fav?.space_id;
-                                    const landingUrl = serialiseJourneyUrl({
-                                        view: 'details',
-                                        intentId: selectedIntentId,
-                                        spaceId: landingSpaceId,
+                                    const uniq = new Map();
+                                    (spacesFavouritesList || []).forEach(f => {
+                                        const candidateId = f?.space_id || f?.favourite_id || null;
+                                        if (!candidateId) return;
+                                        const resolved = findSpaceById(spacesForLookup, candidateId);
+                                        if (!resolved) return; // exclude favourites that don't resolve to a known space
+                                        // exclude spaces not in valid campus set (if such filtering is active)
+                                        if (typeof validCampusIds !== 'undefined' && validCampusIds.size > 0) {
+                                            if (!validCampusIds.has(String(resolved.space_campus_id))) return;
+                                        }
+                                        if (!uniq.has(String(resolved.space_id))) {
+                                            uniq.set(String(resolved.space_id), f);
+                                        }
                                     });
+                                    const favouritesToShow = Array.from(uniq.values()).slice(0, 3);
+                                    return favouritesToShow.map((fav, idx) => {
+                                        const spacesForLookup = [
+                                            ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
+                                            ...(highlightedSpace ? [highlightedSpace] : []),
+                                        ];
+                                        const space = findSpaceById(spacesForLookup, fav?.space_id) || null;
+                                        const landingSpaceId = space?.space_id || fav?.space_id;
+                                        const landingUrl = serialiseJourneyUrl({
+                                            view: 'details',
+                                            intentId: selectedIntentId,
+                                            spaceId: landingSpaceId,
+                                        });
+                                        return (
+                                            <SingleLinkCard
+                                                key={fav?.space_id || `fav-${idx}`}
+                                                testId={`spaces-journey-favourite-card-${idx + 1}`}
+                                                cardHeading={space?.space_name || fav?.label || String(fav?.space_id)}
+                                                sx={{
+                                                    marginBottom: '0px !important',
+                                                    pr: { xs: '10px', sm: 0 },
+                                                    pl: { xs: 0, sm: '24px' },
+                                                }}
+                                                landingUrl={landingUrl}
+                                                shortParagraph={space?.space_library_name || ''}
+                                                fillContainer
+                                                onClick={() => {
+                                                    if (space) {
+                                                        setSelectedSpace(space);
+                                                        navigateToView('details', {
+                                                            intentId: selectedIntentId,
+                                                            spaceId: space.space_id,
+                                                        });
+                                                    } else {
+                                                        const nextSpaceId = space?.space_id || fav?.space_id;
+                                                        const nextUrl = serialiseJourneyUrl({
+                                                            view: 'details',
+                                                            intentId: selectedIntentId,
+                                                            spaceId: nextSpaceId,
+                                                        });
+                                                        window.history.pushState(
+                                                            {
+                                                                journeyView: 'details',
+                                                                journeyIntentId: selectedIntentId,
+                                                                journeySpaceId: String(nextSpaceId),
+                                                            },
+                                                            '',
+                                                            nextUrl,
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                        );
+                                    });
+                                })()}
+                            </Grid>
+                        </Box>
+
+                        <Typography component={'h2'} sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '16px' }}>
+                            Find a learning space
+                        </Typography>
+                        <Grid container spacing={3} sx={{ mt: '-24px' }}>
+                            {(() => {
+                                const intentsToShow = (availableIntentDefinitions || []).filter(
+                                    intent => intent && intent.id !== favouriteIntentDefinition.id,
+                                );
+                                return intentsToShow.map((intent, idx) => {
+                                    const landingUrl = serialiseJourneyUrl({ view: 'results', intentId: intent.id });
                                     return (
                                         <SingleLinkCard
-                                            key={fav?.space_id || `fav-${idx}`}
-                                            testId={`spaces-journey-favourite-card-${idx + 1}`}
-                                            cardHeading={space?.space_name || fav?.label || String(fav?.space_id)}
+                                            key={intent.id || `intent-${idx}`}
+                                            testId={`spaces-journey-intent-card-${intent.id || idx}`}
+                                            iconBackgroundImage={intent.IconSvg || null}
+                                            cardHeading={intent.label}
                                             landingUrl={landingUrl}
-                                            shortParagraph={space?.space_library_name || ''}
+                                            shortParagraph={intent.description || ''}
                                             fillContainer
-                                            onClick={() => {
-                                                if (space) {
-                                                    setSelectedSpace(space);
-                                                    navigateToView('details', {
-                                                        intentId: selectedIntentId,
-                                                        spaceId: space.space_id,
-                                                    });
-                                                } else {
-                                                    const nextSpaceId = space?.space_id || fav?.space_id;
-                                                    const nextUrl = serialiseJourneyUrl({
-                                                        view: 'details',
-                                                        intentId: selectedIntentId,
-                                                        spaceId: nextSpaceId,
-                                                    });
-                                                    window.history.pushState(
-                                                        {
-                                                            journeyView: 'details',
-                                                            journeyIntentId: selectedIntentId,
-                                                            journeySpaceId: String(nextSpaceId),
-                                                        },
-                                                        '',
-                                                        nextUrl,
-                                                    );
-                                                }
-                                            }}
+                                            sx={{ pr: { xs: '10px', sm: 0 }, pl: { xs: 0, sm: '24px' } }}
+                                            onClick={() => handleIntentSelect(intent)}
                                         />
                                     );
                                 });
                             })()}
                         </Grid>
-                    </StandardPage>
-                </Box>
-            )}
-
-            <StandardPage standardPageId="spaces-journey-content-standard-page">
+                    </>
+                )}
                 <StyledJourneyPanel data-testid="spaces-homepage-content" hasTopSpacing={view !== 'landing'}>
                     <Stack
                         direction="row"
                         justifyContent={canShowAdvancedFilters ? 'space-between' : 'flex-start'}
                         alignItems="center"
                     >
-                        <Typography
-                            component={view === 'landing' ? 'h2' : 'h1'}
-                            variant={isMobileView ? 'h5' : 'h4'}
-                            sx={{ fontWeight: 700, color: '#1f1230' }}
-                        >
-                            Find a learning space
-                        </Typography>
                         {canShowAdvancedFilters && (
                             <StyledSecondaryButton
                                 startIcon={<TuneIcon />}
