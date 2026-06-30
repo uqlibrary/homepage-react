@@ -45,7 +45,7 @@ const StyledLink = styled(Link, {
     borderRadius: '4px',
     background: '#FFFFFF',
     display: 'block',
-    width: fillContainer ? '100%' : 'auto',
+    width: '100%',
     cursor: 'pointer',
     color: theme.palette.primary.main,
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
@@ -96,7 +96,6 @@ const StyledLink = styled(Link, {
         alignItems: 'center',
         display: 'flex',
         justifyContent: 'space-between',
-        marginRight: fillContainer ? 0 : '24px',
         padding: '24px',
         '& .panelIcon': {
             width: '40px',

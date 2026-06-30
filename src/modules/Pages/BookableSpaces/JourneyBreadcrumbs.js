@@ -18,7 +18,14 @@ export const buildJourneyBreadcrumbHtml = items =>
         return `<li class="uq-breadcrumb__item" data-journey-breadcrumb="true"><span class="uq-breadcrumb__link">${item.label}</span></li>`;
     });
 
-export const buildJourneyBreadcrumbItems = ({ view, selectedIntent, selectedIntentId, navigateToView, setSelectedIntentId, setSelectedSpace }) => {
+export const buildJourneyBreadcrumbItems = ({
+    view,
+    selectedIntent,
+    selectedIntentId,
+    navigateToView,
+    setSelectedIntentId,
+    setSelectedSpace,
+}) => {
     const buildEntry = (label, nextView, intentId, spaceId, onClick) => ({
         label,
         href: serialiseJourneyUrl({ view: nextView, intentId, spaceId }),
@@ -29,18 +36,18 @@ export const buildJourneyBreadcrumbItems = ({ view, selectedIntent, selectedInte
 
     const items = [];
 
-    if (view === 'intent') {
-        items.push({ label: 'Choose an experience' });
-        return items;
-    }
+    // if (view === 'intent') {
+    //     items.push({ label: 'Choose an experience' });
+    //     return items;
+    // }
 
-    items.push(
-        buildEntry('Choose an experience', 'intent', null, null, () => {
-            setSelectedIntentId(null);
-            setSelectedSpace(null);
-            navigateToView('intent', { intentId: null, spaceId: null });
-        }),
-    );
+    // items.push(
+    //     buildEntry('Choose an experience', 'intent', null, null, () => {
+    //         setSelectedIntentId(null);
+    //         setSelectedSpace(null);
+    //         navigateToView('intent', { intentId: null, spaceId: null });
+    //     }),
+    // );
 
     if (view === 'results') {
         items.push({ label: selectedIntent?.label || 'Results' });
@@ -60,9 +67,24 @@ export const buildJourneyBreadcrumbItems = ({ view, selectedIntent, selectedInte
     return items;
 };
 
-const JourneyBreadcrumbs = ({ view, selectedIntent, selectedIntentId, navigateToView, setSelectedIntentId, setSelectedSpace }) => {
+const JourneyBreadcrumbs = ({
+    view,
+    selectedIntent,
+    selectedIntentId,
+    navigateToView,
+    setSelectedIntentId,
+    setSelectedSpace,
+}) => {
     const items = React.useMemo(
-        () => buildJourneyBreadcrumbItems({ view, selectedIntent, selectedIntentId, navigateToView, setSelectedIntentId, setSelectedSpace }),
+        () =>
+            buildJourneyBreadcrumbItems({
+                view,
+                selectedIntent,
+                selectedIntentId,
+                navigateToView,
+                setSelectedIntentId,
+                setSelectedSpace,
+            }),
         [view, selectedIntent, selectedIntentId, navigateToView, setSelectedIntentId, setSelectedSpace],
     );
 
@@ -91,7 +113,10 @@ const JourneyBreadcrumbs = ({ view, selectedIntent, selectedIntentId, navigateTo
                 if (typeof item.onClick !== 'function' || !item.href) return [];
                 const el = breadcrumbParent.querySelector(`#journey-site-breadcrumb-${index}`);
                 if (!el) return [];
-                const handler = e => { e.preventDefault(); item.onClick(); };
+                const handler = e => {
+                    e.preventDefault();
+                    item.onClick();
+                };
                 el.addEventListener('click', handler);
                 return [() => el.removeEventListener('click', handler)];
             });
@@ -100,7 +125,9 @@ const JourneyBreadcrumbs = ({ view, selectedIntent, selectedIntentId, navigateTo
         };
 
         if (!sync()) {
-            intervalId = window.setInterval(() => { if (sync()) window.clearInterval(intervalId); }, 100);
+            intervalId = window.setInterval(() => {
+                if (sync()) window.clearInterval(intervalId);
+            }, 100);
         }
 
         return () => {

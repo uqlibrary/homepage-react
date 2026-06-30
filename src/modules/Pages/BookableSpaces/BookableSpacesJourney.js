@@ -1128,7 +1128,7 @@ const BookableSpacesJourney = ({
                                         Discover study space options across UQ libraries.
                                     </Typography>
                                     <Stack direction={isMobileView ? 'column' : 'row'} spacing={1.5} sx={{ mt: 3 }}>
-                                        <Button
+                                        {/* <Button
                                             data-testid="spaces-journey-landing-get-started"
                                             variant="contained"
                                             onClick={goToIntentSelection}
@@ -1144,7 +1144,7 @@ const BookableSpacesJourney = ({
                                             }}
                                         >
                                             Get started
-                                        </Button>
+                                        </Button> */}
                                         <Button
                                             data-testid="spaces-journey-landing-browse-all"
                                             variant="outlined"
@@ -1202,7 +1202,17 @@ const BookableSpacesJourney = ({
                                     See all favourites
                                 </StyledSeeAllLink>
                             </StyledFavouritesHeaderGridItem>
-                            <Grid container spacing={3} sx={{ mt: '-24px' }}>
+                            <Grid
+                                container
+                                spacing={3}
+                                sx={{
+                                    mt: '-24px',
+                                    '& a[data-testid^="spaces-journey-"]': {
+                                        boxSizing: 'border-box',
+                                        minWidth: { xs: '100%', sm: '100%' },
+                                    },
+                                }}
+                            >
                                 {(() => {
                                     // Build lookup of available spaces for resolving favourites
                                     const spacesForLookup = [
@@ -1243,8 +1253,8 @@ const BookableSpacesJourney = ({
                                                 cardHeading={space?.space_name || fav?.label || String(fav?.space_id)}
                                                 sx={{
                                                     marginBottom: '0px !important',
-                                                    pr: { xs: '10px', sm: 0 },
-                                                    pl: { xs: 0, sm: '24px' },
+                                                    pr: { xs: '10px' },
+                                                    pl: { xs: 0 },
                                                 }}
                                                 landingUrl={landingUrl}
                                                 shortParagraph={space?.space_library_name || ''}
@@ -1284,7 +1294,18 @@ const BookableSpacesJourney = ({
                         <Typography component={'h2'} sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '16px' }}>
                             Find a learning space
                         </Typography>
-                        <Grid container spacing={3} sx={{ mt: '-24px' }}>
+                        <Grid
+                            container
+                            spacing={3}
+                            sx={{
+                                mt: '-24px',
+                                '& a[data-testid^="spaces-journey-"]': {
+                                    boxSizing: 'border-box',
+                                    width: '100%',
+                                    minWidth: { xs: 0, sm: 'auto' },
+                                },
+                            }}
+                        >
                             {(() => {
                                 const intentsToShow = (availableIntentDefinitions || []).filter(
                                     intent => intent && intent.id !== favouriteIntentDefinition.id,
@@ -1300,7 +1321,7 @@ const BookableSpacesJourney = ({
                                             landingUrl={landingUrl}
                                             shortParagraph={intent.description || ''}
                                             fillContainer
-                                            sx={{ pr: { xs: '10px', sm: 0 }, pl: { xs: 0, sm: '24px' } }}
+                                            sx={{ pr: { xs: '10px' }, pl: { xs: 0 } }}
                                             onClick={() => handleIntentSelect(intent)}
                                         />
                                     );
@@ -1628,7 +1649,7 @@ const BookableSpacesJourney = ({
                         </Stack>
                     )}
 
-                    {view === 'intent' && (
+                    {/* {view === 'intent' && (
                         <>
                             <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
                                 What sort of space would you like to find?
@@ -1661,7 +1682,7 @@ const BookableSpacesJourney = ({
                                 })}
                             </Grid>
                         </>
-                    )}
+                    )} */}
 
                     {view === 'results' && (
                         <>
