@@ -1290,7 +1290,10 @@ const BookableSpacesJourney = ({
                                 })()}
                             </Grid>
                         </Box>
-
+                    </>
+                )}
+                {view === 'landing' && (
+                    <>
                         <Typography component={'h2'} sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '16px' }}>
                             Find a learning space
                         </Typography>
