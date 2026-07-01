@@ -17,10 +17,7 @@ test.describe('The Homepage Learning Resource Panel', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('div[data-testid="learning-resources-homepage-panel"]')).toBeVisible();
         await expect(
-            page
-                .locator('div[data-testid=learning-resources-panel]')
-                .getByText(locale.homepagePanel.title)
-                .first(),
+            page.locator('div[data-testid=learning-resources-panel]').getByText(locale.homepagePanel.title).first(),
         ).toBeVisible();
         await page.locator('div[data-testid=learning-resources-panel] form input').fill('FREN');
         await expect(
@@ -39,10 +36,7 @@ test.describe('The Homepage Learning Resource Panel', () => {
         expect(currentClasses.length).toBeGreaterThan(1); // the user has courses that we can click on
 
         await expect(
-            page
-                .locator('div[data-testid=learning-resources-panel]')
-                .getByText(locale.homepagePanel.title)
-                .first(),
+            page.locator('div[data-testid=learning-resources-panel]').getByText(locale.homepagePanel.title).first(),
         ).toBeVisible();
         await expect(
             page
@@ -74,10 +68,7 @@ test.describe('The Homepage Learning Resource Panel', () => {
             `learning-resources?user=s1111111&coursecode=${specificClass.SUBJECT}${specificClass.CATALOG_NBR}&campus=St%20Lucia&semester=Semester%202%202020`,
         );
         await expect(
-            page
-                .locator(`div[data-testid="classpanel-${classIndex}"] h2`)
-                .getByText(specificClass.SUBJECT)
-                .first(),
+            page.locator(`div[data-testid="classpanel-${classIndex}"] h2`).getByText(specificClass.SUBJECT).first(),
         ).toBeVisible();
     });
 
@@ -85,18 +76,12 @@ test.describe('The Homepage Learning Resource Panel', () => {
         await page.goto('/?user=s3333333');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(
-            page
-                .locator('div[data-testid=learning-resources-panel]')
-                .getByText(locale.homepagePanel.title)
-                .first(),
+            page.locator('div[data-testid=learning-resources-panel]').getByText(locale.homepagePanel.title).first(),
         ).toBeVisible();
 
         // the user is not enrolled in any subjects which means the form has no sibling elements
         await expect(
-            page
-                .locator('div[data-testid=learning-resources-panel] form')
-                .locator('..')
-                .locator(':scope > *'),
+            page.locator('div[data-testid=learning-resources-panel] form').locator('..').locator(':scope > *'),
         ).toHaveCount(2); // 1 search field and one div with 'no courses' text
         // the user sees a search field
         await expect(page.locator('div[data-testid="learning-resource-search-input-field"] input')).toBeVisible();
@@ -167,10 +152,7 @@ test.describe('The Homepage Learning Resource Panel', () => {
         await page.goto('/?user=s3333333');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(
-            page
-                .locator('div[data-testid=learning-resources-panel]')
-                .getByText(locale.homepagePanel.title)
-                .first(),
+            page.locator('div[data-testid=learning-resources-panel]').getByText(locale.homepagePanel.title).first(),
         ).toBeVisible();
         await expect(page.locator('div[data-testid="learning-resource-search-input-field"] input')).toBeVisible();
         await expect(page.locator('div[data-testid="learning-resource-search-input-field"] input')).toBeVisible();
@@ -219,12 +201,9 @@ test.describe('The Homepage Learning Resource Panel', () => {
         ).toBeVisible();
         await expect(page.getByTestId('no-enrolled-courses')).not.toBeVisible();
         const numberOfBlocks = 3 + 1; // n classes + 1 header
-        await expect(
-            page
-                .getByTestId('your-courses')
-                .locator(':scope > *')
-                .locator(':scope > *'),
-        ).toHaveCount(numberOfBlocks);
+        await expect(page.getByTestId('your-courses').locator(':scope > *').locator(':scope > *')).toHaveCount(
+            numberOfBlocks,
+        );
         await expect(
             page
                 .getByTestId('hcr-0')
@@ -238,24 +217,14 @@ test.describe('Users see the correct number of courses', () => {
         page,
     }) => {
         await page.goto('/?user=uqacad1');
-        await expect(
-            page
-                .getByTestId('your-courses')
-                .locator('ul')
-                .locator(':scope > *'),
-        ).toHaveCount(4); // 8 courses with dupes is reduced to 4 without
+        await expect(page.getByTestId('your-courses').locator('ul').locator(':scope > *')).toHaveCount(4); // 8 courses with dupes is reduced to 4 without
     });
 
     test('An academic teaching a course to multiple classes of user (NAWD, PGCW, etc) sees the correct tabs', async ({
         page,
     }) => {
         await page.goto('/?user=uqacad1');
-        await expect(
-            page
-                .getByTestId('your-courses')
-                .locator('ul')
-                .locator(':scope > *'),
-        ).toHaveCount(4); // 8 courses with dupes is reduced to 4 without
+        await expect(page.getByTestId('your-courses').locator('ul').locator(':scope > *')).toHaveCount(4); // 8 courses with dupes is reduced to 4 without
 
         // click on one of the subjects to go to /learning-resources
         await expect(page.getByTestId('learning-resource-panel-course-link-0')).toBeVisible();
@@ -278,32 +247,17 @@ test.describe('Users see the correct number of courses', () => {
     // may as well check all of them are right!
     test('UG student sees correct number of courses', async ({ page }) => {
         await page.goto('/?user=s1111111');
-        await expect(
-            page
-                .getByTestId('your-courses')
-                .locator('ul')
-                .locator(':scope > *'),
-        ).toHaveCount(3);
+        await expect(page.getByTestId('your-courses').locator('ul').locator(':scope > *')).toHaveCount(3);
     });
 
     test('Remote RHD Student sees correct number of courses', async ({ page }) => {
         await page.goto('/?user=s5555555');
-        await expect(
-            page
-                .getByTestId('your-courses')
-                .locator('ul')
-                .locator(':scope > *'),
-        ).toHaveCount(5);
+        await expect(page.getByTestId('your-courses').locator('ul').locator(':scope > *')).toHaveCount(5);
     });
 
     test('Local RHD Student sees correct number of courses', async ({ page }) => {
         await page.goto('/?user=s6666666');
-        await expect(
-            page
-                .getByTestId('your-courses')
-                .locator('ul')
-                .locator(':scope > *'),
-        ).toHaveCount(2);
+        await expect(page.getByTestId('your-courses').locator('ul').locator(':scope > *')).toHaveCount(2);
     });
 
     test('Other local RHD student sees correct number of courses', async ({ page }) => {
