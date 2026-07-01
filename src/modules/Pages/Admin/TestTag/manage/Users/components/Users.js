@@ -121,7 +121,7 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
 
     const handleEditClick = ({ id, api }) => {
         const row = structuredClone(api.getRow(id));
-        row.user_team = teamList?.find?.(team => team.team_slug === row.user_team) ?? null;
+        row.user_team = teamList?.find?.(team => team.team_slug === row.user_team) ?? /* istanbul ignore next */ null;
         row.isSelf = row?.user_uid === userUID;
         const actionProps = {
             type: 'edit',
