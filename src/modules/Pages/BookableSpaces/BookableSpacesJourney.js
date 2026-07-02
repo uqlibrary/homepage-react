@@ -98,9 +98,11 @@ const StyledBrowseAllSpacesLink = styled('button')(({ theme }) => ({
     textDecoration: 'underline',
     cursor: 'pointer',
     fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
     '&:hover, &:focus': {
         backgroundColor: theme.palette.primary.main,
         color: '#fff',
+        textDecoration: 'underline',
     },
     '&:focus-visible': {
         outline: `3px solid ${theme.palette.primary.main}`,
