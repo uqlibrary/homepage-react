@@ -16,7 +16,7 @@ import locale from './pastExamPaperSearch.locale';
 import { isRepeatingString, linkToDrupal } from 'helpers/general';
 import { noResultsFoundBlock, StyledBodyText } from './pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { breadcrumbs } from 'config/routes';
 
 const StyledAboutLink = styled('p')(() => ({

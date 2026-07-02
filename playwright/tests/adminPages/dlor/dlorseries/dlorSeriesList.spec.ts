@@ -22,7 +22,7 @@ test.describe('Digital Learning Hub admin Series management', () => {
                     .locator('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .getByText(/Digital Learning Hub admin/)
                     .first(),
-            ).toHaveAttribute('href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+            ).toHaveAttribute('href', `/admin/dlor?user=${DLOR_ADMIN_USER}`);
             await expect(
                 page
                     .getByTestId('dlor-breadcrumb-series-management-label-0')
@@ -180,11 +180,7 @@ test.describe('Digital Learning Hub admin Series management', () => {
                     .first(),
             ).toBeVisible();
             // say "no, I dont want to delete" and the dialog just closes
-            await page
-                .getByTestId('cancel-dlor-series-delete-confirm')
-                .getByText(/No/)
-                .first()
-                .click();
+            await page.getByTestId('cancel-dlor-series-delete-confirm').getByText(/No/).first().click();
             await expect(page.getByTestId('dialogbox-dlor-series-delete-confirm')).not.toBeVisible();
         });
         test('can delete a series', async ({ page }) => {
@@ -198,12 +194,7 @@ test.describe('Digital Learning Hub admin Series management', () => {
                     .first(),
             ).toBeVisible();
             // say "yes"
-            await expect(
-                page
-                    .getByTestId('confirm-dlor-series-delete-confirm')
-                    .getByText(/Yes/)
-                    .first(),
-            ).toBeVisible();
+            await expect(page.getByTestId('confirm-dlor-series-delete-confirm').getByText(/Yes/).first()).toBeVisible();
             await page.getByTestId('confirm-dlor-series-delete-confirm').click();
 
             // it worked!
@@ -214,11 +205,7 @@ test.describe('Digital Learning Hub admin Series management', () => {
                     .first(),
             ).toBeVisible();
             await expect(page.getByTestId('cancel-dlor-series-delete-confirm')).not.toBeVisible();
-            await page
-                .getByTestId('confirm-dlor-series-delete-confirm')
-                .getByText(/Close/)
-                .first()
-                .click();
+            await page.getByTestId('confirm-dlor-series-delete-confirm').getByText(/Close/).first().click();
 
             // cant really test it was deleted - that will happen in canary. just confirm the page reloads
             await expect(page.getByTestId('dlor-serieslist-list').locator(':scope > *')).toHaveCount(10);
@@ -244,10 +231,7 @@ test.describe('Digital Learning Hub admin Series management', () => {
             ).toBeVisible();
             await expect(page.getByTestId('cancel-dlor-series-delete-confirm')).not.toBeVisible();
             await expect(
-                page
-                    .getByTestId('confirm-dlor-series-delete-confirm')
-                    .getByText(/Close/)
-                    .first(),
+                page.getByTestId('confirm-dlor-series-delete-confirm').getByText(/Close/).first(),
             ).toBeVisible();
 
             await page.getByTestId('confirm-dlor-series-delete-confirm').click();
@@ -295,10 +279,7 @@ test.describe('Digital Learning Hub admin Series management', () => {
             ).toBeVisible();
             await expect(page.getByTestId('cancel-dlor-series-delete-confirm')).not.toBeVisible();
             await expect(
-                page
-                    .getByTestId('confirm-dlor-series-delete-confirm')
-                    .getByText(/Close/)
-                    .first(),
+                page.getByTestId('confirm-dlor-series-delete-confirm').getByText(/Close/).first(),
             ).toBeVisible();
 
             await page.getByTestId('confirm-dlor-series-delete-confirm').click();

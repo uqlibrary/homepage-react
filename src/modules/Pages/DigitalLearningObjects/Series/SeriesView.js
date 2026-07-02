@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import parse from 'html-react-parser';
 
 import Box from '@mui/material/Box';

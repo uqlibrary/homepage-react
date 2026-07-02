@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import DLOAdminHomepage from './DLOAdminHomepage';
 import {
     exportDemographicsToCSV,
@@ -9,8 +9,8 @@ import {
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { useAccountContext } from 'context';
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: jest.fn(),
 }));
 
