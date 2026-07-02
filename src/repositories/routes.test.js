@@ -47,7 +47,12 @@ describe('Backend routes method', () => {
     it('should construct url for LEARNING_RESOURCES_COURSE_SUGGESTIONS_API', () => {
         const keyword = 'cows';
         expect(routes.LEARNING_RESOURCES_COURSE_SUGGESTIONS_API({ keyword })).toEqual({
-            apiUrl: 'https://api.library.uq.edu.au/staging/learning_resources/suggestions?hint=cows',
+            apiUrl: 'learning_resources/suggestions',
+            options: {
+                params: {
+                    hint: 'cows',
+                },
+            },
         });
     });
 
