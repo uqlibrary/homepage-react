@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { render, act, fireEvent, screen } from '@testing-library/react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import { mui1theme } from 'config/theme';
 import { Provider } from 'react-redux';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';

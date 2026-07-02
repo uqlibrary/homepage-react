@@ -1,8 +1,7 @@
-/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Grid, Paper, Divider, Link } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { getUserPostfix } from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
 function buildFacetSummaryUrl(filterId) {
     const baseUrl = '/digital-learning-hub';

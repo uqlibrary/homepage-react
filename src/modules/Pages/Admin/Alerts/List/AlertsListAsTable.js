@@ -27,7 +27,7 @@ import AlertSplitButton from './AlertSplitButton';
 import { systemList } from '../alerthelpers';
 import { scrollToTopOfPage } from 'helpers/general';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const moment = require('moment');
 

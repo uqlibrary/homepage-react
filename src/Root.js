@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouterProvider, Outlet } from 'react-router-dom';
+import { RouterProvider, Outlet } from 'react-router';
 import { createRouter } from 'config/router';
 import { mui1theme } from 'config';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';

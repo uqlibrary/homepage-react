@@ -49,10 +49,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 const homeLink = page.locator('a[data-testid="dlor-breadcrumb-admin-homelink"]');
                 await expect(homeLink).toContainText('Digital Learning Hub admin');
-                await expect(homeLink).toHaveAttribute(
-                    'href',
-                    `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`,
-                );
+                await expect(homeLink).toHaveAttribute('href', `/admin/dlor?user=${DLOR_ADMIN_USER}`);
 
                 await expect(
                     page
@@ -573,11 +570,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     `http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`,
                 );
                 await expect(
-                    page
-                        .getByTestId('dlor-detailpage')
-                        .first()
-                        .getByText('Advanced literature searching')
-                        .first(),
+                    page.getByTestId('dlor-detailpage').first().getByText('Advanced literature searching').first(),
                 ).toBeVisible();
             });
 
@@ -789,10 +782,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     await page.getByTestId('object-link-file-type-new').click({ timeout: 2000 });
                     // panel invalidity count present
                     await expect(
-                        page
-                            .locator('[data-testid="dlor-panel-validity-indicator-2"] span')
-                            .getByText('1')
-                            .first(),
+                        page.locator('[data-testid="dlor-panel-validity-indicator-2"] span').getByText('1').first(),
                     ).toBeVisible({ timeout: 3000 });
                     await page
                         .locator('[data-testid="dlor-admin-form-new-file-type"] input')

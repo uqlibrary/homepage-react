@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';

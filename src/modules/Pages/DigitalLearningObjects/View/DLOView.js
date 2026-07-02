@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 import parse from 'html-react-parser';
 import { useCookies } from 'react-cookie';
 import { pathConfig } from 'config/pathConfig';
