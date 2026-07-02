@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { act, fireEvent, rtlRender, screen } from 'test-utils';
+import { act, fireEvent, rtlRender, screen, WithRouter } from 'test-utils';
 
 jest.mock(
     '../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
@@ -16,7 +16,7 @@ jest.mock('modules/Pages/BookableSpaces/BookableSpacesMap', () => {
     };
 });
 
-describe.skip('BookableSpacesJourney browser back navigation', () => {
+describe('BookableSpacesJourney browser back navigation', () => {
     const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView;
 
     beforeAll(() => {
@@ -75,6 +75,13 @@ describe.skip('BookableSpacesJourney browser back navigation', () => {
         window.history.replaceState({}, '', '/#/spaces');
     });
 
+    const renderJourney = props =>
+        rtlRender(
+            <WithRouter>
+                <BookableSpacesJourney {...props} />
+            </WithRouter>,
+        );
+
     // it('keeps browser back navigation inside journey steps before leaving the page', () => {
     //     const pushStateSpy = jest.spyOn(window.history, 'pushState');
 
@@ -109,12 +116,9 @@ describe.skip('BookableSpacesJourney browser back navigation', () => {
     // });
 
     it('writes permalink query params as users progress through the journey', () => {
-        rtlRender(<BookableSpacesJourney {...defaultProps} />);
+        renderJourney(defaultProps);
 
-        fireEvent.click(screen.getByTestId('spaces-journey-landing-get-started'));
-        expect(window.location.search).toContain('journeyStep=intent');
-
-        fireEvent.click(screen.getByRole('button', { name: /quiet space/i }));
+        fireEvent.click(screen.getByRole('link', { name: /quiet space/i }));
         expect(window.location.search).toContain('journeyStep=results');
         expect(window.location.search).toContain('journeyIntent=quiet');
 
@@ -127,25 +131,24 @@ describe.skip('BookableSpacesJourney browser back navigation', () => {
     it('restores results and selected intent from permalink params', () => {
         window.history.replaceState({}, '', '/spaces?journeyStep=results&journeyIntent=quiet');
 
-        rtlRender(<BookableSpacesJourney {...defaultProps} />);
+        renderJourney(defaultProps);
 
-        expect(screen.getByRole('heading', { level: 2, name: /quiet space/i })).toBeInTheDocument();
+        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
     });
 
     it('restores details view and selected space from permalink params', () => {
         window.history.replaceState({}, '', '/spaces?journeyStep=details&journeyIntent=quiet&journeySpace=101');
 
-        rtlRender(<BookableSpacesJourney {...defaultProps} />);
+        renderJourney(defaultProps);
 
-        expect(screen.getByRole('heading', { level: 3, name: /space details/i })).toBeInTheDocument();
-        expect(screen.getByRole('heading', { level: 2, name: /quiet study room a/i })).toBeInTheDocument();
+        expect(screen.getByText(/space details/i)).toBeInTheDocument();
+        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
     });
 
     it('shows a booking link in results for bookable spaces', () => {
-        rtlRender(<BookableSpacesJourney {...defaultProps} />);
+        renderJourney(defaultProps);
 
-        fireEvent.click(screen.getByTestId('spaces-journey-landing-get-started'));
-        fireEvent.click(screen.getByRole('button', { name: /quiet space/i }));
+        fireEvent.click(screen.getByRole('link', { name: /quiet space/i }));
 
         const bookLink = screen.getByRole('link', { name: /book this space/i });
         expect(bookLink).toHaveAttribute('href', baseSpace.space_external_book_url);
@@ -153,12 +156,12 @@ describe.skip('BookableSpacesJourney browser back navigation', () => {
     });
 
     it('hides the landing highlighted space block when no highlighted space is available', () => {
-        rtlRender(<BookableSpacesJourney {...defaultProps} highlightedSpace={null} />);
+        renderJourney({ ...defaultProps, highlightedSpace: null });
 
         expect(screen.queryByTestId('spaces-journey-landing-highlight-panel')).not.toBeInTheDocument();
     });
 
-    it.skip('hides blank campus options and excludes spaces on invalid campuses in results', () => {
+    it('hides blank campus options and excludes spaces on invalid campuses in results', () => {
         const orphanSpace = {
             ...baseSpace,
             space_id: 202,
@@ -177,10 +180,9 @@ describe.skip('BookableSpacesJourney browser back navigation', () => {
             ],
         };
 
-        rtlRender(<BookableSpacesJourney {...props} />);
+        renderJourney(props);
 
-        fireEvent.click(screen.getByTestId('spaces-journey-landing-get-started'));
-        fireEvent.click(screen.getByRole('button', { name: /quiet space/i }));
+        fireEvent.click(screen.getByRole('link', { name: /quiet space/i }));
 
         const campusSection = screen.getByText('Campus').closest('div');
         expect(campusSection.querySelectorAll('button')).toHaveLength(2);
@@ -191,7 +193,7 @@ describe.skip('BookableSpacesJourney browser back navigation', () => {
         expect(screen.queryByText('Orphaned Space')).not.toBeInTheDocument();
     });
 
-    it.skip('does not show campuses that have no spaces in the inline campus picker', () => {
+    it('does not show campuses that have no spaces in the inline campus picker', () => {
         const props = {
             ...defaultProps,
             filteredSpaceLocations: [
@@ -212,10 +214,9 @@ describe.skip('BookableSpacesJourney browser back navigation', () => {
             ],
         };
 
-        rtlRender(<BookableSpacesJourney {...props} />);
+        renderJourney(props);
 
-        fireEvent.click(screen.getByTestId('spaces-journey-landing-get-started'));
-        fireEvent.click(screen.getByRole('button', { name: /quiet space/i }));
+        fireEvent.click(screen.getByRole('link', { name: /quiet space/i }));
 
         expect(screen.getByRole('button', { name: 'St Lucia' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Gatton' })).toBeInTheDocument();

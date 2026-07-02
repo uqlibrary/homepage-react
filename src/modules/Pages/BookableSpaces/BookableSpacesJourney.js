@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { Box, Button, Chip, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import ComputerIcon from '@mui/icons-material/Computer';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -30,9 +29,8 @@ import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIco
 import { Link } from 'react-router-dom';
 import SingleLinkCard from '../../HomePage/publicComponents/HelpNavigation/SingleLinkCard';
 
-// test
-const imageTest =
-    'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M10.94 4.66a2.94 2.94 0 1 1-5.88 0V1.7h5.85v2.95zm-8.4 9.63a5.46 5.46 0 0 1 10.92 0M1.71 1.71H14.3M5.06 4.23h5.85M2.54 1.71v4.2%27%3e%3c/path%3e%3cpath d=%27M5.2 9.6 8 11.77l2.8-2.17%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
+const browseAllSpacesIcon =
+    'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M14.29 7.57V3.89c0-.35-.2-.66-.52-.78L10.4 1.77a.83.83 0 0 0-.63 0L6.2 3.2a.8.8 0 0 1-.63 0L2.29 1.89a.41.41 0 0 0-.55.22c-.03.06-.03.12-.03.15v8.03c0 .34.2.65.52.77l3.34 1.34c.2.08.43.08.63 0m-.29-9.14v4.31m4.18-5.86v3.77%27%3e%3c/path%3e%3cpath d=%27M10.52 7.57a2.94 2.94 0 1 1 0 5.88 2.94 2.94 0 0 1 0-5.88zm3.77 6.72L12.6 12.6%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
 const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
 const StyledJourneyWrapper = styled('div')(({ theme }) => ({
@@ -63,6 +61,53 @@ const StyledJourneyPanel = styled('div', {
     },
     [theme.breakpoints.down('md')]: {
         maxWidth: '100%',
+    },
+}));
+
+const StyledBrowseAllSpacesCard = styled('section')(({ theme }) => ({
+    marginTop: '2rem',
+    backgroundColor: '#f3f3f5',
+    borderRadius: '4px',
+    padding: '1.5rem',
+    [theme.breakpoints.down('sm')]: {
+        marginTop: '1.5rem',
+        padding: '1.25rem',
+    },
+}));
+
+const StyledBrowseAllSpacesIcon = styled('span')(() => ({
+    display: 'block',
+    width: '56px',
+    height: '56px',
+    backgroundImage: browseAllSpacesIcon,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    backgroundSize: 'contain',
+}));
+
+const StyledBrowseAllSpacesLink = styled('button')(({ theme }) => ({
+    marginTop: '1.25rem',
+    border: 0,
+    padding: 0,
+    background: 'transparent',
+    color: theme.palette.primary.main,
+    fontSize: '1.25rem',
+    lineHeight: 1.3,
+    fontWeight: 500,
+    textAlign: 'left',
+    textDecoration: 'underline',
+    cursor: 'pointer',
+    fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+    '&:hover, &:focus': {
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+    },
+    '&:focus-visible': {
+        outline: `3px solid ${theme.palette.primary.main}`,
+        outlineOffset: '2px',
+    },
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '1.1rem',
     },
 }));
 
@@ -791,7 +836,6 @@ const BookableSpacesJourney = ({
     isFavouriteActionInProgress,
 }) => {
     const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('sm'));
     const journeyTopRef = React.useRef(null);
     const [view, setView] = React.useState('landing');
     const [selectedIntentId, setSelectedIntentId] = React.useState(null);
@@ -919,12 +963,6 @@ const BookableSpacesJourney = ({
         },
         [selectedIntentId, selectedSpace?.space_id, writeJourneyHistory],
     );
-
-    const goToIntentSelection = () => {
-        setSelectedIntentId(null);
-        setSelectedSpace(null);
-        navigateToView('intent', { intentId: null, spaceId: null });
-    };
 
     const goToLegacyBrowse = () => {
         const url = new URL(window.location.href);
@@ -1127,42 +1165,6 @@ const BookableSpacesJourney = ({
                                     >
                                         Discover study space options across UQ libraries.
                                     </Typography>
-                                    <Stack direction={isMobileView ? 'column' : 'row'} spacing={1.5} sx={{ mt: 3 }}>
-                                        {/* <Button
-                                            data-testid="spaces-journey-landing-get-started"
-                                            variant="contained"
-                                            onClick={goToIntentSelection}
-                                            sx={{
-                                                textTransform: 'none',
-                                                alignSelf: 'flex-start',
-                                                backgroundColor: '#fff',
-                                                color: '#51247a',
-                                                fontWeight: 700,
-                                                '&:hover': {
-                                                    backgroundColor: '#f3ebff',
-                                                },
-                                            }}
-                                        >
-                                            Get started
-                                        </Button> */}
-                                        <Button
-                                            data-testid="spaces-journey-landing-browse-all"
-                                            variant="outlined"
-                                            onClick={goToLegacyBrowse}
-                                            sx={{
-                                                textTransform: 'none',
-                                                alignSelf: 'flex-start',
-                                                color: '#fff',
-                                                borderColor: 'rgba(255, 255, 255, 0.45)',
-                                                '&:hover': {
-                                                    borderColor: '#fff',
-                                                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                                                },
-                                            }}
-                                        >
-                                            Browse all study spaces
-                                        </Button>
-                                    </Stack>
                                 </StyledLandingHeroCard>
                             </StyledLandingHeroContentColumn>
                             <StyledLandingHeroVisual
@@ -1331,6 +1333,40 @@ const BookableSpacesJourney = ({
                                 });
                             })()}
                         </Grid>
+                        <StyledBrowseAllSpacesCard data-testid="spaces-journey-browse-all-card">
+                            <StyledBrowseAllSpacesIcon aria-hidden="true" />
+                            <Typography
+                                component="h3"
+                                sx={{
+                                    margin: '0.75rem 0 0',
+                                    fontSize: { xs: '1.5rem', md: '1.75rem' },
+                                    lineHeight: 1.2,
+                                    fontWeight: 500,
+                                    color: '#19191c',
+                                }}
+                            >
+                                Browse all spaces
+                            </Typography>
+                            <Typography
+                                component="p"
+                                sx={{
+                                    mt: 1,
+                                    mb: 0,
+                                    fontSize: { xs: '1rem', md: '1.1rem' },
+                                    lineHeight: 1.5,
+                                    color: '#35353a',
+                                }}
+                            >
+                                Explore all library study spaces on the map!
+                            </Typography>
+                            <StyledBrowseAllSpacesLink
+                                data-testid="spaces-journey-landing-browse-all"
+                                type="button"
+                                onClick={goToLegacyBrowse}
+                            >
+                                Browse all library study spaces
+                            </StyledBrowseAllSpacesLink>
+                        </StyledBrowseAllSpacesCard>
                     </>
                 )}
                 <StyledJourneyPanel data-testid="spaces-homepage-content" hasTopSpacing={view !== 'landing'}>

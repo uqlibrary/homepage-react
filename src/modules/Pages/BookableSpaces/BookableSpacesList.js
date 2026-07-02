@@ -259,7 +259,6 @@ export const BookableSpacesList = ({
         const url = new URL(window.location.href);
         const setJourneyIntentStep = params => {
             params.delete('advanced');
-            params.set('journeyStep', 'intent');
             params.delete('journeyIntent');
             params.delete('journeySpace');
         };

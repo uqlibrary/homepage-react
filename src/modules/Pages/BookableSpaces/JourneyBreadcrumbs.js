@@ -23,7 +23,6 @@ export const buildJourneyBreadcrumbItems = ({
     selectedIntent,
     selectedIntentId,
     navigateToView,
-    setSelectedIntentId,
     setSelectedSpace,
 }) => {
     const buildEntry = (label, nextView, intentId, spaceId, onClick) => ({
@@ -90,13 +89,25 @@ const JourneyBreadcrumbs = ({
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
-        if (!siteHeader) return;
-
-        siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
-        siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
 
         let intervalId = null;
         let cleanupListeners = [];
+
+        const cleanup = () => {
+            if (intervalId) window.clearInterval(intervalId);
+            cleanupListeners.forEach(fn => {
+                fn();
+            });
+            const breadcrumbParent = siteHeader?.shadowRoot?.getElementById('breadcrumb_nav');
+            removeJourneyBreadcrumbsFromHeader(breadcrumbParent);
+        };
+
+        if (!siteHeader) {
+            return cleanup;
+        }
+
+        siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
+        siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
 
         const sync = () => {
             const breadcrumbParent = siteHeader.shadowRoot?.getElementById('breadcrumb_nav');
@@ -130,12 +141,7 @@ const JourneyBreadcrumbs = ({
             }, 100);
         }
 
-        return () => {
-            if (intervalId) window.clearInterval(intervalId);
-            cleanupListeners.forEach(fn => fn());
-            const breadcrumbParent = siteHeader.shadowRoot?.getElementById('breadcrumb_nav');
-            removeJourneyBreadcrumbsFromHeader(breadcrumbParent);
-        };
+        return cleanup;
     }, [items]);
 
     return null;
