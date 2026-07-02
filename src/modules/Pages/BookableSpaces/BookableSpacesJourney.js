@@ -1295,7 +1295,15 @@ const BookableSpacesJourney = ({
                     </>
                 )}
                 {view === 'landing' && (
-                    <>
+                    <Box
+                        className="spaces-journey-favourites"
+                        sx={{
+                            mb: 3,
+                            pt: !isLoggedIn ? '32px' : '0px',
+                            // '& a[data-testid^="spaces-journey-favourite-card-"]:hover': {
+                            //     backgroundColor: '#fff !important',
+                        }}
+                    >
                         <Typography component={'h2'} sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '16px' }}>
                             Find a learning space
                         </Typography>
@@ -1367,7 +1375,7 @@ const BookableSpacesJourney = ({
                                 Browse all library study spaces
                             </StyledBrowseAllSpacesLink>
                         </StyledBrowseAllSpacesCard>
-                    </>
+                    </Box>
                 )}
                 <StyledJourneyPanel data-testid="spaces-homepage-content" hasTopSpacing={view !== 'landing'}>
                     <Stack
