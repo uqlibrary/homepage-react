@@ -1278,12 +1278,12 @@ export const DLOView = ({
                                                                     <span>{s.series_object_title}</span>
                                                                 </span>
                                                             ) : (
-                                                                <a
-                                                                    href={getDlorViewPageUrl(s?.series_object_uuid)}
+                                                                <Link
+                                                                    to={getDlorViewPageUrl(s?.series_object_uuid)}
                                                                     rel="noopener noreferrer"
                                                                 >
                                                                     {s.series_object_title}
-                                                                </a>
+                                                                </Link>
                                                             )}
                                                         </li>
                                                     );
@@ -1404,13 +1404,13 @@ export const DLOView = ({
                                                                         </StyledFilterLink>
                                                                         {!!value?.help &&
                                                                             value?.help.startsWith('http') && (
-                                                                                <a
-                                                                                    href={value.help}
+                                                                                <Link
+                                                                                    to={value.help}
                                                                                     target="_blank"
                                                                                     title="View the help for this filter"
                                                                                 >
                                                                                     <HelpOutlineIcon size="small" />
-                                                                                </a>
+                                                                                </Link>
                                                                             )}
                                                                     </li>
                                                                 );

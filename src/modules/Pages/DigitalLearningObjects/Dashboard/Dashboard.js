@@ -8,6 +8,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import { StandardPage } from '../../../App/components/pages';
 import { isDlorAdminUser } from '../../../../helpers/access';
 import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { Link } from 'react-router';
 
 import {
     Chart as ChartJS,
@@ -81,7 +82,7 @@ function getTitleBlock(detailTitle = 'Analytics dashboard') {
     return (
         <StyledTitleBlockDiv>
             <Typography component={'p'} variant={'h6'} data-testid="dlor-dashboard-sitelabel">
-                <a href={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</a>
+                <Link to={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</Link>
             </Typography>
             <ArrowForwardIcon />
             <Typography>{detailTitle}</Typography>

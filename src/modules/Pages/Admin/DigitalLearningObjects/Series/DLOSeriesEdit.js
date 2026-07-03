@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
+import { useParams, Link as RouterLink } from 'react-router';
 import { useCookies } from 'react-cookie';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -130,14 +130,14 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
                 >
                     <DeleteForever />
                 </IconButton>
-                <a
+                <RouterLink
                     style={{ paddingTop: '3px' }}
-                    href={getDlorViewPageUrl(item?.object_public_uuid)}
+                    to={getDlorViewPageUrl(item?.object_public_uuid)}
                     data-testid={`dlor-series-edit-view-${item.object_id}`}
                     target="_blank"
                 >
                     <VisibilityIcon sx={{ color: 'black' }} />
-                </a>
+                </RouterLink>
             </div>
         </li>
     );
@@ -564,12 +564,12 @@ export const DLOSeriesEdit = ({
                                                                 >
                                                                     <AddCircle />
                                                                 </IconButton>
-                                                                <a
+                                                                <RouterLink
                                                                     style={{ paddingTop: '3px' }}
-                                                                    href={getDlorViewPageUrl(f?.object_public_uuid)}
+                                                                    to={getDlorViewPageUrl(f?.object_public_uuid)}
                                                                 >
                                                                     <VisibilityIcon sx={{ color: 'black' }} />
-                                                                </a>
+                                                                </RouterLink>
                                                             </div>
                                                         </StyledDraggableListItem>
                                                     );
