@@ -153,6 +153,7 @@ const webpackConfig = {
             'process.env.TITLE_SUFFIX': JSON.stringify(config.titleSuffix),
             'process.env.GIT_SHA': JSON.stringify(process.env.CI_COMMIT_ID),
             'process.env.BARCODE_SCANNER_WASM_PATH': JSON.stringify(process.env.BARCODE_SCANNER_WASM_PATH),
+            'process.env.HASH_ROUTER': JSON.stringify(!!config.hashRouter),
         }),
         new webpack.IgnorePlugin({
             resourceRegExp: /^\.\/locale$/,
