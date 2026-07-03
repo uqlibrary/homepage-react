@@ -17,6 +17,7 @@ const router = createRouter([
                 </ThemeProvider>
             </StyledEngineProvider>
         ),
+        ...(process.env.HASH_ROUTER ? { basename: process.env.CI_BRANCH } : {}),
     },
 ]);
 
