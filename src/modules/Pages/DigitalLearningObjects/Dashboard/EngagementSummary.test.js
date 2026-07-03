@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, WithRouter, screen } from '../../../../../utils/test-utils';
 import EngagementSummary from './EngagementSummary';
 
 jest.mock('../../Admin/DigitalLearningObjects/dlorAdminHelpers', () => ({
@@ -15,7 +15,11 @@ describe('EngagementSummary', () => {
     };
 
     it('renders all metrics with correct values', () => {
-        render(<EngagementSummary data={baseData} />);
+        render(
+            <WithRouter>
+                <EngagementSummary data={baseData} />
+            </WithRouter>,
+        );
         expect(screen.getByText('Favourited objects')).toBeInTheDocument();
         expect(screen.getByText('5')).toBeInTheDocument();
         expect(screen.getByText('Subscribed objects')).toBeInTheDocument();
@@ -28,17 +32,29 @@ describe('EngagementSummary', () => {
     });
 
     it('renders 0 for missing or null values', () => {
-        render(<EngagementSummary data={{}} />);
+        render(
+            <WithRouter>
+                <EngagementSummary data={{}} />
+            </WithRouter>,
+        );
         expect(screen.getAllByText('0').length).toBeGreaterThan(0);
     });
 
     it('handles popular_objects as a number', () => {
-        render(<EngagementSummary data={{ ...baseData, popular_objects: 7 }} />);
+        render(
+            <WithRouter>
+                <EngagementSummary data={{ ...baseData, popular_objects: 7 }} />
+            </WithRouter>,
+        );
         expect(screen.getByText('7')).toBeInTheDocument();
     });
 
     it('links have correct hrefs', () => {
-        render(<EngagementSummary data={baseData} />);
+        render(
+            <WithRouter>
+                <EngagementSummary data={baseData} />
+            </WithRouter>,
+        );
         const links = screen.getAllByRole('link');
         expect(links[0]).toHaveAttribute('href', expect.stringContaining('type=isafavourite'));
         expect(links[1]).toHaveAttribute('href', expect.stringContaining('type=subscribed'));

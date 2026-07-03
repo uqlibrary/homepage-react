@@ -11,7 +11,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { useAccountContext } from 'context';
-import { isDlorAdminUser } from 'helpers/access';
+import { Link } from 'react-router';
 
 export const ObjectListItem = ({ object, listParentName = 'team' }) => {
     const { account } = useAccountContext();
@@ -34,12 +34,12 @@ export const ObjectListItem = ({ object, listParentName = 'team' }) => {
                 </div>
             </Grid>
             <Grid item xs={1}>
-                <a
+                <Link
                     data-testid={`dlor-${listParentName}-object-list-item-view-${object?.object_id}`}
-                    href={getDlorViewPageUrl(object?.object_public_uuid)}
+                    to={getDlorViewPageUrl(object?.object_public_uuid)}
                 >
                     <VisibilityIcon sx={{ color: 'black', marginTop: '8px' }} />
-                </a>
+                </Link>
             </Grid>
             <Grid item xs={1}>
                 <IconButton

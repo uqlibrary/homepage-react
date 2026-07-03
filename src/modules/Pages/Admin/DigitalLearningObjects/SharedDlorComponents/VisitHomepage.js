@@ -1,18 +1,18 @@
 import React from 'react';
-
+import { Link } from 'react-router';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const VisitHomepage = () => {
     return (
-        <a
-            href={`${getPathRoot()}/digital-learning-hub`}
+        <Link
+            to={`${getPathRoot()}/digital-learning-hub`}
             title="Visit public pages"
             data-testid="dlor-admin-public-homepage-link"
         >
             <VisibilityIcon sx={{ color: 'black' }} />
-        </a>
+        </Link>
     );
 };
 
