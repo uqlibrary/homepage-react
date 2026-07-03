@@ -1,14 +1,15 @@
-import React from 'react';
-import parse from 'html-react-parser';
-import { fullPath } from 'config/routes';
+// import React from 'react';
+// import parse from 'html-react-parser';
+// import { fullPath } from 'config/routes';
 import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
 export const getPathRoot = () => {
     /* istanbul ignore next */
-    if (fullPath === 'https://homepage-production.library.uq.edu.au') {
-        return 'https://www.library.uq.edu.au';
-    }
-    return fullPath;
+    // if (fullPath === 'https://homepage-production.library.uq.edu.au') {
+    //     return 'https://www.library.uq.edu.au';
+    // }
+    // return fullPath;
+    return '';
 };
 
 export const getYoutubeUrlForPreviewEmbed = testUrlIn => {

@@ -1,4 +1,3 @@
-import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { DLOR_FAVOURITES_REPORT_API } from 'repositories/routes';
 import { get } from 'repositories/generic';
 import { isDlorAdminUser } from 'helpers/access';
