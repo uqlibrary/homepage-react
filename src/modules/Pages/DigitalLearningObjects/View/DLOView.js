@@ -489,7 +489,7 @@ export const DLOView = ({
         return (
             <StyledTitleBlockDiv>
                 <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                    <Link href={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</Link>
+                    <Link to={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</Link>
                 </Typography>
                 <ArrowForwardIcon />
                 <Typography>{detailTitle}</Typography>
