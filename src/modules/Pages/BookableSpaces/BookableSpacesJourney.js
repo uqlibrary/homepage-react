@@ -330,19 +330,12 @@ const StyledResultsSplitLayout = styled(Box)(({ theme }) => ({
 }));
 
 const StyledResultsSidebarPanel = styled(Box)(({ theme }) => ({
-    background: 'linear-gradient(180deg, #fcfbff 0%, #f7f4fc 100%)',
-    border: '1px solid #d9d0e8',
-    borderRadius: '16px',
-    boxShadow: '0 10px 26px rgba(50, 24, 84, 0.08)',
-    padding: '1.25rem',
+    padding: '0',
     position: 'sticky',
     top: '1rem',
     [theme.breakpoints.down('lg')]: {
         position: 'relative',
         top: 'auto',
-    },
-    [theme.breakpoints.down('sm')]: {
-        padding: '1rem',
     },
 }));
 
@@ -1398,12 +1391,6 @@ const BookableSpacesJourney = ({
                             <StyledResultsSplitLayout>
                                 {shouldShowAdvancedFilters && (
                                     <StyledResultsSidebarPanel>
-                                        <Typography component="h3" sx={{ fontWeight: 700, color: '#1f1230', mb: 1 }}>
-                                            Refine your search
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ color: '#666', mb: 1.5 }}>
-                                            Narrow spaces by facilities, campus, and capacity.
-                                        </Typography>
                                         <SidebarFilters
                                             facilityTypeList={facilityTypeList}
                                             facilityTypeListLoading={facilityTypeListLoading}
@@ -1436,51 +1423,6 @@ const BookableSpacesJourney = ({
                                     <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
                                         {selectedIntent?.label || 'Matching spaces'}
                                     </Typography>
-
-                                    {/* Campus picker — visible inline on results, not buried in advanced filters */}
-                                    {validCampusList?.length > 1 && (
-                                        <Box sx={{ mt: 1.5 }}>
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ fontWeight: 600, mb: 0.75, color: '#1f1230' }}
-                                            >
-                                                Campus
-                                            </Typography>
-                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                                {validCampusList.map(campus => (
-                                                    <StyledSecondaryButton
-                                                        key={campus.campus_id}
-                                                        size="small"
-                                                        aria-pressed={selectedCampus === campus.campus_id}
-                                                        onClick={() =>
-                                                            handleCampusSelection({
-                                                                target: { value: campus.campus_id },
-                                                            })
-                                                        }
-                                                        sx={{
-                                                            minWidth: 0,
-                                                            px: 1.25,
-                                                            py: 0.5,
-                                                            ...(selectedCampus === campus.campus_id
-                                                                ? {
-                                                                      backgroundColor: 'primary.main',
-                                                                      color: '#fff',
-                                                                      borderColor: 'primary.main',
-                                                                      '&:hover, &:focus': {
-                                                                          backgroundColor: 'primary.main',
-                                                                          color: '#fff',
-                                                                          borderColor: 'primary.main',
-                                                                      },
-                                                                  }
-                                                                : {}),
-                                                        }}
-                                                    >
-                                                        {campus.campus_name}
-                                                    </StyledSecondaryButton>
-                                                ))}
-                                            </Box>
-                                        </Box>
-                                    )}
 
                                     <Typography variant="body2" sx={{ color: '#666', mt: 1.5 }}>
                                         Showing {intentSpaceLocations?.length || 0}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-import { InputLabel } from '@mui/material';
+import { InputLabel, useMediaQuery, useTheme } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import MuiInput from '@mui/material/Input';
@@ -730,39 +730,13 @@ export const SidebarFilters = ({
     const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
     const checkFiltersList = selectedFacilityTypes?.filter(f => !!f?.selected || !!f?.unselected);
     const hasActiveFilters = selectedFacilityTypes?.some(f => !!f?.selected || !!f?.unselected);
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
     const renderFilterActionButtons = ({ isBottom = false } = {}) => {
         if (isBottom && !showBottomActionButtons) return null;
-        if (isBottom && showBottomActionButtons && !checkFiltersList?.length) {
-            return !!onApplyAllFilters ? (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: '1rem',
-                        paddingTop: '1rem',
-                        borderTop: '1px solid rgba(0, 0, 0, 0.12)',
-                    }}
-                >
-                    <StyledPrimaryButton
-                        id="button-close-filters-bottom"
-                        data-testid="button-close-filters-bottom"
-                        onClick={onApplyAllFilters}
-                        style={{
-                            padding: '0.5rem 1rem',
-                            margin: 0,
-                            display: 'flex',
-                            alignItems: 'center',
-                            columnGap: '0.5rem',
-                        }}
-                    >
-                        <span>Close filters</span>
-                    </StyledPrimaryButton>
-                </div>
-            ) : null;
-        }
         if (!checkFiltersList?.length) return null;
+        if (suppliedClassName?.includes('journey') && !isMobileView) return null;
 
         const wrapperStyles = isBottom
             ? {
@@ -839,12 +813,16 @@ export const SidebarFilters = ({
         return null;
     }
 
+    const isJourneyView = suppliedClassName?.includes('journey');
+
     return (
         <StyledSidebarDiv id="StyledSidebarDivTemp" className={`filterSideBar ${suppliedClassName}`}>
             <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
-                <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
-                    Skip to list of Spaces
-                </a>
+                {!isJourneyView && (
+                    <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
+                        Skip to list of Spaces
+                    </a>
+                )}
                 <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
                     Filter Spaces
                 </Typography>
