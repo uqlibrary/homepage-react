@@ -2,7 +2,7 @@
 
 printf "\n ### start of codebuild-coverage.sh ###\n"
 
-if [[ $CODE_COVERAGE_REQUIRED == false ]]; then
+if [[ $CODE_COVERAGE_REQUIRED != 1 ]]; then
     printf "\n coverage NOT required\n"
 
     # Skip CC check
