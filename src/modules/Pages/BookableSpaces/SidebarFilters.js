@@ -101,6 +101,13 @@ const StyledSidebarDiv = styled('div')(() => ({
     flexBasis: '10%',
     maxWidth: '16.6667%',
 
+    '&.journeyFilterSidebar': {
+        width: '100%',
+        flexBasis: '100%',
+        maxWidth: '100%',
+        minWidth: 0,
+    },
+
     '& .showsOnlyOnFocus': {
         position: 'absolute',
         left: '-999px',
@@ -519,15 +526,18 @@ export const SidebarFilters = ({
 
         setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
     };
-    function valueLabelComponent(props) {
-        const { children, value } = props;
-
+    const ValueLabelComponent = ({ children, value }) => {
         return (
             <Tooltip enterTouchDelay={0} placement="top" title={value}>
                 {children}
             </Tooltip>
         );
-    }
+    };
+
+    ValueLabelComponent.propTypes = {
+        children: PropTypes.node,
+        value: PropTypes.node,
+    };
     const writeCapacitySlider = facilityType => {
         if (!selectedFacilityTypes?.find(f1 => f1?.facility_type_id === FILTER_BOOKABLE_TYPE_ID)?.selected) {
             return null;
@@ -583,7 +593,7 @@ export const SidebarFilters = ({
                         max={maximumSpaceCapacity}
                         step={1}
                         components={{
-                            ValueLabel: valueLabelComponent,
+                            ValueLabel: ValueLabelComponent,
                         }}
                     />
                     <StyledSliderInput
@@ -710,30 +720,15 @@ export const SidebarFilters = ({
                             </li>
                         );
                     }
-                    // if (!!f?.unselected) {
-                    //     const facilityTypeRecord = flatFacilityTypeList?.find(
-                    //         flat => flat?.facility_type_id === f?.facility_type_id,
-                    //     );
-                    //     return (
-                    //         <li key={`cartouche-unselect-${f?.facility_type_id}`}>
-                    //             <Button
-                    //                 id={`button-deselect-selected-${f?.facility_type_id}`}
-                    //                 data-testid={`button-deselect-unselected-${f?.facility_type_id}`}
-                    //                 onClick={deSelectSelected}
-                    //                 className="unselectedFilter"
-                    //                 aria-label={`${facilityTypeRecord?.facility_type_name} excluded - click to deselect`}
-                    //             >
-                    //                 <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
-                    //             </Button>
-                    //         </li>
-                    //     );
-                    // }
+                    // Legacy unselected-filter handling remains intentionally commented out.
                     return null;
                 })}
             </>
         );
     };
 
+    const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
+    const checkFiltersList = selectedFacilityTypes?.filter(f => !!f?.selected || !!f?.unselected);
     const hasActiveFilters = selectedFacilityTypes?.some(f => !!f?.selected || !!f?.unselected);
 
     const renderFilterActionButtons = ({ isBottom = false } = {}) => {
@@ -839,9 +834,6 @@ export const SidebarFilters = ({
             </div>
         );
     };
-
-    const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
-    const checkFiltersList = selectedFacilityTypes?.filter(f => !!f?.selected || !!f?.unselected);
 
     if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
         return null;

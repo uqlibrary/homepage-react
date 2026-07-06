@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Box, Button, Chip, Grid, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Chip, Grid, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ComputerIcon from '@mui/icons-material/Computer';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -25,7 +25,6 @@ import {
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import { ArticleCard } from 'modules/SharedComponents/Toolbox/ArticleCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIcon';
 import { Link } from 'react-router-dom';
 import SingleLinkCard from '../../HomePage/publicComponents/HelpNavigation/SingleLinkCard';
 
@@ -113,135 +112,6 @@ const StyledBrowseAllSpacesLink = styled('button')(({ theme }) => ({
     },
 }));
 
-// Intent card — clickable card matching UQ Library homepage card grid style
-const StyledIntentCard = styled('button')(({ theme }) => ({
-    border: '1px solid hsla(203, 50%, 30%, 0.15)',
-    borderRadius: '4px',
-    background: '#FFFFFF',
-    cursor: 'pointer',
-    color: theme.palette.primary.main,
-    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-    fontSize: '20px',
-    fontWeight: 500,
-    textAlign: 'left',
-    position: 'relative',
-    appearance: 'none',
-    height: '100%',
-    width: '100%',
-    boxSizing: 'border-box',
-    padding: 0,
-    '& .cardHeading': {
-        color: theme.palette.designSystem.headingColor,
-        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-        fontSize: '24px',
-        fontWeight: 500,
-        letterSpacing: '0.16px',
-        lineHeight: 1.2,
-        marginBlock: '8px',
-    },
-    '& svg.arrowForwardIcon': {
-        display: 'block',
-    },
-    '& .panelIcon': {
-        width: '56px',
-        height: '56px',
-        color: theme.palette.primary.main,
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    '& .panelIcon > svg': {
-        fontSize: '2.5rem',
-    },
-    '& .intentDescription': {
-        color: theme.palette.designSystem.bodyCopy,
-        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-        fontSize: '16px',
-        fontWeight: 400,
-        letterSpacing: '0.16px',
-        lineHeight: '1.6',
-    },
-    [theme.breakpoints.up('uqDsTablet')]: {
-        '& .panelBodyWrapper': {
-            margin: '24px 24px 0 24px',
-        },
-        '& .intentDescription': {
-            marginTop: 0,
-            marginBottom: 0,
-            minHeight: '76px',
-        },
-        '& .arrowSvgWrapper': {
-            minHeight: '48px',
-            marginTop: '24px',
-        },
-        '& svg.arrowForwardIcon': {
-            position: 'absolute',
-            bottom: '24px',
-            left: '24px',
-        },
-    },
-    [theme.breakpoints.down('uqDsTablet')]: {
-        alignItems: 'center',
-        display: 'flex',
-        justifyContent: 'space-between',
-        minWidth: '90%',
-        padding: '24px',
-        '& .panelIcon': {
-            width: '40px',
-            height: '40px',
-            minWidth: '40px',
-            minHeight: '40px',
-        },
-        '& .panelIcon > svg': {
-            fontSize: '2rem',
-        },
-        '& .intentDescription': {
-            display: 'none',
-        },
-        '& svg.arrowForwardIcon': {
-            paddingLeft: '15px',
-            minWidth: '24px',
-        },
-        '& .cardHeading': {
-            fontWeight: 500,
-            fontSize: '22px',
-            marginLeft: '24px',
-        },
-        '& .panelBodyWrapper': {
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            width: '100%',
-        },
-    },
-    [theme.breakpoints.up('uqDsDesktop')]: {
-        '& svg.arrowForwardIcon': {
-            '@media (prefers-reduced-motion: no-preference)': {
-                transition: 'margin-left 200ms ease-in-out',
-            },
-        },
-        '&:hover': {
-            '& .cardHeading': {
-                textDecoration: 'underline',
-            },
-            '@media (prefers-reduced-motion: no-preference)': {
-                backgroundColor: theme.palette.designSystem.panelBackgroundColor,
-            },
-            textDecoration: 'none',
-            '& svg.arrowForwardIcon': {
-                '@media (prefers-reduced-motion: no-preference)': {
-                    marginLeft: '10px',
-                    transition: 'margin-left 200ms ease-in-out',
-                },
-            },
-        },
-    },
-    '&:focus-visible': {
-        outline: `3px solid ${theme.palette.primary.main}`,
-        outlineOffset: '2px',
-    },
-}));
-
 // Result card with proper styling - clickable full card
 const StyledResultCardButton = styled(Button)(({ theme }) => ({
     width: '100%',
@@ -261,14 +131,6 @@ const StyledResultCardButton = styled(Button)(({ theme }) => ({
     '&:active': {
         transform: 'translateY(0)',
     },
-}));
-
-const StyledDetailSurface = styled('div')(({ theme }) => ({
-    backgroundColor: '#f9f8fa',
-    color: '#1f1230',
-    borderRadius: '12px',
-    padding: '1.5rem',
-    border: `1px solid ${theme.palette.designSystem.borderColor}`,
 }));
 
 const StyledLandingHeroShell = styled('section')(({ theme }) => ({
@@ -455,210 +317,32 @@ const StyledSeeAllLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-const StyledAdvancedFiltersPanel = styled(StyledDetailSurface)(({ theme }) => ({
+const StyledResultsSplitLayout = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    gap: '1.5rem',
+    gridTemplateColumns: 'minmax(0, 4fr) minmax(0, 8fr)',
+    alignItems: 'start',
+    width: '100%',
+    [theme.breakpoints.down('lg')]: {
+        gridTemplateColumns: '1fr',
+        width: '100%',
+    },
+}));
+
+const StyledResultsSidebarPanel = styled(Box)(({ theme }) => ({
     background: 'linear-gradient(180deg, #fcfbff 0%, #f7f4fc 100%)',
     border: '1px solid #d9d0e8',
-    boxShadow: '0 10px 26px rgba(50, 24, 84, 0.08)',
     borderRadius: '16px',
+    boxShadow: '0 10px 26px rgba(50, 24, 84, 0.08)',
     padding: '1.25rem',
-    overflow: 'hidden',
-    boxSizing: 'border-box',
+    position: 'sticky',
+    top: '1rem',
+    [theme.breakpoints.down('lg')]: {
+        position: 'relative',
+        top: 'auto',
+    },
     [theme.breakpoints.down('sm')]: {
         padding: '1rem',
-    },
-    '& .filterSideBar.journeyFilterSidebar, & .filterSideBar.journeyFilterSidebar *': {
-        boxSizing: 'border-box',
-    },
-    '& .filterSideBar.journeyFilterSidebar': {
-        maxWidth: '100%',
-        flexBasis: '100%',
-        width: '100%',
-        overflowY: 'visible',
-        paddingTop: 0,
-        margin: 0,
-        backgroundColor: 'transparent',
-    },
-    '& .filterSideBar.journeyFilterSidebar > div': {
-        width: '100%',
-    },
-    '& .filterSideBar.journeyFilterSidebar .sectionHeading': {
-        fontWeight: 700,
-        color: '#25153d',
-        letterSpacing: '0.01em',
-    },
-    '& .filterSideBar.journeyFilterSidebar [data-testid="topOfSidebar"]': {
-        fontSize: '1.3rem',
-        fontWeight: 800,
-        lineHeight: 1.2,
-        marginBottom: '0.35rem',
-    },
-    '& .filterSideBar.journeyFilterSidebar [data-testid="space-filter-count"]': {
-        fontSize: '0.98rem',
-        fontWeight: 600,
-        color: '#56456f',
-        lineHeight: 1.3,
-        marginTop: '0.2rem',
-        marginBottom: '0.55rem',
-    },
-    '& .filterSideBar.journeyFilterSidebar [data-testid="space-filter-count"] span': {
-        display: 'inline-block',
-        minWidth: '1.2rem',
-        marginLeft: '0.35rem',
-        padding: '0.08rem 0.45rem',
-        borderRadius: '999px',
-        backgroundColor: '#ece4f9',
-        color: '#432166',
-        fontSize: '0.82rem',
-        fontWeight: 700,
-        textAlign: 'center',
-    },
-    '& .filterSideBar.journeyFilterSidebar .sidebarSelector': {
-        width: '100%',
-    },
-    '& .filterSideBar.journeyFilterSidebar .sidebarSelector > div': {
-        backgroundColor: '#ffffff',
-        border: '1px solid #d9d0e8',
-        borderRadius: '10px',
-        boxShadow: '0 1px 3px rgba(31, 18, 48, 0.06)',
-        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-    },
-    '& .filterSideBar.journeyFilterSidebar .sidebarSelector > div:focus-within': {
-        borderColor: '#6a3ea1',
-        boxShadow: '0 0 0 3px rgba(106, 62, 161, 0.15)',
-    },
-    '& .filterSideBar.journeyFilterSidebar .sidebarSelector .MuiInputBase-root': {
-        width: '100%',
-    },
-    '& .filterSideBar.journeyFilterSidebar .sidebarSelector .MuiSelect-select': {
-        width: '100%',
-        boxSizing: 'border-box',
-        fontWeight: 500,
-        color: '#2a1d3f',
-    },
-    '& .filterSideBar.journeyFilterSidebar [data-testid="sidebarCheckboxes"]': {
-        display: 'block',
-    },
-    '& .filterSideBar.journeyFilterSidebar [data-testid="sidebarCheckboxes"] > div': {
-        width: '100%',
-    },
-    '& .filterSideBar.journeyFilterSidebar [data-testid="sidebarCheckboxes"] > * + *': {
-        marginTop: '0.5rem',
-    },
-    '& .filterSideBar.journeyFilterSidebar [data-testid^="filter-group-block-"]': {
-        width: '100%',
-        padding: '0.9rem 1rem 1rem',
-        marginTop: '0.75rem',
-        backgroundColor: '#ffffff',
-        border: '1px solid #e2daef',
-        borderRadius: '12px',
-        boxShadow: '0 1px 3px rgba(31, 18, 48, 0.05)',
-        overflow: 'hidden',
-    },
-    '& .filterSideBar.journeyFilterSidebar [data-testid^="filter-group-block-"] h3': {
-        marginBottom: 0,
-        fontWeight: 700,
-        color: '#25153d',
-    },
-    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"]': {
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        gap: '0.55rem 0.75rem',
-        width: '100%',
-        paddingTop: '0.85rem',
-        margin: 0,
-        paddingLeft: 0,
-    },
-    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li': {
-        marginLeft: '0 !important',
-        paddingLeft: 0,
-        minWidth: 0,
-        borderRadius: '8px',
-        listStyle: 'none',
-    },
-    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label': {
-        width: '100%',
-        borderRadius: '8px',
-        padding: '0.25rem 0.35rem 0.25rem 0.15rem',
-        transition: 'background-color 0.2s ease, border-color 0.2s ease',
-        border: '1px solid transparent',
-        textDecoration: 'none',
-    },
-    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label:hover': {
-        backgroundColor: '#f6f2fc',
-        borderColor: '#ddd1ee',
-    },
-    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label:hover > span:nth-of-type(2)': {
-        backgroundColor: 'transparent',
-        color: '#2a1d3f',
-        textDecoration: 'none',
-    },
-    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label:focus > span:nth-of-type(2)': {
-        backgroundColor: 'transparent',
-        color: '#2a1d3f',
-        textDecoration: 'none',
-    },
-    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label:focus-visible > span:nth-of-type(2)': {
-        backgroundColor: 'transparent',
-        color: '#2a1d3f',
-        textDecoration: 'none',
-    },
-    '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"] > li label span': {
-        textDecoration: 'none !important',
-    },
-    '& .filterSideBar.journeyFilterSidebar .MuiCheckbox-root': {
-        color: '#6c4f99',
-        padding: '6px',
-    },
-    '& .filterSideBar.journeyFilterSidebar .MuiCheckbox-root.Mui-checked': {
-        color: '#51247a',
-    },
-    '& .filterSideBar.journeyFilterSidebar .MuiCheckbox-root:hover': {
-        backgroundColor: 'rgba(81, 36, 122, 0.08)',
-    },
-    '& .filterSideBar.journeyFilterSidebar .selectedFilterTypeLabel span:last-of-type': {
-        color: '#34224f',
-        fontWeight: 500,
-    },
-    '& .filterSideBar.journeyFilterSidebar .selectedFilterTypeLabel:has(.Mui-checked)': {
-        backgroundColor: '#f4eefc',
-        borderColor: '#cdbbe8',
-    },
-    '& .filterSideBar.journeyFilterSidebar .selectedFilterTypeLabel:has(.Mui-checked) span:last-of-type': {
-        color: '#2a1d3f',
-        fontWeight: 600,
-    },
-    '& .filterSideBar.journeyFilterSidebar .sliderGroupHeading, & .filterSideBar.journeyFilterSidebar h4': {
-        color: '#2a1d3f',
-        fontWeight: 700,
-    },
-    '& .filterSideBar.journeyFilterSidebar .MuiSlider-root': {
-        color: '#51247a',
-    },
-    '& .filterSideBar.journeyFilterSidebar .MuiSlider-rail': {
-        opacity: 1,
-        backgroundColor: '#d9cee9',
-    },
-    '& .filterSideBar.journeyFilterSidebar .MuiSlider-thumb': {
-        border: '2px solid #ffffff',
-        boxShadow: '0 1px 4px rgba(37, 21, 61, 0.35)',
-    },
-    '& .filterSideBar.journeyFilterSidebar button': {
-        borderRadius: '9px',
-    },
-    [theme.breakpoints.up('sm')]: {
-        '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"]': {
-            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-        },
-    },
-    [theme.breakpoints.up('md')]: {
-        '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"]': {
-            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-        },
-    },
-    [theme.breakpoints.up('xl')]: {
-        '& .filterSideBar.journeyFilterSidebar [id^="filter-group-list-"]': {
-            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-        },
     },
 }));
 
@@ -838,12 +522,14 @@ const BookableSpacesJourney = ({
     isFavouriteActionInProgress,
 }) => {
     const theme = useTheme();
+    const isDesktopResultsLayout = useMediaQuery(theme.breakpoints.up('lg'));
     const journeyTopRef = React.useRef(null);
     const [view, setView] = React.useState('landing');
     const [selectedIntentId, setSelectedIntentId] = React.useState(null);
     const [selectedSpace, setSelectedSpace] = React.useState(null);
     const [showAdvancedFilters, setShowAdvancedFilters] = React.useState(false);
     const canShowAdvancedFilters = view === 'results';
+    const shouldShowAdvancedFilters = canShowAdvancedFilters && (isDesktopResultsLayout || showAdvancedFilters);
     const hasFavourites = isLoggedIn && (spacesFavouritesList?.length || 0) > 0;
 
     const availableIntentDefinitions = React.useMemo(
@@ -898,10 +584,15 @@ const BookableSpacesJourney = ({
         favouriteButtonLabel = 'Updating favourites...';
     }
     React.useEffect(() => {
-        if (!canShowAdvancedFilters && showAdvancedFilters) {
+        if (!canShowAdvancedFilters) {
             setShowAdvancedFilters(false);
+            return;
         }
-    }, [canShowAdvancedFilters, showAdvancedFilters]);
+
+        if (isDesktopResultsLayout) {
+            setShowAdvancedFilters(true);
+        }
+    }, [canShowAdvancedFilters, isDesktopResultsLayout]);
 
     const applyIntentFilters = intent => {
         const ids = getIntentFilterIds(filteredFacilityTypeList?.data?.facility_type_groups, intent);
@@ -1380,12 +1071,8 @@ const BookableSpacesJourney = ({
                     </Box>
                 )}
                 <StyledJourneyPanel data-testid="spaces-homepage-content" hasTopSpacing={view !== 'landing'}>
-                    <Stack
-                        direction="row"
-                        justifyContent={canShowAdvancedFilters ? 'space-between' : 'flex-start'}
-                        alignItems="center"
-                    >
-                        {canShowAdvancedFilters && (
+                    <Stack direction="row" justifyContent="flex-start" alignItems="center">
+                        {canShowAdvancedFilters && !isDesktopResultsLayout && (
                             <StyledSecondaryButton
                                 startIcon={<TuneIcon />}
                                 onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
@@ -1439,33 +1126,6 @@ const BookableSpacesJourney = ({
                             </StyledSecondaryButton>
                         )}
                     </Stack>
-
-                    {canShowAdvancedFilters && showAdvancedFilters && (
-                        <StyledAdvancedFiltersPanel>
-                            <SidebarFilters
-                                facilityTypeList={facilityTypeList}
-                                facilityTypeListLoading={facilityTypeListLoading}
-                                facilityTypeListError={facilityTypeListError}
-                                selectedFacilityTypes={selectedFacilityTypes}
-                                setSelectedFacilityTypes={setSelectedFacilityTypes}
-                                filteredFacilityTypeList={filteredFacilityTypeList}
-                                suppliedClassName="journeyFilterSidebar"
-                                minimumSpaceCapacity={minimumSpaceCapacity}
-                                maximumSpaceCapacity={maximumSpaceCapacity}
-                                capacityFilterValue={capacityFilterValue}
-                                setCapacityFilterValue={setCapacityFilterValue}
-                                campusList={campusList}
-                                selectedCampus={selectedCampus}
-                                handleCampusSelection={handleCampusSelection}
-                                activeFilterCount={activeFilterCount}
-                                librariesForCampus={librariesForCampus}
-                                selectedLibrary={selectedLibrary}
-                                handleLibrarySelection={handleLibrarySelection}
-                                onApplyAllFilters={() => setShowAdvancedFilters(false)}
-                                showBottomActionButtons
-                            />
-                        </StyledAdvancedFiltersPanel>
-                    )}
 
                     {view === 'landing' && (
                         <Stack spacing={3}>
@@ -1735,172 +1395,262 @@ const BookableSpacesJourney = ({
 
                     {view === 'results' && (
                         <>
-                            <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
-                                {selectedIntent?.label || 'Matching spaces'}
-                            </Typography>
-
-                            {/* Campus picker — visible inline on results, not buried in advanced filters */}
-                            {validCampusList?.length > 1 && (
-                                <Box>
-                                    <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.75, color: '#1f1230' }}>
-                                        Campus
-                                    </Typography>
-                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                        {validCampusList.map(campus => (
-                                            <StyledSecondaryButton
-                                                key={campus.campus_id}
-                                                size="small"
-                                                aria-pressed={selectedCampus === campus.campus_id}
-                                                onClick={() =>
-                                                    handleCampusSelection({ target: { value: campus.campus_id } })
+                            <StyledResultsSplitLayout>
+                                {shouldShowAdvancedFilters && (
+                                    <StyledResultsSidebarPanel>
+                                        <Typography component="h3" sx={{ fontWeight: 700, color: '#1f1230', mb: 1 }}>
+                                            Refine your search
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ color: '#666', mb: 1.5 }}>
+                                            Narrow spaces by facilities, campus, and capacity.
+                                        </Typography>
+                                        <SidebarFilters
+                                            facilityTypeList={facilityTypeList}
+                                            facilityTypeListLoading={facilityTypeListLoading}
+                                            facilityTypeListError={facilityTypeListError}
+                                            selectedFacilityTypes={selectedFacilityTypes}
+                                            setSelectedFacilityTypes={setSelectedFacilityTypes}
+                                            filteredFacilityTypeList={filteredFacilityTypeList}
+                                            suppliedClassName="journeyFilterSidebar"
+                                            minimumSpaceCapacity={minimumSpaceCapacity}
+                                            maximumSpaceCapacity={maximumSpaceCapacity}
+                                            capacityFilterValue={capacityFilterValue}
+                                            setCapacityFilterValue={setCapacityFilterValue}
+                                            campusList={campusList}
+                                            selectedCampus={selectedCampus}
+                                            handleCampusSelection={handleCampusSelection}
+                                            activeFilterCount={activeFilterCount}
+                                            librariesForCampus={librariesForCampus}
+                                            selectedLibrary={selectedLibrary}
+                                            handleLibrarySelection={handleLibrarySelection}
+                                            onApplyAllFilters={() => {
+                                                if (!isDesktopResultsLayout) {
+                                                    setShowAdvancedFilters(false);
                                                 }
-                                                sx={{
-                                                    minWidth: 0,
-                                                    px: 1.25,
-                                                    py: 0.5,
-                                                    ...(selectedCampus === campus.campus_id
-                                                        ? {
-                                                              backgroundColor: 'primary.main',
-                                                              color: '#fff',
-                                                              borderColor: 'primary.main',
-                                                              '&:hover, &:focus': {
-                                                                  backgroundColor: 'primary.main',
-                                                                  color: '#fff',
-                                                                  borderColor: 'primary.main',
-                                                              },
-                                                          }
-                                                        : {}),
-                                                }}
-                                            >
-                                                {campus.campus_name}
-                                            </StyledSecondaryButton>
-                                        ))}
-                                    </Box>
-                                </Box>
-                            )}
+                                            }}
+                                            showBottomActionButtons
+                                        />
+                                    </StyledResultsSidebarPanel>
+                                )}
+                                <Box>
+                                    <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
+                                        {selectedIntent?.label || 'Matching spaces'}
+                                    </Typography>
 
-                            <Typography variant="body2" sx={{ color: '#666' }}>
-                                Showing {intentSpaceLocations?.length || 0}
-                                {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
-                            </Typography>
-                            <Stack direction="row" spacing={1}>
-                                <StyledSecondaryButton onClick={handleClearJourneyFilters}>
-                                    Reset quick filters
-                                </StyledSecondaryButton>
-                            </Stack>
-                            <Stack spacing={1.5}>
-                                {intentSpaceLocations?.map(space => {
-                                    const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
-                                    const bookableSpaceUrl = space?.space_external_book_url;
-                                    return (
-                                        <Stack key={space?.space_id} spacing={1}>
-                                            <StyledResultCardButton
-                                                onClick={() => {
-                                                    setSelectedSpace(space);
-                                                    navigateToView('details', {
-                                                        intentId: selectedIntentId,
-                                                        spaceId: space?.space_id,
-                                                    });
-                                                }}
+                                    {/* Campus picker — visible inline on results, not buried in advanced filters */}
+                                    {validCampusList?.length > 1 && (
+                                        <Box sx={{ mt: 1.5 }}>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ fontWeight: 600, mb: 0.75, color: '#1f1230' }}
                                             >
-                                                <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
-                                                    <Typography sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5 }}>
-                                                        {space?.space_name}
-                                                    </Typography>
-                                                    <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
-                                                        {space?.space_library_name}
-                                                    </Typography>
-                                                    <Typography variant="body2" sx={{ color: '#999' }}>
-                                                        {space?.space_type_details?.space_type_name ||
-                                                            space?.space_type}
-                                                    </Typography>
-                                                    <Box
+                                                Campus
+                                            </Typography>
+                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                                {validCampusList.map(campus => (
+                                                    <StyledSecondaryButton
+                                                        key={campus.campus_id}
+                                                        size="small"
+                                                        aria-pressed={selectedCampus === campus.campus_id}
+                                                        onClick={() =>
+                                                            handleCampusSelection({
+                                                                target: { value: campus.campus_id },
+                                                            })
+                                                        }
                                                         sx={{
-                                                            mb:
-                                                                space?.space_type_details?.space_type_description ||
-                                                                space?.space_description
-                                                                    ? 1
-                                                                    : 0,
-                                                            mt: 0.5,
+                                                            minWidth: 0,
+                                                            px: 1.25,
+                                                            py: 0.5,
+                                                            ...(selectedCampus === campus.campus_id
+                                                                ? {
+                                                                      backgroundColor: 'primary.main',
+                                                                      color: '#fff',
+                                                                      borderColor: 'primary.main',
+                                                                      '&:hover, &:focus': {
+                                                                          backgroundColor: 'primary.main',
+                                                                          color: '#fff',
+                                                                          borderColor: 'primary.main',
+                                                                      },
+                                                                  }
+                                                                : {}),
                                                         }}
                                                     >
-                                                        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
-                                                            {favouriteSpaceIds.has(String(space?.space_id)) && (
-                                                                <Chip
-                                                                    data-testid={`spaces-journey-favourite-chip-${space?.space_id}`}
-                                                                    label="Favourite"
-                                                                    size="small"
-                                                                    sx={{
-                                                                        backgroundColor: '#fff8e1',
-                                                                        color: '#7a5a00',
-                                                                        borderColor: '#ffe082',
-                                                                        border: '1px solid',
-                                                                        fontWeight: 700,
-                                                                    }}
-                                                                />
-                                                            )}
-                                                            <SpaceOpenStatusChip
-                                                                space={space}
-                                                                weeklyHours={weeklyHours}
-                                                                weeklyHoursLoading={weeklyHoursLoading}
-                                                                weeklyHoursError={weeklyHoursError}
-                                                            />
-                                                            {!!visibleOutage && visibleOutage.status !== 'Current' && (
-                                                                <Chip
-                                                                    data-testid={`spaces-journey-outage-chip-${space?.space_id}`}
-                                                                    label="Upcoming closure"
-                                                                    size="small"
-                                                                    sx={{
-                                                                        backgroundColor: '#fff8e1',
-                                                                        color: '#7a5a00',
-                                                                        border: '1px solid #ffe082',
-                                                                        fontWeight: 700,
-                                                                    }}
-                                                                />
-                                                            )}
-                                                        </Stack>
-                                                    </Box>
-                                                    {!!space?.space_type_details?.space_type_description && (
-                                                        <Typography
-                                                            variant="body2"
-                                                            sx={{
-                                                                color: '#4f4d57',
-                                                                mb: space?.space_description ? 0.75 : 0,
+                                                        {campus.campus_name}
+                                                    </StyledSecondaryButton>
+                                                ))}
+                                            </Box>
+                                        </Box>
+                                    )}
+
+                                    <Typography variant="body2" sx={{ color: '#666', mt: 1.5 }}>
+                                        Showing {intentSpaceLocations?.length || 0}
+                                        {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
+                                    </Typography>
+                                    <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+                                        <StyledSecondaryButton onClick={handleClearJourneyFilters}>
+                                            Reset quick filters
+                                        </StyledSecondaryButton>
+                                    </Stack>
+                                    {(intentSpaceLocations?.length || 0) > 0 ? (
+                                        <Stack spacing={1.5} sx={{ mt: 1.5 }}>
+                                            {intentSpaceLocations?.map(space => {
+                                                const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
+                                                const bookableSpaceUrl = space?.space_external_book_url;
+                                                return (
+                                                    <Stack key={space?.space_id} spacing={1}>
+                                                        <StyledResultCardButton
+                                                            onClick={() => {
+                                                                setSelectedSpace(space);
+                                                                navigateToView('details', {
+                                                                    intentId: selectedIntentId,
+                                                                    spaceId: space?.space_id,
+                                                                });
                                                             }}
                                                         >
-                                                            {space.space_type_details.space_type_description}
-                                                        </Typography>
-                                                    )}
-                                                    {!!space?.space_description && (
-                                                        <Typography
-                                                            variant="body2"
-                                                            sx={{ color: '#666', fontStyle: 'italic' }}
-                                                        >
-                                                            {String(space.space_description)
-                                                                .replace(/<[^>]*>/g, ' ')
-                                                                .trim()}
-                                                        </Typography>
-                                                    )}
-                                                    {!!bookableSpaceUrl && (
-                                                        <Box sx={{ mt: 1.5, pt: 1.5, borderTop: '1px solid #e0e0e0' }}>
-                                                            <StyledPrimaryButton
-                                                                component="a"
-                                                                href={bookableSpaceUrl}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                size="small"
-                                                                sx={{ textTransform: 'none' }}
-                                                            >
-                                                                Book this space
-                                                            </StyledPrimaryButton>
-                                                        </Box>
-                                                    )}
-                                                </Box>
-                                            </StyledResultCardButton>
+                                                            <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
+                                                                <Typography
+                                                                    sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5 }}
+                                                                >
+                                                                    {space?.space_name}
+                                                                </Typography>
+                                                                <Typography
+                                                                    variant="body2"
+                                                                    sx={{ color: '#666', mb: 0.5 }}
+                                                                >
+                                                                    {space?.space_library_name}
+                                                                </Typography>
+                                                                <Typography variant="body2" sx={{ color: '#999' }}>
+                                                                    {space?.space_type_details?.space_type_name ||
+                                                                        space?.space_type}
+                                                                </Typography>
+                                                                <Box
+                                                                    sx={{
+                                                                        mb:
+                                                                            space?.space_type_details
+                                                                                ?.space_type_description ||
+                                                                            space?.space_description
+                                                                                ? 1
+                                                                                : 0,
+                                                                        mt: 0.5,
+                                                                    }}
+                                                                >
+                                                                    <Stack
+                                                                        direction="row"
+                                                                        spacing={1}
+                                                                        sx={{ flexWrap: 'wrap' }}
+                                                                    >
+                                                                        {favouriteSpaceIds.has(
+                                                                            String(space?.space_id),
+                                                                        ) && (
+                                                                            <Chip
+                                                                                data-testid={`spaces-journey-favourite-chip-${space?.space_id}`}
+                                                                                label="Favourite"
+                                                                                size="small"
+                                                                                sx={{
+                                                                                    backgroundColor: '#fff8e1',
+                                                                                    color: '#7a5a00',
+                                                                                    borderColor: '#ffe082',
+                                                                                    border: '1px solid',
+                                                                                    fontWeight: 700,
+                                                                                }}
+                                                                            />
+                                                                        )}
+                                                                        <SpaceOpenStatusChip
+                                                                            space={space}
+                                                                            weeklyHours={weeklyHours}
+                                                                            weeklyHoursLoading={weeklyHoursLoading}
+                                                                            weeklyHoursError={weeklyHoursError}
+                                                                        />
+                                                                        {!!visibleOutage &&
+                                                                            visibleOutage.status !== 'Current' && (
+                                                                                <Chip
+                                                                                    data-testid={`spaces-journey-outage-chip-${space?.space_id}`}
+                                                                                    label="Upcoming closure"
+                                                                                    size="small"
+                                                                                    sx={{
+                                                                                        backgroundColor: '#fff8e1',
+                                                                                        color: '#7a5a00',
+                                                                                        border: '1px solid #ffe082',
+                                                                                        fontWeight: 700,
+                                                                                    }}
+                                                                                />
+                                                                            )}
+                                                                    </Stack>
+                                                                </Box>
+                                                                {!!space?.space_type_details
+                                                                    ?.space_type_description && (
+                                                                    <Typography
+                                                                        variant="body2"
+                                                                        sx={{
+                                                                            color: '#4f4d57',
+                                                                            mb: space?.space_description ? 0.75 : 0,
+                                                                        }}
+                                                                    >
+                                                                        {
+                                                                            space.space_type_details
+                                                                                .space_type_description
+                                                                        }
+                                                                    </Typography>
+                                                                )}
+                                                                {!!space?.space_description && (
+                                                                    <Typography
+                                                                        variant="body2"
+                                                                        sx={{ color: '#666', fontStyle: 'italic' }}
+                                                                    >
+                                                                        {String(space.space_description)
+                                                                            .replace(/<[^>]*>/g, ' ')
+                                                                            .trim()}
+                                                                    </Typography>
+                                                                )}
+                                                                {!!bookableSpaceUrl && (
+                                                                    <Box
+                                                                        sx={{
+                                                                            mt: 1.5,
+                                                                            pt: 1.5,
+                                                                            borderTop: '1px solid #e0e0e0',
+                                                                        }}
+                                                                    >
+                                                                        <StyledPrimaryButton
+                                                                            component="a"
+                                                                            href={bookableSpaceUrl}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            size="small"
+                                                                            sx={{ textTransform: 'none' }}
+                                                                        >
+                                                                            Book this space
+                                                                        </StyledPrimaryButton>
+                                                                    </Box>
+                                                                )}
+                                                            </Box>
+                                                        </StyledResultCardButton>
+                                                    </Stack>
+                                                );
+                                            })}
                                         </Stack>
-                                    );
-                                })}
-                            </Stack>
+                                    ) : (
+                                        <Box
+                                            sx={{
+                                                mt: 1.5,
+                                                p: 2,
+                                                width: '100%',
+                                                boxSizing: 'border-box',
+                                                border: '1px dashed #c8bed6',
+                                                borderRadius: '12px',
+                                                backgroundColor: '#faf7ff',
+                                            }}
+                                        >
+                                            <Typography sx={{ fontWeight: 700, color: '#1f1230' }}>
+                                                No results match your criteria
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ color: '#666', mt: 0.75 }}>
+                                                Try clearing some filters or selecting a different campus to widen your
+                                                search.
+                                            </Typography>
+                                        </Box>
+                                    )}
+                                </Box>
+                            </StyledResultsSplitLayout>
                         </>
                     )}
 
