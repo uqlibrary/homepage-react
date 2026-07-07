@@ -493,9 +493,9 @@ export const BookableSpacesManageFacilities = ({
                 <input type="hidden" name="facility_type_id" id="facility_type_id" value="${facilityTypeId}" />
                 <div class="dialogRow">
                     <label for="facility_type_name">Facility type name</label>
-                    <input type="text" name="facility_type_name" id="facility_type_name" data-testid="facility_type_name" value="${
-                        escapeDialogText(facilityTypeDetails?.facility_type_name)
-                    }" required />
+                    <input type="text" name="facility_type_name" id="facility_type_name" data-testid="facility_type_name" value="${escapeDialogText(
+                        facilityTypeDetails?.facility_type_name,
+                    )}" required />
                 </div>
                 <div class="dialogRow">
                     <label for="filter_display_on">Filter applies to view:</label>

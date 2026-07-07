@@ -782,7 +782,14 @@ const BookableSpacesJourney = ({
             nextSpaceId: nextSelectedSpace?.space_id || null,
             method: 'replaceState',
         });
-    }, [availableIntentDefinitions, filteredFacilityTypeList, filteredSpaceLocations, highlightedSpace, selectedFacilityTypes, writeJourneyHistory]);
+    }, [
+        availableIntentDefinitions,
+        filteredFacilityTypeList,
+        filteredSpaceLocations,
+        highlightedSpace,
+        selectedFacilityTypes,
+        writeJourneyHistory,
+    ]);
 
     React.useEffect(() => {
         const historyTop = journeyHistoryRef.current[journeyHistoryRef.current.length - 1];

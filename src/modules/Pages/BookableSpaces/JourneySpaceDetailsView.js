@@ -323,7 +323,9 @@ const JourneySpaceDetailsView = ({
                         </UserAttention>
                     )}
 
-                    {!!(selectedSpace?.space_type_details?.space_type_description || selectedSpace?.space_description) && (
+                    {!!(
+                        selectedSpace?.space_type_details?.space_type_description || selectedSpace?.space_description
+                    ) && (
                         <Box sx={{ borderLeft: '3px solid #51247a', pl: 1.5 }}>
                             {!!selectedSpace?.space_type_details?.space_type_description && (
                                 <Typography

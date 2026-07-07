@@ -40,11 +40,7 @@ describe('facilityGroupOrderHelpers', () => {
     });
 
     it('builds a sequential payload from current group list order', () => {
-        const groups = [
-            { facility_type_group_id: 11 },
-            { facility_type_group_id: 7 },
-            { facility_type_group_id: 3 },
-        ];
+        const groups = [{ facility_type_group_id: 11 }, { facility_type_group_id: 7 }, { facility_type_group_id: 3 }];
 
         expect(buildFacilityGroupOrderPayload(groups)).toEqual([
             { facility_type_group_id: 11, facility_type_group_order: 1 },

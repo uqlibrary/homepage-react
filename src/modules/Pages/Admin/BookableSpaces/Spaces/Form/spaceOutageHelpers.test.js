@@ -59,13 +59,13 @@ describe('spaceOutageHelpers', () => {
     });
 
     it('formats current outage until wording for public notices', () => {
-        expect(
-            formatSpaceOutageUntilForPublicNotice('2026-12-25 13:00:00', new Date('2026-12-25T09:00:00')),
-        ).toEqual('1:00pm on 25 December 2026');
+        expect(formatSpaceOutageUntilForPublicNotice('2026-12-25 13:00:00', new Date('2026-12-25T09:00:00'))).toEqual(
+            '1:00pm on 25 December 2026',
+        );
 
-        expect(
-            formatSpaceOutageUntilForPublicNotice('2026-12-26 17:00:00', new Date('2026-12-25T09:00:00')),
-        ).toEqual('5:00pm 26 December 2026');
+        expect(formatSpaceOutageUntilForPublicNotice('2026-12-26 17:00:00', new Date('2026-12-25T09:00:00'))).toEqual(
+            '5:00pm 26 December 2026',
+        );
 
         expect(
             formatSpaceOutageUntilForPublicNotice('2026-12-26 17:00:00', new Date('2026-12-25T09:00:00'), false),
