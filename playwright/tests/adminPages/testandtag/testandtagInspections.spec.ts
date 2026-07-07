@@ -549,7 +549,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await page.getByTestId('asset_selector-asset-panel-input').clear();
                 await page.getByTestId('asset_selector-asset-panel-input').fill('UQL20000'); // last inspection = failed
                 await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('UQL200000');
-                await expect(page.getByTestId('action_panel-repair-tab-button')).not.toBeDisabled(); // failed should be able send for repair
+                await expect(page.getByTestId('action_panel-repair-tab-button')).not.toBeDisabled(); // failed should be able send for repair.
                 await expect(page.getByTestId('action_panel-discard-tab-button')).not.toBeDisabled();
 
                 await expect(page.getByTestId('action_panel-discard-reason-input')).toBeDisabled();
