@@ -945,20 +945,22 @@ export const BookableSpacesList = ({
 
         const facilityStateById = new Map(
             (journeyMapFilterState.selectedFacilityTypes || []).map(candidate => {
-                const facilityTypeId =
-                    typeof candidate === 'number' || typeof candidate === 'string'
-                        ? Number(candidate)
-                        : candidate?.facility_type_id
-                        ? Number(candidate.facility_type_id)
-                        : null;
+                let facilityTypeId = null;
+                let isSelected = false;
+                let isUnselected = false;
+
+                if (typeof candidate === 'number' || typeof candidate === 'string') {
+                    facilityTypeId = Number(candidate);
+                    isSelected = true;
+                } else if (candidate?.facility_type_id) {
+                    facilityTypeId = Number(candidate.facility_type_id);
+                    isSelected = !!candidate?.selected;
+                    isUnselected = !!candidate?.unselected;
+                }
+
                 if (!facilityTypeId || Number.isNaN(facilityTypeId)) {
                     return [null, null];
                 }
-
-                const isSelected =
-                    typeof candidate === 'number' || typeof candidate === 'string' ? true : !!candidate?.selected;
-                const isUnselected =
-                    typeof candidate === 'number' || typeof candidate === 'string' ? false : !!candidate?.unselected;
 
                 return [
                     facilityTypeId,
