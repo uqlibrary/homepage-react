@@ -179,9 +179,10 @@ const Inspection = ({
     const { user } = useAccountUser();
     const deptPrinterDefault = getDefaultDeptPrinter(user?.user_department);
     const deptPrintingEnabled = getDeptLabelPrintingEnabled(user?.user_department);
-    const { printerTemplateList } = useLabelPrinterTemplateStore(actions);
+    const { printerTemplateList } = useLabelPrinterTemplateStore(actions, deptPrintingEnabled);
 
     const { printer, availablePrinters } = useLabelPrinter({
+        printingEnabled: deptPrintingEnabled,
         printerCode: deptPrinterDefault,
         shouldOverridePrinterDevEnv: true,
     });
@@ -321,7 +322,7 @@ const Inspection = ({
             return;
         }
         try {
-            const selectedPrinter = availablePrinters.find(printer => printer.name === printerPreference.name);
+            const selectedPrinter = availablePrinters.find(printer => printer?.name === printerPreference.name);
             /* istanbul ignore next */
             if (!selectedPrinter) {
                 console.error('Selected printer not found in available printers', selectedPrinter, availablePrinters);
