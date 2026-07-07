@@ -13,12 +13,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
     });
 
     const selectListBox = async (page: Page, pattern: string, timeout: number = 10_000) =>
-        await page
-            .locator('[role=listbox]')
-            .locator('li')
-            .getByText(pattern)
-            .first()
-            .click({ timeout });
+        await page.locator('[role=listbox]').locator('li').getByText(pattern).first().click({ timeout });
 
     const selectAssetId = async (page: Page, pattern: string) => {
         await page.getByTestId('asset_selector-asset-panel-input').click();
@@ -47,14 +42,14 @@ test.describe('Test and Tag Admin Inspection page', () => {
 
     const selectLocation = async (page: Page, { site, building, floor, room }: Location) => {
         // Site
-        if (!!site) {
+        if (site) {
             await expect(async () => {
                 await page.getByTestId('location_picker-event-panel-site').click({ timeout: 2000 });
                 await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
                 await selectListBox(page, site, 1000);
             }).toPass();
         }
-        if (!!building) {
+        if (building) {
             // Building
             await expect(async () => {
                 await page.getByTestId('location_picker-event-panel-building').click({ timeout: 2000 });
@@ -64,7 +59,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
         }
 
         // Floor
-        if (!!floor) {
+        if (floor) {
             await expect(async () => {
                 await page.getByTestId('location_picker-event-panel-floor').click({ timeout: 2000 });
                 await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
@@ -73,7 +68,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
         }
 
         // Room
-        if (!!room) {
+        if (room) {
             await expect(async () => {
                 await page.getByTestId('location_picker-event-panel-room').click({ timeout: 2000 });
                 await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
@@ -261,10 +256,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
 
                 await expect(page.getByTestId('update_dialog-action-button').getByText('Add')).toBeVisible();
                 await page.getByTestId('update_dialog-action-button').click();
-                await page
-                    .getByTestId('confirmation_alert-success')
-                    .locator('[type=button]')
-                    .click();
+                await page.getByTestId('confirmation_alert-success').locator('[type=button]').click();
                 await expect(page.getByTestId('confirmation_alert-success')).not.toBeVisible();
             });
 
@@ -328,11 +320,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await expect(page.getByTestId('asset_panel-all-teams-switch')).toBeChecked();
                 await page.getByTestId('asset_selector-asset-panel-input').click({ delay: 1000 });
                 await page.getByTestId('asset_selector-asset-panel-input').fill('UQL00');
-                await page
-                    .getByRole('option')
-                    .filter({ hasText: 'UQL00SP' })
-                    .first()
-                    .click();
+                await page.getByRole('option').filter({ hasText: 'UQL00SP' }).first().click();
 
                 await expect(
                     page
@@ -606,12 +594,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
                     await expect(page.getByTestId('inspection-save-button')).not.toBeDisabled();
                     await page.getByTestId('inspection-save-button').click();
                     await expect(page.getByTestId('message-title').getByText('Asset saved')).toBeVisible();
-                    await expect(
-                        page
-                            .getByTestId('saved-asset-id')
-                            .first()
-                            .getByText('UQL000298'),
-                    ).toBeVisible();
+                    await expect(page.getByTestId('saved-asset-id').first().getByText('UQL000298')).toBeVisible();
                     await expect(page.getByTestId('confirm-alternate-inspection-printer-save-success')).toBeDisabled();
 
                     await page.getByTestId('confirm-inspection-printer-save-success').click();
@@ -636,12 +619,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
                     await expect(page.getByTestId('inspection-save-button')).not.toBeDisabled();
                     await page.getByTestId('inspection-save-button').click();
                     await expect(page.getByTestId('message-title').getByText('Asset saved')).toBeVisible();
-                    await expect(
-                        page
-                            .getByTestId('saved-asset-id')
-                            .first()
-                            .getByText('UQL000298'),
-                    ).toBeVisible();
+                    await expect(page.getByTestId('saved-asset-id').first().getByText('UQL000298')).toBeVisible();
                     await page.getByTestId('confirm-inspection-save-success').click();
 
                     await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('');
@@ -665,12 +643,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
                     await expect(page.getByTestId('inspection-save-button')).not.toBeDisabled();
                     await page.getByTestId('inspection-save-button').click();
                     await expect(page.getByTestId('message-title').getByText('Asset saved')).toBeVisible();
-                    await expect(
-                        page
-                            .getByTestId('saved-asset-id')
-                            .first()
-                            .getByText('UQL000298'),
-                    ).toBeVisible();
+                    await expect(page.getByTestId('saved-asset-id').first().getByText('UQL000298')).toBeVisible();
 
                     await expect(page.getByTestId('confirm-alternate-inspection-printer-save-success')).toBeDisabled();
                     // select printer
