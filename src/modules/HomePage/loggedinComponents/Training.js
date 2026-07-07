@@ -205,17 +205,11 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             lastWeek: '[Last] dddd  D MMMM [at] h.mma',
             sameElse: 'D MMMM [at] h.mma',
         };
-        let dateString = moment(eventInternals.start)
-            .calendar(null, calendarOptions)
-            .replace('.00', '');
+        let dateString = moment(eventInternals.start).calendar(null, calendarOptions).replace('.00', '');
         const startDate = moment(eventInternals.start).format('MMDD');
         const endDate = moment(eventInternals.end).format('MMDD');
         if (startDate !== endDate) {
-            dateString +=
-                ' - ' +
-                moment(eventInternals.end)
-                    .calendar(null, calendarOptions)
-                    .replace('.00', '');
+            dateString += ' - ' + moment(eventInternals.end).calendar(null, calendarOptions).replace('.00', '');
         }
         return dateString;
     };

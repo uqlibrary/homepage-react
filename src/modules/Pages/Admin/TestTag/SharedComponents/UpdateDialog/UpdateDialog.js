@@ -166,8 +166,8 @@ export const UpdateDialogue = ({
                                                         ? dataFields[field].computedValue(
                                                               props[dataFields[field].computedValueProp],
                                                           )
-                                                        : dataFields[field]?.valueFormatter?.(data?.[field]) ??
-                                                          data?.[field]}
+                                                        : (dataFields[field]?.valueFormatter?.(data?.[field]) ??
+                                                          data?.[field])}
                                                 </Typography>
                                             </>
                                         )}

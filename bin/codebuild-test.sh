@@ -5,7 +5,8 @@ export COMMIT_INFO_AUTHOR=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:
 export COMMIT_INFO_EMAIL=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:"%ae")
 export COMMIT_INFO_MESSAGE=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:"%B")
 export CI_BUILD_URL="https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/fez-frontend/executions/${CI_BUILD_NUMBER}"
-export PW_SHARD_COUNT=10
+export PWTEST_SHARD_WEIGHTS=37:32:31 # ENV VAR name expected by PW, please don't rename it
+export PW_SHARD_COUNT=3
 
 echo
 echo "Commit Info:"
@@ -73,48 +74,28 @@ function install_pw_deps() {
         printf "\n--- \e[ENDED INSTALLING PW DEPS AT $(date)] 1\e[0m ---\n"
 }
 
-function run_pw_tests() {
-    set -e
-    export PW_SHARD_INDEX="$1"
-    local LIMIT="$2"
-
-    printf "\n--- \e[1mRUNNING E2E TESTS GROUP #$PIPE_NUM [STARTING AT $(date)] 2\e[0m ---\n"
-
-    while (( PW_SHARD_INDEX <= LIMIT ))
-    do
-        if (( PW_SHARD_INDEX == LIMIT )); then
-            export PW_IS_LAST_SHARD=true
-        fi
-
-        run_pw_test_shard "${PW_SHARD_INDEX}"
-        fix_coverage_report_paths "coverage/playwright/coverage-final.json"
-
-        ((PW_SHARD_INDEX++))
-    done
-
-    printf "\n--- [ENDED RUNNING E2E TESTS GROUP #$PIPE_NUM AT $(date)] \n"
-}
-
 function run_pw_test_shard() {
-    local SHARD_INDEX="${1-PW_SHARD_INDEX}"
-    if [[ $CODE_COVERAGE_REQUIRED != 1 ]]; then
-        npm run test:e2e -- --shard="${SHARD_INDEX}/${PW_SHARD_COUNT}"
-        return 0
-    fi
+    set -e
+    npm run start:mock &
+    install_pw_deps
+    export PW_SHARD_INDEX="$1"
 
-    npm run test:e2e:cc -- -- --shard="${SHARD_INDEX}/${PW_SHARD_COUNT}"
+    printf "\n--- \e[1mRUNNING E2E TESTS GROUP #${PW_SHARD_INDEX} [STARTING AT $(date)] 2\e[0m ---\n"
+    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
+        npm run test:e2e:cc -- -- --shard="${PW_SHARD_INDEX}/${PW_SHARD_COUNT}"
+        fix_coverage_report_paths coverage/playwright/coverage-final.json
+    else
+        npm run test:e2e -- --shard="${PW_SHARD_INDEX}/${PW_SHARD_COUNT}"
+    fi
+    printf "\n--- [ENDED RUNNING E2E TESTS GROUP #${PW_SHARD_INDEX} AT $(date)] \n"
 }
 
 case "$PIPE_NUM" in
 "1")
-    npm run start:mock &
-    install_pw_deps
-    run_pw_tests 1 3
+    run_pw_test_shard "$PIPE_NUM"
 ;;
 "2")
-    npm run start:mock &
-    install_pw_deps
-    run_pw_tests 4 7
+    run_pw_test_shard "$PIPE_NUM"
 ;;
 "3")
     printf "\n ### PIPELINE 3 ### \n\n"
@@ -136,9 +117,7 @@ case "$PIPE_NUM" in
         npm run test:unit:ci:nocoverage
     fi
 
-    npm run start:mock &
-    install_pw_deps
-    run_pw_tests 8 10
+    run_pw_test_shard "$PIPE_NUM"
 ;;
 *)
 ;;

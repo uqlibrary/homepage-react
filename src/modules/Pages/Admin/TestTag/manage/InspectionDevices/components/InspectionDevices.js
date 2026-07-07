@@ -232,7 +232,7 @@ const InspectionDevices = ({
                                 isOpen={actionState.isDelete}
                                 locale={
                                     !dialogueBusy
-                                        ? actionState.props?.locale ?? {}
+                                        ? (actionState.props?.locale ?? {})
                                         : {
                                               ...(actionState.props?.locale ?? {}),
                                               confirmButtonLabel: (

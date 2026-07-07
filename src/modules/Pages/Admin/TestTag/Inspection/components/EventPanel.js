@@ -31,10 +31,7 @@ const EventPanel = ({
 }) => {
     const [eventExpanded, setEventExpanded] = React.useState(true);
     const pageLocale = locale.pages.inspect;
-    const startDate = moment()
-        .startOf('year')
-        .subtract(5, 'year')
-        .format(pageLocale.config.dateFormat);
+    const startDate = moment().startOf('year').subtract(5, 'year').format(pageLocale.config.dateFormat);
 
     const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
         state.get?.('testTagOnLoadInspectionReducer'),

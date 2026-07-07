@@ -226,8 +226,7 @@ export const DLOTeamList = ({
                                                 );
                                             }) || /* istanbul ignore next */ [];
 
-
-                                        console.log('visibleTeams', visibleTeams, account);    
+                                        console.log('visibleTeams', visibleTeams, account);
                                         if (visibleTeams.length === 0) {
                                             return (
                                                 <Typography variant="body1" data-testid="dlor-teamlist-no-access">
@@ -267,7 +266,9 @@ export const DLOTeamList = ({
                                                                 !(
                                                                     isDlorAdminUser(account) ||
                                                                     (Array.isArray(team.team_members) &&
-                                                                        team.team_members.some(m => m.team_admin_username === account.id))
+                                                                        team.team_members.some(
+                                                                            m => m.team_admin_username === account.id,
+                                                                        ))
                                                                 )
                                                             }
                                                         >

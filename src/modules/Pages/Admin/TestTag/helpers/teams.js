@@ -36,17 +36,18 @@ export const useUserTeams = ({
     const teamList = useUserDepartmentTeamList(user, allTeamsOption, includeDisabledLabel);
 
     const getTeamSlug = useCallback(teamId => teamList?.find?.(t => t.value === teamId)?.team_slug ?? '', [teamList]);
-    const getTeamIdBySlug = useCallback(teamSlug => teamList?.find?.(t => t.team_slug === teamSlug)?.value ?? '', [
-        teamList,
-    ]);
+    const getTeamIdBySlug = useCallback(
+        teamSlug => teamList?.find?.(t => t.team_slug === teamSlug)?.value ?? '',
+        [teamList],
+    );
     const getDefaultTeamId = () => (setDefaultTeam ? getTeamIdBySlug(user?.user_team) : '');
 
     const [selectedTeam, setSelectedTeam] = useState(getDefaultTeamId);
 
-    const selectedTeamSlug = useMemo(() => teamList.find(t => t.value === selectedTeam)?.team_slug ?? '', [
-        selectedTeam,
-        teamList,
-    ]);
+    const selectedTeamSlug = useMemo(
+        () => teamList.find(t => t.value === selectedTeam)?.team_slug ?? '',
+        [selectedTeam, teamList],
+    );
 
     return {
         userTeamList: teamList,
