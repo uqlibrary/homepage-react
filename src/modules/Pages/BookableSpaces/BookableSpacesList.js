@@ -895,9 +895,21 @@ export const BookableSpacesList = ({
     }, [filteredFacilityTypeList, selectedFacilityTypes, setSelectedFacilityTypes]);
 
     const hasAppliedJourneyMapFilterStateRef = useRef(false);
+    const journeyMapFilterStateSignatureRef = useRef(null);
 
     React.useEffect(() => {
-        if (!journeyMapFilterState || hasAppliedJourneyMapFilterStateRef.current) {
+        if (!journeyMapFilterState) {
+            return;
+        }
+
+        const signature = JSON.stringify({
+            selectedFacilityTypes: journeyMapFilterState.selectedFacilityTypes || [],
+            selectedCampus: journeyMapFilterState.selectedCampus,
+            selectedLibrary: journeyMapFilterState.selectedLibrary,
+            capacityFilterValue: journeyMapFilterState.capacityFilterValue,
+        });
+
+        if (hasAppliedJourneyMapFilterStateRef.current && journeyMapFilterStateSignatureRef.current === signature) {
             return;
         }
 
@@ -911,6 +923,10 @@ export const BookableSpacesList = ({
                       unselected: false,
                       facility_special_action: facilityType?.facility_special_action,
                   }));
+
+        if (!baseFacilityTypes.length) {
+            return;
+        }
 
         const selectedFacilityIds = new Set(
             (journeyMapFilterState.selectedFacilityTypes || []).map(candidate => {
@@ -943,6 +959,7 @@ export const BookableSpacesList = ({
         }
 
         hasAppliedJourneyMapFilterStateRef.current = true;
+        journeyMapFilterStateSignatureRef.current = signature;
     }, [filteredFacilityTypeList, journeyMapFilterState, selectedFacilityTypes, setSelectedFacilityTypes]);
 
     const toggleFilterPopupVisibility = () => {

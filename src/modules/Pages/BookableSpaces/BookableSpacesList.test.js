@@ -181,6 +181,46 @@ describe('BookableSpacesList campus selection', () => {
         );
     });
 
+    it('applies journey map filter state once facility filters become available', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [
+                    { facility_type_id: 11, selected: true, unselected: false, facility_special_action: null },
+                ],
+                selectedCampus: 1,
+                selectedLibrary: 11,
+                capacityFilterValue: [4, 8],
+            }),
+        );
+
+        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+
+        const { rerender } = rtlRender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...baseProps} facilityTypeList={{ data: { facility_type_groups: [] } }} />
+            </WithRouter>,
+        );
+
+        rerender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        expect(latestSidebarProps.selectedFacilityTypes).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                }),
+            ]),
+        );
+    });
+
     it('applies journey map filter state from the URL to the legacy map/list view', async () => {
         const encodedState = encodeURIComponent(
             JSON.stringify({
