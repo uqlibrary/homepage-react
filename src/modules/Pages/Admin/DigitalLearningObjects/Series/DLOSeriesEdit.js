@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useParams, Link as RouterLink } from 'react-router';
+import { useParams, Link as RouterLink, useNavigate } from 'react-router';
 import { useCookies } from 'react-cookie';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -155,6 +155,7 @@ export const DLOSeriesEdit = ({
     mode,
 }) => {
     const { account } = useAccountContext();
+    const navigate = useNavigate();
     const handleEditorChange = (fieldname, newContent) => {
         const newValues = { ...formValues, [fieldname]: newContent };
         setFormValues(newValues);
@@ -271,12 +272,12 @@ export const DLOSeriesEdit = ({
 
     const navigateToSeriesManagementHomePage = () => {
         closeConfirmationBox();
-        window.location.href = dlorAdminLink('/series/manage', account);
+        navigate(dlorAdminLink('/series/manage', account));
         /* istanbul ignore next */
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
-        window.location.href = dlorAdminLink('/series/manage', account);
+        navigate(dlorAdminLink('/series/manage', account));
     };
 
     const clearForm = () => {

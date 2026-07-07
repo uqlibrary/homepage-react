@@ -11,12 +11,13 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { useAccountContext } from 'context';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 export const ObjectListItem = ({ object, listParentName = 'team' }) => {
     const { account } = useAccountContext();
+    const navigate = useNavigate();
     const navigateToDlorEditPage = uuid => {
-        window.location.href = dlorAdminLink(`/edit/${uuid}`, account);
+        navigate(dlorAdminLink(`/edit/${uuid}`, account));
     };
 
     return (
