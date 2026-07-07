@@ -4,7 +4,7 @@ import { act } from 'react-dom/test-utils';
 
 import { fireEvent, rtlRender, screen, waitFor, WithRouter } from 'test-utils';
 
-import { BookableSpacesList } from './BookableSpacesList';
+import { BookableSpacesList, buildJourneyNavigationUrl } from './BookableSpacesList';
 
 const mockDispatch = jest.fn();
 const mockFlyToSpace = jest.fn();
@@ -259,6 +259,33 @@ describe('BookableSpacesList campus selection', () => {
                 }),
             ]),
         );
+    });
+
+    it('returns to the journey landing state when the advanced-view button is used without active filters', () => {
+        const navigatedUrl = buildJourneyNavigationUrl({
+            currentUrl: 'http://localhost/spaces?advanced=1',
+            selectedFacilityTypes: [],
+            selectedCampus: 1,
+            selectedLibrary: 0,
+            capacityFilterValue: [],
+        });
+
+        expect(navigatedUrl).not.toContain('mapFilters');
+        expect(navigatedUrl).not.toContain('journeyStep');
+        expect(navigatedUrl).toContain('/spaces');
+    });
+
+    it('defaults the journey handoff to the results step when filters are active', () => {
+        const navigatedUrl = buildJourneyNavigationUrl({
+            currentUrl: 'http://localhost/spaces?advanced=1',
+            selectedFacilityTypes: [{ facility_type_id: 11, selected: true, unselected: false }],
+            selectedCampus: 1,
+            selectedLibrary: 11,
+            capacityFilterValue: [4, 8],
+        });
+
+        expect(navigatedUrl).toContain('journeyStep=results');
+        expect(navigatedUrl).toContain('mapFilters=');
     });
 
     it('auto-selects the only visible space in the advanced view', async () => {

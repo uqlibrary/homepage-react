@@ -175,6 +175,63 @@ const StyledSidebarTab = styled('button')(({ theme }) => ({
     },
 }));
 
+export const buildJourneyNavigationUrl = ({
+    currentUrl,
+    selectedFacilityTypes,
+    selectedCampus,
+    selectedLibrary,
+    capacityFilterValue,
+}) => {
+    const url = new URL(currentUrl);
+    const hasActiveJourneyFilters = (selectedFacilityTypes || []).some(
+        filter => filter?.selected || filter?.unselected,
+    );
+    const setJourneyIntentStep = params => {
+        params.delete('advanced');
+        params.delete('journeyIntent');
+        params.delete('journeySpace');
+        params.delete('mapFilters');
+        if (!hasActiveJourneyFilters) {
+            params.delete('journeyStep');
+        }
+    };
+
+    if (hasActiveJourneyFilters) {
+        const encodedMapFilters = serialiseJourneyMapFilterState({
+            selectedFacilityTypes,
+            selectedCampus,
+            selectedLibrary,
+            capacityFilterValue,
+        });
+
+        if (url.hash.includes('?')) {
+            const [hashPath, hashQuery] = url.hash.split('?');
+            const hashParams = new URLSearchParams(hashQuery);
+            setJourneyIntentStep(hashParams);
+            hashParams.set('journeyStep', 'results');
+            hashParams.set('mapFilters', encodedMapFilters);
+            const remaining = hashParams.toString();
+            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
+        } else {
+            setJourneyIntentStep(url.searchParams);
+            url.searchParams.set('journeyStep', 'results');
+            url.searchParams.set('mapFilters', encodedMapFilters);
+        }
+    } else {
+        if (url.hash.includes('?')) {
+            const [hashPath, hashQuery] = url.hash.split('?');
+            const hashParams = new URLSearchParams(hashQuery);
+            setJourneyIntentStep(hashParams);
+            const remaining = hashParams.toString();
+            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
+        } else {
+            setJourneyIntentStep(url.searchParams);
+        }
+    }
+
+    return url.toString();
+};
+
 export const BookableSpacesList = ({
     actions,
     bookableSpacesRoomList,
@@ -490,31 +547,14 @@ export const BookableSpacesList = ({
     const [maximumSpaceCapacity, setMaximumSpaceCapacity] = React.useState(50);
 
     const goToJourney = () => {
-        const url = new URL(window.location.href);
-        const encodedMapFilters = serialiseJourneyMapFilterState({
+        const nextUrl = buildJourneyNavigationUrl({
+            currentUrl: window.location.href,
             selectedFacilityTypes,
             selectedCampus,
             selectedLibrary,
             capacityFilterValue,
         });
-        const setJourneyIntentStep = params => {
-            params.delete('advanced');
-            params.delete('journeyIntent');
-            params.delete('journeySpace');
-        };
-
-        if (url.hash.includes('?')) {
-            const [hashPath, hashQuery] = url.hash.split('?');
-            const hashParams = new URLSearchParams(hashQuery);
-            setJourneyIntentStep(hashParams);
-            hashParams.set('mapFilters', encodedMapFilters);
-            const remaining = hashParams.toString();
-            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
-        } else {
-            setJourneyIntentStep(url.searchParams);
-            url.searchParams.set('mapFilters', encodedMapFilters);
-        }
-        window.location.assign(url.toString());
+        window.location.assign(nextUrl);
     };
 
     React.useEffect(() => {
@@ -1123,6 +1163,8 @@ export const BookableSpacesList = ({
     };
 
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
+    const hasActiveFilters = (activeFilterCount || 0) > 0;
+    const advancedViewToggleLabel = hasActiveFilters ? 'Show in simple view' : 'Help me find a space';
     const highlightedSpace = React.useMemo(() => {
         const validHighlightedSpaces =
             bookableSpacesRoomList?.data?.locations?.filter(
@@ -1328,26 +1370,7 @@ export const BookableSpacesList = ({
                                             },
                                         }}
                                     >
-                                        Help me find a space
-                                    </Button>
-                                    <Button
-                                        data-testid="spaces-advanced-go-to-journey-secondary"
-                                        variant="contained"
-                                        onClick={goToJourney}
-                                        sx={{
-                                            textTransform: 'none',
-                                            backgroundColor: '#51247a',
-                                            color: '#fff',
-                                            fontWeight: 600,
-                                            border: '2px solid rgba(255, 255, 255, 0.85)',
-                                            boxShadow: '0 2px 8px rgba(0,0,0,0.35)',
-                                            '&:hover': {
-                                                backgroundColor: '#3c1a5b',
-                                                borderColor: '#fff',
-                                            },
-                                        }}
-                                    >
-                                        Back to journey
+                                        {advancedViewToggleLabel}
                                     </Button>
                                 </Box>
                                 <BookableSpacesMap
