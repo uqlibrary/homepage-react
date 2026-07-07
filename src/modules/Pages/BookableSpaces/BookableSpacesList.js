@@ -560,7 +560,9 @@ export const BookableSpacesList = ({
             });
             const calculatedMaxCapaity = !!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity;
             setMaximumSpaceCapacity(calculatedMaxCapaity);
-            setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
+            if (!Array.isArray(journeyMapFilterState?.capacityFilterValue)) {
+                setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
+            }
 
             /* eslint-disable camelcase */
             const currentCampusList = Object.values(
@@ -611,7 +613,7 @@ export const BookableSpacesList = ({
                 });
             currentLibraryList?.length > 0 && setCampusLibraryList(currentLibraryList);
         }
-    }, [selectedCampus, bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
+    }, [selectedCampus, bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading, journeyMapFilterState]);
 
     function isLocationOpen(locationId, hoursData) {
         if (!locationId) {
@@ -880,7 +882,7 @@ export const BookableSpacesList = ({
     );
 
     React.useEffect(() => {
-        if (!!selectedFacilityTypes?.length || !filteredFacilityTypeList?.data?.facility_type_groups?.length) {
+        if (journeyMapFilterState || !!selectedFacilityTypes?.length || !filteredFacilityTypeList?.data?.facility_type_groups?.length) {
             return;
         }
         const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
@@ -892,7 +894,7 @@ export const BookableSpacesList = ({
             facility_special_action: facilityType?.facility_special_action,
         }));
         setSelectedFacilityTypes(newFilters);
-    }, [filteredFacilityTypeList, selectedFacilityTypes, setSelectedFacilityTypes]);
+    }, [filteredFacilityTypeList, journeyMapFilterState, selectedFacilityTypes, setSelectedFacilityTypes]);
 
     const hasAppliedJourneyMapFilterStateRef = useRef(false);
     const journeyMapFilterStateSignatureRef = useRef(null);
@@ -902,46 +904,67 @@ export const BookableSpacesList = ({
             return;
         }
 
+        const availableFacilityTypeIds = (getFlatFacilityTypeList(filteredFacilityTypeList) || [])
+            .map(facilityType => Number(facilityType?.facility_type_id))
+            .filter(value => !Number.isNaN(value));
+
         const signature = JSON.stringify({
             selectedFacilityTypes: journeyMapFilterState.selectedFacilityTypes || [],
             selectedCampus: journeyMapFilterState.selectedCampus,
             selectedLibrary: journeyMapFilterState.selectedLibrary,
             capacityFilterValue: journeyMapFilterState.capacityFilterValue,
+            availableFacilityTypeIds,
         });
 
         if (hasAppliedJourneyMapFilterStateRef.current && journeyMapFilterStateSignatureRef.current === signature) {
             return;
         }
 
-        const baseFacilityTypes =
-            (selectedFacilityTypes || []).length > 0
-                ? selectedFacilityTypes
-                : (getFlatFacilityTypeList(filteredFacilityTypeList) || []).map(facilityType => ({
-                      facility_type_group_id: facilityType?.facility_type_group_id,
-                      facility_type_id: facilityType?.facility_type_id,
-                      selected: false,
-                      unselected: false,
-                      facility_special_action: facilityType?.facility_special_action,
-                  }));
+        const baseFacilityTypes = (getFlatFacilityTypeList(filteredFacilityTypeList) || []).map(facilityType => ({
+            facility_type_group_id: facilityType?.facility_type_group_id,
+            facility_type_id: facilityType?.facility_type_id,
+            selected: false,
+            unselected: false,
+            facility_special_action: facilityType?.facility_special_action,
+        }));
 
         if (!baseFacilityTypes.length) {
             return;
         }
 
-        const selectedFacilityIds = new Set(
+        const facilityStateById = new Map(
             (journeyMapFilterState.selectedFacilityTypes || []).map(candidate => {
-                if (typeof candidate === 'number' || typeof candidate === 'string') {
-                    return Number(candidate);
+                const facilityTypeId =
+                    typeof candidate === 'number' || typeof candidate === 'string'
+                        ? Number(candidate)
+                        : candidate?.facility_type_id
+                          ? Number(candidate.facility_type_id)
+                          : null;
+                if (!facilityTypeId || Number.isNaN(facilityTypeId)) {
+                    return [null, null];
                 }
-                return candidate?.facility_type_id ? Number(candidate.facility_type_id) : null;
+
+                const isSelected =
+                    typeof candidate === 'number' || typeof candidate === 'string' ? true : !!candidate?.selected;
+                const isUnselected =
+                    typeof candidate === 'number' || typeof candidate === 'string' ? false : !!candidate?.unselected;
+
+                return [
+                    facilityTypeId,
+                    {
+                        selected: isSelected,
+                        unselected: isUnselected,
+                    },
+                ];
             }),
         );
         const nextFacilityTypes = baseFacilityTypes.map(filter => {
             const matchingId = Number(filter.facility_type_id);
+            const state = facilityStateById.get(matchingId);
             return {
                 ...filter,
-                selected: selectedFacilityIds.has(matchingId),
-                unselected: false,
+                selected: !!state?.selected,
+                unselected: !!state?.unselected,
             };
         });
 
@@ -1180,6 +1203,7 @@ export const BookableSpacesList = ({
                                     librariesForCampus={librariesForCampus}
                                     selectedLibrary={selectedLibrary}
                                     handleLibrarySelection={handleLibrarySelection}
+                                    hasJourneyMapFilterState={Boolean(journeyMapFilterState)}
                                 />
                             </div>
                             {isDesktopView && (

@@ -73,8 +73,19 @@ export const serialiseJourneyMapFilterState = ({
         return acc;
     }, []);
 
+    const unselectedFacilityIds = (selectedFacilityTypes || []).reduce((acc, filter) => {
+        const facilityTypeId = filter?.facility_type_id;
+        if (!facilityTypeId || !filter?.unselected) {
+            return acc;
+        }
+
+        acc.push(Number(facilityTypeId));
+        return acc;
+    }, []);
+
     const serialised = {
-        selectedFacilityTypes: selectedFacilityIds,
+        selectedFacilityTypes: [...new Set([...selectedFacilityIds, ...unselectedFacilityIds])],
+        ...(unselectedFacilityIds.length > 0 ? { unselectedFacilityTypes: unselectedFacilityIds } : {}),
         ...(selectedCampus !== null && selectedCampus !== undefined ? { selectedCampus } : {}),
         ...(selectedLibrary !== null && selectedLibrary !== undefined ? { selectedLibrary } : {}),
         ...(Array.isArray(capacityFilterValue) && capacityFilterValue.length > 0 ? { capacityFilterValue } : {}),
@@ -92,18 +103,15 @@ export const deserialiseJourneyMapFilterState = searchParams => {
     try {
         const parsed = JSON.parse(decodeURIComponent(encodedState));
         const selectedFacilityTypes = Array.isArray(parsed?.selectedFacilityTypes) ? parsed.selectedFacilityTypes : [];
-
-        return {
-            selectedFacilityTypes: selectedFacilityTypes.reduce((acc, filter) => {
+        const unselectedFacilityTypes = Array.isArray(parsed?.unselectedFacilityTypes)
+            ? parsed.unselectedFacilityTypes
+            : [];
+        const selectedFacilityIds = new Set(
+            selectedFacilityTypes.reduce((acc, filter) => {
                 if (typeof filter === 'number' || typeof filter === 'string') {
                     const facilityTypeId = Number(filter);
                     if (!Number.isNaN(facilityTypeId)) {
-                        acc.push({
-                            facility_type_id: facilityTypeId,
-                            selected: true,
-                            unselected: false,
-                            facility_special_action: null,
-                        });
+                        acc.push(facilityTypeId);
                     }
                     return acc;
                 }
@@ -113,14 +121,41 @@ export const deserialiseJourneyMapFilterState = searchParams => {
                     return acc;
                 }
 
-                acc.push({
-                    facility_type_id: Number(facilityTypeId),
-                    selected: !!filter?.selected,
-                    unselected: !!filter?.unselected,
-                    facility_special_action: filter?.facility_special_action || null,
-                });
+                acc.push(Number(facilityTypeId));
                 return acc;
             }, []),
+        );
+        const unselectedFacilityIds = new Set(
+            unselectedFacilityTypes.reduce((acc, filter) => {
+                if (typeof filter === 'number' || typeof filter === 'string') {
+                    const facilityTypeId = Number(filter);
+                    if (!Number.isNaN(facilityTypeId)) {
+                        acc.push(facilityTypeId);
+                    }
+                    return acc;
+                }
+
+                const facilityTypeId = filter?.facility_type_id;
+                if (!facilityTypeId) {
+                    return acc;
+                }
+
+                acc.push(Number(facilityTypeId));
+                return acc;
+            }, []),
+        );
+
+        const parsedFacilityTypes = Array.from(new Set([...selectedFacilityIds, ...unselectedFacilityIds])).map(
+            facilityTypeId => ({
+                facility_type_id: facilityTypeId,
+                selected: selectedFacilityIds.has(facilityTypeId) && !unselectedFacilityIds.has(facilityTypeId),
+                unselected: unselectedFacilityIds.has(facilityTypeId),
+                facility_special_action: null,
+            }),
+        );
+
+        return {
+            selectedFacilityTypes: parsedFacilityTypes,
             selectedCampus: parsed?.selectedCampus ?? null,
             selectedLibrary: parsed?.selectedLibrary ?? null,
             capacityFilterValue: Array.isArray(parsed?.capacityFilterValue) ? parsed.capacityFilterValue : null,

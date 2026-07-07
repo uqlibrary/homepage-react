@@ -265,6 +265,7 @@ export const SidebarFilters = ({
     handleLibrarySelection,
     onApplyAllFilters,
     showBottomActionButtons = false,
+    hasJourneyMapFilterState = false,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
     const [defaultCampus, setDefaultCampus] = React.useState(1);
@@ -297,6 +298,7 @@ export const SidebarFilters = ({
 
     React.useEffect(() => {
         if (
+            !hasJourneyMapFilterState &&
             facilityTypeListError === false &&
             facilityTypeListLoading === false &&
             facilityTypeList?.data?.facility_type_groups?.length > 0 &&

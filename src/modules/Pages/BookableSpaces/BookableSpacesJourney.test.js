@@ -11,6 +11,14 @@ jest.mock('../../../../public/images/digital-learning-hub-hero-shot-wide.png', (
 import BookableSpacesJourney from './BookableSpacesJourney';
 import { deserialiseJourneyMapFilterState, serialiseJourneyMapFilterState } from './journeyHelpers';
 
+jest.mock('@mui/material', () => {
+    const actual = jest.requireActual('@mui/material');
+    return {
+        ...actual,
+        useMediaQuery: jest.fn(() => true),
+    };
+});
+
 jest.mock('modules/Pages/BookableSpaces/BookableSpacesMap', () => {
     return function MockBookableSpacesMap() {
         return <div data-testid="mock-bookable-spaces-map" />;

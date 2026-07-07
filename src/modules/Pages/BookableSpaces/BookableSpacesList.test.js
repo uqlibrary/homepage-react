@@ -258,6 +258,83 @@ describe('BookableSpacesList campus selection', () => {
         );
     });
 
+    it('keeps URL-backed facility selections selected when the advanced view first renders', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [29, 31, 23],
+                selectedCampus: 1,
+                selectedLibrary: 0,
+                capacityFilterValue: [1, 24],
+            }),
+        );
+
+        const props = {
+            ...baseProps,
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: 1,
+                            facility_type_children: [
+                                {
+                                    facility_type_id: 29,
+                                    facility_type_name: 'Recharge Station',
+                                    filter_display_on: 'advanced',
+                                },
+                                {
+                                    facility_type_id: 31,
+                                    facility_type_name: 'Self-printing & scanning',
+                                    filter_display_on: 'advanced',
+                                },
+                                {
+                                    facility_type_id: 23,
+                                    facility_type_name: 'Toilets, female',
+                                    filter_display_on: 'advanced',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[0],
+                            facility_types: [
+                                { facility_type_id: 29, facility_type_name: 'Recharge Station' },
+                                { facility_type_id: 31, facility_type_name: 'Self-printing & scanning' },
+                                { facility_type_id: 23, facility_type_name: 'Toilets, female' },
+                            ],
+                        },
+                    ],
+                },
+            },
+        };
+
+        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        expect(latestSidebarProps.selectedFacilityTypes).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ facility_type_id: 29, selected: true, unselected: false }),
+                expect.objectContaining({ facility_type_id: 31, selected: true, unselected: false }),
+                expect.objectContaining({ facility_type_id: 23, selected: true, unselected: false }),
+            ]),
+        );
+    });
+
     it('keeps local filter edits when mapFilters state is present in the URL', async () => {
         const encodedState = encodeURIComponent(
             JSON.stringify({
