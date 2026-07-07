@@ -19,6 +19,7 @@ import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDe
 import JourneyBreadcrumbs from 'modules/Pages/BookableSpaces/JourneyBreadcrumbs';
 import {
     JOURNEY_VIEWS,
+    serialiseJourneyMapFilterState,
     serialiseJourneyUrl,
     parseJourneyStateFromUrl,
 } from 'modules/Pages/BookableSpaces/journeyHelpers';
@@ -652,15 +653,23 @@ const BookableSpacesJourney = ({
 
     const goToLegacyBrowse = () => {
         const url = new URL(window.location.href);
+        const encodedMapFilters = serialiseJourneyMapFilterState({
+            selectedFacilityTypes,
+            selectedCampus,
+            selectedLibrary,
+            capacityFilterValue,
+        });
         // The advanced/map view is reached by adding ?advanced=1
         // Support both standard query params and hash-router query params (#/path?param=val)
         if (url.hash.includes('?')) {
             const [hashPath, hashQuery] = url.hash.split('?');
             const hashParams = new URLSearchParams(hashQuery);
             hashParams.set('advanced', '1');
+            hashParams.set('mapFilters', encodedMapFilters);
             url.hash = `${hashPath}?${hashParams.toString()}`;
         } else {
             url.searchParams.set('advanced', '1');
+            url.searchParams.set('mapFilters', encodedMapFilters);
         }
         window.location.assign(url.toString());
     };
@@ -1431,6 +1440,9 @@ const BookableSpacesJourney = ({
                                     <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
                                         <StyledSecondaryButton onClick={handleClearJourneyFilters}>
                                             Reset quick filters
+                                        </StyledSecondaryButton>
+                                        <StyledSecondaryButton onClick={goToLegacyBrowse}>
+                                            View on map
                                         </StyledSecondaryButton>
                                     </Stack>
                                     {(intentSpaceLocations?.length || 0) > 0 ? (

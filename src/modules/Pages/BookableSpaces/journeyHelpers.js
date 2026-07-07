@@ -57,6 +57,79 @@ export const getJourneySearchParams = url => {
     };
 };
 
+export const serialiseJourneyMapFilterState = ({
+    selectedFacilityTypes,
+    selectedCampus,
+    selectedLibrary,
+    capacityFilterValue,
+}) => {
+    const selectedFacilityIds = (selectedFacilityTypes || []).reduce((acc, filter) => {
+        const facilityTypeId = filter?.facility_type_id;
+        if (!facilityTypeId || !filter?.selected) {
+            return acc;
+        }
+
+        acc.push(Number(facilityTypeId));
+        return acc;
+    }, []);
+
+    const serialised = {
+        selectedFacilityTypes: selectedFacilityIds,
+        ...(selectedCampus !== null && selectedCampus !== undefined ? { selectedCampus } : {}),
+        ...(selectedLibrary !== null && selectedLibrary !== undefined ? { selectedLibrary } : {}),
+        ...(Array.isArray(capacityFilterValue) && capacityFilterValue.length > 0 ? { capacityFilterValue } : {}),
+    };
+
+    return encodeURIComponent(JSON.stringify(serialised));
+};
+
+export const deserialiseJourneyMapFilterState = searchParams => {
+    const encodedState = searchParams?.get?.('mapFilters');
+    if (!encodedState) {
+        return null;
+    }
+
+    try {
+        const parsed = JSON.parse(decodeURIComponent(encodedState));
+        const selectedFacilityTypes = Array.isArray(parsed?.selectedFacilityTypes) ? parsed.selectedFacilityTypes : [];
+
+        return {
+            selectedFacilityTypes: selectedFacilityTypes.reduce((acc, filter) => {
+                if (typeof filter === 'number' || typeof filter === 'string') {
+                    const facilityTypeId = Number(filter);
+                    if (!Number.isNaN(facilityTypeId)) {
+                        acc.push({
+                            facility_type_id: facilityTypeId,
+                            selected: true,
+                            unselected: false,
+                            facility_special_action: null,
+                        });
+                    }
+                    return acc;
+                }
+
+                const facilityTypeId = filter?.facility_type_id;
+                if (!facilityTypeId) {
+                    return acc;
+                }
+
+                acc.push({
+                    facility_type_id: Number(facilityTypeId),
+                    selected: !!filter?.selected,
+                    unselected: !!filter?.unselected,
+                    facility_special_action: filter?.facility_special_action || null,
+                });
+                return acc;
+            }, []),
+            selectedCampus: parsed?.selectedCampus ?? null,
+            selectedLibrary: parsed?.selectedLibrary ?? null,
+            capacityFilterValue: Array.isArray(parsed?.capacityFilterValue) ? parsed.capacityFilterValue : null,
+        };
+    } catch (error) {
+        return null;
+    }
+};
+
 export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
     const url = new URL(window.location.href);
     const { usesHashQuery, hashPath, params } = getJourneySearchParams(url);

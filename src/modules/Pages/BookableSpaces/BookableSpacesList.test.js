@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { act } from 'react-dom/test-utils';
+
 import { fireEvent, rtlRender, screen, waitFor, WithRouter } from 'test-utils';
 
 import { BookableSpacesList } from './BookableSpacesList';
@@ -8,6 +10,7 @@ const mockDispatch = jest.fn();
 const mockFlyToSpace = jest.fn();
 const mockSetCookie = jest.fn();
 const mockJourneyRender = jest.fn();
+const mockSidebarRender = jest.fn();
 
 jest.mock('data/actions/drupalArticlesActions', () => ({
     loadDrupalArticles: () => ({ type: 'LOAD_DRUPAL_ARTICLES' }),
@@ -39,6 +42,7 @@ jest.mock('modules/Pages/BookableSpaces/BookableSpacesJourney', () => props => {
 
 jest.mock('modules/Pages/BookableSpaces/SidebarFilters', () => {
     return function MockSidebarFilters(props) {
+        mockSidebarRender(props);
         return (
             <button
                 data-testid="trigger-campus-change"
@@ -175,6 +179,92 @@ describe('BookableSpacesList campus selection', () => {
             2,
             expect.objectContaining({ expires: expect.any(Date) }),
         );
+    });
+
+    it('applies journey map filter state from the URL to the legacy map/list view', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [
+                    { facility_type_id: 11, selected: true, unselected: false, facility_special_action: null },
+                ],
+                selectedCampus: 2,
+                selectedLibrary: 22,
+                capacityFilterValue: [4, 8],
+            }),
+        );
+
+        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        expect(latestSidebarProps.selectedCampus).toBe(2);
+        expect(latestSidebarProps.selectedLibrary).toBe(22);
+        expect(latestSidebarProps.capacityFilterValue).toEqual([4, 8]);
+        expect(latestSidebarProps.selectedFacilityTypes).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                }),
+            ]),
+        );
+    });
+
+    it('keeps local filter edits when mapFilters state is present in the URL', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [
+                    { facility_type_id: 11, selected: true, unselected: false, facility_special_action: null },
+                ],
+                selectedCampus: 1,
+                selectedLibrary: 11,
+                capacityFilterValue: [4, 8],
+            }),
+        );
+
+        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        act(() => {
+            latestSidebarProps.setSelectedFacilityTypes([
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ]);
+        });
+
+        await waitFor(() => {
+            const updatedSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+            expect(updatedSidebarProps.selectedFacilityTypes).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({
+                        facility_type_id: 11,
+                        selected: false,
+                        unselected: false,
+                    }),
+                ]),
+            );
+        });
     });
 
     it('passes null highlightedSpace when there are no valid highlighted spaces', async () => {

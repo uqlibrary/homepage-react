@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { act, fireEvent, rtlRender, screen, WithRouter } from 'test-utils';
+import { fireEvent, rtlRender, screen, WithRouter } from 'test-utils';
 
 jest.mock(
     '../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
@@ -9,6 +9,7 @@ jest.mock(
 jest.mock('../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-journey-detail-image');
 
 import BookableSpacesJourney from './BookableSpacesJourney';
+import { deserialiseJourneyMapFilterState, serialiseJourneyMapFilterState } from './journeyHelpers';
 
 jest.mock('modules/Pages/BookableSpaces/BookableSpacesMap', () => {
     return function MockBookableSpacesMap() {
@@ -153,6 +154,52 @@ describe('BookableSpacesJourney browser back navigation', () => {
         const bookLink = screen.getByRole('link', { name: /book this space/i });
         expect(bookLink).toHaveAttribute('href', baseSpace.space_external_book_url);
         expect(bookLink).toHaveAttribute('target', '_blank');
+    });
+
+    it('serialises and deserialises journey filter state for the map view', () => {
+        const encodedState = serialiseJourneyMapFilterState({
+            selectedFacilityTypes: [
+                {
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+                {
+                    facility_type_id: 12,
+                    selected: false,
+                    unselected: true,
+                    facility_special_action: null,
+                },
+            ],
+            selectedCampus: 2,
+            selectedLibrary: 3,
+            capacityFilterValue: [4, 8],
+        });
+
+        const decodedState = decodeURIComponent(encodedState);
+        expect(decodedState).toContain('"selectedFacilityTypes":[11,12]');
+
+        const params = new URLSearchParams(`mapFilters=${encodedState}`);
+        const parsedState = deserialiseJourneyMapFilterState(params);
+
+        expect(parsedState.selectedCampus).toBe(2);
+        expect(parsedState.selectedLibrary).toBe(3);
+        expect(parsedState.capacityFilterValue).toEqual([4, 8]);
+        expect(parsedState.selectedFacilityTypes).toEqual([
+            {
+                facility_type_id: 11,
+                selected: true,
+                unselected: false,
+                facility_special_action: null,
+            },
+            {
+                facility_type_id: 12,
+                selected: false,
+                unselected: true,
+                facility_special_action: null,
+            },
+        ]);
     });
 
     it('hides the landing highlighted space block when no highlighted space is available', () => {
