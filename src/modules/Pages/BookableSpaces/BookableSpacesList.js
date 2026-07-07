@@ -614,7 +614,13 @@ export const BookableSpacesList = ({
                 });
             currentLibraryList?.length > 0 && setCampusLibraryList(currentLibraryList);
         }
-    }, [selectedCampus, bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading, journeyMapFilterState]);
+    }, [
+        selectedCampus,
+        bookableSpacesRoomList,
+        bookableSpacesRoomListError,
+        bookableSpacesRoomListLoading,
+        journeyMapFilterState,
+    ]);
 
     function isLocationOpen(locationId, hoursData) {
         if (!locationId) {
@@ -883,7 +889,11 @@ export const BookableSpacesList = ({
     );
 
     React.useEffect(() => {
-        if (journeyMapFilterState || !!selectedFacilityTypes?.length || !filteredFacilityTypeList?.data?.facility_type_groups?.length) {
+        if (
+            journeyMapFilterState ||
+            !!selectedFacilityTypes?.length ||
+            !filteredFacilityTypeList?.data?.facility_type_groups?.length
+        ) {
             return;
         }
         const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
@@ -939,8 +949,8 @@ export const BookableSpacesList = ({
                     typeof candidate === 'number' || typeof candidate === 'string'
                         ? Number(candidate)
                         : candidate?.facility_type_id
-                          ? Number(candidate.facility_type_id)
-                          : null;
+                        ? Number(candidate.facility_type_id)
+                        : null;
                 if (!facilityTypeId || Number.isNaN(facilityTypeId)) {
                     return [null, null];
                 }
