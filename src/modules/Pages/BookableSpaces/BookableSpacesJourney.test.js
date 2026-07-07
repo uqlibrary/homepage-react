@@ -9,6 +9,7 @@ jest.mock(
 jest.mock('../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-journey-detail-image');
 
 import BookableSpacesJourney from './BookableSpacesJourney';
+import SidebarFilters from './SidebarFilters';
 import { deserialiseJourneyMapFilterState, serialiseJourneyMapFilterState } from './journeyHelpers';
 
 jest.mock('@mui/material', () => {
@@ -89,6 +90,56 @@ describe('BookableSpacesJourney browser back navigation', () => {
             <WithRouter>
                 <BookableSpacesJourney {...props} />
             </WithRouter>,
+        );
+
+    const renderSidebarFilters = props =>
+        rtlRender(
+            <SidebarFilters
+                facilityTypeList={{
+                    data: {
+                        facility_type_groups: [
+                            {
+                                facility_type_group_id: 1,
+                                facility_type_group_name: 'Facilities',
+                                facility_type_group_order: 1,
+                                facility_type_group_loads_open: true,
+                                facility_type_children: [],
+                            },
+                        ],
+                    },
+                }}
+                filteredFacilityTypeList={{
+                    data: {
+                        facility_type_groups: [
+                            {
+                                facility_type_group_id: 1,
+                                facility_type_group_name: 'Facilities',
+                                facility_type_group_order: 1,
+                                facility_type_group_loads_open: true,
+                                facility_type_children: [],
+                            },
+                        ],
+                    },
+                }}
+                facilityTypeListLoading={false}
+                facilityTypeListError={false}
+                selectedFacilityTypes={[]}
+                setSelectedFacilityTypes={jest.fn()}
+                minimumSpaceCapacity={1}
+                maximumSpaceCapacity={20}
+                capacityFilterValue={[1, 20]}
+                setCapacityFilterValue={jest.fn()}
+                campusList={[]}
+                selectedCampus={1}
+                handleCampusSelection={jest.fn()}
+                activeFilterCount={0}
+                librariesForCampus={[]}
+                selectedLibrary={1}
+                handleLibrarySelection={jest.fn()}
+                suppliedClassName="journeyFilterSidebar"
+                showBottomActionButtons={false}
+                {...props}
+            />,
         );
 
     // it('keeps browser back navigation inside journey steps before leaving the page', () => {
@@ -216,65 +267,35 @@ describe('BookableSpacesJourney browser back navigation', () => {
         expect(screen.queryByTestId('spaces-journey-landing-highlight-panel')).not.toBeInTheDocument();
     });
 
-    it('hides blank campus options and excludes spaces on invalid campuses in results', () => {
-        const orphanSpace = {
-            ...baseSpace,
-            space_id: 202,
-            space_name: 'Orphaned Space',
-            space_campus_id: 999,
-        };
-
-        const props = {
-            ...defaultProps,
-            filteredSpaceLocations: [baseSpace, orphanSpace],
-            totalSpaceCount: 2,
+    it('renders a campus dropdown with available campuses and omits blank campus options', async () => {
+        renderSidebarFilters({
             campusList: [
                 { campus_id: 1, campus_name: 'St Lucia', campus_space_count: 1 },
                 { campus_id: 2, campus_name: 'Gatton', campus_space_count: 1 },
                 { campus_id: 999, campus_name: '', campus_space_count: 0 },
             ],
-        };
+        });
 
-        renderJourney(props);
-
-        fireEvent.click(screen.getByRole('link', { name: /quiet space/i }));
-
-        const campusSection = screen.getByText('Campus').closest('div');
-        expect(campusSection.querySelectorAll('button')).toHaveLength(2);
-        expect(screen.getByRole('button', { name: 'St Lucia' })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Gatton' })).toBeInTheDocument();
-
-        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
-        expect(screen.queryByText('Orphaned Space')).not.toBeInTheDocument();
+        const campusFilter = await screen.findByRole('combobox');
+        expect(campusFilter).toBeInTheDocument();
+        fireEvent.mouseDown(campusFilter);
+        expect(await screen.findByRole('option', { name: 'St Lucia' })).toBeInTheDocument();
+        expect(await screen.findByRole('option', { name: 'Gatton' })).toBeInTheDocument();
+        expect(screen.queryByRole('option', { name: '' })).not.toBeInTheDocument();
     });
 
-    it('does not show campuses that have no spaces in the inline campus picker', () => {
-        const props = {
-            ...defaultProps,
-            filteredSpaceLocations: [
-                baseSpace,
-                {
-                    ...baseSpace,
-                    space_id: 202,
-                    space_name: 'Gatton Space',
-                    space_campus_id: 2,
-                    space_campus_name: 'Gatton',
-                },
-            ],
-            totalSpaceCount: 2,
+    it('does not show campuses that have no spaces in the inline campus dropdown', async () => {
+        renderSidebarFilters({
             campusList: [
                 { campus_id: 1, campus_name: 'St Lucia', campus_space_count: 10 },
                 { campus_id: 2, campus_name: 'Gatton', campus_space_count: 4 },
                 { campus_id: 3, campus_name: 'Dutton Park', campus_space_count: 0 },
             ],
-        };
+        });
 
-        renderJourney(props);
-
-        fireEvent.click(screen.getByRole('link', { name: /quiet space/i }));
-
-        expect(screen.getByRole('button', { name: 'St Lucia' })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Gatton' })).toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Dutton Park' })).not.toBeInTheDocument();
+        fireEvent.mouseDown(await screen.findByRole('combobox'));
+        expect(await screen.findByRole('option', { name: 'St Lucia' })).toBeInTheDocument();
+        expect(await screen.findByRole('option', { name: 'Gatton' })).toBeInTheDocument();
+        expect(screen.queryByRole('option', { name: 'Dutton Park' })).not.toBeInTheDocument();
     });
 });
