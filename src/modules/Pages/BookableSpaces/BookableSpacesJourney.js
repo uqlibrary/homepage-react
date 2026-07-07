@@ -601,6 +601,7 @@ const BookableSpacesJourney = ({
 
     // Keep browser history and journey views aligned so browser Back stays inside journey steps.
     const journeyHistoryRef = React.useRef(['landing']);
+    const restoredIntentFilterSignatureRef = React.useRef('');
 
     const buildHistoryState = React.useCallback((nextView, nextIntentId = null, nextSpaceId = null) => {
         return {
@@ -666,10 +667,12 @@ const BookableSpacesJourney = ({
             const hashParams = new URLSearchParams(hashQuery);
             hashParams.set('advanced', '1');
             hashParams.set('mapFilters', encodedMapFilters);
+            hashParams.set('autoSelectFirstSpace', '1');
             url.hash = `${hashPath}?${hashParams.toString()}`;
         } else {
             url.searchParams.set('advanced', '1');
             url.searchParams.set('mapFilters', encodedMapFilters);
+            url.searchParams.set('autoSelectFirstSpace', '1');
         }
         window.location.assign(url.toString());
     };
@@ -751,13 +754,35 @@ const BookableSpacesJourney = ({
         setSelectedSpace(nextSelectedSpace);
         journeyHistoryRef.current = [nextView];
 
+        if (nextIntentId && nextView === 'results' && selectedFacilityTypes?.length) {
+            const requestedIntent = availableIntentDefinitions.find(intent => intent.id === nextIntentId) || null;
+            if (requestedIntent && requestedIntent.id !== favouriteIntentDefinition.id) {
+                const ids = getIntentFilterIds(filteredFacilityTypeList?.data?.facility_type_groups, requestedIntent);
+                const nextFilters = selectedFacilityTypes.map(filter => ({
+                    ...filter,
+                    selected: ids.includes(filter.facility_type_id),
+                    unselected: false,
+                }));
+                const filterSignature = `${requestedIntent.id}:${nextFilters
+                    .map(filter => `${filter.facility_type_id}:${filter.selected}`)
+                    .join('|')}`;
+
+                if (restoredIntentFilterSignatureRef.current !== filterSignature) {
+                    restoredIntentFilterSignatureRef.current = filterSignature;
+                    setSelectedFacilityTypes(nextFilters);
+                }
+            }
+        } else {
+            restoredIntentFilterSignatureRef.current = '';
+        }
+
         writeJourneyHistory({
             nextView,
             nextIntentId: nextIntentId || null,
             nextSpaceId: nextSelectedSpace?.space_id || null,
             method: 'replaceState',
         });
-    }, [availableIntentDefinitions, filteredSpaceLocations, highlightedSpace, writeJourneyHistory]);
+    }, [availableIntentDefinitions, filteredFacilityTypeList, filteredSpaceLocations, highlightedSpace, selectedFacilityTypes, writeJourneyHistory]);
 
     React.useEffect(() => {
         const historyTop = journeyHistoryRef.current[journeyHistoryRef.current.length - 1];

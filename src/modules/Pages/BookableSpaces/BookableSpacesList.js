@@ -247,6 +247,7 @@ export const BookableSpacesList = ({
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [expandedSpaceId, setExpandedSpaceId] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
+    const [isMapReady, setIsMapReady] = useState(false);
     const useJourneyExperience = React.useMemo(() => {
         if (typeof window === 'undefined') return true;
         // Journey is the default view. ?advanced=1 switches to the legacy map/list view.
@@ -1065,6 +1066,31 @@ export const BookableSpacesList = ({
     //     ) : null;
     // };
 
+    React.useEffect(() => {
+        if (useJourneyExperience || !sortedSpaceLocations?.length || sortedSpaceLocations.length !== 1) {
+            return;
+        }
+
+        const singleVisibleSpace = sortedSpaceLocations[0];
+        if (!singleVisibleSpace || expandedSpaceId === singleVisibleSpace.space_id) {
+            return;
+        }
+
+        const tryAutoSelect = attempt => {
+            if (isMapReady && typeof mapRef.current?.flyToSpace === 'function') {
+                setExpandedSpaceId(singleVisibleSpace.space_id);
+                handleSpaceSelect(singleVisibleSpace);
+                return;
+            }
+
+            if (attempt < 8) {
+                window.setTimeout(() => tryAutoSelect(attempt + 1), 100);
+            }
+        };
+
+        tryAutoSelect(0);
+    }, [sortedSpaceLocations, expandedSpaceId, useJourneyExperience, isMapReady, handleSpaceSelect]);
+
     const handleMarkerClick = (e, space) => {
         // Stop the click from opening the popup
         e?.originalEvent?.stopPropagation();
@@ -1321,6 +1347,7 @@ export const BookableSpacesList = ({
                                         bookableSpacesRoomList?.data?.locations,
                                         correctedCampusId(selectedCampus),
                                     )}
+                                    onMapReady={setIsMapReady}
                                 />
                             </div>
                         </StyledLayoutWrapper>

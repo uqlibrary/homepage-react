@@ -57,10 +57,13 @@ jest.mock('modules/Pages/BookableSpaces/SidebarFilters', () => {
 jest.mock('modules/Pages/BookableSpaces/BookableSpacesMap', () => {
     const ReactModule = jest.requireActual('react');
 
-    return ReactModule.forwardRef(function MockBookableSpacesMap(_props, ref) {
+    return ReactModule.forwardRef(function MockBookableSpacesMap(props, ref) {
         ReactModule.useImperativeHandle(ref, () => ({
             flyToSpace: mockFlyToSpace,
         }));
+        ReactModule.useEffect(() => {
+            props.onMapReady?.(true);
+        }, [props.onMapReady]);
         return <div data-testid="mock-bookable-spaces-map" />;
     });
 });
@@ -256,6 +259,43 @@ describe('BookableSpacesList campus selection', () => {
                 }),
             ]),
         );
+    });
+
+    it('auto-selects the only visible space in the advanced view', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [
+                    { facility_type_id: 11, selected: true, unselected: false, facility_special_action: null },
+                ],
+                selectedCampus: 1,
+                selectedLibrary: 11,
+                capacityFilterValue: [4, 8],
+            }),
+        );
+
+        const props = {
+            ...baseProps,
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [baseProps.bookableSpacesRoomList.data.locations[0]],
+                },
+            },
+        };
+
+        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => {
+            expect(mockFlyToSpace).toHaveBeenCalledWith(
+                expect.objectContaining({ space_id: 101, space_name: 'St Lucia space' }),
+                expect.any(Number),
+            );
+        });
     });
 
     it('keeps URL-backed facility selections selected when the advanced view first renders', async () => {
