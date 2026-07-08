@@ -215,6 +215,19 @@ describe('BookableSpacesJourney browser back navigation', () => {
         expect(bookLink).toHaveAttribute('target', '_blank');
     });
 
+    it('shows favourites on the landing page even when the current campus-filtered list is empty', () => {
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: true,
+            filteredSpaceLocations: [],
+            allSpaceLocations: [baseSpace],
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Favourite study room' }],
+        });
+
+        expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
+        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+    });
+
     it('serialises and deserialises journey filter state for the map view', () => {
         const encodedState = serialiseJourneyMapFilterState({
             selectedFacilityTypes: [

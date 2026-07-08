@@ -1214,6 +1214,7 @@ export const BookableSpacesList = ({
                     return (
                         <BookableSpacesJourney
                             filteredSpaceLocations={sortedSpaceLocations}
+                            allSpaceLocations={bookableSpacesRoomList?.data?.locations || []}
                             totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}
                             highlightedSpace={highlightedSpace}
                             isLoggedIn={isLoggedIn}
