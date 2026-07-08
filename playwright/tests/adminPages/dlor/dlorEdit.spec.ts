@@ -10,6 +10,7 @@ const REQUIRED_LENGTH_DESCRIPTION = 100;
 
 test.describe('Edit an object on the Digital Learning Hub', () => {
     test.describe('editing an object', () => {
+        test.describe.configure({ mode: 'default' });
         test.describe('successfully', () => {
             test('is accessible', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
