@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';

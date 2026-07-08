@@ -23,7 +23,7 @@ test.describe('Digital Learning Hub', () => {
             );
             await expect(page.getByTestId('dlor-confirm-line-3').locator('a')).toHaveAttribute(
                 'href',
-                'http://localhost:2020/digital-learning-hub/view/938h_4986_654f',
+                '/digital-learning-hub/view/938h_4986_654f',
             );
         });
         test('an expired confirmation appears as expected', async ({ page }) => {
@@ -37,7 +37,7 @@ test.describe('Digital Learning Hub', () => {
             );
             await expect(page.getByTestId('dlor-confirm-line-3').locator('a')).toHaveAttribute(
                 'href',
-                'http://localhost:2020/digital-learning-hub/view/938h_4986_654f',
+                '/digital-learning-hub/view/938h_4986_654f',
             );
         });
         test('a second click on a confirmation link appears as expected', async ({ page }) => {
@@ -51,7 +51,7 @@ test.describe('Digital Learning Hub', () => {
             );
             await expect(page.getByTestId('dlor-confirm-line-3').locator('a')).toHaveAttribute(
                 'href',
-                'http://localhost:2020/digital-learning-hub/view/938h_4986_654f',
+                '/digital-learning-hub/view/938h_4986_654f',
             );
         });
         test('a click on an unknown confirmation link appears as expected', async ({ page }) => {

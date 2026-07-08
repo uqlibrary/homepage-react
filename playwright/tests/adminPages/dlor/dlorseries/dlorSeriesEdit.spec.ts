@@ -19,11 +19,11 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
 
             await expect(page.getByTestId('dlor-breadcrumb-admin-homelink')).toHaveAttribute(
                 'href',
-                `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`,
+                `/admin/dlor?user=${DLOR_ADMIN_USER}`,
             );
             await expect(page.getByTestId('dlor-breadcrumb-series-management-link-0')).toHaveAttribute(
                 'href',
-                `http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`,
+                `/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`,
             );
             await expect(page.getByTestId('dlor-breadcrumb-edit-series-label-1')).toHaveText(
                 /Edit series: Advanced literature searching/,
@@ -238,10 +238,7 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
             );
             await page.setViewportSize({ width: 1300, height: 1000 });
 
-            await page
-                .getByTestId('series-name')
-                .locator('input')
-                .type(' yyy');
+            await page.getByTestId('series-name').locator('input').type(' yyy');
             await page.getByTestId('admin-dlor-series-form-save-button').click();
 
             const dialog = page.getByTestId('dialogbox-dlor-series-save-outcome');

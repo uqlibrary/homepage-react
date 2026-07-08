@@ -134,7 +134,7 @@ to keep initial load to a minimum following optimisation has been added to the p
 
 - Async (lazy) loading of non-essential (essential components are only those components user can see on public pages
   when not authenticated)
-- Splitting essential vendor libraries out ('react', 'react-dom', 'react-router-dom', 'redux', 'react-redux') - those
+- Splitting essential vendor libraries out ('react', 'react-dom', 'redux', 'react-redux') - those
   libraries do not change often and will be cached by the browser
 - Optimise rendering of the components (in ReactJs 15 use react-addon-perf) to minimize wasteful rendering of
   components, implement PureComponent or shouldComponentUpdate()

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, WithRouter, screen } from '../../../../../utils/test-utils';
 import DLOStatusSummary from './DLOStatusSummary';
 import * as helpers from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
 
@@ -19,7 +19,11 @@ describe('DLOStatusSummary', () => {
             deprecated_objects: 4,
             user_submitted_objects: 5,
         };
-        render(<DLOStatusSummary data={data} />);
+        render(
+            <WithRouter>
+                <DLOStatusSummary data={data} />
+            </WithRouter>,
+        );
         expect(screen.getByTestId('count-new_objects')).toHaveTextContent('1');
         expect(screen.getByTestId('count-published_objects')).toHaveTextContent('2');
         expect(screen.getByTestId('count-rejected_objects')).toHaveTextContent('3');
@@ -33,7 +37,11 @@ describe('DLOStatusSummary', () => {
     });
 
     it('renders 0 for missing or undefined data', () => {
-        render(<DLOStatusSummary data={{}} />);
+        render(
+            <WithRouter>
+                <DLOStatusSummary data={{}} />
+            </WithRouter>,
+        );
         expect(screen.getByTestId('count-new_objects')).toHaveTextContent('0');
         expect(screen.getByTestId('count-published_objects')).toHaveTextContent('0');
         expect(screen.getByTestId('count-rejected_objects')).toHaveTextContent('0');
@@ -42,7 +50,11 @@ describe('DLOStatusSummary', () => {
     });
 
     it('renders 0 for completely missing data prop', () => {
-        render(<DLOStatusSummary />);
+        render(
+            <WithRouter>
+                <DLOStatusSummary />
+            </WithRouter>,
+        );
         expect(screen.getByTestId('count-new_objects')).toHaveTextContent('0');
         expect(screen.getByTestId('count-published_objects')).toHaveTextContent('0');
         expect(screen.getByTestId('count-rejected_objects')).toHaveTextContent('0');
@@ -51,7 +63,11 @@ describe('DLOStatusSummary', () => {
     });
 
     it('generates correct hrefs for each status (no postfix)', () => {
-        render(<DLOStatusSummary data={{}} />);
+        render(
+            <WithRouter>
+                <DLOStatusSummary data={{}} />
+            </WithRouter>,
+        );
         expect(screen.getByTestId('count-new_objects').querySelector('a')).toHaveAttribute(
             'href',
             '/digital-learning-hub?type=new',
@@ -76,7 +92,11 @@ describe('DLOStatusSummary', () => {
 
     it('generates correct hrefs for each status (with postfix)', () => {
         helpers.getUserPostfix.mockReturnValue('?user=foo');
-        render(<DLOStatusSummary data={{}} />);
+        render(
+            <WithRouter>
+                <DLOStatusSummary data={{}} />
+            </WithRouter>,
+        );
         expect(screen.getByTestId('count-new_objects').querySelector('a')).toHaveAttribute(
             'href',
             '/digital-learning-hub?user=foo&type=new',

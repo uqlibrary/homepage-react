@@ -6,7 +6,7 @@ import { PropTypes } from 'prop-types';
 
 import { styled } from '@mui/material/styles';
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { Box, useMediaQuery, useTheme } from '@mui/material';

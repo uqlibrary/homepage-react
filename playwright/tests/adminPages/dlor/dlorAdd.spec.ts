@@ -50,10 +50,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
             test('loads as expected', async ({ page }) => {
                 const homeLink = page.locator('a[data-testid="dlor-breadcrumb-admin-homelink"]');
                 await expect(homeLink).toContainText('Digital Learning Hub admin');
-                await expect(homeLink).toHaveAttribute(
-                    'href',
-                    `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`,
-                );
+                await expect(homeLink).toHaveAttribute('href', `/admin/dlor?user=${DLOR_ADMIN_USER}`);
 
                 await expect(
                     page.locator(
@@ -248,10 +245,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
                 await page.locator('[data-testid="object-title"] input').fill('xxxxxxx');
                 await expect(
-                    page
-                        .locator('[data-testid="dlor-panel-validity-indicator-1"] span')
-                        .getByText('1')
-                        .first(),
+                    page.locator('[data-testid="dlor-panel-validity-indicator-1"] span').getByText('1').first(),
                 ).toBeVisible();
                 await page.locator('[data-testid="object-title"] input').pressSequentially('p');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
@@ -1333,34 +1327,19 @@ test.describe('Add an object to the Digital Learning Hub', () => {
         test('displays an "unauthorised" page to public users', async ({ page }) => {
             await page.goto('http://localhost:2020/admin/dlor/add?user=public');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(
-                page
-                    .locator('h1')
-                    .first()
-                    .getByText('Authentication required'),
-            ).toBeVisible();
+            await expect(page.locator('h1').first().getByText('Authentication required')).toBeVisible();
         });
 
         test('displays an "unauthorised" page to non-authorised users', async ({ page }) => {
             await page.goto('http://localhost:2020/admin/dlor/add?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(
-                page
-                    .locator('h1')
-                    .first()
-                    .getByText('Permission denied'),
-            ).toBeVisible();
+            await expect(page.locator('h1').first().getByText('Permission denied')).toBeVisible();
         });
 
         test('displays correct page for admin users (list)', async ({ page }) => {
             await page.goto(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(
-                page
-                    .locator('h1')
-                    .first()
-                    .getByText('Digital Learning Hub Management'),
-            ).toBeVisible();
+            await expect(page.locator('h1').first().getByText('Digital Learning Hub Management')).toBeVisible();
         });
     });
 });
