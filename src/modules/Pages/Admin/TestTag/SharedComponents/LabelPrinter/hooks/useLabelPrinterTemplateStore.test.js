@@ -29,7 +29,7 @@ describe('useLabelPrinterTemplateStore', () => {
             printerTemplateListError: null,
         });
 
-        const { result } = renderHook(() => useLabelPrinterTemplateStore(mockActions));
+        const { result } = renderHook(() => useLabelPrinterTemplateStore(mockActions, true));
 
         expect(result.current.printerTemplateList).toEqual([
             { id: 1, name: 'Template', code: 'Code', printers: ['GK420t'] },
@@ -43,7 +43,7 @@ describe('useLabelPrinterTemplateStore', () => {
             printerTemplateListError: null,
         });
 
-        const { result } = renderHook(() => useLabelPrinterTemplateStore(mockActions));
+        const { result } = renderHook(() => useLabelPrinterTemplateStore(mockActions, true));
 
         expect(result.current.printerTemplateList).toEqual([]);
     });
@@ -52,22 +52,37 @@ describe('useLabelPrinterTemplateStore', () => {
         useSelector.mockReturnValue({
             printerTemplateList: [],
             printerTemplateListLoading: false,
+            printerTemplateListLoaded: false,
             printerTemplateListError: null,
         });
 
-        renderHook(() => useLabelPrinterTemplateStore(mockActions));
+        renderHook(() => useLabelPrinterTemplateStore(mockActions, true));
 
         expect(mockActions.loadPrinterTemplateList).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call loadPrinterTemplateList if printing is not enabled', () => {
+        useSelector.mockReturnValue({
+            printerTemplateList: [],
+            printerTemplateListLoading: false,
+            printerTemplateListLoaded: false,
+            printerTemplateListError: null,
+        });
+
+        renderHook(() => useLabelPrinterTemplateStore(mockActions, false));
+
+        expect(mockActions.loadPrinterTemplateList).not.toHaveBeenCalled();
     });
 
     it('should NOT call loadPrinterTemplateList when list already has items', () => {
         useSelector.mockReturnValue({
             printerTemplateList: mockRawTemplateList,
             printerTemplateListLoading: false,
+            printerTemplateListLoaded: true,
             printerTemplateListError: null,
         });
 
-        renderHook(() => useLabelPrinterTemplateStore(mockActions));
+        renderHook(() => useLabelPrinterTemplateStore(mockActions, true));
 
         expect(mockActions.loadPrinterTemplateList).not.toHaveBeenCalled();
     });
@@ -76,10 +91,11 @@ describe('useLabelPrinterTemplateStore', () => {
         useSelector.mockReturnValue({
             printerTemplateList: [],
             printerTemplateListLoading: true,
+            printerTemplateListLoaded: false,
             printerTemplateListError: null,
         });
 
-        renderHook(() => useLabelPrinterTemplateStore(mockActions));
+        renderHook(() => useLabelPrinterTemplateStore(mockActions, true));
 
         expect(mockActions.loadPrinterTemplateList).not.toHaveBeenCalled();
     });
