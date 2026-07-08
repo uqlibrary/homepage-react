@@ -469,8 +469,16 @@ const favouriteIntentDefinition = {
 
 const findSpaceById = (spaces, targetSpaceId) => {
     if (!targetSpaceId) return null;
-    return spaces?.find(space => String(space?.space_id) === String(targetSpaceId)) || null;
+    return (
+        spaces?.find(space => {
+            const spaceUuid = space?.space_uuid;
+            const spaceId = space?.space_id;
+            return String(spaceUuid || '') === String(targetSpaceId) || String(spaceId || '') === String(targetSpaceId);
+        }) || null
+    );
 };
+
+const getSpaceIdentifier = space => space?.space_uuid || space?.space_id || null;
 
 const getIntentFilterIds = (facilityGroups, intent) => {
     const ids = [];
@@ -627,7 +635,7 @@ const BookableSpacesJourney = ({
     );
 
     const navigateToView = React.useCallback(
-        (nextView, { pushHistory = true, intentId = selectedIntentId, spaceId = selectedSpace?.space_id } = {}) => {
+        (nextView, { pushHistory = true, intentId = selectedIntentId, spaceId = getSpaceIdentifier(selectedSpace) } = {}) => {
             if (!JOURNEY_VIEWS.includes(nextView)) {
                 return;
             }
@@ -650,7 +658,7 @@ const BookableSpacesJourney = ({
             }
             setView(nextView);
         },
-        [selectedIntentId, selectedSpace?.space_id, writeJourneyHistory],
+        [selectedIntentId, selectedSpace, writeJourneyHistory],
     );
 
     const goToLegacyBrowse = () => {
@@ -780,7 +788,7 @@ const BookableSpacesJourney = ({
         writeJourneyHistory({
             nextView,
             nextIntentId: nextIntentId || null,
-            nextSpaceId: nextSelectedSpace?.space_id || null,
+            nextSpaceId: getSpaceIdentifier(nextSelectedSpace) || null,
             method: 'replaceState',
         });
     }, [
@@ -801,7 +809,7 @@ const BookableSpacesJourney = ({
         writeJourneyHistory({
             nextView: view,
             nextIntentId: selectedIntentId,
-            nextSpaceId: selectedSpace?.space_id || null,
+            nextSpaceId: getSpaceIdentifier(selectedSpace) || null,
             method: 'replaceState',
         });
     }, [selectedIntentId, selectedSpace, view, writeJourneyHistory]);
@@ -969,7 +977,7 @@ const BookableSpacesJourney = ({
                                         const landingUrl = serialiseJourneyUrl({
                                             view: 'details',
                                             intentId: selectedIntentId,
-                                            spaceId: landingSpaceId,
+                                            spaceId: getSpaceIdentifier(space) || landingSpaceId,
                                         });
                                         return (
                                             <SingleLinkCard
@@ -989,20 +997,20 @@ const BookableSpacesJourney = ({
                                                         setSelectedSpace(space);
                                                         navigateToView('details', {
                                                             intentId: selectedIntentId,
-                                                            spaceId: space.space_id,
+                                                            spaceId: getSpaceIdentifier(space),
                                                         });
                                                     } else {
                                                         const nextSpaceId = space?.space_id || fav?.space_id;
                                                         const nextUrl = serialiseJourneyUrl({
                                                             view: 'details',
                                                             intentId: selectedIntentId,
-                                                            spaceId: nextSpaceId,
+                                                            spaceId: getSpaceIdentifier(space) || nextSpaceId,
                                                         });
                                                         window.history.pushState(
                                                             {
                                                                 journeyView: 'details',
                                                                 journeyIntentId: selectedIntentId,
-                                                                journeySpaceId: String(nextSpaceId),
+                                                                journeySpaceId: String(getSpaceIdentifier(space) || nextSpaceId),
                                                             },
                                                             '',
                                                             nextUrl,
@@ -1296,7 +1304,7 @@ const BookableSpacesJourney = ({
                                                         setSelectedSpace(highlightedSpace);
                                                         navigateToView('details', {
                                                             intentId: selectedIntentId,
-                                                            spaceId: highlightedSpace?.space_id,
+                                                            spaceId: getSpaceIdentifier(highlightedSpace),
                                                         });
                                                     }}
                                                     sx={{
@@ -1485,7 +1493,7 @@ const BookableSpacesJourney = ({
                                                                 setSelectedSpace(space);
                                                                 navigateToView('details', {
                                                                     intentId: selectedIntentId,
-                                                                    spaceId: space?.space_id,
+                                                                    spaceId: getSpaceIdentifier(space),
                                                                 });
                                                             }}
                                                         >

@@ -39,6 +39,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
 
     const baseSpace = {
         space_id: 101,
+        space_uuid: 'test-space-uuid-1234',
         space_name: 'Quiet Study Room A',
         space_library_name: 'Central Library',
         space_type: 'Silent study',
@@ -185,7 +186,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
         fireEvent.click(screen.getByRole('button', { name: /quiet study room a/i }));
         expect(window.location.search).toContain('journeyStep=details');
         expect(window.location.search).toContain('journeyIntent=quiet');
-        expect(window.location.search).toContain('journeySpace=101');
+        expect(window.location.search).toContain(`journeySpace=${baseSpace.space_uuid}`);
     });
 
     it('restores results and selected intent from permalink params', () => {
@@ -197,7 +198,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
     });
 
     it('restores details view and selected space from permalink params', () => {
-        window.history.replaceState({}, '', '/spaces?journeyStep=details&journeyIntent=quiet&journeySpace=101');
+        window.history.replaceState({}, '', `/spaces?journeyStep=details&journeyIntent=quiet&journeySpace=${baseSpace.space_uuid}`);
 
         renderJourney(defaultProps);
 
