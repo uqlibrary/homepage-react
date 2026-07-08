@@ -487,6 +487,7 @@ const getIntentFilterIds = (facilityGroups, intent) => {
 
 const BookableSpacesJourney = ({
     filteredSpaceLocations,
+    allSpaceLocations,
     totalSpaceCount,
     highlightedSpace,
     isLoggedIn,
@@ -943,8 +944,11 @@ const BookableSpacesJourney = ({
                                 }}
                             >
                                 {(() => {
-                                    // Build lookup of available spaces for resolving favourites
-                                    const spacesForLookup = [
+                                    // Build lookup of available spaces for resolving favourites.
+                                    // This homepage-only block should ignore the current campus filter so
+                                    // favourites remain visible on the landing page regardless of campus.
+                                    const fullSpaceLookup = [
+                                        ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : []),
                                         ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
                                         ...(highlightedSpace ? [highlightedSpace] : []),
                                     ];
@@ -952,23 +956,15 @@ const BookableSpacesJourney = ({
                                     (spacesFavouritesList || []).forEach(f => {
                                         const candidateId = f?.space_id || f?.favourite_id || null;
                                         if (!candidateId) return;
-                                        const resolved = findSpaceById(spacesForLookup, candidateId);
+                                        const resolved = findSpaceById(fullSpaceLookup, candidateId);
                                         if (!resolved) return; // exclude favourites that don't resolve to a known space
-                                        // exclude spaces not in valid campus set (if such filtering is active)
-                                        if (typeof validCampusIds !== 'undefined' && validCampusIds.size > 0) {
-                                            if (!validCampusIds.has(String(resolved.space_campus_id))) return;
-                                        }
                                         if (!uniq.has(String(resolved.space_id))) {
                                             uniq.set(String(resolved.space_id), f);
                                         }
                                     });
                                     const favouritesToShow = Array.from(uniq.values()).slice(0, 3);
                                     return favouritesToShow.map((fav, idx) => {
-                                        const spacesForLookup = [
-                                            ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
-                                            ...(highlightedSpace ? [highlightedSpace] : []),
-                                        ];
-                                        const space = findSpaceById(spacesForLookup, fav?.space_id) || null;
+                                        const space = findSpaceById(fullSpaceLookup, fav?.space_id) || null;
                                         const landingSpaceId = space?.space_id || fav?.space_id;
                                         const landingUrl = serialiseJourneyUrl({
                                             view: 'details',
@@ -1664,6 +1660,7 @@ const BookableSpacesJourney = ({
 
 BookableSpacesJourney.propTypes = {
     filteredSpaceLocations: PropTypes.array,
+    allSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
     highlightedSpace: PropTypes.object,
     isLoggedIn: PropTypes.bool,
