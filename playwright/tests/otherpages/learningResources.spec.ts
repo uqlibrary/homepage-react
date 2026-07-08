@@ -26,20 +26,12 @@ async function the_user_lands_on_the_My_Classes_tab(
             .getByText(/Your courses/)
             .first(),
     ).toBeVisible();
-    await expect(
-        page
-            .locator(`div[data-testid=classpanel-${panelId}] h2`)
-            .getByText(title)
-            .first(),
-    ).toBeVisible();
+    await expect(page.locator(`div[data-testid=classpanel-${panelId}] h2`).getByText(title).first()).toBeVisible();
 }
 
 async function the_user_lands_on_the_Search_tab(page: Page) {
     await expect(
-        page
-            .locator('div[data-testid="learning-resources"]')
-            .getByText(locale.search.title)
-            .first(),
+        page.locator('div[data-testid="learning-resources"]').getByText(locale.search.title).first(),
     ).toBeVisible();
 }
 
@@ -52,11 +44,7 @@ async function the_user_clicks_on_the_My_Courses_tab(page: Page) {
 }
 
 async function the_user_clicks_on_the_Search_tab(page: Page) {
-    await page
-        .locator('button#topmenu-1')
-        .getByText(locale.search.title)
-        .first()
-        .click();
+    await page.locator('button#topmenu-1').getByText(locale.search.title).first().click();
 }
 
 interface ExamPaper {
@@ -156,12 +144,10 @@ async function guides_panel_loads_correctly_for_a_subject_with_one_guide(
             .getByText(/Subject guides/)
             .first(),
     ).toBeVisible();
-    await expect(
-        page
-            .locator(`div[data-testid=guides-${courseCode}] a`)
-            .getByText(guideTitle)
-            .first(),
-    ).toHaveAttribute('href', guideLink);
+    await expect(page.locator(`div[data-testid=guides-${courseCode}] a`).getByText(guideTitle).first()).toHaveAttribute(
+        'href',
+        guideLink,
+    );
     await expect(page.locator(`div[data-testid="guides-${courseCode}"]`)).not.toContainText(
         'Subject guides list currently unavailable',
     );
@@ -264,10 +250,7 @@ async function a_user_can_use_the_search_bar_to_load_a_subject(
 
     // the tab loads and we see the title of the correct course
     await expect(
-        page
-            .locator(`div[data-testid=classpanel-${tabId}] h3`)
-            .getByText(courseReadingList.course_title)
-            .first(),
+        page.locator(`div[data-testid=classpanel-${tabId}] h3`).getByText(courseReadingList.course_title).first(),
     ).toBeVisible();
     await expect(page.locator(`div[data-testid=classpanel-${tabId}]`)).not.toContainText(
         'Reading list currently unavailable',
@@ -296,33 +279,18 @@ async function the_user_sees_the_search_form(page: Page) {
 async function click_on_a_subject_tab(page: Page, panelNumber: string, courseReadingList) {
     const courseCode = courseReadingList.coursecode || 'mock data is missing';
     const title = courseReadingList.course_title || 'mock data is missing';
-    await page
-        .locator(`button#classtab-${panelNumber}`)
-        .getByText(courseCode)
-        .first()
-        .click();
-    await expect(
-        page
-            .locator(`div[data-testid=classpanel-${panelNumber}] h2`)
-            .getByText(title)
-            .first(),
-    ).toBeVisible();
+    await page.locator(`button#classtab-${panelNumber}`).getByText(courseCode).first().click();
+    await expect(page.locator(`div[data-testid=classpanel-${panelNumber}] h2`).getByText(title).first()).toBeVisible();
 }
 
 async function the_title_block_displays_properly(page: Page, courseReadingList: Record<string, string>) {
     const listTitle = courseReadingList.course_title || 'mock data is missing1';
     const courseCode = courseReadingList.coursecode || 'mock data is missing2';
     await expect(
-        page
-            .locator('h2[data-testid=learning-resource-subject-title]')
-            .getByText(listTitle)
-            .first(),
+        page.locator('h2[data-testid=learning-resource-subject-title]').getByText(listTitle).first(),
     ).toBeVisible();
     await expect(
-        page
-            .locator('h2[data-testid=learning-resource-subject-title]')
-            .getByText(courseCode)
-            .first(),
+        page.locator('h2[data-testid=learning-resource-subject-title]').getByText(courseCode).first(),
     ).toBeVisible();
 }
 

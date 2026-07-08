@@ -16,7 +16,7 @@ import { isDlorAdminUser } from 'helpers/access';
 export const ObjectListItem = ({ object, listParentName = 'team' }) => {
     const { account } = useAccountContext();
     const navigateToDlorEditPage = uuid => {
-        window.location.href = dlorAdminLink(`/edit/${uuid}`, account)
+        window.location.href = dlorAdminLink(`/edit/${uuid}`, account);
     };
 
     return (

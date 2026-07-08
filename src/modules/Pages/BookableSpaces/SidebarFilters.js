@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-import { InputLabel } from '@mui/material';
+import { InputLabel, useMediaQuery, useTheme } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import MuiInput from '@mui/material/Input';
@@ -100,6 +100,13 @@ const StyledSidebarDiv = styled('div')(() => ({
     marginLeft: 0,
     flexBasis: '10%',
     maxWidth: '16.6667%',
+
+    '&.journeyFilterSidebar': {
+        width: '100%',
+        flexBasis: '100%',
+        maxWidth: '100%',
+        minWidth: 0,
+    },
 
     '& .showsOnlyOnFocus': {
         position: 'absolute',
@@ -258,6 +265,7 @@ export const SidebarFilters = ({
     handleLibrarySelection,
     onApplyAllFilters,
     showBottomActionButtons = false,
+    hasJourneyMapFilterState = false,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
     const [defaultCampus, setDefaultCampus] = React.useState(1);
@@ -290,6 +298,7 @@ export const SidebarFilters = ({
 
     React.useEffect(() => {
         if (
+            !hasJourneyMapFilterState &&
             facilityTypeListError === false &&
             facilityTypeListLoading === false &&
             facilityTypeList?.data?.facility_type_groups?.length > 0 &&
@@ -519,15 +528,18 @@ export const SidebarFilters = ({
 
         setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
     };
-    function valueLabelComponent(props) {
-        const { children, value } = props;
-
+    const ValueLabelComponent = ({ children, value }) => {
         return (
             <Tooltip enterTouchDelay={0} placement="top" title={value}>
                 {children}
             </Tooltip>
         );
-    }
+    };
+
+    ValueLabelComponent.propTypes = {
+        children: PropTypes.node,
+        value: PropTypes.node,
+    };
     const writeCapacitySlider = facilityType => {
         if (!selectedFacilityTypes?.find(f1 => f1?.facility_type_id === FILTER_BOOKABLE_TYPE_ID)?.selected) {
             return null;
@@ -583,7 +595,7 @@ export const SidebarFilters = ({
                         max={maximumSpaceCapacity}
                         step={1}
                         components={{
-                            ValueLabel: valueLabelComponent,
+                            ValueLabel: ValueLabelComponent,
                         }}
                     />
                     <StyledSliderInput
@@ -710,64 +722,23 @@ export const SidebarFilters = ({
                             </li>
                         );
                     }
-                    // if (!!f?.unselected) {
-                    //     const facilityTypeRecord = flatFacilityTypeList?.find(
-                    //         flat => flat?.facility_type_id === f?.facility_type_id,
-                    //     );
-                    //     return (
-                    //         <li key={`cartouche-unselect-${f?.facility_type_id}`}>
-                    //             <Button
-                    //                 id={`button-deselect-selected-${f?.facility_type_id}`}
-                    //                 data-testid={`button-deselect-unselected-${f?.facility_type_id}`}
-                    //                 onClick={deSelectSelected}
-                    //                 className="unselectedFilter"
-                    //                 aria-label={`${facilityTypeRecord?.facility_type_name} excluded - click to deselect`}
-                    //             >
-                    //                 <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
-                    //             </Button>
-                    //         </li>
-                    //     );
-                    // }
+                    // Legacy unselected-filter handling remains intentionally commented out.
                     return null;
                 })}
             </>
         );
     };
 
+    const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
+    const checkFiltersList = selectedFacilityTypes?.filter(f => !!f?.selected || !!f?.unselected);
     const hasActiveFilters = selectedFacilityTypes?.some(f => !!f?.selected || !!f?.unselected);
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
     const renderFilterActionButtons = ({ isBottom = false } = {}) => {
         if (isBottom && !showBottomActionButtons) return null;
-        if (isBottom && showBottomActionButtons && !checkFiltersList?.length) {
-            return !!onApplyAllFilters ? (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: '1rem',
-                        paddingTop: '1rem',
-                        borderTop: '1px solid rgba(0, 0, 0, 0.12)',
-                    }}
-                >
-                    <StyledPrimaryButton
-                        id="button-close-filters-bottom"
-                        data-testid="button-close-filters-bottom"
-                        onClick={onApplyAllFilters}
-                        style={{
-                            padding: '0.5rem 1rem',
-                            margin: 0,
-                            display: 'flex',
-                            alignItems: 'center',
-                            columnGap: '0.5rem',
-                        }}
-                    >
-                        <span>Close filters</span>
-                    </StyledPrimaryButton>
-                </div>
-            ) : null;
-        }
         if (!checkFiltersList?.length) return null;
+        if (suppliedClassName?.includes('journey') && !isMobileView) return null;
 
         const wrapperStyles = isBottom
             ? {
@@ -840,19 +811,20 @@ export const SidebarFilters = ({
         );
     };
 
-    const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
-    const checkFiltersList = selectedFacilityTypes?.filter(f => !!f?.selected || !!f?.unselected);
-
     if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
         return null;
     }
 
+    const isJourneyView = suppliedClassName?.includes('journey');
+
     return (
         <StyledSidebarDiv id="StyledSidebarDivTemp" className={`filterSideBar ${suppliedClassName}`}>
             <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
-                <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
-                    Skip to list of Spaces
-                </a>
+                {!isJourneyView && (
+                    <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
+                        Skip to list of Spaces
+                    </a>
+                )}
                 <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
                     Filter Spaces
                 </Typography>

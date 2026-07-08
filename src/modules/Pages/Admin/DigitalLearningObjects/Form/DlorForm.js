@@ -279,7 +279,6 @@ export const DlorForm = ({
         if (dlorItem && dlorItem?.object_public_uuid) {
             actions.loadDlorAdminNotes(dlorItem.object_public_uuid);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorItem, actions]);
 
     useEffect(() => {
@@ -742,11 +741,13 @@ export const DlorForm = ({
                                 type="email"
                                 error={!isValidEmail(formValues?.team_email_edit)}
                             />
-                            {/* istanbul ignore next */ !isValidEmail(formValues?.team_email_edit) && (
-                                <StyledErrorMessageBox data-testid="error-message-team-email-edit">
-                                    This email address is not valid.
-                                </StyledErrorMessageBox>
-                            )}
+                            {
+                                /* istanbul ignore next */ !isValidEmail(formValues?.team_email_edit) && (
+                                    <StyledErrorMessageBox data-testid="error-message-team-email-edit">
+                                        This email address is not valid.
+                                    </StyledErrorMessageBox>
+                                )
+                            }
                         </FormControl>
                     </Grid>
                 )}
@@ -1772,7 +1773,6 @@ export const DlorForm = ({
             setShowFileTypeCreationForm(true);
             formDefaults.object_link_file_type = 'new';
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formDefaults]);
 
     useEffect(() => {

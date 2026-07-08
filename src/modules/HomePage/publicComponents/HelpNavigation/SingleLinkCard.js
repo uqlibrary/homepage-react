@@ -8,7 +8,9 @@ import { styled } from '@mui/material/styles';
 
 import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIcon';
 
-const StyledGridItem = styled(Grid)(({ theme }) => ({
+const StyledGridItem = styled(Grid, {
+    shouldForwardProp: prop => prop !== 'fillContainer',
+})(({ theme, fillContainer }) => ({
     listStyleType: 'none',
     display: 'flex',
     alignItems: 'stretch',
@@ -16,6 +18,7 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
     '& > div': {
         height: '100%',
         display: 'flex',
+        width: fillContainer ? '100%' : 'auto',
     },
     paddingLeft: '24px',
     marginBottom: '24px',
@@ -25,7 +28,6 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
     },
     [theme.breakpoints.down('uqDsTablet')]: {
         display: 'block',
-        minWidth: '100%',
     },
     '& p': {
         color: theme.palette.designSystem.bodyCopy,
@@ -36,11 +38,14 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
         lineHeight: '1.6',
     },
 }));
-const StyledLink = styled(Link)(({ theme }) => ({
+const StyledLink = styled(Link, {
+    shouldForwardProp: prop => prop !== 'fillContainer',
+})(({ theme, fillContainer }) => ({
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
     background: '#FFFFFF',
     display: 'block',
+    width: '100%',
     cursor: 'pointer',
     color: theme.palette.primary.main,
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
@@ -59,6 +64,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     '& svg.arrowForwardIcon': {
         display: 'block',
     },
+    // original hover behavior: on hover change background and move icon
     '& .panelIcon': {
         width: '56px',
         height: '56px',
@@ -90,8 +96,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
         alignItems: 'center',
         display: 'flex',
         justifyContent: 'space-between',
-        minWidth: '90%',
-        marginRight: '24px',
         padding: '24px',
         '& .panelIcon': {
             width: '40px',
@@ -153,13 +157,35 @@ const paneIcon = paneBackgroundImage => {
     );
 };
 
-const SingleLinkCard = ({ cardHeading, landingUrl, iconBackgroundImage, shortParagraph, loggedIn }) => {
+const SingleLinkCard = ({
+    cardHeading,
+    landingUrl,
+    iconBackgroundImage,
+    shortParagraph,
+    loggedIn,
+    fillContainer,
+    testId,
+    onClick,
+    disableHover,
+}) => {
     return (
-        <StyledGridItem item component={'li'} xs={12} uqDsTablet={6} uqDsDesktop={4}>
+        <StyledGridItem item component={'li'} xs={12} uqDsTablet={6} uqDsDesktop={4} fillContainer={fillContainer}>
             <div>
-                <StyledLink border={1} p={1} to={landingUrl}>
+                <StyledLink
+                    border={1}
+                    p={1}
+                    to={landingUrl}
+                    fillContainer={fillContainer}
+                    data-testid={testId}
+                    onClick={e => {
+                        if (typeof onClick === 'function') {
+                            e.preventDefault();
+                            onClick(e);
+                        }
+                    }}
+                >
                     <div className={'panelBodyWrapper'}>
-                        {paneIcon(iconBackgroundImage)}
+                        {!!iconBackgroundImage && paneIcon(iconBackgroundImage)}
                         {!!loggedIn ? (
                             <h3 className={'cardHeading'}>{cardHeading}</h3>
                         ) : (
@@ -182,6 +208,9 @@ SingleLinkCard.propTypes = {
     iconBackgroundImage: PropTypes.string,
     shortParagraph: PropTypes.string,
     loggedIn: PropTypes.bool,
+    fillContainer: PropTypes.bool,
+    testId: PropTypes.string,
+    onClick: PropTypes.func,
 };
 
 export default SingleLinkCard;

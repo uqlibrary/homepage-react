@@ -282,7 +282,7 @@ const ManageLocations = ({ actions }) => {
                         isOpen={actionState.isDelete}
                         locale={
                             !dialogueBusy
-                                ? actionState.props?.locale ?? {}
+                                ? (actionState.props?.locale ?? {})
                                 : {
                                       ...(actionState.props?.locale ?? /* istanbul ignore next */ {}),
                                       confirmButtonLabel: (

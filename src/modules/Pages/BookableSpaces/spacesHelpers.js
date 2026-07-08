@@ -15,11 +15,7 @@ export const FILTER_DISPLAY_ON_ADVANCED = 'advanced';
 export const FILTER_DISPLAY_ON_BOTH = 'both';
 
 export const normalizeFilterDisplayOn = value => {
-    const validDisplayOnValues = [
-        FILTER_DISPLAY_ON_SIMPLE,
-        FILTER_DISPLAY_ON_ADVANCED,
-        FILTER_DISPLAY_ON_BOTH,
-    ];
+    const validDisplayOnValues = [FILTER_DISPLAY_ON_SIMPLE, FILTER_DISPLAY_ON_ADVANCED, FILTER_DISPLAY_ON_BOTH];
     return validDisplayOnValues.includes(value) ? value : FILTER_DISPLAY_ON_BOTH;
 };
 

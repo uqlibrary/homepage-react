@@ -5,7 +5,6 @@ import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
 import * as mockData from './data';
-import fetchMock from 'fetch-mock';
 
 import exams_FREN1010 from './data/records/learningResources/examListFREN1010';
 import exams_FREN1011 from './data/records/learningResources/examListFREN1011';
@@ -134,8 +133,8 @@ if (user && !mockData.accounts[user]) {
 const withDelay = response => config => {
     const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
     // const randomTime = 5000;
-    return new Promise(function(resolve, reject) {
-        setTimeout(function() {
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
             resolve(response);
         }, randomTime);
     });
@@ -274,8 +273,7 @@ mock.onAny(routes.ALERTS_CREATE_API().apiUrl).reply(
                 start: '2020-06-07 02:00:03',
                 end: '2020-06-07 03:00:03',
                 title: 'Updated alert 1',
-                body:
-                    'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
+                body: 'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
                 priority_type: 'info',
             },
         ],
@@ -290,8 +288,7 @@ mock.onPut(`/${routes.ALERT_UPDATE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db72
             start: '2020-06-07 02:00:03',
             end: '2020-06-07 03:00:03',
             title: 'Updated alert 2',
-            body:
-                'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
+            body: 'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
             priority_type: 'info',
         },
     ]),
@@ -337,8 +334,7 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }
             start: '2021-06-29 15:00:34',
             end: '2031-07-02 18:30:34',
             title: 'Example alert:',
-            body:
-                'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
+            body: 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
             priority_type: 'urgent',
             systems: ['homepage'],
             created_by: 'uqtest1',
@@ -354,8 +350,7 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9' }
             start: '2021-06-28 16:02:54',
             end: '2021-06-29 15:00:54',
             title: 'Face masks in the Library:',
-            body:
-                'Test Extreme alert with a longish body content.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
+            body: 'Test Extreme alert with a longish body content.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
             priority_type: 'extreme',
             created_by: '?',
             updated_by: null,
@@ -386,8 +381,7 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09' }
             start: '2021-06-27 14:00:57',
             end: '2021-06-27 14:50:57',
             title: 'Network outage, Duhig Tower, 2.30-2.45pm today.',
-            body:
-                'There will be a short network outage in the Duhig Tower this afternoon (Sunday 27 June) for network maintenance. During this time the internet, library computers and printers will be affected. We apologise for any inconvenience.',
+            body: 'There will be a short network outage in the Duhig Tower this afternoon (Sunday 27 June) for network maintenance. During this time the internet, library computers and printers will be affected. We apologise for any inconvenience.',
             priority_type: 'extreme',
             created_by: 'uqtest1',
             updated_by: 'uqtest2',
@@ -407,13 +401,6 @@ mock.onGet(/alert\/.*/).reply(config => {
     }
     return [200, getSpecificAlert(alertId)];
 });
-
-// Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
-fetchMock.config.fallbackToNetwork = true;
-fetchMock.mock(
-    'begin:https://api.library.uq.edu.au/staging/learning_resources/suggestions?hint=',
-    subjectSearchSuggestions,
-);
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {
@@ -1014,6 +1001,16 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, courseReadingList_ACCT1101];
     })
+
+    .onGet('learning_resources/suggestions', {
+        params: {
+            asymmetricMatch: actual => !!actual && actual.hint !== undefined,
+        },
+    })
+    .reply(() => {
+        return [200, subjectSearchSuggestions];
+    })
+
     .onGet('exams/suggestions/fr')
     .reply(() => {
         return [200, examSuggestion_FREN];
@@ -2209,7 +2206,7 @@ mock.onGet('exams/course/FREN1010/summary')
         return [200, { status: 'OK', data: space }];
     })
     .onAny()
-    .reply(function(config) {
+    .reply(function (config) {
         console.log('url not mocked...', config.url);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });

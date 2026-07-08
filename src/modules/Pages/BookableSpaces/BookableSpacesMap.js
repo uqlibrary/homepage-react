@@ -161,7 +161,7 @@ BookableSpacesMapPopupContent.propTypes = {
 };
 
 const BookableSpacesMap = React.forwardRef(
-    ({ sortedSpaceLocations, spacesFavouritesList, onMarkerClick, centreLatLong }, ref) => {
+    ({ sortedSpaceLocations, spacesFavouritesList, onMarkerClick, centreLatLong, onMapReady }, ref) => {
         const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
         const [isMazeMapReady, setIsMazeMapReady] = React.useState(false);
         const [isMazeMapAvailable, setIsMazeMapAvailable] = React.useState(true);
@@ -335,6 +335,7 @@ const BookableSpacesMap = React.forwardRef(
 
         React.useEffect(() => {
             if (!isMazeMapScriptReady || !mapContainer || !isMazeMapAvailable) {
+                onMapReady?.(false);
                 return;
             }
 
@@ -353,6 +354,7 @@ const BookableSpacesMap = React.forwardRef(
             }
 
             mazeMapInstanceRef.current.on('load', () => {
+                onMapReady?.(true);
                 initialViewRef.current = {
                     lng: Number(centreLatLong.space_longitude),
                     lat: Number(centreLatLong.space_latitude),
@@ -369,6 +371,7 @@ const BookableSpacesMap = React.forwardRef(
             });
 
             mazeMapInstanceRef.current.on('error', () => {
+                onMapReady?.(false);
                 disableMazeMap();
             });
 
@@ -478,6 +481,7 @@ BookableSpacesMap.propTypes = {
     spacesFavouritesList: PropTypes.any,
     onMarkerClick: PropTypes.func.isRequired,
     centreLatLong: PropTypes.object,
+    onMapReady: PropTypes.func,
 };
 
 export default BookableSpacesMap;

@@ -7,6 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { pluralise } from 'helpers/general';
+import { StyledPrimaryButton } from 'helpers/general';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import { getSpaceHoursStatus, spaceOpeningHours } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import {
@@ -190,7 +191,7 @@ const JourneySpaceDetailsView = ({
 
     return (
         <>
-            {showBackButton && (
+            {showBackButton ? (
                 <Button
                     variant="text"
                     startIcon={<ArrowBackIcon />}
@@ -199,7 +200,7 @@ const JourneySpaceDetailsView = ({
                 >
                     {backLabel}
                 </Button>
-            )}
+            ) : null}
 
             <Box
                 sx={{
@@ -322,7 +323,9 @@ const JourneySpaceDetailsView = ({
                         </UserAttention>
                     )}
 
-                    {!!(selectedSpace?.space_type_details?.space_type_description || selectedSpace?.space_description) && (
+                    {!!(
+                        selectedSpace?.space_type_details?.space_type_description || selectedSpace?.space_description
+                    ) && (
                         <Box sx={{ borderLeft: '3px solid #51247a', pl: 1.5 }}>
                             {!!selectedSpace?.space_type_details?.space_type_description && (
                                 <Typography
@@ -347,14 +350,14 @@ const JourneySpaceDetailsView = ({
 
                     {showFavouriteControls && isLoggedIn && !!selectedSpace?.space_id && (
                         <Box>
-                            <Button
+                            <StyledPrimaryButton
                                 variant={isSelectedSpaceFavourite ? 'contained' : 'outlined'}
                                 disabled={isFavouriteActionInProgress}
                                 onClick={() => onFavouriteToggle?.(selectedSpace)}
                                 sx={{ textTransform: 'none' }}
                             >
                                 {favouriteButtonLabel}
-                            </Button>
+                            </StyledPrimaryButton>
                         </Box>
                     )}
                 </Stack>
@@ -377,7 +380,7 @@ const JourneySpaceDetailsView = ({
                 <Stack spacing={2.5}>
                     {!!selectedSpace?.space_external_book_url ? (
                         <Box>
-                            <Button
+                            <StyledPrimaryButton
                                 variant="contained"
                                 component="a"
                                 href={selectedSpace.space_external_book_url}
@@ -386,7 +389,7 @@ const JourneySpaceDetailsView = ({
                                 sx={{ textTransform: 'none' }}
                             >
                                 Book this space
-                            </Button>
+                            </StyledPrimaryButton>
                         </Box>
                     ) : (
                         <Typography variant="body2" sx={{ color: '#4f4d57' }}>

@@ -22,9 +22,10 @@ export const useLabelPrinterTemplateStore = actions => {
         }
     }, [printerTemplateList, printerTemplateListLoading, actions]);
 
-    const transformedTemplateStore = useMemo(() => transformTemplateListToStore(printerTemplateList), [
-        printerTemplateList,
-    ]);
+    const transformedTemplateStore = useMemo(
+        () => transformTemplateListToStore(printerTemplateList),
+        [printerTemplateList],
+    );
     return { printerTemplateList: transformedTemplateStore, printerTemplateListLoading, printerTemplateListError };
 };
 

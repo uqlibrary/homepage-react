@@ -17,63 +17,65 @@ export const transformRow = row => {
 export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {} };
 
 export const transformUpdateRequest = request => {
-    // delete request.previleges;
-    delete request.actions_count;
-    delete request.id;
-    delete request.department_display_name;
-    delete request.user_department;
-    delete request.team_display_name;
-    request.privileges.can_admin = request?.can_admin_cb ? 1 : 0;
-    request.privileges.can_inspect = request?.can_inspect_cb ? 1 : 0;
-    request.privileges.can_alter = request?.can_alter_cb ? 1 : 0;
-    request.privileges.can_see_reports = request?.can_see_reports_cb ? 1 : 0;
+    const newRequest = structuredClone(request);
 
-    request.user_current_flag = request?.user_current_flag_cb ? 1 : 0;
-    request.user_team = request?.user_team?.team_slug;
+    delete newRequest.actions_count;
+    delete newRequest.id;
+    delete newRequest.department_display_name;
+    delete newRequest.user_department;
+    delete newRequest.user_team_display;
+    newRequest.privileges.can_admin = request?.can_admin_cb ? 1 : 0;
+    newRequest.privileges.can_inspect = request?.can_inspect_cb ? 1 : 0;
+    newRequest.privileges.can_alter = request?.can_alter_cb ? 1 : 0;
+    newRequest.privileges.can_see_reports = request?.can_see_reports_cb ? 1 : 0;
 
-    delete request.can_admin;
-    delete request.can_admin_cb;
-    delete request.can_inspect;
-    delete request.can_inspect_cb;
-    delete request.can_alter;
-    delete request.can_alter_cb;
-    delete request.can_see_reports;
-    delete request.can_see_reports_cb;
-    delete request.user_current_flag_cb;
+    newRequest.user_current_flag = request?.user_current_flag_cb ? 1 : 0;
+    newRequest.user_team = request?.user_team?.team_slug;
 
-    return request;
+    delete newRequest.can_admin;
+    delete newRequest.can_admin_cb;
+    delete newRequest.can_inspect;
+    delete newRequest.can_inspect_cb;
+    delete newRequest.can_alter;
+    delete newRequest.can_alter_cb;
+    delete newRequest.can_see_reports;
+    delete newRequest.can_see_reports_cb;
+    delete newRequest.user_current_flag_cb;
+
+    return newRequest;
 };
 
 export const transformAddRequest = request => {
+    const newRequest = structuredClone(request);
     // clear data not required from UI for request.
-    delete request.actions_count;
-    delete request.user_id;
+    delete newRequest.actions_count;
+    delete newRequest.user_id;
 
     // Prime Privileges
-    request.privileges = {};
-    request.user_licence_number = request?.can_inspect_cb ? request?.user_licence_number : '';
-    request.privileges.can_admin = request?.can_admin_cb ? 1 : 0;
-    request.privileges.can_inspect = request?.can_inspect_cb ? 1 : 0;
-    request.privileges.can_alter = request?.can_alter_cb ? 1 : 0;
-    request.privileges.can_see_reports = request?.can_see_reports_cb ? 1 : 0;
+    newRequest.privileges = {};
+    newRequest.user_licence_number = request?.can_inspect_cb ? request?.user_licence_number : '';
+    newRequest.privileges.can_admin = request?.can_admin_cb ? 1 : 0;
+    newRequest.privileges.can_inspect = request?.can_inspect_cb ? 1 : 0;
+    newRequest.privileges.can_alter = request?.can_alter_cb ? 1 : 0;
+    newRequest.privileges.can_see_reports = request?.can_see_reports_cb ? 1 : 0;
 
     // Assign user Current flag.
-    request.user_current_flag = request?.user_current_flag_cb ? 1 : 0;
+    newRequest.user_current_flag = request?.user_current_flag_cb ? 1 : 0;
 
-    request.user_team = request?.user_team?.team_slug;
+    newRequest.user_team = request?.user_team?.team_slug;
 
     // Delete remainder of root note elements used by other checkboxes, or in FE captured by request{} object.
-    delete request.can_admin;
-    delete request.can_admin_cb;
-    delete request.can_inspect;
-    delete request.can_inspect_cb;
-    delete request.can_alter;
-    delete request.can_alter_cb;
-    delete request.can_see_reports;
-    delete request.can_see_reports_cb;
-    delete request.user_current_flag_cb;
+    delete newRequest.can_admin;
+    delete newRequest.can_admin_cb;
+    delete newRequest.can_inspect;
+    delete newRequest.can_inspect_cb;
+    delete newRequest.can_alter;
+    delete newRequest.can_alter_cb;
+    delete newRequest.can_see_reports;
+    delete newRequest.can_see_reports_cb;
+    delete newRequest.user_current_flag_cb;
 
-    return request;
+    return newRequest;
 };
 
 export const actionReducer = (_, action) => {

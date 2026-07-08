@@ -214,11 +214,7 @@ export const SpaceOutagePanel = ({
             }
 
             const scopeLabel = OUTAGE_SCOPE_OPTIONS.find(o => o.value === outageScope)?.label || 'space';
-            displayToastMessage(
-                editingOutageId
-                    ? 'Space unavailability updated'
-                    : `Closure saved for: ${scopeLabel}`,
-            );
+            displayToastMessage(editingOutageId ? 'Space unavailability updated' : `Closure saved for: ${scopeLabel}`);
             resetDraft();
             await refreshOutages();
         } catch (error) {
@@ -375,7 +371,12 @@ export const SpaceOutagePanel = ({
                             <FormControlLabel
                                 key={option.value}
                                 value={option.value}
-                                control={<Radio size="small" inputProps={{ 'data-testid': `space-outage-scope-${option.value}` }} />}
+                                control={
+                                    <Radio
+                                        size="small"
+                                        inputProps={{ 'data-testid': `space-outage-scope-${option.value}` }}
+                                    />
+                                }
                                 label={option.label}
                                 disabled={
                                     (option.value === 'floor' && !floorId) ||

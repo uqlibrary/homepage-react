@@ -423,12 +423,7 @@ export const BookableSpacesManageSpaces = ({
 
     const isSpaceDeleted = space => {
         const deletedValue = space?.space_deleted;
-        return (
-            deletedValue === true ||
-            deletedValue === 1 ||
-            deletedValue === '1' ||
-            deletedValue === 'true'
-        );
+        return deletedValue === true || deletedValue === 1 || deletedValue === '1' || deletedValue === 'true';
     };
 
     React.useEffect(() => {

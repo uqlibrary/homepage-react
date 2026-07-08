@@ -8,7 +8,7 @@ import { useLocation } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 
-import { Button, Grid, useTheme } from '@mui/material';
+import { Box, Button, Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -44,6 +44,10 @@ import {
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { CAMPUS_DUTTON_PARK } from 'config/locale';
+import {
+    deserialiseJourneyMapFilterState,
+    serialiseJourneyMapFilterState,
+} from 'modules/Pages/BookableSpaces/journeyHelpers';
 
 const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     ...standardText(theme),
@@ -171,6 +175,63 @@ const StyledSidebarTab = styled('button')(({ theme }) => ({
     },
 }));
 
+export const buildJourneyNavigationUrl = ({
+    currentUrl,
+    selectedFacilityTypes,
+    selectedCampus,
+    selectedLibrary,
+    capacityFilterValue,
+}) => {
+    const url = new URL(currentUrl);
+    const hasActiveJourneyFilters = (selectedFacilityTypes || []).some(
+        filter => filter?.selected || filter?.unselected,
+    );
+    const setJourneyIntentStep = params => {
+        params.delete('advanced');
+        params.delete('journeyIntent');
+        params.delete('journeySpace');
+        params.delete('mapFilters');
+        if (!hasActiveJourneyFilters) {
+            params.delete('journeyStep');
+        }
+    };
+
+    if (hasActiveJourneyFilters) {
+        const encodedMapFilters = serialiseJourneyMapFilterState({
+            selectedFacilityTypes,
+            selectedCampus,
+            selectedLibrary,
+            capacityFilterValue,
+        });
+
+        if (url.hash.includes('?')) {
+            const [hashPath, hashQuery] = url.hash.split('?');
+            const hashParams = new URLSearchParams(hashQuery);
+            setJourneyIntentStep(hashParams);
+            hashParams.set('journeyStep', 'results');
+            hashParams.set('mapFilters', encodedMapFilters);
+            const remaining = hashParams.toString();
+            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
+        } else {
+            setJourneyIntentStep(url.searchParams);
+            url.searchParams.set('journeyStep', 'results');
+            url.searchParams.set('mapFilters', encodedMapFilters);
+        }
+    } else {
+        if (url.hash.includes('?')) {
+            const [hashPath, hashQuery] = url.hash.split('?');
+            const hashParams = new URLSearchParams(hashQuery);
+            setJourneyIntentStep(hashParams);
+            const remaining = hashParams.toString();
+            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
+        } else {
+            setJourneyIntentStep(url.searchParams);
+        }
+    }
+
+    return url.toString();
+};
+
 export const BookableSpacesList = ({
     actions,
     bookableSpacesRoomList,
@@ -236,14 +297,14 @@ export const BookableSpacesList = ({
     const [librariesForCampus, setCampusLibraryList] = useState([]);
 
     const [selectedFacilityTypes, setSelectedFacilityTypes2] = useState([]);
-    const setSelectedFacilityTypes = x => {
-        console.log('setSelectedFacilityTypes', x);
+    const setSelectedFacilityTypes = useCallback(x => {
         return setSelectedFacilityTypes2(x);
-    };
+    }, []);
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [expandedSpaceId, setExpandedSpaceId] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
+    const [isMapReady, setIsMapReady] = useState(false);
     const useJourneyExperience = React.useMemo(() => {
         if (typeof window === 'undefined') return true;
         // Journey is the default view. ?advanced=1 switches to the legacy map/list view.
@@ -255,26 +316,6 @@ export const BookableSpacesList = ({
         return params.get('advanced') !== '1';
     }, [location.search, location.hash]);
 
-    const goToJourney = () => {
-        const url = new URL(window.location.href);
-        const setJourneyIntentStep = params => {
-            params.delete('advanced');
-            params.set('journeyStep', 'intent');
-            params.delete('journeyIntent');
-            params.delete('journeySpace');
-        };
-
-        if (url.hash.includes('?')) {
-            const [hashPath, hashQuery] = url.hash.split('?');
-            const hashParams = new URLSearchParams(hashQuery);
-            setJourneyIntentStep(hashParams);
-            const remaining = hashParams.toString();
-            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
-        } else {
-            setJourneyIntentStep(url.searchParams);
-        }
-        window.location.assign(url.toString());
-    };
     const initialJourneyModeRef = useRef(useJourneyExperience);
 
     React.useEffect(() => {
@@ -328,10 +369,13 @@ export const BookableSpacesList = ({
     );
 
     const [cookies, setCookie] = useCookies();
-    const correctedCampusId = campusId => {
-        const normalizedCampusId = Number(campusId);
-        return campusList?.find(c => c.campus_id === normalizedCampusId) ? normalizedCampusId : FIRST_CAMPUS_ID;
-    };
+    const correctedCampusId = useCallback(
+        campusId => {
+            const normalizedCampusId = Number(campusId);
+            return campusList?.find(c => c.campus_id === normalizedCampusId) ? normalizedCampusId : FIRST_CAMPUS_ID;
+        },
+        [campusList],
+    );
     const getCampusInitialState = () => {
         const spacesPreferredCampus = cookies.UQLspacesPreferredCampus;
         if (!!spacesPreferredCampus) {
@@ -340,6 +384,15 @@ export const BookableSpacesList = ({
         return FIRST_CAMPUS_ID;
     };
     const [selectedCampus, setSelectedCampus] = React.useState(getCampusInitialState());
+
+    const journeyMapFilterState = React.useMemo(() => {
+        if (typeof window === 'undefined') return null;
+        const searchValue = location.search || window.location.search || '';
+        const hashValue = location.hash || window.location.hash || '';
+        const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
+        const params = new URLSearchParams(searchValue || hashSearch);
+        return deserialiseJourneyMapFilterState(params);
+    }, [location.search, location.hash]);
 
     // based on https://stackoverflow.com/a/42234774
     // this isn't the formula I am used to, which has much more trig, but it seems good enough
@@ -493,6 +546,17 @@ export const BookableSpacesList = ({
     const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
     const [maximumSpaceCapacity, setMaximumSpaceCapacity] = React.useState(50);
 
+    const goToJourney = () => {
+        const nextUrl = buildJourneyNavigationUrl({
+            currentUrl: window.location.href,
+            selectedFacilityTypes,
+            selectedCampus,
+            selectedLibrary,
+            capacityFilterValue,
+        });
+        window.location.assign(nextUrl);
+    };
+
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader &&
@@ -537,7 +601,9 @@ export const BookableSpacesList = ({
             });
             const calculatedMaxCapaity = !!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity;
             setMaximumSpaceCapacity(calculatedMaxCapaity);
-            setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
+            if (!Array.isArray(journeyMapFilterState?.capacityFilterValue)) {
+                setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
+            }
 
             /* eslint-disable camelcase */
             const currentCampusList = Object.values(
@@ -588,7 +654,13 @@ export const BookableSpacesList = ({
                 });
             currentLibraryList?.length > 0 && setCampusLibraryList(currentLibraryList);
         }
-    }, [selectedCampus, bookableSpacesRoomList, bookableSpacesRoomListError, bookableSpacesRoomListLoading]);
+    }, [
+        selectedCampus,
+        bookableSpacesRoomList,
+        bookableSpacesRoomListError,
+        bookableSpacesRoomListLoading,
+        journeyMapFilterState,
+    ]);
 
     function isLocationOpen(locationId, hoursData) {
         if (!locationId) {
@@ -635,7 +707,7 @@ export const BookableSpacesList = ({
         }
 
         for (const week of department?.weeks) {
-            for (const [dayName, dayData] of Object.entries(week)) {
+            for (const [, dayData] of Object.entries(week)) {
                 if (dayData?.date === currentDate) {
                     return dayData?.times?.currently_open ?? null;
                 }
@@ -730,7 +802,8 @@ export const BookableSpacesList = ({
                         console.log('filter: FILTER_BOOKABLE_ACTION_NAME');
                         return isBookable(space);
                     } else {
-                        // we could specifically exclude FILTER_BOOKABLE_ACTION_NAME here, but we dont need to because it doesnt have a matching filter
+                        // We could specifically exclude FILTER_BOOKABLE_ACTION_NAME here, but we don't need to because
+                        // it doesn't have a matching filter.
                         // regular checkbox from admin-managed facility-types
                         const result = spaceFacilityTypes?.includes(filterId);
                         console.log('filter: default - check', filterId, 'is in', spaceFacilityTypes, '=', result);
@@ -751,108 +824,116 @@ export const BookableSpacesList = ({
             Math.max(...filteredFacilityTypeList?.data?.facility_type_groups?.map(g => g?.facility_type_group_id)) + 1
         );
     };
-    const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
-        // get a list of the filters used in spaces
-        const spaceFilters = bookableSpacesRoomList?.data?.locations
-            ?.filter(space => space.space_campus_id === correctedCampusId(selectedCampus))
-            ?.flatMap(space => space?.facility_types || [])
-            ?.map(facilityType => facilityType?.facility_type_id);
-        console.log('getFilteredFacilityTypeList selectedCampus=', selectedCampus, 'spaceFilters=', spaceFilters);
-        const spaceFiltersSet = new Set(spaceFilters);
-        console.log('getFilteredFacilityTypeList spaceFiltersSet=', spaceFiltersSet);
+    const getFilteredFacilityTypeList = useCallback(
+        (bookableSpacesRoomList, facilityTypeList) => {
+            // get a list of the filters used in spaces
+            const spaceFilters = bookableSpacesRoomList?.data?.locations
+                ?.filter(space => space.space_campus_id === correctedCampusId(selectedCampus))
+                ?.flatMap(space => space?.facility_types || [])
+                ?.map(facilityType => facilityType?.facility_type_id);
+            console.log('getFilteredFacilityTypeList selectedCampus=', selectedCampus, 'spaceFilters=', spaceFilters);
+            const spaceFiltersSet = new Set(spaceFilters);
+            console.log('getFilteredFacilityTypeList spaceFiltersSet=', spaceFiltersSet);
 
-        // filter facility types so we only show the checkboxes where there is an associated space
-        // (this will remove the group completely if it has no shown checkboxes)
-        const filteredFacilityTypeList = {
-            ...facilityTypeList,
-            data: {
-                ...facilityTypeList?.data,
-                facility_type_groups: facilityTypeList?.data?.facility_type_groups
-                    ?.map(group => ({
-                        ...group,
-                        facility_type_children: (group?.facility_type_children || [])?.filter(child => {
-                            const isHiddenInPublicFilterList =
-                                child?.hide_in_public_filter_list === true ||
-                                child?.hide_in_public_filter_list === 1 ||
-                                child?.hide_in_public_filter_list === '1';
-                            const displayOn = normalizeFilterDisplayOn(child?.filter_display_on);
-                            const isVisibleInCurrentView =
-                                displayOn === FILTER_DISPLAY_ON_BOTH ||
-                                (useJourneyExperience && displayOn === FILTER_DISPLAY_ON_SIMPLE) ||
-                                (!useJourneyExperience && displayOn === FILTER_DISPLAY_ON_ADVANCED);
-                            return (
-                                spaceFiltersSet?.has(child?.facility_type_id) &&
-                                !isHiddenInPublicFilterList &&
-                                isVisibleInCurrentView
-                            );
-                        }),
-                    }))
-                    ?.filter(group => group?.facility_type_children?.length > 0),
-            },
-        };
-        console.log('filteredFacilityTypeList=', filteredFacilityTypeList);
-
-        // manually add a "Currently Open" filter
-        const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
-            facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
-            facility_type_group_name: FACILITY_TYPE_NAME_CURRENTLY_OPEN,
-            facility_type_group_order: -999, // force to top of list
-            facility_type_group_loads_open: 1,
-            facility_type_group_type: 'choose-many',
-            filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
-            facility_type_children: [
-                {
-                    facility_type_id: 9001, // must be unique!
-                    facility_type_name: 'Currently open',
-                    facility_special_action: FILTER_CURRENTLY_OPEN_ACTION_NAME,
-                    facility_type: FACILITY_TYPE_CHECKBOX,
-                    filter_display_on: FILTER_DISPLAY_ON_BOTH,
+            // filter facility types so we only show the checkboxes where there is an associated space
+            // (this will remove the group completely if it has no shown checkboxes)
+            const filteredFacilityTypeList = {
+                ...facilityTypeList,
+                data: {
+                    ...facilityTypeList?.data,
+                    facility_type_groups: facilityTypeList?.data?.facility_type_groups
+                        ?.map(group => ({
+                            ...group,
+                            facility_type_children: (group?.facility_type_children || [])?.filter(child => {
+                                const isHiddenInPublicFilterList =
+                                    child?.hide_in_public_filter_list === true ||
+                                    child?.hide_in_public_filter_list === 1 ||
+                                    child?.hide_in_public_filter_list === '1';
+                                const displayOn = normalizeFilterDisplayOn(child?.filter_display_on);
+                                const isVisibleInCurrentView =
+                                    displayOn === FILTER_DISPLAY_ON_BOTH ||
+                                    (useJourneyExperience && displayOn === FILTER_DISPLAY_ON_SIMPLE) ||
+                                    (!useJourneyExperience && displayOn === FILTER_DISPLAY_ON_ADVANCED);
+                                return (
+                                    spaceFiltersSet?.has(child?.facility_type_id) &&
+                                    !isHiddenInPublicFilterList &&
+                                    isVisibleInCurrentView
+                                );
+                            }),
+                        }))
+                        ?.filter(group => group?.facility_type_children?.length > 0),
                 },
-            ],
-        };
-        !!filterOpenFacilityType && filteredFacilityTypeList?.data?.facility_type_groups?.push(filterOpenFacilityType);
+            };
+            console.log('filteredFacilityTypeList=', filteredFacilityTypeList);
 
-        // manually add a "Bookable/Choose number of people" filter
-        const filterCapacityFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
-            facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
-            facility_type_group_name: FACILITY_TYPE_NAME_CAPACITY,
-            facility_type_group_order: -998, // force to second in list
-            facility_type_group_loads_open: 1,
-            facility_type_group_type: 'choose-many',
-            filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
-            facility_type_children: [
-                {
-                    facility_type_id: FILTER_BOOKABLE_TYPE_ID, // must be unique!
-                    facility_type_name: 'Bookable',
-                    facility_special_action: FILTER_BOOKABLE_ACTION_NAME,
-                    facility_type: FACILITY_TYPE_CHECKBOX,
-                    filter_display_on: FILTER_DISPLAY_ON_BOTH,
-                },
-                {
-                    facility_type_id: FILTER_CAPACITY_TYPE_ID, // must be unique!
-                    facility_type_name: 'Space capacity',
-                    facility_special_action: FILTER_SPACE_CAPACITY_ACTION_NAME,
-                    facility_type: FACILITY_TYPE_SLIDER,
-                    filter_display_on: FILTER_DISPLAY_ON_BOTH,
-                },
-            ],
-        };
-        !!filterOpenFacilityType &&
-            filteredFacilityTypeList?.data?.facility_type_groups?.push(filterCapacityFacilityType);
+            // manually add a "Currently Open" filter
+            const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
+                facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
+                facility_type_group_name: FACILITY_TYPE_NAME_CURRENTLY_OPEN,
+                facility_type_group_order: -999, // force to top of list
+                facility_type_group_loads_open: 1,
+                facility_type_group_type: 'choose-many',
+                filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
+                facility_type_children: [
+                    {
+                        facility_type_id: 9001, // must be unique!
+                        facility_type_name: 'Currently open',
+                        facility_special_action: FILTER_CURRENTLY_OPEN_ACTION_NAME,
+                        facility_type: FACILITY_TYPE_CHECKBOX,
+                        filter_display_on: FILTER_DISPLAY_ON_BOTH,
+                    },
+                ],
+            };
+            !!filterOpenFacilityType &&
+                filteredFacilityTypeList?.data?.facility_type_groups?.push(filterOpenFacilityType);
 
-        console.log(
-            'getFilteredFacilityTypeList::filteredFacilityTypeList=',
-            filteredFacilityTypeList?.data?.facility_type_groups,
-        );
-        return filteredFacilityTypeList;
-    };
+            // manually add a "Bookable/Choose number of people" filter
+            const filterCapacityFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
+                facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
+                facility_type_group_name: FACILITY_TYPE_NAME_CAPACITY,
+                facility_type_group_order: -998, // force to second in list
+                facility_type_group_loads_open: 1,
+                facility_type_group_type: 'choose-many',
+                filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
+                facility_type_children: [
+                    {
+                        facility_type_id: FILTER_BOOKABLE_TYPE_ID, // must be unique!
+                        facility_type_name: 'Bookable',
+                        facility_special_action: FILTER_BOOKABLE_ACTION_NAME,
+                        facility_type: FACILITY_TYPE_CHECKBOX,
+                        filter_display_on: FILTER_DISPLAY_ON_BOTH,
+                    },
+                    {
+                        facility_type_id: FILTER_CAPACITY_TYPE_ID, // must be unique!
+                        facility_type_name: 'Space capacity',
+                        facility_special_action: FILTER_SPACE_CAPACITY_ACTION_NAME,
+                        facility_type: FACILITY_TYPE_SLIDER,
+                        filter_display_on: FILTER_DISPLAY_ON_BOTH,
+                    },
+                ],
+            };
+            !!filterOpenFacilityType &&
+                filteredFacilityTypeList?.data?.facility_type_groups?.push(filterCapacityFacilityType);
+
+            console.log(
+                'getFilteredFacilityTypeList::filteredFacilityTypeList=',
+                filteredFacilityTypeList?.data?.facility_type_groups,
+            );
+            return filteredFacilityTypeList;
+        },
+        [correctedCampusId, selectedCampus, useJourneyExperience],
+    );
     const filteredFacilityTypeList = React.useMemo(
         () => getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList),
-        [bookableSpacesRoomList, facilityTypeList, selectedCampus, useJourneyExperience],
+        [bookableSpacesRoomList, facilityTypeList, getFilteredFacilityTypeList],
     );
 
     React.useEffect(() => {
-        if (!!selectedFacilityTypes?.length || !filteredFacilityTypeList?.data?.facility_type_groups?.length) {
+        if (
+            journeyMapFilterState ||
+            !!selectedFacilityTypes?.length ||
+            !filteredFacilityTypeList?.data?.facility_type_groups?.length
+        ) {
             return;
         }
         const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
@@ -864,12 +945,103 @@ export const BookableSpacesList = ({
             facility_special_action: facilityType?.facility_special_action,
         }));
         setSelectedFacilityTypes(newFilters);
-    }, [filteredFacilityTypeList, selectedFacilityTypes, setSelectedFacilityTypes]);
+    }, [filteredFacilityTypeList, journeyMapFilterState, selectedFacilityTypes, setSelectedFacilityTypes]);
 
-    const toggleFilterPopupVisibility = e => {
+    const hasAppliedJourneyMapFilterStateRef = useRef(false);
+    const journeyMapFilterStateSignatureRef = useRef(null);
+
+    React.useEffect(() => {
+        if (!journeyMapFilterState) {
+            return;
+        }
+
+        const availableFacilityTypeIds = (getFlatFacilityTypeList(filteredFacilityTypeList) || [])
+            .map(facilityType => Number(facilityType?.facility_type_id))
+            .filter(value => !Number.isNaN(value));
+
+        const signature = JSON.stringify({
+            selectedFacilityTypes: journeyMapFilterState.selectedFacilityTypes || [],
+            selectedCampus: journeyMapFilterState.selectedCampus,
+            selectedLibrary: journeyMapFilterState.selectedLibrary,
+            capacityFilterValue: journeyMapFilterState.capacityFilterValue,
+            availableFacilityTypeIds,
+        });
+
+        if (hasAppliedJourneyMapFilterStateRef.current && journeyMapFilterStateSignatureRef.current === signature) {
+            return;
+        }
+
+        const baseFacilityTypes = (getFlatFacilityTypeList(filteredFacilityTypeList) || []).map(facilityType => ({
+            facility_type_group_id: facilityType?.facility_type_group_id,
+            facility_type_id: facilityType?.facility_type_id,
+            selected: false,
+            unselected: false,
+            facility_special_action: facilityType?.facility_special_action,
+        }));
+
+        if (!baseFacilityTypes.length) {
+            return;
+        }
+
+        const facilityStateById = new Map(
+            (journeyMapFilterState.selectedFacilityTypes || []).map(candidate => {
+                let facilityTypeId = null;
+                let isSelected = false;
+                let isUnselected = false;
+
+                if (typeof candidate === 'number' || typeof candidate === 'string') {
+                    facilityTypeId = Number(candidate);
+                    isSelected = true;
+                } else if (candidate?.facility_type_id) {
+                    facilityTypeId = Number(candidate.facility_type_id);
+                    isSelected = !!candidate?.selected;
+                    isUnselected = !!candidate?.unselected;
+                }
+
+                if (!facilityTypeId || Number.isNaN(facilityTypeId)) {
+                    return [null, null];
+                }
+
+                return [
+                    facilityTypeId,
+                    {
+                        selected: isSelected,
+                        unselected: isUnselected,
+                    },
+                ];
+            }),
+        );
+        const nextFacilityTypes = baseFacilityTypes.map(filter => {
+            const matchingId = Number(filter.facility_type_id);
+            const state = facilityStateById.get(matchingId);
+            return {
+                ...filter,
+                selected: !!state?.selected,
+                unselected: !!state?.unselected,
+            };
+        });
+
+        if (journeyMapFilterState.selectedCampus !== null) {
+            setSelectedCampus(Number(journeyMapFilterState.selectedCampus));
+        }
+        if (journeyMapFilterState.selectedLibrary !== null) {
+            setSelectedLibrary(Number(journeyMapFilterState.selectedLibrary));
+        }
+        if (Array.isArray(journeyMapFilterState.capacityFilterValue)) {
+            setCapacityFilterValue(journeyMapFilterState.capacityFilterValue);
+        }
+        if (nextFacilityTypes.length > 0) {
+            setSelectedFacilityTypes(nextFacilityTypes);
+        }
+
+        hasAppliedJourneyMapFilterStateRef.current = true;
+        journeyMapFilterStateSignatureRef.current = signature;
+    }, [filteredFacilityTypeList, journeyMapFilterState, selectedFacilityTypes, setSelectedFacilityTypes]);
+
+    const toggleFilterPopupVisibility = () => {
         setShowFilterSelectorPopup(!showFilterSelectorPopup);
     };
-    const toggleSpacesListPopupVisibility = e => {
+    const toggleSpacesListPopupVisibility = () => {
         setShowSpacesSelectorPopup(!showSpacesSelectorPopup);
     };
     const handleFavouriteAction = async (action, spaceId) => {
@@ -946,6 +1118,31 @@ export const BookableSpacesList = ({
     //     ) : null;
     // };
 
+    React.useEffect(() => {
+        if (useJourneyExperience || !sortedSpaceLocations?.length || sortedSpaceLocations.length !== 1) {
+            return;
+        }
+
+        const singleVisibleSpace = sortedSpaceLocations[0];
+        if (!singleVisibleSpace || expandedSpaceId === singleVisibleSpace.space_id) {
+            return;
+        }
+
+        const tryAutoSelect = attempt => {
+            if (isMapReady && typeof mapRef.current?.flyToSpace === 'function') {
+                setExpandedSpaceId(singleVisibleSpace.space_id);
+                handleSpaceSelect(singleVisibleSpace);
+                return;
+            }
+
+            if (attempt < 8) {
+                window.setTimeout(() => tryAutoSelect(attempt + 1), 100);
+            }
+        };
+
+        tryAutoSelect(0);
+    }, [sortedSpaceLocations, expandedSpaceId, useJourneyExperience, isMapReady, handleSpaceSelect]);
+
     const handleMarkerClick = (e, space) => {
         // Stop the click from opening the popup
         e?.originalEvent?.stopPropagation();
@@ -966,6 +1163,26 @@ export const BookableSpacesList = ({
     };
 
     const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
+    const hasActiveFilters = (activeFilterCount || 0) > 0;
+    const advancedViewToggleLabel = hasActiveFilters ? 'Show in simple view' : 'Help me find a space';
+    const highlightedSpace = React.useMemo(() => {
+        const validHighlightedSpaces =
+            bookableSpacesRoomList?.data?.locations?.filter(
+                space => space?.space_highlighted && !space?.space_draftmode,
+            ) || [];
+
+        if (validHighlightedSpaces.length === 0) {
+            return null;
+        }
+
+        if (validHighlightedSpaces.length === 1) {
+            return validHighlightedSpaces[0];
+        }
+
+        const randomIndex = Math.floor(Math.random() * validHighlightedSpaces.length);
+        return validHighlightedSpaces[randomIndex];
+    }, [bookableSpacesRoomList?.data?.locations]);
+
     return (
         <StyledBookableSpacesListWrapperDiv>
             {(() => {
@@ -994,9 +1211,6 @@ export const BookableSpacesList = ({
                         </StandardPage>
                     );
                 } else if (useJourneyExperience) {
-                    const highlightedSpace =
-                        bookableSpacesRoomList?.data?.locations?.find(s => s.space_highlighted && !s.space_draftmode) ||
-                        null;
                     return (
                         <BookableSpacesJourney
                             filteredSpaceLocations={sortedSpaceLocations}
@@ -1069,6 +1283,7 @@ export const BookableSpacesList = ({
                                     librariesForCampus={librariesForCampus}
                                     selectedLibrary={selectedLibrary}
                                     handleLibrarySelection={handleLibrarySelection}
+                                    hasJourneyMapFilterState={Boolean(journeyMapFilterState)}
                                 />
                             </div>
                             {isDesktopView && (
@@ -1124,31 +1339,40 @@ export const BookableSpacesList = ({
                             )}
 
                             <div id="mapWrapper" className="mapHolder" style={{ height: '100%', position: 'relative' }}>
-                                <Button
-                                    data-testid="spaces-advanced-go-to-journey"
-                                    variant="contained"
-                                    startIcon={<TravelExploreIcon />}
-                                    onClick={goToJourney}
+                                <Box
                                     sx={{
                                         position: 'absolute',
                                         top: 12,
                                         left: '50%',
                                         transform: 'translateX(-50%)',
                                         zIndex: 1000,
-                                        textTransform: 'none',
-                                        backgroundColor: '#51247a',
-                                        color: '#fff',
-                                        fontWeight: 600,
-                                        border: '2px solid rgba(255, 255, 255, 0.85)',
-                                        boxShadow: '0 2px 8px rgba(0,0,0,0.35)',
-                                        '&:hover': {
-                                            backgroundColor: '#3c1a5b',
-                                            borderColor: '#fff',
-                                        },
+                                        display: 'flex',
+                                        gap: 1,
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'center',
                                     }}
                                 >
-                                    Help me find a space
-                                </Button>
+                                    <Button
+                                        data-testid="spaces-advanced-go-to-journey"
+                                        variant="contained"
+                                        startIcon={<TravelExploreIcon />}
+                                        onClick={goToJourney}
+                                        sx={{
+                                            textTransform: 'none',
+                                            backgroundColor: '#51247a',
+                                            color: '#fff',
+                                            fontWeight: 600,
+                                            border: '2px solid rgba(255, 255, 255, 0.85)',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.35)',
+                                            '&:hover': {
+                                                backgroundColor: '#3c1a5b',
+                                                borderColor: '#fff',
+                                            },
+                                        }}
+                                    >
+                                        {advancedViewToggleLabel}
+                                    </Button>
+                                </Box>
                                 <BookableSpacesMap
                                     ref={mapRef}
                                     sortedSpaceLocations={sortedSpaceLocations}
@@ -1158,6 +1382,7 @@ export const BookableSpacesList = ({
                                         bookableSpacesRoomList?.data?.locations,
                                         correctedCampusId(selectedCampus),
                                     )}
+                                    onMapReady={setIsMapReady}
                                 />
                             </div>
                         </StyledLayoutWrapper>

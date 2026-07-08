@@ -1021,7 +1021,7 @@ export const BookableSpacesManageLocations = ({
                 }
                 ${campusDetails?.libraries?.length === 0 ? '<p>No libraries</p>' : ''}
             </div>`;
-            setSelectedCampusCentre(campusDetails);
+        setSelectedCampusCentre(campusDetails);
 
         if (!!formBody) {
             const dialogBodyElement = document.getElementById('dialogBody');

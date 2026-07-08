@@ -1429,10 +1429,10 @@ export const DLOView = ({
                                                         return (
                                                             <li key={index}>
                                                                 <StyledFilterLink
-                                                                    to={`/digital-learning-hub?keyword=${keyword
-                                                                        .charAt(0)
-                                                                        .toUpperCase() +
-                                                                        keyword.slice(1).replace(/\s/g, '+')}`}
+                                                                    to={`/digital-learning-hub?keyword=${
+                                                                        keyword.charAt(0).toUpperCase() +
+                                                                        keyword.slice(1).replace(/\s/g, '+')
+                                                                    }`}
                                                                 >
                                                                     {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
                                                                 </StyledFilterLink>

@@ -1,12 +1,16 @@
 import React from 'react';
 
+import { act } from 'react-dom/test-utils';
+
 import { fireEvent, rtlRender, screen, waitFor, WithRouter } from 'test-utils';
 
-import { BookableSpacesList } from './BookableSpacesList';
+import { BookableSpacesList, buildJourneyNavigationUrl } from './BookableSpacesList';
 
 const mockDispatch = jest.fn();
 const mockFlyToSpace = jest.fn();
 const mockSetCookie = jest.fn();
+const mockJourneyRender = jest.fn();
+const mockSidebarRender = jest.fn();
 
 jest.mock('data/actions/drupalArticlesActions', () => ({
     loadDrupalArticles: () => ({ type: 'LOAD_DRUPAL_ARTICLES' }),
@@ -31,10 +35,14 @@ jest.mock('context', () => ({
 jest.mock('@mui/material/useMediaQuery', () => jest.fn(() => false));
 
 jest.mock('modules/Pages/BookableSpaces/SidebarSpacesList', () => () => <div data-testid="mock-spaces-list" />);
-jest.mock('modules/Pages/BookableSpaces/BookableSpacesJourney', () => () => <div data-testid="mock-journey" />);
+jest.mock('modules/Pages/BookableSpaces/BookableSpacesJourney', () => props => {
+    mockJourneyRender(props);
+    return <div data-testid="mock-journey" />;
+});
 
 jest.mock('modules/Pages/BookableSpaces/SidebarFilters', () => {
     return function MockSidebarFilters(props) {
+        mockSidebarRender(props);
         return (
             <button
                 data-testid="trigger-campus-change"
@@ -49,10 +57,13 @@ jest.mock('modules/Pages/BookableSpaces/SidebarFilters', () => {
 jest.mock('modules/Pages/BookableSpaces/BookableSpacesMap', () => {
     const ReactModule = jest.requireActual('react');
 
-    return ReactModule.forwardRef(function MockBookableSpacesMap(_props, ref) {
+    return ReactModule.forwardRef(function MockBookableSpacesMap(props, ref) {
         ReactModule.useImperativeHandle(ref, () => ({
             flyToSpace: mockFlyToSpace,
         }));
+        ReactModule.useEffect(() => {
+            props.onMapReady?.(true);
+        }, [props.onMapReady]);
         return <div data-testid="mock-bookable-spaces-map" />;
     });
 });
@@ -171,5 +182,366 @@ describe('BookableSpacesList campus selection', () => {
             2,
             expect.objectContaining({ expires: expect.any(Date) }),
         );
+    });
+
+    it('applies journey map filter state once facility filters become available', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [
+                    { facility_type_id: 11, selected: true, unselected: false, facility_special_action: null },
+                ],
+                selectedCampus: 1,
+                selectedLibrary: 11,
+                capacityFilterValue: [4, 8],
+            }),
+        );
+
+        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+
+        const { rerender } = rtlRender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...baseProps} facilityTypeList={{ data: { facility_type_groups: [] } }} />
+            </WithRouter>,
+        );
+
+        rerender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        expect(latestSidebarProps.selectedFacilityTypes).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                }),
+            ]),
+        );
+    });
+
+    it('applies journey map filter state from the URL to the legacy map/list view', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [
+                    { facility_type_id: 11, selected: true, unselected: false, facility_special_action: null },
+                ],
+                selectedCampus: 2,
+                selectedLibrary: 22,
+                capacityFilterValue: [4, 8],
+            }),
+        );
+
+        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        expect(latestSidebarProps.selectedCampus).toBe(2);
+        expect(latestSidebarProps.selectedLibrary).toBe(22);
+        expect(latestSidebarProps.capacityFilterValue).toEqual([4, 8]);
+        expect(latestSidebarProps.selectedFacilityTypes).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                }),
+            ]),
+        );
+    });
+
+    it('returns to the journey landing state when the advanced-view button is used without active filters', () => {
+        const navigatedUrl = buildJourneyNavigationUrl({
+            currentUrl: 'http://localhost/spaces?advanced=1',
+            selectedFacilityTypes: [],
+            selectedCampus: 1,
+            selectedLibrary: 0,
+            capacityFilterValue: [],
+        });
+
+        expect(navigatedUrl).not.toContain('mapFilters');
+        expect(navigatedUrl).not.toContain('journeyStep');
+        expect(navigatedUrl).toContain('/spaces');
+    });
+
+    it('defaults the journey handoff to the results step when filters are active', () => {
+        const navigatedUrl = buildJourneyNavigationUrl({
+            currentUrl: 'http://localhost/spaces?advanced=1',
+            selectedFacilityTypes: [{ facility_type_id: 11, selected: true, unselected: false }],
+            selectedCampus: 1,
+            selectedLibrary: 11,
+            capacityFilterValue: [4, 8],
+        });
+
+        expect(navigatedUrl).toContain('journeyStep=results');
+        expect(navigatedUrl).toContain('mapFilters=');
+    });
+
+    it('auto-selects the only visible space in the advanced view', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [
+                    { facility_type_id: 11, selected: true, unselected: false, facility_special_action: null },
+                ],
+                selectedCampus: 1,
+                selectedLibrary: 11,
+                capacityFilterValue: [4, 8],
+            }),
+        );
+
+        const props = {
+            ...baseProps,
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [baseProps.bookableSpacesRoomList.data.locations[0]],
+                },
+            },
+        };
+
+        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => {
+            expect(mockFlyToSpace).toHaveBeenCalledWith(
+                expect.objectContaining({ space_id: 101, space_name: 'St Lucia space' }),
+                expect.any(Number),
+            );
+        });
+    });
+
+    it('keeps URL-backed facility selections selected when the advanced view first renders', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [29, 31, 23],
+                selectedCampus: 1,
+                selectedLibrary: 0,
+                capacityFilterValue: [1, 24],
+            }),
+        );
+
+        const props = {
+            ...baseProps,
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: 1,
+                            facility_type_children: [
+                                {
+                                    facility_type_id: 29,
+                                    facility_type_name: 'Recharge Station',
+                                    filter_display_on: 'advanced',
+                                },
+                                {
+                                    facility_type_id: 31,
+                                    facility_type_name: 'Self-printing & scanning',
+                                    filter_display_on: 'advanced',
+                                },
+                                {
+                                    facility_type_id: 23,
+                                    facility_type_name: 'Toilets, female',
+                                    filter_display_on: 'advanced',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[0],
+                            facility_types: [
+                                { facility_type_id: 29, facility_type_name: 'Recharge Station' },
+                                { facility_type_id: 31, facility_type_name: 'Self-printing & scanning' },
+                                { facility_type_id: 23, facility_type_name: 'Toilets, female' },
+                            ],
+                        },
+                    ],
+                },
+            },
+        };
+
+        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        expect(latestSidebarProps.selectedFacilityTypes).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ facility_type_id: 29, selected: true, unselected: false }),
+                expect.objectContaining({ facility_type_id: 31, selected: true, unselected: false }),
+                expect.objectContaining({ facility_type_id: 23, selected: true, unselected: false }),
+            ]),
+        );
+    });
+
+    it('keeps local filter edits when mapFilters state is present in the URL', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [
+                    { facility_type_id: 11, selected: true, unselected: false, facility_special_action: null },
+                ],
+                selectedCampus: 1,
+                selectedLibrary: 11,
+                capacityFilterValue: [4, 8],
+            }),
+        );
+
+        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        act(() => {
+            latestSidebarProps.setSelectedFacilityTypes([
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ]);
+        });
+
+        await waitFor(() => {
+            const updatedSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+            expect(updatedSidebarProps.selectedFacilityTypes).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({
+                        facility_type_id: 11,
+                        selected: false,
+                        unselected: false,
+                    }),
+                ]),
+            );
+        });
+    });
+
+    it('passes null highlightedSpace when there are no valid highlighted spaces', async () => {
+        window.history.replaceState({}, '', '/spaces');
+        const props = {
+            ...baseProps,
+            bookableSpacesRoomList: {
+                data: {
+                    locations: baseProps.bookableSpacesRoomList.data.locations.map(space => ({
+                        ...space,
+                        space_highlighted: false,
+                    })),
+                },
+            },
+        };
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={['/spaces']}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+        expect(latestProps.highlightedSpace).toBeNull();
+    });
+
+    it('passes the single valid highlighted space when exactly one is available', async () => {
+        window.history.replaceState({}, '', '/spaces');
+        const props = {
+            ...baseProps,
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[0],
+                            space_highlighted: true,
+                            space_draftmode: false,
+                        },
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[1],
+                            space_highlighted: false,
+                        },
+                    ],
+                },
+            },
+        };
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={['/spaces']}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+        expect(latestProps.highlightedSpace?.space_id).toBe(101);
+    });
+
+    it('randomises highlightedSpace when more than one valid highlighted space exists', async () => {
+        window.history.replaceState({}, '', '/spaces');
+        const randomSpy = jest.spyOn(Math, 'random').mockReturnValue(0.99);
+
+        const props = {
+            ...baseProps,
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[0],
+                            space_highlighted: true,
+                            space_draftmode: false,
+                        },
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[1],
+                            space_highlighted: true,
+                            space_draftmode: false,
+                        },
+                    ],
+                },
+            },
+        };
+
+        rtlRender(
+            <WithRouter route="/spaces" initialEntries={['/spaces']}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+        expect(latestProps.highlightedSpace?.space_id).toBe(201);
+
+        randomSpy.mockRestore();
     });
 });

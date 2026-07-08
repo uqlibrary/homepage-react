@@ -39,13 +39,8 @@ export const parseSpaceOutageDate = value => {
     }
     const m = moment(
         String(value),
-        [
-            'YYYY-MM-DDTHH:mm',
-            'YYYY-MM-DD HH:mm',
-            'YYYY-MM-DDTHH:mm:ss',
-            'YYYY-MM-DD HH:mm:ss'
-        ],
-        true
+        ['YYYY-MM-DDTHH:mm', 'YYYY-MM-DD HH:mm', 'YYYY-MM-DDTHH:mm:ss', 'YYYY-MM-DD HH:mm:ss'],
+        true,
     );
     return m.isValid() ? m : null;
 };
@@ -187,11 +182,7 @@ export const sortSpaceOutages = outages => {
     });
 };
 
-export const getVisibleSpaceOutage = (
-    outages,
-    currentTime,
-    noticeWindowDays = SPACE_OUTAGE_NOTICE_WINDOW_DAYS,
-) => {
+export const getVisibleSpaceOutage = (outages, currentTime, noticeWindowDays = SPACE_OUTAGE_NOTICE_WINDOW_DAYS) => {
     const now = currentTime ? moment(currentTime) : moment();
     const sortedOutages = sortSpaceOutages(outages);
     const currentOutage = sortedOutages.find(outage => getSpaceOutageStatus(outage, now) === 'Current');

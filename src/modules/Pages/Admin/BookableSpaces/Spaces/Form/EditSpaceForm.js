@@ -402,6 +402,7 @@ export const EditSpaceForm = ({
     const [errorMessages, setErrorMessages] = useState([]);
     const [hasAttemptedSave, setHasAttemptedSave] = useState(false);
     const [showSpaceDescriptionCheckbox, setShowSpaceDescriptionCheckbox] = useState(!!formValues?.space_description);
+    const [isHighlightedTouched, setIsHighlightedTouched] = useState(false);
     const spaceDescriptionStateKeyRef = useRef(`${mode}:${formValues?.space_uuid || 'new'}`);
 
     const firstTabId = 0;
@@ -485,6 +486,7 @@ export const EditSpaceForm = ({
         if (spaceDescriptionStateKeyRef.current !== nextStateKey) {
             spaceDescriptionStateKeyRef.current = nextStateKey;
             setShowSpaceDescriptionCheckbox(!!formValues?.space_description);
+            setIsHighlightedTouched(false);
         }
     }, [mode, formValues?.space_description, formValues?.space_uuid]);
 
@@ -874,6 +876,11 @@ export const EditSpaceForm = ({
         validateForm(newValues);
 
         setFormValues(newValues);
+    };
+
+    const handleHighlightedChange = event => {
+        setIsHighlightedTouched(true);
+        handleChange('space_highlighted')(event);
     };
 
     function navigateToPage(spacesPath) {
@@ -1331,6 +1338,9 @@ export const EditSpaceForm = ({
         valuesToSend.space_external_book_url = !!formValues?.space_external_book_url
             ? formValues?.space_external_book_url
             : null;
+        if (isHighlightedTouched) {
+            valuesToSend.space_highlighted = !!formValues?.space_highlighted;
+        }
         valuesToSend.space_draftmode = !!formValues?.space_draftmode;
         valuesToSend.archibus_room_id =
             formValues?.archibus_room_id !== undefined &&
@@ -1808,6 +1818,24 @@ export const EditSpaceForm = ({
                             )}
                         </FormControl>
                     </div>
+                </Grid>
+                <Grid item xs={12}>
+                    <FormControlLabel
+                        label={
+                            <span data-testid="space-highlighted-label">
+                                Set this space as a highlighted space for front page
+                            </span>
+                        }
+                        data-testid="space-highlighted-checkbox"
+                        control={
+                            <Checkbox
+                                checked={!!formValues?.space_highlighted}
+                                data-testid="space_highlighted"
+                                className={'checkbox'}
+                                onChange={handleHighlightedChange}
+                            />
+                        }
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <FormControlLabel

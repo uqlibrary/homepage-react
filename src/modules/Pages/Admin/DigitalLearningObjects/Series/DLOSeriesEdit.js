@@ -236,8 +236,8 @@ export const DLOSeriesEdit = ({
             if (Object.keys(seriesDetail).length === 0) {
                 console.log('Doing the things');
                 seriesDetail.object_series_id = dlorSeriesId;
-                (seriesDetail.object_series_name = dlorSeries?.series_name),
-                    (seriesDetail.object_series_description = dlorSeries?.series_description);
+                ((seriesDetail.object_series_name = dlorSeries?.series_name),
+                    (seriesDetail.object_series_description = dlorSeries?.series_description));
             }
             mode === 'EDIT' &&
                 setOriginalSeriesDetails({
@@ -377,7 +377,7 @@ export const DLOSeriesEdit = ({
     };
 
     function toProperCase(text) {
-        return text.replace(/\w\S*/g, function(txt) {
+        return text.replace(/\w\S*/g, function (txt) {
             return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         });
     }

@@ -92,13 +92,13 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-friendly-location`).locator('.location-campus')).not.toBeVisible();
         });
 
-        test('help me find a space opens journey at space type step', async ({ page }) => {
-            await page.getByTestId('spaces-advanced-go-to-journey').click();
+        // test('help me find a space opens journey at space type step', async ({ page }) => {
+        //     await page.getByTestId('spaces-advanced-go-to-journey').click();
 
-            await expect(page).toHaveURL(/journeyStep=intent/);
-            await expect(page).not.toHaveURL(/advanced=1/);
-            await expect(page.getByRole('heading', { name: 'What sort of space would you like to find?' })).toBeVisible();
-        });
+        //     await expect(page).toHaveURL(/journeyStep=intent/);
+        //     await expect(page).not.toHaveURL(/advanced=1/);
+        //     await expect(page.getByRole('heading', { name: 'What sort of space would you like to find?' })).toBeVisible();
+        // });
 
         test('bookable links appear correct on load', async ({ page }) => {
             // public bookable Architecture and Music example

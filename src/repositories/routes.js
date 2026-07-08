@@ -62,7 +62,8 @@ export const INCOMPLETE_NTRO_RECORDS_API = () => ({
 });
 
 export const LEARNING_RESOURCES_COURSE_SUGGESTIONS_API = ({ keyword }) => ({
-    apiUrl: API_URL + 'learning_resources/suggestions?hint=' + keyword,
+    apiUrl: 'learning_resources/suggestions',
+    options: { params: { hint: keyword } },
 });
 
 // Library hours
