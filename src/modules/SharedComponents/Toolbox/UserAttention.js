@@ -11,7 +11,8 @@ const StyledAttentionDiv = styled('div', {
 })(({ theme, tone, variant }) => {
     if (variant === 'aligned') {
         return {
-            backgroundColor: tone === 'error' ? '#fbeaea' : theme.palette.designSystem.warningYellow,
+            backgroundColor:
+                tone === 'error' ? theme.palette.designSystem.alert.error : theme.palette.designSystem.alert.warning,
             color: theme.palette.designSystem.headingColor,
             padding: '16px',
             '& .uq-userattention-row': {
@@ -48,7 +49,7 @@ const StyledAttentionDiv = styled('div', {
     }
 
     return {
-        backgroundColor: theme.palette.designSystem.warningYellow,
+        backgroundColor: theme.palette.designSystem.alert.warning,
         padding: '16px',
         '& h4': {
             fontStyle: 'normal',

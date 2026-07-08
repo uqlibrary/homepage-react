@@ -42,7 +42,7 @@ const StyledLink = styled(Link, {
     shouldForwardProp: prop => prop !== 'fillContainer',
 })(({ theme, fillContainer }) => ({
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
-    borderRadius: '4px',
+    borderRadius: theme.palette.designSystem.borderRadius,
     background: '#FFFFFF',
     display: 'block',
     width: '100%',
