@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
-import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
@@ -460,7 +459,7 @@ export const DLOAdminHomepage = ({
                         <Divider />
                         <MenuItem
                             component={Link}
-                            to={`${getPathRoot()}/digital-learning-hub`}
+                            to={'/digital-learning-hub'}
                             rel="noopener noreferrer"
                             onClick={handleMenuClose}
                             data-testid="dlor-admin-public-homepage-link"

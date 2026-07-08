@@ -25,11 +25,7 @@ import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { isLibraryStaff, isStaff, isUQOnlyUser } from 'helpers/access';
 
-import {
-    getDlorViewPageUrl,
-    getPathRoot,
-    convertSnakeCaseToKebabCase,
-} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { getDlorViewPageUrl, convertSnakeCaseToKebabCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const StyledTitleTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -77,7 +73,7 @@ function getTitleBlock(detailTitle = 'View a series') {
     return (
         <StyledTitleBlockDiv>
             <Typography component={'p'} variant={'h6'} data-testid="dlor-seriespage-sitelabel">
-                <Link to={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</Link>
+                <Link to={'/digital-learning-hub'}>Find a digital learning object</Link>
             </Typography>
             <ArrowForwardIcon />
             <Typography>{detailTitle}</Typography>

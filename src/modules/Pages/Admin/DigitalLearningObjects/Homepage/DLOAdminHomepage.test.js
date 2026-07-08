@@ -43,7 +43,6 @@ jest.mock('modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/Visit
 
 jest.mock('modules/Pages/DigitalLearningObjects/dlorHelpers', () => ({
     convertSnakeCaseToKebabCase: value => value,
-    getPathRoot: () => '',
 }));
 
 const baseProps = {
