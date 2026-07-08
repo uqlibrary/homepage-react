@@ -13,7 +13,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
-import { getDlorViewPageUrl, getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { breadcrumbs } from 'config/routes';
 
 const StyledInstructionList = styled('ul')(() => ({
@@ -147,8 +147,8 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                     <StyledInstructionList sx={{ marginTop: 0 }}>
                         <li data-testid="dlor-confirm-line-3">check your email and try again</li>
                         <li data-testid="dlor-confirm-line-3">
-                            visit <Link to={`${getPathRoot()}/digital-learning-hub`}>our Digital learning hub</Link> to
-                            view available objects.
+                            visit <Link to={'/digital-learning-hub'}>our Digital learning hub</Link> to view available
+                            objects.
                         </li>
                     </StyledInstructionList>
                 </>

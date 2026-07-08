@@ -45,7 +45,6 @@ import {
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
     getDlorViewPageUrl,
-    getPathRoot,
     toTitleCase,
     convertSnakeCaseToKebabCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
@@ -489,7 +488,7 @@ export const DLOView = ({
         return (
             <StyledTitleBlockDiv>
                 <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                    <Link to={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</Link>
+                    <Link to={'/digital-learning-hub'}>Find a digital learning object</Link>
                 </Typography>
                 <ArrowForwardIcon />
                 <Typography>{detailTitle}</Typography>

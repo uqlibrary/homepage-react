@@ -1,16 +1,4 @@
-// import React from 'react';
-// import parse from 'html-react-parser';
-// import { fullPath } from 'config/routes';
 import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-
-export const getPathRoot = () => {
-    /* istanbul ignore next */
-    // if (fullPath === 'https://homepage-production.library.uq.edu.au') {
-    //     return 'https://www.library.uq.edu.au';
-    // }
-    // return fullPath;
-    return '';
-};
 
 export const getYoutubeUrlForPreviewEmbed = testUrlIn => {
     let testUrl;
@@ -161,7 +149,7 @@ export const toTitleCase = str => {
 
 export const getDlorViewPageUrl = uuid => {
     const userString = getUserPostfix();
-    return `${getPathRoot()}/digital-learning-hub/view/${uuid}${userString}`;
+    return `/digital-learning-hub/view/${uuid}${userString}`;
 };
 
 export const isValidUrl = testUrl => {
