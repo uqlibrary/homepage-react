@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, WithRouter } from '../../../../../../utils/test-utils';
 import { useNavigate } from 'react-router';
 import DLOAdminHomepage from './DLOAdminHomepage';
 import {
@@ -87,7 +87,11 @@ describe('DLOAdminHomepage menu', () => {
     });
 
     it('opens the admin menu and shows menu items including dashboard link', async () => {
-        render(<DLOAdminHomepage {...baseProps} />);
+        render(
+            <WithRouter>
+                <DLOAdminHomepage {...baseProps} />
+            </WithRouter>,
+        );
 
         fireEvent.click(screen.getByTestId('admin-dlor-menu-button'));
 
@@ -106,7 +110,11 @@ describe('DLOAdminHomepage menu', () => {
     });
 
     it('calls CSV export handlers from menu items', async () => {
-        render(<DLOAdminHomepage {...baseProps} />);
+        render(
+            <WithRouter>
+                <DLOAdminHomepage {...baseProps} />
+            </WithRouter>,
+        );
 
         fireEvent.click(screen.getByTestId('admin-dlor-menu-button'));
 
@@ -125,7 +133,11 @@ describe('DLOAdminHomepage menu', () => {
     });
 
     it('closes menu after selecting a menu action', async () => {
-        render(<DLOAdminHomepage {...baseProps} />);
+        render(
+            <WithRouter>
+                <DLOAdminHomepage {...baseProps} />
+            </WithRouter>,
+        );
 
         fireEvent.click(screen.getByTestId('admin-dlor-menu-button'));
         expect(await screen.findByTestId('dlor-admin-dashboard--button')).toBeInTheDocument();
@@ -137,7 +149,11 @@ describe('DLOAdminHomepage menu', () => {
     });
 
     it('navigates to dashboard from menu item', async () => {
-        render(<DLOAdminHomepage {...baseProps} />);
+        render(
+            <WithRouter>
+                <DLOAdminHomepage {...baseProps} />
+            </WithRouter>,
+        );
 
         fireEvent.click(screen.getByTestId('admin-dlor-menu-button'));
         fireEvent.click(await screen.findByTestId('dlor-admin-dashboard--button'));

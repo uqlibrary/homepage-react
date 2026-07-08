@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 import { useCookies } from 'react-cookie';
 
 import Box from '@mui/material/Box';
@@ -49,6 +49,7 @@ export const DLOTeamForm = ({
     mode,
 }) => {
     const { account } = useAccountContext();
+    const navigate = useNavigate();
     const { dlorTeamId } = useParams();
     const [cookies, setCookie] = useCookies();
 
@@ -97,12 +98,12 @@ export const DLOTeamForm = ({
 
     const navigateToTeamManagementHomePage = () => {
         closeConfirmationBox();
-        window.location.href = dlorAdminLink('/team/manage', account);
+        navigate(dlorAdminLink('/team/manage', account));
         /* istanbul ignore next */
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
-        window.location.href = dlorAdminLink('/team/manage', account);
+        navigate(dlorAdminLink('/team/manage', account));
     };
 
     const clearForm = () => {

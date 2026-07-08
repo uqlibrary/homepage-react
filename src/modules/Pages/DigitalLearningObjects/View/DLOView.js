@@ -1344,8 +1344,8 @@ export const DLOView = ({
                                             data-testid="detailpage-authenticated-link"
                                         >
                                             <strong>Secure URL: </strong>
-                                            <a
-                                                href={pathConfig.dlorViewSecure(dlorItem.object_public_uuid)}
+                                            <Link
+                                                to={pathConfig.dlorViewSecure(dlorItem.object_public_uuid)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 data-testid="detailpage-authenticated-link-url"
@@ -1353,7 +1353,7 @@ export const DLOView = ({
                                                 {`${window.location.origin}${pathConfig.dlorViewSecure(
                                                     dlorItem.object_public_uuid,
                                                 )}`}
-                                            </a>
+                                            </Link>
                                         </Typography>
                                     )}
                                 </StyledLayoutBox>
