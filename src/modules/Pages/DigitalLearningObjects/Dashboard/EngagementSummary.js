@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Grid, Divider } from '@mui/material';
 import { getUserPostfix } from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { Link } from 'react-router';
 
 export default function EngagementSummary({ data }) {
     const metrics = [
@@ -77,15 +78,15 @@ export default function EngagementSummary({ data }) {
                                         p: 0,
                                     }}
                                 >
-                                    <a
-                                        href={buildEngagementUrl(m.param)}
+                                    <Link
+                                        to={buildEngagementUrl(m.param)}
                                         style={{ textDecoration: 'none', color: m.color }}
                                         aria-label={`View ${m.label}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         {m.value}
-                                    </a>
+                                    </Link>
                                 </Typography>
                                 <Typography
                                     variant="caption"

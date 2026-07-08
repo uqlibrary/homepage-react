@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router';
 import parse from 'html-react-parser';
 
 import Box from '@mui/material/Box';
@@ -77,7 +77,7 @@ function getTitleBlock(detailTitle = 'View a series') {
     return (
         <StyledTitleBlockDiv>
             <Typography component={'p'} variant={'h6'} data-testid="dlor-seriespage-sitelabel">
-                <a href={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</a>
+                <Link to={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</Link>
             </Typography>
             <ArrowForwardIcon />
             <Typography>{detailTitle}</Typography>

@@ -586,7 +586,7 @@ test.describe('Digital Learning Hub', () => {
             ).toBeVisible();
             await expect(page.locator('[data-testid="dlor-detailpage-sitelabel"] a')).toHaveAttribute(
                 'href',
-                'http://localhost:2020/digital-learning-hub',
+                '/digital-learning-hub',
             );
             await page.locator('[data-testid="dlor-detailpage-sitelabel"] a').click();
 
@@ -605,7 +605,7 @@ test.describe('Digital Learning Hub', () => {
             // back to homepage
             await expect(page.locator('[data-testid="dlor-detailpage-sitelabel"] a')).toHaveAttribute(
                 'href',
-                'http://localhost:2020/digital-learning-hub',
+                '/digital-learning-hub',
             );
             await page.locator('[data-testid="dlor-detailpage-sitelabel"] a').click();
 
@@ -684,10 +684,7 @@ test.describe('Digital Learning Hub', () => {
             ).toBeVisible();
 
             // click pagination to go to first page
-            await page
-                .locator('nav[aria-label="pagination navigation"] li:first-child button')
-                .first()
-                .click();
+            await page.locator('nav[aria-label="pagination navigation"] li:first-child button').first().click();
 
             // when we filter the content the number of pagination page buttons changes
             await page.locator('[data-testid="dlor-homepage-keyword"] input').fill('digital');
@@ -793,10 +790,7 @@ test.describe('Digital Learning Hub', () => {
                 'Close this filter section',
             );
             await expect(
-                page
-                    .locator('[data-testid="sidebar-panel-media-format"] label')
-                    .getByText(/H5P/)
-                    .first(),
+                page.locator('[data-testid="sidebar-panel-media-format"] label').getByText(/H5P/).first(),
             ).toBeVisible();
 
             await expect(page.getByTestId('panel-minimisation-icon-subject')).toHaveAttribute(
@@ -936,10 +930,7 @@ test.describe('Digital Learning Hub', () => {
             // filters correctly
             await expect(page.getByTestId('filter-sidebar')).not.toBeVisible();
 
-            await page
-                .getByTestId('sidebar-filter-icon')
-                .locator('button')
-                .click();
+            await page.getByTestId('sidebar-filter-icon').locator('button').click();
             await page.getByTestId('filter-sidebar').scrollIntoViewIfNeeded();
             await expect(page.getByTestId('sidebar-filter-icon')).not.toBeVisible();
 
@@ -958,10 +949,7 @@ test.describe('Digital Learning Hub', () => {
             await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(1 + extraRowCount);
 
             // hide the filter section
-            await page
-                .getByTestId('sidebar-filter-icon-hide-id')
-                .locator('button')
-                .click();
+            await page.getByTestId('sidebar-filter-icon-hide-id').locator('button').click();
             await expect(page.getByTestId('filter-sidebar')).not.toBeVisible();
         });
     });

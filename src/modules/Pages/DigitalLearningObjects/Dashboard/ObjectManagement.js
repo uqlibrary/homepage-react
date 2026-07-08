@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Grid, Divider } from '@mui/material';
 import { getUserPostfix } from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { Link } from 'react-router';
 
 export function buildObjectManagementUrl(param) {
     const baseUrl = '/digital-learning-hub';
@@ -71,15 +72,15 @@ export default function ObjectManagement({ data }) {
                                         p: 0,
                                     }}
                                 >
-                                    <a
-                                        href={buildObjectManagementUrl(m.param)}
+                                    <Link
+                                        to={buildObjectManagementUrl(m.param)}
                                         style={{ textDecoration: 'none', color: m.color }}
                                         aria-label={`View ${m.label}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         {m.value}
-                                    </a>
+                                    </Link>
                                 </Typography>
                                 <Typography
                                     variant="caption"
