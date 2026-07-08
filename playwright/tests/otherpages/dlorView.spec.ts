@@ -595,6 +595,7 @@ test.describe('Digital Learning Hub View page', () => {
         });
     });
     test.describe('User can edit their own objects', () => {
+        test.describe.configure({ mode: 'default' });
         test('User sees edit on objects they own', async ({ page }) => {
             await page.goto(`digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=${DLOR_NO_EDIT_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
