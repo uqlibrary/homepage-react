@@ -35,10 +35,7 @@ test.describe('Digital Learning Hub View page', () => {
 
             // meta data in sidebar is as expected
             await expect(
-                page
-                    .locator('[data-testid="detailpage-filter-topic"] h3')
-                    .getByText(/Topic/)
-                    .first(),
+                page.locator('[data-testid="detailpage-filter-topic"] h3').getByText(/Topic/).first(),
             ).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-topic"] ul').locator(' > *')).toHaveCount(2);
             await expect(page.locator('[data-testid="detailpage-filter-topic"] ul li:first-child')).toHaveText(
@@ -342,14 +339,8 @@ test.describe('Digital Learning Hub View page', () => {
             const typeSubject = 'PHIL1001';
             const typeSchoolName = 'School of Mathematics';
             await page.getByTestId('detailpage-demographics-button').click();
-            await page
-                .getByTestId('view-demographics-subject-code')
-                .locator('input')
-                .fill(typeSubject);
-            await page
-                .getByTestId('view-demographics-school-name')
-                .locator('input')
-                .fill(typeSchoolName);
+            await page.getByTestId('view-demographics-subject-code').locator('input').fill(typeSubject);
+            await page.getByTestId('view-demographics-school-name').locator('input').fill(typeSchoolName);
             const captureButton = page.getByTestId('demographics-capture');
             await expect(captureButton).not.toBeDisabled();
             await captureButton.click();
@@ -598,6 +589,8 @@ test.describe('Digital Learning Hub View page', () => {
         test('User sees edit on objects they own', async ({ page }) => {
             await page.goto(`digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=${DLOR_NO_EDIT_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.getByText(/Dummy entry/)).toBeVisible({ timeout: 15_000 });
+
             await page.getByTestId('detailpage-admin-edit-button').click();
             await expect(page).toHaveURL(
                 `http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01?user=${DLOR_NO_EDIT_USER}`,
@@ -611,6 +604,7 @@ test.describe('Digital Learning Hub View page', () => {
                 'This is a test. This information is not used in the real system. This is simply content that is big enough to test the CKEditor - it is at least sufficient characters long for the editor to accept the content.';
             await page.goto(`digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=${DLOR_NO_EDIT_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.getByText(/Dummy entry/)).toBeVisible({ timeout: 15_000 });
 
             await page.getByTestId('detailpage-admin-edit-button').click();
             await expect(page).toHaveURL(
