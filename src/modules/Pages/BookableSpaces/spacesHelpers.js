@@ -49,7 +49,7 @@ export function getFriendlyFloorName(bookableSpace) {
     return getPrefixedFloorName(bookableSpace?.space_floor_name);
 }
 
-export function getFriendlyLocationDescription(bookableSpace, isCollapsed = false) {
+export function getFriendlyLocationDescription(bookableSpace, isCollapsed = false, hideOptions = {}) {
     if (isCollapsed) {
         return (
             <div className="location-space location-library">
@@ -59,7 +59,9 @@ export function getFriendlyLocationDescription(bookableSpace, isCollapsed = fals
     }
     return (
         <>
-            <div className="location-space location-name">{`${bookableSpace?.space_name || ''}`}</div>
+            {!hideOptions.space_name && (
+                <div className="location-space location-name">{`${bookableSpace?.space_name || ''}`}</div>
+            )}
             <div className="location-space location-campus">{`${bookableSpace?.space_campus_name}`}</div>
             <div className="location-space location-building">{`${bookableSpace?.space_building_name} (${bookableSpace?.space_building_number})`}</div>
             <div className="location-space location-library">

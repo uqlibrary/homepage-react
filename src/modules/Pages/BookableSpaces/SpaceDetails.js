@@ -10,9 +10,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 
-import { OpeningHoursDown } from './OpeningHoursDown';
 import { OpeningHoursShort } from './OpeningHoursShort';
-import { OpeningHoursTable } from './OpeningHoursTable';
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import {
     formatSpaceOutageRangeForPublicNotice,
@@ -23,6 +21,7 @@ import {
 import { pluralise } from 'helpers/general';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
+import JourneySpaceDetailsView from './JourneySpaceDetailsView';
 
 const StyledFriendlyLocationDiv = styled('div')(() => ({
     marginTop: '5px',
@@ -71,16 +70,6 @@ const StyledOutageNotice = styled('div')(() => ({
     marginBlock: '0.5rem',
     '& p': {
         marginTop: '0.5rem',
-    },
-}));
-const StyledLocationImg = styled('img')(({ theme }) => ({
-    display: 'block',
-    width: '100%',
-    maxWidth: '100%',
-    height: 'auto',
-    marginTop: '1rem',
-    [theme.breakpoints.down('sm')]: {
-        display: 'none',
     },
 }));
 const StyledDescriptionDiv = styled('div')(() => ({
@@ -149,6 +138,12 @@ const ShowOutageNotice = ({ bookableSpace, visibleOutage, isCollapsed }) => {
         </StyledOutageNotice>
     );
 };
+ShowOutageNotice.propTypes = {
+    bookableSpace: PropTypes.any,
+    visibleOutage: PropTypes.any,
+    isCollapsed: PropTypes.any,
+};
+
 const CollapsedSection = ({
     bookableSpace,
     visibleOutage,
@@ -160,7 +155,7 @@ const CollapsedSection = ({
     weeklyHoursLoading,
     weeklyHoursError,
     weeklyHours,
-    isMobileView,
+    // isMobileView,
 }) => {
     return (
         <>
@@ -217,112 +212,20 @@ const CollapsedSection = ({
         </>
     );
 };
-
-const ExpandedSection = ({
-    bookableSpace,
-    visibleOutage,
-    isBookable,
-    uqBookitMakeABookingIcon,
-    getDescriptionClassName,
-    getFirstParagraph,
-    summaryPanelElementId,
-    weeklyHoursLoading,
-    weeklyHoursError,
-    weeklyHours,
-    isMobileView,
-}) => {
-    return (
-        <>
-            {!!visibleOutage && (
-                <ShowOutageNotice bookableSpace={bookableSpace} visibleOutage={visibleOutage} isCollapsed={false} />
-            )}
-
-            {isBookable && (
-                <StyledBookitLinkWrapperDiv data-testid={`space-${bookableSpace?.space_id}-booking-link`}>
-                    {uqBookitMakeABookingIcon}
-                    <a href={bookableSpace?.space_external_book_url} target={'_blank'}>
-                        <span>Book this space</span>
-                    </a>
-                </StyledBookitLinkWrapperDiv>
-            )}
-            {!isBookable && (
-                <div data-testid={`space-${bookableSpace?.space_id}-not-bookable`}>No booking required.</div>
-            )}
-            {isBookable && !!bookableSpace?.space_capacity && bookableSpace?.space_capacity > 0 && (
-                <StyleCapacityDiv data-testid={`space-${bookableSpace?.space_id}-capacity`}>
-                    <PeopleOutlineIcon />
-                    {`Space for ${bookableSpace?.space_capacity} ${pluralise(
-                        'person',
-                        bookableSpace?.space_capacity,
-                        'people',
-                    )}.`}
-                </StyleCapacityDiv>
-            )}
-            <Typography variant="body2">{bookableSpace?.space_type_details?.space_type_description}</Typography>
-            {bookableSpace?.space_description?.length > 0 && (
-                <StyledDescriptionDiv
-                    id={`space-description-${bookableSpace?.space_id}`}
-                    data-testid={`space-${bookableSpace?.space_id}-description`}
-                    className={getDescriptionClassName()}
-                >
-                    {parse(bookableSpace?.space_description)}
-                </StyledDescriptionDiv>
-            )}
-            <StyledCollapsableSection
-                // loads closed
-                id={`space-more-${bookableSpace?.space_id}`}
-                data-testid={`space-${bookableSpace?.space_id}-full-info`}
-            >
-                {!isMobileView && (
-                    <StyledFriendlyLocationDiv data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
-                        {getFriendlyLocationDescription(bookableSpace)}
-                    </StyledFriendlyLocationDiv>
-                )}
-                {isMobileView && (
-                    <OpeningHoursDown
-                        weeklyHoursLoading={weeklyHoursLoading}
-                        weeklyHoursError={weeklyHoursError}
-                        weeklyHours={weeklyHours}
-                        bookableSpace={bookableSpace}
-                    />
-                )}
-                {!isMobileView && (
-                    <OpeningHoursTable
-                        weeklyHoursLoading={weeklyHoursLoading}
-                        weeklyHoursError={weeklyHoursError}
-                        weeklyHours={weeklyHours}
-                        bookableSpace={bookableSpace}
-                    />
-                )}
-                {bookableSpace?.space_photo_url && (
-                    <StyledLocationImg
-                        src={bookableSpace?.space_photo_url}
-                        alt={bookableSpace?.space_photo_description}
-                    />
-                )}
-                {bookableSpace?.facility_types?.length > 0 && (
-                    <>
-                        <h4>Facilities</h4>
-                        <ul className="facilityTypeList" data-testid={`space-${bookableSpace?.space_id}-facility`}>
-                            {bookableSpace?.facility_types?.map(facility => {
-                                return (
-                                    <li
-                                        key={`space-${bookableSpace?.space_id}-facility-${facility?.facility_type_id}`}
-                                        data-testid={`space-${bookableSpace?.space_id}-facility-${facility?.facility_type_id}`}
-                                    >
-                                        {facility?.facility_type_name}
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </>
-                )}
-                {/* <div>[todo] ‘Check availability’ link to Bookit </div>
-                    <div>[todo] ‘Check availability of similar rooms’ link to Bookit </div> */}
-            </StyledCollapsableSection>
-        </>
-    );
+CollapsedSection.propTypes = {
+    bookableSpace: PropTypes.any,
+    visibleOutage: PropTypes.any,
+    isBookable: PropTypes.any,
+    uqBookitMakeABookingIcon: PropTypes.any,
+    getDescriptionClassName: PropTypes.any,
+    getFirstParagraph: PropTypes.any,
+    summaryPanelElementId: PropTypes.any,
+    weeklyHoursLoading: PropTypes.any,
+    weeklyHoursError: PropTypes.any,
+    weeklyHours: PropTypes.any,
+    isMobileView: PropTypes.any,
 };
+
 const SpaceDetails = ({
     weeklyHours,
     weeklyHoursLoading,
@@ -334,6 +237,8 @@ const SpaceDetails = ({
     // collapsed=false: opens from icon in map, no open-close icon
     onToggle = null,
     showToggle = true,
+    isFavouriteActionInProgress = false,
+    spacesFavouritesList = null,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -413,6 +318,14 @@ const SpaceDetails = ({
         </svg>
     );
     const isBookable = !!bookableSpace?.space_external_book_url;
+    const isSelectedSpaceFavourite = spacesFavouritesList?.some(fav => fav.space_id === bookableSpace?.space_id);
+    let favouriteButtonLabel = 'Add to favourites';
+    if (isSelectedSpaceFavourite) {
+        favouriteButtonLabel = 'Remove from favourites';
+    }
+    if (isFavouriteActionInProgress) {
+        favouriteButtonLabel = 'Updating favourites...';
+    }
     return (
         <div id="SpaceDetailsTemp">
             <StyledSpaceDiv>
@@ -437,18 +350,19 @@ const SpaceDetails = ({
                     />
                 )}
                 {!isCollapsed && (
-                    <ExpandedSection
-                        bookableSpace={bookableSpace}
-                        visibleOutage={visibleOutage}
-                        isBookable={isBookable}
-                        uqBookitMakeABookingIcon={uqBookitMakeABookingIcon}
-                        getDescriptionClassName={getDescriptionClassName}
-                        getFirstParagraph={getFirstParagraph}
-                        summaryPanelElementId={summaryPanelElementId}
+                    <JourneySpaceDetailsView
+                        weeklyHours={weeklyHours}
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
-                        weeklyHours={weeklyHours}
-                        isMobileView={isMobileView}
+                        selectedSpace={bookableSpace}
+                        showFavouriteControls
+                        isSelectedSpaceFavourite={isSelectedSpaceFavourite}
+                        favouriteButtonLabel={favouriteButtonLabel}
+                        isFavouriteActionInProgress={isFavouriteActionInProgress}
+                        // onFavouriteToggle={handleJourneyFavouriteToggle}
+                        showMap={false}
+                        showBackButton={false}
+                        narrowView
                     />
                 )}
             </StyledSpaceDiv>
@@ -465,6 +379,8 @@ SpaceDetails.propTypes = {
     isExpanded: PropTypes.bool,
     onToggle: PropTypes.func,
     showToggle: PropTypes.bool,
+    isFavouriteActionInProgress: PropTypes.bool,
+    spacesFavouritesList: PropTypes.Array,
 };
 
 export default React.memo(SpaceDetails);

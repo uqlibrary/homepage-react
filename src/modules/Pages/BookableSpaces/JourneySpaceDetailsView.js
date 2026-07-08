@@ -9,7 +9,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { baseButtonStyles, baseHoverFocusStyles, pluralise } from 'helpers/general';
 import { StyledPrimaryButton } from 'helpers/general';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
-import { getSpaceHoursStatus, spaceOpeningHours } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import {
+    getFriendlyLocationDescription,
+    getSpaceHoursStatus,
+    spaceOpeningHours,
+} from 'modules/Pages/BookableSpaces/spacesHelpers';
 import {
     formatSpaceOutageRangeForPublicNotice,
     formatSpaceOutageUntilForPublicNotice,
@@ -17,6 +21,9 @@ import {
     getVisibleSpaceOutage,
 } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
+
+import { useAccountContext } from 'context';
+import { OpeningHoursDown } from './OpeningHoursDown';
 
 const journeyFallbackDetailImage = require('../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
@@ -34,6 +41,16 @@ const StyledNameTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.designSystem.bodyCopy,
     marginBottom: '1rem',
     fontSize: '1rem',
+}));
+const StyledFriendlyLocationDiv = styled('div')(() => ({
+    marginBottom: '1rem',
+    '& .location-space': {
+        lineHeight: 1.25,
+    },
+    '& .location-floor': {
+        fontWeight: 'bold',
+        whiteSpace: 'nowrap',
+    },
 }));
 const StyledH3Typography = styled(Typography)(({ theme }) => ({
     fontSize: '24px',
@@ -78,8 +95,9 @@ const StyledMissingImageBox = styled(Box)(({ theme }) => ({
     color: theme.palette.designSystem.bodyCopy,
     fontWeight: 600,
 }));
-const StyledHeadingChip = styled(Chip)(({ theme }) => ({
+const StyledHeadingChip = styled(Chip)(() => ({
     fontSize: '1rem',
+    marginBottom: '0.5rem !important',
     '& span': {
         padding: '12px 16px',
     },
@@ -96,6 +114,18 @@ const StyledBodyChip = styled(Chip)(({ theme }) => ({
 const StyledSpaceDescriptionTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.designSystem.bodyCopy,
     fontSize: '1rem',
+}));
+const StyledTopBox = styled(Box)(() => ({
+    display: 'grid',
+    gap: '1.5rem',
+    alignItems: 'start',
+    gridTemplateColumns: '1fr',
+    '&.horizontallayout': {
+        gridTemplateColumns: '1fr 1fr',
+    },
+    // '&.verticallayout': {
+    //     gridTemplateColumns: '1fr',
+    // },
 }));
 
 const StyledTightLinkButton = styled(Button)(({ theme }) => ({
@@ -188,16 +218,53 @@ const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHou
     );
 };
 
+SpaceOpenStatusChip.propTypes = {
+    space: PropTypes.object,
+    weeklyHours: PropTypes.any,
+    weeklyHoursLoading: PropTypes.bool,
+    weeklyHoursError: PropTypes.any,
+};
+
+const OpenSpaceNewWindowButton = ({ spaceDetails }) => {
+    return (
+        <a
+            href={`/spaces?journeyStep=details&journeySpace=${spaceDetails?.space_uuid}`}
+            target="_blank"
+            style={{ display: 'inline-flex', pr: 0 }}
+            aria-label={`Open Space ${spaceDetails?.space_name} in a new window`}
+        >
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                <path
+                    d="m6.743 9.257-2.514 2.514-2.515 2.515M14.286 5.486V1.714h-3.772"
+                    stroke="#000"
+                    strokeWidth=".75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+                <path
+                    d="M1.714 10.514v3.772h3.772M14.286 1.714 9.257 6.743"
+                    stroke="#000"
+                    strokeWidth=".75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+            </svg>
+        </a>
+    );
+};
+OpenSpaceNewWindowButton.propTypes = {
+    spaceDetails: PropTypes.object,
+};
 const JourneySpaceDetailsView = ({
     selectedSpace,
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
     showBackButton = true,
+    narrowView = true,
     backLabel = 'Back to results',
     onBack,
     showFavouriteControls = false,
-    isLoggedIn = false,
     isSelectedSpaceFavourite = false,
     favouriteButtonLabel = 'Add to favourites',
     isFavouriteActionInProgress = false,
@@ -205,7 +272,11 @@ const JourneySpaceDetailsView = ({
     showMap = true,
 }) => {
     const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')); // must be called unconditionally
+    const isMobileLayout = narrowView || isMobileView;
+
+    const { account } = useAccountContext();
+    const isLoggedIn = !!account?.id;
 
     const detailImages = React.useMemo(() => {
         if (!selectedSpace) return [];
@@ -261,19 +332,21 @@ const JourneySpaceDetailsView = ({
         return uniqueImages;
     }, [selectedSpace]);
 
-    const spaceHours = React.useMemo(
-        () => (!weeklyHoursLoading && !weeklyHoursError ? spaceOpeningHours(selectedSpace, weeklyHours) || [] : []),
-        [selectedSpace, weeklyHours, weeklyHoursLoading, weeklyHoursError],
-    );
+    // const spaceHours = React.useMemo(
+    //     () => (!weeklyHoursLoading && !weeklyHoursError ? spaceOpeningHours(selectedSpace, weeklyHours) || [] : []),
+    //     [selectedSpace, weeklyHours, weeklyHoursLoading, weeklyHoursError],
+    // );
 
-    const visibleOutage = React.useMemo(() => getVisibleSpaceOutage(selectedSpace?.space_outages), [
-        selectedSpace?.space_outages,
-    ]);
+    const visibleOutage = React.useMemo(
+        () => getVisibleSpaceOutage(selectedSpace?.space_outages),
+        [selectedSpace?.space_outages],
+    );
 
     if (!selectedSpace) {
         return null;
     }
 
+    console.log('### selectedSpace=', selectedSpace);
     return (
         <>
             {showBackButton ? (
@@ -287,14 +360,7 @@ const JourneySpaceDetailsView = ({
                 </Button>
             ) : null}
 
-            <Box
-                sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-                    gap: '1.5rem',
-                    alignItems: 'start',
-                }}
-            >
+            <StyledTopBox id="sdsdsdf" className={isMobileLayout ? 'verticallayout' : 'horizontallayout'}>
                 <StyledDetailImage>
                     {detailImages?.[0]?.src ? (
                         <img
@@ -311,12 +377,18 @@ const JourneySpaceDetailsView = ({
                 </StyledDetailImage>
                 <Stack spacing={2} sx={{ pt: { xs: 0, md: 0.5 } }}>
                     <Box>
-                        <StyledSpaceTitleTypography component="h2" variant="h5">
-                            {selectedSpace?.space_name}
-                        </StyledSpaceTitleTypography>
-                        <StyledNameTypography variant="body2">{selectedSpace?.space_library_name}</StyledNameTypography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <StyledSpaceTitleTypography component="h2" variant="h5">
+                                {selectedSpace?.space_name}
+                            </StyledSpaceTitleTypography>
+                            {narrowView && <OpenSpaceNewWindowButton spaceId={selectedSpace} />}
+                        </Box>
+                        {/* <StyledNameTypography variant="body2">{selectedSpace?.space_library_name}</StyledNameTypography>*/}
+                        <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
+                            {getFriendlyLocationDescription(selectedSpace, false, { space_name: true })}
+                        </StyledFriendlyLocationDiv>{' '}
                         {!!(selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type) && (
-                            <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap', mb: 1 }}>
+                            <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
                                 <StyledHeadingChip
                                     label={
                                         selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type
@@ -375,7 +447,7 @@ const JourneySpaceDetailsView = ({
                             {!!visibleOutage.reason && (
                                 <Typography
                                     variant="body2"
-                                    data-testid={`spaces-journey-outage-reason-${selectedSpace?.space_id}`}
+                                    data-testid={`space-${selectedSpace?.space_id}-outage-reason`}
                                 >
                                     Reason: {visibleOutage.reason}
                                 </Typography>
@@ -398,7 +470,10 @@ const JourneySpaceDetailsView = ({
                                 </StyledSpaceDescriptionTypography>
                             )}
                             {!!selectedSpace?.space_description && (
-                                <StyledSpaceDescriptionTypography variant="body2">
+                                <StyledSpaceDescriptionTypography
+                                    variant="body2"
+                                    data-testid={`space-${selectedSpace?.space_id}-description`}
+                                >
                                     {String(selectedSpace.space_description)
                                         .replace(/<[^>]*>/g, ' ')
                                         .trim()}
@@ -419,7 +494,7 @@ const JourneySpaceDetailsView = ({
                         </Box>
                     )}
                 </Stack>
-            </Box>
+            </StyledTopBox>
 
             <StyledDetailSurface>
                 <StyledH3Typography component="h3" variant="h6">
@@ -456,7 +531,7 @@ const JourneySpaceDetailsView = ({
                     )}
 
                     {selectedSpace?.facility_types?.length > 0 && (
-                        <Box>
+                        <Box data-testid={`space-${selectedSpace.space_id}-facility`}>
                             <StyledH4Typography component="h4" variant="body2" sx={{ mb: 0.75 }}>
                                 Facilities
                             </StyledH4Typography>
@@ -467,58 +542,20 @@ const JourneySpaceDetailsView = ({
                                         label={f.facility_type_name}
                                         size="small"
                                         variant="outlined"
+                                        data-testid={`space-${selectedSpace.space_id}-facility-${f?.facility_type_id}`}
                                     />
                                 ))}
                             </Box>
                         </Box>
                     )}
 
-                    {spaceHours.length > 0 && (
-                        <Box>
-                            <StyledH4Typography component="h4" variant="body2" sx={{ mb: 1 }}>
-                                {selectedSpace?.space_library_name} opening hours
-                            </StyledH4Typography>
-                            <Stack spacing={0}>
-                                {spaceHours.map((d, i) => {
-                                    const isToday = d?.dayName === 'Today';
-                                    const colorByDay = isToday
-                                        ? theme.palette.primary.main
-                                        : theme.palette.designSystem.bodyCopy;
-                                    return (
-                                        <Box
-                                            key={i}
-                                            sx={{
-                                                display: 'grid',
-                                                gridTemplateColumns: '7.5rem 1fr',
-                                                gap: '0.5rem',
-                                                py: 0.75,
-                                                borderBottom: i < spaceHours.length - 1 ? '1px solid #f0ecf7' : 'none',
-                                                backgroundColor: isToday
-                                                    ? theme.palette.designSystem.purple.purple50
-                                                    : 'transparent',
-                                                px: isToday ? 1 : 0,
-                                                borderRadius: isToday ? '4px' : 0,
-                                                mx: isToday ? -1 : 0,
-                                            }}
-                                        >
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ fontWeight: isToday ? 700 : 400, color: colorByDay }}
-                                            >
-                                                {d?.dayName}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ fontWeight: isToday ? 600 : 400, color: colorByDay }}
-                                            >
-                                                {d?.rendered}
-                                            </Typography>
-                                        </Box>
-                                    );
-                                })}
-                            </Stack>
-                        </Box>
-                    )}
+                    <OpeningHoursDown
+                        weeklyHoursLoading={weeklyHoursLoading}
+                        weeklyHoursError={weeklyHoursError}
+                        weeklyHours={weeklyHours}
+                        bookableSpace={selectedSpace}
+                        showShortList={false}
+                    />
                 </Stack>
             </StyledDetailSurface>
 
@@ -527,7 +564,7 @@ const JourneySpaceDetailsView = ({
                     <StyledH3Typography component="h3" variant="h6" sx={{ pb: '1rem' }}>
                         Location
                     </StyledH3Typography>
-                    <div style={{ height: isMobileView ? '260px' : '340px' }}>
+                    <div style={{ height: isMobileLayout ? '260px' : '340px' }}>
                         <BookableSpacesMap
                             sortedSpaceLocations={[selectedSpace]}
                             spacesFavouritesList={null}
@@ -541,23 +578,16 @@ const JourneySpaceDetailsView = ({
     );
 };
 
-SpaceOpenStatusChip.propTypes = {
-    space: PropTypes.object,
-    weeklyHours: PropTypes.any,
-    weeklyHoursLoading: PropTypes.bool,
-    weeklyHoursError: PropTypes.any,
-};
-
 JourneySpaceDetailsView.propTypes = {
     selectedSpace: PropTypes.object,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     showBackButton: PropTypes.bool,
+    narrowView: PropTypes.bool,
     backLabel: PropTypes.string,
     onBack: PropTypes.func,
     showFavouriteControls: PropTypes.bool,
-    isLoggedIn: PropTypes.bool,
     isSelectedSpaceFavourite: PropTypes.bool,
     favouriteButtonLabel: PropTypes.string,
     isFavouriteActionInProgress: PropTypes.bool,

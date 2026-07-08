@@ -1713,12 +1713,12 @@ const BookableSpacesJourney = ({
                             weeklyHoursError={weeklyHoursError}
                             showBackButton={false}
                             showFavouriteControls
-                            isLoggedIn={isLoggedIn}
                             isSelectedSpaceFavourite={isSelectedSpaceFavourite}
                             favouriteButtonLabel={favouriteButtonLabel}
                             isFavouriteActionInProgress={isFavouriteActionInProgress}
                             onFavouriteToggle={handleJourneyFavouriteToggle}
                             showMap
+                            narrowView={false}
                         />
                     )}
                 </StyledJourneyPanel>

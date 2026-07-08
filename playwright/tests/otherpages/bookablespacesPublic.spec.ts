@@ -261,7 +261,7 @@ test.describe('Spaces', () => {
 
             await page.getByTestId(`${ARCH_BOOKABLE}-facility`).scrollIntoViewIfNeeded();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`).locator(' > *')).toHaveCount(12);
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`).locator('div > div')).toHaveCount(12);
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-23`)).toContainText('Toilets, female');
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-22`)).toContainText('Toilets, male');
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-29`)).toContainText('Recharge Station');
@@ -284,7 +284,7 @@ test.describe('Spaces', () => {
             // third panel
             await page.getByTestId(`${LIV}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${LIV}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-facility`).locator(' > *')).toHaveCount(9);
+            await expect(page.getByTestId(`${LIV}-facility`).locator('div > div')).toHaveCount(9);
             await expect(page.getByTestId(`${LIV}-facility-23`)).toContainText('Toilets, female');
             await expect(page.getByTestId(`${LIV}-facility-22`)).toContainText('Toilets, male');
             await expect(page.getByTestId(`${LIV}-facility-29`)).toContainText('Recharge Station');
@@ -1464,7 +1464,7 @@ test.describe('Spaces', () => {
         test('facilities appear correctly when panel expands on change of campus', async ({ page }) => {
             await page.getByTestId(`${PACE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${PACE}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-facility`).locator(' > *')).toHaveCount(15);
+            await expect(page.getByTestId(`${PACE}-facility`).locator('div > div')).toHaveCount(15);
             await expect(page.getByTestId(`${PACE}-facility-23`)).toContainText('Toilets, female');
             await expect(page.getByTestId(`${PACE}-facility-22`)).toContainText('Toilets, male');
             await expect(page.getByTestId(`${PACE}-facility-29`)).toContainText('Recharge Station');
