@@ -275,6 +275,68 @@ describe('BookableSpacesJourney browser back navigation', () => {
         ]);
     });
 
+    it('preserves a manual filter change after an intent is restored from the URL', () => {
+        const Harness = () => {
+            const [filters, setFilters] = React.useState([
+                { facility_type_id: 11, selected: false, unselected: false },
+                { facility_type_id: 12, selected: false, unselected: false },
+            ]);
+
+            return (
+                <>
+                    <button
+                        type="button"
+                        onClick={() =>
+                            setFilters(prev =>
+                                prev.map(filter =>
+                                    filter.facility_type_id === 12
+                                        ? { ...filter, selected: true, unselected: false }
+                                        : filter,
+                                ),
+                            )
+                        }
+                    >
+                        add extra filter
+                    </button>
+                    <div data-testid="current-filters">{JSON.stringify(filters)}</div>
+                    <BookableSpacesJourney
+                        {...defaultProps}
+                        filteredFacilityTypeList={{
+                            data: {
+                                facility_type_groups: [
+                                    {
+                                        facility_type_group_id: 1,
+                                        facility_type_group_name: 'Facilities',
+                                        facility_type_group_order: 1,
+                                        facility_type_group_loads_open: true,
+                                        facility_type_children: [
+                                            { facility_type_id: 11, facility_type_name: 'Quiet' },
+                                            { facility_type_id: 12, facility_type_name: 'Accessible' },
+                                        ],
+                                    },
+                                ],
+                            },
+                        }}
+                        selectedFacilityTypes={filters}
+                        setSelectedFacilityTypes={setFilters}
+                    />
+                </>
+            );
+        };
+
+        window.history.replaceState({}, '', '/spaces?journeyStep=results&journeyIntent=quiet');
+        rtlRender(
+            <WithRouter>
+                <Harness />
+            </WithRouter>,
+        );
+
+        fireEvent.click(screen.getByRole('button', { name: /add extra filter/i }));
+
+        expect(screen.getByTestId('current-filters')).toHaveTextContent('"facility_type_id":12');
+        expect(screen.getByTestId('current-filters')).toHaveTextContent('"selected":true');
+    });
+
     it('hides the landing highlighted space block when no highlighted space is available', () => {
         renderJourney({ ...defaultProps, highlightedSpace: null });
 
