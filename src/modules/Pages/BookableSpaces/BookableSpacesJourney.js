@@ -289,7 +289,7 @@ const StyledLandingHighlightAsideContent = styled('div')(() => ({
     marginBottom: 'auto',
 }));
 
-const StyledFavouritesHeaderGridItem = styled(Grid)(({ theme }) => ({
+const StyledHeaderWithLinkToAllGridItem = styled(Grid)(({ theme }) => ({
     marginTop: '-32px',
     paddingBottom: theme.spacing(3),
     '& h2': {
@@ -970,7 +970,7 @@ const BookableSpacesJourney = ({
                                 //     backgroundColor: '#fff !important',
                             }}
                         >
-                            <StyledFavouritesHeaderGridItem item xs={12}>
+                            <StyledHeaderWithLinkToAllGridItem item xs={12}>
                                 <Typography component={'h2'}>Your favourite spaces</Typography>
                                 <StyledSeeAllLink
                                     to={serialiseJourneyUrl({
@@ -985,7 +985,7 @@ const BookableSpacesJourney = ({
                                 >
                                     See all favourites
                                 </StyledSeeAllLink>
-                            </StyledFavouritesHeaderGridItem>
+                            </StyledHeaderWithLinkToAllGridItem>
                             <Grid
                                 container
                                 spacing={3}
@@ -1083,9 +1083,24 @@ const BookableSpacesJourney = ({
                             //     backgroundColor: '#fff !important',
                         }}
                     >
-                        <Typography component={'h2'} sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '16px' }}>
-                            Find a learning space
-                        </Typography>
+                        <StyledHeaderWithLinkToAllGridItem item xs={12}>
+                            <Typography
+                                component={'h2'}
+                                sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '16px' }}
+                            >
+                                Find a study space
+                            </Typography>
+                            <StyledSeeAllLink
+                                to={serialiseJourneyUrl({ view: 'results' })}
+                                onClick={e => {
+                                    e.preventDefault();
+                                    navigateToView('results');
+                                }}
+                                data-testid="spaces-journey-showall"
+                            >
+                                View all spaces
+                            </StyledSeeAllLink>
+                        </StyledHeaderWithLinkToAllGridItem>
                         <Grid
                             container
                             spacing={3}
@@ -1517,7 +1532,11 @@ const BookableSpacesJourney = ({
                                         {selectedIntent?.label || 'Matching spaces'}
                                     </Typography>
 
-                                    <Typography variant="body2" sx={{ color: '#666', mt: 1.5 }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ color: '#666', mt: 1.5 }}
+                                        data-testid="spaces-journey-result-count"
+                                    >
                                         Showing {intentSpaceLocations?.length || 0}
                                         {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
                                     </Typography>
@@ -1561,6 +1580,7 @@ const BookableSpacesJourney = ({
                                                             >
                                                                 <Typography
                                                                     sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5 }}
+                                                                    data-testid={`space-journey-name-${space?.space_id}`}
                                                                 >
                                                                     {space?.space_name}
                                                                 </Typography>

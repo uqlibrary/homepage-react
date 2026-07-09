@@ -30,7 +30,7 @@ test.describe('Spaces', () => {
         await disableMazeMapAssets(page);
         await context.clearCookies();
     });
-    test.skip('can navigate to Spaces public page', async ({ page }) => {
+    test.skip('library homepage can navigate to Spaces public page', async ({ page }) => {
         await page.goto('/?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('homepage-hours-bookit-link')).toHaveText(/Book a room/);
@@ -56,6 +56,15 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
                 VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
+        });
+
+        test('spaces homepage can navigate to list view without filters', async ({ page }) => {
+            await page.goto('spaces');
+            await expect(page.getByTestId('spaces-journey-showall')).toBeVisible();
+            await page.getByTestId('spaces-journey-showall').click();
+            await expect(page.getByTestId('space-journey-name-1')).toBeVisible();
+            await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0); // no filters are selected
+            await expect(page.getByTestId('spaces-journey-result-count')).toContainText('Showing 10 of 15 spaces'); // all spaces are showing
         });
 
         test('friendly location displays correctly on load', async ({ page }) => {
