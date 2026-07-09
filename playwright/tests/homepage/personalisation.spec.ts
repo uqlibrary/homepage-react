@@ -190,11 +190,7 @@ test.describe('Personalised Homepage', () => {
 
         // as the user is logged in, they see nav panels with a h3
         await expect(
-            page
-                .getByTestId('help-navigation-panel')
-                .locator(':scope > *')
-                .nth(0)
-                .locator('h3'),
+            page.getByTestId('help-navigation-panel').locator(':scope > *').nth(0).locator('h3'),
         ).toBeVisible();
     });
 
@@ -204,11 +200,7 @@ test.describe('Personalised Homepage', () => {
 
         // as the user is logged out, they see nav panels with a h2
         await expect(
-            page
-                .getByTestId('help-navigation-panel')
-                .locator(':scope > *')
-                .nth(0)
-                .locator('h2'),
+            page.getByTestId('help-navigation-panel').locator(':scope > *').nth(0).locator('h2'),
         ).toBeVisible();
     });
 
@@ -258,19 +250,9 @@ test.describe('Personalised Homepage', () => {
         await hasAccountPanelOptions(page, ['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
         // special loans & requests values
         await expect(page.locator('[data-testid="show-requests"] span')).toBeVisible();
-        await expect(
-            page
-                .locator('[data-testid="show-requests"] span')
-                .getByText(/4/)
-                .first(),
-        ).toBeVisible();
+        await expect(page.locator('[data-testid="show-requests"] span').getByText(/4/).first()).toBeVisible();
         await expect(page.locator('[data-testid="show-loans"] span')).toBeVisible();
-        await expect(
-            page
-                .locator('[data-testid="show-loans"] span')
-                .getByText(/0/)
-                .first(),
-        ).toBeVisible();
+        await expect(page.locator('[data-testid="show-loans"] span').getByText(/0/).first()).toBeVisible();
 
         await hasNoEspacePanel(page);
     });
@@ -284,19 +266,9 @@ test.describe('Personalised Homepage', () => {
         await hasAccountPanelOptions(page, ['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
         // special loans & requests values
         await expect(page.locator('[data-testid="show-requests"] span')).toBeVisible();
-        await expect(
-            page
-                .locator('[data-testid="show-requests"] span')
-                .getByText(/0/)
-                .first(),
-        ).toBeVisible();
+        await expect(page.locator('[data-testid="show-requests"] span').getByText(/0/).first()).toBeVisible();
         await expect(page.locator('[data-testid="show-loans"] span')).toBeVisible();
-        await expect(
-            page
-                .locator('[data-testid="show-loans"] span')
-                .getByText(/7/)
-                .first(),
-        ).toBeVisible();
+        await expect(page.locator('[data-testid="show-loans"] span').getByText(/7/).first()).toBeVisible();
 
         await hasEspaceEntries(page, ['espace-possible', 'espace-orcid', 'espace-ntro']);
     });

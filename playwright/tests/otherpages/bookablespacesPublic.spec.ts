@@ -34,7 +34,7 @@ test.describe('Spaces', () => {
         await page.goto('/?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('homepage-hours-bookit-link')).toHaveText(/Book a room/);
-        //await page.getByTestId('homepage-hours-bookit-link').click();
+        // await page.getByTestId('homepage-hours-bookit-link').click();
         await expect(page).toHaveURL('http://localhost:2020/spaces?user=s1111111');
         await page.getByTestId('spaces-journey-landing-browse-all').click();
         await expect(page).toHaveURL(/advanced=1/);
@@ -1014,19 +1014,11 @@ test.describe('Spaces', () => {
             await expect(collapseIcon(FILTER_GROUP_LIGHTING, page)).toBeVisible();
             await expect(expandIcon(FILTER_GROUP_LIGHTING, page)).not.toBeVisible();
             await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
-            await expect(
-                filterGroup(FILTER_GROUP_LIGHTING, page)
-                    .locator('ul')
-                    .locator(':scope > *'),
-            ).toHaveCount(2);
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul').locator(':scope > *')).toHaveCount(2);
 
             await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
             // await page.waitForTimeout(100000);
-            await expect(
-                filterGroup(FILTER_GROUP_LIGHTING, page)
-                    .locator('ul li')
-                    .first(),
-            ).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul li').first()).toBeVisible();
 
             // the state of the other groups is known (and won't change after click)
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
@@ -1099,11 +1091,9 @@ test.describe('Spaces', () => {
                 'aria-label',
                 'Hide On this floor filter options',
             );
-            await expect(
-                filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)
-                    .locator('ul')
-                    .locator(':scope > *'),
-            ).toHaveCount(4);
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul').locator(':scope > *')).toHaveCount(
+                4,
+            );
 
             // the group we opened has completely changed - visibility flips
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).toBeVisible();
