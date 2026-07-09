@@ -26,7 +26,7 @@ import {
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import { ArticleCard } from 'modules/SharedComponents/Toolbox/ArticleCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import SingleLinkCard from '../../HomePage/publicComponents/HelpNavigation/SingleLinkCard';
 
 const browseAllSpacesIcon =

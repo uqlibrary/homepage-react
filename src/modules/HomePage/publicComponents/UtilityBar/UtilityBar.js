@@ -1,14 +1,13 @@
 /* eslint max-len: 0 */
 import React, { lazy, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import { useLocation } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 
-import { addClass, hrefToInternalPage, isEscapeKeyPressed, lazyRetry, removeClass } from 'helpers/general';
+import { addClass, isEscapeKeyPressed, lazyRetry, removeClass } from 'helpers/general';
 
 const Locations = lazy(() => lazyRetry(() => import('./Locations')));
 
@@ -138,8 +137,6 @@ const StyledLocationBox = styled(Box)(() => ({
 }));
 
 export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
-    const pageLocation = useLocation();
-
     // handle the location opener
     const [locationOpen, setLocationOpen] = React.useState(null);
     const locationsRef = React.useRef(null);
@@ -268,17 +265,6 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         !!siteHeader && siteHeader.removeAttribute('secondLevelUrl');
     }, []);
 
-    const getSpacesUrl = () => {
-        let url =
-            window.location.hostname === 'homepage-development.library.uq.edu.au'
-                ? /* istanbul ignore next */ window.location.href + 'spaces'
-                : '/spaces';
-        if (window.location.hostname === 'localhost') {
-            const username = new URLSearchParams(window.location.search)?.get('user');
-            url += '?user=' + username ?? 'vanilla';
-        }
-        return url;
-    };
     // display as locations then booking link but code as booking then locations,
     // so they don't tab to the booking link after clicking the locations open
     return (
@@ -301,7 +287,11 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                             Locations and hours
                         </span>
                     </StyledLocationOpenerButton>
-                    <StyledBookingLink href={getSpacesUrl()} data-testid="homepage-hours-bookit-link" id="bookit-link">
+                    <StyledBookingLink
+                        href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
+                        data-testid="homepage-hours-bookit-link"
+                        id="bookit-link"
+                    >
                         <span>Book a room</span>
                     </StyledBookingLink>
                 </StyledButtonAreaDiv>

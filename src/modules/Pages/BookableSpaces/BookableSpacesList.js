@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { loadDrupalArticles } from 'data/actions/drupalArticlesActions';
 
 import { useCookies } from 'react-cookie';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import { useDispatch } from 'react-redux';
 
