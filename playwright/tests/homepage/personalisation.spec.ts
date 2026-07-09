@@ -132,6 +132,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('Personalised Homepage', () => {
+    test.describe.configure({ mode: 'default' });
     test('Renders an RHD who is only enrolled in a research subject home page correctly', async ({ page }) => {
         await expectUserToDisplayCorrectFirstName(page, 's2222222', 'Jane');
 
