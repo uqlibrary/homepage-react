@@ -198,7 +198,11 @@ describe('BookableSpacesJourney browser back navigation', () => {
     });
 
     it('restores details view and selected space from permalink params', () => {
-        window.history.replaceState({}, '', `/spaces?journeyStep=details&journeyIntent=quiet&journeySpace=${baseSpace.space_uuid}`);
+        window.history.replaceState(
+            {},
+            '',
+            `/spaces?journeyStep=details&journeyIntent=quiet&journeySpace=${baseSpace.space_uuid}`,
+        );
 
         renderJourney(defaultProps);
 
