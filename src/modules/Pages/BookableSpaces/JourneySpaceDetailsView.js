@@ -153,6 +153,7 @@ const defaultChipStyles = theme => {
     };
 };
 const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHoursError }) => {
+    const chipTestId = `spaces-${space?.space_id}-details-outage-chip`;
     const theme = useTheme();
     const openingHoursConfig = (status, theme) => {
         if (status === 'open') {
@@ -189,6 +190,7 @@ const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHou
         const config = openingHoursConfig('closed', theme);
         return (
             <StyledHeadingChip
+                data-testid={chipTestId}
                 size="small"
                 label={config.label}
                 sx={{
@@ -209,6 +211,7 @@ const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHou
     }
     return (
         <StyledHeadingChip
+            data-testid={chipTestId}
             size="small"
             label={config.label}
             sx={{
@@ -378,7 +381,11 @@ const JourneySpaceDetailsView = ({
                 <Stack spacing={2} sx={{ pt: { xs: 0, md: 0.5 } }}>
                     <Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <StyledSpaceTitleTypography component="h2" variant="h5">
+                            <StyledSpaceTitleTypography
+                                component="h2"
+                                variant="h5"
+                                data-testid={`spaces-${selectedSpace?.space_id}-details-name`}
+                            >
                                 {selectedSpace?.space_name}
                             </StyledSpaceTitleTypography>
                             {narrowView && <OpenSpaceNewWindowButton spaceId={selectedSpace} />}
@@ -402,7 +409,7 @@ const JourneySpaceDetailsView = ({
                                 />
                                 {isSelectedSpaceFavourite && (
                                     <StyledHeadingChip
-                                        data-testid={`spaces-journey-favourite-chip-${selectedSpace?.space_id}`}
+                                        data-testid={`spaces-${selectedSpace?.space_id}-detail-favourite-chip`}
                                         label="Favourite"
                                         size="small"
                                         sx={{
@@ -461,6 +468,7 @@ const JourneySpaceDetailsView = ({
                         <Box>
                             {!!selectedSpace?.space_type_details?.space_type_description && (
                                 <StyledSpaceDescriptionTypography
+                                    data-testid={`spaces-${selectedSpace.space_id}-details-space-type-description`}
                                     variant="body2"
                                     sx={{
                                         mb: selectedSpace?.space_description ? 1 : 0,
@@ -472,7 +480,7 @@ const JourneySpaceDetailsView = ({
                             {!!selectedSpace?.space_description && (
                                 <StyledSpaceDescriptionTypography
                                     variant="body2"
-                                    data-testid={`space-${selectedSpace?.space_id}-description`}
+                                    data-testid={`space-${selectedSpace?.space_id}-details-description`}
                                 >
                                     {String(selectedSpace.space_description)
                                         .replace(/<[^>]*>/g, ' ')

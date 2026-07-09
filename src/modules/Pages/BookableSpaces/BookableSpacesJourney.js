@@ -33,24 +33,12 @@ const browseAllSpacesIcon =
     'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M14.29 7.57V3.89c0-.35-.2-.66-.52-.78L10.4 1.77a.83.83 0 0 0-.63 0L6.2 3.2a.8.8 0 0 1-.63 0L2.29 1.89a.41.41 0 0 0-.55.22c-.03.06-.03.12-.03.15v8.03c0 .34.2.65.52.77l3.34 1.34c.2.08.43.08.63 0m-.29-9.14v4.31m4.18-5.86v3.77%27%3e%3c/path%3e%3cpath d=%27M10.52 7.57a2.94 2.94 0 1 1 0 5.88 2.94 2.94 0 0 1 0-5.88zm3.77 6.72L12.6 12.6%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
 const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
-const StyledJourneyWrapper = styled('div', {
-    shouldForwardProp: prop => prop !== 'isResultsView',
-})(({ theme, isResultsView }) => ({
+const StyledJourneyWrapper = styled('div')(({ theme }) => ({
     backgroundColor: '#fff',
     minHeight: 'calc(100vh - 200px)',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'stretch',
     paddingBottom: '6rem',
-    ...(isResultsView
-        ? {
-              '& .layout-card': {
-                  width: '100%',
-                  maxWidth: 'none',
-                  boxSizing: 'border-box',
-              },
-          }
-        : {}),
     [theme.breakpoints.down('sm')]: {
         paddingBottom: '8rem',
     },
@@ -127,16 +115,10 @@ const StyledBrowseAllSpacesLink = styled('button')(({ theme }) => ({
 
 // Result card with proper styling - clickable full card
 const StyledResultCardButton = styled(Button)(({ theme }) => ({
-    display: 'block',
     width: '100%',
-    minWidth: 0,
-    maxWidth: '100%',
-    flex: '1 1 100%',
-    flexShrink: 0,
-    flexBasis: '100%',
-    alignSelf: 'stretch',
     padding: '0',
     textTransform: 'none',
+    justifyContent: 'flex-start',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: '8px',
     backgroundColor: '#fff',
@@ -288,6 +270,14 @@ const StyledLandingHighlightAsideContent = styled('div')(() => ({
     marginTop: 'auto',
     marginBottom: 'auto',
 }));
+const StyledFavouritesContainerGrid = styled(Grid)(() => ({
+    marginTop: '-24px',
+    paddingLeft: 0,
+    '& a': {
+        boxSizing: 'border-box',
+        minWidth: { xs: '100%', sm: '100%' },
+    },
+}));
 
 const StyledHeaderWithLinkToAllGridItem = styled(Grid)(({ theme }) => ({
     marginTop: '-32px',
@@ -337,13 +327,13 @@ const StyledSeeAllLink = styled(Link)(({ theme }) => ({
 }));
 
 const StyledResultsSplitLayout = styled(Box)(({ theme }) => ({
-    display: 'flex',
+    display: 'grid',
     gap: '1.5rem',
-    alignItems: 'flex-start',
+    gridTemplateColumns: 'minmax(0, 4fr) minmax(0, 8fr)',
+    alignItems: 'start',
     width: '100%',
-    minWidth: 0,
     [theme.breakpoints.down('lg')]: {
-        flexDirection: 'column',
+        gridTemplateColumns: '1fr',
         width: '100%',
     },
 }));
@@ -352,28 +342,10 @@ const StyledResultsSidebarPanel = styled(Box)(({ theme }) => ({
     padding: '0',
     position: 'sticky',
     top: '1rem',
-    flex: '0 0 20rem',
-    width: '20rem',
-    maxWidth: '20rem',
-    minWidth: 0,
     [theme.breakpoints.down('lg')]: {
         position: 'relative',
         top: 'auto',
-        flex: '1 1 auto',
-        width: '100%',
-        maxWidth: '100%',
     },
-}));
-
-const StyledResultsContentPanel = styled(Box)(() => ({
-    flex: '1 1 auto',
-    width: '100%',
-    maxWidth: 'none',
-    minWidth: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    boxSizing: 'border-box',
 }));
 
 const HOURS_STATUS_CONFIG = {
@@ -904,11 +876,7 @@ const BookableSpacesJourney = ({
     }, [view]);
 
     return (
-        <StyledJourneyWrapper
-            data-testid="spaces-journey-wrapper"
-            isResultsView={view === 'results'}
-            ref={journeyTopRef}
-        >
+        <StyledJourneyWrapper data-testid="spaces-journey-wrapper" ref={journeyTopRef}>
             <JourneyBreadcrumbs
                 view={view}
                 selectedIntent={selectedIntent}
@@ -973,6 +941,7 @@ const BookableSpacesJourney = ({
                             <StyledHeaderWithLinkToAllGridItem item xs={12}>
                                 <Typography component={'h2'}>Your favourite spaces</Typography>
                                 <StyledSeeAllLink
+                                    data-testid="spaces-homepage-favourites-all-link"
                                     to={serialiseJourneyUrl({
                                         view: 'results',
                                         intentId: favouriteIntentDefinition.id,
@@ -986,19 +955,11 @@ const BookableSpacesJourney = ({
                                     See all favourites
                                 </StyledSeeAllLink>
                             </StyledHeaderWithLinkToAllGridItem>
-                            <Grid
+                            <StyledFavouritesContainerGrid
+                                component={'ul'}
                                 container
                                 spacing={3}
-                                sx={{
-                                    mt: '-24px',
-                                    '& li.MuiGrid-item': {
-                                        pt: 0,
-                                    },
-                                    '& a': {
-                                        boxSizing: 'border-box',
-                                        minWidth: { xs: '100%', sm: '100%' },
-                                    },
-                                }}
+                                data-testid="spaces-homepage-favourites-block"
                             >
                                 {(() => {
                                     // Build lookup of available spaces for resolving favourites.
@@ -1073,7 +1034,7 @@ const BookableSpacesJourney = ({
                                         );
                                     });
                                 })()}
-                            </Grid>
+                            </StyledFavouritesContainerGrid>
                         </Box>
                     </>
                 )}
@@ -1535,8 +1496,13 @@ const BookableSpacesJourney = ({
                                         />
                                     </StyledResultsSidebarPanel>
                                 )}
-                                <StyledResultsContentPanel>
-                                    <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
+                                <Box>
+                                    <Typography
+                                        component="h2"
+                                        variant="h5"
+                                        sx={{ fontWeight: 700, color: '#1f1230' }}
+                                        data-testid="spaces-journey-results-heading"
+                                    >
                                         {selectedIntent?.label || 'Matching spaces'}
                                     </Typography>
 
@@ -1557,7 +1523,7 @@ const BookableSpacesJourney = ({
                                         </StyledSecondaryButton>
                                     </Stack>
                                     {(intentSpaceLocations?.length || 0) > 0 ? (
-                                        <Stack spacing={1.5} sx={{ mt: 1.5, width: '100%', maxWidth: '100%' }}>
+                                        <Stack spacing={1.5} sx={{ mt: 1.5 }} data-testid="spaces-result-list">
                                             {intentSpaceLocations?.map(space => {
                                                 const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
                                                 const bookableSpaceUrl = space?.space_external_book_url;
@@ -1565,7 +1531,7 @@ const BookableSpacesJourney = ({
                                                     <Stack
                                                         key={space?.space_id}
                                                         spacing={1}
-                                                        sx={{ width: '100%', maxWidth: '100%', alignSelf: 'stretch' }}
+                                                        data-testid={`spaces-result-list-${space.space_uuid}`}
                                                     >
                                                         <StyledResultCardButton
                                                             onClick={() => {
@@ -1576,29 +1542,25 @@ const BookableSpacesJourney = ({
                                                                 });
                                                             }}
                                                         >
-                                                            <Box
-                                                                sx={{
-                                                                    p: '1.5rem',
-                                                                    width: '100%',
-                                                                    maxWidth: '100%',
-                                                                    boxSizing: 'border-box',
-                                                                    display: 'block',
-                                                                    textAlign: 'left',
-                                                                }}
-                                                            >
+                                                            <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
                                                                 <Typography
                                                                     sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5 }}
-                                                                    data-testid={`space-journey-name-${space?.space_id}`}
+                                                                    data-testid={`space-journey-result-item-${space?.space_id}-name`}
                                                                 >
                                                                     {space?.space_name}
                                                                 </Typography>
                                                                 <Typography
                                                                     variant="body2"
                                                                     sx={{ color: '#666', mb: 0.5 }}
+                                                                    data-testid={`space-journey-result-item-${space?.space_id}-library-name`}
                                                                 >
                                                                     {space?.space_library_name}
                                                                 </Typography>
-                                                                <Typography variant="body2" sx={{ color: '#999' }}>
+                                                                <Typography
+                                                                    variant="body2"
+                                                                    sx={{ color: '#999' }}
+                                                                    data-testid={`space-journey-result-item-${space?.space_id}-space-type`}
+                                                                >
                                                                     {space?.space_type_details?.space_type_name ||
                                                                         space?.space_type}
                                                                 </Typography>
@@ -1622,7 +1584,7 @@ const BookableSpacesJourney = ({
                                                                             String(space?.space_id),
                                                                         ) && (
                                                                             <Chip
-                                                                                data-testid={`spaces-journey-favourite-chip-${space?.space_id}`}
+                                                                                data-testid={`spaces-journey-result-item-${space?.space_id}-favourite-chip`}
                                                                                 label="Favourite"
                                                                                 size="small"
                                                                                 sx={{
@@ -1643,7 +1605,7 @@ const BookableSpacesJourney = ({
                                                                         {!!visibleOutage &&
                                                                             visibleOutage.status !== 'Current' && (
                                                                                 <Chip
-                                                                                    data-testid={`spaces-journey-outage-chip-${space?.space_id}`}
+                                                                                    data-testid={`spaces-journey-result-item-${space?.space_id}-outage-chip`}
                                                                                     label="Upcoming closure"
                                                                                     size="small"
                                                                                     sx={{
@@ -1660,6 +1622,7 @@ const BookableSpacesJourney = ({
                                                                     ?.space_type_description && (
                                                                     <Typography
                                                                         variant="body2"
+                                                                        data-testid={`spaces-journey-result-item-${space?.space_id}-space-type-description`}
                                                                         sx={{
                                                                             color: '#4f4d57',
                                                                             mb: space?.space_description ? 0.75 : 0,
@@ -1675,6 +1638,7 @@ const BookableSpacesJourney = ({
                                                                     <Typography
                                                                         variant="body2"
                                                                         sx={{ color: '#666', fontStyle: 'italic' }}
+                                                                        data-testid={`spaces-journey-result-item-${space?.space_id}-description`}
                                                                     >
                                                                         {String(space.space_description)
                                                                             .replace(/<[^>]*>/g, ' ')
@@ -1728,7 +1692,7 @@ const BookableSpacesJourney = ({
                                             </Typography>
                                         </Box>
                                     )}
-                                </StyledResultsContentPanel>
+                                </Box>
                             </StyledResultsSplitLayout>
                         </>
                     )}

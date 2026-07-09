@@ -58,15 +58,6 @@ test.describe('Spaces', () => {
             );
         });
 
-        test('spaces homepage can navigate to list view without filters', async ({ page }) => {
-            await page.goto('spaces');
-            await expect(page.getByTestId('spaces-journey-showall')).toBeVisible();
-            await page.getByTestId('spaces-journey-showall').click();
-            await expect(page.getByTestId('space-journey-name-1')).toBeVisible();
-            await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0); // no filters are selected
-            await expect(page.getByTestId('spaces-journey-result-count')).toContainText('Showing 10 of 15 spaces'); // all spaces are showing
-        });
-
         test('friendly location displays correctly on load', async ({ page }) => {
             // public Architecture and Music Library example
             await expect(page.getByTestId(`${ARCH_REFERENCE}-friendly-location-collapsed`)).toBeVisible();
