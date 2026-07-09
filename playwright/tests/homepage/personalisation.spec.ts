@@ -99,6 +99,21 @@ const hasAccountPanelOptions = async (page: Page, optionsTheUserShouldSee: strin
     }
 };
 
+const hasFineAmount = async (page: Page, amount: string, timeout = 30000) => {
+    const finesPanel = page.getByTestId('show-fines');
+
+    await expect(finesPanel).toBeVisible({ timeout });
+    await expect(finesPanel).toContainText('Fines and charges', { timeout });
+
+    await expect
+        .poll(async () => (await finesPanel.innerText()).replace(/\s+/g, ' ').replace(/\$\s+/g, '$').trim(), {
+            timeout,
+            message: `Expected fines panel to include amount ${amount}`,
+        })
+        .toContain(amount);
+    await expect(finesPanel).toContainText('payable', { timeout });
+};
+
 const seesEndNoteInReferencing = async (page: Page) =>
     await expect(page.getByTestId('referencing-endnote').getByText('Endnote referencing software')).toBeVisible();
 
@@ -151,12 +166,7 @@ test.describe('Personalised Homepage', () => {
         ]);
 
         // the fine has a special value
-        await expect(
-            page
-                .getByTestId('show-fines')
-                .getByText(/65\.97/)
-                .first(),
-        ).toBeVisible();
+        await hasFineAmount(page, '65.97');
 
         await hasEspaceEntries(page, ['espace-possible', 'espace-ntro']);
     });
@@ -178,12 +188,7 @@ test.describe('Personalised Homepage', () => {
         ]);
 
         // the fine has the supplied value
-        await expect(
-            page
-                .getByTestId('show-fines')
-                .getByText(/48\.93/)
-                .first(),
-        ).toBeVisible();
+        await hasFineAmount(page, '48.93');
 
         // this type of user will see these lines in the espace panel
         await hasEspaceEntries(page, ['espace-possible', 'espace-ntro']);

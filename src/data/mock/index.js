@@ -1707,9 +1707,12 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         function addFineEntry(_loans, newFine) {
             const newFineObject = { fineAmount: newFine };
-            _loans.fines.push(newFineObject); // (we don't care about all the entries...)
-            _loans.total_fines_count = _loans.fines.length;
-            return _loans;
+            const fineEntries = [...(_loans?.fines || []), newFineObject];
+            return {
+                ..._loans,
+                fines: fineEntries,
+                total_fines_count: fineEntries.length,
+            };
         }
         if (responseType === 'almaError') {
             return [500, {}];
