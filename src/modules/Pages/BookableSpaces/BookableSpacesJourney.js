@@ -38,7 +38,13 @@ const StyledJourneyWrapper = styled('div')(({ theme }) => ({
     minHeight: 'calc(100vh - 200px)',
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'stretch',
     paddingBottom: '6rem',
+    '& .layout-card': {
+        width: '100%',
+        maxWidth: 'none',
+        boxSizing: 'border-box',
+    },
     [theme.breakpoints.down('sm')]: {
         paddingBottom: '8rem',
     },
@@ -115,10 +121,16 @@ const StyledBrowseAllSpacesLink = styled('button')(({ theme }) => ({
 
 // Result card with proper styling - clickable full card
 const StyledResultCardButton = styled(Button)(({ theme }) => ({
+    display: 'block',
     width: '100%',
+    minWidth: 0,
+    maxWidth: '100%',
+    flex: '1 1 100%',
+    flexShrink: 0,
+    flexBasis: '100%',
+    alignSelf: 'stretch',
     padding: '0',
     textTransform: 'none',
-    justifyContent: 'flex-start',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: '8px',
     backgroundColor: '#fff',
@@ -319,13 +331,13 @@ const StyledSeeAllLink = styled(Link)(({ theme }) => ({
 }));
 
 const StyledResultsSplitLayout = styled(Box)(({ theme }) => ({
-    display: 'grid',
+    display: 'flex',
     gap: '1.5rem',
-    gridTemplateColumns: 'minmax(0, 4fr) minmax(0, 8fr)',
-    alignItems: 'start',
+    alignItems: 'flex-start',
     width: '100%',
+    minWidth: 0,
     [theme.breakpoints.down('lg')]: {
-        gridTemplateColumns: '1fr',
+        flexDirection: 'column',
         width: '100%',
     },
 }));
@@ -334,10 +346,28 @@ const StyledResultsSidebarPanel = styled(Box)(({ theme }) => ({
     padding: '0',
     position: 'sticky',
     top: '1rem',
+    flex: '0 0 20rem',
+    width: '20rem',
+    maxWidth: '20rem',
+    minWidth: 0,
     [theme.breakpoints.down('lg')]: {
         position: 'relative',
         top: 'auto',
+        flex: '1 1 auto',
+        width: '100%',
+        maxWidth: '100%',
     },
+}));
+
+const StyledResultsContentPanel = styled(Box)(() => ({
+    flex: '1 1 auto',
+    width: '100%',
+    maxWidth: 'none',
+    minWidth: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    boxSizing: 'border-box',
 }));
 
 const HOURS_STATUS_CONFIG = {
@@ -1472,7 +1502,7 @@ const BookableSpacesJourney = ({
                                         />
                                     </StyledResultsSidebarPanel>
                                 )}
-                                <Box>
+                                <StyledResultsContentPanel>
                                     <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
                                         {selectedIntent?.label || 'Matching spaces'}
                                     </Typography>
@@ -1490,12 +1520,16 @@ const BookableSpacesJourney = ({
                                         </StyledSecondaryButton>
                                     </Stack>
                                     {(intentSpaceLocations?.length || 0) > 0 ? (
-                                        <Stack spacing={1.5} sx={{ mt: 1.5 }}>
+                                        <Stack spacing={1.5} sx={{ mt: 1.5, width: '100%', maxWidth: '100%' }}>
                                             {intentSpaceLocations?.map(space => {
                                                 const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
                                                 const bookableSpaceUrl = space?.space_external_book_url;
                                                 return (
-                                                    <Stack key={space?.space_id} spacing={1}>
+                                                    <Stack
+                                                        key={space?.space_id}
+                                                        spacing={1}
+                                                        sx={{ width: '100%', maxWidth: '100%', alignSelf: 'stretch' }}
+                                                    >
                                                         <StyledResultCardButton
                                                             onClick={() => {
                                                                 setSelectedSpace(space);
@@ -1505,7 +1539,16 @@ const BookableSpacesJourney = ({
                                                                 });
                                                             }}
                                                         >
-                                                            <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
+                                                            <Box
+                                                                sx={{
+                                                                    p: '1.5rem',
+                                                                    width: '100%',
+                                                                    maxWidth: '100%',
+                                                                    boxSizing: 'border-box',
+                                                                    display: 'block',
+                                                                    textAlign: 'left',
+                                                                }}
+                                                            >
                                                                 <Typography
                                                                     sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5 }}
                                                                 >
@@ -1647,7 +1690,7 @@ const BookableSpacesJourney = ({
                                             </Typography>
                                         </Box>
                                     )}
-                                </Box>
+                                </StyledResultsContentPanel>
                             </StyledResultsSplitLayout>
                         </>
                     )}
