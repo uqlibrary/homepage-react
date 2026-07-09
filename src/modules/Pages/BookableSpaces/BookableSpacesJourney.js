@@ -991,7 +991,10 @@ const BookableSpacesJourney = ({
                                 spacing={3}
                                 sx={{
                                     mt: '-24px',
-                                    '& a[data-testid^="spaces-journey-"]': {
+                                    '& li.MuiGrid-item': {
+                                        pt: 0,
+                                    },
+                                    '& a': {
                                         boxSizing: 'border-box',
                                         minWidth: { xs: '100%', sm: '100%' },
                                     },
@@ -1107,7 +1110,10 @@ const BookableSpacesJourney = ({
                             spacing={3}
                             sx={{
                                 mt: '-24px',
-                                '& a[data-testid^="spaces-journey-"]': {
+                                '& li.MuiGrid-item': {
+                                    pt: 0,
+                                },
+                                '& a': {
                                     boxSizing: 'border-box',
                                     width: '100%',
                                     minWidth: { xs: 0, sm: 'auto' },
