@@ -33,18 +33,24 @@ const browseAllSpacesIcon =
     'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M14.29 7.57V3.89c0-.35-.2-.66-.52-.78L10.4 1.77a.83.83 0 0 0-.63 0L6.2 3.2a.8.8 0 0 1-.63 0L2.29 1.89a.41.41 0 0 0-.55.22c-.03.06-.03.12-.03.15v8.03c0 .34.2.65.52.77l3.34 1.34c.2.08.43.08.63 0m-.29-9.14v4.31m4.18-5.86v3.77%27%3e%3c/path%3e%3cpath d=%27M10.52 7.57a2.94 2.94 0 1 1 0 5.88 2.94 2.94 0 0 1 0-5.88zm3.77 6.72L12.6 12.6%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
 const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
-const StyledJourneyWrapper = styled('div')(({ theme }) => ({
+const StyledJourneyWrapper = styled('div', {
+    shouldForwardProp: prop => prop !== 'isResultsView',
+})(({ theme, isResultsView }) => ({
     backgroundColor: '#fff',
     minHeight: 'calc(100vh - 200px)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
     paddingBottom: '6rem',
-    '& .layout-card': {
-        width: '100%',
-        maxWidth: 'none',
-        boxSizing: 'border-box',
-    },
+    ...(isResultsView
+        ? {
+              '& .layout-card': {
+                  width: '100%',
+                  maxWidth: 'none',
+                  boxSizing: 'border-box',
+              },
+          }
+        : {}),
     [theme.breakpoints.down('sm')]: {
         paddingBottom: '8rem',
     },
@@ -898,7 +904,11 @@ const BookableSpacesJourney = ({
     }, [view]);
 
     return (
-        <StyledJourneyWrapper data-testid="spaces-journey-wrapper" ref={journeyTopRef}>
+        <StyledJourneyWrapper
+            data-testid="spaces-journey-wrapper"
+            isResultsView={view === 'results'}
+            ref={journeyTopRef}
+        >
             <JourneyBreadcrumbs
                 view={view}
                 selectedIntent={selectedIntent}
