@@ -1038,6 +1038,7 @@ const BookableSpacesJourney = ({
                                                 landingUrl={landingUrl}
                                                 shortParagraph={space?.space_library_name || ''}
                                                 fillContainer
+                                                showH3
                                                 onClick={() => {
                                                     if (space) {
                                                         setSelectedSpace(space);
@@ -1130,6 +1131,7 @@ const BookableSpacesJourney = ({
                                             fillContainer
                                             sx={{ pr: { xs: '10px' }, pl: { xs: 0 } }}
                                             onClick={() => handleIntentSelect(intent)}
+                                            showH3
                                         />
                                     );
                                 });

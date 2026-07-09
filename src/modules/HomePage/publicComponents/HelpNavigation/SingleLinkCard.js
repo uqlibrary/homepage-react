@@ -167,7 +167,9 @@ const SingleLinkCard = ({
     testId,
     onClick,
     disableHover,
+    showH3 = null,
 }) => {
+    const _showH3 = showH3 === null ? loggedIn : showH3;
     return (
         <StyledGridItem item component={'li'} xs={12} uqDsTablet={6} uqDsDesktop={4} fillContainer={fillContainer}>
             <div>
@@ -186,7 +188,7 @@ const SingleLinkCard = ({
                 >
                     <div className={'panelBodyWrapper'}>
                         {!!iconBackgroundImage && paneIcon(iconBackgroundImage)}
-                        {!!loggedIn ? (
+                        {!!_showH3 ? (
                             <h3 className={'cardHeading'}>{cardHeading}</h3>
                         ) : (
                             <h2 className={'cardHeading'}>{cardHeading}</h2>
@@ -211,6 +213,7 @@ SingleLinkCard.propTypes = {
     fillContainer: PropTypes.bool,
     testId: PropTypes.string,
     onClick: PropTypes.func,
+    showH3: PropTypes.any,
 };
 
 export default SingleLinkCard;
