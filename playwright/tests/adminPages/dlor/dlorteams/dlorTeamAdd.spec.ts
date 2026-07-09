@@ -25,11 +25,11 @@ test.describe('Digital Learning Hub admin Add Team', () => {
             await expect(page.getByTestId('admin-dlor-team-form-team-email').locator('input')).toBeEmpty();
             await expect(page.getByTestId('dlor-breadcrumb-admin-homelink')).toHaveAttribute(
                 'href',
-                `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`,
+                `/admin/dlor?user=${DLOR_ADMIN_USER}`,
             );
             await expect(page.getByTestId('dlor-breadcrumb-team-management-link-0')).toHaveAttribute(
                 'href',
-                `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`,
+                `/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`,
             );
             await expect(page.getByTestId('dlor-breadcrumb-add-new-team-label-1')).toHaveText(/Add new team/);
         });

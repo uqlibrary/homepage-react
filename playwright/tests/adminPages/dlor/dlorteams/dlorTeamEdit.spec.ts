@@ -50,13 +50,13 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
                     .locator('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .getByText(/Digital Learning Hub admin/)
                     .first(),
-            ).toHaveAttribute('href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+            ).toHaveAttribute('href', `/admin/dlor?user=${DLOR_ADMIN_USER}`);
             await expect(
                 page
                     .locator('a[data-testid="dlor-breadcrumb-team-management-link-0"]')
                     .getByText(/Team management/)
                     .first(),
-            ).toHaveAttribute('href', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
+            ).toHaveAttribute('href', `/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
         });
         test('validates correctly', async ({ page }) => {
             // initially, save button is disabled - the form is invalid, but no errors appear
@@ -266,7 +266,7 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
 
             await page.evaluate(() => {
                 const original = URL.createObjectURL;
-                URL.createObjectURL = function() {
+                URL.createObjectURL = function () {
                     window.wasCreateObjectURLCalled = true;
                     return original.apply(this, arguments);
                 };

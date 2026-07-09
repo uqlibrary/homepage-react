@@ -28,6 +28,7 @@ const mockTemplateStore = {
 function setup(testProps = {}) {
     const {
         printerCode = 'zebra',
+        printingEnabled = true,
         shouldRemoveNoNamePrinters = true,
         availablePrinters = mockPrinters,
         ...props
@@ -42,6 +43,7 @@ function setup(testProps = {}) {
     const initialProps = {
         printerCode,
         shouldRemoveNoNamePrinters,
+        printingEnabled,
         ...props,
     };
 
@@ -148,8 +150,7 @@ describe('useLabelPrinter', () => {
                 expect(printerRegistry.zebra).toHaveBeenCalled();
 
                 // Change printer code
-                rerender({ printerCode: 'emulator', templateStore: mockTemplateStore });
-
+                rerender({ printerCode: 'emulator', templateStore: mockTemplateStore, printingEnabled: true });
                 expect(result.current.printerCode).toBe('emulator');
                 expect(printerRegistry.emulator).toHaveBeenCalled();
             });
@@ -188,6 +189,7 @@ describe('useLabelPrinter', () => {
                 rerender({
                     printerCode: 'emulator',
                     templateStore: mockTemplateStore,
+                    printingEnabled: true,
                     shouldRemoveNoNamePrinters: true,
                     shouldDisableUnknownPrinters: true,
                 });
@@ -213,6 +215,7 @@ describe('useLabelPrinter', () => {
                 rerender({
                     printerCode: 'zebra',
                     templateStore: mockTemplateStore,
+                    printingEnabled: true,
                     shouldRemoveNoNamePrinters: false,
                 });
 
@@ -234,6 +237,27 @@ describe('useLabelPrinter', () => {
                 process.env = originalEnv;
             });
 
+            it('should not call template endpoint if label printing is disabled', async () => {
+                const printerInstanceMock = {
+                    getAvailablePrinters: jest.fn().mockResolvedValue([]),
+                };
+                printerRegistry.zebra = jest.fn(() => printerInstanceMock);
+                useLabelPrinterTemplate.mockReturnValue({
+                    hasLabelPrinterTemplate: jest.fn(() => true),
+                });
+
+                const { result } = renderHook(() =>
+                    useLabelPrinter({
+                        printerCode: undefined,
+                        templateStore: {},
+                    }),
+                );
+
+                expect(result.current.printerCode).toBe('zebra');
+                expect(result.current.printer).toBeNull();
+                expect(printerRegistry.zebra).not.toHaveBeenCalled();
+            });
+
             it('should use default printerCode value of "zebra" when not provided', async () => {
                 const printerInstanceMock = {
                     getAvailablePrinters: jest.fn().mockResolvedValue([]),
@@ -247,6 +271,7 @@ describe('useLabelPrinter', () => {
                     useLabelPrinter({
                         printerCode: undefined,
                         templateStore: {},
+                        printingEnabled: true,
                     }),
                 );
 
@@ -266,6 +291,7 @@ describe('useLabelPrinter', () => {
                 const { result } = renderHook(() =>
                     useLabelPrinter({
                         templateStore: {},
+                        printingEnabled: true,
                     }),
                 );
 
@@ -281,6 +307,7 @@ describe('useLabelPrinter', () => {
                 setup({
                     printerCode: 'zebra',
                     shouldOverridePrinterDevEnv: true,
+                    printingEnabled: true,
                     availablePrinters: [],
                 });
 
@@ -297,6 +324,7 @@ describe('useLabelPrinter', () => {
                 setup({
                     printerCode: 'zebra',
                     shouldOverridePrinterDevEnv: true,
+                    printingEnabled: true,
                     availablePrinters: [],
                 });
 
@@ -312,6 +340,7 @@ describe('useLabelPrinter', () => {
                 setup({
                     printerCode: 'zebra',
                     shouldOverridePrinterDevEnv: false,
+                    printingEnabled: true,
                     availablePrinters: [],
                 });
 
@@ -381,6 +410,7 @@ describe('useLabelPrinter', () => {
                         useLabelPrinter({
                             printerCode: 'zebra',
                             templateStore: {},
+                            printingEnabled: true,
                         }),
                     );
 

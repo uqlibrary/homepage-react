@@ -13,6 +13,7 @@ import { isDlorAdminUser } from 'helpers/access';
 
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
+import { Link } from 'react-router';
 
 const StyledTitleBox = styled(Box)(() => ({
     '& p:first-of-type': {
@@ -29,18 +30,18 @@ const StyledTitleBox = styled(Box)(() => ({
 
 export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
     const { account } = useAccountContext();
-    console.log('ACCOUNT IN BREADCRUMBS', account);
     return (
         <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
             <Grid item xs={11}>
                 <StyledTitleBox>
                     <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
                         {/* istanbul ignore next */}
-                        <a data-testid="dlor-breadcrumb-admin-homelink" href={dlorAdminLink(undefined, account)}>
+                        <Link to={dlorAdminLink(undefined, account)} data-testid="dlor-breadcrumb-admin-homelink">
                             {isDlorAdminUser(account)
                                 ? /* istanbul ignore next */ 'Digital Learning Hub admin'
                                 : /* istanbul ignore next */ 'Digital Learning Hub'}
-                        </a>
+                        </Link>
+
                         {breadCrumbList.map((b, index) => {
                             const entryId = !!b.id
                                 ? `dlor-breadcrumb-${b.id}`
@@ -65,9 +66,9 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
                                     <ArrowForwardIcon sx={{ height: '15px' }} />
                                     <span key={`${entryId}-span`}>
                                         {!!b.link ? (
-                                            <a data-testid={getDataTestid('link')} href={b.link}>
+                                            <Link data-testid={getDataTestid('link')} to={b.link}>
                                                 {b.title}
-                                            </a>
+                                            </Link>
                                         ) : (
                                             <span data-testid={getDataTestid('label')}>{b.title}</span>
                                         )}

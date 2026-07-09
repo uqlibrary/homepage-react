@@ -29,7 +29,7 @@ import {
 } from '../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage, StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { breadcrumbs } from 'config/routes';
 
 const moment = require('moment');

@@ -28,6 +28,7 @@ export const getAvailablePrinters = async printerInstance => {
  */
 const useLabelPrinter = ({
     printerCode = 'zebra',
+    printingEnabled = false,
     shouldRemoveNoNamePrinters = true,
     shouldOverridePrinterDevEnv = false,
 }) => {
@@ -38,8 +39,12 @@ const useLabelPrinter = ({
         const isTestEnvironment = isTest();
         const shouldUsePrinterEmulator = shouldOverridePrinterDevEnv && (isLocalEnvironment || isTestEnvironment);
 
-        return !shouldUsePrinterEmulator ? printerRegistry[printerCode]?.() : printerRegistry.emulator?.();
-    }, [printerCode, shouldOverridePrinterDevEnv]);
+        return printingEnabled
+            ? !shouldUsePrinterEmulator
+                ? printerRegistry[printerCode]?.()
+                : printerRegistry.emulator?.()
+            : null;
+    }, [printerCode, shouldOverridePrinterDevEnv, printingEnabled]);
 
     useEffect(() => {
         getAvailablePrinters(printerInstance)

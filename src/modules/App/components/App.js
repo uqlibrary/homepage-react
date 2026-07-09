@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { routes } from 'config';
 import browserUpdate from 'browser-update';
 import { AccountContext } from 'context';

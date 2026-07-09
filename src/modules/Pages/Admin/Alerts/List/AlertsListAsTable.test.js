@@ -2,8 +2,8 @@ import React from 'react';
 import { rtlRender } from 'test-utils';
 import AlertsListAsTable from './AlertsListAsTable';
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: () => jest.fn(),
 }));
 function setup(testProps = {}) {

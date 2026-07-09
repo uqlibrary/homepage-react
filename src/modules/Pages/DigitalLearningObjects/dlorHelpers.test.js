@@ -117,7 +117,7 @@ describe('helpers', () => {
     });
 
     it('generates view urls', () => {
-        expect(getDlorViewPageUrl('xyz')).toEqual('http://localhost/digital-learning-hub/view/xyz');
+        expect(getDlorViewPageUrl('xyz')).toEqual('/digital-learning-hub/view/xyz');
     });
 
     it('should correctly change snake case to kebab case', () => {

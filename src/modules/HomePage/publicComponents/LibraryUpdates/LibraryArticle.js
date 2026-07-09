@@ -4,7 +4,17 @@ import Grid from '@mui/material/Grid';
 import { PropTypes } from 'prop-types';
 
 import { styled } from '@mui/material/styles';
-import { ArticleCard } from 'modules/SharedComponents/Toolbox/ArticleCard';
+
+import { Link } from 'react-router';
+
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
+
+const fallBackImage = require('../../../../../public/images/article_placeholder.jpg');
+
+const loadFallbackImage = image => {
+    image.src = fallBackImage;
+};
 
 const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
     return {
