@@ -21,7 +21,7 @@ import {
 import { pluralise } from 'helpers/general';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
-import JourneySpaceDetailsView from './JourneySpaceDetailsView';
+import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
 
 const StyledFriendlyLocationDiv = styled('div')(() => ({
     marginTop: '5px',

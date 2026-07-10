@@ -122,7 +122,7 @@ const chipStyles = {
 // Result card with proper styling - clickable full card
 const StyledResultCardLink = styled(Link)(({ theme }) => ({
     width: '100%',
-    padding: '0',
+    padding: '0 0 4rem 0',
     textTransform: 'none',
     justifyContent: 'flex-start',
     border: `${theme.palette.designSystem.border}`,
@@ -464,125 +464,107 @@ const SpaceItemCard = ({
 }) => {
     const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
     return (
-        <StyledResultCardLink
-            to={serialiseJourneyUrl({
-                view: 'results',
-                intentId: getSpaceIdentifier(space).id,
-            })}
-            onClick={() => {
-                setSelectedSpace(space);
-                navigateToView('details', {
-                    intentId: selectedIntentId,
-                    spaceId: getSpaceIdentifier(space),
-                });
-            }}
-        >
-            <Stack sx={{ p: '1.5rem', textAlign: 'left' }}>
-                <Typography component="h3" data-testid={`space-journey-result-item-${space?.space_id}-name`}>
-                    {space?.space_name}
-                </Typography>
-                <Typography
-                    className="resultBody"
-                    sx={{ mb: 0.5 }}
-                    data-testid={`space-journey-result-item-${space?.space_id}-library-name`}
-                >
-                    {space?.space_library_name}
-                </Typography>
-                <Typography
-                    className="resultBody"
-                    // sx={{ color: '#999' }}
-                    data-testid={`space-journey-result-item-${space?.space_id}-space-type`}
-                >
-                    {space?.space_type_details?.space_type_name || space?.space_type}
-                </Typography>
-                <Box
-                    sx={{
-                        mb: space?.space_type_details?.space_type_description || space?.space_description ? 1 : 0,
-                        mt: 0.5,
-                    }}
-                >
-                    <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
-                        {favouriteSpaceIds.has(String(space?.space_id)) && (
-                            <Chip
-                                data-testid={`spaces-journey-result-item-${space?.space_id}-favourite-chip`}
-                                label="Favourite"
-                                size="small"
-                                sx={{
-                                    backgroundColor: '#fff8e1',
-                                    color: '#7a5a00',
-                                    borderColor: '#ffe082',
-                                    border: '1px solid',
-                                    fontWeight: 700,
-                                    fontSize: '1rem',
-                                }}
-                            />
-                        )}
-                        <SpaceOpenStatusChip
-                            space={space}
-                            weeklyHours={weeklyHours}
-                            weeklyHoursLoading={weeklyHoursLoading}
-                            weeklyHoursError={weeklyHoursError}
-                            chipStyles={chipStyles}
-                        />
-                        {!!visibleOutage && visibleOutage.status !== 'Current' && (
-                            <Chip
-                                data-testid={`spaces-journey-result-item-${space?.space_id}-outage-chip`}
-                                label="Upcoming closure"
-                                size="small"
-                                sx={{
-                                    backgroundColor: '#fff8e1',
-                                    color: '#7a5a00',
-                                    border: '1px solid #ffe082',
-                                    fontWeight: 700,
-                                }}
-                            />
-                        )}
-                    </Stack>
-                </Box>
-                {!!space?.space_type_details?.space_type_description && (
+        <>
+            <StyledResultCardLink
+                data-testid={`spaces-result-list-item-${space.space_id}`}
+                to={serialiseJourneyUrl({
+                    view: 'results',
+                    intentId: getSpaceIdentifier(space).id,
+                })}
+                onClick={() => {
+                    setSelectedSpace(space);
+                    navigateToView('details', {
+                        intentId: selectedIntentId,
+                        spaceId: getSpaceIdentifier(space),
+                    });
+                }}
+            >
+                <Stack sx={{ p: '1.5rem', textAlign: 'left' }}>
+                    <Typography component="h3" data-testid={`space-journey-result-item-${space?.space_id}-name`}>
+                        {space?.space_name}
+                    </Typography>
                     <Typography
                         className="resultBody"
-                        data-testid={`spaces-journey-result-item-${space?.space_id}-space-type-description`}
-                        sx={{
-                            mb: space?.space_description ? 0.75 : 0,
-                        }}
+                        sx={{ mb: 0.5 }}
+                        data-testid={`space-journey-result-item-${space?.space_id}-library-name`}
                     >
-                        {space.space_type_details.space_type_description}
+                        {space?.space_library_name}
                     </Typography>
-                )}
-                {!!space?.space_description && (
                     <Typography
                         className="resultBody"
-                        sx={{ fontStyle: 'italic' }}
-                        data-testid={`spaces-journey-result-item-${space?.space_id}-description`}
+                        data-testid={`space-journey-result-item-${space?.space_id}-space-type`}
                     >
-                        {String(space.space_description)
-                            .replace(/<[^>]*>/g, ' ')
-                            .trim()}
+                        {space?.space_type_details?.space_type_name || space?.space_type}
                     </Typography>
-                )}
-                {!!space?.space_external_book_url && (
                     <Box
                         sx={{
-                            mt: 1.5,
-                            pt: 1.5,
-                            borderTop: '1px solid #e0e0e0',
+                            mb: space?.space_type_details?.space_type_description || space?.space_description ? 1 : 0,
+                            mt: 0.5,
                         }}
                     >
-                        <StyledPrimaryButton
-                            component="a"
-                            href={space?.space_external_book_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            size="small"
-                            sx={{ textTransform: 'none' }}
-                        >
-                            Book this space
-                        </StyledPrimaryButton>
+                        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                            {favouriteSpaceIds.has(String(space?.space_id)) && (
+                                <Chip
+                                    data-testid={`spaces-journey-result-item-${space?.space_id}-favourite-chip`}
+                                    label="Favourite"
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: '#fff8e1',
+                                        color: '#7a5a00',
+                                        borderColor: '#ffe082',
+                                        border: '1px solid',
+                                        fontWeight: 700,
+                                        fontSize: '1rem',
+                                    }}
+                                />
+                            )}
+                            <SpaceOpenStatusChip
+                                space={space}
+                                weeklyHours={weeklyHours}
+                                weeklyHoursLoading={weeklyHoursLoading}
+                                weeklyHoursError={weeklyHoursError}
+                                chipStyles={chipStyles}
+                            />
+                            {!!visibleOutage && visibleOutage.status !== 'Current' && (
+                                <Chip
+                                    data-testid={`spaces-journey-result-item-${space?.space_id}-outage-chip`}
+                                    label="Upcoming closure"
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: '#fff8e1',
+                                        color: '#7a5a00',
+                                        border: '1px solid #ffe082',
+                                        fontWeight: 700,
+                                    }}
+                                />
+                            )}
+                        </Stack>
                     </Box>
-                )}
-            </Stack>
-        </StyledResultCardLink>
+                    {!!space?.space_type_details?.space_type_description && (
+                        <Typography
+                            className="resultBody"
+                            data-testid={`spaces-journey-result-item-${space?.space_id}-space-type-description`}
+                            sx={{
+                                mb: space?.space_description ? 0.75 : 0,
+                            }}
+                        >
+                            {space.space_type_details.space_type_description}
+                        </Typography>
+                    )}
+                    {!!space?.space_description && (
+                        <Typography
+                            className="resultBody"
+                            sx={{ fontStyle: 'italic' }}
+                            data-testid={`spaces-journey-result-item-${space?.space_id}-description`}
+                        >
+                            {String(space.space_description)
+                                .replace(/<[^>]*>/g, ' ')
+                                .trim()}
+                        </Typography>
+                    )}
+                </Stack>
+            </StyledResultCardLink>
+        </>
     );
 };
 SpaceItemCard.propTypes = {
@@ -1631,6 +1613,7 @@ const BookableSpacesJourney = ({
                                                         component="li"
                                                         key={space?.space_id}
                                                         data-testid={`spaces-result-list-${space.space_id}`}
+                                                        sx={{ position: 'relative' }}
                                                     >
                                                         <SpaceItemCard
                                                             space={space}
@@ -1642,6 +1625,28 @@ const BookableSpacesJourney = ({
                                                             weeklyHoursLoading={weeklyHoursLoading}
                                                             weeklyHoursError={weeklyHoursError}
                                                         />
+                                                        {!!space?.space_external_book_url && (
+                                                            <Box
+                                                                sx={{
+                                                                    mt: 1.5,
+                                                                    pt: 1.5,
+                                                                    position: 'absolute',
+                                                                    bottom: '3rem',
+                                                                    left: '1.5rem',
+                                                                }}
+                                                            >
+                                                                <StyledPrimaryButton
+                                                                    component="a"
+                                                                    href={space?.space_external_book_url}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    size="small"
+                                                                    sx={{ textTransform: 'none' }}
+                                                                >
+                                                                    Book this space
+                                                                </StyledPrimaryButton>
+                                                            </Box>
+                                                        )}
                                                     </Stack>
                                                 );
                                             })}
