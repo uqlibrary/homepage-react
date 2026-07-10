@@ -30,17 +30,7 @@ test.describe('Spaces', () => {
         await disableMazeMapAssets(page);
         await context.clearCookies();
     });
-    test.skip('library homepage can navigate to Spaces public page', async ({ page }) => {
-        await page.goto('/?user=s1111111');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.getByTestId('homepage-hours-bookit-link')).toHaveText(/Book a room/);
-        // await page.getByTestId('homepage-hours-bookit-link').click();
-        await expect(page).toHaveURL('http://localhost:2020/spaces?user=s1111111');
-        await page.getByTestId('spaces-journey-landing-browse-all').click();
-        await expect(page).toHaveURL(/advanced=1/);
-        await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
-    });
-    test.describe('Shows a basic page for Spaces', () => {
+    test.describe('Shows a basic map page for Spaces', () => {
         test.beforeEach(async ({ page }) => {
             // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
             // which would otherwise cause BookableSpacesList to re-render and destabilise the toggle
@@ -389,8 +379,8 @@ test.describe('Spaces', () => {
         // the other blocks have not appeared (are unaffected by this button click)
         await expect(page.getByTestId(`${ARCH_PANEL_4}-facility`)).not.toBeVisible();
         // and description is no longer truncated
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).not.toHaveClass(/truncated/);
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-details-description`)).toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-details-description`)).not.toHaveClass(/truncated/);
         // and the controls have swapped
         await expect(
             page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel'),

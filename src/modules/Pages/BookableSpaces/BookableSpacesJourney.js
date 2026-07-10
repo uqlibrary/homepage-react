@@ -15,7 +15,7 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import { standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
-import { getSpaceHoursStatus } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
 import JourneyBreadcrumbs from 'modules/Pages/BookableSpaces/JourneyBreadcrumbs';
 import {
@@ -112,7 +112,13 @@ const StyledBrowseAllSpacesLink = styled('button')(({ theme }) => ({
         fontSize: '1.1rem',
     },
 }));
-
+const chipStyles = {
+    fontSize: '1rem',
+    marginBottom: '0.5rem !important',
+    '& span': {
+        padding: '12px 16px',
+    },
+};
 // Result card with proper styling - clickable full card
 const StyledResultCardLink = styled(Link)(({ theme }) => ({
     width: '100%',
@@ -355,68 +361,6 @@ const StyledResultsSidebarPanel = styled(Box)(({ theme }) => ({
     },
 }));
 
-const HOURS_STATUS_CONFIG = {
-    open: {
-        label: 'Open now',
-        sx: { backgroundColor: '#e8f5e9', color: '#1b5e20', borderColor: '#a5d6a7', border: '1px solid' },
-    },
-    'closing-soon': {
-        label: 'Closing soon',
-        sx: { backgroundColor: '#fff8e1', color: '#e65100', borderColor: '#ffe082', border: '1px solid' },
-    },
-    closed: {
-        label: 'Closed',
-        sx: { backgroundColor: '#fdecea', color: '#b71c1c', borderColor: '#ffcdd2', border: '1px solid' },
-    },
-};
-
-const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHoursError }) => {
-    const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
-    if (visibleOutage?.status === 'Current') {
-        return (
-            <Chip
-                data-testid={'spaces-journey-open-status-chip-current-outage'}
-                label="Currently closed"
-                size="small"
-                sx={{
-                    fontWeight: 700,
-                    fontSize: '1rem',
-                    letterSpacing: '0.01em',
-                    backgroundColor: '#fdecea',
-                    color: '#b71c1c',
-                    borderColor: '#ffcdd2',
-                    border: '1px solid',
-                }}
-            />
-        );
-    }
-
-    if (weeklyHoursLoading || weeklyHoursError || !weeklyHours) return null;
-    const status = getSpaceHoursStatus(space, weeklyHours);
-    if (!status) return null;
-    const config = HOURS_STATUS_CONFIG[status];
-    return (
-        <Chip
-            data-testid={'spaces-journey-open-status-chip-' + status}
-            label={config.label}
-            size="small"
-            sx={{
-                fontWeight: 700,
-                fontSize: '1rem',
-                letterSpacing: '0.01em',
-                ...config.sx,
-            }}
-        />
-    );
-};
-
-SpaceOpenStatusChip.propTypes = {
-    space: PropTypes.object,
-    weeklyHours: PropTypes.object,
-    weeklyHoursLoading: PropTypes.bool,
-    weeklyHoursError: PropTypes.bool,
-};
-
 const intentDefinitions = [
     {
         id: 'quiet',
@@ -518,7 +462,6 @@ const SpaceItemCard = ({
     weeklyHoursLoading,
     weeklyHoursError,
 }) => {
-    const theme = useTheme();
     const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
     return (
         <StyledResultCardLink
@@ -579,6 +522,7 @@ const SpaceItemCard = ({
                             weeklyHours={weeklyHours}
                             weeklyHoursLoading={weeklyHoursLoading}
                             weeklyHoursError={weeklyHoursError}
+                            chipStyles={chipStyles}
                         />
                         {!!visibleOutage && visibleOutage.status !== 'Current' && (
                             <Chip
@@ -1455,6 +1399,7 @@ const BookableSpacesJourney = ({
                                                             weeklyHours={weeklyHours}
                                                             weeklyHoursLoading={weeklyHoursLoading}
                                                             weeklyHoursError={weeklyHoursError}
+                                                            chipStyles={chipStyles}
                                                         />
                                                     </Box>
                                                 )}

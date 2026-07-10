@@ -6,13 +6,12 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import { baseButtonStyles, baseHoverFocusStyles, pluralise } from 'helpers/general';
-import { StyledPrimaryButton } from 'helpers/general';
+import { baseButtonStyles, baseHoverFocusStyles, pluralise, StyledPrimaryButton } from 'helpers/general';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import {
+    defaultChipStyles,
     getFriendlyLocationDescription,
-    getSpaceHoursStatus,
-    spaceOpeningHours,
+    SpaceOpenStatusChip,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import {
     formatSpaceOutageRangeForPublicNotice,
@@ -95,13 +94,7 @@ const StyledMissingImageBox = styled(Box)(({ theme }) => ({
     color: theme.palette.designSystem.bodyCopy,
     fontWeight: 600,
 }));
-const StyledHeadingChip = styled(Chip)(() => ({
-    fontSize: '1rem',
-    marginBottom: '0.5rem !important',
-    '& span': {
-        padding: '12px 16px',
-    },
-}));
+
 const StyledBodyChip = styled(Chip)(({ theme }) => ({
     fontSize: '1rem',
     borderColor: theme.palette.primary.main,
@@ -143,90 +136,6 @@ const StyledTightLinkButton = styled(Button)(({ theme }) => ({
         color: '#fff',
     },
 }));
-
-const defaultChipStyles = theme => {
-    return {
-        borderColor: theme.palette.designSystem.bodyCopy,
-        border: '1px solid',
-        color: theme.palette.designSystem.bodyCopy,
-        fontWeight: 600,
-    };
-};
-const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHoursError }) => {
-    const chipTestId = `spaces-${space?.space_id}-details-outage-chip`;
-    const theme = useTheme();
-    const openingHoursConfig = (status, theme) => {
-        if (status === 'open') {
-            return {
-                label: 'Open now',
-                sx: {
-                    ...defaultChipStyles(theme),
-                    backgroundColor: theme.palette.designSystem.alert.info,
-                },
-            };
-        }
-        if (status === 'closing-soon') {
-            return {
-                label: 'Closing soon',
-                sx: {
-                    ...defaultChipStyles(theme),
-                    backgroundColor: theme.palette.designSystem.alert.warning,
-                },
-            };
-        }
-        if (status === 'closed') {
-            return {
-                label: 'Currently closed',
-                sx: {
-                    ...defaultChipStyles(theme),
-                    backgroundColor: theme.palette.designSystem.alert.error,
-                },
-            };
-        }
-        return null;
-    };
-    const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
-    if (visibleOutage?.status === 'Current') {
-        const config = openingHoursConfig('closed', theme);
-        return (
-            <StyledHeadingChip
-                data-testid={chipTestId}
-                size="small"
-                label={config.label}
-                sx={{
-                    ...config?.sx,
-                }}
-            />
-        );
-    }
-
-    const status = !weeklyHoursLoading && !weeklyHoursError ? getSpaceHoursStatus(space, weeklyHours) : null;
-    if (!status) {
-        return null;
-    }
-
-    const config = openingHoursConfig(status, theme);
-    if (!config) {
-        return null;
-    }
-    return (
-        <StyledHeadingChip
-            data-testid={chipTestId}
-            size="small"
-            label={config.label}
-            sx={{
-                ...config.sx,
-            }}
-        />
-    );
-};
-
-SpaceOpenStatusChip.propTypes = {
-    space: PropTypes.object,
-    weeklyHours: PropTypes.any,
-    weeklyHoursLoading: PropTypes.bool,
-    weeklyHoursError: PropTypes.any,
-};
 
 const OpenSpaceNewWindowButton = ({ spaceDetails }) => {
     return (
@@ -396,7 +305,7 @@ const JourneySpaceDetailsView = ({
                         </StyledFriendlyLocationDiv>{' '}
                         {!!(selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type) && (
                             <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
-                                <StyledHeadingChip
+                                <Chip
                                     label={
                                         selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type
                                     }
@@ -408,7 +317,7 @@ const JourneySpaceDetailsView = ({
                                     }}
                                 />
                                 {isSelectedSpaceFavourite && (
-                                    <StyledHeadingChip
+                                    <Chip
                                         data-testid={`spaces-${selectedSpace?.space_id}-detail-favourite-chip`}
                                         label="Favourite"
                                         size="small"
@@ -424,6 +333,13 @@ const JourneySpaceDetailsView = ({
                                     weeklyHours={weeklyHours}
                                     weeklyHoursLoading={weeklyHoursLoading}
                                     weeklyHoursError={weeklyHoursError}
+                                    chipStyles={{
+                                        fontSize: '1rem',
+                                        marginBottom: '0.5rem !important',
+                                        '& span': {
+                                            padding: '12px 16px',
+                                        },
+                                    }}
                                 />
                             </Stack>
                         )}

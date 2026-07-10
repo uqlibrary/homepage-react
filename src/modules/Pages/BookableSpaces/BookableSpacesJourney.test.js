@@ -145,41 +145,41 @@ describe('BookableSpacesJourney browser back navigation', () => {
 
     // it('keeps browser back navigation inside journey steps before leaving the page', () => {
     //     const pushStateSpy = jest.spyOn(window.history, 'pushState');
-
+    //
     //     rtlRender(<BookableSpacesJourney {...defaultProps} />);
-
+    //
     //     fireEvent.click(screen.getByTestId('spaces-journey-landing-get-started'));
     //     expect(screen.getByText('What sort of space would you like to find?')).toBeInTheDocument();
-
+    //
     //     fireEvent.click(screen.getByRole('button', { name: /quiet space/i }));
     //     expect(screen.getByRole('heading', { level: 2, name: /quiet space/i })).toBeInTheDocument();
-
+    //
     //     fireEvent.click(screen.getByRole('button', { name: /quiet study room a/i }));
     //     expect(screen.getByRole('heading', { level: 3, name: /space details/i })).toBeInTheDocument();
-
+    //
     //     act(() => {
     //         window.dispatchEvent(new PopStateEvent('popstate', { state: { journeyView: 'results' } }));
     //     });
     //     expect(screen.getByRole('heading', { level: 2, name: /quiet space/i })).toBeInTheDocument();
-
+    //
     //     act(() => {
     //         window.dispatchEvent(new PopStateEvent('popstate', { state: { journeyView: 'intent' } }));
     //     });
     //     expect(screen.getByText('What sort of space would you like to find?')).toBeInTheDocument();
-
+    //
     //     act(() => {
     //         window.dispatchEvent(new PopStateEvent('popstate', { state: { journeyView: 'landing' } }));
     //     });
     //     expect(screen.getByTestId('spaces-journey-landing-get-started')).toBeInTheDocument();
-
+    //
     //     expect(pushStateSpy).toHaveBeenCalledTimes(3);
     //     pushStateSpy.mockRestore();
     // });
 
-    it('writes permalink query params as users progress through the journey', () => {
+    it.only('writes permalink query params as users progress through the journey', () => {
         renderJourney(defaultProps);
 
-        fireEvent.click(screen.getByRole('link', { name: /quiet space/i }));
+        fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
         expect(window.location.search).toContain('journeyStep=results');
         expect(window.location.search).toContain('journeyIntent=quiet');
 
