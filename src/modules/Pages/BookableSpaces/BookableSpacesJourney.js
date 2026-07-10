@@ -15,7 +15,7 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import { standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
-import { SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { defaultChipStyles, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
 import JourneyBreadcrumbs from 'modules/Pages/BookableSpaces/JourneyBreadcrumbs';
 import {
@@ -462,6 +462,7 @@ const SpaceItemCard = ({
     weeklyHoursLoading,
     weeklyHoursError,
 }) => {
+    const theme = useTheme();
     const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
     return (
         <>
@@ -531,9 +532,9 @@ const SpaceItemCard = ({
                                     label="Upcoming closure"
                                     size="small"
                                     sx={{
-                                        backgroundColor: '#fff8e1',
-                                        color: '#7a5a00',
-                                        border: '1px solid #ffe082',
+                                        ...chipStyles,
+                                        ...defaultChipStyles(theme),
+                                        backgroundColor: theme.palette.designSystem.alert.warning,
                                         fontWeight: 700,
                                     }}
                                 />

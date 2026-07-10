@@ -230,40 +230,42 @@ export const defaultChipStyles = theme => {
         border: '1px solid',
         color: theme.palette.designSystem.bodyCopy,
         fontWeight: 600,
+        fontSize: '1rem',
     };
-};
-export const openingHoursStatusConfig = (status, theme) => {
-    if (status === 'open') {
-        return {
-            label: 'Open now',
-            sx: {
-                ...defaultChipStyles(theme),
-                backgroundColor: theme.palette.designSystem.alert.info,
-            },
-        };
-    }
-    if (status === 'closing-soon') {
-        return {
-            label: 'Closing soon',
-            sx: {
-                ...defaultChipStyles(theme),
-                backgroundColor: theme.palette.designSystem.alert.warning,
-            },
-        };
-    }
-    if (status === 'closed') {
-        return {
-            label: 'Currently closed',
-            sx: {
-                ...defaultChipStyles(theme),
-                backgroundColor: theme.palette.designSystem.alert.error,
-            },
-        };
-    }
-    return null;
 };
 
 export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHoursError, chipStyles }) => {
+    const openingHoursStatusConfig = (status, theme) => {
+        if (status === 'open') {
+            return {
+                label: 'Open now',
+                sx: {
+                    ...defaultChipStyles(theme),
+                    backgroundColor: theme.palette.designSystem.alert.info,
+                },
+            };
+        }
+        if (status === 'closing-soon') {
+            return {
+                label: 'Closing soon',
+                sx: {
+                    ...defaultChipStyles(theme),
+                    backgroundColor: theme.palette.designSystem.alert.warning,
+                },
+            };
+        }
+        if (status === 'closed') {
+            return {
+                label: 'Currently closed',
+                sx: {
+                    ...defaultChipStyles(theme),
+                    backgroundColor: theme.palette.designSystem.alert.error,
+                },
+            };
+        }
+        return null;
+    };
+
     const chipTestId = `spaces-${space?.space_id}-details-outage-chip`;
     const theme = useTheme();
     const visibleOutage = getVisibleSpaceOutage(space?.space_outages);

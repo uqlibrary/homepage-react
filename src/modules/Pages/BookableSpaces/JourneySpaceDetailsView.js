@@ -334,11 +334,8 @@ const JourneySpaceDetailsView = ({
                                     weeklyHoursLoading={weeklyHoursLoading}
                                     weeklyHoursError={weeklyHoursError}
                                     chipStyles={{
-                                        fontSize: '1rem',
-                                        marginBottom: '0.5rem !important',
-                                        '& span': {
-                                            padding: '12px 16px',
-                                        },
+                                        ...defaultChipStyles(theme),
+                                        fontWeight: 700,
                                     }}
                                 />
                             </Stack>
