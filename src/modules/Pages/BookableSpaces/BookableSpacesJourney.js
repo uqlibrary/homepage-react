@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 
 import { Box, Button, Chip, Grid, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -13,7 +14,7 @@ import TvIcon from '@mui/icons-material/Tv';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
-import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
+import { standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 import { getSpaceHoursStatus } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
 import JourneyBreadcrumbs from 'modules/Pages/BookableSpaces/JourneyBreadcrumbs';
@@ -26,8 +27,7 @@ import {
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import { ArticleCard } from 'modules/SharedComponents/Toolbox/ArticleCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { Link } from 'react-router';
-import SingleLinkCard from '../../HomePage/publicComponents/HelpNavigation/SingleLinkCard';
+import SingleLinkCard from 'modules/HomePage/publicComponents/HelpNavigation/SingleLinkCard';
 
 const browseAllSpacesIcon =
     'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M14.29 7.57V3.89c0-.35-.2-.66-.52-.78L10.4 1.77a.83.83 0 0 0-.63 0L6.2 3.2a.8.8 0 0 1-.63 0L2.29 1.89a.41.41 0 0 0-.55.22c-.03.06-.03.12-.03.15v8.03c0 .34.2.65.52.77l3.34 1.34c.2.08.43.08.63 0m-.29-9.14v4.31m4.18-5.86v3.77%27%3e%3c/path%3e%3cpath d=%27M10.52 7.57a2.94 2.94 0 1 1 0 5.88 2.94 2.94 0 0 1 0-5.88zm3.77 6.72L12.6 12.6%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
@@ -114,23 +114,30 @@ const StyledBrowseAllSpacesLink = styled('button')(({ theme }) => ({
 }));
 
 // Result card with proper styling - clickable full card
-const StyledResultCardButton = styled(Button)(({ theme }) => ({
+const StyledResultCardLink = styled(Link)(({ theme }) => ({
     width: '100%',
     padding: '0',
     textTransform: 'none',
     justifyContent: 'flex-start',
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: '8px',
+    border: `${theme.palette.designSystem.border}`,
+    borderRadius: theme.palette.designSystem.borderRadius,
     backgroundColor: '#fff',
     color: 'inherit',
-    transition: 'all 0.2s ease-in-out',
-    '&:hover': {
-        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
-        borderColor: theme.palette.primary.main,
-        transform: 'translateY(-2px)',
+    fontSize: '1rem',
+    marginBottom: '1.5rem',
+    '&:hover, &focus': {
+        textDecoration: 'none',
+        backgroundColor: theme.palette.designSystem.panelBackgroundColor,
     },
-    '&:active': {
-        transform: 'translateY(0)',
+    '& h3': {
+        fontWeight: 500,
+        color: theme.palette.designSystem.headingColor,
+        fontSize: '1.5rem',
+        marginBottom: '0.5rem',
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+    },
+    '& .resultBody': {
+        ...standardText(theme),
     },
 }));
 
@@ -373,7 +380,7 @@ const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHou
                 size="small"
                 sx={{
                     fontWeight: 700,
-                    fontSize: '0.75rem',
+                    fontSize: '1rem',
                     letterSpacing: '0.01em',
                     backgroundColor: '#fdecea',
                     color: '#b71c1c',
@@ -395,7 +402,7 @@ const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHou
             size="small"
             sx={{
                 fontWeight: 700,
-                fontSize: '0.75rem',
+                fontSize: '1rem',
                 letterSpacing: '0.01em',
                 ...config.sx,
             }}
@@ -499,6 +506,150 @@ const getIntentFilterIds = (facilityGroups, intent) => {
         });
     });
     return ids;
+};
+
+const SpaceItemCard = ({
+    space,
+    setSelectedSpace,
+    navigateToView,
+    selectedIntentId,
+    favouriteSpaceIds,
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
+}) => {
+    const theme = useTheme();
+    const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
+    return (
+        <StyledResultCardLink
+            to={serialiseJourneyUrl({
+                view: 'results',
+                intentId: getSpaceIdentifier(space).id,
+            })}
+            onClick={() => {
+                setSelectedSpace(space);
+                navigateToView('details', {
+                    intentId: selectedIntentId,
+                    spaceId: getSpaceIdentifier(space),
+                });
+            }}
+        >
+            <Stack sx={{ p: '1.5rem', textAlign: 'left' }}>
+                <Typography component="h3" data-testid={`space-journey-result-item-${space?.space_id}-name`}>
+                    {space?.space_name}
+                </Typography>
+                <Typography
+                    className="resultBody"
+                    sx={{ mb: 0.5 }}
+                    data-testid={`space-journey-result-item-${space?.space_id}-library-name`}
+                >
+                    {space?.space_library_name}
+                </Typography>
+                <Typography
+                    className="resultBody"
+                    // sx={{ color: '#999' }}
+                    data-testid={`space-journey-result-item-${space?.space_id}-space-type`}
+                >
+                    {space?.space_type_details?.space_type_name || space?.space_type}
+                </Typography>
+                <Box
+                    sx={{
+                        mb: space?.space_type_details?.space_type_description || space?.space_description ? 1 : 0,
+                        mt: 0.5,
+                    }}
+                >
+                    <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                        {favouriteSpaceIds.has(String(space?.space_id)) && (
+                            <Chip
+                                data-testid={`spaces-journey-result-item-${space?.space_id}-favourite-chip`}
+                                label="Favourite"
+                                size="small"
+                                sx={{
+                                    backgroundColor: '#fff8e1',
+                                    color: '#7a5a00',
+                                    borderColor: '#ffe082',
+                                    border: '1px solid',
+                                    fontWeight: 700,
+                                    fontSize: '1rem',
+                                }}
+                            />
+                        )}
+                        <SpaceOpenStatusChip
+                            space={space}
+                            weeklyHours={weeklyHours}
+                            weeklyHoursLoading={weeklyHoursLoading}
+                            weeklyHoursError={weeklyHoursError}
+                        />
+                        {!!visibleOutage && visibleOutage.status !== 'Current' && (
+                            <Chip
+                                data-testid={`spaces-journey-result-item-${space?.space_id}-outage-chip`}
+                                label="Upcoming closure"
+                                size="small"
+                                sx={{
+                                    backgroundColor: '#fff8e1',
+                                    color: '#7a5a00',
+                                    border: '1px solid #ffe082',
+                                    fontWeight: 700,
+                                }}
+                            />
+                        )}
+                    </Stack>
+                </Box>
+                {!!space?.space_type_details?.space_type_description && (
+                    <Typography
+                        className="resultBody"
+                        data-testid={`spaces-journey-result-item-${space?.space_id}-space-type-description`}
+                        sx={{
+                            mb: space?.space_description ? 0.75 : 0,
+                        }}
+                    >
+                        {space.space_type_details.space_type_description}
+                    </Typography>
+                )}
+                {!!space?.space_description && (
+                    <Typography
+                        className="resultBody"
+                        sx={{ fontStyle: 'italic' }}
+                        data-testid={`spaces-journey-result-item-${space?.space_id}-description`}
+                    >
+                        {String(space.space_description)
+                            .replace(/<[^>]*>/g, ' ')
+                            .trim()}
+                    </Typography>
+                )}
+                {!!space?.space_external_book_url && (
+                    <Box
+                        sx={{
+                            mt: 1.5,
+                            pt: 1.5,
+                            borderTop: '1px solid #e0e0e0',
+                        }}
+                    >
+                        <StyledPrimaryButton
+                            component="a"
+                            href={space?.space_external_book_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            size="small"
+                            sx={{ textTransform: 'none' }}
+                        >
+                            Book this space
+                        </StyledPrimaryButton>
+                    </Box>
+                )}
+            </Stack>
+        </StyledResultCardLink>
+    );
+};
+SpaceItemCard.propTypes = {
+    space: PropTypes.object,
+    setSelectedSpace: PropTypes.func,
+    navigateToView: PropTypes.func,
+    selectedIntentId: PropTypes.any,
+    favouriteSpaceIds: PropTypes.any,
+    weeklyHours: PropTypes.any,
+    weeklyHoursLoading: PropTypes.bool,
+    weeklyHoursError: PropTypes.any,
 };
 
 const BookableSpacesJourney = ({
@@ -1514,7 +1665,7 @@ const BookableSpacesJourney = ({
                                         Showing {intentSpaceLocations?.length || 0}
                                         {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
                                     </Typography>
-                                    <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+                                    <Stack direction="row" spacing={1} sx={{ mt: 1.5, marginBottom: '2rem' }}>
                                         <StyledSecondaryButton onClick={handleClearJourneyFilters}>
                                             Reset quick filters
                                         </StyledSecondaryButton>
@@ -1523,150 +1674,29 @@ const BookableSpacesJourney = ({
                                         </StyledSecondaryButton>
                                     </Stack>
                                     {(intentSpaceLocations?.length || 0) > 0 ? (
-                                        <Stack spacing={1.5} sx={{ mt: 1.5 }} data-testid="spaces-result-list">
+                                        <Stack
+                                            component="ul"
+                                            spacing={1.5}
+                                            sx={{ mt: 1.5, pl: 0 }}
+                                            data-testid="spaces-result-list"
+                                        >
                                             {intentSpaceLocations?.map(space => {
-                                                const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
-                                                const bookableSpaceUrl = space?.space_external_book_url;
                                                 return (
                                                     <Stack
+                                                        component="li"
                                                         key={space?.space_id}
-                                                        spacing={1}
-                                                        data-testid={`spaces-result-list-${space.space_uuid}`}
+                                                        data-testid={`spaces-result-list-${space.space_id}`}
                                                     >
-                                                        <StyledResultCardButton
-                                                            onClick={() => {
-                                                                setSelectedSpace(space);
-                                                                navigateToView('details', {
-                                                                    intentId: selectedIntentId,
-                                                                    spaceId: getSpaceIdentifier(space),
-                                                                });
-                                                            }}
-                                                        >
-                                                            <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
-                                                                <Typography
-                                                                    sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5 }}
-                                                                    data-testid={`space-journey-result-item-${space?.space_id}-name`}
-                                                                >
-                                                                    {space?.space_name}
-                                                                </Typography>
-                                                                <Typography
-                                                                    variant="body2"
-                                                                    sx={{ color: '#666', mb: 0.5 }}
-                                                                    data-testid={`space-journey-result-item-${space?.space_id}-library-name`}
-                                                                >
-                                                                    {space?.space_library_name}
-                                                                </Typography>
-                                                                <Typography
-                                                                    variant="body2"
-                                                                    sx={{ color: '#999' }}
-                                                                    data-testid={`space-journey-result-item-${space?.space_id}-space-type`}
-                                                                >
-                                                                    {space?.space_type_details?.space_type_name ||
-                                                                        space?.space_type}
-                                                                </Typography>
-                                                                <Box
-                                                                    sx={{
-                                                                        mb:
-                                                                            space?.space_type_details
-                                                                                ?.space_type_description ||
-                                                                            space?.space_description
-                                                                                ? 1
-                                                                                : 0,
-                                                                        mt: 0.5,
-                                                                    }}
-                                                                >
-                                                                    <Stack
-                                                                        direction="row"
-                                                                        spacing={1}
-                                                                        sx={{ flexWrap: 'wrap' }}
-                                                                    >
-                                                                        {favouriteSpaceIds.has(
-                                                                            String(space?.space_id),
-                                                                        ) && (
-                                                                            <Chip
-                                                                                data-testid={`spaces-journey-result-item-${space?.space_id}-favourite-chip`}
-                                                                                label="Favourite"
-                                                                                size="small"
-                                                                                sx={{
-                                                                                    backgroundColor: '#fff8e1',
-                                                                                    color: '#7a5a00',
-                                                                                    borderColor: '#ffe082',
-                                                                                    border: '1px solid',
-                                                                                    fontWeight: 700,
-                                                                                }}
-                                                                            />
-                                                                        )}
-                                                                        <SpaceOpenStatusChip
-                                                                            space={space}
-                                                                            weeklyHours={weeklyHours}
-                                                                            weeklyHoursLoading={weeklyHoursLoading}
-                                                                            weeklyHoursError={weeklyHoursError}
-                                                                        />
-                                                                        {!!visibleOutage &&
-                                                                            visibleOutage.status !== 'Current' && (
-                                                                                <Chip
-                                                                                    data-testid={`spaces-journey-result-item-${space?.space_id}-outage-chip`}
-                                                                                    label="Upcoming closure"
-                                                                                    size="small"
-                                                                                    sx={{
-                                                                                        backgroundColor: '#fff8e1',
-                                                                                        color: '#7a5a00',
-                                                                                        border: '1px solid #ffe082',
-                                                                                        fontWeight: 700,
-                                                                                    }}
-                                                                                />
-                                                                            )}
-                                                                    </Stack>
-                                                                </Box>
-                                                                {!!space?.space_type_details
-                                                                    ?.space_type_description && (
-                                                                    <Typography
-                                                                        variant="body2"
-                                                                        data-testid={`spaces-journey-result-item-${space?.space_id}-space-type-description`}
-                                                                        sx={{
-                                                                            color: '#4f4d57',
-                                                                            mb: space?.space_description ? 0.75 : 0,
-                                                                        }}
-                                                                    >
-                                                                        {
-                                                                            space.space_type_details
-                                                                                .space_type_description
-                                                                        }
-                                                                    </Typography>
-                                                                )}
-                                                                {!!space?.space_description && (
-                                                                    <Typography
-                                                                        variant="body2"
-                                                                        sx={{ color: '#666', fontStyle: 'italic' }}
-                                                                        data-testid={`spaces-journey-result-item-${space?.space_id}-description`}
-                                                                    >
-                                                                        {String(space.space_description)
-                                                                            .replace(/<[^>]*>/g, ' ')
-                                                                            .trim()}
-                                                                    </Typography>
-                                                                )}
-                                                                {!!bookableSpaceUrl && (
-                                                                    <Box
-                                                                        sx={{
-                                                                            mt: 1.5,
-                                                                            pt: 1.5,
-                                                                            borderTop: '1px solid #e0e0e0',
-                                                                        }}
-                                                                    >
-                                                                        <StyledPrimaryButton
-                                                                            component="a"
-                                                                            href={bookableSpaceUrl}
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
-                                                                            size="small"
-                                                                            sx={{ textTransform: 'none' }}
-                                                                        >
-                                                                            Book this space
-                                                                        </StyledPrimaryButton>
-                                                                    </Box>
-                                                                )}
-                                                            </Box>
-                                                        </StyledResultCardButton>
+                                                        <SpaceItemCard
+                                                            space={space}
+                                                            setSelectedSpace={setSelectedSpace}
+                                                            navigateToView={navigateToView}
+                                                            selectedIntentId={selectedIntentId}
+                                                            favouriteSpaceIds={favouriteSpaceIds}
+                                                            weeklyHours={weeklyHours}
+                                                            weeklyHoursLoading={weeklyHoursLoading}
+                                                            weeklyHoursError={weeklyHoursError}
+                                                        />
                                                     </Stack>
                                                 );
                                             })}
