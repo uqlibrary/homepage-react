@@ -9,6 +9,7 @@ jest.mock(
 jest.mock('../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-journey-detail-image');
 
 import BookableSpacesJourney from './BookableSpacesJourney';
+import { buildLegacyBrowseNavigationUrl } from './BookableSpacesJourney';
 import SidebarFilters from './SidebarFilters';
 import { deserialiseJourneyMapFilterState, serialiseJourneyMapFilterState } from './journeyHelpers';
 
@@ -180,17 +181,14 @@ describe('BookableSpacesJourney browser back navigation', () => {
         renderJourney(defaultProps);
 
         fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
-        expect(window.location.search).toContain('journeyStep=results');
-        expect(window.location.search).toContain('journeyIntent=quiet');
+        expect(window.location.pathname).toBe('/spaces/results/filters=quiet');
 
         fireEvent.click(screen.getByTestId('spaces-result-list-item-101'));
-        expect(window.location.search).toContain('journeyStep=details');
-        expect(window.location.search).toContain('journeyIntent=quiet');
-        expect(window.location.search).toContain(`journeySpace=${baseSpace.space_uuid}`);
+        expect(window.location.pathname).toBe(`/spaces/detail/${baseSpace.space_uuid}`);
     });
 
     it('restores results and selected intent from permalink params', () => {
-        window.history.replaceState({}, '', '/spaces?journeyStep=results&journeyIntent=quiet');
+        window.history.replaceState({}, '', '/spaces/results/filters=quiet');
 
         renderJourney(defaultProps);
 
@@ -198,11 +196,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
     });
 
     it('restores details view and selected space from permalink params', () => {
-        window.history.replaceState(
-            {},
-            '',
-            `/spaces?journeyStep=details&journeyIntent=quiet&journeySpace=${baseSpace.space_uuid}`,
-        );
+        window.history.replaceState({}, '', `/spaces/detail/${baseSpace.space_uuid}`);
 
         renderJourney(defaultProps);
 
@@ -328,7 +322,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
             );
         };
 
-        window.history.replaceState({}, '', '/spaces?journeyStep=results&journeyIntent=quiet');
+        window.history.replaceState({}, '', '/spaces/results/filters=quiet');
         rtlRender(
             <WithRouter>
                 <Harness />
@@ -339,6 +333,34 @@ describe('BookableSpacesJourney browser back navigation', () => {
 
         expect(screen.getByTestId('current-filters')).toHaveTextContent('"facility_type_id":12');
         expect(screen.getByTestId('current-filters')).toHaveTextContent('"selected":true');
+    });
+
+    it('builds browser-router map URL with encoded mapFilters and autoSelectFirstSpace', () => {
+        const nextUrl = buildLegacyBrowseNavigationUrl({
+            currentUrl: 'http://localhost:2020/spaces/results/filters=quiet',
+            selectedFacilityTypes: [{ facility_type_id: 10, selected: true, unselected: false }],
+            selectedCampus: 1,
+            selectedLibrary: 0,
+            capacityFilterValue: [1, 24],
+        });
+
+        expect(nextUrl).toContain('/spaces/results/map?');
+        expect(nextUrl).toContain('mapFilters=');
+        expect(nextUrl).toContain('autoSelectFirstSpace=1');
+    });
+
+    it('builds hash-router map URL with encoded mapFilters and autoSelectFirstSpace', () => {
+        const nextUrl = buildLegacyBrowseNavigationUrl({
+            currentUrl: 'http://localhost:2020/#/spaces/results/filters=quiet',
+            selectedFacilityTypes: [{ facility_type_id: 10, selected: true, unselected: false }],
+            selectedCampus: 1,
+            selectedLibrary: 0,
+            capacityFilterValue: [1, 24],
+        });
+
+        expect(nextUrl).toContain('#/spaces/results/map?');
+        expect(nextUrl).toContain('mapFilters=');
+        expect(nextUrl).toContain('autoSelectFirstSpace=1');
     });
 
     it('hides the landing highlighted space block when no highlighted space is available', () => {

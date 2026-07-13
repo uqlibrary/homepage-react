@@ -186,15 +186,11 @@ export const buildJourneyNavigationUrl = ({
     const hasActiveJourneyFilters = (selectedFacilityTypes || []).some(
         filter => filter?.selected || filter?.unselected,
     );
-    const setJourneyIntentStep = params => {
-        params.delete('advanced');
-        params.delete('journeyIntent');
-        params.delete('journeySpace');
-        params.delete('mapFilters');
-        if (!hasActiveJourneyFilters) {
-            params.delete('journeyStep');
-        }
-    };
+    url.searchParams.delete('advanced');
+    url.searchParams.delete('journeyStep');
+    url.searchParams.delete('journeyIntent');
+    url.searchParams.delete('journeySpace');
+    url.searchParams.delete('mapFilters');
 
     if (hasActiveJourneyFilters) {
         const encodedMapFilters = serialiseJourneyMapFilterState({
@@ -204,29 +200,10 @@ export const buildJourneyNavigationUrl = ({
             capacityFilterValue,
         });
 
-        if (url.hash.includes('?')) {
-            const [hashPath, hashQuery] = url.hash.split('?');
-            const hashParams = new URLSearchParams(hashQuery);
-            setJourneyIntentStep(hashParams);
-            hashParams.set('journeyStep', 'results');
-            hashParams.set('mapFilters', encodedMapFilters);
-            const remaining = hashParams.toString();
-            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
-        } else {
-            setJourneyIntentStep(url.searchParams);
-            url.searchParams.set('journeyStep', 'results');
-            url.searchParams.set('mapFilters', encodedMapFilters);
-        }
+        url.pathname = '/spaces/results';
+        url.searchParams.set('mapFilters', encodedMapFilters);
     } else {
-        if (url.hash.includes('?')) {
-            const [hashPath, hashQuery] = url.hash.split('?');
-            const hashParams = new URLSearchParams(hashQuery);
-            setJourneyIntentStep(hashParams);
-            const remaining = hashParams.toString();
-            url.hash = remaining ? `${hashPath}?${remaining}` : hashPath;
-        } else {
-            setJourneyIntentStep(url.searchParams);
-        }
+        url.pathname = '/spaces';
     }
 
     return url.toString();
@@ -245,6 +222,7 @@ export const BookableSpacesList = ({
     facilityTypeListError,
     spacesFavouritesList,
     drupalArticleList,
+    forceAdvanced = false,
 }) => {
     const { account } = useAccountContext();
     const location = useLocation();
@@ -307,6 +285,13 @@ export const BookableSpacesList = ({
     const [isMapReady, setIsMapReady] = useState(false);
     const useJourneyExperience = React.useMemo(() => {
         if (typeof window === 'undefined') return true;
+        if (forceAdvanced) return false;
+
+        const pathname = window.location.pathname || location.pathname || '';
+        if (pathname === '/spaces/results/map' || pathname.startsWith('/spaces/results/map/')) {
+            return false;
+        }
+
         // Journey is the default view. ?advanced=1 switches to the legacy map/list view.
         // Support both standard query params (?advanced=1) and hash-router query params (#/spaces?advanced=1)
         const hashValue = location.hash || window.location.hash || '';
@@ -314,7 +299,7 @@ export const BookableSpacesList = ({
         const searchValue = location.search || window.location.search || '';
         const params = new URLSearchParams(searchValue || hashSearch);
         return params.get('advanced') !== '1';
-    }, [location.search, location.hash]);
+    }, [forceAdvanced, location.hash, location.pathname, location.search]);
 
     const initialJourneyModeRef = useRef(useJourneyExperience);
 
@@ -1409,6 +1394,7 @@ BookableSpacesList.propTypes = {
     drupalArticleList: PropTypes.array,
     drupalArticlesLoading: PropTypes.bool,
     drupalArticlesError: PropTypes.bool,
+    forceAdvanced: PropTypes.bool,
 };
 
 export default React.memo(BookableSpacesList);

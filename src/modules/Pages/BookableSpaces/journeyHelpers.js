@@ -165,58 +165,75 @@ export const deserialiseJourneyMapFilterState = searchParams => {
     }
 };
 
+const getJourneyPathname = url => {
+    const hashValue = url?.hash || '';
+    if (hashValue.startsWith('#/')) {
+        const hashPath = hashValue.slice(1).split('?')[0] || '/spaces';
+        return hashPath.replace(/\/+$/, '') || '/spaces';
+    }
+
+    const pathValue = url?.pathname || '/spaces';
+    return pathValue.replace(/\/+$/, '') || '/spaces';
+};
+
 export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
     const url = new URL(window.location.href);
-    const { usesHashQuery, hashPath, params } = getJourneySearchParams(url);
 
-    if (view && view !== 'landing') {
-        params.set(JOURNEY_QUERY_PARAM_STEP, view);
-    } else {
-        params.delete(JOURNEY_QUERY_PARAM_STEP);
+    const buildPath = ({ nextView, nextIntentId, nextSpaceId }) => {
+        if (nextView === 'results') {
+            if (nextIntentId) {
+                return `/spaces/results/filters=${encodeURIComponent(String(nextIntentId))}`;
+            }
+            return '/spaces/results';
+        }
+
+        if (nextView === 'details' && nextSpaceId) {
+            return `/spaces/detail/${encodeURIComponent(String(nextSpaceId))}`;
+        }
+
+        return '/spaces';
+    };
+
+    const nextPath = buildPath({ nextView: view, nextIntentId: intentId, nextSpaceId: spaceId });
+    if ((url.hash || '').startsWith('#/')) {
+        return `#${nextPath}`;
     }
 
-    if (intentId && (view === 'results' || view === 'details')) {
-        params.set(JOURNEY_QUERY_PARAM_INTENT, String(intentId));
-    } else {
-        params.delete(JOURNEY_QUERY_PARAM_INTENT);
-    }
-
-    if (view === 'details' && spaceId) {
-        params.set(JOURNEY_QUERY_PARAM_SPACE, String(spaceId));
-    } else {
-        params.delete(JOURNEY_QUERY_PARAM_SPACE);
-    }
-
-    if (usesHashQuery) {
-        const nextHashQuery = params.toString();
-        url.hash = nextHashQuery ? `${hashPath}?${nextHashQuery}` : hashPath;
-    }
-
-    // Prefer returning a relative URL so react-router `Link` and manual
-    // `history.pushState` don't cause a full-navigation or produce duplicate
-    // hashes. When using hash-based params, return only the `#...` part;
-    // otherwise return the pathname + search.
-    if (usesHashQuery) {
-        return url.hash || '';
-    }
-
-    return `${url.pathname}${url.search || ''}`;
+    return nextPath;
 };
 
 export const parseJourneyStateFromUrl = availableIntentDefinitions => {
     const url = new URL(window.location.href);
-    const { params } = getJourneySearchParams(url);
+    const pathname = getJourneyPathname(url);
 
-    const requestedView = params.get(JOURNEY_QUERY_PARAM_STEP);
-    const view = JOURNEY_VIEWS.includes(requestedView) ? requestedView : 'landing';
+    if (pathname === '/spaces/results' || pathname.startsWith('/spaces/results/')) {
+        if (pathname === '/spaces/results/map') {
+            return { view: 'results', intentId: null, spaceId: null };
+        }
 
-    const requestedIntentId = params.get(JOURNEY_QUERY_PARAM_INTENT);
-    const intentId = availableIntentDefinitions?.some(intent => intent.id === requestedIntentId)
-        ? requestedIntentId
-        : null;
+        if (pathname.startsWith('/spaces/results/filters=')) {
+            const filterValue = decodeURIComponent(pathname.split('/spaces/results/filters=')[1] || '');
+            const parsedIntentId =
+                availableIntentDefinitions?.some(intent => intent.id === filterValue) ? filterValue : null;
+            return { view: 'results', intentId: parsedIntentId, spaceId: null };
+        }
 
-    const requestedSpaceId = params.get(JOURNEY_QUERY_PARAM_SPACE);
-    const spaceId = requestedSpaceId ? String(requestedSpaceId) : null;
+        return { view: 'results', intentId: null, spaceId: null };
+    }
 
-    return { view, intentId, spaceId };
+    if (pathname === '/spaces/detail' || pathname.startsWith('/spaces/detail/')) {
+        const requestedSpaceId = pathname.startsWith('/spaces/detail/')
+            ? decodeURIComponent(pathname.split('/spaces/detail/')[1] || '')
+            : null;
+        return { view: 'details', intentId: null, spaceId: requestedSpaceId || null };
+    }
+
+    if (pathname === '/spaces/details' || pathname.startsWith('/spaces/details/')) {
+        const requestedSpaceId = pathname.startsWith('/spaces/details/')
+            ? decodeURIComponent(pathname.split('/spaces/details/')[1] || '')
+            : null;
+        return { view: 'details', intentId: null, spaceId: requestedSpaceId || null };
+    }
+
+    return { view: 'landing', intentId: null, spaceId: null };
 };

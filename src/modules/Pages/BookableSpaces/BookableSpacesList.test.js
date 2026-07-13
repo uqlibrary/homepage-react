@@ -284,7 +284,7 @@ describe('BookableSpacesList campus selection', () => {
             capacityFilterValue: [4, 8],
         });
 
-        expect(navigatedUrl).toContain('journeyStep=results');
+        expect(navigatedUrl).toContain('/spaces/results');
         expect(navigatedUrl).toContain('mapFilters=');
     });
 
