@@ -10,7 +10,8 @@ jest.mock(
 jest.mock('../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-journey-detail-image');
 
 import SpaceDetails from './SpaceDetails';
-describe.skip('SpaceDetails outage notices', () => {
+
+describe('SpaceDetails outage notices', () => {
     afterEach(() => {
         MockDate.reset();
     });
@@ -47,13 +48,12 @@ describe.skip('SpaceDetails outage notices', () => {
             />,
         );
 
-        expect(screen.getByTestId('space-123-outage-notice')).toBeInTheDocument();
         expect(screen.getByText('Current closure')).toBeInTheDocument();
-        expect(screen.getByTestId('space-123-outage-message')).toHaveTextContent(
+        expect(screen.getByTestId('spaces-journey-outage-message-123')).toHaveTextContent(
             'Currently unavailable until 10:00am 1 January 2999.',
         );
         expect(screen.getByTestId('space-123-outage-reason')).toHaveTextContent('Electrical maintenance');
-        expect(screen.getByTestId('space-123-booking-link')).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /book this space/i })).toBeInTheDocument();
     });
 
     it('renders same-day current outage using time then date wording', () => {
@@ -79,7 +79,7 @@ describe.skip('SpaceDetails outage notices', () => {
             />,
         );
 
-        expect(screen.getByTestId('space-124-outage-message')).toHaveTextContent(
+        expect(screen.getByTestId('spaces-journey-outage-message-124')).toHaveTextContent(
             'Currently unavailable until 1:00pm on 24 April 2026.',
         );
     });
@@ -107,13 +107,12 @@ describe.skip('SpaceDetails outage notices', () => {
             />,
         );
 
-        expect(screen.getByTestId('space-456-outage-notice')).toBeInTheDocument();
         expect(screen.getByText('Upcoming closure')).toBeInTheDocument();
-        expect(screen.getByTestId('space-456-outage-message')).toHaveTextContent(
+        expect(screen.getByTestId('spaces-journey-outage-message-456')).toHaveTextContent(
             'Closed 9:00am to 5:00pm on 30 April 2026.',
         );
         expect(screen.getByTestId('space-456-outage-reason')).toHaveTextContent('Air conditioning works');
-        expect(screen.getByTestId('space-456-booking-link')).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /book this space/i })).toBeInTheDocument();
     });
 
     it('hides times for upcoming outages when space_outage_show_time_public is false', () => {
@@ -140,7 +139,9 @@ describe.skip('SpaceDetails outage notices', () => {
             />,
         );
 
-        expect(screen.getByTestId('space-457-outage-message')).toHaveTextContent('Closed 26 April to 5 May 2026.');
+        expect(screen.getByTestId('spaces-journey-outage-message-457')).toHaveTextContent(
+            'Closed 26 April to 5 May 2026.',
+        );
         expect(screen.getByTestId('space-457-outage-reason')).toHaveTextContent('Replacing carpet');
     });
 });

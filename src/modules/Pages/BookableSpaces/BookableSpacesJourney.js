@@ -1582,7 +1582,7 @@ const BookableSpacesJourney = ({
                                         sx={{ fontWeight: 700, color: '#1f1230' }}
                                         data-testid="spaces-journey-results-heading"
                                     >
-                                        {selectedIntent?.label || 'Matching spaces'}
+                                        Search results
                                     </Typography>
 
                                     <Typography

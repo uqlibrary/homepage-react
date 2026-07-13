@@ -24,7 +24,7 @@ test.describe('Spaces Journey Result page', () => {
         // show the favourites block has the correct contents
         await expect(page.getByTestId('sidebarCheckboxes')).toBeVisible();
         await expect(page.getByTestId('spaces-journey-results-heading')).toBeVisible();
-        await expect(page.getByTestId('spaces-journey-results-heading')).toContainText('Matching spaces');
+        await expect(page.getByTestId('spaces-journey-results-heading')).toContainText('Search results');
         await expect(page.getByTestId('spaces-journey-result-count')).toContainText('Showing 10 of 15 spaces'); // first page of spaces are showing
         await expect(page.getByTestId('spaces-result-list').locator(':scope > *')).toHaveCount(NUMBER_SPACES_DEFAULT); // a page load of spaces are present
         await expect(page.getByTestId('spaces-result-list').locator(':scope > *')).toHaveCount(NUMBER_SPACES_DEFAULT);

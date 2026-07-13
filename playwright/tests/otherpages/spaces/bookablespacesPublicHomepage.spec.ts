@@ -53,7 +53,7 @@ test.describe('Spaces Homepage', () => {
         // the results page has loaded, with favourites loaded
         await expect(page.getByTestId('spaces-homepage-favourites-all-link')).not.toBeVisible();
         await expect(page.getByTestId('spaces-journey-results-heading')).toBeVisible(); // heading present
-        await expect(page.getByTestId('spaces-journey-results-heading')).toContainText('Favourite spaces'); // heading present
+        await expect(page.getByTestId('spaces-journey-results-heading')).toContainText('Search results'); // heading present
         await expect(page.getByTestId('spaces-result-list').locator(':scope > *')).toHaveCount(
             VANILLA_USER_FAVOURITE_COUNT,
         );
