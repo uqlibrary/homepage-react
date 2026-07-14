@@ -1024,12 +1024,38 @@ const BookableSpacesJourney = ({
     const applyIntentFilters = React.useCallback(
         intent => {
             const ids = getIntentFilterIds(filteredFacilityTypeList?.data?.facility_type_groups, intent);
-            if (!selectedFacilityTypes?.length) return;
-            const nextFilters = selectedFacilityTypes.map(filter => ({
+            const existingFilters = Array.isArray(selectedFacilityTypes) ? selectedFacilityTypes : [];
+            const facilityTypeEntries = (filteredFacilityTypeList?.data?.facility_type_groups || []).flatMap(group => {
+                const children = Array.isArray(group?.facility_type_children) ? group.facility_type_children : [];
+                return children
+                    .map(child => {
+                        const facilityTypeId = Number(child?.facility_type_id);
+                        if (!Number.isFinite(facilityTypeId)) {
+                            return null;
+                        }
+
+                        const existingFilter = existingFilters.find(
+                            filter => Number(filter?.facility_type_id) === facilityTypeId,
+                        );
+
+                        return {
+                            ...(existingFilter || {}),
+                            facility_type_id: facilityTypeId,
+                            facility_type_name: child?.facility_type_name || existingFilter?.facility_type_name || null,
+                            selected: false,
+                            unselected: false,
+                            facility_special_action: existingFilter?.facility_special_action || null,
+                        };
+                    })
+                    .filter(Boolean);
+            });
+
+            const nextFilters = facilityTypeEntries.map(filter => ({
                 ...filter,
-                selected: ids.includes(filter.facility_type_id),
+                selected: ids.includes(Number(filter.facility_type_id)),
                 unselected: false,
             }));
+
             lastAppliedIntentIdRef.current = intent?.id || null;
             setSelectedFacilityTypes(nextFilters);
         },

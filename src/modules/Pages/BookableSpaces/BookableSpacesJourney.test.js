@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { waitFor } from '@testing-library/react';
+
 import { fireEvent, rtlRender, screen, WithRouter } from 'test-utils';
 
 jest.mock(
@@ -284,6 +286,44 @@ describe('BookableSpacesJourney browser back navigation', () => {
                 facility_special_action: null,
             },
         ]);
+    });
+
+    it('applies an intent filter when the current filter list is empty on initial load', async () => {
+        const setSelectedFacilityTypes = jest.fn();
+
+        window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
+        rtlRender(
+            <WithRouter>
+                <BookableSpacesJourney
+                    {...defaultProps}
+                    selectedFacilityTypes={[]}
+                    setSelectedFacilityTypes={setSelectedFacilityTypes}
+                    filteredFacilityTypeList={{
+                        data: {
+                            facility_type_groups: [
+                                {
+                                    facility_type_group_id: 1,
+                                    facility_type_group_name: 'Facilities',
+                                    facility_type_group_order: 1,
+                                    facility_type_group_loads_open: true,
+                                    facility_type_children: [
+                                        { facility_type_id: 11, facility_type_name: 'Low noise level' },
+                                    ],
+                                },
+                            ],
+                        },
+                    }}
+                />
+            </WithRouter>,
+        );
+
+        await waitFor(() => {
+            expect(setSelectedFacilityTypes).toHaveBeenCalledWith(
+                expect.arrayContaining([
+                    expect.objectContaining({ facility_type_id: 11, selected: true, unselected: false }),
+                ]),
+            );
+        });
     });
 
     it('preserves a manual filter change after an intent is restored from the URL', () => {
