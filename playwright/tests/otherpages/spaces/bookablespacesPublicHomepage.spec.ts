@@ -36,7 +36,7 @@ test.describe('Spaces Homepage', () => {
         await expect(favBlock.locator(':scope > *')).toHaveCount(VANILLA_USER_FAVOURITE_COUNT);
         await expect(favBlock.locator('li:first-child a')).toHaveAttribute(
             'href',
-            '/spaces?journeyStep=details&journeySpace=a00de3d4-7e11-47eb-8079-532bdef80def',
+            '/spaces/detail/a00de3d4-7e11-47eb-8079-532bdef80def',
         );
         await expect(favBlock.locator('li:first-child a')).toContainText('354');
         await expect(favBlock.locator('li:first-child a')).toContainText('Architecture and Music Library');
@@ -52,14 +52,14 @@ test.describe('Spaces Homepage', () => {
 
         // the results page has loaded, with favourites loaded
         await expect(page.getByTestId('spaces-homepage-favourites-all-link')).not.toBeVisible();
-        await expect(page.getByTestId('spaces-journey-results-heading')).toBeVisible(); // heading present
-        await expect(page.getByTestId('spaces-journey-results-heading')).toContainText('Search results'); // heading present
-        await expect(page.getByTestId('spaces-result-list').locator(':scope > *')).toHaveCount(
+        await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
+        await expect(page.getByRole('heading', { level: 2, name: 'Search results' })).toBeVisible();
+        await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(
             VANILLA_USER_FAVOURITE_COUNT,
         );
-        await expect(page.getByTestId('spaces-journey-result-count')).toContainText('Showing 2 of 15 spaces');
+        await expect(page.getByText('Showing 2 of 15 spaces')).toBeVisible();
         // a block is present
-        await expect(page.getByTestId('space-journey-result-item-1-name')).toContainText('354');
+        await expect(page.getByTestId('spaces-result-list-item-1')).toContainText('354');
 
         // back button works
         await page.goBack();
@@ -97,10 +97,10 @@ test.describe('Spaces Homepage', () => {
 
         // result page appears as expected
         await expect(page.getByTestId('spaces-journey-showall')).not.toBeVisible();
-        await expect(page.getByTestId('space-journey-result-item-1-name')).toBeVisible();
+        await expect(page.getByTestId('spaces-result-list-item-1')).toBeVisible();
         await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0); // no filters are selected
-        await expect(page.getByTestId('spaces-journey-result-count')).toContainText('Showing 10 of 15 spaces'); // all spaces are showing
-        await expect(page.getByTestId('spaces-result-list').locator(':scope > *')).toHaveCount(10); // a page load of spaces are present
+        await expect(page.getByText('Showing 10 of 15 spaces')).toBeVisible(); // all spaces are showing
+        await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(10); // a page load of spaces are present
 
         // back button works
         await page.goBack();

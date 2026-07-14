@@ -574,16 +574,15 @@ export const BookableSpacesList = ({
             !!bookableSpacesRoomList?.data?.locations
         ) {
             // the space with the highest capacity
-            const spaceMaxCapacity = bookableSpacesRoomList?.data?.locations?.reduce(function findMax(
-                highestCapacity,
-                current,
-            ) {
-                return highestCapacity &&
-                    typeof current.space_capacity === 'number' &&
-                    highestCapacity.space_capacity < current.space_capacity
-                    ? current
-                    : highestCapacity;
-            });
+            const spaceMaxCapacity = bookableSpacesRoomList?.data?.locations?.reduce(
+                function findMax(highestCapacity, current) {
+                    return highestCapacity &&
+                        typeof current.space_capacity === 'number' &&
+                        highestCapacity.space_capacity < current.space_capacity
+                        ? current
+                        : highestCapacity;
+                },
+            );
             const calculatedMaxCapaity = !!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity;
             setMaximumSpaceCapacity(calculatedMaxCapaity);
             if (!Array.isArray(journeyMapFilterState?.capacityFilterValue)) {
@@ -1056,7 +1055,7 @@ export const BookableSpacesList = ({
 
     // Memoize so that MazeMaps state changes (isMazeMapScriptReady, isMazeMapReady, mapContainer)
     // don't cause SidebarSpacesList to receive a new array reference and re-render unnecessarily.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     const sortedSpaceLocations = React.useMemo(() => {
         const allFilterTypes = {};
         getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList)?.data?.facility_type_groups?.forEach(

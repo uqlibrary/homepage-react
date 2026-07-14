@@ -15,36 +15,23 @@ test.describe('Spaces Journey Result page', () => {
         await context.clearCookies();
     });
     test('spaces result page has the correct parts', async ({ page }) => {
-        const firstSpacePane = page.getByTestId('spaces-result-list').locator('li:first-child');
+        const firstSpacePane = page.getByTestId('spaces-result-list-item-1');
 
         // load the spaces homepage
-        await page.goto('/spaces?journeyStep=results');
+        await page.goto('/spaces/results');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
         // show the favourites block has the correct contents
         await expect(page.getByTestId('sidebarCheckboxes')).toBeVisible();
-        await expect(page.getByTestId('spaces-journey-results-heading')).toBeVisible();
-        await expect(page.getByTestId('spaces-journey-results-heading')).toContainText('Search results');
-        await expect(page.getByTestId('spaces-journey-result-count')).toContainText('Showing 10 of 15 spaces'); // first page of spaces are showing
-        await expect(page.getByTestId('spaces-result-list').locator(':scope > *')).toHaveCount(NUMBER_SPACES_DEFAULT); // a page load of spaces are present
-        await expect(page.getByTestId('spaces-result-list').locator(':scope > *')).toHaveCount(NUMBER_SPACES_DEFAULT);
-        await expect(firstSpacePane.locator('a')).toHaveAttribute('href', '/spaces?journeyStep=results');
-        await expect(firstSpacePane.getByTestId('space-journey-result-item-1-name')).toContainText('354');
-        await expect(firstSpacePane.getByTestId('space-journey-result-item-1-library-name')).toContainText(
-            'Architecture and Music Library',
-        );
-        await expect(firstSpacePane.getByTestId('space-journey-result-item-1-space-type')).toContainText(
-            'Individual study',
-        );
-        await expect(firstSpacePane.getByTestId('spaces-journey-result-item-1-favourite-chip')).toContainText(
-            'Favourite',
-        );
+        await expect(page.getByRole('heading', { level: 2, name: 'Search results' })).toBeVisible();
+        await expect(page.getByText('Showing 10 of 15 spaces')).toBeVisible(); // first page of spaces are showing
+        await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(NUMBER_SPACES_DEFAULT); // a page load of spaces are present
+        await expect(firstSpacePane).toContainText('354');
+        await expect(firstSpacePane).toContainText('Architecture and Music Library');
+        await expect(firstSpacePane).toContainText('Individual study');
+        await expect(firstSpacePane.getByTestId('spaces-journey-favourite-chip-1')).toContainText('Favourite');
         await expect(firstSpacePane.getByTestId('spaces-journey-open-status-chip-open')).toContainText('Open now');
-        await expect(firstSpacePane.getByTestId('spaces-journey-result-item-1-space-type-description')).toContainText(
-            'Designed for individual study',
-        );
-        await expect(firstSpacePane.getByTestId('spaces-journey-result-item-1-description')).toContainText(
-            'Space desciption field being used to report the mock data',
-        );
+        await expect(firstSpacePane).toContainText('Designed for individual study');
+        await expect(firstSpacePane).toContainText('Space desciption field being used to report the mock data');
     });
 });

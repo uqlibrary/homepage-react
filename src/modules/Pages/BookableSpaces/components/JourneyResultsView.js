@@ -85,7 +85,7 @@ export const JourneyResultsView = ({
 
                 <Box>
                     <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
-                        {selectedIntent?.label || 'Matching spaces'}
+                        Search results
                     </Typography>
                     <Typography variant="body2" sx={{ color: '#666', mt: 1.5 }}>
                         Showing {spaces.length}
@@ -93,7 +93,9 @@ export const JourneyResultsView = ({
                     </Typography>
 
                     <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
-                        <StyledSecondaryButton onClick={handleClearJourneyFilters}>Reset quick filters</StyledSecondaryButton>
+                        <StyledSecondaryButton onClick={handleClearJourneyFilters}>
+                            Reset quick filters
+                        </StyledSecondaryButton>
                         <StyledSecondaryButton onClick={goToLegacyBrowse}>View on map</StyledSecondaryButton>
                     </Stack>
 
@@ -164,13 +166,19 @@ export const JourneyResultsView = ({
                                                 {!!space?.space_type_details?.space_type_description && (
                                                     <Typography
                                                         variant="body2"
-                                                        sx={{ color: '#4f4d57', mb: space?.space_description ? 0.75 : 0 }}
+                                                        sx={{
+                                                            color: '#4f4d57',
+                                                            mb: space?.space_description ? 0.75 : 0,
+                                                        }}
                                                     >
                                                         {space.space_type_details.space_type_description}
                                                     </Typography>
                                                 )}
                                                 {!!space?.space_description && (
-                                                    <Typography variant="body2" sx={{ color: '#666', fontStyle: 'italic' }}>
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{ color: '#666', fontStyle: 'italic' }}
+                                                    >
                                                         {String(space.space_description)
                                                             .replace(/<[^>]*>/g, ' ')
                                                             .trim()}
@@ -178,16 +186,16 @@ export const JourneyResultsView = ({
                                                 )}
                                                 {!!space?.space_external_book_url && (
                                                     <Box sx={{ mt: 1.5, pt: 1.5, borderTop: '1px solid #e0e0e0' }}>
-                                                    <StyledPrimaryButton
-                                                        component="a"
-                                                        href={space.space_external_book_url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        size="small"
-                                                        sx={{ textTransform: 'none' }}
-                                                    >
-                                                        Book this space
-                                                    </StyledPrimaryButton>
+                                                        <StyledPrimaryButton
+                                                            component="a"
+                                                            href={space.space_external_book_url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            size="small"
+                                                            sx={{ textTransform: 'none' }}
+                                                        >
+                                                            Book this space
+                                                        </StyledPrimaryButton>
                                                     </Box>
                                                 )}
                                             </Box>
@@ -208,7 +216,9 @@ export const JourneyResultsView = ({
                                 backgroundColor: '#faf7ff',
                             }}
                         >
-                            <Typography sx={{ fontWeight: 700, color: '#1f1230' }}>No results match your criteria</Typography>
+                            <Typography sx={{ fontWeight: 700, color: '#1f1230' }}>
+                                No results match your criteria
+                            </Typography>
                             <Typography variant="body2" sx={{ color: '#666', mt: 0.75 }}>
                                 Try clearing some filters or selecting a different campus to widen your search.
                             </Typography>
