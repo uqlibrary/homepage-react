@@ -269,17 +269,11 @@ test.describe('Spaces Admin - add new space', () => {
 
         await expect(page.getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`).locator('input')).toBeVisible();
         await expect(page.getByTestId(`facility-type-listitem-${ASKUS_FILTER_TYPE}`)).toContainText('AskUs service');
-        await page
-            .getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`)
-            .locator('input')
-            .click();
+        await page.getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`).locator('input').click();
 
         await expect(page.getByTestId(`filtertype-${MICROWAVE_FILTER_TYPE}`).locator('input')).toBeVisible();
         await expect(page.getByTestId(`facility-type-listitem-${MICROWAVE_FILTER_TYPE}`)).toContainText('Microwave');
-        await page
-            .getByTestId(`filtertype-${MICROWAVE_FILTER_TYPE}`)
-            .locator('input')
-            .click();
+        await page.getByTestId(`filtertype-${MICROWAVE_FILTER_TYPE}`).locator('input').click();
 
         // go back to about tab for campus/library/level selectors
         await page.getByTestId('spaces-form-back-button').click();
@@ -404,10 +398,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('space-capacity-error')).not.toBeVisible();
 
         // make the space bookable
-        await page
-            .getByTestId('contains-bookable-checkbox')
-            .locator('input')
-            .check();
+        await page.getByTestId('contains-bookable-checkbox').locator('input').check();
 
         // capacity is now required and an error shows
         await expect(page.getByTestId('capacity-required-indicator')).toBeVisible();
@@ -542,18 +533,8 @@ test.describe('Spaces Admin - add new space', () => {
 
         // failed save should bring focus back to the first invalid tab/field
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        await expect(
-            page
-                .getByTestId('space-name')
-                .locator('..')
-                .getByText('A Name is required.'),
-        ).toBeVisible();
-        await expect(
-            page
-                .getByTestId('space-type')
-                .locator('..')
-                .getByText('A Type is required.'),
-        ).toBeVisible();
+        await expect(page.getByTestId('space-name').locator('..').getByText('A Name is required.')).toBeVisible();
+        await expect(page.getByTestId('space-type').locator('..').getByText('A Type is required.')).toBeVisible();
 
         // user enters the name, but there is still an error
         const spaceNameInputField = page.getByTestId('space-name').locator('input');
