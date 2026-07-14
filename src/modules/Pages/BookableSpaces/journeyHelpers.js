@@ -206,6 +206,15 @@ export const parseJourneyStateFromUrl = availableIntentDefinitions => {
     const url = new URL(window.location.href);
     const pathname = getJourneyPathname(url);
 
+    const resolveIntentId = rawIntentId => {
+        if (!rawIntentId) {
+            return null;
+        }
+
+        const decodedIntentId = decodeURIComponent(String(rawIntentId));
+        return availableIntentDefinitions?.some(intent => intent.id === decodedIntentId) ? decodedIntentId : null;
+    };
+
     if (pathname === '/spaces/results' || pathname.startsWith('/spaces/results/')) {
         if (pathname === '/spaces/results/map') {
             return { view: 'results', intentId: null, spaceId: null };
@@ -213,8 +222,7 @@ export const parseJourneyStateFromUrl = availableIntentDefinitions => {
 
         if (pathname.startsWith('/spaces/results/filters=')) {
             const filterValue = decodeURIComponent(pathname.split('/spaces/results/filters=')[1] || '');
-            const parsedIntentId =
-                availableIntentDefinitions?.some(intent => intent.id === filterValue) ? filterValue : null;
+            const parsedIntentId = resolveIntentId(filterValue);
             return { view: 'results', intentId: parsedIntentId, spaceId: null };
         }
 

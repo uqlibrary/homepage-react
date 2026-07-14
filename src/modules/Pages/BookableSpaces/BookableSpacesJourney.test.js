@@ -11,7 +11,12 @@ jest.mock('../../../../public/images/digital-learning-hub-hero-shot-wide.png', (
 import BookableSpacesJourney from './BookableSpacesJourney';
 import { buildLegacyBrowseNavigationUrl } from './BookableSpacesJourney';
 import SidebarFilters from './SidebarFilters';
-import { deserialiseJourneyMapFilterState, serialiseJourneyMapFilterState } from './journeyHelpers';
+import {
+    deserialiseJourneyMapFilterState,
+    parseJourneyStateFromUrl,
+    serialiseJourneyMapFilterState,
+    serialiseJourneyUrl,
+} from './journeyHelpers';
 
 jest.mock('@mui/material', () => {
     const actual = jest.requireActual('@mui/material');
@@ -202,6 +207,14 @@ describe('BookableSpacesJourney browser back navigation', () => {
 
         expect(screen.getByText(/space details/i)).toBeInTheDocument();
         expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+    });
+
+    it('restores results from a path-based hash URL when running under hash routing', () => {
+        window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
+
+        const parsedState = parseJourneyStateFromUrl([{ id: 'quiet' }]);
+
+        expect(parsedState).toEqual({ view: 'results', intentId: 'quiet', spaceId: null });
     });
 
     it('shows a booking link in results for bookable spaces', () => {
