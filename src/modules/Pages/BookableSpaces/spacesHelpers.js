@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Chip, useTheme } from '@mui/material';
+import { Chip, Tooltip, useTheme } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 import { getVisibleSpaceOutage } from '../Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
@@ -319,4 +321,54 @@ SpaceOpenStatusChip.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.bool,
     chipStyles: PropTypes.any,
+};
+export const RenderFavouriteIcon = ({
+    bookableSpace,
+    isFavourite,
+    isLoggedIn,
+    onFavouriteToggle,
+    isFavouriteActionInProgress,
+}) => {
+    if (!isLoggedIn || !onFavouriteToggle || !!isFavouriteActionInProgress || isFavourite === undefined) {
+        return <span style={{ width: '24px' }}> </span>; // placeholder to minimise movement
+    }
+
+    if (isFavourite) {
+        return (
+            <Tooltip title="Remove from Favourites" arrow>
+                <StarIcon
+                    onClick={() => onFavouriteToggle('removeSpaceFavourite', bookableSpace?.space_id)}
+                    sx={{
+                        fill: '#FFD700',
+                        cursor: isFavouriteActionInProgress ? 'not-allowed' : 'pointer',
+                        fontSize: '1.5rem',
+                        flexShrink: 0,
+                    }}
+                    data-testid={`favourite-star-${bookableSpace?.space_id}`}
+                />
+            </Tooltip>
+        );
+    }
+
+    return (
+        <Tooltip title="Add to Favourites" arrow>
+            <StarBorderIcon
+                onClick={() => onFavouriteToggle('addSpaceFavourite', bookableSpace?.space_id)}
+                sx={{
+                    fill: '#666',
+                    cursor: isFavouriteActionInProgress ? 'not-allowed' : 'pointer',
+                    fontSize: '1.5rem',
+                    flexShrink: 0,
+                }}
+                data-testid={`favourite-star-outline-${bookableSpace?.space_id}`}
+            />
+        </Tooltip>
+    );
+};
+RenderFavouriteIcon.propTypes = {
+    bookableSpace: PropTypes.any,
+    isFavourite: PropTypes.bool,
+    isLoggedIn: PropTypes.bool,
+    onFavouriteToggle: PropTypes.func,
+    isFavouriteActionInProgress: PropTypes.bool,
 };
