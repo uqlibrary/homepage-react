@@ -438,7 +438,6 @@ export const BookableSpacesList = ({
         const normalizedSelectedCampusId = Number(selectedCampusId);
         const spacesListForCampus = spacesList?.filter(s => s.space_campus_id === normalizedSelectedCampusId);
 
-        /* eslint-disable camelcase */
         const buildingsOnCampus =
             !!spacesListForCampus &&
             Object.values(
@@ -625,7 +624,6 @@ export const BookableSpacesList = ({
                 setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
             }
 
-            /* eslint-disable camelcase */
             const currentCampusList = Object.values(
                 bookableSpacesRoomList?.data?.locations?.reduce(
                     (acc, { space_campus_id, space_campus_name, space_campus_number }) => {
@@ -1068,7 +1066,7 @@ export const BookableSpacesList = ({
         /* istanbul ignore next */
         if (isFavouriteActionInProgress) return;
         const isAddFavouriteAction = action === 'addSpaceFavourite';
-        setIsFavouriteActionInProgress(true);
+        setIsFavouriteActionInProgress(spaceId);
         try {
             await actions[action](spaceId);
             displayToastMessage(isAddFavouriteAction ? 'Space added to favourites' : 'Space removed from favourites');

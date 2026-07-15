@@ -1431,7 +1431,7 @@ BookableSpacesJourney.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     onFavouriteToggle: PropTypes.func,
-    isFavouriteActionInProgress: PropTypes.bool,
+    isFavouriteActionInProgress: PropTypes.any,
     initialView: PropTypes.oneOf(['landing', 'results', 'details']),
 };
 

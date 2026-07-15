@@ -1546,6 +1546,40 @@ test.describe('Spaces', () => {
             await expect(librarySelector).not.toBeVisible();
         });
     });
+    test.describe('Spaces favourites', () => {
+        test('can UNfavourite a space', async ({ page }) => {
+            await page.goto('');
+            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
+            await page.goto('spaces?advanced=1');
+
+            // the space is currently favourited
+            await expect(page.getByTestId('spaces-detail-1-unfavourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-1-favourite')).not.toBeVisible();
+
+            // unfavourite it
+            await page.getByTestId('spaces-detail-1-unfavourite').click();
+
+            // the space is now UNfavourited
+            await expect(page.getByTestId('spaces-detail-1-favourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-1-unfavourite')).not.toBeVisible();
+        });
+        test('can unfavourite a space', async ({ page }) => {
+            await page.goto('');
+            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
+            await page.goto('spaces?advanced=1');
+
+            // the space is currently UNfavourited
+            await expect(page.getByTestId('spaces-detail-43534-favourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-43534-unfavourite')).not.toBeVisible();
+
+            // favourite it
+            await page.getByTestId('spaces-detail-43534-favourite').click();
+
+            // the space is now favourited
+            await expect(page.getByTestId('spaces-detail-43534-unfavourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-43534-favourite')).not.toBeVisible();
+        });
+    });
 });
 test.describe('Spaces errors', () => {
     test.beforeEach(async ({ page }) => {

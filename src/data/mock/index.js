@@ -1908,8 +1908,14 @@ mock.onGet('exams/course/FREN1010/summary')
         ];
     })
     .onDelete('bookable_spaces/favourites')
-    .reply(() => {
-        return [200, { data: [] }];
+    .reply(config => {
+        const body = JSON.parse(config.data);
+        return [
+            200,
+            {
+                data: [...spaces_favourites.data.filter(favourite => favourite.space_id !== body.space_id)],
+            },
+        ];
     })
     .onGet(routes.WEEKLYHOURS_API().apiUrl)
     .reply(() => {
