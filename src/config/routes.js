@@ -167,7 +167,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: 'Library spaces',
         },
         {
-            path: '/spaces/results/map',
+            path: '/spaces/mapresults',
             element: <components.BookableSpacesMapPage />,
             exact: true,
             pageTitle: 'Library spaces',

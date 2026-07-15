@@ -3,9 +3,9 @@ import BookableSpacesListContainer from 'modules/Pages/BookableSpaces/BookableSp
 import BookableSpacesPageLayout from './BookableSpacesPageLayout';
 
 const BookableSpacesMapPage = props => (
-	<BookableSpacesPageLayout>
-		<BookableSpacesListContainer {...props} forceAdvanced />
-	</BookableSpacesPageLayout>
+    <BookableSpacesPageLayout>
+        <BookableSpacesListContainer {...props} forceAdvanced />
+    </BookableSpacesPageLayout>
 );
 
 export default BookableSpacesMapPage;

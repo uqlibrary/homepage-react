@@ -219,6 +219,22 @@ describe('BookableSpacesJourney browser back navigation', () => {
         expect(parsedState).toEqual({ view: 'results', intentId: 'quiet', spaceId: null });
     });
 
+    it('treats the map-results path as a results route when parsing the URL', () => {
+        window.history.replaceState({}, '', '/#/spaces/mapresults');
+
+        const parsedState = parseJourneyStateFromUrl([{ id: 'quiet' }]);
+
+        expect(parsedState).toEqual({ view: 'results', intentId: null, spaceId: null });
+    });
+
+    it('does not treat the legacy results/map path as a results route', () => {
+        window.history.replaceState({}, '', '/#/spaces/results/map');
+
+        const parsedState = parseJourneyStateFromUrl([{ id: 'quiet' }]);
+
+        expect(parsedState).toEqual({ view: 'landing', intentId: null, spaceId: null });
+    });
+
     it('shows a booking link in results for bookable spaces', () => {
         renderJourney(defaultProps);
 
@@ -397,7 +413,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
             capacityFilterValue: [1, 24],
         });
 
-        expect(nextUrl).toContain('/spaces/results/map?');
+        expect(nextUrl).toContain('/spaces/mapresults?');
         expect(nextUrl).toContain('mapFilters=');
         expect(nextUrl).toContain('autoSelectFirstSpace=1');
     });
@@ -411,7 +427,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
             capacityFilterValue: [1, 24],
         });
 
-        expect(nextUrl).toContain('#/spaces/results/map?');
+        expect(nextUrl).toContain('#/spaces/mapresults?');
         expect(nextUrl).toContain('mapFilters=');
         expect(nextUrl).toContain('autoSelectFirstSpace=1');
     });

@@ -288,7 +288,7 @@ export const BookableSpacesList = ({
         if (forceAdvanced) return false;
 
         const pathname = window.location.pathname || location.pathname || '';
-        if (pathname === '/spaces/results/map' || pathname.startsWith('/spaces/results/map/')) {
+        if (pathname === '/spaces/mapresults' || pathname.startsWith('/spaces/mapresults/')) {
             return false;
         }
 
