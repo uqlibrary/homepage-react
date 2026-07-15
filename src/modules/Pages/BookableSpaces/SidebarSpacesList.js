@@ -162,7 +162,7 @@ SidebarSpacesList.propTypes = {
     spacesFavouritesList: PropTypes.any,
     isLoggedIn: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
-    isFavouriteActionInProgress: PropTypes.bool,
+    isFavouriteActionInProgress: PropTypes.any,
     onSpaceSelect: PropTypes.func,
     onSpaceToggle: PropTypes.func,
     expandedSpaceId: PropTypes.number,

@@ -1729,7 +1729,7 @@ BookableSpacesJourney.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     onFavouriteToggle: PropTypes.func,
-    isFavouriteActionInProgress: PropTypes.bool,
+    isFavouriteActionInProgress: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesJourney);

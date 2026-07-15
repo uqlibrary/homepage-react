@@ -6,6 +6,7 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 import { getVisibleSpaceOutage } from '../Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export const FILTER_BOOKABLE_TYPE_ID = 9002;
 export const FILTER_CAPACITY_TYPE_ID = 9003;
@@ -329,7 +330,13 @@ export const RenderFavouriteIcon = ({
     onFavouriteToggle,
     isFavouriteActionInProgress,
 }) => {
-    if (!isLoggedIn || !onFavouriteToggle || !!isFavouriteActionInProgress || isFavourite === undefined) {
+    if (!isLoggedIn || !onFavouriteToggle) {
+        return null;
+    }
+    if (!!isFavouriteActionInProgress && isFavouriteActionInProgress === bookableSpace.space_id) {
+        return <CircularProgress color="inherit" size={25} id={`${bookableSpace.space_id}-favorite-progress`} />;
+    }
+    if (isFavourite === undefined) {
         return <span style={{ width: '24px' }}> </span>; // placeholder to minimise movement
     }
 
@@ -370,5 +377,5 @@ RenderFavouriteIcon.propTypes = {
     isFavourite: PropTypes.bool,
     isLoggedIn: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
-    isFavouriteActionInProgress: PropTypes.bool,
+    isFavouriteActionInProgress: PropTypes.any,
 };

@@ -511,7 +511,7 @@ JourneySpaceDetailsView.propTypes = {
     showFavouriteControls: PropTypes.bool,
     isSelectedSpaceFavourite: PropTypes.bool,
     favouriteButtonLabel: PropTypes.string,
-    isFavouriteActionInProgress: PropTypes.bool,
+    isFavouriteActionInProgress: PropTypes.any,
     onFavouriteToggle: PropTypes.func,
     showMap: PropTypes.bool,
 };
