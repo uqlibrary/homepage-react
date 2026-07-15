@@ -1,17 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useAccountContext } from 'context';
 
 import { Box, Button, Chip, Stack, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
+import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
 import { baseButtonStyles, baseHoverFocusStyles, pluralise, StyledPrimaryButton } from 'helpers/general';
+
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
+import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
+import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/OpeningHoursDown';
 import {
     defaultChipStyles,
     getFriendlyLocationDescription,
-    RenderFavouriteIcon,
     SpaceOpenStatusChip,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import {
@@ -20,10 +24,6 @@ import {
     getSpaceOutageShowTimePublic,
     getVisibleSpaceOutage,
 } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
-
-import { useAccountContext } from 'context';
-import { OpeningHoursDown } from './OpeningHoursDown';
 
 const journeyFallbackDetailImage = require('../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 

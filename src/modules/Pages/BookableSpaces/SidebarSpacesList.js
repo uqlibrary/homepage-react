@@ -7,7 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
 
 import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
-import { RenderFavouriteIcon } from './spacesHelpers';
+import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
 
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
