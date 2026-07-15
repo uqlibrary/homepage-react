@@ -302,6 +302,19 @@ describe('BookableSpacesList campus selection', () => {
         expect(parsedUrl.hash).toContain('#/spaces/results');
     });
 
+    it('preserves existing filter query params when switching from map view to the journey list view', () => {
+        const navigatedUrl = buildJourneyNavigationUrl({
+            currentUrl: 'http://localhost/feature-uqslanca-2/#/spaces/mapresults?mapFilters=abc&autoSelectFirstSpace=1',
+            selectedFacilityTypes: [],
+            selectedCampus: 1,
+            selectedLibrary: 0,
+            capacityFilterValue: [],
+        });
+
+        expect(navigatedUrl).toContain('mapFilters=abc');
+        expect(navigatedUrl).toContain('autoSelectFirstSpace=1');
+    });
+
     it('auto-selects the only visible space in the advanced view', async () => {
         const encodedState = encodeURIComponent(
             JSON.stringify({
