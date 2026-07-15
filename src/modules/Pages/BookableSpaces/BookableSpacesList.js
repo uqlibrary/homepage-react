@@ -417,7 +417,6 @@ export const BookableSpacesList = ({
         const normalizedSelectedCampusId = Number(selectedCampusId);
         const spacesListForCampus = spacesList?.filter(s => s.space_campus_id === normalizedSelectedCampusId);
 
-        /* eslint-disable camelcase */
         const buildingsOnCampus =
             !!spacesListForCampus &&
             Object.values(
@@ -589,23 +588,21 @@ export const BookableSpacesList = ({
             !!bookableSpacesRoomList?.data?.locations
         ) {
             // the space with the highest capacity
-            const spaceMaxCapacity = bookableSpacesRoomList?.data?.locations?.reduce(function findMax(
-                highestCapacity,
-                current,
-            ) {
-                return highestCapacity &&
-                    typeof current.space_capacity === 'number' &&
-                    highestCapacity.space_capacity < current.space_capacity
-                    ? current
-                    : highestCapacity;
-            });
+            const spaceMaxCapacity = bookableSpacesRoomList?.data?.locations?.reduce(
+                function findMax(highestCapacity, current) {
+                    return highestCapacity &&
+                        typeof current.space_capacity === 'number' &&
+                        highestCapacity.space_capacity < current.space_capacity
+                        ? current
+                        : highestCapacity;
+                },
+            );
             const calculatedMaxCapaity = !!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity;
             setMaximumSpaceCapacity(calculatedMaxCapaity);
             if (!Array.isArray(journeyMapFilterState?.capacityFilterValue)) {
                 setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
             }
 
-            /* eslint-disable camelcase */
             const currentCampusList = Object.values(
                 bookableSpacesRoomList?.data?.locations?.reduce(
                     (acc, { space_campus_id, space_campus_name, space_campus_number }) => {
@@ -1071,7 +1068,6 @@ export const BookableSpacesList = ({
 
     // Memoize so that MazeMaps state changes (isMazeMapScriptReady, isMazeMapReady, mapContainer)
     // don't cause SidebarSpacesList to receive a new array reference and re-render unnecessarily.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const sortedSpaceLocations = React.useMemo(() => {
         const allFilterTypes = {};
         getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList)?.data?.facility_type_groups?.forEach(
@@ -1105,18 +1101,6 @@ export const BookableSpacesList = ({
         selectedCampus,
         selectedLibrary,
     ]);
-    // const visibleSpacesCountBadge = () => {
-    //     return sortedSpaceLocations?.length > 0 &&
-    //         sortedSpaceLocations?.length < bookableSpacesRoomList?.data?.locations?.length ? (
-    //         <Badge
-    //             badgeContent={sortedSpaceLocations?.length}
-    //             max={bookableSpacesRoomList?.data?.locations?.length}
-    //             color="primary"
-    //             style={{ marginRight: '0.3rem' }} // it tries to sit too far to the right
-    //             data-testid="space-space-count"
-    //         />
-    //     ) : null;
-    // };
 
     React.useEffect(() => {
         if (useJourneyExperience || !sortedSpaceLocations?.length || sortedSpaceLocations.length !== 1) {
