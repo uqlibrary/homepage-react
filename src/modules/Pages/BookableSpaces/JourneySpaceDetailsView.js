@@ -11,6 +11,7 @@ import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import {
     defaultChipStyles,
     getFriendlyLocationDescription,
+    RenderFavouriteIcon,
     SpaceOpenStatusChip,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import {
@@ -29,17 +30,20 @@ const journeyFallbackDetailImage = require('../../../../public/images/digital-le
 const StyledDetailSurface = styled('div')(({ theme }) => ({
     color: theme.palette.designSystem.bodyCopy,
 }));
-const StyledSpaceTitleTypography = styled(Typography)(({ theme }) => ({
-    fontFamily: theme.palette.designSystem.fontFamilyH1,
-    fontWeight: 500,
-    color: theme.palette.designSystem.headingColor,
-    // marginBottom: '1rem',
-    lineHeight: 1.2,
-}));
-const StyledNameTypography = styled(Typography)(({ theme }) => ({
-    color: theme.palette.designSystem.bodyCopy,
-    marginBottom: '1rem',
-    fontSize: '1rem',
+const StyledSpaceTitleWrapperBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    '& > span': {
+        display: 'flex',
+        columnGap: '6px',
+        justifyContent: 'flex-start',
+        '& h2': {
+            fontWeight: 500,
+            color: theme.palette.designSystem.headingColor,
+            lineHeight: 1.2,
+        },
+    },
 }));
 const StyledFriendlyLocationDiv = styled('div')(() => ({
     marginBottom: '1rem',
@@ -176,9 +180,7 @@ const JourneySpaceDetailsView = ({
     narrowView = true,
     backLabel = 'Back to results',
     onBack,
-    showFavouriteControls = false,
     isSelectedSpaceFavourite = false,
-    favouriteButtonLabel = 'Add to favourites',
     isFavouriteActionInProgress = false,
     onFavouriteToggle,
     showMap = true,
@@ -289,16 +291,27 @@ const JourneySpaceDetailsView = ({
                 </StyledDetailImage>
                 <Stack spacing={2} sx={{ pt: { xs: 0, md: 0.5 } }}>
                     <Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <StyledSpaceTitleTypography
-                                component="h2"
-                                variant="h5"
-                                data-testid={`spaces-${selectedSpace?.space_id}-details-name`}
-                            >
-                                {selectedSpace?.space_name}
-                            </StyledSpaceTitleTypography>
+                        <StyledSpaceTitleWrapperBox>
+                            <span>
+                                {!narrowView && isLoggedIn && !!selectedSpace?.space_id && (
+                                    <RenderFavouriteIcon
+                                        bookableSpace={selectedSpace}
+                                        isFavourite={isSelectedSpaceFavourite}
+                                        isLoggedIn={isLoggedIn}
+                                        onFavouriteToggle={() => onFavouriteToggle?.(selectedSpace)}
+                                        isFavouriteActionInProgress={isFavouriteActionInProgress}
+                                    />
+                                )}
+                                <Typography
+                                    component="h2"
+                                    variant="h5"
+                                    data-testid={`spaces-${selectedSpace?.space_id}-details-name`}
+                                >
+                                    {selectedSpace?.space_name}
+                                </Typography>
+                            </span>
                             {narrowView && <OpenSpaceNewWindowButton spaceId={selectedSpace} />}
-                        </Box>
+                        </StyledSpaceTitleWrapperBox>
                         {/* <StyledNameTypography variant="body2">{selectedSpace?.space_library_name}</StyledNameTypography>*/}
                         <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
                             {getFriendlyLocationDescription(selectedSpace, false, { space_name: true })}
@@ -316,18 +329,6 @@ const JourneySpaceDetailsView = ({
                                         fontWeight: 700,
                                     }}
                                 />
-                                {isSelectedSpaceFavourite && (
-                                    <Chip
-                                        data-testid={`spaces-${selectedSpace?.space_id}-detail-favourite-chip`}
-                                        label="Favourite"
-                                        size="small"
-                                        sx={{
-                                            ...defaultChipStyles(theme),
-                                            backgroundColor: theme.palette.designSystem.alert.info,
-                                            fontWeight: 700,
-                                        }}
-                                    />
-                                )}
                                 <SpaceOpenStatusChip
                                     space={selectedSpace}
                                     weeklyHours={weeklyHours}
@@ -400,18 +401,6 @@ const JourneySpaceDetailsView = ({
                                         .trim()}
                                 </StyledSpaceDescriptionTypography>
                             )}
-                        </Box>
-                    )}
-
-                    {showFavouriteControls && isLoggedIn && !!selectedSpace?.space_id && (
-                        <Box>
-                            <StyledTightLinkButton
-                                variant={isSelectedSpaceFavourite ? 'contained' : 'outlined'}
-                                disabled={isFavouriteActionInProgress}
-                                onClick={() => onFavouriteToggle?.(selectedSpace)}
-                            >
-                                {favouriteButtonLabel}
-                            </StyledTightLinkButton>
                         </Box>
                     )}
                 </Stack>
@@ -508,9 +497,7 @@ JourneySpaceDetailsView.propTypes = {
     narrowView: PropTypes.bool,
     backLabel: PropTypes.string,
     onBack: PropTypes.func,
-    showFavouriteControls: PropTypes.bool,
     isSelectedSpaceFavourite: PropTypes.bool,
-    favouriteButtonLabel: PropTypes.string,
     isFavouriteActionInProgress: PropTypes.any,
     onFavouriteToggle: PropTypes.func,
     showMap: PropTypes.bool,

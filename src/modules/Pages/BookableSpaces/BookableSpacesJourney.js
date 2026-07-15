@@ -666,13 +666,6 @@ const BookableSpacesJourney = ({
         const action = favouriteSpaceIds.has(String(space.space_id)) ? 'removeSpaceFavourite' : 'addSpaceFavourite';
         await onFavouriteToggle(action, space.space_id);
     };
-    let favouriteButtonLabel = 'Add to favourites';
-    if (isSelectedSpaceFavourite) {
-        favouriteButtonLabel = 'Remove from favourites';
-    }
-    if (isFavouriteActionInProgress) {
-        favouriteButtonLabel = 'Updating favourites...';
-    }
     React.useEffect(() => {
         if (!canShowAdvancedFilters) {
             setShowAdvancedFilters(false);
@@ -1685,9 +1678,7 @@ const BookableSpacesJourney = ({
                             weeklyHoursLoading={weeklyHoursLoading}
                             weeklyHoursError={weeklyHoursError}
                             showBackButton={false}
-                            showFavouriteControls
                             isSelectedSpaceFavourite={isSelectedSpaceFavourite}
-                            favouriteButtonLabel={favouriteButtonLabel}
                             isFavouriteActionInProgress={isFavouriteActionInProgress}
                             onFavouriteToggle={handleJourneyFavouriteToggle}
                             showMap
