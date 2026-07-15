@@ -183,11 +183,22 @@ export const buildJourneyNavigationUrl = ({
     capacityFilterValue,
 }) => {
     const url = new URL(currentUrl);
+    const hashValue = url.hash || '';
+    const isHashRouting = hashValue.startsWith('#/');
+    const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
+    const existingParams = new URLSearchParams(hashSearch || url.search || '');
+
     const hasActiveJourneyFilters = (selectedFacilityTypes || []).some(
         filter => filter?.selected || filter?.unselected,
     );
-    const hashValue = url.hash || '';
-    const isHashRouting = hashValue.startsWith('#/');
+
+    const preservedQueryParams = new URLSearchParams();
+    ['mapFilters', 'autoSelectFirstSpace'].forEach(key => {
+        const value = existingParams.get(key);
+        if (value !== null) {
+            preservedQueryParams.set(key, value);
+        }
+    });
 
     url.searchParams.delete('advanced');
     url.searchParams.delete('journeyStep');
@@ -197,6 +208,7 @@ export const buildJourneyNavigationUrl = ({
 
     if (isHashRouting) {
         url.search = '';
+        const nextQueryString = preservedQueryParams.toString();
         if (hasActiveJourneyFilters) {
             const encodedMapFilters = serialiseJourneyMapFilterState({
                 selectedFacilityTypes,
@@ -204,9 +216,11 @@ export const buildJourneyNavigationUrl = ({
                 selectedLibrary,
                 capacityFilterValue,
             });
-            url.hash = `#/spaces/results?mapFilters=${encodedMapFilters}`;
+            const nextSearchParams = new URLSearchParams(nextQueryString);
+            nextSearchParams.set('mapFilters', encodedMapFilters);
+            url.hash = `#/spaces/results?${nextSearchParams.toString()}`;
         } else {
-            url.hash = '#/spaces';
+            url.hash = `#/spaces${nextQueryString ? `?${nextQueryString}` : ''}`;
         }
         return url.toString();
     }
@@ -220,9 +234,12 @@ export const buildJourneyNavigationUrl = ({
         });
 
         url.pathname = '/spaces/results';
-        url.searchParams.set('mapFilters', encodedMapFilters);
+        const nextSearchParams = new URLSearchParams(preservedQueryParams.toString());
+        nextSearchParams.set('mapFilters', encodedMapFilters);
+        url.search = nextSearchParams.toString();
     } else {
         url.pathname = '/spaces';
+        url.search = preservedQueryParams.toString();
     }
 
     return url.toString();

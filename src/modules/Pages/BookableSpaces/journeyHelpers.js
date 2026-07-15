@@ -178,6 +178,23 @@ const getJourneyPathname = url => {
 
 export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
     const url = new URL(window.location.href);
+    const hashValue = url.hash || '';
+    const isHashRouting = hashValue.startsWith('#/');
+
+    const getPreservedQueryParams = () => {
+        const hashQuery = hashValue.includes('?') ? hashValue.split('?')[1] : '';
+        const params = new URLSearchParams(hashQuery || url.search || '');
+        const nextParams = new URLSearchParams();
+
+        ['mapFilters', 'autoSelectFirstSpace'].forEach(key => {
+            const value = params.get(key);
+            if (value !== null) {
+                nextParams.set(key, value);
+            }
+        });
+
+        return nextParams.toString();
+    };
 
     const buildPath = ({ nextView, nextIntentId, nextSpaceId }) => {
         if (nextView === 'results') {
@@ -195,11 +212,16 @@ export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
     };
 
     const nextPath = buildPath({ nextView: view, nextIntentId: intentId, nextSpaceId: spaceId });
-    if ((url.hash || '').startsWith('#/')) {
-        return `#${nextPath}`;
+    const preservedQueryParams = getPreservedQueryParams();
+    const querySuffix = preservedQueryParams ? `?${preservedQueryParams}` : '';
+
+    if (isHashRouting) {
+        const branchPrefix = url.pathname && url.pathname !== '/' ? url.pathname.replace(/\/+$/, '') : '';
+        const branchPrefixPath = branchPrefix ? `${branchPrefix}/` : '';
+        return `${branchPrefixPath}#${nextPath}${querySuffix}`;
     }
 
-    return nextPath;
+    return `${nextPath}${querySuffix}`;
 };
 
 export const parseJourneyStateFromUrl = availableIntentDefinitions => {

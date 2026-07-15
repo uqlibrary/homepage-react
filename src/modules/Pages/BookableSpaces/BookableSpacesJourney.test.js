@@ -446,6 +446,23 @@ describe('BookableSpacesJourney browser back navigation', () => {
         expect(parsedUrl.hash).toContain('#/spaces/mapresults?');
     });
 
+    it('returns a path-relative URL for browser-router links', () => {
+        window.history.replaceState({}, '', '/spaces');
+
+        const nextUrl = serialiseJourneyUrl({ view: 'details', intentId: null, spaceId: 'space-123' });
+
+        expect(nextUrl).toBe('/spaces/detail/space-123');
+    });
+
+    it('preserves mapFilters when serialising the journey URL between views', () => {
+        window.history.replaceState({}, '', '/#/spaces/results?mapFilters=abc123&autoSelectFirstSpace=1');
+
+        const nextUrl = serialiseJourneyUrl({ view: 'details', intentId: null, spaceId: 'space-123' });
+
+        expect(nextUrl).toContain('mapFilters=abc123');
+        expect(nextUrl).toContain('autoSelectFirstSpace=1');
+    });
+
     it('hides the landing highlighted space block when no highlighted space is available', () => {
         renderJourney({ ...defaultProps, highlightedSpace: null });
 
