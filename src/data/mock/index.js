@@ -1785,20 +1785,14 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(/bookable_spaces\/space\/\d+\/outages.*/)
     .reply(config => {
-        const urlTail = config.url
-            .split('/')
-            .slice(-2)
-            .join('/');
+        const urlTail = config.url.split('/').slice(-2).join('/');
         const spaceId = urlTail.split('/')[0];
         return [200, { status: 'OK', data: getMockSpaceOutagesForSpace(spaceId) }];
     })
     .onPost(/bookable_spaces\/space\/\d+\/outages.*/)
     .reply(config => {
         const body = JSON.parse(config.data);
-        const urlTail = config.url
-            .split('/')
-            .slice(-2)
-            .join('/');
+        const urlTail = config.url.split('/').slice(-2).join('/');
         const spaceId = body?.space_id || urlTail.split('/')[0];
         const newOutage = {
             space_outage_id: getNextMockSpaceOutageId(),
@@ -1814,10 +1808,7 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onPut(/bookable_spaces\/space_outage\/\d+.*/)
     .reply(config => {
-        const outageId = config.url
-            .split('/')
-            .pop()
-            .split('?')[0];
+        const outageId = config.url.split('/').pop().split('?')[0];
         const body = JSON.parse(config.data);
         const existingOutage = mockSpaceOutageRecords.find(
             outage => String(outage?.space_outage_id) === String(outageId),
@@ -1835,10 +1826,7 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onDelete(/bookable_spaces\/space_outage\/\d+.*/)
     .reply(config => {
-        const outageId = config.url
-            .split('/')
-            .pop()
-            .split('?')[0];
+        const outageId = config.url.split('/').pop().split('?')[0];
         mockSpaceOutageRecords = mockSpaceOutageRecords.filter(
             outage => String(outage?.space_outage_id) !== String(outageId),
         );
@@ -2185,10 +2173,7 @@ mock.onGet('exams/course/FREN1010/summary')
     // SPACES_ADMIN_SINGLE_API - returns a single space by uuid for admin (includes deleted metadata)
     .onGet(/bookable_spaces\/admin\/space\/.*/)
     .reply(config => {
-        const spaceUuid = config.url
-            .split('/')
-            .pop()
-            .split('?')[0];
+        const spaceUuid = config.url.split('/').pop().split('?')[0];
         if (spaceUuid === 'error') {
             return [500, { status: 'error', message: 'Server error' }];
         } else if (spaceUuid === '404') {
@@ -2200,12 +2185,7 @@ mock.onGet('exams/course/FREN1010/summary')
     // SPACES_MODIFY_LOCATION_API (PUT) - handles soft-delete toggle and other space updates
     .onPut(/bookable_spaces\/space\/\d+.*/)
     .reply(config => {
-        const spaceId = Number(
-            config.url
-                .split('/')
-                .pop()
-                .split('?')[0],
-        );
+        const spaceId = Number(config.url.split('/').pop().split('?')[0]);
         const body = JSON.parse(config.data || '{}');
         const space = bookableSpaces_all.data.locations.find(s => s.space_id === spaceId);
         if (!space) {
