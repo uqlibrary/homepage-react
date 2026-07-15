@@ -21,7 +21,9 @@ test.describe('Spaces Homepage', () => {
         await page.getByTestId('homepage-hours-bookit-link').click();
         await expect(page).toHaveURL('http://localhost:2020/spaces?user=s1111111');
         await page.getByTestId('spaces-journey-landing-browse-all').click();
-        await expect(page).toHaveURL(/advanced=1/);
+        await expect(page).toHaveURL(/\/spaces\/mapresults(?:\?|$)/);
+        await expect(page).toHaveURL(/mapFilters=/);
+        await expect(page).toHaveURL(/autoSelectFirstSpace=1/);
         await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
     });
     test('spaces homepage has correct favourites', async ({ page }) => {

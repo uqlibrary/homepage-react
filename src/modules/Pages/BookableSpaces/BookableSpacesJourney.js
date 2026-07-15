@@ -370,7 +370,7 @@ export const buildLegacyBrowseNavigationUrl = ({
         const hashPath = hashValue.slice(1).split('?')[0] || '/spaces';
         const spacesSegmentIndex = hashPath.indexOf('/spaces');
         const hashPrefix = spacesSegmentIndex > 0 ? hashPath.slice(0, spacesSegmentIndex) : '';
-        const nextHashPath = `${hashPrefix}/spaces/results/map`;
+        const nextHashPath = `${hashPrefix}/spaces/mapresults`;
 
         url.pathname = '/';
         url.search = '';
@@ -378,7 +378,7 @@ export const buildLegacyBrowseNavigationUrl = ({
         return url.toString();
     }
 
-    url.pathname = '/spaces/results/map';
+    url.pathname = '/spaces/mapresults';
     url.search = searchParams.toString();
     url.hash = '';
     return url.toString();

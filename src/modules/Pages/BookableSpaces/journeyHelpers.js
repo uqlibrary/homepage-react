@@ -215,18 +215,26 @@ export const parseJourneyStateFromUrl = availableIntentDefinitions => {
         return availableIntentDefinitions?.some(intent => intent.id === decodedIntentId) ? decodedIntentId : null;
     };
 
-    if (pathname === '/spaces/results' || pathname.startsWith('/spaces/results/')) {
-        if (pathname === '/spaces/results/map') {
-            return { view: 'results', intentId: null, spaceId: null };
-        }
+    if (pathname === '/spaces/mapresults' || pathname.startsWith('/spaces/mapresults/')) {
+        return { view: 'results', intentId: null, spaceId: null };
+    }
 
-        if (pathname.startsWith('/spaces/results/filters=')) {
-            const filterValue = decodeURIComponent(pathname.split('/spaces/results/filters=')[1] || '');
-            const parsedIntentId = resolveIntentId(filterValue);
+    if (pathname === '/spaces/results' || pathname === '/spaces/results/') {
+        return { view: 'results', intentId: null, spaceId: null };
+    }
+
+    if (pathname.startsWith('/spaces/results/filters=')) {
+        const filterValue = decodeURIComponent(pathname.split('/spaces/results/filters=')[1] || '');
+        const parsedIntentId = resolveIntentId(filterValue);
+        return { view: 'results', intentId: parsedIntentId, spaceId: null };
+    }
+
+    if (pathname.startsWith('/spaces/results/')) {
+        const tokenValue = decodeURIComponent(pathname.split('/spaces/results/')[1] || '');
+        const parsedIntentId = resolveIntentId(tokenValue);
+        if (parsedIntentId) {
             return { view: 'results', intentId: parsedIntentId, spaceId: null };
         }
-
-        return { view: 'results', intentId: null, spaceId: null };
     }
 
     if (pathname === '/spaces/detail' || pathname.startsWith('/spaces/detail/')) {
