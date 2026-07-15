@@ -186,11 +186,30 @@ export const buildJourneyNavigationUrl = ({
     const hasActiveJourneyFilters = (selectedFacilityTypes || []).some(
         filter => filter?.selected || filter?.unselected,
     );
+    const hashValue = url.hash || '';
+    const isHashRouting = hashValue.startsWith('#/');
+
     url.searchParams.delete('advanced');
     url.searchParams.delete('journeyStep');
     url.searchParams.delete('journeyIntent');
     url.searchParams.delete('journeySpace');
     url.searchParams.delete('mapFilters');
+
+    if (isHashRouting) {
+        url.search = '';
+        if (hasActiveJourneyFilters) {
+            const encodedMapFilters = serialiseJourneyMapFilterState({
+                selectedFacilityTypes,
+                selectedCampus,
+                selectedLibrary,
+                capacityFilterValue,
+            });
+            url.hash = `#/spaces/results?mapFilters=${encodedMapFilters}`;
+        } else {
+            url.hash = '#/spaces';
+        }
+        return url.toString();
+    }
 
     if (hasActiveJourneyFilters) {
         const encodedMapFilters = serialiseJourneyMapFilterState({

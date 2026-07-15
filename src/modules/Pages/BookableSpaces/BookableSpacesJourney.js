@@ -367,14 +367,8 @@ export const buildLegacyBrowseNavigationUrl = ({
     const isHashRouting = hashValue.startsWith('#/');
 
     if (isHashRouting) {
-        const hashPath = hashValue.slice(1).split('?')[0] || '/spaces';
-        const spacesSegmentIndex = hashPath.indexOf('/spaces');
-        const hashPrefix = spacesSegmentIndex > 0 ? hashPath.slice(0, spacesSegmentIndex) : '';
-        const nextHashPath = `${hashPrefix}/spaces/mapresults`;
-
-        url.pathname = '/';
         url.search = '';
-        url.hash = `${nextHashPath}?${searchParams.toString()}`;
+        url.hash = `#/spaces/mapresults?${searchParams.toString()}`;
         return url.toString();
     }
 

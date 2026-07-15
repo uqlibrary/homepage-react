@@ -432,6 +432,20 @@ describe('BookableSpacesJourney browser back navigation', () => {
         expect(nextUrl).toContain('autoSelectFirstSpace=1');
     });
 
+    it('preserves a branch prefix when building a hash-router map URL', () => {
+        const nextUrl = buildLegacyBrowseNavigationUrl({
+            currentUrl: 'http://localhost:2020/feature-uqslanca-2/#/spaces/results/filters=quiet',
+            selectedFacilityTypes: [{ facility_type_id: 10, selected: true, unselected: false }],
+            selectedCampus: 1,
+            selectedLibrary: 0,
+            capacityFilterValue: [1, 24],
+        });
+
+        const parsedUrl = new URL(nextUrl);
+        expect(parsedUrl.pathname).toBe('/feature-uqslanca-2/');
+        expect(parsedUrl.hash).toContain('#/spaces/mapresults?');
+    });
+
     it('hides the landing highlighted space block when no highlighted space is available', () => {
         renderJourney({ ...defaultProps, highlightedSpace: null });
 
