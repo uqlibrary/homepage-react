@@ -313,7 +313,7 @@ const JourneySpaceDetailsView = ({
                                     {selectedSpace?.space_name}
                                 </Typography>
                             </span>
-                            {narrowView && <OpenSpaceNewWindowButton spaceId={selectedSpace} />}
+                            {narrowView && <OpenSpaceNewWindowButton spaceDetails={selectedSpace} />}
                         </StyledSpaceTitleWrapperBox>
                         {/* <StyledNameTypography variant="body2">{selectedSpace?.space_library_name}</StyledNameTypography>*/}
                         <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
