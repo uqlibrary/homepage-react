@@ -149,7 +149,7 @@ const StyledTightLinkButton = styled(Button)(({ theme }) => ({
 const OpenSpaceNewWindowButton = ({ spaceDetails }) => {
     return (
         <a
-            href={`/spaces?journeyStep=details&journeySpace=${spaceDetails?.space_uuid}`}
+            href={`/spaces/detail/${spaceDetails?.space_uuid}`}
             target="_blank"
             style={{ display: 'inline-flex', pr: 0 }}
             aria-label={`Open Space ${spaceDetails?.space_name} in a new window`}
@@ -278,7 +278,10 @@ const JourneySpaceDetailsView = ({
                 </Button>
             ) : null}
 
-            <StyledTopBox id="sdsdsdf" className={isMobileLayout ? 'verticallayout' : 'horizontallayout'}>
+            <StyledTopBox
+                id={`space-${selectedSpace?.space_id}-details`}
+                className={isMobileLayout ? 'verticallayout' : 'horizontallayout'}
+            >
                 <StyledDetailImage>
                     {detailImages?.[0]?.src ? (
                         <img
