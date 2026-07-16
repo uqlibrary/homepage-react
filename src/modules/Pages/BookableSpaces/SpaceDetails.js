@@ -319,13 +319,6 @@ const SpaceDetails = ({
     );
     const isBookable = !!bookableSpace?.space_external_book_url;
     const isSelectedSpaceFavourite = spacesFavouritesList?.some(fav => fav.space_id === bookableSpace?.space_id);
-    let favouriteButtonLabel = 'Add to favourites';
-    if (isSelectedSpaceFavourite) {
-        favouriteButtonLabel = 'Remove from favourites';
-    }
-    if (isFavouriteActionInProgress) {
-        favouriteButtonLabel = 'Updating favourites...';
-    }
     return (
         <div id="SpaceDetailsTemp">
             <StyledSpaceDiv>
@@ -355,11 +348,8 @@ const SpaceDetails = ({
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
                         selectedSpace={bookableSpace}
-                        showFavouriteControls
                         isSelectedSpaceFavourite={isSelectedSpaceFavourite}
-                        favouriteButtonLabel={favouriteButtonLabel}
                         isFavouriteActionInProgress={isFavouriteActionInProgress}
-                        // onFavouriteToggle={handleJourneyFavouriteToggle}
                         showMap={false}
                         showBackButton={false}
                         narrowView

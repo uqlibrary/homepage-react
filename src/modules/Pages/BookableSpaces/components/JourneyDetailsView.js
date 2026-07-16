@@ -24,7 +24,6 @@ JourneyDetailsView.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     isSelectedSpaceFavourite: PropTypes.bool,
-    favouriteButtonLabel: PropTypes.string,
     isFavouriteActionInProgress: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
 };
