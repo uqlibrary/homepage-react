@@ -145,7 +145,7 @@ const CollapsedSection = ({
             {!!visibleOutage && (
                 <ShowOutageNotice bookableSpace={bookableSpace} visibleOutage={visibleOutage} isCollapsed />
             )}
-            <BookingLink bookableSpace={bookableSpace} showRequired /> {/* showRequired=true*/}
+            <BookingLink bookableSpace={bookableSpace} showNoBookingRequired /> {/* showNoBookingRequired=true*/}
             {isBookable(bookableSpace) && !!bookableSpace?.space_capacity && bookableSpace?.space_capacity > 0 && (
                 <StyleCapacityDiv data-testid={`space-${bookableSpace?.space_id}-capacity`}>
                     <PeopleOutlineIcon />

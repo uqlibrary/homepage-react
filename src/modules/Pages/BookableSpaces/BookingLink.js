@@ -27,7 +27,7 @@ const StyledBookitLinkWrapperDiv = styled('div')(({ theme }) => ({
         },
     },
 }));
-export const BookingLink = ({ bookableSpace, showRequired }) => {
+export const BookingLink = ({ bookableSpace, showNoBookingRequired }) => {
     const uqBookitMakeABookingIcon = (
         <svg
             height="512"
@@ -52,14 +52,14 @@ export const BookingLink = ({ bookableSpace, showRequired }) => {
             </StyledBookitLinkWrapperDiv>
         );
     }
-    if (!isBookable(bookableSpace) && !!showRequired) {
+    if (!isBookable(bookableSpace) && !!showNoBookingRequired) {
         return <div data-testid={`space-${bookableSpace?.space_id}-not-bookable`}>No booking required.</div>;
     }
     return null;
 };
 BookingLink.propTypes = {
     bookableSpace: PropTypes.any,
-    showRequired: PropTypes.bool,
+    showNoBookingRequired: PropTypes.bool,
 };
 
 export default BookingLink;
