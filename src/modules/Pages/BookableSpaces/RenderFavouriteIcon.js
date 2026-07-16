@@ -10,7 +10,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const typLeft = {
+const topLeft = {
     padding: '0.25rem',
     '&.topLeft': {
         // on the results page, we have to position it absolutely over the main panel, because we cant put a button within a link!
@@ -20,8 +20,9 @@ const typLeft = {
         left: '1.25rem',
     },
 };
-const StyledTooltip = styled(Tooltip)(() => typLeft);
-const StyledCircularProgress = styled(CircularProgress)(() => typLeft);
+const StyledTooltip = styled(Tooltip)(() => topLeft);
+const StyledCircularProgress = styled(CircularProgress)(() => topLeft);
+
 export const RenderFavouriteIcon = ({
     bookableSpace,
     isFavourite,
