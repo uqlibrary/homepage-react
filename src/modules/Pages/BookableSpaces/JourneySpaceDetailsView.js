@@ -265,7 +265,6 @@ const JourneySpaceDetailsView = ({
         return null;
     }
 
-    console.log('### selectedSpace=', selectedSpace);
     return (
         <>
             {showBackButton ? (

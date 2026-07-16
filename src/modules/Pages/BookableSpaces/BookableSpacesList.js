@@ -263,19 +263,6 @@ export const BookableSpacesList = ({
     const { account } = useAccountContext();
     const location = useLocation();
     const isLoggedIn = !!account?.id;
-    console.log(
-        'BookableSpacesList load facilityTypeList:',
-        facilityTypeListLoading,
-        facilityTypeListError,
-        facilityTypeList,
-    );
-    console.log('BookableSpacesList load weeklyHours:', weeklyHoursLoading, weeklyHoursError, weeklyHours);
-    console.log(
-        'BookableSpacesList load bookableSpacesRoomList:',
-        bookableSpacesRoomListLoading,
-        bookableSpacesRoomListError,
-        bookableSpacesRoomList,
-    );
 
     const dispatch = useDispatch();
     React.useEffect(() => {
@@ -291,8 +278,6 @@ export const BookableSpacesList = ({
             ) ?? [],
         [drupalArticleList],
     );
-
-    console.log('servicesAndSpacesArticles', servicesAndSpacesArticles);
 
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -358,8 +343,6 @@ export const BookableSpacesList = ({
     };
 
     const handleSpaceSelect = useCallback(space => {
-        console.log('### handleSpaceExpand space=', space);
-
         highlightPanel(space);
 
         // show space's location on the map
@@ -523,8 +506,6 @@ export const BookableSpacesList = ({
         if (Number.isNaN(campusId)) {
             return;
         }
-        console.log('BookableSpacesList campus::handleCampusSelection', campusId, e);
-        console.log('BookableSpacesList campus::handleCampusSelection bookableSpacesRoomList=', bookableSpacesRoomList);
         setSelectedCampus(campusId);
         setSelectedFacilityTypes([]); // reset so the useEffect re-initializes with the new campus's facility types
 
@@ -536,7 +517,6 @@ export const BookableSpacesList = ({
         setSelectedLibrary(ALL_LIBRARIES_ID); // clear the library on changing campus
 
         const locationOfCentreOfCampus = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
-        console.log('### locationOfCentreOfCampus=', locationOfCentreOfCampus);
         setExpandedSpaceId(null);
         !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
     };
@@ -794,13 +774,9 @@ export const BookableSpacesList = ({
                 const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
                 // OR within group
-                console.log('====');
-                console.log('selectedFiltersInGroup', selectedFiltersInGroup);
                 const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
                     const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                    console.log(space.space_id, filterId, 'facility_special_action=', filter?.facility_special_action);
                     if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
-                        console.log('filter: FILTER_CURRENTLY_OPEN_ACTION_NAME');
                         return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
                     } else if (
                         filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME &&
@@ -817,18 +793,14 @@ export const BookableSpacesList = ({
                         !selectedFiltersInGroup.includes(FILTER_CAPACITY_TYPE_ID)
                     ) {
                         // we only check the bookable action on its own if we aren't checking the capacity action
-                        console.log('filter: FILTER_BOOKABLE_ACTION_NAME');
                         return isBookable(space);
                     } else {
                         // We could specifically exclude FILTER_BOOKABLE_ACTION_NAME here, but we don't need to because
                         // it doesn't have a matching filter.
                         // regular checkbox from admin-managed facility-types
-                        const result = spaceFacilityTypes?.includes(filterId);
-                        console.log('filter: default - check', filterId, 'is in', spaceFacilityTypes, '=', result);
-                        return result;
+                        return spaceFacilityTypes?.includes(filterId);
                     }
                 });
-                console.log('hasMatchInGroup=', hasMatchInGroup);
                 if (!hasMatchInGroup) {
                     return false;
                 }
@@ -849,9 +821,7 @@ export const BookableSpacesList = ({
                 ?.filter(space => space.space_campus_id === correctedCampusId(selectedCampus))
                 ?.flatMap(space => space?.facility_types || [])
                 ?.map(facilityType => facilityType?.facility_type_id);
-            console.log('getFilteredFacilityTypeList selectedCampus=', selectedCampus, 'spaceFilters=', spaceFilters);
             const spaceFiltersSet = new Set(spaceFilters);
-            console.log('getFilteredFacilityTypeList spaceFiltersSet=', spaceFiltersSet);
 
             // filter facility types so we only show the checkboxes where there is an associated space
             // (this will remove the group completely if it has no shown checkboxes)
@@ -882,7 +852,6 @@ export const BookableSpacesList = ({
                         ?.filter(group => group?.facility_type_children?.length > 0),
                 },
             };
-            console.log('filteredFacilityTypeList=', filteredFacilityTypeList);
 
             // manually add a "Currently Open" filter
             const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
@@ -933,10 +902,6 @@ export const BookableSpacesList = ({
             !!filterOpenFacilityType &&
                 filteredFacilityTypeList?.data?.facility_type_groups?.push(filterCapacityFacilityType);
 
-            console.log(
-                'getFilteredFacilityTypeList::filteredFacilityTypeList=',
-                filteredFacilityTypeList?.data?.facility_type_groups,
-            );
             return filteredFacilityTypeList;
         },
         [correctedCampusId, selectedCampus, useJourneyExperience],

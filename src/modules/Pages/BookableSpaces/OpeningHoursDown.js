@@ -18,7 +18,6 @@ export const OpeningHoursDown = ({
     bookableSpace,
     showShortList = true,
 }) => {
-    console.log('OpeningHoursDown weeklyHours=', weeklyHours?.locations);
     const theme = useTheme();
 
     const spaceId = bookableSpace?.space_id;
@@ -41,7 +40,6 @@ export const OpeningHoursDown = ({
     }
 
     const openingHoursList = spaceOpeningHours(bookableSpace, weeklyHours);
-    console.log('OpeningHoursDown openingHoursList=', openingHoursList);
 
     if (!openingHoursList || openingHoursList?.length === 0) {
         return ''; // no opening hours

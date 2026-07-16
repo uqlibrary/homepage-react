@@ -324,7 +324,6 @@ export const SidebarFilters = ({
                     facility_special_action: facilityType?.facility_special_action,
                 };
             });
-            console.log('setSelectedFacilityTypes call 1');
             setSelectedFacilityTypes(newFilters);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -349,8 +348,6 @@ export const SidebarFilters = ({
 
     // TODO remove isUnselected, remove unselected
     const setFilters = (facilityTypeId, isSelected, isUnselected, facilitySpecialAction) => {
-        console.log('setFilters =', facilityTypeId, isSelected, isUnselected, facilitySpecialAction);
-        console.log('setFilters selectedFacilityTypes', [...selectedFacilityTypes]);
         // Look up from selectedFacilityTypes first; fall back to filteredFacilityTypeList for types
         // that were added to the UI after the initial state was set (e.g. after campus change)
         const resetFilter =
@@ -367,8 +364,6 @@ export const SidebarFilters = ({
                 unselected: isUnselected,
                 facility_special_action: facilitySpecialAction,
             });
-        console.log('setFilters newFilters', newFilters);
-        !!newFilters && console.log('setSelectedFacilityTypes call 2');
         !!newFilters && setSelectedFacilityTypes(newFilters);
     };
 
@@ -405,7 +400,6 @@ export const SidebarFilters = ({
     };
 
     const handleFilterSelection = (isChecked, facilityType) => {
-        console.log('handleFilterSelection isChecked=', isChecked, 'facilityType=', facilityType);
         const facilityTypeId = facilityType?.facility_type_id;
         const facilitySpecialAction = facilityType?.facility_special_action;
         if (!isChecked && facilityType.facility_type_id === FILTER_BOOKABLE_TYPE_ID) {
@@ -415,14 +409,12 @@ export const SidebarFilters = ({
             // setFilters(FILTER_CAPACITY_TYPE_ID, false, false, FILTER_SPACE_CAPACITY_ACTION_NAME);
 
             // duplicate setFilters function, but for multiple filters
-            console.log('handleFilterSelection selectedFacilityTypes', selectedFacilityTypes);
             const resetFilters = selectedFacilityTypes?.filter(ftf => {
                 return (
                     ftf?.facility_type_id === FILTER_BOOKABLE_TYPE_ID ||
                     ftf?.facility_type_id === FILTER_CAPACITY_TYPE_ID
                 );
             });
-            console.log('handleFilterSelection resetFilters', resetFilters);
             const newFilters = selectedFacilityTypes?.filter(ftf => {
                 return (
                     ftf?.facility_type_id !== FILTER_BOOKABLE_TYPE_ID &&
@@ -439,12 +431,9 @@ export const SidebarFilters = ({
                         facility_special_action: facilitySpecialAction,
                     });
                 });
-            console.log('handleFilterSelection newFilters', newFilters);
-            console.log('setSelectedFacilityTypes call 3');
             !!newFilters && setSelectedFacilityTypes(newFilters);
             setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
         } else {
-            console.log('handleFilterSelection either not bookable or is checking bookable');
             showHideActiveFilterListItems(facilityTypeId, isChecked);
 
             setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
@@ -523,7 +512,6 @@ export const SidebarFilters = ({
                 facility_type: ft?.facility_type,
             };
         });
-        console.log('setSelectedFacilityTypes call 4');
         setSelectedFacilityTypes(newFacilityTypes);
 
         setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
