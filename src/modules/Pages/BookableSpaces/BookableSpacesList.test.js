@@ -35,7 +35,7 @@ jest.mock('context', () => ({
 jest.mock('@mui/material/useMediaQuery', () => jest.fn(() => false));
 
 jest.mock('modules/Pages/BookableSpaces/SidebarSpacesList', () => () => <div data-testid="mock-spaces-list" />);
-jest.mock('modules/Pages/BookableSpaces/BookableSpacesJourney', () => props => {
+jest.mock('./BookableSpacesHomepage', () => props => {
     mockJourneyRender(props);
     return <div data-testid="mock-journey" />;
 });

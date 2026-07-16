@@ -26,7 +26,7 @@ import { useAccountContext } from 'context';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
-import BookableSpacesJourney from 'modules/Pages/BookableSpaces/BookableSpacesJourney';
+import BookableSpacesHomepage from './BookableSpacesHomepage';
 import {
     FACILITY_TYPE_CHECKBOX,
     FACILITY_TYPE_SLIDER,
@@ -1195,7 +1195,7 @@ export const BookableSpacesList = ({
                     );
                 } else if (useJourneyExperience) {
                     return (
-                        <BookableSpacesJourney
+                        <BookableSpacesHomepage
                             filteredSpaceLocations={sortedSpaceLocations}
                             allSpaceLocations={bookableSpacesRoomList?.data?.locations || []}
                             totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}

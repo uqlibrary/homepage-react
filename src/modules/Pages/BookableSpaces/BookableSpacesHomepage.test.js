@@ -10,8 +10,8 @@ jest.mock(
 );
 jest.mock('../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-journey-detail-image');
 
-import BookableSpacesJourney from './BookableSpacesJourney';
-import { buildLegacyBrowseNavigationUrl } from './BookableSpacesJourney';
+import BookableSpacesHomepage from './BookableSpacesHomepage';
+import { buildLegacyBrowseNavigationUrl } from './BookableSpacesHomepage';
 import SidebarFilters from './SidebarFilters';
 import {
     deserialiseJourneyMapFilterState,
@@ -34,7 +34,7 @@ jest.mock('modules/Pages/BookableSpaces/BookableSpacesMap', () => {
     };
 });
 
-describe('BookableSpacesJourney browser back navigation', () => {
+describe('BookableSpacesHomepage browser back navigation', () => {
     const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView;
 
     beforeAll(() => {
@@ -97,7 +97,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
     const renderJourney = props =>
         rtlRender(
             <WithRouter>
-                <BookableSpacesJourney {...props} />
+                <BookableSpacesHomepage {...props} />
             </WithRouter>,
         );
 
@@ -154,7 +154,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
     // it('keeps browser back navigation inside journey steps before leaving the page', () => {
     //     const pushStateSpy = jest.spyOn(window.history, 'pushState');
     //
-    //     rtlRender(<BookableSpacesJourney {...defaultProps} />);
+    //     rtlRender(<BookableSpacesHomepage {...defaultProps} />);
     //
     //     fireEvent.click(screen.getByTestId('spaces-journey-landing-get-started'));
     //     expect(screen.getByText('What sort of space would you like to find?')).toBeInTheDocument();
@@ -310,7 +310,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
         window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
         rtlRender(
             <WithRouter>
-                <BookableSpacesJourney
+                <BookableSpacesHomepage
                     {...defaultProps}
                     selectedFacilityTypes={[]}
                     setSelectedFacilityTypes={setSelectedFacilityTypes}
@@ -366,7 +366,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
                         add extra filter
                     </button>
                     <div data-testid="current-filters">{JSON.stringify(filters)}</div>
-                    <BookableSpacesJourney
+                    <BookableSpacesHomepage
                         {...defaultProps}
                         filteredFacilityTypeList={{
                             data: {

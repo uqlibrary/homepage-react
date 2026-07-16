@@ -907,7 +907,7 @@ JourneyLandingView.propTypes = {
     weeklyHoursError: PropTypes.any,
 };
 
-const BookableSpacesJourney = ({
+const BookableSpacesHomepage = ({
     filteredSpaceLocations,
     allSpaceLocations,
     totalSpaceCount,
@@ -1394,7 +1394,7 @@ const BookableSpacesJourney = ({
     );
 };
 
-BookableSpacesJourney.propTypes = {
+BookableSpacesHomepage.propTypes = {
     filteredSpaceLocations: PropTypes.array,
     allSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
@@ -1427,4 +1427,4 @@ BookableSpacesJourney.propTypes = {
     initialView: PropTypes.oneOf(['landing', 'results', 'details']),
 };
 
-export default React.memo(BookableSpacesJourney);
+export default React.memo(BookableSpacesHomepage);
