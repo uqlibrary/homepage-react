@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box, Button, Chip, Stack, Typography, useTheme } from '@mui/material';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
-import { SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { defaultChipStyles, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import BookingLink from 'modules/Pages/BookableSpaces/BookingLink';
 import { StyledSecondaryButton } from 'helpers/general';
@@ -151,10 +151,9 @@ export const JourneyResultsView = ({
                                                                 label="Upcoming closure"
                                                                 size="small"
                                                                 sx={{
-                                                                    backgroundColor: '#fff8e1',
-                                                                    color: '#7a5a00',
-                                                                    border: '1px solid #ffe082',
-                                                                    fontWeight: 700,
+                                                                    ...defaultChipStyles(theme),
+                                                                    backgroundColor:
+                                                                        theme.palette.designSystem.alert.warning,
                                                                 }}
                                                             />
                                                         )}
