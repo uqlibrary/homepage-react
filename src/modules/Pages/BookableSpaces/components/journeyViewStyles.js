@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const StyledJourneyContentShell = styled(Box)(({ theme }) => ({
@@ -35,7 +35,7 @@ export const StyledJourneyPanel = styled('section', {
 
 export const StyledResultsSplitLayout = styled('div')(({ theme }) => ({
     display: 'grid',
-    gap: '1.5rem',
+    gap: '2rem',
     gridTemplateColumns: 'minmax(0, 4fr) minmax(0, 8fr)',
     alignItems: 'start',
     width: '100%',
@@ -55,22 +55,27 @@ export const StyledResultsSidebarPanel = styled('aside')(({ theme }) => ({
     },
 }));
 
-export const StyledResultCardButton = styled(Button)(({ theme }) => ({
-    width: '100%',
-    padding: '0',
-    textTransform: 'none',
-    justifyContent: 'flex-start',
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: '8px',
-    backgroundColor: '#fff',
-    color: 'inherit',
-    transition: 'all 0.2s ease-in-out',
-    '&:hover': {
-        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
-        borderColor: theme.palette.primary.main,
-        transform: 'translateY(-2px)',
+export const StyledListItemStack = styled(Stack)(({ theme }) => ({
+    position: 'relative',
+
+    '& a.cardBody': {
+        width: '100%',
+        padding: '0',
+        textTransform: 'none',
+        justifyContent: 'flex-start',
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: theme.palette.designSystem.borderRadius,
+        backgroundColor: '#fff',
+        color: 'inherit',
+        '&:hover, &:focus': {
+            backgroundColor: theme.palette.designSystem.panelBackgroundColor,
+        },
     },
-    '&:active': {
-        transform: 'translateY(0)',
+    '&:has(.bookitLink)': {
+        '& a.cardBody': {
+            paddingBottom: '4rem',
+        },
     },
 }));
+
+export const StyledResultCardButton = styled(Button)(({ theme }) => ({}));

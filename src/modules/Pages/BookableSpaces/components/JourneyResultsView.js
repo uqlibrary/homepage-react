@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Chip, Stack, Typography } from '@mui/material';
+import { Box, Chip, Stack, Typography, useTheme } from '@mui/material';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import { SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
@@ -11,15 +11,12 @@ import {
     StyledResultCardButton,
     StyledResultsSidebarPanel,
     StyledResultsSplitLayout,
+    StyledListItemStack,
 } from './journeyViewStyles';
 
 export const JourneyResultsView = ({
-    selectedIntent,
     intentSpaceLocations,
     totalSpaceCount,
-    selectedIntentId,
-    setSelectedSpace,
-    navigateToView,
     handleClearJourneyFilters,
     goToLegacyBrowse,
     selectedFacilityTypes,
@@ -47,6 +44,8 @@ export const JourneyResultsView = ({
     weeklyHoursLoading,
     weeklyHoursError,
 }) => {
+    const theme = useTheme();
+
     const spaces = Array.isArray(intentSpaceLocations) ? intentSpaceLocations : [];
 
     return (
@@ -100,30 +99,28 @@ export const JourneyResultsView = ({
                     </Stack>
 
                     {spaces.length > 0 ? (
-                        <Stack spacing={1.5} sx={{ mt: 1.5 }}>
+                        <Stack spacing={4} sx={{ mt: 1.5 }}>
                             {spaces.map(space => {
                                 const detailId = String(space?.space_uuid || space?.space_id || '');
                                 const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
                                 return (
-                                    <Stack key={detailId || space?.space_id} spacing={1}>
+                                    <StyledListItemStack key={detailId || space?.space_id} spacing={1}>
                                         <StyledResultCardButton
+                                            component="a"
+                                            className="cardBody"
+                                            href={`./detail/${space?.space_uuid}`}
                                             data-testid={`spaces-result-list-item-${space?.space_id}`}
-                                            onClick={() => {
-                                                setSelectedSpace?.(space);
-                                                navigateToView?.('details', {
-                                                    intentId: selectedIntentId,
-                                                    spaceId: detailId,
-                                                });
-                                            }}
                                         >
                                             <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
-                                                <Typography sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5 }}>
+                                                <Typography component={'h3'} variant={'h6'}>
                                                     {space?.space_name || 'Unnamed space'}
                                                 </Typography>
-                                                <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
+                                                <Typography
+                                                    sx={{ color: theme.palette.designSystem.bodyCopy, mb: 0.5 }}
+                                                >
                                                     {space?.space_library_name}
                                                 </Typography>
-                                                <Typography variant="body2" sx={{ color: '#999' }}>
+                                                <Typography sx={{ color: theme.palette.designSystem.bodyCopy }}>
                                                     {space?.space_type_details?.space_type_name || space?.space_type}
                                                 </Typography>
                                                 <Box sx={{ mt: 0.75, mb: 1 }}>
@@ -167,7 +164,7 @@ export const JourneyResultsView = ({
                                                     <Typography
                                                         variant="body2"
                                                         sx={{
-                                                            color: '#4f4d57',
+                                                            color: theme.palette.designSystem.bodyCopy,
                                                             mb: space?.space_description ? 0.75 : 0,
                                                         }}
                                                     >
@@ -177,30 +174,43 @@ export const JourneyResultsView = ({
                                                 {!!space?.space_description && (
                                                     <Typography
                                                         variant="body2"
-                                                        sx={{ color: '#666', fontStyle: 'italic' }}
+                                                        sx={{
+                                                            color: theme.palette.designSystem.bodyCopy,
+                                                            fontStyle: 'italic',
+                                                        }}
                                                     >
                                                         {String(space.space_description)
                                                             .replace(/<[^>]*>/g, ' ')
                                                             .trim()}
                                                     </Typography>
                                                 )}
-                                                {!!space?.space_external_book_url && (
-                                                    <Box sx={{ mt: 1.5, pt: 1.5, borderTop: '1px solid #e0e0e0' }}>
-                                                        <StyledPrimaryButton
-                                                            component="a"
-                                                            href={space.space_external_book_url}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            size="small"
-                                                            sx={{ textTransform: 'none' }}
-                                                        >
-                                                            Book this space
-                                                        </StyledPrimaryButton>
-                                                    </Box>
-                                                )}
                                             </Box>
                                         </StyledResultCardButton>
-                                    </Stack>
+                                        {!!space?.space_external_book_url && (
+                                            <Box
+                                                sx={{
+                                                    mt: 1.5,
+                                                    pt: 1.5,
+                                                    // borderTop: '1px solid #e0e0e0',
+                                                    position: 'absolute',
+                                                    bottom: '1rem',
+                                                    left: '1.5rem',
+                                                }}
+                                            >
+                                                <StyledPrimaryButton
+                                                    component="a"
+                                                    className="bookitLink"
+                                                    href={space.space_external_book_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    size="small"
+                                                    sx={{ textTransform: 'none' }}
+                                                >
+                                                    Book this space
+                                                </StyledPrimaryButton>
+                                            </Box>
+                                        )}
+                                    </StyledListItemStack>
                                 );
                             })}
                         </Stack>
@@ -231,12 +241,8 @@ export const JourneyResultsView = ({
 };
 
 JourneyResultsView.propTypes = {
-    selectedIntent: PropTypes.object,
     intentSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
-    selectedIntentId: PropTypes.any,
-    setSelectedSpace: PropTypes.func,
-    navigateToView: PropTypes.func,
     handleClearJourneyFilters: PropTypes.func,
     goToLegacyBrowse: PropTypes.func,
     selectedFacilityTypes: PropTypes.array,
