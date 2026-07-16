@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Chip, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Chip, Stack, Typography, useTheme } from '@mui/material';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import { SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
+import BookingLink from 'modules/Pages/BookableSpaces/BookingLink';
+import { StyledSecondaryButton } from 'helpers/general';
 import {
     StyledJourneyPanel,
-    StyledResultCardButton,
     StyledResultsSidebarPanel,
     StyledResultsSplitLayout,
     StyledListItemStack,
@@ -105,13 +105,13 @@ export const JourneyResultsView = ({
                                 const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
                                 return (
                                     <StyledListItemStack key={detailId || space?.space_id} spacing={1}>
-                                        <StyledResultCardButton
+                                        <Button
                                             component="a"
                                             className="cardBody"
                                             href={`./detail/${space?.space_uuid}`}
                                             data-testid={`spaces-result-list-item-${space?.space_id}`}
                                         >
-                                            <Box sx={{ p: '1.5rem', width: '100%', textAlign: 'left' }}>
+                                            <Box>
                                                 <Typography component={'h3'} variant={'h6'}>
                                                     {space?.space_name || 'Unnamed space'}
                                                 </Typography>
@@ -185,29 +185,10 @@ export const JourneyResultsView = ({
                                                     </Typography>
                                                 )}
                                             </Box>
-                                        </StyledResultCardButton>
+                                        </Button>
                                         {!!space?.space_external_book_url && (
-                                            <Box
-                                                sx={{
-                                                    mt: 1.5,
-                                                    pt: 1.5,
-                                                    // borderTop: '1px solid #e0e0e0',
-                                                    position: 'absolute',
-                                                    bottom: '1rem',
-                                                    left: '1.5rem',
-                                                }}
-                                            >
-                                                <StyledPrimaryButton
-                                                    component="a"
-                                                    className="bookitLink"
-                                                    href={space.space_external_book_url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    size="small"
-                                                    sx={{ textTransform: 'none' }}
-                                                >
-                                                    Book this space
-                                                </StyledPrimaryButton>
+                                            <Box className="bookingLink">
+                                                <BookingLink bookableSpace={space} showRequired={false} />
                                             </Box>
                                         )}
                                     </StyledListItemStack>

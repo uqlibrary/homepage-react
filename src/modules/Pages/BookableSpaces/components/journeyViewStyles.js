@@ -69,13 +69,26 @@ export const StyledListItemStack = styled(Stack)(({ theme }) => ({
         color: 'inherit',
         '&:hover, &:focus': {
             backgroundColor: theme.palette.designSystem.panelBackgroundColor,
+            '& h3': {
+                textDecoration: 'underline',
+            },
+        },
+        '> div': {
+            padding: '1.5rem',
+            width: '100%',
+            textAlign: 'left',
         },
     },
-    '&:has(.bookitLink)': {
+    '&:has(.bookingLink)': {
         '& a.cardBody': {
-            paddingBottom: '4rem',
+            paddingBottom: '3rem',
         },
+    },
+    '.bookingLink': {
+        marginTop: 1.5,
+        paddingTop: 1.5,
+        position: 'absolute',
+        bottom: '1rem',
+        left: '1.5rem',
     },
 }));
-
-export const StyledResultCardButton = styled(Button)(({ theme }) => ({}));

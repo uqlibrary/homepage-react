@@ -228,8 +228,8 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
 
                 showHideLocationPanel();
 
-                const bookitLink = document.getElementById('bookit-link');
-                !!bookitLink && bookitLink.focus();
+                const bookingLink = document.getElementById('bookit-link');
+                !!bookingLink && bookingLink.focus();
             }
         };
 
