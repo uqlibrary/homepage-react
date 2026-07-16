@@ -73,6 +73,10 @@ export const StyledListItemStack = styled(Stack)(({ theme }) => ({
                 textDecoration: 'underline',
             },
         },
+        '.spaceHolderForFavouriteStar': {
+            width: '1.5rem',
+            height: '1.5rem',
+        },
         '> div': {
             padding: '1.5rem',
             width: '100%',

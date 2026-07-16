@@ -112,7 +112,6 @@ const SidebarSpacesList = ({
                                             isFavourite={spacesFavouritesList?.some(
                                                 fav => fav.space_id === bookableSpace?.space_id,
                                             )}
-                                            isLoggedIn={isLoggedIn}
                                             onFavouriteToggle={onFavouriteToggle}
                                             isFavouriteActionInProgress={isFavouriteActionInProgress}
                                         />

@@ -301,7 +301,6 @@ const JourneySpaceDetailsView = ({
                                     <RenderFavouriteIcon
                                         bookableSpace={selectedSpace}
                                         isFavourite={isSelectedSpaceFavourite}
-                                        isLoggedIn={isLoggedIn}
                                         onFavouriteToggle={() => onFavouriteToggle?.(selectedSpace)}
                                         isFavouriteActionInProgress={isFavouriteActionInProgress}
                                     />

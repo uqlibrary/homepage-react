@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { Box, Button, Chip, Stack, Typography, useTheme } from '@mui/material';
 
+import BookingLink from 'modules/Pages/BookableSpaces/BookingLink';
+import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
+
 import { defaultChipStyles, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-import BookingLink from 'modules/Pages/BookableSpaces/BookingLink';
 import { StyledSecondaryButton } from 'helpers/general';
+
 import {
     StyledJourneyPanel,
     StyledResultsSidebarPanel,
@@ -39,10 +43,12 @@ export const JourneyResultsView = ({
     shouldShowAdvancedFilters,
     isDesktopResultsLayout,
     setShowAdvancedFilters,
-    favouriteSpaceIds,
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
+    isFavouriteActionInProgress,
+    onFavouriteToggle,
+    spacesFavouritesList,
 }) => {
     const theme = useTheme();
 
@@ -111,10 +117,18 @@ export const JourneyResultsView = ({
                                             href={`./detail/${space?.space_uuid}`}
                                             data-testid={`spaces-result-list-item-${space?.space_id}`}
                                         >
-                                            <Box>
-                                                <Typography component={'h3'} variant={'h6'}>
-                                                    {space?.space_name || 'Unnamed space'}
-                                                </Typography>
+                                            <Box sx={{ position: 'relative' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <span className="spaceHolderForFavouriteStar" />
+
+                                                    <Typography
+                                                        component={'h3'}
+                                                        variant={'h6'}
+                                                        data-testid={`spaces-${space?.space_id}-name`}
+                                                    >
+                                                        {space?.space_name || 'Unnamed space'}
+                                                    </Typography>
+                                                </div>
                                                 <Typography
                                                     sx={{ color: theme.palette.designSystem.bodyCopy, mb: 0.5 }}
                                                 >
@@ -125,20 +139,6 @@ export const JourneyResultsView = ({
                                                 </Typography>
                                                 <Box sx={{ mt: 0.75, mb: 1 }}>
                                                     <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
-                                                        {favouriteSpaceIds?.has(String(space?.space_id)) && (
-                                                            <Chip
-                                                                data-testid={`spaces-journey-favourite-chip-${space?.space_id}`}
-                                                                label="Favourite"
-                                                                size="small"
-                                                                sx={{
-                                                                    backgroundColor: '#fff8e1',
-                                                                    color: '#7a5a00',
-                                                                    borderColor: '#ffe082',
-                                                                    border: '1px solid',
-                                                                    fontWeight: 700,
-                                                                }}
-                                                            />
-                                                        )}
                                                         <SpaceOpenStatusChip
                                                             space={space}
                                                             weeklyHours={weeklyHours}
@@ -185,6 +185,15 @@ export const JourneyResultsView = ({
                                                 )}
                                             </Box>
                                         </Button>
+                                        <RenderFavouriteIcon
+                                            bookableSpace={space}
+                                            isFavourite={spacesFavouritesList?.some(
+                                                fav => fav.space_id === space?.space_id,
+                                            )}
+                                            onFavouriteToggle={() => onFavouriteToggle?.(space)}
+                                            isFavouriteActionInProgress={isFavouriteActionInProgress}
+                                            iconPosition="topLeft"
+                                        />
                                         {!!space?.space_external_book_url && (
                                             <Box className="bookingLink">
                                                 <BookingLink bookableSpace={space} showRequired={false} />
@@ -245,10 +254,12 @@ JourneyResultsView.propTypes = {
     shouldShowAdvancedFilters: PropTypes.bool,
     isDesktopResultsLayout: PropTypes.bool,
     setShowAdvancedFilters: PropTypes.func,
-    favouriteSpaceIds: PropTypes.object,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
+    isFavouriteActionInProgress: PropTypes.bool,
+    onFavouriteToggle: PropTypes.func,
+    spacesFavouritesList: PropTypes.any,
 };
 
 export default JourneyResultsView;

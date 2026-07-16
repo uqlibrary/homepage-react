@@ -1369,10 +1369,12 @@ const BookableSpacesHomepage = ({
                         isDesktopResultsLayout={isDesktopResultsLayout}
                         showAdvancedFilters={showAdvancedFilters}
                         setShowAdvancedFilters={setShowAdvancedFilters}
-                        favouriteSpaceIds={favouriteSpaceIds}
                         weeklyHours={weeklyHours}
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
+                        isFavouriteActionInProgress={isFavouriteActionInProgress}
+                        onFavouriteToggle={handleJourneyFavouriteToggle}
+                        spacesFavouritesList={spacesFavouritesList}
                     />
                 </StandardPage>
             )}
