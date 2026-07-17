@@ -211,6 +211,22 @@ describe('BookableSpacesHomepage browser back navigation', () => {
         expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
     });
 
+    it('restores details view from a hash URL using the full space list when the filtered list does not contain the space', async () => {
+        window.history.replaceState({}, '', '/#/spaces/detail/test-space-uuid-1234');
+
+        renderJourney({
+            ...defaultProps,
+            filteredSpaceLocations: [],
+            highlightedSpace: null,
+            allSpaceLocations: [baseSpace],
+        });
+
+        await waitFor(() => {
+            expect(screen.getByText(/space details/i)).toBeInTheDocument();
+            expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+        });
+    });
+
     it('restores results from a path-based hash URL when running under hash routing', () => {
         window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
 

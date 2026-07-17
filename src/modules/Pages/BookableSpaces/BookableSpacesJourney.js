@@ -907,7 +907,7 @@ JourneyLandingView.propTypes = {
     weeklyHoursError: PropTypes.any,
 };
 
-const BookableSpacesHomepage = ({
+const BookableSpacesJourney = ({
     filteredSpaceLocations,
     allSpaceLocations,
     totalSpaceCount,
@@ -1372,12 +1372,10 @@ const BookableSpacesHomepage = ({
                         isDesktopResultsLayout={isDesktopResultsLayout}
                         showAdvancedFilters={showAdvancedFilters}
                         setShowAdvancedFilters={setShowAdvancedFilters}
+                        favouriteSpaceIds={favouriteSpaceIds}
                         weeklyHours={weeklyHours}
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
-                        isFavouriteActionInProgress={isFavouriteActionInProgress}
-                        onFavouriteToggle={handleJourneyFavouriteToggle}
-                        spacesFavouritesList={spacesFavouritesList}
                     />
                 </StandardPage>
             )}
@@ -1399,7 +1397,7 @@ const BookableSpacesHomepage = ({
     );
 };
 
-BookableSpacesHomepage.propTypes = {
+BookableSpacesJourney.propTypes = {
     filteredSpaceLocations: PropTypes.array,
     allSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
@@ -1432,4 +1430,4 @@ BookableSpacesHomepage.propTypes = {
     initialView: PropTypes.oneOf(['landing', 'results', 'details']),
 };
 
-export default React.memo(BookableSpacesHomepage);
+export default React.memo(BookableSpacesJourney);
