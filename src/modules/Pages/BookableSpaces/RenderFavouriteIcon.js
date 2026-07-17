@@ -56,7 +56,7 @@ export const RenderFavouriteIcon = ({
                 <IconButton
                     onClick={() => onFavouriteToggle('removeSpaceFavourite', bookableSpace?.space_id)}
                     aria-label="Remove from Favourites"
-                    data-testid={`spaces-detail-${bookableSpace?.space_id}-unfavourite`}
+                    data-testid={`space-${bookableSpace?.space_id}-detail-unfavourite`}
                     size="large"
                 >
                     <StarIcon
@@ -77,7 +77,7 @@ export const RenderFavouriteIcon = ({
             <IconButton
                 onClick={() => onFavouriteToggle('addSpaceFavourite', bookableSpace?.space_id)}
                 aria-label="Add to Favourites"
-                data-testid={`spaces-detail-${bookableSpace?.space_id}-favourite`}
+                data-testid={`space-${bookableSpace?.space_id}-detail-favourite`}
                 size="large"
             >
                 <StarBorderIcon

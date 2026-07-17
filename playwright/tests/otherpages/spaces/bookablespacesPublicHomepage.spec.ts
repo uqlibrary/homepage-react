@@ -80,7 +80,7 @@ test.describe('Spaces Homepage', () => {
 
         // the correct space displays
         await expect(firstFavouritesLink).not.toBeVisible();
-        await expect(page.getByTestId('spaces-1-details-name')).toContainText('354');
+        await expect(page.getByTestId('space-1-details-name')).toContainText('354');
         await expect(page.getByTestId('space-1-friendly-location')).toContainText('Architecture and Music Library');
 
         // back button works

@@ -4,7 +4,7 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 const ARCH_REFERENCE = 'space-1'; // a public Architecture and Music Library space with summary hours and description
 const ARCH_BOOKABLE = 'space-2'; // a public Architecture and Music Library space with booking and rich facilities
 const PACE = 'space-1234544'; // a space in dutton park (pace)
-const LIV = 'space-43534'; // a space in liveris building (used to show we can , if we want, add spaces that aren't in our Libraries)
+const LIV = 'space-43534'; // a space in liveris building (shows that we can , if we want, add spaces that aren't in our Libraries)
 const ARCH_PANEL_4 = 'space-2';
 const ARCH_PANEL_5 = 'space-3';
 const ARCH_PANEL_6 = 'space-4';
@@ -90,15 +90,58 @@ test.describe('Spaces', () => {
         //     await expect(page.getByRole('heading', { name: 'What sort of space would you like to find?' })).toBeVisible();
         // });
 
-        test('bookable links appear correct on load', async ({ page }) => {
-            // public bookable Architecture and Music example
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable`)).not.toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toBeVisible();
+        test('map page expands to show correct book a room links', async ({ page }) => {
+            // ** panel WITH Booking Link has loaded
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-name`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-name`)).toContainText('Individual study');
 
-            await expect(page.getByTestId(`${LIV}-not-bookable`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-not-bookable`)).toContainText('No booking required.');
+            // the booking link appears
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toContainText('Book this space');
+            const hrefValue = await page.getByTestId(`${ARCH_BOOKABLE}-booking-link`).locator('a').getAttribute('href');
+            expect(hrefValue).toMatch(new RegExp(`^https://uqbookit.uq.edu.au`)); // we have put the correct value in the page
+
+            // expand the panel
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`)).toBeVisible();
+            await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
+
+            // the panel has expanded
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-details-name`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-details-name`)).toContainText('339');
+
+            // the booking link appears
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-bookable-local`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable-local`)).not.toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-bookable-local`)).toContainText('Book this space');
+            // await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-icon`)).toBeVisible();
+
+            // ** Panel WITHOUT Booking Link has loaded
+            await page.getByTestId(`${LIV}-name`).scrollIntoViewIfNeeded();
+            await expect(page.getByTestId(`${LIV}-name`)).toBeVisible();
+            await expect(page.getByTestId(`${LIV}-name`)).toContainText('Meeting room');
+
+            // NO booking link appears
             await expect(page.getByTestId(`${LIV}-booking-link`)).not.toBeVisible();
+            await expect(page.getByTestId(`${LIV}-booking-icon`)).not.toBeVisible();
+
+            // expand the panel
+            await expect(page.getByTestId(`${LIV}-toggle-panel-button`)).toBeVisible();
+            await page.getByTestId(`${LIV}-toggle-panel-button`).click();
+
+            // the panel has expanded
+            await expect(page.getByTestId(`${LIV}-details-name`)).toBeVisible();
+            await expect(page.getByTestId(`${LIV}-details-name`)).toContainText('46-342/343');
+
+            // "no booking required" prompt appears
+            await expect(page.getByTestId(`${LIV}-bookable-local`)).not.toBeVisible();
+            await expect(page.getByTestId(`${LIV}-not-bookable-local`)).toBeVisible();
+            await expect(page.getByTestId(`${LIV}-not-bookable-local`)).toContainText('No booking required.');
+        });
+
+        test('outage message appear correct on load', async ({ page }) => {
+            // public bookable Architecture and Music example
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toBeVisible();
+            await expect(page.getByTestId(`${LIV}-outage-message`)).not.toBeVisible();
         });
 
         test('capacity loads correctly', async ({ page }) => {
@@ -438,58 +481,6 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`)).toHaveAttribute('aria-expanded', 'true');
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-summary-hours`)).not.toBeVisible();
-    });
-    test('map page shows correct book a room links', async ({ page }) => {
-        await page.goto('/spaces/mapresults');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-
-        // Panel WITH Booking Link
-
-        // panel has loaded
-        await expect(page.getByTestId('map-panel-2-name')).toBeVisible();
-        await expect(page.getByTestId('map-panel-2-name')).toContainText('Individual study');
-
-        // the booking link appears
-        await expect(page.getByTestId('space-2-booking-link')).toBeVisible();
-        await expect(page.getByTestId('space-2-booking-link')).toContainText('Book this space');
-        await expect(page.getByTestId('space-2-booking-icon')).toBeVisible();
-
-        // expand the panel
-        await expect(page.getByTestId('space-2-toggle-panel-button')).toBeVisible();
-        await page.getByTestId('space-2-toggle-panel-button').click();
-
-        // the panel has expanded
-        await expect(page.getByTestId('spaces-2-details-name')).toBeVisible();
-        await expect(page.getByTestId('spaces-2-details-name')).toContainText('339');
-
-        // the booking link appears
-        await expect(page.getByTestId('space-2-bookable-local')).toBeVisible();
-        await expect(page.getByTestId('space-2-not-bookable-local')).not.toBeVisible();
-        await expect(page.getByTestId('space-2-bookable-local')).toContainText('Book this space');
-        // await expect(page.getByTestId('space-2-booking-icon')).toBeVisible();
-
-        // Panel WITHOUT Booking Link
-
-        await page.getByTestId('map-panel-43534-name').scrollIntoViewIfNeeded();
-        await expect(page.getByTestId('map-panel-43534-name')).toBeVisible();
-        await expect(page.getByTestId('map-panel-43534-name')).toContainText('Meeting room');
-
-        // NO booking link appears
-        await expect(page.getByTestId('space-43534-booking-link')).not.toBeVisible();
-        await expect(page.getByTestId('space-43534-booking-icon')).not.toBeVisible();
-
-        // expand the panel
-        await expect(page.getByTestId('space-43534-toggle-panel-button')).toBeVisible();
-        await page.getByTestId('space-43534-toggle-panel-button').click();
-
-        // the panel has expanded
-        await expect(page.getByTestId('spaces-43534-details-name')).toBeVisible();
-        await expect(page.getByTestId('spaces-43534-details-name')).toContainText('46-342/343');
-
-        // "no booking required" prompt appears
-        await expect(page.getByTestId('space-43534-bookable-local')).not.toBeVisible();
-        await expect(page.getByTestId('space-43534-not-bookable-local')).toBeVisible();
-        await expect(page.getByTestId('space-43534-not-bookable-local')).toContainText('No booking required.');
     });
     test.describe('filtering', () => {
         test.beforeEach(async ({ page }) => {
@@ -1430,7 +1421,7 @@ test.describe('Spaces', () => {
             // public bookable Architecture and Music example
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable`)).not.toBeVisible();
 
-            await expect(page.getByTestId(`${PACE}-not-bookable`)).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-not-bookable-local`)).not.toBeVisible();
             await expect(page.getByTestId(`${PACE}-booking-link`)).toBeVisible();
             await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toBeVisible();
             await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toHaveAttribute(
@@ -1599,37 +1590,37 @@ test.describe('Spaces', () => {
         });
     });
     test.describe('Spaces favourites', () => {
-        test('can UNfavourite a space', async ({ page }) => {
+        test('can UNfavourite a space on the map page', async ({ page }) => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces?advanced=1');
 
             // the space is currently favourited
-            await expect(page.getByTestId('spaces-detail-1-unfavourite')).toBeVisible();
-            await expect(page.getByTestId('spaces-detail-1-favourite')).not.toBeVisible();
+            await expect(page.getByTestId('space-1-detail-unfavourite')).toBeVisible();
+            await expect(page.getByTestId('space-1-detail-favourite')).not.toBeVisible();
 
             // unfavourite it
-            await page.getByTestId('spaces-detail-1-unfavourite').click();
+            await page.getByTestId('space-1-detail-unfavourite').click();
 
             // the space is now UNfavourited
-            await expect(page.getByTestId('spaces-detail-1-favourite')).toBeVisible();
-            await expect(page.getByTestId('spaces-detail-1-unfavourite')).not.toBeVisible();
+            await expect(page.getByTestId('space-1-detail-favourite')).toBeVisible();
+            await expect(page.getByTestId('space-1-detail-unfavourite')).not.toBeVisible();
         });
-        test('can unfavourite a space', async ({ page }) => {
+        test('can favourite a space on the map page', async ({ page }) => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces?advanced=1');
 
             // the space is currently UNfavourited
-            await expect(page.getByTestId('spaces-detail-43534-favourite')).toBeVisible();
-            await expect(page.getByTestId('spaces-detail-43534-unfavourite')).not.toBeVisible();
+            await expect(page.getByTestId('space-43534-detail-favourite')).toBeVisible();
+            await expect(page.getByTestId('space-43534-detail-unfavourite')).not.toBeVisible();
 
             // favourite it
-            await page.getByTestId('spaces-detail-43534-favourite').click();
+            await page.getByTestId('space-43534-detail-favourite').click();
 
             // the space is now favourited
-            await expect(page.getByTestId('spaces-detail-43534-unfavourite')).toBeVisible();
-            await expect(page.getByTestId('spaces-detail-43534-favourite')).not.toBeVisible();
+            await expect(page.getByTestId('space-43534-detail-unfavourite')).toBeVisible();
+            await expect(page.getByTestId('space-43534-detail-favourite')).not.toBeVisible();
         });
     });
 });

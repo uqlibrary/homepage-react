@@ -322,7 +322,7 @@ const JourneySpaceDetailsView = ({
                                 <Typography
                                     component="h2"
                                     variant="h5"
-                                    data-testid={`spaces-${selectedSpace?.space_id}-details-name`}
+                                    data-testid={`space-${selectedSpace?.space_id}-details-name`}
                                 >
                                     {selectedSpace?.space_name}
                                 </Typography>
