@@ -201,7 +201,7 @@ export const JourneyResultsView = ({
                                         />
                                         {!!space?.space_external_book_url && (
                                             <Box className="bookingLink">
-                                                <BookingLink bookableSpace={space} showNoBookingRequired={false} />
+                                                <BookingLink bookableSpace={space} hideNoBookingRequired />
                                             </Box>
                                         )}
                                     </StyledListItemStack>
