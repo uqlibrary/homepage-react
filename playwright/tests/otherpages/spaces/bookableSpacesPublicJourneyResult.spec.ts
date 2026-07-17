@@ -45,8 +45,8 @@ test.describe('Spaces Journey Result page', () => {
         await expect(page.getByTestId('spaces-2-name')).toContainText('339');
 
         // the booking link appears
-        await expect(page.getByTestId('space-2-booking-link')).toBeVisible();
-        await expect(page.getByTestId('space-2-booking-link')).toContainText('Book this space');
+        await expect(page.locator('a[data-testid="space-2-booking-link"]')).toBeVisible();
+        await expect(page.locator('a[data-testid="space-2-booking-link"]')).toContainText('Book this space');
         await expect(page.getByTestId('space-2-booking-icon')).toBeVisible();
     });
     test.describe('Favourites', () => {

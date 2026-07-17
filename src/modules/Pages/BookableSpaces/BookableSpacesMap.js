@@ -2,7 +2,6 @@ import React, { useImperativeHandle, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { createRoot } from 'react-dom/client';
 
-import Typography from '@mui/material/Typography';
 import { styled, ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 
 import { mui1theme } from 'config/theme';
@@ -10,13 +9,8 @@ import { CAMPUS_ST_LUCIA } from 'config/locale';
 import { addClass, removeClass } from 'helpers/general';
 
 import { BookingLink } from 'modules/Pages/BookableSpaces/BookingLink';
-import {
-    formatSpaceOutageRangeForPublicNotice,
-    formatSpaceOutageUntilForPublicNotice,
-    getSpaceOutageShowTimePublic,
-    getVisibleSpaceOutage,
-} from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
+import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+import ShowOutageNotice from 'modules/Pages/BookableSpaces/ShowOutageNotice';
 
 const StyledMapWrapperDiv = styled('div')(() => ({
     position: 'absolute',
@@ -111,39 +105,18 @@ export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) =>
             </StyledPopupBookingDiv>
 
             {!!visibleOutage && (
-                <StyledPopupOutageNotice data-testid={`space-${space?.space_id}-map-popup-outage-notice`}>
-                    <UserAttention
-                        titleText={visibleOutage.status === 'Current' ? 'Current closure' : 'Upcoming closure'}
-                        tone={visibleOutage.tone}
-                        variant="aligned"
-                        testId={`space-${space?.space_id}-map-popup-outage`}
-                    >
-                        <Typography variant="body2" data-testid={`space-${space?.space_id}-map-popup-outage-message`}>
-                            {visibleOutage.status === 'Current'
-                                ? `Currently unavailable until ${formatSpaceOutageUntilForPublicNotice(
-                                      visibleOutage.outage?.space_outage_end,
-                                      undefined,
-                                      getSpaceOutageShowTimePublic(visibleOutage.outage),
-                                  )}.`
-                                : `Closed ${formatSpaceOutageRangeForPublicNotice(
-                                      visibleOutage.outage?.space_outage_start,
-                                      visibleOutage.outage?.space_outage_end,
-                                      getSpaceOutageShowTimePublic(visibleOutage.outage),
-                                  )}.`}
-                        </Typography>
-                        {!!visibleOutage.reason && (
-                            <Typography
-                                variant="body2"
-                                data-testid={`space-${space?.space_id}-map-popup-outage-reason`}
-                            >
-                                Reason: {visibleOutage.reason}
-                            </Typography>
-                        )}
-                    </UserAttention>
-                </StyledPopupOutageNotice>
+                <ShowOutageNotice
+                    bookableSpace={space}
+                    visibleOutage={visibleOutage}
+                    hideReason={!visibleOutage.reason}
+                />
             )}
 
-            {isFavourite && <StyledFavouriteNote>One of your favourite spaces</StyledFavouriteNote>}
+            {isFavourite && (
+                <StyledFavouriteNote data-testid={`space-${space?.space_id}-favourite-message`}>
+                    One of your favourite spaces
+                </StyledFavouriteNote>
+            )}
         </StyledPopupContent>
     );
 };

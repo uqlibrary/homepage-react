@@ -7,24 +7,19 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
 import { baseButtonStyles, baseHoverFocusStyles, pluralise } from 'helpers/general';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import { BookingLink } from 'modules/Pages/BookableSpaces/BookingLink';
 import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/OpeningHoursDown';
 import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
+import ShowOutageNotice from 'modules/Pages/BookableSpaces/ShowOutageNotice';
 import {
     defaultChipStyles,
     getFriendlyLocationDescription,
     SpaceOpenStatusChip,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import {
-    formatSpaceOutageRangeForPublicNotice,
-    formatSpaceOutageUntilForPublicNotice,
-    getSpaceOutageShowTimePublic,
-    getVisibleSpaceOutage,
-} from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
 
 const journeyFallbackDetailImage = require('../../../../public/images/digital-learning-hub-hero-shot-wide.png');
@@ -362,38 +357,11 @@ const JourneySpaceDetailsView = ({
                     </Box>
 
                     {!!visibleOutage && (
-                        <UserAttention
-                            titleText={visibleOutage.status === 'Current' ? 'Current closure' : 'Upcoming closure'}
-                            tone={visibleOutage.tone}
-                            variant="aligned"
-                            testId={`spaces-journey-outage-${selectedSpace?.space_id}`}
-                            headingLevel="h3"
-                        >
-                            <Typography
-                                variant="body2"
-                                data-testid={`spaces-journey-outage-message-${selectedSpace?.space_id}`}
-                            >
-                                {visibleOutage.status === 'Current'
-                                    ? `Currently unavailable until ${formatSpaceOutageUntilForPublicNotice(
-                                          visibleOutage.outage?.space_outage_end,
-                                          undefined,
-                                          getSpaceOutageShowTimePublic(visibleOutage.outage),
-                                      )}.`
-                                    : `Closed ${formatSpaceOutageRangeForPublicNotice(
-                                          visibleOutage.outage?.space_outage_start,
-                                          visibleOutage.outage?.space_outage_end,
-                                          getSpaceOutageShowTimePublic(visibleOutage.outage),
-                                      )}.`}
-                            </Typography>
-                            {!!visibleOutage.reason && (
-                                <Typography
-                                    variant="body2"
-                                    data-testid={`space-${selectedSpace?.space_id}-outage-reason`}
-                                >
-                                    Reason: {visibleOutage.reason}
-                                </Typography>
-                            )}
-                        </UserAttention>
+                        <ShowOutageNotice
+                            bookableSpace={selectedSpace}
+                            visibleOutage={visibleOutage}
+                            hideReason={!visibleOutage.reason}
+                        />
                     )}
 
                     {!!(

@@ -1,9 +1,6 @@
 import {
     buildSpaceOutagePayload,
     formatSpaceOutageDateTimeForInput,
-    formatSpaceOutageDateTimeForPublicNotice,
-    formatSpaceOutageRangeForPublicNotice,
-    formatSpaceOutageUntilForPublicNotice,
     getSpaceOutageShowTimePublic,
     getVisibleSpaceOutage,
     getOverlappingSpaceOutages,
@@ -12,6 +9,11 @@ import {
     sortSpaceOutages,
     validateSpaceOutageDraft,
 } from './spaceOutageHelpers';
+import {
+    formatSpaceOutageDateTimeForPublicNotice,
+    formatSpaceOutageRangeForPublicNotice,
+    formatSpaceOutageUntilForPublicNotice,
+} from 'modules/Pages/BookableSpaces/ShowOutageNotice';
 
 describe('spaceOutageHelpers', () => {
     const sampleOutages = [

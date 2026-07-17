@@ -32,16 +32,19 @@ describe('BookableSpacesMapPopupContent', () => {
         );
 
         expect(screen.getByTestId('space-100-map-popup')).toBeInTheDocument();
+        expect(screen.getByTestId('space-100-outage')).toBeInTheDocument();
         expect(screen.getByText('Current closure')).toBeInTheDocument();
-        expect(screen.getByTestId('space-100-map-popup-outage-message')).toHaveTextContent(
+        expect(screen.getByTestId('space-100-outage-message')).toHaveTextContent(
             'Currently unavailable until 12:00pm 1 January 2999.',
         );
-        expect(screen.getByTestId('space-100-map-popup-outage-reason')).toHaveTextContent('Electrical maintenance');
-        expect(screen.getByTestId('space-100-map-popup-booking-link')).toHaveAttribute(
+        expect(screen.getByTestId('space-100-outage-reason')).toHaveTextContent('Electrical maintenance');
+
+        expect(screen.getByRole('link', { name: 'Book this space' })).toHaveAttribute(
             'href',
             'https://uqbookit.uq.edu.au/#/app/booking-types/100',
         );
-        expect(screen.getByText('One of your favourite spaces')).toBeInTheDocument();
+
+        expect(screen.getByTestId('space-100-favourite-message')).toHaveTextContent('One of your favourite spaces');
     });
 
     it('renders same-day current outage in popup using time then date wording', () => {
@@ -65,7 +68,7 @@ describe('BookableSpacesMapPopupContent', () => {
             />,
         );
 
-        expect(screen.getByTestId('space-102-map-popup-outage-message')).toHaveTextContent(
+        expect(screen.getByTestId('space-102-outage-message')).toHaveTextContent(
             'Currently unavailable until 1:00pm on 24 April 2026.',
         );
     });
@@ -92,10 +95,10 @@ describe('BookableSpacesMapPopupContent', () => {
         );
 
         expect(screen.getByText('Upcoming closure')).toBeInTheDocument();
-        expect(screen.getByTestId('space-101-map-popup-outage-message')).toHaveTextContent(
+        expect(screen.getByTestId('space-101-outage-message')).toHaveTextContent(
             'Closed 9:00am to 12:00pm on 30 April 2026.',
         );
-        expect(screen.getByTestId('space-101-map-popup-outage-reason')).toHaveTextContent('Lift works');
+        expect(screen.getByTestId('space-101-outage-reason')).toHaveTextContent('Lift works');
     });
 
     it('hides times for popup upcoming outages when space_outage_show_time_public is false', () => {
@@ -120,9 +123,7 @@ describe('BookableSpacesMapPopupContent', () => {
             />,
         );
 
-        expect(screen.getByTestId('space-103-map-popup-outage-message')).toHaveTextContent(
-            'Closed 26 April to 5 May 2026.',
-        );
-        expect(screen.getByTestId('space-103-map-popup-outage-reason')).toHaveTextContent('Replacing carpet');
+        expect(screen.getByTestId('space-103-outage-message')).toHaveTextContent('Closed 26 April to 5 May 2026.');
+        expect(screen.getByTestId('space-103-outage-reason')).toHaveTextContent('Replacing carpet');
     });
 });

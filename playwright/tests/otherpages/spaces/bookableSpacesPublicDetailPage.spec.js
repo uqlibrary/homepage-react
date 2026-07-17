@@ -16,14 +16,14 @@ test.describe('Spaces Detail page', () => {
             await expect(page.getByTestId(`space-${SPACE_ID}-details-name`)).toContainText('339');
 
             // outage block appears as expected
-            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID}`)).toBeVisible();
-            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID}`)).toHaveCSS(
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage`).locator('> div')).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage`).locator('> div')).toHaveCSS(
                 'background-color',
                 COLOR_UQ_ERROR_50,
             );
 
-            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID}`)).toBeVisible();
-            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID}`)).toContainText(
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage-message`)).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage-message`)).toContainText(
                 'Currently unavailable until',
             );
             await expect(page.getByTestId(`space-${SPACE_ID}-outage-reason`)).toBeVisible();
@@ -41,14 +41,14 @@ test.describe('Spaces Detail page', () => {
             await expect(page.getByTestId(`space-${SPACE_ID}-details-name`)).toContainText('342');
 
             // outage block appears as expected
-            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID}`)).toBeVisible();
-            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID}`)).toHaveCSS(
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage`).locator('> div')).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage`).locator('> div')).toHaveCSS(
                 'background-color',
                 COLOUR_UQ_WARNING_50,
             );
-
-            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID}`)).toBeVisible();
-            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID}`)).toContainText('Closed');
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage`).locator('h4')).toContainText('Upcoming closure');
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage-message`)).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage-message`)).toContainText('Closed');
             await expect(page.getByTestId(`space-${SPACE_ID}-outage-reason`)).toBeVisible();
             await expect(page.getByTestId(`space-${SPACE_ID}-outage-reason`)).toContainText(
                 'Reason: Air conditioning maintenance',
@@ -105,9 +105,9 @@ test.describe('Spaces Detail page', () => {
             await expect(page.getByTestId('space-4-details-name')).toContainText('341');
 
             // the booking link is present
-            await expect(page.getByTestId('space-4-booking-link')).toBeVisible();
+            await expect(page.locator('a[data-testid="space-4-booking-link"]')).toBeVisible();
+            await expect(page.getByTestId('space-4-booking-icon')).toBeVisible();
             await expect(page.getByTestId('space-4-not-bookable')).not.toBeVisible();
-            // data-testid={`space-4-booking-icon`}
         });
         test('spaces detail page shows the correct message when there is no linked booking', async ({ page }) => {
             await page.goto('/spaces/detail/a00de3d4-7e11-47eb-8079-532bdef80def');

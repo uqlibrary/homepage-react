@@ -96,7 +96,7 @@ const CollapsedSection = ({
                 {getFriendlyLocationDescription(bookableSpace, true)}
             </StyledFriendlyLocationDiv>
             {!!visibleOutage && (
-                <ShowOutageNotice bookableSpace={bookableSpace} visibleOutage={visibleOutage} isCollapsed />
+                <ShowOutageNotice bookableSpace={bookableSpace} visibleOutage={visibleOutage} hideReason />
             )}
             <BookingLink bookableSpace={bookableSpace} />
             {isBookable(bookableSpace) && !!bookableSpace?.space_capacity && bookableSpace?.space_capacity > 0 && (
@@ -159,7 +159,7 @@ const SpaceDetails = ({
     onToggle = null,
     showToggle = true,
     isFavouriteActionInProgress = false,
-    spacesFavouritesList = null,
+    isSelectedSpaceFavourite = false,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -225,7 +225,6 @@ const SpaceDetails = ({
     // taken from uqbookit sidenav for the page these land on
 
     const isBookable = !!bookableSpace?.space_external_book_url;
-    const isSelectedSpaceFavourite = spacesFavouritesList?.some(fav => fav.space_id === bookableSpace?.space_id);
     return (
         <div id="SpaceDetailsTemp">
             <StyledSpaceDiv>
@@ -239,7 +238,6 @@ const SpaceDetails = ({
                         bookableSpace={bookableSpace}
                         visibleOutage={visibleOutage}
                         isBookable={isBookable}
-                        // uqBookitMakeABookingIcon={uqBookitMakeABookingIcon}
                         getDescriptionClassName={getDescriptionClassName}
                         getFirstParagraph={getFirstParagraph}
                         summaryPanelElementId={summaryPanelElementId}
@@ -277,7 +275,7 @@ SpaceDetails.propTypes = {
     onToggle: PropTypes.func,
     showToggle: PropTypes.bool,
     isFavouriteActionInProgress: PropTypes.bool,
-    spacesFavouritesList: PropTypes.Array,
+    isSelectedSpaceFavourite: PropTypes.bool,
 };
 
 export default React.memo(SpaceDetails);

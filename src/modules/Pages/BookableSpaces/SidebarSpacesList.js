@@ -139,7 +139,9 @@ const SidebarSpacesList = ({
                                     isExpanded={expandedSpaceId === bookableSpace?.space_id}
                                     onToggle={onSpaceToggle}
                                     isFavouriteActionInProgress={isFavouriteActionInProgress}
-                                    spacesFavouritesList={spacesFavouritesList}
+                                    isSelectedSpaceFavourite={spacesFavouritesList?.some(
+                                        fav => fav.space_id === bookableSpace?.space_id,
+                                    )}
                                 />
                             </StyledStandardCard>
                         </StyledBookableSpaceGridItem>

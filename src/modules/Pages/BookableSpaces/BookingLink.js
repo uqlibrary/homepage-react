@@ -50,7 +50,7 @@ export const BookingLink = ({ bookableSpace, hideNoBookingRequired = false }) =>
                 <a
                     href={bookableSpace?.space_external_book_url}
                     target={'_blank'}
-                    data-testid={`space-${bookableSpace?.space_id}-map-popup-booking-link`}
+                    data-testid={`space-${bookableSpace?.space_id}-booking-link`}
                 >
                     <span>Book this space</span>
                 </a>

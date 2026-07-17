@@ -23,6 +23,7 @@ describe('SpaceDetails outage notices', () => {
         collapsed: false,
         isExpanded: true,
         onToggle: jest.fn(),
+        isSelectedSpaceFavourite: false,
     };
 
     it('renders a red current outage notice and keeps booking link', () => {
@@ -30,7 +31,6 @@ describe('SpaceDetails outage notices', () => {
             <SpaceDetails
                 {...baseProps}
                 isFavouriteActionInProgress={false}
-                spacesFavouritesList={null}
                 bookableSpace={{
                     space_id: 123,
                     space_name: 'Current outage room',
@@ -49,7 +49,7 @@ describe('SpaceDetails outage notices', () => {
         );
 
         expect(screen.getByText('Current closure')).toBeInTheDocument();
-        expect(screen.getByTestId('spaces-journey-outage-message-123')).toHaveTextContent(
+        expect(screen.getByTestId('space-123-outage-message')).toHaveTextContent(
             'Currently unavailable until 10:00am 1 January 2999.',
         );
         expect(screen.getByTestId('space-123-outage-reason')).toHaveTextContent('Electrical maintenance');
@@ -79,7 +79,7 @@ describe('SpaceDetails outage notices', () => {
             />,
         );
 
-        expect(screen.getByTestId('spaces-journey-outage-message-124')).toHaveTextContent(
+        expect(screen.getByTestId('space-124-outage-message')).toHaveTextContent(
             'Currently unavailable until 1:00pm on 24 April 2026.',
         );
     });
@@ -108,7 +108,7 @@ describe('SpaceDetails outage notices', () => {
         );
 
         expect(screen.getByText('Upcoming closure')).toBeInTheDocument();
-        expect(screen.getByTestId('spaces-journey-outage-message-456')).toHaveTextContent(
+        expect(screen.getByTestId('space-456-outage-message')).toHaveTextContent(
             'Closed 9:00am to 5:00pm on 30 April 2026.',
         );
         expect(screen.getByTestId('space-456-outage-reason')).toHaveTextContent('Air conditioning works');
@@ -139,9 +139,7 @@ describe('SpaceDetails outage notices', () => {
             />,
         );
 
-        expect(screen.getByTestId('spaces-journey-outage-message-457')).toHaveTextContent(
-            'Closed 26 April to 5 May 2026.',
-        );
+        expect(screen.getByTestId('space-457-outage-message')).toHaveTextContent('Closed 26 April to 5 May 2026.');
         expect(screen.getByTestId('space-457-outage-reason')).toHaveTextContent('Replacing carpet');
     });
 });

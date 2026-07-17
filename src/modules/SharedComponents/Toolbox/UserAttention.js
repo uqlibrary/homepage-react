@@ -66,17 +66,10 @@ const StyledAttentionDiv = styled('div', {
     };
 });
 
-const UserAttention = ({
-    titleText,
-    children,
-    tone = 'warning',
-    variant = 'legacy',
-    testId = 'user-attention',
-    headingLevel = 'h4',
-}) => {
+const UserAttention = ({ titleText, children, tone = 'warning', variant = 'legacy', headingLevel = 'h4' }) => {
     if (variant === 'aligned') {
         return (
-            <StyledAttentionDiv tone={tone} variant={variant} data-testid={testId}>
+            <StyledAttentionDiv tone={tone} variant={variant}>
                 <div className="uq-userattention-row">
                     <div className="uq-userattention-icon" aria-hidden="true">
                         <UqDsExclamationCircle />
@@ -91,7 +84,7 @@ const UserAttention = ({
     }
 
     return (
-        <StyledAttentionDiv tone={tone} variant={variant} data-testid={testId}>
+        <StyledAttentionDiv tone={tone} variant={variant}>
             <Typography component={'h4'}>
                 <UqDsExclamationCircle />
                 <span>{titleText}</span>
@@ -106,7 +99,6 @@ UserAttention.propTypes = {
     children: PropTypes.any,
     tone: PropTypes.oneOf(['warning', 'error']),
     variant: PropTypes.oneOf(['legacy', 'aligned']),
-    testId: PropTypes.string,
     headingLevel: PropTypes.string,
 };
 
