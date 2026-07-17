@@ -439,6 +439,58 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-summary-hours`)).not.toBeVisible();
     });
+    test('map page shows correct book a room links', async ({ page }) => {
+        await page.goto('/spaces/mapresults');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        // Panel WITH Booking Link
+
+        // panel has loaded
+        await expect(page.getByTestId('map-panel-2-name')).toBeVisible();
+        await expect(page.getByTestId('map-panel-2-name')).toContainText('Individual study');
+
+        // the booking link appears
+        await expect(page.getByTestId('space-2-booking-link')).toBeVisible();
+        await expect(page.getByTestId('space-2-booking-link')).toContainText('Book this space');
+        await expect(page.getByTestId('space-2-booking-icon')).toBeVisible();
+
+        // expand the panel
+        await expect(page.getByTestId('space-2-toggle-panel-button')).toBeVisible();
+        await page.getByTestId('space-2-toggle-panel-button').click();
+
+        // the panel has expanded
+        await expect(page.getByTestId('spaces-2-details-name')).toBeVisible();
+        await expect(page.getByTestId('spaces-2-details-name')).toContainText('339');
+
+        // the booking link appears
+        await expect(page.getByTestId('space-2-bookable-local')).toBeVisible();
+        await expect(page.getByTestId('space-2-not-bookable-local')).not.toBeVisible();
+        await expect(page.getByTestId('space-2-bookable-local')).toContainText('Book this space');
+        // await expect(page.getByTestId('space-2-booking-icon')).toBeVisible();
+
+        // Panel WITHOUT Booking Link
+
+        await page.getByTestId('map-panel-43534-name').scrollIntoViewIfNeeded();
+        await expect(page.getByTestId('map-panel-43534-name')).toBeVisible();
+        await expect(page.getByTestId('map-panel-43534-name')).toContainText('Meeting room');
+
+        // NO booking link appears
+        await expect(page.getByTestId('space-43534-booking-link')).not.toBeVisible();
+        await expect(page.getByTestId('space-43534-booking-icon')).not.toBeVisible();
+
+        // expand the panel
+        await expect(page.getByTestId('space-43534-toggle-panel-button')).toBeVisible();
+        await page.getByTestId('space-43534-toggle-panel-button').click();
+
+        // the panel has expanded
+        await expect(page.getByTestId('spaces-43534-details-name')).toBeVisible();
+        await expect(page.getByTestId('spaces-43534-details-name')).toContainText('46-342/343');
+
+        // "no booking required" prompt appears
+        await expect(page.getByTestId('space-43534-bookable-local')).not.toBeVisible();
+        await expect(page.getByTestId('space-43534-not-bookable-local')).toBeVisible();
+        await expect(page.getByTestId('space-43534-not-bookable-local')).toContainText('No booking required.');
+    });
     test.describe('filtering', () => {
         test.beforeEach(async ({ page }) => {
             // things don't redraw fast enough for playwright to work if we load the page then resize.

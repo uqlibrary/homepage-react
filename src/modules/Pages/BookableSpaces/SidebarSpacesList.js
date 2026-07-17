@@ -119,6 +119,7 @@ const SidebarSpacesList = ({
                                             onClick={() => onSpaceSelect?.(bookableSpace)}
                                             style={onSpaceSelect ? { cursor: 'pointer' } : undefined}
                                             title="Show on map"
+                                            data-testid={`map-panel-${bookableSpace.space_id}-name`}
                                         >
                                             {bookableSpace?.space_type_details?.space_type_name}
                                         </span>

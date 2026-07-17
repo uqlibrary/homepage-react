@@ -437,12 +437,15 @@ const JourneySpaceDetailsView = ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 sx={{ textTransform: 'none' }}
+                                data-testid={`space-${selectedSpace?.space_id}-bookable-local`}
                             >
                                 Book this space
                             </StyledPrimaryButton>
                         </Box>
                     ) : (
-                        <Typography variant="body2">No booking required.</Typography>
+                        <Typography variant="body2" data-testid={`space-${selectedSpace?.space_id}-not-bookable-local`}>
+                            No booking required.
+                        </Typography>
                     )}
 
                     {!!(selectedSpace?.space_capacity && selectedSpace.space_capacity > 0) && (

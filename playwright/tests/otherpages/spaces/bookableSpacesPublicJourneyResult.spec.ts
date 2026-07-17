@@ -36,44 +36,59 @@ test.describe('Spaces Journey Result page', () => {
 
         await expect(page.getByTestId('spaces-detail-1-unfavourite')).toBeVisible();
     });
-    test('can UNfavourite a space', async ({ page }) => {
-        // load the spaces results page
+    test('results page can book a room', async ({ page }) => {
         await page.goto('/spaces/results');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
-        // the page has loaded
+        // panel has loaded
         await expect(page.getByTestId('spaces-2-name')).toBeVisible();
         await expect(page.getByTestId('spaces-2-name')).toContainText('339');
 
-        // the space is currently favourited
-        await expect(page.getByTestId('spaces-detail-2-unfavourite')).toBeVisible();
-        await expect(page.getByTestId('spaces-detail-2-favourite')).not.toBeVisible();
-
-        // unfavourite it
-        await page.getByTestId('spaces-detail-2-unfavourite').click();
-
-        // the space is now UNfavourited
-        await expect(page.getByTestId('spaces-detail-2-favourite')).toBeVisible();
-        await expect(page.getByTestId('spaces-detail-2-unfavourite')).not.toBeVisible();
+        // the booking link appears
+        await expect(page.getByTestId('space-2-booking-link')).toBeVisible();
+        await expect(page.getByTestId('space-2-booking-link')).toContainText('Book this space');
+        await expect(page.getByTestId('space-2-booking-icon')).toBeVisible();
     });
-    test('can favourite a space', async ({ page }) => {
-        // load the spaces results page
-        await page.goto('/spaces/results');
-        await page.setViewportSize({ width: 1300, height: 1000 });
+    test.describe('Favourites', () => {
+        test('can UNfavourite a space', async ({ page }) => {
+            // load the spaces results page
+            await page.goto('/spaces/results');
+            await page.setViewportSize({ width: 1300, height: 1000 });
 
-        // the page has loaded
-        await expect(page.getByTestId('spaces-5-name')).toBeVisible();
-        await expect(page.getByTestId('spaces-5-name')).toContainText('342');
+            // the page has loaded
+            await expect(page.getByTestId('spaces-2-name')).toBeVisible();
+            await expect(page.getByTestId('spaces-2-name')).toContainText('339');
 
-        // the space is currently favourited
-        await expect(page.getByTestId('spaces-detail-5-favourite')).toBeVisible();
-        await expect(page.getByTestId('spaces-detail-5-unfavourite')).not.toBeVisible();
+            // the space is currently favourited
+            await expect(page.getByTestId('spaces-detail-2-unfavourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-2-favourite')).not.toBeVisible();
 
-        // unfavourite it
-        await page.getByTestId('spaces-detail-5-favourite').click();
+            // unfavourite it
+            await page.getByTestId('spaces-detail-2-unfavourite').click();
 
-        // the space is now UNfavourited
-        await expect(page.getByTestId('spaces-detail-5-unfavourite')).toBeVisible();
-        await expect(page.getByTestId('spaces-detail-5-favourite')).not.toBeVisible();
+            // the space is now UNfavourited
+            await expect(page.getByTestId('spaces-detail-2-favourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-2-unfavourite')).not.toBeVisible();
+        });
+        test('can favourite a space', async ({ page }) => {
+            // load the spaces results page
+            await page.goto('/spaces/results');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+
+            // the page has loaded
+            await expect(page.getByTestId('spaces-5-name')).toBeVisible();
+            await expect(page.getByTestId('spaces-5-name')).toContainText('342');
+
+            // the space is currently favourited
+            await expect(page.getByTestId('spaces-detail-5-favourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-5-unfavourite')).not.toBeVisible();
+
+            // unfavourite it
+            await page.getByTestId('spaces-detail-5-favourite').click();
+
+            // the space is now UNfavourited
+            await expect(page.getByTestId('spaces-detail-5-unfavourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-5-favourite')).not.toBeVisible();
+        });
     });
 });

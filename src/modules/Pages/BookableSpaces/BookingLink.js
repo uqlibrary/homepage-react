@@ -30,6 +30,7 @@ const StyledBookitLinkWrapperDiv = styled('div')(({ theme }) => ({
 export const BookingLink = ({ bookableSpace, showNoBookingRequired }) => {
     const uqBookitMakeABookingIcon = (
         <svg
+            data-testid={`space-${bookableSpace?.space_id}-booking-icon`}
             height="512"
             viewBox="0 0 24 24"
             width="512"
