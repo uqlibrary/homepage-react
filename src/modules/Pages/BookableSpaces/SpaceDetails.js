@@ -11,18 +11,14 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 
-import { OpeningHoursShort } from 'modules/Pages/BookableSpaces/OpeningHoursShort';
+import { pluralise } from 'helpers/general';
+
 import { BookingLink } from 'modules/Pages/BookableSpaces/BookingLink';
 import { getFriendlyLocationDescription, isBookable } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import {
-    formatSpaceOutageRangeForPublicNotice,
-    formatSpaceOutageUntilForPublicNotice,
-    getSpaceOutageShowTimePublic,
-    getVisibleSpaceOutage,
-} from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-import { pluralise } from 'helpers/general';
-import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
+import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
+import { OpeningHoursShort } from 'modules/Pages/BookableSpaces/OpeningHoursShort';
+import ShowOutageNotice from 'modules/Pages/BookableSpaces/ShowOutageNotice';
 
 const StyledFriendlyLocationDiv = styled('div')(() => ({
     marginTop: '5px',
@@ -46,12 +42,6 @@ const StyleCapacityDiv = styled('div')(({ theme }) => ({
     columnGap: '0.5rem',
     '& svg': {
         color: theme.palette.primary.main,
-    },
-}));
-const StyledOutageNotice = styled('div')(() => ({
-    marginBlock: '0.5rem',
-    '& p': {
-        marginTop: '0.5rem',
     },
 }));
 const StyledDescriptionDiv = styled('div')(() => ({
@@ -90,43 +80,6 @@ const StyledCollapsableSection = styled('div')(({ theme }) => ({
     },
 }));
 
-const ShowOutageNotice = ({ bookableSpace, visibleOutage, isCollapsed }) => {
-    return (
-        <StyledOutageNotice data-testid={`space-${bookableSpace?.space_id}-outage-notice`}>
-            <UserAttention
-                titleText={visibleOutage.status === 'Current' ? 'Current closure' : 'Upcoming closure'}
-                tone={visibleOutage.tone}
-                variant="aligned"
-                testId={`space-${bookableSpace?.space_id}-outage`}
-            >
-                <Typography variant="body2" data-testid={`space-${bookableSpace?.space_id}-outage-message`}>
-                    {visibleOutage.status === 'Current'
-                        ? `Currently unavailable until ${formatSpaceOutageUntilForPublicNotice(
-                              visibleOutage.outage?.space_outage_end,
-                              undefined,
-                              getSpaceOutageShowTimePublic(visibleOutage.outage),
-                          )}.`
-                        : `Closed ${formatSpaceOutageRangeForPublicNotice(
-                              visibleOutage.outage?.space_outage_start,
-                              visibleOutage.outage?.space_outage_end,
-                              getSpaceOutageShowTimePublic(visibleOutage.outage),
-                          )}.`}
-                </Typography>
-                {!isCollapsed && !!visibleOutage.reason && (
-                    <Typography variant="body2" data-testid={`space-${bookableSpace?.space_id}-outage-reason`}>
-                        Reason: {visibleOutage.reason}
-                    </Typography>
-                )}
-            </UserAttention>
-        </StyledOutageNotice>
-    );
-};
-ShowOutageNotice.propTypes = {
-    bookableSpace: PropTypes.any,
-    visibleOutage: PropTypes.any,
-    isCollapsed: PropTypes.any,
-};
-
 const CollapsedSection = ({
     bookableSpace,
     visibleOutage,
@@ -136,12 +89,11 @@ const CollapsedSection = ({
     weeklyHoursLoading,
     weeklyHoursError,
     weeklyHours,
-    // isMobileView,
 }) => {
     return (
         <>
             <StyledFriendlyLocationDiv data-testid={`space-${bookableSpace?.space_id}-friendly-location-collapsed`}>
-                {getFriendlyLocationDescription(bookableSpace, true)}yyy
+                {getFriendlyLocationDescription(bookableSpace, true)}
             </StyledFriendlyLocationDiv>
             {!!visibleOutage && (
                 <ShowOutageNotice bookableSpace={bookableSpace} visibleOutage={visibleOutage} isCollapsed />
