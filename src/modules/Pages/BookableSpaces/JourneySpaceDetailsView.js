@@ -8,11 +8,12 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
-import { baseButtonStyles, baseHoverFocusStyles, pluralise, StyledPrimaryButton } from 'helpers/general';
+import { baseButtonStyles, baseHoverFocusStyles, pluralise } from 'helpers/general';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
-import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
+import { BookingLink } from 'modules/Pages/BookableSpaces/BookingLink';
 import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/OpeningHoursDown';
+import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
 import {
     defaultChipStyles,
     getFriendlyLocationDescription,
@@ -428,25 +429,7 @@ const JourneySpaceDetailsView = ({
                     Space details
                 </StyledH3Typography>
                 <Stack spacing={2.5}>
-                    {!!selectedSpace?.space_external_book_url ? (
-                        <Box>
-                            <StyledPrimaryButton
-                                variant="contained"
-                                component="a"
-                                href={selectedSpace.space_external_book_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                sx={{ textTransform: 'none' }}
-                                data-testid={`space-${selectedSpace?.space_id}-bookable-local`}
-                            >
-                                Book this space
-                            </StyledPrimaryButton>
-                        </Box>
-                    ) : (
-                        <Typography variant="body2" data-testid={`space-${selectedSpace?.space_id}-not-bookable-local`}>
-                            No booking required.
-                        </Typography>
-                    )}
+                    <BookingLink bookableSpace={selectedSpace} />
 
                     {!!(selectedSpace?.space_capacity && selectedSpace.space_capacity > 0) && (
                         <Box>

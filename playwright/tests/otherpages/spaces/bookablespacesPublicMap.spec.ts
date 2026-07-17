@@ -110,9 +110,9 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-details-name`)).toContainText('339');
 
             // the booking link appears
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-bookable-local`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable-local`)).not.toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-bookable-local`)).toContainText('Book this space');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable`)).not.toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toContainText('Book this space');
             // await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-icon`)).toBeVisible();
 
             // ** Panel WITHOUT Booking Link has loaded
@@ -133,9 +133,9 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-details-name`)).toContainText('46-342/343');
 
             // "no booking required" prompt appears
-            await expect(page.getByTestId(`${LIV}-bookable-local`)).not.toBeVisible();
-            await expect(page.getByTestId(`${LIV}-not-bookable-local`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-not-bookable-local`)).toContainText('No booking required.');
+            await expect(page.getByTestId(`${LIV}-booking-link`)).not.toBeVisible();
+            await expect(page.getByTestId(`${LIV}-not-bookable`)).toBeVisible();
+            await expect(page.getByTestId(`${LIV}-not-bookable`)).toContainText('No booking required.');
         });
 
         test('outage message appear correct on load', async ({ page }) => {
@@ -1421,7 +1421,7 @@ test.describe('Spaces', () => {
             // public bookable Architecture and Music example
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable`)).not.toBeVisible();
 
-            await expect(page.getByTestId(`${PACE}-not-bookable-local`)).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-not-bookable`)).not.toBeVisible();
             await expect(page.getByTestId(`${PACE}-booking-link`)).toBeVisible();
             await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toBeVisible();
             await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toHaveAttribute(

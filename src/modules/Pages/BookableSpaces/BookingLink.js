@@ -47,7 +47,11 @@ export const BookingLink = ({ bookableSpace, hideNoBookingRequired = false }) =>
         return (
             <StyledBookitLinkWrapperDiv data-testid={`space-${bookableSpace?.space_id}-booking-link`}>
                 {uqBookitMakeABookingIcon}
-                <a href={bookableSpace?.space_external_book_url} target={'_blank'}>
+                <a
+                    href={bookableSpace?.space_external_book_url}
+                    target={'_blank'}
+                    data-testid={`space-${bookableSpace?.space_id}-map-popup-booking-link`}
+                >
                     <span>Book this space</span>
                 </a>
             </StyledBookitLinkWrapperDiv>

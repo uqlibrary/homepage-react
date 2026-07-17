@@ -53,9 +53,9 @@ test.describe('Spaces Detail page', () => {
             await expect(page.getByTestId('space-4-details-name')).toBeVisible();
             await expect(page.getByTestId('space-4-details-name')).toContainText('341');
 
-            // the booking link appears
-            await expect(page.getByTestId('space-4-bookable-local')).toBeVisible();
-            await expect(page.getByTestId('space-4-not-bookable-local')).not.toBeVisible();
+            // the booking link is present
+            await expect(page.getByTestId('space-4-booking-link')).toBeVisible();
+            await expect(page.getByTestId('space-4-not-bookable')).not.toBeVisible();
             // data-testid={`space-4-booking-icon`}
         });
         test('spaces detail page shows the correct message when there is no linked booking', async ({ page }) => {
@@ -67,8 +67,8 @@ test.describe('Spaces Detail page', () => {
             await expect(page.getByTestId('space-1-details-name')).toContainText('354');
 
             // the book it link appears
-            await expect(page.getByTestId('space-1-bookable-local')).not.toBeVisible();
-            await expect(page.getByTestId('space-1-not-bookable-local')).toBeVisible();
+            await expect(page.getByTestId('space-1-booking-link')).not.toBeVisible();
+            await expect(page.getByTestId('space-1-not-bookable')).toBeVisible();
             // data-testid={`space-1-booking-icon`}
         });
     });

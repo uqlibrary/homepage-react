@@ -5,9 +5,11 @@ import { createRoot } from 'react-dom/client';
 import Typography from '@mui/material/Typography';
 import { styled, ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 
-import { addClass, removeClass } from 'helpers/general';
-import { CAMPUS_ST_LUCIA } from 'config/locale';
 import { mui1theme } from 'config/theme';
+import { CAMPUS_ST_LUCIA } from 'config/locale';
+import { addClass, removeClass } from 'helpers/general';
+
+import { BookingLink } from 'modules/Pages/BookableSpaces/BookingLink';
 import {
     formatSpaceOutageRangeForPublicNotice,
     formatSpaceOutageUntilForPublicNotice,
@@ -78,9 +80,8 @@ const StyledFavouriteNote = styled('em')(() => ({
     color: '#666',
 }));
 
-const StyledPopupBookingLink = styled('a')(() => ({
-    display: 'inline-block',
-    marginTop: '0.5rem',
+const StyledPopupBookingDiv = styled('div')(() => ({
+    paddingTop: '0.4rem',
 }));
 
 export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) => {
@@ -105,18 +106,9 @@ export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) =>
                 </>
             )}
 
-            {!!space?.space_external_book_url && (
-                <div>
-                    <StyledPopupBookingLink
-                        href={space.space_external_book_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        data-testid={`space-${space?.space_id}-map-popup-booking-link`}
-                    >
-                        Book this space
-                    </StyledPopupBookingLink>
-                </div>
-            )}
+            <StyledPopupBookingDiv>
+                <BookingLink bookableSpace={space} hideNoBookingRequired />
+            </StyledPopupBookingDiv>
 
             {!!visibleOutage && (
                 <StyledPopupOutageNotice data-testid={`space-${space?.space_id}-map-popup-outage-notice`}>
@@ -375,7 +367,6 @@ const BookableSpacesMap = React.forwardRef(
                 disableMazeMap();
             });
 
-            // eslint-disable-next-line consistent-return
             return () => {
                 clearActivePopup();
                 mazeMapInstanceRef.current?.remove();
@@ -387,7 +378,6 @@ const BookableSpacesMap = React.forwardRef(
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isMazeMapScriptReady, mapContainer, isMazeMapAvailable, disableMazeMap]);
 
-        // eslint-disable-next-line consistent-return
         React.useEffect(() => {
             if (!isMazeMapReady || !mazeMapInstanceRef.current) return;
 
