@@ -32,7 +32,7 @@ const StyledAttentionDiv = styled('div', {
                     stroke: `${theme.palette.designSystem.headingColor} !important`,
                 },
             },
-            '& .uq-userattention-content h4': {
+            '& .uq-userattention-content h3, & .uq-userattention-content h4': {
                 color: theme.palette.designSystem.headingColor,
                 margin: 0,
                 fontStyle: 'normal',
@@ -51,7 +51,7 @@ const StyledAttentionDiv = styled('div', {
     return {
         backgroundColor: theme.palette.designSystem.alert.warning,
         padding: '16px',
-        '& h4': {
+        '& h3, & h4': {
             fontStyle: 'normal',
             fontWeight: 500,
             letterSpacing: '0.16px',
@@ -66,16 +66,23 @@ const StyledAttentionDiv = styled('div', {
     };
 });
 
-const UserAttention = ({ titleText, children, tone = 'warning', variant = 'legacy' }) => {
+const UserAttention = ({
+    titleText,
+    children,
+    tone = 'warning',
+    variant = 'legacy',
+    testId = 'user-attention',
+    headingLevel = 'h4',
+}) => {
     if (variant === 'aligned') {
         return (
-            <StyledAttentionDiv tone={tone} variant={variant}>
+            <StyledAttentionDiv tone={tone} variant={variant} data-testid={testId}>
                 <div className="uq-userattention-row">
                     <div className="uq-userattention-icon" aria-hidden="true">
                         <UqDsExclamationCircle />
                     </div>
                     <div className="uq-userattention-content">
-                        <Typography component={'h4'}>{titleText}</Typography>
+                        <Typography component={headingLevel}>{titleText}</Typography>
                         {children}
                     </div>
                 </div>
@@ -84,7 +91,7 @@ const UserAttention = ({ titleText, children, tone = 'warning', variant = 'legac
     }
 
     return (
-        <StyledAttentionDiv tone={tone} variant={variant}>
+        <StyledAttentionDiv tone={tone} variant={variant} data-testid={testId}>
             <Typography component={'h4'}>
                 <UqDsExclamationCircle />
                 <span>{titleText}</span>
@@ -99,6 +106,8 @@ UserAttention.propTypes = {
     children: PropTypes.any,
     tone: PropTypes.oneOf(['warning', 'error']),
     variant: PropTypes.oneOf(['legacy', 'aligned']),
+    testId: PropTypes.string,
+    headingLevel: PropTypes.string,
 };
 
 export default UserAttention;

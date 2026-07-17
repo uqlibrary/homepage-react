@@ -116,6 +116,7 @@ export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) =>
                         titleText={visibleOutage.status === 'Current' ? 'Current closure' : 'Upcoming closure'}
                         tone={visibleOutage.tone}
                         variant="aligned"
+                        testId={`space-${space?.space_id}-map-popup-outage`}
                     >
                         <Typography variant="body2" data-testid={`space-${space?.space_id}-map-popup-outage-message`}>
                             {visibleOutage.status === 'Current'

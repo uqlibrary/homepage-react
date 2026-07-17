@@ -1,6 +1,8 @@
 import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
+import { COLOUR_UQ_WARNING_50, COLOR_UQ_ERROR_50 } from '@uq/pw/lib/constants';
+
 const ARCH_REFERENCE = 'space-1'; // a public Architecture and Music Library space with summary hours and description
 const ARCH_BOOKABLE = 'space-2'; // a public Architecture and Music Library space with booking and rich facilities
 const PACE = 'space-1234544'; // a space in dutton park (pace)
@@ -169,20 +171,77 @@ test.describe('Spaces', () => {
         });
 
         test('current unavailability is shown with reason on expand', async ({ page }) => {
-            await expect(page.getByTestId(`${ARCH_REFERENCE}-outage-notice`)).not.toBeVisible();
-            await expect(page.getByTestId(`${LIV}-outage-notice`)).not.toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toContainText(
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-outage`)).not.toBeVisible();
+            await expect(page.getByTestId(`${LIV}-outage`)).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-outage`)).not.toBeVisible();
+
+            // test red current closure
+            const SPACE_ID_2 = 2;
+            await expect(page.getByTestId(`space-${SPACE_ID_2}-outage`)).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID_2}-outage`)).toHaveCSS(
+                'background-color',
+                COLOR_UQ_ERROR_50,
+            );
+            await expect(page.getByTestId(`space-${SPACE_ID_2}-outage`).locator('h4')).toContainText('Current closure');
+            await expect(page.getByTestId(`space-${SPACE_ID_2}-outage-message`)).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID_2}-outage-message`)).toContainText(
                 'Currently unavailable until',
             );
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-reason`)).not.toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-outage-notice`)).not.toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID_2}-outage-reason`)).not.toBeVisible();
 
-            await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-reason`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-reason`)).toContainText(
+            // expand the space panel to show the reason
+            await page.getByTestId(`space-${SPACE_ID_2}-toggle-panel-button`).click();
+
+            await page.getByTestId(`spaces-journey-outage-${SPACE_ID_2}`).scrollIntoViewIfNeeded();
+            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID_2}`)).toHaveCSS(
+                'background-color',
+                COLOR_UQ_ERROR_50,
+            );
+            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID_2}`).locator('h3')).toContainText(
+                'Current closure',
+            );
+            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID_2}`)).toBeVisible();
+            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID_2}`)).toContainText(
+                'Currently unavailable until',
+            );
+            await expect(page.getByTestId(`space-${SPACE_ID_2}-outage-reason`)).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID_2}-outage-reason`)).toContainText(
                 'Reason: Lighting maintenance',
+            );
+
+            // collapse the space panel to show the reason
+            await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
+
+            // test amber upcoming closure
+            const SPACE_ID_5 = 5;
+            await page.getByTestId(`space-${SPACE_ID_5}-name`).scrollIntoViewIfNeeded();
+            await expect(page.getByTestId(`space-${SPACE_ID_5}-name`)).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID_5}-name`)).toContainText('Individual study');
+
+            await expect(page.getByTestId(`space-${SPACE_ID_5}-outage`)).toHaveCSS(
+                'background-color',
+                COLOUR_UQ_WARNING_50,
+            );
+            await expect(page.getByTestId(`space-${SPACE_ID_5}-outage`).locator('h4')).toContainText(
+                'Upcoming closure',
+            );
+            await expect(page.getByTestId(`space-${SPACE_ID_5}-outage-reason`)).not.toBeVisible();
+
+            // expand the space panel
+            await page.getByTestId(`space-${SPACE_ID_5}-toggle-panel-button`).click();
+
+            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID_5}`)).toHaveCSS(
+                'background-color',
+                COLOUR_UQ_WARNING_50,
+            );
+            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID_5}`).locator('h3')).toContainText(
+                'Upcoming closure',
+            );
+            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID_5}`)).toBeVisible();
+            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID_5}`)).toContainText('Closed');
+            await expect(page.getByTestId(`space-${SPACE_ID_5}-outage-reason`)).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID_5}-outage-reason`)).toContainText(
+                'Reason: Air conditioning maintenance',
             );
         });
 

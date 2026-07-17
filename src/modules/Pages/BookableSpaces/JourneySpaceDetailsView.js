@@ -332,7 +332,7 @@ const JourneySpaceDetailsView = ({
                         </StyledSpaceTitleWrapperBox>
                         {/* <StyledNameTypography variant="body2">{selectedSpace?.space_library_name}</StyledNameTypography>*/}
                         <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
-                            {getFriendlyLocationDescription(selectedSpace, false, { space_name: true })}
+                            {getFriendlyLocationDescription(selectedSpace, false, { space_name: true })}xxx
                         </StyledFriendlyLocationDiv>{' '}
                         {!!(selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type) && (
                             <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
@@ -366,6 +366,8 @@ const JourneySpaceDetailsView = ({
                             titleText={visibleOutage.status === 'Current' ? 'Current closure' : 'Upcoming closure'}
                             tone={visibleOutage.tone}
                             variant="aligned"
+                            testId={`spaces-journey-outage-${selectedSpace?.space_id}`}
+                            headingLevel="h3"
                         >
                             <Typography
                                 variant="body2"

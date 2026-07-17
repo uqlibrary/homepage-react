@@ -1,8 +1,59 @@
 import { expect, test } from '@uq/pw/test';
+import { COLOR_UQPURPLE, COLOUR_UQ_WARNING_50, COLOR_UQ_ERROR_50 } from '@uq/pw/lib/constants';
 
 test.describe('Spaces Detail page', () => {
     test.beforeEach(async ({ context }) => {
         await context.clearCookies();
+    });
+    test.describe('Outage blocks', () => {
+        test('spaces detail page has appropriate Current Closure block', async ({ page }) => {
+            await page.goto('/spaces/detail/a00de509-570b-4acb-9ca1-89c4baebe2e6');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+
+            // page has loaded
+            const SPACE_ID = 2;
+            await expect(page.getByTestId(`space-${SPACE_ID}-details-name`)).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID}-details-name`)).toContainText('339');
+
+            // outage block appears as expected
+            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID}`)).toBeVisible();
+            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID}`)).toHaveCSS(
+                'background-color',
+                COLOR_UQ_ERROR_50,
+            );
+
+            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID}`)).toBeVisible();
+            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID}`)).toContainText(
+                'Currently unavailable until',
+            );
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage-reason`)).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage-reason`)).toContainText(
+                'Reason: Lighting maintenance',
+            );
+        });
+        test('spaces detail page has appropriate Upcoming Closure block', async ({ page }) => {
+            await page.goto('/spaces/detail/a0298845-9999-4bb7-a6d5-666f1999c3d4');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+
+            // page has loaded
+            const SPACE_ID = 5;
+            await expect(page.getByTestId(`space-${SPACE_ID}-details-name`)).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID}-details-name`)).toContainText('342');
+
+            // outage block appears as expected
+            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID}`)).toBeVisible();
+            await expect(page.getByTestId(`spaces-journey-outage-${SPACE_ID}`)).toHaveCSS(
+                'background-color',
+                COLOUR_UQ_WARNING_50,
+            );
+
+            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID}`)).toBeVisible();
+            await expect(page.getByTestId(`spaces-journey-outage-message-${SPACE_ID}`)).toContainText('Closed');
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage-reason`)).toBeVisible();
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage-reason`)).toContainText(
+                'Reason: Air conditioning maintenance',
+            );
+        });
     });
     test.describe('Favourites', () => {
         test('spaces detail page can UNfavourite', async ({ page }) => {

@@ -1170,8 +1170,9 @@ export const BookableSpacesManageFacilities = ({
                                                     <ul>
                                                         {orderedFacilityTypeGroups?.map((item, index) => (
                                                             <DraggableListItem
-                                                                key={`draggable-facility-group-type-${item?.facility_type_group_id ||
-                                                                    index}`}
+                                                                key={`draggable-facility-group-type-${
+                                                                    item?.facility_type_group_id || index
+                                                                }`}
                                                                 item={item}
                                                                 index={index}
                                                                 moveItem={moveItem}
@@ -1196,7 +1197,7 @@ export const BookableSpacesManageFacilities = ({
                                                 component={'h3'}
                                                 variant={'h6'}
                                                 style={{ marginBottom: '0.5rem' }}
-                                                data-testId="filter-add-edit-heading"
+                                                data-testid="filter-add-edit-heading"
                                             >
                                                 Add and Edit Filter types
                                             </Typography>

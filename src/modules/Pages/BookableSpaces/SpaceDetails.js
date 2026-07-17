@@ -97,6 +97,7 @@ const ShowOutageNotice = ({ bookableSpace, visibleOutage, isCollapsed }) => {
                 titleText={visibleOutage.status === 'Current' ? 'Current closure' : 'Upcoming closure'}
                 tone={visibleOutage.tone}
                 variant="aligned"
+                testId={`space-${bookableSpace?.space_id}-outage`}
             >
                 <Typography variant="body2" data-testid={`space-${bookableSpace?.space_id}-outage-message`}>
                     {visibleOutage.status === 'Current'
@@ -140,7 +141,7 @@ const CollapsedSection = ({
     return (
         <>
             <StyledFriendlyLocationDiv data-testid={`space-${bookableSpace?.space_id}-friendly-location-collapsed`}>
-                {getFriendlyLocationDescription(bookableSpace, true)}
+                {getFriendlyLocationDescription(bookableSpace, true)}yyy
             </StyledFriendlyLocationDiv>
             {!!visibleOutage && (
                 <ShowOutageNotice bookableSpace={bookableSpace} visibleOutage={visibleOutage} isCollapsed />
