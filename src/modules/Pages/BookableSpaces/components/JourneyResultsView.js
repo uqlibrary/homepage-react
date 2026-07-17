@@ -10,6 +10,7 @@ import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import { defaultChipStyles, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import { StyledSecondaryButton } from 'helpers/general';
+import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
 
 import {
     StyledJourneyPanel,
@@ -109,12 +110,16 @@ export const JourneyResultsView = ({
                             {spaces.map(space => {
                                 const detailId = String(space?.space_uuid || space?.space_id || '');
                                 const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
+                                const detailUrl = serialiseJourneyUrl({
+                                    view: 'details',
+                                    spaceId: space?.space_uuid || space?.space_id || null,
+                                });
                                 return (
                                     <StyledListItemStack key={detailId || space?.space_id} spacing={1}>
                                         <Button
                                             component="a"
                                             className="cardBody"
-                                            href={`./detail/${space?.space_uuid}`}
+                                            href={detailUrl}
                                             data-testid={`spaces-result-list-item-${space?.space_id}`}
                                         >
                                             <Box sx={{ position: 'relative' }}>

@@ -24,6 +24,7 @@ import {
     getSpaceOutageShowTimePublic,
     getVisibleSpaceOutage,
 } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
 
 const journeyFallbackDetailImage = require('../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
@@ -147,10 +148,20 @@ const StyledTightLinkButton = styled(Button)(({ theme }) => ({
 }));
 
 const OpenSpaceNewWindowButton = ({ spaceDetails }) => {
+    const detailUrl = React.useMemo(
+        () =>
+            serialiseJourneyUrl({
+                view: 'details',
+                spaceId: spaceDetails?.space_uuid || spaceDetails?.space_id || null,
+            }),
+        [spaceDetails?.space_uuid, spaceDetails?.space_id],
+    );
+
     return (
         <a
-            href={`/spaces/detail/${spaceDetails?.space_uuid}`}
+            href={detailUrl}
             target="_blank"
+            rel="noopener noreferrer"
             style={{ display: 'inline-flex', pr: 0 }}
             aria-label={`Open Space ${spaceDetails?.space_name} in a new window`}
         >
