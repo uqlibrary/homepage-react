@@ -7,7 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
 
 import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
-import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
+import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
 
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
@@ -107,7 +107,7 @@ const SidebarSpacesList = ({
                                 fullHeight
                                 title={
                                     <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <RenderFavouriteIcon
+                                        <SpaceFavouriteIcon
                                             bookableSpace={bookableSpace}
                                             isFavourite={spacesFavouritesList?.some(
                                                 fav => fav.space_id === bookableSpace?.space_id,

@@ -23,7 +23,7 @@ const topLeft = {
 const StyledTooltip = styled(Tooltip)(() => topLeft);
 const StyledCircularProgress = styled(CircularProgress)(() => topLeft);
 
-export const RenderFavouriteIcon = ({
+export const SpaceFavouriteIcon = ({
     bookableSpace,
     isFavourite,
     onFavouriteToggle,
@@ -92,11 +92,11 @@ export const RenderFavouriteIcon = ({
         </StyledTooltip>
     );
 };
-RenderFavouriteIcon.propTypes = {
+SpaceFavouriteIcon.propTypes = {
     bookableSpace: PropTypes.any,
     isFavourite: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
     isFavouriteActionInProgress: PropTypes.any,
     iconPosition: PropTypes.any,
 };
-export default RenderFavouriteIcon;
+export default SpaceFavouriteIcon;

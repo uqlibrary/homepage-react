@@ -13,7 +13,7 @@ import {
     formatSpaceOutageDateTimeForPublicNotice,
     formatSpaceOutageRangeForPublicNotice,
     formatSpaceOutageUntilForPublicNotice,
-} from 'modules/Pages/BookableSpaces/ShowOutageNotice';
+} from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
 
 describe('spaceOutageHelpers', () => {
     const sampleOutages = [

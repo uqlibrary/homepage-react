@@ -12,8 +12,8 @@ import { baseButtonStyles, baseHoverFocusStyles, pluralise } from 'helpers/gener
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import { BookingLink } from 'modules/Pages/BookableSpaces/BookingLink';
 import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/OpeningHoursDown';
-import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
-import ShowOutageNotice from 'modules/Pages/BookableSpaces/ShowOutageNotice';
+import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
+import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
 import {
     defaultChipStyles,
     getFriendlyLocationDescription,
@@ -308,7 +308,7 @@ const JourneySpaceDetailsView = ({
                         <StyledSpaceTitleWrapperBox>
                             <span>
                                 {!narrowView && isLoggedIn && !!selectedSpace?.space_id && (
-                                    <RenderFavouriteIcon
+                                    <SpaceFavouriteIcon
                                         bookableSpace={selectedSpace}
                                         isFavourite={isSelectedSpaceFavourite}
                                         onFavouriteToggle={() => onFavouriteToggle?.(selectedSpace)}
@@ -357,7 +357,7 @@ const JourneySpaceDetailsView = ({
                     </Box>
 
                     {!!visibleOutage && (
-                        <ShowOutageNotice
+                        <SpaceOutageNotice
                             bookableSpace={selectedSpace}
                             visibleOutage={visibleOutage}
                             hideReason={!visibleOutage.reason}

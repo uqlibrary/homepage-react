@@ -18,7 +18,7 @@ import { getFriendlyLocationDescription, isBookable } from 'modules/Pages/Bookab
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
 import { OpeningHoursShort } from 'modules/Pages/BookableSpaces/OpeningHoursShort';
-import ShowOutageNotice from 'modules/Pages/BookableSpaces/ShowOutageNotice';
+import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
 
 const StyledFriendlyLocationDiv = styled('div')(() => ({
     marginTop: '5px',
@@ -96,7 +96,7 @@ const CollapsedSection = ({
                 {getFriendlyLocationDescription(bookableSpace, true)}
             </StyledFriendlyLocationDiv>
             {!!visibleOutage && (
-                <ShowOutageNotice bookableSpace={bookableSpace} visibleOutage={visibleOutage} hideReason />
+                <SpaceOutageNotice bookableSpace={bookableSpace} visibleOutage={visibleOutage} hideReason />
             )}
             <BookingLink bookableSpace={bookableSpace} />
             {isBookable(bookableSpace) && !!bookableSpace?.space_capacity && bookableSpace?.space_capacity > 0 && (
