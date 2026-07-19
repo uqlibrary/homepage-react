@@ -1279,7 +1279,7 @@ export default {
                 space_type_details: {
                     "space_type_id": 1,
                     "space_type_name": "Communal space",
-                    "space_type_description": "Designed for communal activities, these spaces typically include seating areas, tables, and other amenities to support group interactions and social engagement."
+                    "space_type_description": "Designed for communal activities, these spaces typically include seating areas."
                 },
                 space_campus_name: "St Lucia",
                 "space_campus_number": "01",

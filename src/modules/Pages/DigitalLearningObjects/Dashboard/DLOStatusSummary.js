@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography, Grid, Divider } from '@mui/material';
 import { getUserPostfix } from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 
 const statusConfig = [
     { label: 'New / Draft', key: 'new_objects', color: '#1976d2', param: 'new' },
@@ -61,8 +62,8 @@ const DLOStatusSummary = ({ data }) => (
                                 }}
                                 data-testid={`count-${status.key}`}
                             >
-                                <a
-                                    href={buildDLOStatusUrl(status.param)}
+                                <Link
+                                    to={buildDLOStatusUrl(status.param)}
                                     style={{ textDecoration: 'none', color: status.color }}
                                     aria-label={`View ${status.label} objects`}
                                     target="_blank"
@@ -70,7 +71,7 @@ const DLOStatusSummary = ({ data }) => (
                                 >
                                     {/* istanbul ignore next */}
                                     {data?.[status.key] ?? 0}
-                                </a>
+                                </Link>
                             </Typography>
                             <Typography
                                 variant="caption"

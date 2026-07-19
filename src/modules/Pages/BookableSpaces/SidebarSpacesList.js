@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid, Tooltip, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
+import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
 
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
@@ -66,46 +65,6 @@ const SidebarSpacesList = ({
     //     }
     // };
 
-    const renderFavouriteIcon = bookableSpace => {
-        if (!isLoggedIn || !onFavouriteToggle) {
-            return null;
-        }
-
-        const isFavourite = spacesFavouritesList?.some(fav => fav.space_id === bookableSpace?.space_id);
-
-        if (isFavourite) {
-            return (
-                <Tooltip title="Remove from Favourites" arrow>
-                    <StarIcon
-                        onClick={() => onFavouriteToggle('removeSpaceFavourite', bookableSpace?.space_id)}
-                        sx={{
-                            fill: '#FFD700',
-                            cursor: isFavouriteActionInProgress ? 'not-allowed' : 'pointer',
-                            fontSize: '1.5rem',
-                            flexShrink: 0,
-                        }}
-                        data-testid={`favourite-star-${bookableSpace?.space_id}`}
-                    />
-                </Tooltip>
-            );
-        }
-
-        return (
-            <Tooltip title="Add to Favourites" arrow>
-                <StarBorderIcon
-                    onClick={() => onFavouriteToggle('addSpaceFavourite', bookableSpace?.space_id)}
-                    sx={{
-                        fill: '#666',
-                        cursor: isFavouriteActionInProgress ? 'not-allowed' : 'pointer',
-                        fontSize: '1.5rem',
-                        flexShrink: 0,
-                    }}
-                    data-testid={`favourite-star-outline-${bookableSpace?.space_id}`}
-                />
-            </Tooltip>
-        );
-    };
-
     return (
         <StyledSpaceGridWrapperDiv id="space-wrapper" data-testid="space-wrapper" className={suppliedClassName}>
             <a className="showsOnlyOnFocus" href="#topOfSidebar">
@@ -148,7 +107,14 @@ const SidebarSpacesList = ({
                                 fullHeight
                                 title={
                                     <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        {renderFavouriteIcon(bookableSpace)}
+                                        <RenderFavouriteIcon
+                                            bookableSpace={bookableSpace}
+                                            isFavourite={spacesFavouritesList?.some(
+                                                fav => fav.space_id === bookableSpace?.space_id,
+                                            )}
+                                            onFavouriteToggle={onFavouriteToggle}
+                                            isFavouriteActionInProgress={isFavouriteActionInProgress}
+                                        />
                                         <span
                                             onClick={() => onSpaceSelect?.(bookableSpace)}
                                             style={onSpaceSelect ? { cursor: 'pointer' } : undefined}
@@ -171,6 +137,8 @@ const SidebarSpacesList = ({
                                     showAllData
                                     isExpanded={expandedSpaceId === bookableSpace?.space_id}
                                     onToggle={onSpaceToggle}
+                                    isFavouriteActionInProgress={isFavouriteActionInProgress}
+                                    spacesFavouritesList={spacesFavouritesList}
                                 />
                             </StyledStandardCard>
                         </StyledBookableSpaceGridItem>

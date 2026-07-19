@@ -22,6 +22,7 @@ import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//Sh
 import { pluralise } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 import { useAccountContext } from 'context';
+import { useNavigate } from 'react-router';
 
 const StyledObjectDetails = styled('details')(() => ({
     marginLeft: '20px',
@@ -39,6 +40,7 @@ export const DLOSeriesList = ({
     dlorSeriesDeleted,
     dlorSeriesDeleteError,
 }) => {
+    const navigate = useNavigate();
     const { account } = useAccountContext();
     const DELETION_STEP_NULL = null;
     const DELETION_STEP_ONE_CONFIRM = 1;
@@ -99,7 +101,7 @@ export const DLOSeriesList = ({
     };
 
     const navigateToSeriesEditPage = seriesId => {
-        window.location.href = dlorAdminLink(`/series/edit/${seriesId}`, account);
+        navigate(dlorAdminLink(`/series/edit/${seriesId}`, account));
     };
     const deletionConfirmationBoxLocale = {
         confirmItMessage: {

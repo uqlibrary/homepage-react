@@ -54,12 +54,21 @@ const palette = {
     designSystem: {
         borderColor: '#dcdcdd', // $grey-200
         border: '1px solid #dcdcdd',
+        borderRadius: '4px',
         deemphasisedText: '#757377', // $grey-700
         panelBackgroundColor: '#f3f3f4', // $grey-50
         headingColor: '#19151c', // $black
         bodyCopy: '#3b383e', // $grey-900
         disabledText: '#d1d0d2', // $grey-300
-        warningYellow: '#fef8e8', // $warning-50 Background for warning alerts
+        fontFamilyH1: 'Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        purple: {
+            purple50: '#eee9f2',
+        },
+        alert: {
+            info: '#e7f0fa',
+            warning: '#fef8e8',
+            error: '#fbeaea',
+        },
     },
 };
 

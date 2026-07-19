@@ -1,4 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
+import { Chip, useTheme } from '@mui/material';
+
+import { getVisibleSpaceOutage } from '../Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
 export const FILTER_BOOKABLE_TYPE_ID = 9002;
 export const FILTER_CAPACITY_TYPE_ID = 9003;
@@ -49,7 +54,7 @@ export function getFriendlyFloorName(bookableSpace) {
     return getPrefixedFloorName(bookableSpace?.space_floor_name);
 }
 
-export function getFriendlyLocationDescription(bookableSpace, isCollapsed = false) {
+export function getFriendlyLocationDescription(bookableSpace, isCollapsed = false, hideOptions = {}) {
     if (isCollapsed) {
         return (
             <div className="location-space location-library">
@@ -59,7 +64,9 @@ export function getFriendlyLocationDescription(bookableSpace, isCollapsed = fals
     }
     return (
         <>
-            <div className="location-space location-name">{`${bookableSpace?.space_name || ''}`}</div>
+            {!hideOptions.space_name && (
+                <div className="location-space location-name">{`${bookableSpace?.space_name || ''}`}</div>
+            )}
             <div className="location-space location-campus">{`${bookableSpace?.space_campus_name}`}</div>
             <div className="location-space location-building">{`${bookableSpace?.space_building_name} (${bookableSpace?.space_building_number})`}</div>
             <div className="location-space location-library">
@@ -215,4 +222,101 @@ export const getSpaceHoursStatus = (space, weeklyHours) => {
     const minsUntilClose = (closeTime - now) / 60000;
     if (minsUntilClose <= 60) return 'closing-soon';
     return 'open';
+};
+
+export const defaultChipStyles = theme => {
+    return {
+        borderColor: theme.palette.designSystem.bodyCopy,
+        border: '1px solid',
+        color: theme.palette.designSystem.bodyCopy,
+        fontWeight: 600,
+        fontSize: '1rem',
+    };
+};
+
+export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHoursError, chipStyles }) => {
+    const openingHoursStatusConfig = (status, theme) => {
+        if (status === 'open') {
+            return {
+                label: 'Open now',
+                sx: {
+                    ...defaultChipStyles(theme),
+                    backgroundColor: theme.palette.designSystem.alert.info,
+                },
+            };
+        }
+        if (status === 'closing-soon') {
+            return {
+                label: 'Closing soon',
+                sx: {
+                    ...defaultChipStyles(theme),
+                    backgroundColor: theme.palette.designSystem.alert.warning,
+                },
+            };
+        }
+        if (status === 'closed') {
+            return {
+                label: 'Currently closed',
+                sx: {
+                    ...defaultChipStyles(theme),
+                    backgroundColor: theme.palette.designSystem.alert.error,
+                },
+            };
+        }
+        return null;
+    };
+
+    const chipTestId = `spaces-${space?.space_id}-details-outage-chip`;
+    const theme = useTheme();
+    const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
+    if (visibleOutage?.status === 'Current') {
+        const closedConfig = openingHoursStatusConfig('closed', theme);
+        return (
+            <Chip
+                data-testid={chipTestId}
+                label={closedConfig.label}
+                size="small"
+                sx={{
+                    ...chipStyles,
+                    ...closedConfig?.sx,
+                }}
+            />
+        );
+    }
+
+    if (weeklyHoursLoading || weeklyHoursError || !weeklyHours) {
+        return null;
+    }
+
+    const status = getSpaceHoursStatus(space, weeklyHours);
+    if (!status) {
+        return null;
+    }
+
+    const config = openingHoursStatusConfig(status, theme);
+    if (!config) {
+        return null;
+    }
+    return (
+        <Chip
+            data-testid={'spaces-journey-open-status-chip-' + status}
+            label={config.label}
+            size="small"
+            sx={{
+                ...chipStyles,
+                fontWeight: 700,
+                fontSize: '1rem',
+                letterSpacing: '0.01em',
+                ...config.sx,
+            }}
+        />
+    );
+};
+
+SpaceOpenStatusChip.propTypes = {
+    space: PropTypes.object,
+    weeklyHours: PropTypes.object,
+    weeklyHoursLoading: PropTypes.bool,
+    weeklyHoursError: PropTypes.bool,
+    chipStyles: PropTypes.any,
 };

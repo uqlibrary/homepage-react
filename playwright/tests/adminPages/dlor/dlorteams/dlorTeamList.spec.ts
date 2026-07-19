@@ -21,7 +21,7 @@ test.describe('Digital Learning Hub admin Teams management', () => {
                     .locator('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .getByText(/Digital Learning Hub admin/)
                     .first(),
-            ).toHaveAttribute('href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+            ).toHaveAttribute('href', `/admin/dlor?user=${DLOR_ADMIN_USER}`);
             await expect(
                 page
                     .getByTestId('dlor-breadcrumb-team-management-label-0')
@@ -122,12 +122,7 @@ test.describe('Digital Learning Hub admin Teams management', () => {
             ).toBeVisible();
             await expect(page.getByTestId('cancel-dlor-team-delete-confirm')).not.toBeVisible();
             await expect(page.getByTestId('confirm-dlor-team-delete-confirm')).toBeVisible();
-            await expect(
-                page
-                    .getByTestId('confirm-dlor-team-delete-confirm')
-                    .getByText(/Close/)
-                    .first(),
-            ).toBeVisible();
+            await expect(page.getByTestId('confirm-dlor-team-delete-confirm').getByText(/Close/).first()).toBeVisible();
 
             await page.getByTestId('confirm-dlor-team-delete-confirm').click();
             // cant really test it was deleted - that will happen in canary. just confirm the page reloads
@@ -155,12 +150,7 @@ test.describe('Digital Learning Hub admin Teams management', () => {
                     .first(),
             ).toBeVisible();
             await expect(page.getByTestId('cancel-dlor-team-delete-confirm')).not.toBeVisible();
-            await expect(
-                page
-                    .getByTestId('confirm-dlor-team-delete-confirm')
-                    .getByText(/Close/)
-                    .first(),
-            ).toBeVisible();
+            await expect(page.getByTestId('confirm-dlor-team-delete-confirm').getByText(/Close/).first()).toBeVisible();
             await page.getByTestId('confirm-dlor-team-delete-confirm').click();
         });
     });
@@ -204,12 +194,7 @@ test.describe('Digital Learning Hub admin Teams management', () => {
                     .first(),
             ).toBeVisible();
             await expect(page.getByTestId('cancel-dlor-team-delete-confirm')).not.toBeVisible();
-            await expect(
-                page
-                    .getByTestId('confirm-dlor-team-delete-confirm')
-                    .getByText(/Close/)
-                    .first(),
-            ).toBeVisible();
+            await expect(page.getByTestId('confirm-dlor-team-delete-confirm').getByText(/Close/).first()).toBeVisible();
 
             await page.getByTestId('confirm-dlor-team-delete-confirm').click();
             // cant really test it was deleted - that will happen in canary. just confirm the page reloads

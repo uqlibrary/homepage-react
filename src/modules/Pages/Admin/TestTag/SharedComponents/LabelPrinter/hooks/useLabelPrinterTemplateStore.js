@@ -11,16 +11,15 @@ export const transformTemplateListToStore = templateList => {
     }));
 };
 
-export const useLabelPrinterTemplateStore = actions => {
-    const { printerTemplateList, printerTemplateListLoading, printerTemplateListError } = useSelector(state =>
-        state.get?.('testTagPrinterTemplateReducer'),
-    );
+export const useLabelPrinterTemplateStore = (actions, printingEnabled) => {
+    const { printerTemplateList, printerTemplateListLoading, printerTemplateListLoaded, printerTemplateListError } =
+        useSelector(state => state.get?.('testTagPrinterTemplateReducer'));
 
     useEffect(() => {
-        if ((!printerTemplateList?.length || printerTemplateList?.length === 0) && !printerTemplateListLoading) {
+        if (printingEnabled && !printerTemplateListLoaded && !printerTemplateListLoading) {
             actions.loadPrinterTemplateList();
         }
-    }, [printerTemplateList, printerTemplateListLoading, actions]);
+    }, [printerTemplateList, printerTemplateListLoading, printerTemplateListLoaded, actions, printingEnabled]);
 
     const transformedTemplateStore = useMemo(
         () => transformTemplateListToStore(printerTemplateList),

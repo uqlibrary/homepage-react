@@ -37,7 +37,7 @@ import {
     useLabelPrinterPreference,
     LabelPrinterSelector,
 } from '../../../SharedComponents/LabelPrinter';
-import { getDefaultDeptPrinter } from '../../../helpers/labelPrinting';
+import { getDefaultDeptPrinter, getDeptLabelPrintingEnabled } from '../../../helpers/labelPrinting';
 import { COOKIE_PRINTER_PREFERENCE } from '../../../config/labelPrinting';
 import { hasPrinterError } from '../../../helpers/labelPrinting';
 
@@ -47,11 +47,14 @@ const PrinterTemplates = () => {
     const theme = useTheme();
     const { user } = useAccountUser();
     const deptPrinterDefault = getDefaultDeptPrinter(user?.user_department);
+    const deptPrintingEnabled = getDeptLabelPrintingEnabled(user?.user_department);
+
     const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
     const [printerPreference] = useLabelPrinterPreference(COOKIE_PRINTER_PREFERENCE);
 
     const [selectedPrinter, setSelectedPrinter] = React.useState(printerPreference);
     const { printer, availablePrinters } = useLabelPrinter({
+        printingEnabled: deptPrintingEnabled,
         printerCode: deptPrinterDefault,
         shouldOverridePrinterDevEnv: true,
     });

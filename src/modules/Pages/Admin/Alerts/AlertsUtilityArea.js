@@ -5,7 +5,7 @@ import SimpleBackdrop from '@mui/material/Backdrop';
 import Fade from '@mui/material/Fade';
 import Drawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
 /**

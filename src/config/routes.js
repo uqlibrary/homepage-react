@@ -156,8 +156,38 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
         {
             path: pathConfig.bookablespaces,
-            element: <components.BookableSpacesList />,
-            exact: false,
+            element: <components.BookableSpacesLandingPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: '/spaces/results',
+            element: <components.BookableSpacesResultsPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: '/spaces/mapresults',
+            element: <components.BookableSpacesMapPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: '/spaces/results/:intentToken',
+            element: <components.BookableSpacesResultsPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: '/spaces/detail/:spaceId',
+            element: <components.BookableSpacesDetailPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: '/spaces/details/:spaceId',
+            element: <components.BookableSpacesDetailPage />,
+            exact: true,
             pageTitle: 'Library spaces',
         },
     ];

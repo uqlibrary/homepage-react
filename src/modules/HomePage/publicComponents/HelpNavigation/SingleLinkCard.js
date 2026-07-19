@@ -1,6 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -42,7 +42,7 @@ const StyledLink = styled(Link, {
     shouldForwardProp: prop => prop !== 'fillContainer',
 })(({ theme, fillContainer }) => ({
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
-    borderRadius: '4px',
+    borderRadius: theme.palette.designSystem.borderRadius,
     background: '#FFFFFF',
     display: 'block',
     width: '100%',
@@ -167,7 +167,9 @@ const SingleLinkCard = ({
     testId,
     onClick,
     disableHover,
+    showH3 = null,
 }) => {
+    const _showH3 = showH3 === null ? loggedIn : showH3;
     return (
         <StyledGridItem item component={'li'} xs={12} uqDsTablet={6} uqDsDesktop={4} fillContainer={fillContainer}>
             <div>
@@ -186,7 +188,7 @@ const SingleLinkCard = ({
                 >
                     <div className={'panelBodyWrapper'}>
                         {!!iconBackgroundImage && paneIcon(iconBackgroundImage)}
-                        {!!loggedIn ? (
+                        {!!_showH3 ? (
                             <h3 className={'cardHeading'}>{cardHeading}</h3>
                         ) : (
                             <h2 className={'cardHeading'}>{cardHeading}</h2>
@@ -211,6 +213,7 @@ SingleLinkCard.propTypes = {
     fillContainer: PropTypes.bool,
     testId: PropTypes.string,
     onClick: PropTypes.func,
+    showH3: PropTypes.any,
 };
 
 export default SingleLinkCard;

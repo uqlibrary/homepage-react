@@ -5,8 +5,8 @@ import * as routes from 'repositories/routes';
 
 const mockUseNavigate = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: () => mockUseNavigate,
     useParams: jest.fn(() => ({ alertid: '1db618c0-d897-11eb-a27e-df4e46db7245' })),
 }));

@@ -19,13 +19,13 @@ test.describe('Digital Learning Hub admin Series management - add item', () => {
                     .locator('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .getByText(/Digital Learning Hub admin/)
                     .first(),
-            ).toHaveAttribute('href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+            ).toHaveAttribute('href', `/admin/dlor?user=${DLOR_ADMIN_USER}`);
             await expect(
                 page
                     .locator('a[data-testid="dlor-breadcrumb-series-management-link-0"]')
                     .getByText(/Series management/)
                     .first(),
-            ).toHaveAttribute('href', `http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`);
+            ).toHaveAttribute('href', `/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`);
 
             // series name input shows correctly
             await expect(page.locator('[data-testid="series-name"] input')).toBeVisible();

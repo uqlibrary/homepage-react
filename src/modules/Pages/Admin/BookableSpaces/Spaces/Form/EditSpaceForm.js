@@ -2280,7 +2280,6 @@ export const EditSpaceForm = ({
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
                         showBackButton={false}
-                        showFavouriteControls={false}
                         showMap
                     />
                 </DialogContent>

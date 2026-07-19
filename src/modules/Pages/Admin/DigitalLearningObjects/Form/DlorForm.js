@@ -72,6 +72,7 @@ import Paper from '@mui/material/Paper';
 import parse from 'html-react-parser';
 
 import FuzzySearch from 'modules/Pages/DigitalLearningObjects/SharedComponents/FuzzySearch';
+import { Link as RouterLink } from 'react-router';
 
 const fuseOptions = {
     includeScore: true,
@@ -716,9 +717,9 @@ export const DlorForm = ({
                             A change here will affect all Objects for this team.
                             <br />
                             You can also{' '}
-                            <a target="_blank" href={dlorAdminLink('/team/manage', account)}>
+                            <RouterLink target="_blank" to={dlorAdminLink('/team/manage', account)}>
                                 Manage Teams
-                            </a>
+                            </RouterLink>
                         </Box>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_manager_edit">Name of Team manager *</InputLabel>
@@ -1659,7 +1660,9 @@ export const DlorForm = ({
                     <Typography id="notify-lightbox-description" sx={{ mt: '2px' }}>
                         We have updated{' '}
                         <b>
-                            <a href={getDlorViewPageUrl(dlorItem?.object_public_uuid)}>{dlorItem?.object_title}</a>
+                            <RouterLink to={getDlorViewPageUrl(dlorItem?.object_public_uuid)}>
+                                {dlorItem?.object_title}
+                            </RouterLink>
                         </b>
                     </Typography>
                     <Typography sx={{ mt: '2px' }}>Here is what is new:</Typography>

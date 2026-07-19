@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -13,7 +13,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
-import { getDlorViewPageUrl, getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { breadcrumbs } from 'config/routes';
 
 const StyledInstructionList = styled('ul')(() => ({
@@ -66,9 +66,9 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                     <ul>
                         <li data-testid="dlor-confirm-line-3">
                             Visit{' '}
-                            <a href={getDlorViewPageUrl(dlorUpdatedItem.object_public_uuid)}>
+                            <Link to={getDlorViewPageUrl(dlorUpdatedItem.object_public_uuid)}>
                                 {dlorUpdatedItem.object_title}
-                            </a>{' '}
+                            </Link>{' '}
                             now.
                         </li>
                     </ul>
@@ -87,9 +87,9 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                     <ul>
                         <li data-testid="dlor-confirm-line-3">
                             Visit{' '}
-                            <a href={getDlorViewPageUrl(dlorUpdatedItem.object_public_uuid)}>
+                            <Link to={getDlorViewPageUrl(dlorUpdatedItem.object_public_uuid)}>
                                 {dlorUpdatedItem.object_title}
-                            </a>{' '}
+                            </Link>{' '}
                             to try again.
                         </li>
                     </ul>
@@ -107,9 +107,9 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                     <ul>
                         <li data-testid="dlor-confirm-line-3">
                             Visit{' '}
-                            <a href={getDlorViewPageUrl(dlorUpdatedItem.object_public_uuid)}>
+                            <Link to={getDlorViewPageUrl(dlorUpdatedItem.object_public_uuid)}>
                                 {dlorUpdatedItem.object_title}
-                            </a>{' '}
+                            </Link>{' '}
                             now.
                         </li>
                     </ul>
@@ -147,8 +147,8 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                     <StyledInstructionList sx={{ marginTop: 0 }}>
                         <li data-testid="dlor-confirm-line-3">check your email and try again</li>
                         <li data-testid="dlor-confirm-line-3">
-                            visit <a href={`${getPathRoot()}/digital-learning-hub`}>our Digital learning hub</a> to view
-                            available objects.
+                            visit <Link to={'/digital-learning-hub'}>our Digital learning hub</Link> to view available
+                            objects.
                         </li>
                     </StyledInstructionList>
                 </>

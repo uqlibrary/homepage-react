@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 

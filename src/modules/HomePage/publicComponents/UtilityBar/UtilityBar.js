@@ -1,14 +1,13 @@
 /* eslint max-len: 0 */
 import React, { lazy, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import { useLocation } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 
-import { addClass, hrefToInternalPage, isEscapeKeyPressed, lazyRetry, removeClass } from 'helpers/general';
+import { addClass, isEscapeKeyPressed, lazyRetry, removeClass } from 'helpers/general';
 
 const Locations = lazy(() => lazyRetry(() => import('./Locations')));
 
@@ -138,8 +137,6 @@ const StyledLocationBox = styled(Box)(() => ({
 }));
 
 export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
-    const pageLocation = useLocation();
-
     // handle the location opener
     const [locationOpen, setLocationOpen] = React.useState(null);
     const locationsRef = React.useRef(null);
@@ -231,8 +228,8 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
 
                 showHideLocationPanel();
 
-                const bookitLink = document.getElementById('bookit-link');
-                !!bookitLink && bookitLink.focus();
+                const bookingLink = document.getElementById('bookit-link');
+                !!bookingLink && bookingLink.focus();
             }
         };
 
@@ -275,7 +272,9 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                 : '/spaces';
         if (window.location.hostname === 'localhost') {
             const username = new URLSearchParams(window.location.search)?.get('user');
-            url += '?user=' + username ?? 'vanilla';
+            if (!!username) {
+                url += '?user=' + username;
+            }
         }
         return url;
     };

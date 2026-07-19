@@ -1,4 +1,3 @@
-import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { DLOR_FAVOURITES_REPORT_API } from 'repositories/routes';
 import { get } from 'repositories/generic';
 import { isDlorAdminUser } from 'helpers/access';
@@ -50,8 +49,8 @@ export function getUserPostfix(appendType = '?') {
 export const dlorAdminLink = (dlorPath = '', /* istanbul ignore next */ account = null) => {
     const userString = getUserPostfix();
     return isDlorAdminUser(account)
-        ? `${getPathRoot()}/admin/dlor${dlorPath}${userString}`
-        : `${getPathRoot()}/digital-learning-hub${dlorPath}${userString}`;
+        ? `/admin/dlor${dlorPath}${userString}`
+        : `/digital-learning-hub${dlorPath}${userString}`;
 };
 
 export const isValidEmail = testEmail => {

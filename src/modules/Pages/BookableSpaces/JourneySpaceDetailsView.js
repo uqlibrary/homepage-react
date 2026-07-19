@@ -1,52 +1,80 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useAccountContext } from 'context';
 
 import { Box, Button, Chip, Stack, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import { pluralise } from 'helpers/general';
-import { StyledPrimaryButton } from 'helpers/general';
+import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
+import { baseButtonStyles, baseHoverFocusStyles, pluralise, StyledPrimaryButton } from 'helpers/general';
+
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
-import { getSpaceHoursStatus, spaceOpeningHours } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
+import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/OpeningHoursDown';
+import {
+    defaultChipStyles,
+    getFriendlyLocationDescription,
+    SpaceOpenStatusChip,
+} from 'modules/Pages/BookableSpaces/spacesHelpers';
 import {
     formatSpaceOutageRangeForPublicNotice,
     formatSpaceOutageUntilForPublicNotice,
     getSpaceOutageShowTimePublic,
     getVisibleSpaceOutage,
 } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
+import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
 
 const journeyFallbackDetailImage = require('../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
-const HOURS_STATUS_CONFIG = {
-    open: {
-        label: 'Open now',
-        sx: { backgroundColor: '#e8f5e9', color: '#1b5e20', borderColor: '#a5d6a7', border: '1px solid' },
-    },
-    'closing-soon': {
-        label: 'Closing soon',
-        sx: { backgroundColor: '#fff8e1', color: '#e65100', borderColor: '#ffe082', border: '1px solid' },
-    },
-    closed: {
-        label: 'Currently closed',
-        sx: { backgroundColor: '#fdecea', color: '#b71c1c', borderColor: '#ffcdd2', border: '1px solid' },
-    },
-};
-
 const StyledDetailSurface = styled('div')(({ theme }) => ({
-    backgroundColor: '#f9f8fa',
-    color: '#1f1230',
-    borderRadius: '12px',
-    padding: '1.5rem',
-    border: `1px solid ${theme.palette.designSystem.borderColor}`,
+    color: theme.palette.designSystem.bodyCopy,
 }));
-
+const StyledSpaceTitleWrapperBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    '& > span': {
+        display: 'flex',
+        columnGap: '6px',
+        justifyContent: 'flex-start',
+        '& h2': {
+            fontWeight: 500,
+            color: theme.palette.designSystem.headingColor,
+            lineHeight: 1.2,
+        },
+    },
+}));
+// const StyledNameTypography = styled(Typography)(({ theme }) => ({
+//     color: theme.palette.designSystem.bodyCopy,
+//     marginBottom: '1rem',
+//     fontSize: '1rem',
+// }));
+const StyledFriendlyLocationDiv = styled('div')(() => ({
+    marginBottom: '1rem',
+    '& .location-space': {
+        lineHeight: 1.25,
+    },
+    '& .location-floor': {
+        fontWeight: 'bold',
+        whiteSpace: 'nowrap',
+    },
+}));
+const StyledH3Typography = styled(Typography)(({ theme }) => ({
+    fontSize: '24px',
+    marginBottom: '1rem',
+    color: theme.palette.designSystem.headingColor,
+    paddingBotom: '0.5rem',
+}));
+const StyledH4Typography = styled(Typography)(({ theme }) => ({
+    fontWeight: 500,
+    fontSize: '20px',
+    color: theme.palette.designSystem.headingColor,
+}));
 const StyledDetailImage = styled('div')(({ theme }) => ({
     width: '100%',
     backgroundColor: '#ece8f3',
-    borderRadius: '12px',
     overflow: 'hidden',
     minHeight: '240px',
     border: `1px solid ${theme.palette.designSystem.borderColor}`,
@@ -67,60 +95,118 @@ const StyledDetailImage = styled('div')(({ theme }) => ({
         },
     },
 }));
+const StyledMissingImageBox = styled(Box)(({ theme }) => ({
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.designSystem.bodyCopy,
+    fontWeight: 600,
+}));
 
-const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHoursError }) => {
-    const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
-    if (visibleOutage?.status === 'Current') {
-        return (
-            <Chip
-                size="small"
-                label="Currently closed"
-                sx={{
-                    backgroundColor: '#fdecea',
-                    color: '#b71c1c',
-                    border: '1px solid #ffcdd2',
-                    fontWeight: 600,
-                }}
-            />
-        );
-    }
+const StyledBodyChip = styled(Chip)(({ theme }) => ({
+    fontSize: '1rem',
+    borderColor: theme.palette.primary.main,
+    color: theme.palette.primary.main,
+    '& span': {
+        padding: '12px 16px',
+        fontWeight: 400,
+    },
+}));
+const StyledSpaceDescriptionTypography = styled(Typography)(({ theme }) => ({
+    color: theme.palette.designSystem.bodyCopy,
+    fontSize: '1rem',
+}));
+const StyledTopBox = styled(Box)(() => ({
+    display: 'grid',
+    gap: '1.5rem',
+    alignItems: 'start',
+    gridTemplateColumns: '1fr',
+    '&.horizontallayout': {
+        gridTemplateColumns: '1fr 1fr',
+    },
+    // '&.verticallayout': {
+    //     gridTemplateColumns: '1fr',
+    // },
+}));
 
-    const status = !weeklyHoursLoading && !weeklyHoursError ? getSpaceHoursStatus(space, weeklyHours) : null;
-    if (!status) return null;
+const StyledTightLinkButton = styled(Button)(({ theme }) => ({
+    ...baseButtonStyles,
+    padding: 0,
+    borderColor: '#fff',
+    textDecoration: 'underline',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    color: theme.palette.primary.main,
+    borderRadius: 0,
+    '&:hover, &:focus': {
+        ...baseHoverFocusStyles,
+        backgroundColor: theme.palette.primary.main,
+        borderColor: theme.palette.primary.main,
+        color: '#fff',
+    },
+}));
 
-    const config = HOURS_STATUS_CONFIG[status];
-    if (!config) return null;
+const OpenSpaceNewWindowButton = ({ spaceDetails }) => {
+    const detailUrl = React.useMemo(
+        () =>
+            serialiseJourneyUrl({
+                view: 'details',
+                spaceId: spaceDetails?.space_uuid || spaceDetails?.space_id || null,
+            }),
+        [spaceDetails?.space_uuid, spaceDetails?.space_id],
+    );
 
     return (
-        <Chip
-            size="small"
-            label={config.label}
-            sx={{
-                ...config.sx,
-                fontWeight: 600,
-            }}
-        />
+        <a
+            href={detailUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: 'inline-flex', pr: 0 }}
+            aria-label={`Open Space ${spaceDetails?.space_name} in a new window`}
+        >
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                <path
+                    d="m6.743 9.257-2.514 2.514-2.515 2.515M14.286 5.486V1.714h-3.772"
+                    stroke="#000"
+                    strokeWidth=".75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+                <path
+                    d="M1.714 10.514v3.772h3.772M14.286 1.714 9.257 6.743"
+                    stroke="#000"
+                    strokeWidth=".75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+            </svg>
+        </a>
     );
 };
-
+OpenSpaceNewWindowButton.propTypes = {
+    spaceDetails: PropTypes.object,
+};
 const JourneySpaceDetailsView = ({
     selectedSpace,
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
     showBackButton = true,
+    narrowView = true,
     backLabel = 'Back to results',
     onBack,
-    showFavouriteControls = false,
-    isLoggedIn = false,
     isSelectedSpaceFavourite = false,
-    favouriteButtonLabel = 'Add to favourites',
     isFavouriteActionInProgress = false,
     onFavouriteToggle,
     showMap = true,
 }) => {
     const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')); // must be called unconditionally
+    const isMobileLayout = narrowView || isMobileView;
+
+    const { account } = useAccountContext();
+    const isLoggedIn = !!account?.id;
 
     const detailImages = React.useMemo(() => {
         if (!selectedSpace) return [];
@@ -176,14 +262,15 @@ const JourneySpaceDetailsView = ({
         return uniqueImages;
     }, [selectedSpace]);
 
-    const spaceHours = React.useMemo(
-        () => (!weeklyHoursLoading && !weeklyHoursError ? spaceOpeningHours(selectedSpace, weeklyHours) || [] : []),
-        [selectedSpace, weeklyHours, weeklyHoursLoading, weeklyHoursError],
-    );
+    // const spaceHours = React.useMemo(
+    //     () => (!weeklyHoursLoading && !weeklyHoursError ? spaceOpeningHours(selectedSpace, weeklyHours) || [] : []),
+    //     [selectedSpace, weeklyHours, weeklyHoursLoading, weeklyHoursError],
+    // );
 
-    const visibleOutage = React.useMemo(() => getVisibleSpaceOutage(selectedSpace?.space_outages), [
-        selectedSpace?.space_outages,
-    ]);
+    const visibleOutage = React.useMemo(
+        () => getVisibleSpaceOutage(selectedSpace?.space_outages),
+        [selectedSpace?.space_outages],
+    );
 
     if (!selectedSpace) {
         return null;
@@ -202,13 +289,9 @@ const JourneySpaceDetailsView = ({
                 </Button>
             ) : null}
 
-            <Box
-                sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-                    gap: '1.5rem',
-                    alignItems: 'start',
-                }}
+            <StyledTopBox
+                id={`space-${selectedSpace?.space_id}-details`}
+                className={isMobileLayout ? 'verticallayout' : 'horizontallayout'}
             >
                 <StyledDetailImage>
                     {detailImages?.[0]?.src ? (
@@ -221,70 +304,57 @@ const JourneySpaceDetailsView = ({
                             }}
                         />
                     ) : (
-                        <Box
-                            sx={{
-                                width: '100%',
-                                height: '100%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: '#53515b',
-                                fontWeight: 600,
-                            }}
-                        >
-                            No image available
-                        </Box>
+                        <StyledMissingImageBox>No image available</StyledMissingImageBox>
                     )}
                 </StyledDetailImage>
-
                 <Stack spacing={2} sx={{ pt: { xs: 0, md: 0.5 } }}>
                     <Box>
-                        <Typography
-                            component="h2"
-                            variant="h5"
-                            sx={{ fontWeight: 700, color: '#1f1230', mb: 0.5, lineHeight: 1.2 }}
-                        >
-                            {selectedSpace?.space_name}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
-                            {selectedSpace?.space_library_name}
-                        </Typography>
-                        {!!(selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type) && (
-                            <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
-                                <Typography
-                                    variant="caption"
-                                    sx={{
-                                        display: 'inline-block',
-                                        px: 1.25,
-                                        py: 0.25,
-                                        borderRadius: '20px',
-                                        backgroundColor: '#ede8f5',
-                                        color: '#51247a',
-                                        fontWeight: 600,
-                                        letterSpacing: 0.3,
-                                    }}
-                                >
-                                    {selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type}
-                                </Typography>
-                                {isSelectedSpaceFavourite && (
-                                    <Chip
-                                        data-testid={`spaces-journey-favourite-chip-${selectedSpace?.space_id}`}
-                                        label="Favourite"
-                                        size="small"
-                                        sx={{
-                                            backgroundColor: '#fff8e1',
-                                            color: '#7a5a00',
-                                            borderColor: '#ffe082',
-                                            border: '1px solid',
-                                            fontWeight: 700,
-                                        }}
+                        <StyledSpaceTitleWrapperBox>
+                            <span>
+                                {!narrowView && isLoggedIn && !!selectedSpace?.space_id && (
+                                    <RenderFavouriteIcon
+                                        bookableSpace={selectedSpace}
+                                        isFavourite={isSelectedSpaceFavourite}
+                                        onFavouriteToggle={() => onFavouriteToggle?.(selectedSpace)}
+                                        isFavouriteActionInProgress={isFavouriteActionInProgress}
                                     />
                                 )}
+                                <Typography
+                                    component="h2"
+                                    variant="h5"
+                                    data-testid={`spaces-${selectedSpace?.space_id}-details-name`}
+                                >
+                                    {selectedSpace?.space_name}
+                                </Typography>
+                            </span>
+                            {narrowView && <OpenSpaceNewWindowButton spaceDetails={selectedSpace} />}
+                        </StyledSpaceTitleWrapperBox>
+                        {/* <StyledNameTypography variant="body2">{selectedSpace?.space_library_name}</StyledNameTypography>*/}
+                        <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
+                            {getFriendlyLocationDescription(selectedSpace, false, { space_name: true })}
+                        </StyledFriendlyLocationDiv>{' '}
+                        {!!(selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type) && (
+                            <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
+                                <Chip
+                                    label={
+                                        selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type
+                                    }
+                                    size="small"
+                                    sx={{
+                                        ...defaultChipStyles(theme),
+                                        backgroundColor: theme.palette.designSystem.purple.purple50,
+                                        fontWeight: 700,
+                                    }}
+                                />
                                 <SpaceOpenStatusChip
                                     space={selectedSpace}
                                     weeklyHours={weeklyHours}
                                     weeklyHoursLoading={weeklyHoursLoading}
                                     weeklyHoursError={weeklyHoursError}
+                                    chipStyles={{
+                                        ...defaultChipStyles(theme),
+                                        fontWeight: 700,
+                                    }}
                                 />
                             </Stack>
                         )}
@@ -315,7 +385,7 @@ const JourneySpaceDetailsView = ({
                             {!!visibleOutage.reason && (
                                 <Typography
                                     variant="body2"
-                                    data-testid={`spaces-journey-outage-reason-${selectedSpace?.space_id}`}
+                                    data-testid={`space-${selectedSpace?.space_id}-outage-reason`}
                                 >
                                     Reason: {visibleOutage.reason}
                                 </Typography>
@@ -326,57 +396,37 @@ const JourneySpaceDetailsView = ({
                     {!!(
                         selectedSpace?.space_type_details?.space_type_description || selectedSpace?.space_description
                     ) && (
-                        <Box sx={{ borderLeft: '3px solid #51247a', pl: 1.5 }}>
+                        <Box>
                             {!!selectedSpace?.space_type_details?.space_type_description && (
-                                <Typography
+                                <StyledSpaceDescriptionTypography
+                                    data-testid={`spaces-${selectedSpace.space_id}-details-space-type-description`}
                                     variant="body2"
                                     sx={{
-                                        color: '#4f4d57',
                                         mb: selectedSpace?.space_description ? 1 : 0,
                                     }}
                                 >
                                     {selectedSpace.space_type_details.space_type_description}
-                                </Typography>
+                                </StyledSpaceDescriptionTypography>
                             )}
                             {!!selectedSpace?.space_description && (
-                                <Typography variant="body2" sx={{ color: '#666' }}>
+                                <StyledSpaceDescriptionTypography
+                                    variant="body2"
+                                    data-testid={`space-${selectedSpace?.space_id}-details-description`}
+                                >
                                     {String(selectedSpace.space_description)
                                         .replace(/<[^>]*>/g, ' ')
                                         .trim()}
-                                </Typography>
+                                </StyledSpaceDescriptionTypography>
                             )}
                         </Box>
                     )}
-
-                    {showFavouriteControls && isLoggedIn && !!selectedSpace?.space_id && (
-                        <Box>
-                            <StyledPrimaryButton
-                                variant={isSelectedSpaceFavourite ? 'contained' : 'outlined'}
-                                disabled={isFavouriteActionInProgress}
-                                onClick={() => onFavouriteToggle?.(selectedSpace)}
-                                sx={{ textTransform: 'none' }}
-                            >
-                                {favouriteButtonLabel}
-                            </StyledPrimaryButton>
-                        </Box>
-                    )}
                 </Stack>
-            </Box>
+            </StyledTopBox>
 
             <StyledDetailSurface>
-                <Typography
-                    component="h3"
-                    variant="h6"
-                    sx={{
-                        fontWeight: 700,
-                        mb: 2,
-                        color: '#1f1230',
-                        pb: 1,
-                        borderBottom: '1px solid #ddd8e4',
-                    }}
-                >
+                <StyledH3Typography component="h3" variant="h6">
                     Space details
-                </Typography>
+                </StyledH3Typography>
                 <Stack spacing={2.5}>
                     {!!selectedSpace?.space_external_book_url ? (
                         <Box>
@@ -392,104 +442,56 @@ const JourneySpaceDetailsView = ({
                             </StyledPrimaryButton>
                         </Box>
                     ) : (
-                        <Typography variant="body2" sx={{ color: '#4f4d57' }}>
-                            No booking required.
-                        </Typography>
+                        <Typography variant="body2">No booking required.</Typography>
                     )}
 
                     {!!(selectedSpace?.space_capacity && selectedSpace.space_capacity > 0) && (
-                        <Typography variant="body2" sx={{ color: '#4f4d57' }}>
-                            <strong>Capacity:</strong> {selectedSpace.space_capacity}{' '}
-                            {pluralise('person', selectedSpace.space_capacity, 'people')}
-                        </Typography>
+                        <Box>
+                            <Typography component="h4" style={{ display: 'inline' }}>
+                                Capacity
+                            </Typography>
+                            <Typography variant="body2" style={{ display: 'inline' }}>
+                                : {selectedSpace.space_capacity}{' '}
+                                {pluralise('person', selectedSpace.space_capacity, 'people')}
+                            </Typography>
+                        </Box>
                     )}
 
                     {selectedSpace?.facility_types?.length > 0 && (
-                        <Box>
-                            <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.75, color: '#1f1230' }}>
+                        <Box data-testid={`space-${selectedSpace.space_id}-facility`}>
+                            <StyledH4Typography component="h4" variant="body2" sx={{ mb: 0.75 }}>
                                 Facilities
-                            </Typography>
+                            </StyledH4Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                                 {selectedSpace.facility_types.map(f => (
-                                    <Chip
+                                    <StyledBodyChip
                                         key={f.facility_type_id}
                                         label={f.facility_type_name}
                                         size="small"
                                         variant="outlined"
-                                        sx={{ borderColor: '#c9bfdf', color: '#51247a' }}
+                                        data-testid={`space-${selectedSpace.space_id}-facility-${f?.facility_type_id}`}
                                     />
                                 ))}
                             </Box>
                         </Box>
                     )}
 
-                    {spaceHours.length > 0 && (
-                        <Box>
-                            <Typography variant="body2" sx={{ fontWeight: 600, mb: 1, color: '#1f1230' }}>
-                                {selectedSpace?.space_library_name} opening hours
-                            </Typography>
-                            <Stack spacing={0}>
-                                {spaceHours.map((d, i) => {
-                                    const isToday = d?.dayName === 'Today';
-                                    return (
-                                        <Box
-                                            key={i}
-                                            sx={{
-                                                display: 'grid',
-                                                gridTemplateColumns: '7.5rem 1fr',
-                                                gap: '0.5rem',
-                                                py: 0.75,
-                                                borderBottom: i < spaceHours.length - 1 ? '1px solid #f0ecf7' : 'none',
-                                                backgroundColor: isToday ? '#f9f6fe' : 'transparent',
-                                                px: isToday ? 1 : 0,
-                                                borderRadius: isToday ? '4px' : 0,
-                                                mx: isToday ? -1 : 0,
-                                            }}
-                                        >
-                                            <Typography
-                                                variant="body2"
-                                                sx={{
-                                                    fontWeight: isToday ? 700 : 400,
-                                                    color: isToday ? '#51247a' : '#1f1230',
-                                                }}
-                                            >
-                                                {d?.dayName}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                sx={{
-                                                    color: isToday ? '#51247a' : '#4f4d57',
-                                                    fontWeight: isToday ? 600 : 400,
-                                                }}
-                                            >
-                                                {d?.rendered}
-                                            </Typography>
-                                        </Box>
-                                    );
-                                })}
-                            </Stack>
-                        </Box>
-                    )}
+                    <OpeningHoursDown
+                        weeklyHoursLoading={weeklyHoursLoading}
+                        weeklyHoursError={weeklyHoursError}
+                        weeklyHours={weeklyHours}
+                        bookableSpace={selectedSpace}
+                        showShortList={false}
+                    />
                 </Stack>
             </StyledDetailSurface>
 
             {showMap && (
                 <StyledDetailSurface sx={{ p: 0, overflow: 'hidden' }}>
-                    <Typography
-                        component="h3"
-                        variant="h6"
-                        sx={{
-                            fontWeight: 700,
-                            color: '#1f1230',
-                            px: '1.5rem',
-                            pt: '1.25rem',
-                            pb: '1rem',
-                            borderBottom: '1px solid #ddd8e4',
-                        }}
-                    >
+                    <StyledH3Typography component="h3" variant="h6" sx={{ pb: '1rem' }}>
                         Location
-                    </Typography>
-                    <div style={{ height: isMobileView ? '260px' : '340px' }}>
+                    </StyledH3Typography>
+                    <div style={{ height: isMobileLayout ? '260px' : '340px' }}>
                         <BookableSpacesMap
                             sortedSpaceLocations={[selectedSpace]}
                             spacesFavouritesList={null}
@@ -503,25 +505,16 @@ const JourneySpaceDetailsView = ({
     );
 };
 
-SpaceOpenStatusChip.propTypes = {
-    space: PropTypes.object,
-    weeklyHours: PropTypes.any,
-    weeklyHoursLoading: PropTypes.bool,
-    weeklyHoursError: PropTypes.any,
-};
-
 JourneySpaceDetailsView.propTypes = {
     selectedSpace: PropTypes.object,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     showBackButton: PropTypes.bool,
+    narrowView: PropTypes.bool,
     backLabel: PropTypes.string,
     onBack: PropTypes.func,
-    showFavouriteControls: PropTypes.bool,
-    isLoggedIn: PropTypes.bool,
     isSelectedSpaceFavourite: PropTypes.bool,
-    favouriteButtonLabel: PropTypes.string,
     isFavouriteActionInProgress: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
     showMap: PropTypes.bool,

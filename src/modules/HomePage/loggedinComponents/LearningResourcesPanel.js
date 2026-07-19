@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router';
 
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -50,6 +50,10 @@ const StyledGridListItem = styled(Grid)(({ theme }) => ({
         marginTop: '-25px',
         fontWeight: 400,
     },
+}));
+const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: theme.palette.designSystem.borderRadius,
 }));
 
 export const getUrlForLearningResourceSpecificTab = (
@@ -138,12 +142,8 @@ export const LearningResourcesPanel = ({ account }) => {
         ];
     }
     return (
-        <StandardCard
+        <StyledStandardCard
             subCard
-            style={{
-                border: '1px solid hsla(203, 50%, 30%, 0.15)',
-                borderRadius: '4px',
-            }}
             fullHeight
             primaryHeader
             noPadding
@@ -231,7 +231,7 @@ export const LearningResourcesPanel = ({ account }) => {
             ) : (
                 <div style={{ marginLeft: 24, marginTop: -10, fontWeight: 400 }}>{locale.homepagePanel.noCourses}</div>
             )}
-        </StandardCard>
+        </StyledStandardCard>
     );
 };
 

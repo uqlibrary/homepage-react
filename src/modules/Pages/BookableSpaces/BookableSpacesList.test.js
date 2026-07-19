@@ -35,7 +35,7 @@ jest.mock('context', () => ({
 jest.mock('@mui/material/useMediaQuery', () => jest.fn(() => false));
 
 jest.mock('modules/Pages/BookableSpaces/SidebarSpacesList', () => () => <div data-testid="mock-spaces-list" />);
-jest.mock('modules/Pages/BookableSpaces/BookableSpacesJourney', () => props => {
+jest.mock('./BookableSpacesHomepage', () => props => {
     mockJourneyRender(props);
     return <div data-testid="mock-journey" />;
 });
@@ -284,8 +284,35 @@ describe('BookableSpacesList campus selection', () => {
             capacityFilterValue: [4, 8],
         });
 
-        expect(navigatedUrl).toContain('journeyStep=results');
+        expect(navigatedUrl).toContain('/spaces/results');
         expect(navigatedUrl).toContain('mapFilters=');
+    });
+
+    it('preserves a branch prefix when the journey handoff uses hash routing', () => {
+        const navigatedUrl = buildJourneyNavigationUrl({
+            currentUrl: 'http://localhost/feature-uqslanca-2/#/spaces/mapresults?mapFilters=abc',
+            selectedFacilityTypes: [{ facility_type_id: 11, selected: true, unselected: false }],
+            selectedCampus: 1,
+            selectedLibrary: 11,
+            capacityFilterValue: [4, 8],
+        });
+
+        const parsedUrl = new URL(navigatedUrl);
+        expect(parsedUrl.pathname).toBe('/feature-uqslanca-2/');
+        expect(parsedUrl.hash).toContain('#/spaces/results');
+    });
+
+    it('preserves existing filter query params when switching from map view to the journey list view', () => {
+        const navigatedUrl = buildJourneyNavigationUrl({
+            currentUrl: 'http://localhost/feature-uqslanca-2/#/spaces/mapresults?mapFilters=abc&autoSelectFirstSpace=1',
+            selectedFacilityTypes: [],
+            selectedCampus: 1,
+            selectedLibrary: 0,
+            capacityFilterValue: [],
+        });
+
+        expect(navigatedUrl).toContain('mapFilters=abc');
+        expect(navigatedUrl).toContain('autoSelectFirstSpace=1');
     });
 
     it('auto-selects the only visible space in the advanced view', async () => {

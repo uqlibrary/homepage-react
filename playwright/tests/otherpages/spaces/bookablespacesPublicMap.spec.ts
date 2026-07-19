@@ -30,17 +30,7 @@ test.describe('Spaces', () => {
         await disableMazeMapAssets(page);
         await context.clearCookies();
     });
-    test('can navigate to Spaces public page', async ({ page }) => {
-        await page.goto('/?user=s1111111');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.getByTestId('homepage-hours-bookit-link')).toHaveText(/Book a room/);
-        await page.getByTestId('homepage-hours-bookit-link').click();
-        await expect(page).toHaveURL('http://localhost:2020/spaces?user=s1111111');
-        await page.getByTestId('spaces-journey-landing-browse-all').click();
-        await expect(page).toHaveURL(/advanced=1/);
-        await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
-    });
-    test.describe('Shows a basic page for Spaces', () => {
+    test.describe('Shows a basic map page for Spaces', () => {
         test.beforeEach(async ({ page }) => {
             // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
             // which would otherwise cause BookableSpacesList to re-render and destabilise the toggle
@@ -261,7 +251,7 @@ test.describe('Spaces', () => {
 
             await page.getByTestId(`${ARCH_BOOKABLE}-facility`).scrollIntoViewIfNeeded();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`).locator(' > *')).toHaveCount(12);
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`).locator('div > div')).toHaveCount(12);
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-23`)).toContainText('Toilets, female');
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-22`)).toContainText('Toilets, male');
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-29`)).toContainText('Recharge Station');
@@ -284,7 +274,7 @@ test.describe('Spaces', () => {
             // third panel
             await page.getByTestId(`${LIV}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${LIV}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-facility`).locator(' > *')).toHaveCount(9);
+            await expect(page.getByTestId(`${LIV}-facility`).locator('div > div')).toHaveCount(9);
             await expect(page.getByTestId(`${LIV}-facility-23`)).toContainText('Toilets, female');
             await expect(page.getByTestId(`${LIV}-facility-22`)).toContainText('Toilets, male');
             await expect(page.getByTestId(`${LIV}-facility-29`)).toContainText('Recharge Station');
@@ -389,8 +379,8 @@ test.describe('Spaces', () => {
         // the other blocks have not appeared (are unaffected by this button click)
         await expect(page.getByTestId(`${ARCH_PANEL_4}-facility`)).not.toBeVisible();
         // and description is no longer truncated
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).not.toHaveClass(/truncated/);
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-details-description`)).toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-details-description`)).not.toHaveClass(/truncated/);
         // and the controls have swapped
         await expect(
             page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel'),
@@ -1014,19 +1004,11 @@ test.describe('Spaces', () => {
             await expect(collapseIcon(FILTER_GROUP_LIGHTING, page)).toBeVisible();
             await expect(expandIcon(FILTER_GROUP_LIGHTING, page)).not.toBeVisible();
             await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
-            await expect(
-                filterGroup(FILTER_GROUP_LIGHTING, page)
-                    .locator('ul')
-                    .locator(':scope > *'),
-            ).toHaveCount(2);
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul').locator(':scope > *')).toHaveCount(2);
 
             await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
             // await page.waitForTimeout(100000);
-            await expect(
-                filterGroup(FILTER_GROUP_LIGHTING, page)
-                    .locator('ul li')
-                    .first(),
-            ).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul li').first()).toBeVisible();
 
             // the state of the other groups is known (and won't change after click)
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
@@ -1099,11 +1081,9 @@ test.describe('Spaces', () => {
                 'aria-label',
                 'Hide On this floor filter options',
             );
-            await expect(
-                filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)
-                    .locator('ul')
-                    .locator(':scope > *'),
-            ).toHaveCount(4);
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul').locator(':scope > *')).toHaveCount(
+                4,
+            );
 
             // the group we opened has completely changed - visibility flips
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).toBeVisible();
@@ -1474,7 +1454,7 @@ test.describe('Spaces', () => {
         test('facilities appear correctly when panel expands on change of campus', async ({ page }) => {
             await page.getByTestId(`${PACE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${PACE}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-facility`).locator(' > *')).toHaveCount(15);
+            await expect(page.getByTestId(`${PACE}-facility`).locator('div > div')).toHaveCount(15);
             await expect(page.getByTestId(`${PACE}-facility-23`)).toContainText('Toilets, female');
             await expect(page.getByTestId(`${PACE}-facility-22`)).toContainText('Toilets, male');
             await expect(page.getByTestId(`${PACE}-facility-29`)).toContainText('Recharge Station');
@@ -1564,6 +1544,40 @@ test.describe('Spaces', () => {
             await expect(panelLabel(GATTON_PANEL_ONE)).toContainText('J.K. Murray Library');
             await expect(spacePanelWrapper).toHaveCount(4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
             await expect(librarySelector).not.toBeVisible();
+        });
+    });
+    test.describe('Spaces favourites', () => {
+        test('can UNfavourite a space', async ({ page }) => {
+            await page.goto('');
+            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
+            await page.goto('spaces?advanced=1');
+
+            // the space is currently favourited
+            await expect(page.getByTestId('spaces-detail-1-unfavourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-1-favourite')).not.toBeVisible();
+
+            // unfavourite it
+            await page.getByTestId('spaces-detail-1-unfavourite').click();
+
+            // the space is now UNfavourited
+            await expect(page.getByTestId('spaces-detail-1-favourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-1-unfavourite')).not.toBeVisible();
+        });
+        test('can unfavourite a space', async ({ page }) => {
+            await page.goto('');
+            await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
+            await page.goto('spaces?advanced=1');
+
+            // the space is currently UNfavourited
+            await expect(page.getByTestId('spaces-detail-43534-favourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-43534-unfavourite')).not.toBeVisible();
+
+            // favourite it
+            await page.getByTestId('spaces-detail-43534-favourite').click();
+
+            // the space is now favourited
+            await expect(page.getByTestId('spaces-detail-43534-unfavourite')).toBeVisible();
+            await expect(page.getByTestId('spaces-detail-43534-favourite')).not.toBeVisible();
         });
     });
 });

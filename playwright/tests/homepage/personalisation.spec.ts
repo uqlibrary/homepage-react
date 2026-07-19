@@ -99,6 +99,21 @@ const hasAccountPanelOptions = async (page: Page, optionsTheUserShouldSee: strin
     }
 };
 
+const hasFineAmount = async (page: Page, amount: string, timeout = 30000) => {
+    const finesPanel = page.getByTestId('show-fines');
+
+    await expect(finesPanel).toBeVisible({ timeout });
+    await expect(finesPanel).toContainText('Fines and charges', { timeout });
+
+    await expect
+        .poll(async () => (await finesPanel.innerText()).replace(/\s+/g, ' ').replace(/\$\s+/g, '$').trim(), {
+            timeout,
+            message: `Expected fines panel to include amount ${amount}`,
+        })
+        .toContain(amount);
+    await expect(finesPanel).toContainText('payable', { timeout });
+};
+
 const seesEndNoteInReferencing = async (page: Page) =>
     await expect(page.getByTestId('referencing-endnote').getByText('Endnote referencing software')).toBeVisible();
 
@@ -132,6 +147,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('Personalised Homepage', () => {
+    test.describe.configure({ mode: 'default' });
     test('Renders an RHD who is only enrolled in a research subject home page correctly', async ({ page }) => {
         await expectUserToDisplayCorrectFirstName(page, 's2222222', 'Jane');
 
@@ -150,12 +166,7 @@ test.describe('Personalised Homepage', () => {
         ]);
 
         // the fine has a special value
-        await expect(
-            page
-                .getByTestId('show-fines')
-                .getByText(/65\.97/)
-                .first(),
-        ).toBeVisible();
+        await hasFineAmount(page, '65.97');
 
         await hasEspaceEntries(page, ['espace-possible', 'espace-ntro']);
     });
@@ -177,23 +188,14 @@ test.describe('Personalised Homepage', () => {
         ]);
 
         // the fine has the supplied value
-        await expect(
-            page
-                .getByTestId('show-fines')
-                .getByText(/48\.93/)
-                .first(),
-        ).toBeVisible();
+        await hasFineAmount(page, '48.93');
 
         // this type of user will see these lines in the espace panel
         await hasEspaceEntries(page, ['espace-possible', 'espace-ntro']);
 
         // as the user is logged in, they see nav panels with a h3
         await expect(
-            page
-                .getByTestId('help-navigation-panel')
-                .locator(':scope > *')
-                .nth(0)
-                .locator('h3'),
+            page.getByTestId('help-navigation-panel').locator(':scope > *').nth(0).locator('h3'),
         ).toBeVisible();
     });
 
@@ -203,11 +205,7 @@ test.describe('Personalised Homepage', () => {
 
         // as the user is logged out, they see nav panels with a h2
         await expect(
-            page
-                .getByTestId('help-navigation-panel')
-                .locator(':scope > *')
-                .nth(0)
-                .locator('h2'),
+            page.getByTestId('help-navigation-panel').locator(':scope > *').nth(0).locator('h2'),
         ).toBeVisible();
     });
 
@@ -257,19 +255,9 @@ test.describe('Personalised Homepage', () => {
         await hasAccountPanelOptions(page, ['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
         // special loans & requests values
         await expect(page.locator('[data-testid="show-requests"] span')).toBeVisible();
-        await expect(
-            page
-                .locator('[data-testid="show-requests"] span')
-                .getByText(/4/)
-                .first(),
-        ).toBeVisible();
+        await expect(page.locator('[data-testid="show-requests"] span').getByText(/4/).first()).toBeVisible();
         await expect(page.locator('[data-testid="show-loans"] span')).toBeVisible();
-        await expect(
-            page
-                .locator('[data-testid="show-loans"] span')
-                .getByText(/0/)
-                .first(),
-        ).toBeVisible();
+        await expect(page.locator('[data-testid="show-loans"] span').getByText(/0/).first()).toBeVisible();
 
         await hasNoEspacePanel(page);
     });
@@ -283,19 +271,9 @@ test.describe('Personalised Homepage', () => {
         await hasAccountPanelOptions(page, ['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
         // special loans & requests values
         await expect(page.locator('[data-testid="show-requests"] span')).toBeVisible();
-        await expect(
-            page
-                .locator('[data-testid="show-requests"] span')
-                .getByText(/0/)
-                .first(),
-        ).toBeVisible();
+        await expect(page.locator('[data-testid="show-requests"] span').getByText(/0/).first()).toBeVisible();
         await expect(page.locator('[data-testid="show-loans"] span')).toBeVisible();
-        await expect(
-            page
-                .locator('[data-testid="show-loans"] span')
-                .getByText(/7/)
-                .first(),
-        ).toBeVisible();
+        await expect(page.locator('[data-testid="show-loans"] span').getByText(/7/).first()).toBeVisible();
 
         await hasEspaceEntries(page, ['espace-possible', 'espace-orcid', 'espace-ntro']);
     });

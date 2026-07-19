@@ -165,58 +165,113 @@ export const deserialiseJourneyMapFilterState = searchParams => {
     }
 };
 
+const getJourneyPathname = url => {
+    const hashValue = url?.hash || '';
+    if (hashValue.startsWith('#/')) {
+        const hashPath = hashValue.slice(1).split('?')[0] || '/spaces';
+        return hashPath.replace(/\/+$/, '') || '/spaces';
+    }
+
+    const pathValue = url?.pathname || '/spaces';
+    return pathValue.replace(/\/+$/, '') || '/spaces';
+};
+
 export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
     const url = new URL(window.location.href);
-    const { usesHashQuery, hashPath, params } = getJourneySearchParams(url);
+    const hashValue = url.hash || '';
+    const isHashRouting = hashValue.startsWith('#/');
 
-    if (view && view !== 'landing') {
-        params.set(JOURNEY_QUERY_PARAM_STEP, view);
-    } else {
-        params.delete(JOURNEY_QUERY_PARAM_STEP);
+    const getPreservedQueryParams = () => {
+        const hashQuery = hashValue.includes('?') ? hashValue.split('?')[1] : '';
+        const params = new URLSearchParams(hashQuery || url.search || '');
+        const nextParams = new URLSearchParams();
+
+        ['mapFilters', 'autoSelectFirstSpace'].forEach(key => {
+            const value = params.get(key);
+            if (value !== null) {
+                nextParams.set(key, value);
+            }
+        });
+
+        return nextParams.toString();
+    };
+
+    const buildPath = ({ nextView, nextIntentId, nextSpaceId }) => {
+        if (nextView === 'results') {
+            if (nextIntentId) {
+                return `/spaces/results/filters=${encodeURIComponent(String(nextIntentId))}`;
+            }
+            return '/spaces/results';
+        }
+
+        if (nextView === 'details' && nextSpaceId) {
+            return `/spaces/detail/${encodeURIComponent(String(nextSpaceId))}`;
+        }
+
+        return '/spaces';
+    };
+
+    const nextPath = buildPath({ nextView: view, nextIntentId: intentId, nextSpaceId: spaceId });
+    const preservedQueryParams = getPreservedQueryParams();
+    const querySuffix = preservedQueryParams ? `?${preservedQueryParams}` : '';
+
+    if (isHashRouting) {
+        const branchPrefix = url.pathname && url.pathname !== '/' ? url.pathname.replace(/\/+$/, '') : '';
+        const branchPrefixPath = branchPrefix ? `${branchPrefix}/` : '';
+        return `${branchPrefixPath}#${nextPath}${querySuffix}`;
     }
 
-    if (intentId && (view === 'results' || view === 'details')) {
-        params.set(JOURNEY_QUERY_PARAM_INTENT, String(intentId));
-    } else {
-        params.delete(JOURNEY_QUERY_PARAM_INTENT);
-    }
-
-    if (view === 'details' && spaceId) {
-        params.set(JOURNEY_QUERY_PARAM_SPACE, String(spaceId));
-    } else {
-        params.delete(JOURNEY_QUERY_PARAM_SPACE);
-    }
-
-    if (usesHashQuery) {
-        const nextHashQuery = params.toString();
-        url.hash = nextHashQuery ? `${hashPath}?${nextHashQuery}` : hashPath;
-    }
-
-    // Prefer returning a relative URL so react-router `Link` and manual
-    // `history.pushState` don't cause a full-navigation or produce duplicate
-    // hashes. When using hash-based params, return only the `#...` part;
-    // otherwise return the pathname + search.
-    if (usesHashQuery) {
-        return url.hash || '';
-    }
-
-    return `${url.pathname}${url.search || ''}`;
+    return `${nextPath}${querySuffix}`;
 };
 
 export const parseJourneyStateFromUrl = availableIntentDefinitions => {
     const url = new URL(window.location.href);
-    const { params } = getJourneySearchParams(url);
+    const pathname = getJourneyPathname(url);
 
-    const requestedView = params.get(JOURNEY_QUERY_PARAM_STEP);
-    const view = JOURNEY_VIEWS.includes(requestedView) ? requestedView : 'landing';
+    const resolveIntentId = rawIntentId => {
+        if (!rawIntentId) {
+            return null;
+        }
 
-    const requestedIntentId = params.get(JOURNEY_QUERY_PARAM_INTENT);
-    const intentId = availableIntentDefinitions?.some(intent => intent.id === requestedIntentId)
-        ? requestedIntentId
-        : null;
+        const decodedIntentId = decodeURIComponent(String(rawIntentId));
+        return availableIntentDefinitions?.some(intent => intent.id === decodedIntentId) ? decodedIntentId : null;
+    };
 
-    const requestedSpaceId = params.get(JOURNEY_QUERY_PARAM_SPACE);
-    const spaceId = requestedSpaceId ? String(requestedSpaceId) : null;
+    if (pathname === '/spaces/mapresults' || pathname.startsWith('/spaces/mapresults/')) {
+        return { view: 'results', intentId: null, spaceId: null };
+    }
 
-    return { view, intentId, spaceId };
+    if (pathname === '/spaces/results' || pathname === '/spaces/results/') {
+        return { view: 'results', intentId: null, spaceId: null };
+    }
+
+    if (pathname.startsWith('/spaces/results/filters=')) {
+        const filterValue = decodeURIComponent(pathname.split('/spaces/results/filters=')[1] || '');
+        const parsedIntentId = resolveIntentId(filterValue);
+        return { view: 'results', intentId: parsedIntentId, spaceId: null };
+    }
+
+    if (pathname.startsWith('/spaces/results/')) {
+        const tokenValue = decodeURIComponent(pathname.split('/spaces/results/')[1] || '');
+        const parsedIntentId = resolveIntentId(tokenValue);
+        if (parsedIntentId) {
+            return { view: 'results', intentId: parsedIntentId, spaceId: null };
+        }
+    }
+
+    if (pathname === '/spaces/detail' || pathname.startsWith('/spaces/detail/')) {
+        const requestedSpaceId = pathname.startsWith('/spaces/detail/')
+            ? decodeURIComponent(pathname.split('/spaces/detail/')[1] || '')
+            : null;
+        return { view: 'details', intentId: null, spaceId: requestedSpaceId || null };
+    }
+
+    if (pathname === '/spaces/details' || pathname.startsWith('/spaces/details/')) {
+        const requestedSpaceId = pathname.startsWith('/spaces/details/')
+            ? decodeURIComponent(pathname.split('/spaces/details/')[1] || '')
+            : null;
+        return { view: 'details', intentId: null, spaceId: requestedSpaceId || null };
+    }
+
+    return { view: 'landing', intentId: null, spaceId: null };
 };
