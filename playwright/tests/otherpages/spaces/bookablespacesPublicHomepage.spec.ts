@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@uq/pw/test';
 
-const VANILLA_USER_FAVOURITE_COUNT = 2;
+const VANILLA_USER_FAVOURITE_COUNT = 4;
 
 // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
 // which would otherwise cause BookableSpacesList to re-render and destabilise the filter
@@ -35,7 +35,8 @@ test.describe('Spaces Homepage', () => {
 
         // show the favourites block has the correct contents
         await expect(favBlock).toBeVisible();
-        await expect(favBlock.locator(':scope > *')).toHaveCount(VANILLA_USER_FAVOURITE_COUNT);
+        const numberDisplayed = VANILLA_USER_FAVOURITE_COUNT > 3 ? 3 : VANILLA_USER_FAVOURITE_COUNT;
+        await expect(favBlock.locator(':scope > *')).toHaveCount(numberDisplayed);
         await expect(favBlock.locator('li:first-child a')).toHaveAttribute(
             'href',
             '/spaces/detail/a00de3d4-7e11-47eb-8079-532bdef80def',
@@ -43,49 +44,55 @@ test.describe('Spaces Homepage', () => {
         await expect(favBlock.locator('li:first-child a')).toContainText('354');
         await expect(favBlock.locator('li:first-child a')).toContainText('Architecture and Music Library');
     });
-    test('clicking all Favourites link lands on the Results page', async ({ page }) => {
-        // load the spaces homepage
-        await page.goto('/spaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
+    test.describe('Favourites', () => {
+        test.beforeEach(async ({ page }) => {
+            // load the spaces homepage
+            await page.goto('/spaces');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+        });
+        test('clicking all Favourites link lands on the Results page', async ({ page }) => {
+            // click the all favourites link
+            await expect(page.getByTestId('spaces-homepage-favourites-all-link')).toBeVisible();
+            await page.getByTestId('spaces-homepage-favourites-all-link').click();
 
-        // click the all favourites link
-        await expect(page.getByTestId('spaces-homepage-favourites-all-link')).toBeVisible();
-        await page.getByTestId('spaces-homepage-favourites-all-link').click();
+            // the results page has loaded, with favourites loaded
+            await expect(page.getByTestId('spaces-homepage-favourites-all-link')).not.toBeVisible();
+            await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
+            await expect(page.getByRole('heading', { level: 2, name: 'Search results' })).toBeVisible();
+            await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(
+                VANILLA_USER_FAVOURITE_COUNT,
+            );
+            await expect(page.getByText(`Showing ${VANILLA_USER_FAVOURITE_COUNT} of 15 spaces`)).toBeVisible();
+            // a block is present
+            await expect(page.getByTestId('spaces-result-list-item-1')).toContainText('354');
 
-        // the results page has loaded, with favourites loaded
-        await expect(page.getByTestId('spaces-homepage-favourites-all-link')).not.toBeVisible();
-        await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
-        await expect(page.getByRole('heading', { level: 2, name: 'Search results' })).toBeVisible();
-        await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(
-            VANILLA_USER_FAVOURITE_COUNT,
-        );
-        await expect(page.getByText('Showing 2 of 15 spaces')).toBeVisible();
-        // a block is present
-        await expect(page.getByTestId('spaces-result-list-item-1')).toContainText('354');
+            // back button works
+            await page.goBack();
+            await expect(page.getByTestId('spaces-homepage-favourites-all-link')).toBeVisible();
+        });
+        test('clicking a Favourites link lands on the Details page', async ({ page }) => {
+            const firstFavouritesLink = page
+                .getByTestId('spaces-homepage-favourites-block')
+                .locator('li:first-child a');
 
-        // back button works
-        await page.goBack();
-        await expect(page.getByTestId('spaces-homepage-favourites-all-link')).toBeVisible();
-    });
-    test('clicking a Favourites link lands on the Details page', async ({ page }) => {
-        const firstFavouritesLink = page.getByTestId('spaces-homepage-favourites-block').locator('li:first-child a');
+            // click the first favourite link
+            await expect(firstFavouritesLink).toBeVisible();
+            await firstFavouritesLink.click();
 
-        // load the spaces homepage
-        await page.goto('/spaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
+            // the correct space displays
+            await expect(firstFavouritesLink).not.toBeVisible();
+            await expect(page.getByTestId('space-1-details-name')).toContainText('354');
+            await expect(page.getByTestId('space-1-friendly-location')).toContainText('Architecture and Music Library');
 
-        // click the first favourite link
-        await expect(firstFavouritesLink).toBeVisible();
-        await firstFavouritesLink.click();
-
-        // the correct space displays
-        await expect(firstFavouritesLink).not.toBeVisible();
-        await expect(page.getByTestId('space-1-details-name')).toContainText('354');
-        await expect(page.getByTestId('space-1-friendly-location')).toContainText('Architecture and Music Library');
-
-        // back button works
-        await page.goBack();
-        await expect(firstFavouritesLink).toBeVisible();
+            // back button works
+            await page.goBack();
+            await expect(firstFavouritesLink).toBeVisible();
+        });
+        // test('clicking a Favourites star unfavourites a Space', async ({ page }) => {
+        //     const firstFavouritesLink = page
+        //         .getByTestId('spaces-homepage-favourites-block')
+        //         .locator('li:first-child a');
+        // });
     });
 
     test('spaces homepage can navigate to list view without filters', async ({ page }) => {
