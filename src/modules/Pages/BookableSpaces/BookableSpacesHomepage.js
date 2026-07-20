@@ -558,6 +558,7 @@ const JourneyLandingView = ({
                                                 landingUrl={landingUrl}
                                                 shortParagraph={space?.space_library_name || ''}
                                                 fillContainer
+                                                ariaLabel={`View details for Space ${space?.space_name} in ${space?.space_library_name}`}
                                                 showH3
                                                 onClick={() => {
                                                     if (space) {
@@ -593,6 +594,7 @@ const JourneyLandingView = ({
                                                         onFavouriteToggle={() => handleJourneyFavouriteToggle?.(fav)}
                                                         isFavouriteActionInProgress={isFavouriteActionInProgress}
                                                         iconPosition="topLeft"
+                                                        ariaLabel={`Unfavourite Space ${space?.space_name} in ${space?.space_library_name}`}
                                                     />
                                                 }
                                             />

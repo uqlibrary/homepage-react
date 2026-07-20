@@ -168,6 +168,7 @@ const SingleLinkCard = ({
     onClick,
     showH3 = null,
     followingElement,
+    ariaLabel,
 }) => {
     const _showH3 = showH3 === null ? loggedIn : showH3;
     return (
@@ -185,6 +186,7 @@ const SingleLinkCard = ({
                             onClick(e);
                         }
                     }}
+                    aria-label={ariaLabel}
                 >
                     <div className={'panelBodyWrapper'}>
                         {!!iconBackgroundImage && paneIcon(iconBackgroundImage)}
@@ -216,6 +218,7 @@ SingleLinkCard.propTypes = {
     onClick: PropTypes.func,
     showH3: PropTypes.any,
     followingElement: PropTypes.any,
+    ariaLabel: PropTypes.string,
 };
 
 export default SingleLinkCard;
