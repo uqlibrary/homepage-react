@@ -13,7 +13,7 @@ jest.mock('../../../../public/images/digital-learning-hub-hero-shot-wide.png', (
 import BookableSpacesHomepage from './BookableSpacesHomepage';
 import { buildLegacyBrowseNavigationUrl } from './BookableSpacesHomepage';
 import JourneyResultsView from './components/JourneyResultsView';
-import JourneySpaceDetailsView from './JourneySpaceDetailsView';
+import OpenSpaceNewWindowButton from './SpacesMapPage/OpenSpaceNewWindowButton';
 import SidebarFilters from './SidebarFilters';
 import {
     deserialiseJourneyMapFilterState,
@@ -411,7 +411,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
 
         rtlRender(
             <WithRouter>
-                <JourneySpaceDetailsView selectedSpace={baseSpace} narrowView />
+                <OpenSpaceNewWindowButton spaceDetails={baseSpace} />
             </WithRouter>,
         );
 
