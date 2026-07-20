@@ -88,11 +88,30 @@ test.describe('Spaces Homepage', () => {
             await page.goBack();
             await expect(firstFavouritesLink).toBeVisible();
         });
-        // test('clicking a Favourites star unfavourites a Space', async ({ page }) => {
-        //     const firstFavouritesLink = page
-        //         .getByTestId('spaces-homepage-favourites-block')
-        //         .locator('li:first-child a');
-        // });
+        test('clicking a Favourites star unfavourites a Space', async ({ page }) => {
+            const favSpace354 = 'a[href="/spaces/detail/a00de3d4-7e11-47eb-8079-532bdef80def"]';
+            const favSpace339 = 'a[href="/spaces/detail/a00de509-570b-4acb-9ca1-89c4baebe2e6"]';
+            const favSpace340 = 'a[href="/spaces/detail/a00df52a-2308-40e1-85ef-d3cf3421edd8"]';
+            const favSpace341 = 'a[href="/spaces/detail/a029666f-16e1-4dea-968b-31440e6bfaee"]';
+
+            await expect(page.getByTestId('spaces-homepage-favourites-block').locator(favSpace354)).toBeVisible();
+            await expect(page.getByTestId('spaces-homepage-favourites-block').locator(favSpace339)).toBeVisible();
+            await expect(page.getByTestId('spaces-homepage-favourites-block').locator(favSpace340)).toBeVisible();
+            await expect(page.getByTestId('spaces-homepage-favourites-block').locator(favSpace341)).not.toBeVisible();
+
+            // unfavourite the first space
+            const firstFavouritesButton = page
+                .getByTestId('spaces-homepage-favourites-block')
+                .locator(`li:has(${favSpace354}) button`);
+            await expect(firstFavouritesButton).toBeVisible();
+            await firstFavouritesButton.click();
+
+            // the correct spaces display as favourites
+            await expect(page.getByTestId('spaces-homepage-favourites-block').locator(favSpace354)).not.toBeVisible();
+            await expect(page.getByTestId('spaces-homepage-favourites-block').locator(favSpace339)).toBeVisible();
+            await expect(page.getByTestId('spaces-homepage-favourites-block').locator(favSpace340)).toBeVisible();
+            await expect(page.getByTestId('spaces-homepage-favourites-block').locator(favSpace341)).toBeVisible();
+        });
     });
 
     test('spaces homepage can navigate to list view without filters', async ({ page }) => {
