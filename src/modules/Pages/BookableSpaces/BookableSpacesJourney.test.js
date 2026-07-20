@@ -467,6 +467,69 @@ describe('BookableSpacesJourney browser back navigation', () => {
         );
     });
 
+    it('paginates long spaces lists in the journey results view', () => {
+        const manySpaces = Array.from({ length: 25 }, (_, index) => ({
+            ...baseSpace,
+            space_id: 100 + index,
+            space_name: `Space ${index + 1}`,
+            space_uuid: `space-uuid-${index + 1}`,
+        }));
+
+        rtlRender(
+            <WithRouter>
+                <JourneyResultsView
+                    intentSpaceLocations={manySpaces}
+                    totalSpaceCount={manySpaces.length}
+                    handleClearJourneyFilters={jest.fn()}
+                    goToLegacyBrowse={jest.fn()}
+                    selectedFacilityTypes={[]}
+                    setSelectedFacilityTypes={jest.fn()}
+                    filteredFacilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeListLoading={false}
+                    facilityTypeListError={null}
+                    minimumSpaceCapacity={1}
+                    maximumSpaceCapacity={20}
+                    capacityFilterValue={[1, 20]}
+                    setCapacityFilterValue={jest.fn()}
+                    campusList={[]}
+                    selectedCampus={1}
+                    handleCampusSelection={jest.fn()}
+                    activeFilterCount={0}
+                    librariesForCampus={[]}
+                    selectedLibrary={1}
+                    handleLibrarySelection={jest.fn()}
+                    shouldShowAdvancedFilters={false}
+                    isDesktopResultsLayout
+                    setShowAdvancedFilters={jest.fn()}
+                    weeklyHours={null}
+                    weeklyHoursLoading={false}
+                    weeklyHoursError={null}
+                    isFavouriteActionInProgress={false}
+                    onFavouriteToggle={jest.fn()}
+                    spacesFavouritesList={[]}
+                />
+            </WithRouter>,
+        );
+
+        expect(screen.getByText(/1-10 of 25 spaces/i)).toBeInTheDocument();
+        expect(screen.getByTestId('spaces-result-list-item-100')).toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-result-list-item-120')).not.toBeInTheDocument();
+
+        const firstPageButton = screen.getByRole('button', { name: /page 1/i });
+        const secondPageButton = screen.getByRole('button', { name: /page 2/i });
+
+        expect(firstPageButton).toHaveClass('Mui-selected');
+        expect(secondPageButton).not.toHaveClass('Mui-selected');
+
+        fireEvent.click(secondPageButton);
+
+        expect(screen.getByText(/11-20 of 25 spaces/i)).toBeInTheDocument();
+        expect(screen.getByTestId('spaces-result-list-item-110')).toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-result-list-item-100')).not.toBeInTheDocument();
+        expect(secondPageButton).toHaveClass('Mui-selected');
+    });
+
     it('builds browser-router map URL with encoded mapFilters and autoSelectFirstSpace', () => {
         const nextUrl = buildLegacyBrowseNavigationUrl({
             currentUrl: 'http://localhost:2020/spaces/results/filters=quiet',

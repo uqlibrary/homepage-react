@@ -6,6 +6,7 @@ import { Box, Button, Chip, Stack, Typography, useTheme } from '@mui/material';
 import BookingLink from 'modules/Pages/BookableSpaces/BookingLink';
 import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
+import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPagination';
 
 import { defaultChipStyles, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
@@ -54,6 +55,17 @@ export const JourneyResultsView = ({
     const theme = useTheme();
 
     const spaces = Array.isArray(intentSpaceLocations) ? intentSpaceLocations : [];
+    const [page, setPage] = React.useState(1);
+    const itemsPerPage = 10;
+    const totalPages = Math.max(1, Math.ceil(spaces.length / itemsPerPage));
+    const visibleSpaces = React.useMemo(() => {
+        const start = (page - 1) * itemsPerPage;
+        return spaces.slice(start, start + itemsPerPage);
+    }, [page, spaces]);
+
+    React.useEffect(() => {
+        setPage(prevPage => (prevPage > totalPages ? totalPages : prevPage));
+    }, [totalPages]);
 
     return (
         <StyledJourneyPanel data-testid="bookable-spaces-journey-results-view" hasTopSpacing>
@@ -94,7 +106,7 @@ export const JourneyResultsView = ({
                         Search results
                     </Typography>
                     <Typography variant="body2" sx={{ color: '#666', mt: 1.5 }}>
-                        Showing {spaces.length}
+                        {spaces.length}
                         {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
                     </Typography>
 
@@ -105,9 +117,9 @@ export const JourneyResultsView = ({
                         <StyledSecondaryButton onClick={goToLegacyBrowse}>View on map</StyledSecondaryButton>
                     </Stack>
 
-                    {spaces.length > 0 ? (
+                    {spaces.length > 0 && (
                         <Stack spacing={4} sx={{ mt: 1.5 }}>
-                            {spaces.map(space => {
+                            {visibleSpaces.map(space => {
                                 const detailId = String(space?.space_uuid || space?.space_id || '');
                                 const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
                                 const detailUrl = serialiseJourneyUrl({
@@ -208,7 +220,19 @@ export const JourneyResultsView = ({
                                 );
                             })}
                         </Stack>
-                    ) : (
+                    )}
+
+                    {spaces.length > 0 && (
+                        <SpacesPagination
+                            page={page}
+                            count={totalPages}
+                            onPageChange={setPage}
+                            totalItems={spaces.length}
+                            itemsPerPage={itemsPerPage}
+                        />
+                    )}
+
+                    {spaces.length === 0 && (
                         <Box
                             sx={{
                                 mt: 1.5,
