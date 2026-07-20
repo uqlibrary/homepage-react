@@ -44,6 +44,15 @@ test.describe('Spaces Homepage', () => {
         await expect(favBlock.locator('li:first-child a')).toContainText('354');
         await expect(favBlock.locator('li:first-child a')).toContainText('Architecture and Music Library');
     });
+    test('logged out user does not see favourites', async ({ page }) => {
+        // load the spaces homepage, for the logged out user
+        await page.goto('/spaces?user=public');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        await expect(page.getByTestId('spaces-homepage-favourites-all-link')).not.toBeVisible();
+        await expect(page.getByTestId('spaces-homepage-favourites-block')).not.toBeVisible();
+        await expect(page.getByTestId('space-1-detail-unfavourite')).not.toBeVisible();
+    });
     test.describe('Favourites', () => {
         test.beforeEach(async ({ page }) => {
             // load the spaces homepage

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 
 import { Box, Button, Chip, Grid, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -16,70 +15,20 @@ import { SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers'
 import { JourneyDetailsView } from 'modules/Pages/BookableSpaces/components/JourneyDetailsView';
 import { JourneyResultsView } from 'modules/Pages/BookableSpaces/components/JourneyResultsView';
 import { StyledJourneyPanel } from 'modules/Pages/BookableSpaces/components/journeyViewStyles';
-import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
 import { BookableSpacesJourneyView } from 'modules/Pages/BookableSpaces/components/BookableSpacesJourneyView';
+import FavouritesList from 'modules/Pages/BookableSpaces/SpacesHomepage/FavouritesList';
+import SpacesQuickLinks from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesQuickLinks';
 import {
     JOURNEY_VIEWS,
     serialiseJourneyMapFilterState,
     serialiseJourneyUrl,
     parseJourneyStateFromUrl,
 } from 'modules/Pages/BookableSpaces/journeyHelpers';
+
 import { ArticleCard } from 'modules/SharedComponents/Toolbox/ArticleCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import SingleLinkCard from 'modules/HomePage/publicComponents/HelpNavigation/SingleLinkCard';
 
-const browseAllSpacesIcon =
-    'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M14.29 7.57V3.89c0-.35-.2-.66-.52-.78L10.4 1.77a.83.83 0 0 0-.63 0L6.2 3.2a.8.8 0 0 1-.63 0L2.29 1.89a.41.41 0 0 0-.55.22c-.03.06-.03.12-.03.15v8.03c0 .34.2.65.52.77l3.34 1.34c.2.08.43.08.63 0m-.29-9.14v4.31m4.18-5.86v3.77%27%3e%3c/path%3e%3cpath d=%27M10.52 7.57a2.94 2.94 0 1 1 0 5.88 2.94 2.94 0 0 1 0-5.88zm3.77 6.72L12.6 12.6%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
 const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
-
-const StyledBrowseAllSpacesCard = styled('section')(({ theme }) => ({
-    marginTop: '2rem',
-    backgroundColor: '#f3f3f5',
-    borderRadius: '4px',
-    padding: '1.5rem',
-    [theme.breakpoints.down('sm')]: {
-        marginTop: '1.5rem',
-        padding: '1.25rem',
-    },
-}));
-
-const StyledBrowseAllSpacesIcon = styled('span')(() => ({
-    display: 'block',
-    width: '56px',
-    height: '56px',
-    backgroundImage: browseAllSpacesIcon,
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-    backgroundSize: 'contain',
-}));
-
-const StyledBrowseAllSpacesLink = styled('button')(({ theme }) => ({
-    marginTop: '1.25rem',
-    border: 0,
-    padding: 0,
-    background: 'transparent',
-    color: theme.palette.primary.main,
-    fontSize: '1.25rem',
-    lineHeight: 1.3,
-    fontWeight: 500,
-    textAlign: 'left',
-    textDecoration: 'underline',
-    cursor: 'pointer',
-    fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
-    '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.main,
-        color: '#fff',
-        textDecoration: 'underline',
-    },
-    '&:focus-visible': {
-        outline: `3px solid ${theme.palette.primary.main}`,
-        outlineOffset: '2px',
-    },
-    [theme.breakpoints.down('sm')]: {
-        fontSize: '1.1rem',
-    },
-}));
 
 const chipStyles = {
     fontSize: '1rem',
@@ -225,72 +174,6 @@ const StyledLandingHighlightAsideContent = styled('div')(() => ({
     marginTop: 'auto',
     marginBottom: 'auto',
 }));
-const StyledFavouritesContainerGrid = styled(Grid)(() => ({
-    marginTop: '-24px',
-    paddingLeft: 0,
-    '& a': {
-        boxSizing: 'border-box',
-        minWidth: { xs: '100%', sm: '100%' },
-    },
-    '& li': {
-        // position the favourite star at the top left
-        position: 'relative',
-        '& .topLeft': {
-            top: '3rem',
-            left: '3rem',
-        },
-        '& h3': {
-            paddingLeft: '2rem',
-        },
-    },
-}));
-
-const StyledHeaderWithLinkToAllGridItem = styled(Grid)(({ theme }) => ({
-    marginTop: '-32px',
-    paddingBottom: theme.spacing(3),
-    '& h2': {
-        marginTop: '22px',
-        fontSize: '32px',
-        fontWeight: 500,
-        display: 'inline-block',
-        marginRight: '16px',
-    },
-    // ensure heading doesn't capture pointer above the inline link
-    '& h2, & h2 *': {
-        zIndex: 0,
-    },
-    '& a': {
-        color: theme.palette.primary.main,
-        fontWeight: 500,
-        display: 'inline-block',
-        paddingBlock: '2px',
-        textDecoration: 'underline',
-        transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
-        '&:hover': {
-            color: '#fff',
-            backgroundColor: theme.palette.primary.main,
-        },
-    },
-}));
-
-const StyledSeeAllLink = styled(Link)(({ theme }) => ({
-    marginLeft: theme.spacing(0),
-    paddingBlock: '2px',
-    display: 'inline-block',
-    textDecoration: 'underline',
-    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
-    color: theme.palette.primary.main,
-    zIndex: 1,
-    pointerEvents: 'auto',
-    '&:hover': {
-        color: '#fff',
-        backgroundColor: theme.palette.primary.main,
-        textDecoration: 'underline',
-    },
-    '&, & *': {
-        color: 'inherit',
-    },
-}));
 
 const intentDefinitions = [
     {
@@ -419,7 +302,6 @@ const getIntentFilterIds = (facilityGroups, intent) => {
 const JourneyLandingView = ({
     isLoggedIn,
     spacesFavouritesList,
-    isFavourite = false,
     isFavouriteActionInProgress = false,
     handleJourneyFavouriteToggle,
     allSpaceLocations,
@@ -486,210 +368,30 @@ const JourneyLandingView = ({
             <div style={{ paddingTop: '64px' }}>
                 <StandardPage standardPageId="spaces-journey-content-standard-page">
                     {isLoggedIn && (spacesFavouritesList || []).length > 0 && (
-                        <Box className="spaces-journey-favourites" sx={{ mb: 3 }}>
-                            <StyledHeaderWithLinkToAllGridItem item xs={12}>
-                                <Typography component={'h2'}>Your favourite spaces</Typography>
-                                <StyledSeeAllLink
-                                    data-testid="spaces-homepage-favourites-all-link"
-                                    to={serialiseJourneyUrl({
-                                        view: 'results',
-                                        intentId: favouriteIntentDefinition.id,
-                                    })}
-                                    onClick={e => {
-                                        e.preventDefault();
-                                        setSelectedIntentId(favouriteIntentDefinition.id);
-                                        navigateToView('results', { intentId: favouriteIntentDefinition.id });
-                                    }}
-                                >
-                                    See all favourites
-                                </StyledSeeAllLink>
-                            </StyledHeaderWithLinkToAllGridItem>
-                            <StyledFavouritesContainerGrid
-                                component={'ul'}
-                                container
-                                spacing={3}
-                                data-testid="spaces-homepage-favourites-block"
-                            >
-                                {(() => {
-                                    const fullSpaceLookup = [
-                                        ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : []),
-                                        ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
-                                        ...(highlightedSpace ? [highlightedSpace] : []),
-                                    ];
-                                    const uniq = new Map();
-                                    (spacesFavouritesList || []).forEach(f => {
-                                        const candidateId = f?.space_id || f?.favourite_id || null;
-                                        if (!candidateId) {
-                                            return;
-                                        }
-                                        const resolved = findSpaceById(fullSpaceLookup, candidateId);
-                                        if (!resolved) {
-                                            return;
-                                        }
-                                        if (!uniq.has(String(resolved.space_id))) {
-                                            uniq.set(String(resolved.space_id), f);
-                                        }
-                                    });
-                                    const favouritesToShow = Array.from(uniq.values()).slice(0, 3);
-                                    return favouritesToShow.map((fav, idx) => {
-                                        const space = findSpaceById(fullSpaceLookup, fav?.space_id) || null;
-                                        const landingSpaceId = space?.space_id || fav?.space_id;
-                                        const landingUrl = serialiseJourneyUrl({
-                                            view: 'details',
-                                            intentId: selectedIntentId,
-                                            spaceId: getSpaceIdentifier(space) || landingSpaceId,
-                                        });
-                                        return (
-                                            <>
-                                                <SingleLinkCard
-                                                    key={fav?.space_id || `fav-${idx}`}
-                                                    testId={`spaces-journey-favourite-card-${idx + 1}`}
-                                                    cardHeading={
-                                                        space?.space_name || fav?.label || String(fav?.space_id)
-                                                    }
-                                                    sx={{
-                                                        marginBottom: '0px !important',
-                                                        pr: { xs: '10px' },
-                                                        pl: { xs: 0 },
-                                                    }}
-                                                    landingUrl={landingUrl}
-                                                    shortParagraph={space?.space_library_name || ''}
-                                                    fillContainer
-                                                    ariaLabel={`View details for Space ${space?.space_name} in ${space?.space_library_name}`}
-                                                    showH3
-                                                    onClick={() => {
-                                                        if (space) {
-                                                            setSelectedSpace(space);
-                                                            navigateToView('details', {
-                                                                intentId: selectedIntentId,
-                                                                spaceId: getSpaceIdentifier(space),
-                                                            });
-                                                        } else {
-                                                            const nextSpaceId = space?.space_id || fav?.space_id;
-                                                            const nextUrl = serialiseJourneyUrl({
-                                                                view: 'details',
-                                                                intentId: selectedIntentId,
-                                                                spaceId: getSpaceIdentifier(space) || nextSpaceId,
-                                                            });
-                                                            window.history.pushState(
-                                                                {
-                                                                    journeyView: 'details',
-                                                                    journeyIntentId: selectedIntentId,
-                                                                    journeySpaceId: String(
-                                                                        getSpaceIdentifier(space) || nextSpaceId,
-                                                                    ),
-                                                                },
-                                                                '',
-                                                                nextUrl,
-                                                            );
-                                                        }
-                                                    }}
-                                                    followingElement={
-                                                        <SpaceFavouriteIcon
-                                                            bookableSpace={space}
-                                                            isFavourite
-                                                            onFavouriteToggle={() =>
-                                                                handleJourneyFavouriteToggle?.(fav)
-                                                            }
-                                                            isFavouriteActionInProgress={isFavouriteActionInProgress}
-                                                            iconPosition="topLeft"
-                                                            ariaLabel={`Unfavourite Space ${space?.space_name} in ${space?.space_library_name}`}
-                                                        />
-                                                    }
-                                                />
-                                            </>
-                                        );
-                                    });
-                                })()}
-                            </StyledFavouritesContainerGrid>
-                        </Box>
+                        <FavouritesList
+                            favouriteIntentDefinition={favouriteIntentDefinition}
+                            setSelectedIntentId={setSelectedIntentId}
+                            navigateToView={navigateToView}
+                            allSpaceLocations={allSpaceLocations}
+                            filteredSpaceLocations={filteredSpaceLocations}
+                            highlightedSpace={highlightedSpace}
+                            spacesFavouritesList={spacesFavouritesList}
+                            selectedIntentId={selectedIntentId}
+                            setSelectedSpace={setSelectedSpace}
+                            handleJourneyFavouriteToggle={handleJourneyFavouriteToggle}
+                            isFavouriteActionInProgress={isFavouriteActionInProgress}
+                            findSpaceById={findSpaceById}
+                            getSpaceIdentifier={getSpaceIdentifier}
+                        />
                     )}
-                    <Box className="spaces-list" sx={{ mb: 3 }}>
-                        <StyledHeaderWithLinkToAllGridItem item xs={12}>
-                            <Typography
-                                component={'h2'}
-                                sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '16px' }}
-                            >
-                                Find a study space
-                            </Typography>
-                            <StyledSeeAllLink
-                                to={serialiseJourneyUrl({ view: 'results' })}
-                                onClick={e => {
-                                    e.preventDefault();
-                                    navigateToView('results');
-                                }}
-                                data-testid="spaces-journey-showall"
-                            >
-                                See all spaces
-                            </StyledSeeAllLink>
-                        </StyledHeaderWithLinkToAllGridItem>
-                        <Grid
-                            container
-                            spacing={3}
-                            sx={{
-                                mt: '-24px',
-                                '& li.MuiGrid-item': { pt: 0 },
-                                '& a': { boxSizing: 'border-box', width: '100%', minWidth: { xs: 0, sm: 'auto' } },
-                            }}
-                        >
-                            {(() => {
-                                const intentsToShow = (availableIntentDefinitionsForLanding || []).filter(
-                                    intent => intent && intent.id !== favouriteIntentDefinition.id,
-                                );
-                                return intentsToShow.map((intent, idx) => {
-                                    const landingUrl = serialiseJourneyUrl({ view: 'results', intentId: intent.id });
-                                    return (
-                                        <SingleLinkCard
-                                            key={intent.id || `intent-${idx}`}
-                                            testId={`spaces-journey-intent-card-${intent.id || idx}`}
-                                            iconBackgroundImage={intent.IconSvg || null}
-                                            cardHeading={intent.label}
-                                            landingUrl={landingUrl}
-                                            shortParagraph={intent.description || ''}
-                                            fillContainer
-                                            sx={{ pr: { xs: '10px' }, pl: { xs: 0 } }}
-                                            onClick={() => handleIntentSelect(intent)}
-                                            showH3
-                                        />
-                                    );
-                                });
-                            })()}
-                        </Grid>
-                        <StyledBrowseAllSpacesCard data-testid="spaces-journey-browse-all-card">
-                            <StyledBrowseAllSpacesIcon aria-hidden="true" />
-                            <Typography
-                                component="h3"
-                                sx={{
-                                    margin: '0.75rem 0 0',
-                                    fontSize: { xs: '1.5rem', md: '1.75rem' },
-                                    lineHeight: 1.2,
-                                    fontWeight: 500,
-                                    color: '#19191c',
-                                }}
-                            >
-                                Browse all spaces
-                            </Typography>
-                            <Typography
-                                component="p"
-                                sx={{
-                                    mt: 1,
-                                    mb: 0,
-                                    fontSize: { xs: '1rem', md: '1.1rem' },
-                                    lineHeight: 1.5,
-                                    color: '#35353a',
-                                }}
-                            >
-                                Explore all library study spaces on the map!
-                            </Typography>
-                            <StyledBrowseAllSpacesLink
-                                data-testid="spaces-journey-landing-browse-all"
-                                type="button"
-                                onClick={goToLegacyBrowse}
-                            >
-                                Browse all library study spaces
-                            </StyledBrowseAllSpacesLink>
-                        </StyledBrowseAllSpacesCard>
-                    </Box>
+                    <SpacesQuickLinks
+                        navigateToView={navigateToView}
+                        availableIntentDefinitionsForLanding={availableIntentDefinitionsForLanding}
+                        favouriteIntentDefinition={favouriteIntentDefinition}
+                        handleIntentSelect={handleIntentSelect}
+                        goToLegacyBrowse={goToLegacyBrowse}
+                        serialiseJourneyUrl={serialiseJourneyUrl}
+                    />
                     <StyledJourneyPanel data-testid="spaces-homepage-content" hasTopSpacing={false}>
                         <Stack spacing={3}>
                             <Box
@@ -702,7 +404,6 @@ const JourneyLandingView = ({
                             >
                                 {landingHighlights.map((item, index) => (
                                     <ArticleCard
-                                        // key={item.canonical_url || item.title || index}
                                         key={`spaces-journey-landing-feature-card-${index}`}
                                         article={item}
                                         articleindex={index}
