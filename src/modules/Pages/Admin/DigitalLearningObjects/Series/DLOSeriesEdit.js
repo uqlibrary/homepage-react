@@ -32,9 +32,7 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { breadcrumbs } from 'config/routes';
 
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { ClassicEditor, Essentials, Heading, Indent, Bold, Italic, Link, List } from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
+import { RichTextEditor } from 'modules/SharedComponents/RichTextEditor';
 import { useAccountContext } from 'context';
 
 const StyledDraggableListItem = styled('li')(({ theme }) => ({
@@ -187,19 +185,6 @@ export const DLOSeriesEdit = ({
         });
 
         setFormValues({ ...formValues, object_list_linked: updatedList });
-    };
-
-    const editorConfig = {
-        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials],
-        toolbar: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-        heading: {
-            options: [
-                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-            ],
-        },
-        licenseKey: 'GPL',
     };
 
     useEffect(() => {
@@ -469,24 +454,11 @@ export const DLOSeriesEdit = ({
                                                         <InputLabel htmlFor="object_description">
                                                             Description of Series
                                                         </InputLabel>
-                                                        <CKEditor
+                                                        <RichTextEditor
                                                             id="object_description"
-                                                            data-testid="object-description"
-                                                            sx={{ width: '100%' }}
-                                                            editor={ClassicEditor}
-                                                            config={editorConfig}
-                                                            data={formValues?.series_description || ''}
-                                                            onReady={editor => {
-                                                                editor.editing.view.change(writer => {
-                                                                    writer.setStyle(
-                                                                        'height',
-                                                                        '200px',
-                                                                        editor.editing.view.document.getRoot(),
-                                                                    );
-                                                                });
-                                                            }}
-                                                            onChange={(event, editor) => {
-                                                                const htmlData = editor.getData();
+                                                            testId="object-description"
+                                                            value={formValues?.series_description || ''}
+                                                            onChange={htmlData => {
                                                                 handleEditorChange('series_description', htmlData);
                                                             }}
                                                         />
