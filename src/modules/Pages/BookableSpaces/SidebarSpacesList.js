@@ -8,7 +8,19 @@ import { useTheme } from '@mui/material';
 
 import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
 import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
+import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesMapPage/OpenSpaceNewWindowButton';
 
+const StyledHeadingWrapperSpan = styled(Grid)(() => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    paddingRight: '1rem',
+    span: {
+        paddingLeft: '6px',
+    },
+    '&:has(.openNewWrapper)': {
+        paddingRight: '2rem',
+    },
+}));
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
     '&:last-child': {
@@ -94,6 +106,7 @@ const SidebarSpacesList = ({
             )}
             {filteredSpaceLocations?.length > 0 &&
                 filteredSpaceLocations?.map(bookableSpace => {
+                    const isExpanded = expandedSpaceId === bookableSpace?.space_id;
                     return (
                         <StyledBookableSpaceGridItem
                             item
@@ -106,7 +119,7 @@ const SidebarSpacesList = ({
                             <StyledStandardCard
                                 fullHeight
                                 title={
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <StyledHeadingWrapperSpan>
                                         <SpaceFavouriteIcon
                                             bookableSpace={bookableSpace}
                                             isFavourite={spacesFavouritesList?.some(
@@ -123,7 +136,12 @@ const SidebarSpacesList = ({
                                         >
                                             {bookableSpace?.space_type_details?.space_type_name}
                                         </span>
-                                    </span>
+                                        {isExpanded && (
+                                            <span className="openNewWrapper" style={{ paddingBlock: '0.2rem' }}>
+                                                <OpenSpaceNewWindowButton spaceDetails={bookableSpace} />
+                                            </span>
+                                        )}
+                                    </StyledHeadingWrapperSpan>
                                 }
                                 style={{ marginRight: '0.5rem' }}
                                 squareTop
@@ -136,7 +154,7 @@ const SidebarSpacesList = ({
                                     bookableSpace={bookableSpace}
                                     collapsed
                                     showAllData
-                                    isExpanded={expandedSpaceId === bookableSpace?.space_id}
+                                    isExpanded={isExpanded}
                                     onToggle={onSpaceToggle}
                                     isFavouriteActionInProgress={isFavouriteActionInProgress}
                                     isSelectedSpaceFavourite={spacesFavouritesList?.some(

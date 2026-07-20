@@ -7,7 +7,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import { baseButtonStyles, baseHoverFocusStyles, pluralise } from 'helpers/general';
+import { pluralise } from 'helpers/general';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import { BookingLink } from 'modules/Pages/BookableSpaces/BookingLink';
@@ -20,7 +20,6 @@ import {
     SpaceOpenStatusChip,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
 
 const journeyFallbackDetailImage = require('../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
@@ -123,66 +122,9 @@ const StyledTopBox = styled(Box)(() => ({
         gridTemplateColumns: '1fr 1fr',
     },
     // '&.verticallayout': {
-    //     gridTemplateColumns: '1fr',
     // },
 }));
 
-const StyledTightLinkButton = styled(Button)(({ theme }) => ({
-    ...baseButtonStyles,
-    padding: 0,
-    borderColor: '#fff',
-    textDecoration: 'underline',
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-    color: theme.palette.primary.main,
-    borderRadius: 0,
-    '&:hover, &:focus': {
-        ...baseHoverFocusStyles,
-        backgroundColor: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main,
-        color: '#fff',
-    },
-}));
-
-const OpenSpaceNewWindowButton = ({ spaceDetails }) => {
-    const detailUrl = React.useMemo(
-        () =>
-            serialiseJourneyUrl({
-                view: 'details',
-                spaceId: spaceDetails?.space_uuid || spaceDetails?.space_id || null,
-            }),
-        [spaceDetails?.space_uuid, spaceDetails?.space_id],
-    );
-
-    return (
-        <a
-            href={detailUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ display: 'inline-flex', pr: 0 }}
-            aria-label={`Open Space ${spaceDetails?.space_name} in a new window`}
-        >
-            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
-                <path
-                    d="m6.743 9.257-2.514 2.514-2.515 2.515M14.286 5.486V1.714h-3.772"
-                    stroke="#000"
-                    strokeWidth=".75"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-                <path
-                    d="M1.714 10.514v3.772h3.772M14.286 1.714 9.257 6.743"
-                    stroke="#000"
-                    strokeWidth=".75"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-            </svg>
-        </a>
-    );
-};
-OpenSpaceNewWindowButton.propTypes = {
-    spaceDetails: PropTypes.object,
-};
 const JourneySpaceDetailsView = ({
     selectedSpace,
     weeklyHours,
@@ -323,9 +265,7 @@ const JourneySpaceDetailsView = ({
                                     {selectedSpace?.space_name}
                                 </Typography>
                             </span>
-                            {narrowView && <OpenSpaceNewWindowButton spaceDetails={selectedSpace} />}
                         </StyledSpaceTitleWrapperBox>
-                        {/* <StyledNameTypography variant="body2">{selectedSpace?.space_library_name}</StyledNameTypography>*/}
                         <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
                             {getFriendlyLocationDescription(selectedSpace, false, { space_name: true })}
                         </StyledFriendlyLocationDiv>{' '}

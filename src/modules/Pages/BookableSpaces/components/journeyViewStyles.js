@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const StyledJourneyContentShell = styled(Box)(({ theme }) => ({

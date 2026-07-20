@@ -259,6 +259,7 @@ export const BookableSpacesList = ({
     spacesFavouritesList,
     drupalArticleList,
     forceAdvanced = false,
+    // isFavouriteActionInProgress,
 }) => {
     const { account } = useAccountContext();
     const location = useLocation();
@@ -1029,7 +1030,9 @@ export const BookableSpacesList = ({
     };
     const handleFavouriteAction = async (action, spaceId) => {
         /* istanbul ignore next */
-        if (isFavouriteActionInProgress) return;
+        if (isFavouriteActionInProgress) {
+            return;
+        }
         const isAddFavouriteAction = action === 'addSpaceFavourite';
         setIsFavouriteActionInProgress(spaceId);
         try {
@@ -1393,6 +1396,7 @@ BookableSpacesList.propTypes = {
     drupalArticlesLoading: PropTypes.bool,
     drupalArticlesError: PropTypes.bool,
     forceAdvanced: PropTypes.bool,
+    // isFavouriteActionInProgress: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesList);
