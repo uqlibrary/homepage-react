@@ -483,438 +483,443 @@ const JourneyLandingView = ({
                     </StyledLandingHeroLayout>
                 </StyledLandingHeroInner>
             </StyledLandingHeroShell>
-            <StandardPage standardPageId="spaces-journey-content-standard-page">
-                {isLoggedIn && (spacesFavouritesList || []).length > 0 && (
-                    <Box
-                        className="spaces-journey-favourites"
-                        sx={{
-                            mb: 3,
-                            pt: '64px',
-                        }}
-                    >
+            <div style={{ paddingTop: '64px' }}>
+                <StandardPage standardPageId="spaces-journey-content-standard-page">
+                    {isLoggedIn && (spacesFavouritesList || []).length > 0 && (
+                        <Box className="spaces-journey-favourites" sx={{ mb: 3 }}>
+                            <StyledHeaderWithLinkToAllGridItem item xs={12}>
+                                <Typography component={'h2'}>Your favourite spaces</Typography>
+                                <StyledSeeAllLink
+                                    data-testid="spaces-homepage-favourites-all-link"
+                                    to={serialiseJourneyUrl({
+                                        view: 'results',
+                                        intentId: favouriteIntentDefinition.id,
+                                    })}
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        setSelectedIntentId(favouriteIntentDefinition.id);
+                                        navigateToView('results', { intentId: favouriteIntentDefinition.id });
+                                    }}
+                                >
+                                    See all favourites
+                                </StyledSeeAllLink>
+                            </StyledHeaderWithLinkToAllGridItem>
+                            <StyledFavouritesContainerGrid
+                                component={'ul'}
+                                container
+                                spacing={3}
+                                data-testid="spaces-homepage-favourites-block"
+                            >
+                                {(() => {
+                                    const fullSpaceLookup = [
+                                        ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : []),
+                                        ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
+                                        ...(highlightedSpace ? [highlightedSpace] : []),
+                                    ];
+                                    const uniq = new Map();
+                                    (spacesFavouritesList || []).forEach(f => {
+                                        const candidateId = f?.space_id || f?.favourite_id || null;
+                                        if (!candidateId) {
+                                            return;
+                                        }
+                                        const resolved = findSpaceById(fullSpaceLookup, candidateId);
+                                        if (!resolved) {
+                                            return;
+                                        }
+                                        if (!uniq.has(String(resolved.space_id))) {
+                                            uniq.set(String(resolved.space_id), f);
+                                        }
+                                    });
+                                    const favouritesToShow = Array.from(uniq.values()).slice(0, 3);
+                                    return favouritesToShow.map((fav, idx) => {
+                                        const space = findSpaceById(fullSpaceLookup, fav?.space_id) || null;
+                                        const landingSpaceId = space?.space_id || fav?.space_id;
+                                        const landingUrl = serialiseJourneyUrl({
+                                            view: 'details',
+                                            intentId: selectedIntentId,
+                                            spaceId: getSpaceIdentifier(space) || landingSpaceId,
+                                        });
+                                        return (
+                                            <>
+                                                <SingleLinkCard
+                                                    key={fav?.space_id || `fav-${idx}`}
+                                                    testId={`spaces-journey-favourite-card-${idx + 1}`}
+                                                    cardHeading={
+                                                        space?.space_name || fav?.label || String(fav?.space_id)
+                                                    }
+                                                    sx={{
+                                                        marginBottom: '0px !important',
+                                                        pr: { xs: '10px' },
+                                                        pl: { xs: 0 },
+                                                    }}
+                                                    landingUrl={landingUrl}
+                                                    shortParagraph={space?.space_library_name || ''}
+                                                    fillContainer
+                                                    ariaLabel={`View details for Space ${space?.space_name} in ${space?.space_library_name}`}
+                                                    showH3
+                                                    onClick={() => {
+                                                        if (space) {
+                                                            setSelectedSpace(space);
+                                                            navigateToView('details', {
+                                                                intentId: selectedIntentId,
+                                                                spaceId: getSpaceIdentifier(space),
+                                                            });
+                                                        } else {
+                                                            const nextSpaceId = space?.space_id || fav?.space_id;
+                                                            const nextUrl = serialiseJourneyUrl({
+                                                                view: 'details',
+                                                                intentId: selectedIntentId,
+                                                                spaceId: getSpaceIdentifier(space) || nextSpaceId,
+                                                            });
+                                                            window.history.pushState(
+                                                                {
+                                                                    journeyView: 'details',
+                                                                    journeyIntentId: selectedIntentId,
+                                                                    journeySpaceId: String(
+                                                                        getSpaceIdentifier(space) || nextSpaceId,
+                                                                    ),
+                                                                },
+                                                                '',
+                                                                nextUrl,
+                                                            );
+                                                        }
+                                                    }}
+                                                    followingElement={
+                                                        <SpaceFavouriteIcon
+                                                            bookableSpace={space}
+                                                            isFavourite
+                                                            onFavouriteToggle={() =>
+                                                                handleJourneyFavouriteToggle?.(fav)
+                                                            }
+                                                            isFavouriteActionInProgress={isFavouriteActionInProgress}
+                                                            iconPosition="topLeft"
+                                                            ariaLabel={`Unfavourite Space ${space?.space_name} in ${space?.space_library_name}`}
+                                                        />
+                                                    }
+                                                />
+                                            </>
+                                        );
+                                    });
+                                })()}
+                            </StyledFavouritesContainerGrid>
+                        </Box>
+                    )}
+                    <Box className="spaces-list" sx={{ mb: 3 }}>
                         <StyledHeaderWithLinkToAllGridItem item xs={12}>
-                            <Typography component={'h2'}>Your favourite spaces</Typography>
+                            <Typography
+                                component={'h2'}
+                                sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '16px' }}
+                            >
+                                Find a study space
+                            </Typography>
                             <StyledSeeAllLink
-                                data-testid="spaces-homepage-favourites-all-link"
-                                to={serialiseJourneyUrl({
-                                    view: 'results',
-                                    intentId: favouriteIntentDefinition.id,
-                                })}
+                                to={serialiseJourneyUrl({ view: 'results' })}
                                 onClick={e => {
                                     e.preventDefault();
-                                    setSelectedIntentId(favouriteIntentDefinition.id);
-                                    navigateToView('results', { intentId: favouriteIntentDefinition.id });
+                                    navigateToView('results');
                                 }}
+                                data-testid="spaces-journey-showall"
                             >
-                                See all favourites
+                                See all spaces
                             </StyledSeeAllLink>
                         </StyledHeaderWithLinkToAllGridItem>
-                        <StyledFavouritesContainerGrid
-                            component={'ul'}
+                        <Grid
                             container
                             spacing={3}
-                            data-testid="spaces-homepage-favourites-block"
+                            sx={{
+                                mt: '-24px',
+                                '& li.MuiGrid-item': { pt: 0 },
+                                '& a': { boxSizing: 'border-box', width: '100%', minWidth: { xs: 0, sm: 'auto' } },
+                            }}
                         >
                             {(() => {
-                                const fullSpaceLookup = [
-                                    ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : []),
-                                    ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
-                                    ...(highlightedSpace ? [highlightedSpace] : []),
-                                ];
-                                const uniq = new Map();
-                                (spacesFavouritesList || []).forEach(f => {
-                                    const candidateId = f?.space_id || f?.favourite_id || null;
-                                    if (!candidateId) {
-                                        return;
-                                    }
-                                    const resolved = findSpaceById(fullSpaceLookup, candidateId);
-                                    if (!resolved) {
-                                        return;
-                                    }
-                                    if (!uniq.has(String(resolved.space_id))) {
-                                        uniq.set(String(resolved.space_id), f);
-                                    }
-                                });
-                                const favouritesToShow = Array.from(uniq.values()).slice(0, 3);
-                                return favouritesToShow.map((fav, idx) => {
-                                    const space = findSpaceById(fullSpaceLookup, fav?.space_id) || null;
-                                    const landingSpaceId = space?.space_id || fav?.space_id;
-                                    const landingUrl = serialiseJourneyUrl({
-                                        view: 'details',
-                                        intentId: selectedIntentId,
-                                        spaceId: getSpaceIdentifier(space) || landingSpaceId,
-                                    });
+                                const intentsToShow = (availableIntentDefinitionsForLanding || []).filter(
+                                    intent => intent && intent.id !== favouriteIntentDefinition.id,
+                                );
+                                return intentsToShow.map((intent, idx) => {
+                                    const landingUrl = serialiseJourneyUrl({ view: 'results', intentId: intent.id });
                                     return (
-                                        <>
-                                            <SingleLinkCard
-                                                key={fav?.space_id || `fav-${idx}`}
-                                                testId={`spaces-journey-favourite-card-${idx + 1}`}
-                                                cardHeading={space?.space_name || fav?.label || String(fav?.space_id)}
-                                                sx={{
-                                                    marginBottom: '0px !important',
-                                                    pr: { xs: '10px' },
-                                                    pl: { xs: 0 },
-                                                }}
-                                                landingUrl={landingUrl}
-                                                shortParagraph={space?.space_library_name || ''}
-                                                fillContainer
-                                                ariaLabel={`View details for Space ${space?.space_name} in ${space?.space_library_name}`}
-                                                showH3
-                                                onClick={() => {
-                                                    if (space) {
-                                                        setSelectedSpace(space);
-                                                        navigateToView('details', {
-                                                            intentId: selectedIntentId,
-                                                            spaceId: getSpaceIdentifier(space),
-                                                        });
-                                                    } else {
-                                                        const nextSpaceId = space?.space_id || fav?.space_id;
-                                                        const nextUrl = serialiseJourneyUrl({
-                                                            view: 'details',
-                                                            intentId: selectedIntentId,
-                                                            spaceId: getSpaceIdentifier(space) || nextSpaceId,
-                                                        });
-                                                        window.history.pushState(
-                                                            {
-                                                                journeyView: 'details',
-                                                                journeyIntentId: selectedIntentId,
-                                                                journeySpaceId: String(
-                                                                    getSpaceIdentifier(space) || nextSpaceId,
-                                                                ),
-                                                            },
-                                                            '',
-                                                            nextUrl,
-                                                        );
-                                                    }
-                                                }}
-                                                followingElement={
-                                                    <SpaceFavouriteIcon
-                                                        bookableSpace={space}
-                                                        isFavourite
-                                                        onFavouriteToggle={() => handleJourneyFavouriteToggle?.(fav)}
-                                                        isFavouriteActionInProgress={isFavouriteActionInProgress}
-                                                        iconPosition="topLeft"
-                                                        ariaLabel={`Unfavourite Space ${space?.space_name} in ${space?.space_library_name}`}
-                                                    />
-                                                }
-                                            />
-                                        </>
+                                        <SingleLinkCard
+                                            key={intent.id || `intent-${idx}`}
+                                            testId={`spaces-journey-intent-card-${intent.id || idx}`}
+                                            iconBackgroundImage={intent.IconSvg || null}
+                                            cardHeading={intent.label}
+                                            landingUrl={landingUrl}
+                                            shortParagraph={intent.description || ''}
+                                            fillContainer
+                                            sx={{ pr: { xs: '10px' }, pl: { xs: 0 } }}
+                                            onClick={() => handleIntentSelect(intent)}
+                                            showH3
+                                        />
                                     );
                                 });
                             })()}
-                        </StyledFavouritesContainerGrid>
+                        </Grid>
+                        <StyledBrowseAllSpacesCard data-testid="spaces-journey-browse-all-card">
+                            <StyledBrowseAllSpacesIcon aria-hidden="true" />
+                            <Typography
+                                component="h3"
+                                sx={{
+                                    margin: '0.75rem 0 0',
+                                    fontSize: { xs: '1.5rem', md: '1.75rem' },
+                                    lineHeight: 1.2,
+                                    fontWeight: 500,
+                                    color: '#19191c',
+                                }}
+                            >
+                                Browse all spaces
+                            </Typography>
+                            <Typography
+                                component="p"
+                                sx={{
+                                    mt: 1,
+                                    mb: 0,
+                                    fontSize: { xs: '1rem', md: '1.1rem' },
+                                    lineHeight: 1.5,
+                                    color: '#35353a',
+                                }}
+                            >
+                                Explore all library study spaces on the map!
+                            </Typography>
+                            <StyledBrowseAllSpacesLink
+                                data-testid="spaces-journey-landing-browse-all"
+                                type="button"
+                                onClick={goToLegacyBrowse}
+                            >
+                                Browse all library study spaces
+                            </StyledBrowseAllSpacesLink>
+                        </StyledBrowseAllSpacesCard>
                     </Box>
-                )}
-                <Box
-                    className="spaces-journey-favourites"
-                    sx={{
-                        mb: 3,
-                        pt: !isLoggedIn ? '32px' : '0px',
-                    }}
-                >
-                    <StyledHeaderWithLinkToAllGridItem item xs={12}>
-                        <Typography component={'h2'} sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '16px' }}>
-                            Find a study space
-                        </Typography>
-                        <StyledSeeAllLink
-                            to={serialiseJourneyUrl({ view: 'results' })}
-                            onClick={e => {
-                                e.preventDefault();
-                                navigateToView('results');
-                            }}
-                            data-testid="spaces-journey-showall"
-                        >
-                            See all spaces
-                        </StyledSeeAllLink>
-                    </StyledHeaderWithLinkToAllGridItem>
-                    <Grid
-                        container
-                        spacing={3}
-                        sx={{
-                            mt: '-24px',
-                            '& li.MuiGrid-item': { pt: 0 },
-                            '& a': { boxSizing: 'border-box', width: '100%', minWidth: { xs: 0, sm: 'auto' } },
-                        }}
-                    >
-                        {(() => {
-                            const intentsToShow = (availableIntentDefinitionsForLanding || []).filter(
-                                intent => intent && intent.id !== favouriteIntentDefinition.id,
-                            );
-                            return intentsToShow.map((intent, idx) => {
-                                const landingUrl = serialiseJourneyUrl({ view: 'results', intentId: intent.id });
-                                return (
-                                    <SingleLinkCard
-                                        key={intent.id || `intent-${idx}`}
-                                        testId={`spaces-journey-intent-card-${intent.id || idx}`}
-                                        iconBackgroundImage={intent.IconSvg || null}
-                                        cardHeading={intent.label}
-                                        landingUrl={landingUrl}
-                                        shortParagraph={intent.description || ''}
-                                        fillContainer
-                                        sx={{ pr: { xs: '10px' }, pl: { xs: 0 } }}
-                                        onClick={() => handleIntentSelect(intent)}
-                                        showH3
+                    <StyledJourneyPanel data-testid="spaces-homepage-content" hasTopSpacing={false}>
+                        <Stack spacing={3}>
+                            <Box
+                                sx={{
+                                    display: 'grid',
+                                    gap: '1.5rem',
+                                    gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' },
+                                    alignItems: 'stretch',
+                                }}
+                            >
+                                {landingHighlights.map((item, index) => (
+                                    <ArticleCard
+                                        // key={item.canonical_url || item.title || index}
+                                        key={`spaces-journey-landing-feature-card-${index}`}
+                                        article={item}
+                                        articleindex={index}
+                                        cardId={`spaces-journey-landing-feature-card-${index + 1}`}
+                                        linkTestId={`spaces-journey-landing-feature-link-${index + 1}`}
+                                        imageTestId={`spaces-journey-landing-feature-image-${index + 1}`}
+                                        contentTestId={`spaces-journey-landing-feature-content-${index + 1}`}
+                                        eyebrowTestId={`spaces-journey-landing-feature-eyebrow-${index + 1}`}
+                                        titleTestId={`spaces-journey-landing-feature-title-${index + 1}`}
+                                        textTestId={`spaces-journey-landing-feature-text-${index + 1}`}
                                     />
-                                );
-                            });
-                        })()}
-                    </Grid>
-                    <StyledBrowseAllSpacesCard data-testid="spaces-journey-browse-all-card">
-                        <StyledBrowseAllSpacesIcon aria-hidden="true" />
-                        <Typography
-                            component="h3"
-                            sx={{
-                                margin: '0.75rem 0 0',
-                                fontSize: { xs: '1.5rem', md: '1.75rem' },
-                                lineHeight: 1.2,
-                                fontWeight: 500,
-                                color: '#19191c',
-                            }}
-                        >
-                            Browse all spaces
-                        </Typography>
-                        <Typography
-                            component="p"
-                            sx={{
-                                mt: 1,
-                                mb: 0,
-                                fontSize: { xs: '1rem', md: '1.1rem' },
-                                lineHeight: 1.5,
-                                color: '#35353a',
-                            }}
-                        >
-                            Explore all library study spaces on the map!
-                        </Typography>
-                        <StyledBrowseAllSpacesLink
-                            data-testid="spaces-journey-landing-browse-all"
-                            type="button"
-                            onClick={goToLegacyBrowse}
-                        >
-                            Browse all library study spaces
-                        </StyledBrowseAllSpacesLink>
-                    </StyledBrowseAllSpacesCard>
-                </Box>
-                <StyledJourneyPanel data-testid="spaces-homepage-content" hasTopSpacing={false}>
-                    <Stack spacing={3}>
-                        <Box
-                            sx={{
-                                display: 'grid',
-                                gap: '1.5rem',
-                                gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' },
-                                alignItems: 'stretch',
-                            }}
-                        >
-                            {landingHighlights.map((item, index) => (
-                                <ArticleCard
-                                    // key={item.canonical_url || item.title || index}
-                                    key={`spaces-journey-landing-feature-card-${index}`}
-                                    article={item}
-                                    articleindex={index}
-                                    cardId={`spaces-journey-landing-feature-card-${index + 1}`}
-                                    linkTestId={`spaces-journey-landing-feature-link-${index + 1}`}
-                                    imageTestId={`spaces-journey-landing-feature-image-${index + 1}`}
-                                    contentTestId={`spaces-journey-landing-feature-content-${index + 1}`}
-                                    eyebrowTestId={`spaces-journey-landing-feature-eyebrow-${index + 1}`}
-                                    titleTestId={`spaces-journey-landing-feature-title-${index + 1}`}
-                                    textTestId={`spaces-journey-landing-feature-text-${index + 1}`}
-                                />
-                            ))}
-                        </Box>
+                                ))}
+                            </Box>
 
-                        {!!highlightedSpace && (
-                            <StyledLandingHighlightPanel data-testid="spaces-journey-landing-highlight-panel">
-                                <StyledLandingHighlightPanelMedia
-                                    aria-hidden="true"
-                                    sx={
-                                        highlightedSpace?.space_photo_url
-                                            ? {
-                                                  backgroundImage:
-                                                      'linear-gradient(140deg, rgba(18, 10, 29, 0.22) 0%, rgba(18, 10, 29, 0.6) 72%, rgba(18, 10, 29, 0.78) 100%), url(' +
-                                                      highlightedSpace.space_photo_url +
-                                                      '), url(' +
-                                                      journeyFallbackImage +
-                                                      ')',
-                                                  backgroundSize: 'cover',
-                                                  backgroundPosition: 'center',
-                                              }
-                                            : undefined
-                                    }
-                                />
-                                <Grid
-                                    container
-                                    spacing={2.5}
-                                    alignItems="stretch"
-                                    sx={{
-                                        position: 'relative',
-                                        zIndex: 1,
-                                        width: '100%',
-                                        [theme.breakpoints.down('lg')]: {
-                                            margin: 0,
+                            {!!highlightedSpace && (
+                                <StyledLandingHighlightPanel data-testid="spaces-journey-landing-highlight-panel">
+                                    <StyledLandingHighlightPanelMedia
+                                        aria-hidden="true"
+                                        sx={
+                                            highlightedSpace?.space_photo_url
+                                                ? {
+                                                      backgroundImage:
+                                                          'linear-gradient(140deg, rgba(18, 10, 29, 0.22) 0%, rgba(18, 10, 29, 0.6) 72%, rgba(18, 10, 29, 0.78) 100%), url(' +
+                                                          highlightedSpace.space_photo_url +
+                                                          '), url(' +
+                                                          journeyFallbackImage +
+                                                          ')',
+                                                      backgroundSize: 'cover',
+                                                      backgroundPosition: 'center',
+                                                  }
+                                                : undefined
+                                        }
+                                    />
+                                    <Grid
+                                        container
+                                        spacing={2.5}
+                                        alignItems="stretch"
+                                        sx={{
+                                            position: 'relative',
+                                            zIndex: 1,
                                             width: '100%',
-                                        },
-                                    }}
-                                >
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        lg={7}
-                                        data-testid="spaces-journey-landing-highlight-primary"
-                                        sx={{
                                             [theme.breakpoints.down('lg')]: {
-                                                pl: '0 !important',
-                                                pr: '0 !important',
+                                                margin: 0,
+                                                width: '100%',
                                             },
                                         }}
                                     >
-                                        <StyledLandingHighlightTextCard data-testid="spaces-journey-landing-highlight-text-card">
-                                            <Typography
-                                                component="h3"
-                                                variant="h6"
-                                                data-testid="spaces-journey-landing-highlight-title"
-                                                sx={{ fontWeight: 700, mb: 0.8, color: '#fff' }}
-                                            >
-                                                Study Space highlight
-                                            </Typography>
-                                            {!!highlightedSpace?.space_name && (
-                                                <Typography
-                                                    component="h4"
-                                                    variant="subtitle1"
-                                                    data-testid="spaces-journey-landing-highlight-space-name"
-                                                    sx={{ fontWeight: 600, mb: 0.8, color: 'rgba(255,255,255,0.88)' }}
-                                                >
-                                                    {highlightedSpace.space_name}
-                                                    {!!highlightedSpace.space_library_name &&
-                                                        ' — ' + highlightedSpace.space_library_name}
-                                                </Typography>
-                                            )}
-                                            {!!highlightedSpace && (
-                                                <Box sx={{ mb: 1.2 }}>
-                                                    <SpaceOpenStatusChip
-                                                        space={highlightedSpace}
-                                                        weeklyHours={weeklyHours}
-                                                        weeklyHoursLoading={weeklyHoursLoading}
-                                                        weeklyHoursError={weeklyHoursError}
-                                                        chipStyles={chipStyles}
-                                                    />
-                                                </Box>
-                                            )}
-                                            {!!highlightedSpace?.space_type_details?.space_type_description && (
-                                                <Typography
-                                                    variant="body2"
-                                                    data-testid="spaces-journey-landing-highlight-body-1"
-                                                    sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.6, mb: 1 }}
-                                                >
-                                                    {highlightedSpace.space_type_details.space_type_description}
-                                                </Typography>
-                                            )}
-                                            {!!highlightSpaceDescription && (
-                                                <Typography
-                                                    variant="body2"
-                                                    data-testid="spaces-journey-landing-highlight-body-2"
-                                                    sx={{ color: 'rgba(255,255,255,0.82)', lineHeight: 1.55, mb: 1.5 }}
-                                                >
-                                                    {highlightSpaceDescription}
-                                                </Typography>
-                                            )}
-                                            <Button
-                                                data-testid="spaces-journey-landing-highlight-view-space"
-                                                variant="contained"
-                                                onClick={() => {
-                                                    setSelectedSpace(highlightedSpace);
-                                                    navigateToView('details', {
-                                                        intentId: selectedIntentId,
-                                                        spaceId: getSpaceIdentifier(highlightedSpace),
-                                                    });
-                                                }}
-                                                sx={{
-                                                    textTransform: 'none',
-                                                    alignSelf: 'flex-start',
-                                                    backgroundColor: '#fff',
-                                                    color: '#51247a',
-                                                    fontWeight: 700,
-                                                    '&:hover': { backgroundColor: '#f3ebff' },
-                                                }}
-                                            >
-                                                View this space
-                                            </Button>
-                                        </StyledLandingHighlightTextCard>
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        lg={5}
-                                        data-testid="spaces-journey-landing-highlight-secondary"
-                                        sx={{
-                                            [theme.breakpoints.down('lg')]: {
-                                                pl: '0 !important',
-                                                pr: '0 !important',
-                                            },
-                                        }}
-                                    >
-                                        <Box
-                                            data-testid="spaces-journey-landing-highlight-offered-box"
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            lg={7}
+                                            data-testid="spaces-journey-landing-highlight-primary"
                                             sx={{
-                                                backgroundColor: '#ffffff',
-                                                border: '1px solid #ddd8e4',
-                                                borderRadius: '4px',
-                                                p: '1rem',
-                                                height: '100%',
-                                                boxSizing: 'border-box',
-                                                display: 'flex',
-                                                flexDirection: 'column',
+                                                [theme.breakpoints.down('lg')]: {
+                                                    pl: '0 !important',
+                                                    pr: '0 !important',
+                                                },
                                             }}
                                         >
-                                            <StyledLandingHighlightAsideContent data-testid="spaces-journey-landing-highlight-offered-content">
+                                            <StyledLandingHighlightTextCard data-testid="spaces-journey-landing-highlight-text-card">
                                                 <Typography
-                                                    component="h4"
-                                                    variant="subtitle1"
-                                                    data-testid="spaces-journey-landing-highlight-offered-title"
-                                                    sx={{ fontWeight: 700, mb: 1 }}
+                                                    component="h3"
+                                                    variant="h6"
+                                                    data-testid="spaces-journey-landing-highlight-title"
+                                                    sx={{ fontWeight: 700, mb: 0.8, color: '#fff' }}
                                                 >
-                                                    What's offered here
+                                                    Study Space highlight
                                                 </Typography>
-                                                {highlightedSpace?.facility_types?.length > 0 ? (
-                                                    <Box
-                                                        data-testid="spaces-journey-landing-highlight-offered-chips"
+                                                {!!highlightedSpace?.space_name && (
+                                                    <Typography
+                                                        component="h4"
+                                                        variant="subtitle1"
+                                                        data-testid="spaces-journey-landing-highlight-space-name"
                                                         sx={{
-                                                            display: 'flex',
-                                                            flexWrap: 'wrap',
-                                                            gap: '0.5rem',
-                                                            mt: 0.5,
+                                                            fontWeight: 600,
+                                                            mb: 0.8,
+                                                            color: 'rgba(255,255,255,0.88)',
                                                         }}
                                                     >
-                                                        {highlightedSpace.facility_types.map(ft => (
-                                                            <Chip
-                                                                key={ft.facility_type_id}
-                                                                label={ft.facility_type_name}
-                                                                size="small"
-                                                                variant="outlined"
-                                                                sx={{
-                                                                    borderColor: '#c9bfdf',
-                                                                    color: '#51247a',
-                                                                    fontSize: '0.8rem',
-                                                                }}
-                                                            />
-                                                        ))}
-                                                    </Box>
-                                                ) : (
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{ color: '#4f4d57', mt: 0.5 }}
-                                                        data-testid="spaces-journey-landing-highlight-offered-empty"
-                                                    >
-                                                        No facilities listed for this space.
+                                                        {highlightedSpace.space_name}
+                                                        {!!highlightedSpace.space_library_name &&
+                                                            ' — ' + highlightedSpace.space_library_name}
                                                     </Typography>
                                                 )}
-                                            </StyledLandingHighlightAsideContent>
-                                        </Box>
+                                                {!!highlightedSpace && (
+                                                    <Box sx={{ mb: 1.2 }}>
+                                                        <SpaceOpenStatusChip
+                                                            space={highlightedSpace}
+                                                            weeklyHours={weeklyHours}
+                                                            weeklyHoursLoading={weeklyHoursLoading}
+                                                            weeklyHoursError={weeklyHoursError}
+                                                            chipStyles={chipStyles}
+                                                        />
+                                                    </Box>
+                                                )}
+                                                {!!highlightedSpace?.space_type_details?.space_type_description && (
+                                                    <Typography
+                                                        variant="body2"
+                                                        data-testid="spaces-journey-landing-highlight-body-1"
+                                                        sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.6, mb: 1 }}
+                                                    >
+                                                        {highlightedSpace.space_type_details.space_type_description}
+                                                    </Typography>
+                                                )}
+                                                {!!highlightSpaceDescription && (
+                                                    <Typography
+                                                        variant="body2"
+                                                        data-testid="spaces-journey-landing-highlight-body-2"
+                                                        sx={{
+                                                            color: 'rgba(255,255,255,0.82)',
+                                                            lineHeight: 1.55,
+                                                            mb: 1.5,
+                                                        }}
+                                                    >
+                                                        {highlightSpaceDescription}
+                                                    </Typography>
+                                                )}
+                                                <Button
+                                                    data-testid="spaces-journey-landing-highlight-view-space"
+                                                    variant="contained"
+                                                    onClick={() => {
+                                                        setSelectedSpace(highlightedSpace);
+                                                        navigateToView('details', {
+                                                            intentId: selectedIntentId,
+                                                            spaceId: getSpaceIdentifier(highlightedSpace),
+                                                        });
+                                                    }}
+                                                    sx={{
+                                                        textTransform: 'none',
+                                                        alignSelf: 'flex-start',
+                                                        backgroundColor: '#fff',
+                                                        color: '#51247a',
+                                                        fontWeight: 700,
+                                                        '&:hover': { backgroundColor: '#f3ebff' },
+                                                    }}
+                                                >
+                                                    View this space
+                                                </Button>
+                                            </StyledLandingHighlightTextCard>
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            lg={5}
+                                            data-testid="spaces-journey-landing-highlight-secondary"
+                                            sx={{
+                                                [theme.breakpoints.down('lg')]: {
+                                                    pl: '0 !important',
+                                                    pr: '0 !important',
+                                                },
+                                            }}
+                                        >
+                                            <Box
+                                                data-testid="spaces-journey-landing-highlight-offered-box"
+                                                sx={{
+                                                    backgroundColor: '#ffffff',
+                                                    border: '1px solid #ddd8e4',
+                                                    borderRadius: '4px',
+                                                    p: '1rem',
+                                                    height: '100%',
+                                                    boxSizing: 'border-box',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                }}
+                                            >
+                                                <StyledLandingHighlightAsideContent data-testid="spaces-journey-landing-highlight-offered-content">
+                                                    <Typography
+                                                        component="h4"
+                                                        variant="subtitle1"
+                                                        data-testid="spaces-journey-landing-highlight-offered-title"
+                                                        sx={{ fontWeight: 700, mb: 1 }}
+                                                    >
+                                                        What's offered here
+                                                    </Typography>
+                                                    {highlightedSpace?.facility_types?.length > 0 ? (
+                                                        <Box
+                                                            data-testid="spaces-journey-landing-highlight-offered-chips"
+                                                            sx={{
+                                                                display: 'flex',
+                                                                flexWrap: 'wrap',
+                                                                gap: '0.5rem',
+                                                                mt: 0.5,
+                                                            }}
+                                                        >
+                                                            {highlightedSpace.facility_types.map(ft => (
+                                                                <Chip
+                                                                    key={ft.facility_type_id}
+                                                                    label={ft.facility_type_name}
+                                                                    size="small"
+                                                                    variant="outlined"
+                                                                    sx={{
+                                                                        borderColor: '#c9bfdf',
+                                                                        color: '#51247a',
+                                                                        fontSize: '0.8rem',
+                                                                    }}
+                                                                />
+                                                            ))}
+                                                        </Box>
+                                                    ) : (
+                                                        <Typography
+                                                            variant="body2"
+                                                            sx={{ color: '#4f4d57', mt: 0.5 }}
+                                                            data-testid="spaces-journey-landing-highlight-offered-empty"
+                                                        >
+                                                            No facilities listed for this space.
+                                                        </Typography>
+                                                    )}
+                                                </StyledLandingHighlightAsideContent>
+                                            </Box>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </StyledLandingHighlightPanel>
-                        )}
-                    </Stack>
-                </StyledJourneyPanel>
-            </StandardPage>
+                                </StyledLandingHighlightPanel>
+                            )}
+                        </Stack>
+                    </StyledJourneyPanel>
+                </StandardPage>
+            </div>
         </>
     );
 };
