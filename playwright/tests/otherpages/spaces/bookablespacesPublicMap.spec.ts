@@ -538,6 +538,32 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-summary-hours`)).not.toBeVisible();
     });
+    test('can open a space detail page from a panel', async ({ page, context }) => {
+        await page.goto('');
+        await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
+        await page.goto('spaces?advanced=1');
+        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+
+        await expect(page.getByTestId(`${ARCH_REFERENCE}`).locator('h3')).toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel')).toBeVisible();
+
+        // expand the panel
+        await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
+
+        // click "open in new window"
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-new-window`)).toBeVisible();
+        const [newPage] = await Promise.all([
+            context.waitForEvent('page'),
+            page.getByTestId(`${ARCH_REFERENCE}-new-window`).click(),
+        ]);
+
+        // new window has correct page
+        await newPage.waitForLoadState();
+        await expect(newPage).toHaveURL(/\/spaces\/detail\/a00de3d4-7e11-47eb-8079-532bdef80def/);
+        await expect(newPage.getByTestId(`${ARCH_REFERENCE}-details-name`)).toBeVisible();
+        await expect(newPage.getByTestId(`${ARCH_REFERENCE}-details-name`)).toContainText('354');
+    });
+
     test.describe('filtering', () => {
         test.beforeEach(async ({ page }) => {
             // things don't redraw fast enough for playwright to work if we load the page then resize.
