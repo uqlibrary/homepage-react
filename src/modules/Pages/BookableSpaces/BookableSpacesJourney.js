@@ -592,7 +592,7 @@ const JourneyLandingView = ({
                             }}
                             data-testid="spaces-journey-showall"
                         >
-                            View all spaces
+                            See all spaces
                         </StyledSeeAllLink>
                     </StyledHeaderWithLinkToAllGridItem>
                     <Grid

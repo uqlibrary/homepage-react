@@ -93,7 +93,7 @@ test.describe('Spaces Homepage', () => {
         await page.goto('/spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
-        // click the "View all spaces" link (to load the results page without anything selected
+        // click the "See all spaces" link (to load the results page without anything selected)
         await expect(page.getByTestId('spaces-journey-showall')).toBeVisible();
         await page.getByTestId('spaces-journey-showall').click();
 
