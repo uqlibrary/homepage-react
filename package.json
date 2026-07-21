@@ -100,7 +100,7 @@
         "assets-webpack-plugin": "^5.1.2",
         "autoprefixer": "^10.4.16",
         "axe-core": "^4.10.3",
-        "axios": "^1.15.0",
+        "axios": "^1.18.1",
         "axios-cache-interceptor": "^1.12.0",
         "axios-mock-adapter": "^2.1.0",
         "babel-jest": "^30.3.0",
