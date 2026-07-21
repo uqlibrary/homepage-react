@@ -1093,7 +1093,7 @@ const BookableSpacesHomepage = ({
                 />
             )}
             renderResultsView={() => (
-                <StandardPage standardPageId="spaces-journey-content-standard-page">
+                <StandardPage standardPageId="spaces-journey-content-standard-page" fullWidth>
                     <JourneyResultsView
                         selectedIntent={selectedIntent}
                         intentSpaceLocations={intentSpaceLocations}
