@@ -71,7 +71,9 @@ test.describe('Spaces Homepage', () => {
             await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(
                 VANILLA_USER_FAVOURITE_COUNT,
             );
-            await expect(page.getByText(`Showing ${VANILLA_USER_FAVOURITE_COUNT} of 15 spaces`)).toBeVisible();
+            await expect(page.getByTestId('spaces-results-summary')).toContainText(
+                `${VANILLA_USER_FAVOURITE_COUNT} of 15 spaces`,
+            );
             // a block is present
             await expect(page.getByTestId('spaces-result-list-item-1')).toContainText('354');
 
@@ -136,7 +138,7 @@ test.describe('Spaces Homepage', () => {
         await expect(page.getByTestId('spaces-journey-showall')).not.toBeVisible();
         await expect(page.getByTestId('spaces-result-list-item-1')).toBeVisible();
         await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0); // no filters are selected
-        await expect(page.getByText('Showing 10 of 15 spaces')).toBeVisible(); // all spaces are showing
+        await expect(page.getByTestId('spaces-results-summary')).toContainText('10 of 15 spaces'); // all spaces are showing
         await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(10); // a page load of spaces are present
 
         // back button works

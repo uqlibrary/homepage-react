@@ -105,7 +105,7 @@ export const JourneyResultsView = ({
                     <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
                         Search results
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#666', mt: 1.5 }}>
+                    <Typography data-testid="spaces-results-summary" variant="body2" sx={{ color: '#666', mt: 1.5 }}>
                         {spaces.length}
                         {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
                     </Typography>

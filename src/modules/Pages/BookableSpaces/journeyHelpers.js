@@ -186,7 +186,7 @@ export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
         const params = new URLSearchParams(hashQuery || url.search || '');
         const nextParams = new URLSearchParams();
 
-        ['mapFilters', 'autoSelectFirstSpace'].forEach(key => {
+        ['mapFilters', 'autoSelectFirstSpace', 'user'].forEach(key => {
             const value = params.get(key);
             if (value !== null) {
                 nextParams.set(key, value);

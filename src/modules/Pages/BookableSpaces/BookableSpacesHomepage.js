@@ -20,6 +20,7 @@ import FavouritesList from 'modules/Pages/BookableSpaces/SpacesHomepage/Favourit
 import SpacesQuickLinks from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesQuickLinks';
 import {
     JOURNEY_VIEWS,
+    getJourneySearchParams,
     serialiseJourneyMapFilterState,
     serialiseJourneyUrl,
     parseJourneyStateFromUrl,
@@ -257,6 +258,12 @@ export const buildLegacyBrowseNavigationUrl = ({
     const searchParams = new URLSearchParams();
     searchParams.set('mapFilters', encodedMapFilters);
     searchParams.set('autoSelectFirstSpace', '1');
+
+    const journeySearchParams = getJourneySearchParams(url);
+    const userValue = journeySearchParams.params.get('user');
+    if (userValue !== null) {
+        searchParams.set('user', userValue);
+    }
 
     const hashValue = url.hash || '';
     const isHashRouting = hashValue.startsWith('#/');

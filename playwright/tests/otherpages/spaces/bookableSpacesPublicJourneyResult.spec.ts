@@ -23,7 +23,7 @@ test.describe('Spaces Journey Result page', () => {
 
         await expect(page.getByTestId('sidebarCheckboxes')).toBeVisible();
         await expect(page.getByRole('heading', { level: 2, name: 'Search results' })).toBeVisible();
-        await expect(page.getByText('Showing 10 of 15 spaces')).toBeVisible(); // first page of spaces are showing
+        await expect(page.getByTestId('spaces-results-summary')).toContainText('10 of 15 spaces'); // first page of spaces are showing
         await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(NUMBER_SPACES_DEFAULT); // a page load of spaces are present
 
         // show the first panel has the correct contents

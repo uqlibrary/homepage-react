@@ -479,6 +479,27 @@ describe('BookableSpacesHomepage browser back navigation', () => {
         expect(nextUrl).toContain('autoSelectFirstSpace=1');
     });
 
+    it('preserves the user query param when serialising the journey URL between views', () => {
+        window.history.replaceState({}, '', '/#/spaces/results?user=test-user');
+
+        const nextUrl = serialiseJourneyUrl({ view: 'details', intentId: null, spaceId: 'space-123' });
+
+        expect(nextUrl).toContain('user=test-user');
+    });
+
+    it('preserves the user query param when building a hash-router map URL', () => {
+        const nextUrl = buildLegacyBrowseNavigationUrl({
+            currentUrl: 'http://localhost:2020/#/spaces/results?user=test-user',
+            selectedFacilityTypes: [],
+            selectedCampus: null,
+            selectedLibrary: null,
+            capacityFilterValue: null,
+        });
+
+        expect(nextUrl).toContain('user=test-user');
+        expect(nextUrl).toContain('#/spaces/mapresults?');
+    });
+
     it('hides the landing highlighted space block when no highlighted space is available', () => {
         renderJourney({ ...defaultProps, highlightedSpace: null });
 
