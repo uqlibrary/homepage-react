@@ -29,10 +29,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { ClassicEditor, Essentials, Heading, Indent, Bold, Italic, Link, List } from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
-
+import { RichTextEditor } from 'modules/SharedComponents/RichTextEditor';
 import { scrollToTopOfPage } from 'helpers/general';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -174,8 +171,6 @@ export const DlorForm = ({
     const [showLinkTimeForm, setShowLinkTimeForm] = useState(false);
     const [showLinkSizeForm, setShowLinkSizeForm] = useState(false);
 
-    const [editorReady, setEditorReady] = useState(false);
-
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
     const [formValues, setFormValues] = useState(formDefaults);
     const [requestedKeywordValues, setRequestedKeywordValues] = useState({});
@@ -284,24 +279,6 @@ export const DlorForm = ({
         }
     }, [dlorItem, actions]);
 
-    useEffect(() => {
-        if (!editorReady) return;
-        const editable = document.querySelector('.ck-editor__editable');
-        /* istanbul ignore next */
-        if (editable) {
-            const handler = e => {
-                /* istanbul ignore next */
-                if (e.target.tagName === 'A') {
-                    console.log('Link clicked in CKEditor', e.target.href);
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                }
-            };
-            editable.addEventListener('click', handler);
-            return () => editable.removeEventListener('click', handler);
-        }
-    }, [editorReady]);
-
     // these match the values in dlor playwright admin tests
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
@@ -323,30 +300,6 @@ export const DlorForm = ({
                     : ''}
             </Box>
         );
-    };
-
-    const editorConfig = {
-        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials],
-        toolbar: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-        heading: {
-            options: [
-                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-            ],
-        },
-        link: {
-            decorators: {
-                isEditing: {
-                    mode: 'manual',
-                    label: 'Editing',
-                    attributes: {
-                        href: 'javascript:void(0);',
-                    },
-                },
-            },
-        },
-        licenseKey: 'GPL',
     };
 
     const isValidUsername = testUserName => {
@@ -797,21 +750,11 @@ export const DlorForm = ({
                         <Grid item xs={12}>
                             <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                                 <InputLabel htmlFor="object_admin_notes">Admin Notes</InputLabel>
-                                <CKEditor
+                                <RichTextEditor
                                     id="object_admin_notes"
-                                    data-testid="object-admin-notes"
-                                    sx={{ width: '100%' }}
-                                    editor={ClassicEditor}
-                                    config={editorConfig}
-                                    data={formValues?.object_admin_notes || ''}
-                                    onReady={editor => {
-                                        setEditorReady(true);
-                                        editor.editing.view.change(writer => {
-                                            writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                                        });
-                                    }}
-                                    onChange={(event, editor) => {
-                                        const htmlData = editor.getData();
+                                    testId="object-admin-notes"
+                                    value={formValues?.object_admin_notes || ''}
+                                    onChange={htmlData => {
                                         handleAdminNotesEditorChange('object_admin_notes', htmlData);
                                     }}
                                 />
@@ -958,21 +901,11 @@ export const DlorForm = ({
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
-                    <CKEditor
+                    <RichTextEditor
                         id="object_description"
-                        data-testid="object-description"
-                        sx={{ width: '100%' }}
-                        editor={ClassicEditor}
-                        config={editorConfig}
-                        data={formValues?.object_description || ''}
-                        onReady={editor => {
-                            setEditorReady(true);
-                            editor.editing.view.change(writer => {
-                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                            });
-                        }}
-                        onChange={(event, editor) => {
-                            const htmlData = editor.getData();
+                        testId="object-description"
+                        value={formValues?.object_description || ''}
+                        onChange={htmlData => {
                             handleEditorChange('object_description', htmlData);
                         }}
                     />
@@ -1358,21 +1291,11 @@ export const DlorForm = ({
                     <InputLabel htmlFor="object_download_instructions" sx={{ fontSize: 20 }}>
                         Instructions
                     </InputLabel>
-                    <CKEditor
+                    <RichTextEditor
                         id="download_instructions"
-                        data-testid="download_instructions"
-                        sx={{ width: '100%' }}
-                        editor={ClassicEditor}
-                        config={editorConfig}
-                        data={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
-                        onReady={editor => {
-                            setEditorReady(true);
-                            editor.editing.view.change(writer => {
-                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                            });
-                        }}
-                        onChange={(event, editor) => {
-                            const htmlData = editor.getData();
+                        testId="download_instructions"
+                        value={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
+                        onChange={htmlData => {
                             handleEditorChange('object_download_instructions', htmlData);
                         }}
                     />
@@ -1671,20 +1594,11 @@ export const DlorForm = ({
                     <Typography sx={{ mt: '2px', color: 'grey', fontSize: '0.8em' }}>
                         Enter the notification details the user will see here:
                     </Typography>
-                    <CKEditor
+                    <RichTextEditor
                         id="notificationText"
-                        sx={{ width: '100%' }}
-                        editor={ClassicEditor}
-                        config={editorConfig}
-                        data={formValues?.notificationText || ''}
-                        onReady={editor => {
-                            setEditorReady(true);
-                            editor.editing.view.change(writer => {
-                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                            });
-                        }}
-                        onChange={(event, editor) => {
-                            const htmlData = editor.getData();
+                        testId="notificationText"
+                        value={formValues?.notificationText || ''}
+                        onChange={htmlData => {
                             handleEditorChange('notificationText', htmlData);
                         }}
                     />
@@ -1811,6 +1725,7 @@ export const DlorForm = ({
 
     const saveDlor = () => {
         const valuesToSend = { ...formValues };
+        console.log(valuesToSend);
         // somehow in localhost this is already an array of ids, but on feature branch its the original facets
         if (valuesToSend.facets.length > 0 && valuesToSend.facets[0].hasOwnProperty('filter_key')) {
             valuesToSend.facets = flatMapFacets(formValues?.facets);
@@ -1948,12 +1863,10 @@ export const DlorForm = ({
     };
 
     const handleNext = () => {
-        setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
     };
 
     const handleBack = () => {
-        setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
     };
 
