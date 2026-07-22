@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { readCKEditor, typeCKEditor } from '@uq/pw/lib/ckeditor';
+import { readRichTextEditor, typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 import { addToInputValue } from '@uq/pw/lib/helpers';
 import { DLOR_ADMIN_USER, DLOR_NO_EDIT_USER, DLOR_OBJECT_OWNER } from '@uq/pw/lib/constants';
 import moment from 'moment-timezone';
@@ -23,7 +23,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // open the "edit a team dialog"
                 await page.getByTestId('object-form-teamid-change').click();
                 await assertAccessibility(page, '[data-testid="StandardPage"]');
-                await typeCKEditor(page, 'This is the admin notes');
+                await typeRichTextEditor(page, 'This is the admin notes');
 
                 // go to panel 2
                 await page.getByTestId('dlor-form-next-button').click();
@@ -141,7 +141,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(page.locator('[data-testid="object-title"] input')).toHaveValue(
                     'Advanced literature searching',
                 );
-                await expect(await readCKEditor(page)).toContain(
+                await expect(await readRichTextEditor(page)).toContain(
                     'This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping',
                 );
                 await expect(page.locator('[data-testid="object-summary"] textarea:first-child')).toHaveValue(
@@ -163,7 +163,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(page.getByTestId('object-link-duration')).not.toBeVisible();
                 await expect(page.getByTestId('object-link-file-size')).not.toBeVisible();
 
-                await expect(await readCKEditor(page)).toEqual('some download instructions');
+                await expect(await readRichTextEditor(page)).toEqual('some download instructions');
                 // go to panel 4
                 await page.getByTestId('dlor-form-next-button').click();
                 // await expect(page.locator('[data-testid="object-keywords"] textarea:first-child')).toHaveValue(
@@ -430,13 +430,13 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team name');
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('john Manager');
                 await page.locator('[data-testid="dlor-form-team-email-new"] input').fill('john@example.com');
-                await typeCKEditor(page, 'This is the admin notes');
+                await typeRichTextEditor(page, 'This is the admin notes');
 
                 // go to the second panel, Description
                 await page.getByTestId('dlor-form-next-button').click();
 
                 await addToInputValue(page.locator('[data-testid="object-title"] input'), 'xx');
-                await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await addToInputValue(page.locator('[data-testid="object-summary"] textarea:first-child'), 'xx');
 
                 await page.locator('[data-testid="object-is-featured"] input').check();
@@ -456,7 +456,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-value="MB"]').click();
 
                 const typeableDownloadInstructions = 'xxx';
-                await typeCKEditor(page, typeableDownloadInstructions);
+                await typeRichTextEditor(page, typeableDownloadInstructions);
 
                 // go to the fourth panel, Filtering
                 await page.getByTestId('dlor-form-next-button').click();
@@ -488,7 +488,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     page.getByTestId('notify-lightbox-title').getByText('Object change notification'),
                 ).toBeVisible();
 
-                await typeCKEditor(page, 'the words that will go in the email');
+                await typeRichTextEditor(page, 'the words that will go in the email');
 
                 await page.getByTestId('notify-lightbox-close-button').click();
 
@@ -611,7 +611,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     page.locator('[data-testid="object-title"] input'),
                     'x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'),
                 );
-                await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await addToInputValue(page.locator('[data-testid="object-summary"] textarea:first-child'), 'xxx');
 
                 // go to the third panel, Link
@@ -632,7 +632,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-link-duration-minutes"] input').fill('6');
                 await page.locator('[data-testid="object-link-duration-seconds"] input').fill('30');
 
-                await typeCKEditor(page, downloadInstructionText);
+                await typeRichTextEditor(page, downloadInstructionText);
 
                 // go to the fourth panel, Filtering
                 await page.getByTestId('dlor-form-next-button').click();
@@ -792,7 +792,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 await expect(page.getByTestId('dlor-panel-validity-indicator-2')).toBeHidden();
 
-                await typeCKEditor(page, 'word');
+                await typeRichTextEditor(page, 'word');
 
                 // go to the fourth panel, Filtering
                 await nextButton.click();
@@ -806,7 +806,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 const notifyLightboxTitle = page.getByTestId('notify-lightbox-title');
                 await expect(notifyLightboxTitle).toContainText('Object change notification');
 
-                await typeCKEditor(page, 'the words that will go in the email');
+                await typeRichTextEditor(page, 'the words that will go in the email');
 
                 const closeButton = page.getByTestId('notify-lightbox-close-button');
                 await expect(closeButton).toContainText('Close');
