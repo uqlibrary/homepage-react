@@ -235,6 +235,52 @@ describe('BookableSpacesHomepage browser back navigation', () => {
         expect(parsedState).toEqual({ view: 'results', intentId: 'quiet', spaceId: null });
     });
 
+    it('treats the favourite intent as a valid journey intent when parsing direct URLs', () => {
+        window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
+
+        const parsedState = parseJourneyStateFromUrl([]);
+
+        expect(parsedState).toEqual({ view: 'results', intentId: 'favourite', spaceId: null });
+    });
+
+    it('restores the favourites-only filter when loading the favourite route directly', () => {
+        window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
+
+        const favouriteSpace = { ...baseSpace, space_id: 101, space_name: 'Favourite Study Room' };
+        const otherSpace = { ...baseSpace, space_id: 102, space_name: 'Other Study Room' };
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: true,
+            spacesFavouritesList: [{ space_id: 101, label: 'Favourite study room' }],
+            filteredSpaceLocations: [favouriteSpace, otherSpace],
+            highlightedSpace: favouriteSpace,
+        });
+
+        expect(screen.getByText('Favourite Study Room')).toBeInTheDocument();
+        expect(screen.queryByText('Other Study Room')).not.toBeInTheDocument();
+    });
+
+    it('allows the favourites-only sidebar filter to be unchecked after loading the favourite route directly', () => {
+        window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
+
+        const favouriteSpace = { ...baseSpace, space_id: 101, space_name: 'Favourite Study Room' };
+        const otherSpace = { ...baseSpace, space_id: 102, space_name: 'Other Study Room' };
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: true,
+            spacesFavouritesList: [{ space_id: 101, label: 'Favourite study room' }],
+            filteredSpaceLocations: [favouriteSpace, otherSpace],
+            highlightedSpace: favouriteSpace,
+        });
+
+        fireEvent.click(screen.getByRole('checkbox', { name: /show favourite spaces only/i }));
+
+        expect(screen.getByText('Favourite Study Room')).toBeInTheDocument();
+        expect(screen.getByText('Other Study Room')).toBeInTheDocument();
+    });
+
     it('treats the map-results path as a results route when parsing the URL', () => {
         window.history.replaceState({}, '', '/#/spaces/mapresults');
 

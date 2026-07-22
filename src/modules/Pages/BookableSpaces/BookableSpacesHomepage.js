@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Box, Button, Chip, Grid, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ComputerIcon from '@mui/icons-material/Computer';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -11,10 +11,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import TvIcon from '@mui/icons-material/Tv';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
-import { SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { JourneyDetailsView } from 'modules/Pages/BookableSpaces/components/JourneyDetailsView';
 import { JourneyResultsView } from 'modules/Pages/BookableSpaces/components/JourneyResultsView';
-import { StyledJourneyPanel } from 'modules/Pages/BookableSpaces/components/journeyViewStyles';
 import { BookableSpacesJourneyView } from 'modules/Pages/BookableSpaces/components/BookableSpacesJourneyView';
 import FavouritesList from 'modules/Pages/BookableSpaces/SpacesHomepage/FavouritesList';
 import SpacesQuickLinks from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesQuickLinks';
@@ -26,18 +24,9 @@ import {
     parseJourneyStateFromUrl,
 } from 'modules/Pages/BookableSpaces/journeyHelpers';
 
-import { ArticleCard } from 'modules/SharedComponents/Toolbox/ArticleCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
-
-const chipStyles = {
-    fontSize: '1rem',
-    marginBottom: '0.5rem !important',
-    '& span': {
-        padding: '12px 16px',
-    },
-};
 
 const StyledLandingHeroShell = styled('section')(({ theme }) => ({
     background: 'linear-gradient(135deg, #4b2271 0%, #5e2c8d 58%, #6f369f 100%)',
@@ -116,64 +105,6 @@ const StyledLandingHeroInner = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         maxWidth: '100%',
     },
-}));
-
-const StyledLandingHighlightPanel = styled('section')(({ theme }) => ({
-    position: 'relative',
-    minHeight: '300px',
-    borderRadius: '4px',
-    overflow: 'hidden',
-    backgroundColor: '#34204f',
-    display: 'flex',
-    alignItems: 'center',
-    padding: '1rem',
-    boxShadow: '0 14px 34px rgba(31, 18, 48, 0.16)',
-    boxSizing: 'border-box',
-    [theme.breakpoints.down('md')]: {
-        minHeight: 'auto',
-        alignItems: 'stretch',
-    },
-    [theme.breakpoints.down('sm')]: {
-        padding: '0.75rem',
-    },
-}));
-
-const StyledLandingHighlightPanelMedia = styled('div')(() => ({
-    position: 'absolute',
-    inset: 0,
-    backgroundColor: '#1a0a25',
-    backgroundImage:
-        'linear-gradient(140deg, rgba(18, 10, 29, 0.22) 0%, rgba(18, 10, 29, 0.6) 72%, rgba(18, 10, 29, 0.78) 100%), url(' +
-        journeyFallbackImage +
-        ')',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-}));
-
-const StyledLandingHighlightTextCard = styled('div')(({ theme }) => ({
-    position: 'relative',
-    zIndex: 1,
-    width: '100%',
-    maxWidth: '31rem',
-    margin: 0,
-    backgroundColor: 'rgba(90, 43, 135, 0.92)',
-    color: '#fff',
-    padding: '1.25rem 1.35rem',
-    boxShadow: '0 16px 30px rgba(23, 11, 37, 0.35)',
-    boxSizing: 'border-box',
-    borderRadius: '4px',
-    [theme.breakpoints.down('sm')]: {
-        maxWidth: '100%',
-        padding: '1rem 1.05rem',
-    },
-}));
-
-const StyledLandingHighlightAsideContent = styled('div')(() => ({
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: 'auto',
-    marginBottom: 'auto',
 }));
 
 const intentDefinitions = [
@@ -314,21 +245,16 @@ const JourneyLandingView = ({
     allSpaceLocations,
     filteredSpaceLocations,
     highlightedSpace,
-    landingHighlights,
-    highlightSpaceDescription,
     availableIntentDefinitions,
     favouriteIntentDefinition,
     selectedIntentId,
     handleIntentSelect,
     navigateToView,
+    activateFavouritesResults,
     setSelectedSpace,
     setSelectedIntentId,
     goToLegacyBrowse,
-    weeklyHours,
-    weeklyHoursLoading,
-    weeklyHoursError,
 }) => {
-    const theme = useTheme();
     const hasFavourites = isLoggedIn && (spacesFavouritesList?.length || 0) > 0;
     const availableIntentDefinitionsForLanding = React.useMemo(
         () => (hasFavourites ? [favouriteIntentDefinition, ...availableIntentDefinitions] : availableIntentDefinitions),
@@ -379,6 +305,7 @@ const JourneyLandingView = ({
                             favouriteIntentDefinition={favouriteIntentDefinition}
                             setSelectedIntentId={setSelectedIntentId}
                             navigateToView={navigateToView}
+                            activateFavouritesResults={activateFavouritesResults}
                             allSpaceLocations={allSpaceLocations}
                             filteredSpaceLocations={filteredSpaceLocations}
                             highlightedSpace={highlightedSpace}
@@ -427,6 +354,7 @@ JourneyLandingView.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     isFavouriteActionInProgress: PropTypes.bool,
+    activateFavouritesResults: PropTypes.func,
 };
 
 const BookableSpacesHomepage = ({
@@ -466,6 +394,7 @@ const BookableSpacesHomepage = ({
     const [view, setView] = React.useState(initialView || 'landing');
     const [selectedIntentId, setSelectedIntentId] = React.useState(null);
     const [selectedSpace, setSelectedSpace] = React.useState(null);
+    const [showFavouriteSpacesOnly, setShowFavouriteSpacesOnly] = React.useState(false);
     const journeyTopRef = React.useRef(null);
     const [showAdvancedFilters, setShowAdvancedFilters] = React.useState(false);
     const canShowAdvancedFilters = view === 'results';
@@ -497,18 +426,20 @@ const BookableSpacesHomepage = ({
         [validCampusList],
     );
     const intentSpaceLocations = React.useMemo(() => {
-        const spacesWithIntentApplied =
-            selectedIntentId !== favouriteIntentDefinition.id
-                ? filteredSpaceLocations || []
-                : (filteredSpaceLocations || []).filter(space => favouriteSpaceIds.has(String(space?.space_id)));
+        const spacesWithIntentApplied = filteredSpaceLocations || [];
+
+        const spacesWithFavouriteFilterApplied =
+            showFavouriteSpacesOnly && hasFavourites
+                ? spacesWithIntentApplied.filter(space => favouriteSpaceIds.has(String(space?.space_id)))
+                : spacesWithIntentApplied;
 
         // Exclude orphaned spaces with no valid campus assignment from journey results.
         if (validCampusIds.size === 0) {
-            return spacesWithIntentApplied;
+            return spacesWithFavouriteFilterApplied;
         }
 
-        return spacesWithIntentApplied.filter(space => validCampusIds.has(String(space?.space_campus_id)));
-    }, [filteredSpaceLocations, favouriteSpaceIds, selectedIntentId, validCampusIds]);
+        return spacesWithFavouriteFilterApplied.filter(space => validCampusIds.has(String(space?.space_campus_id)));
+    }, [filteredSpaceLocations, favouriteSpaceIds, hasFavourites, showFavouriteSpacesOnly, validCampusIds]);
     const isSelectedSpaceFavourite = favouriteSpaceIds.has(String(selectedSpace?.space_id));
     const handleJourneyFavouriteToggle = async space => {
         if (!space?.space_id || !onFavouriteToggle || !isLoggedIn) {
@@ -641,6 +572,7 @@ const BookableSpacesHomepage = ({
         setSelectedIntentId(intent.id);
         setSelectedSpace(null);
         if (intent.id === favouriteIntentDefinition.id) {
+            setShowFavouriteSpacesOnly(true);
             const clearedFilters = (selectedFacilityTypes || []).map(filter => ({
                 ...filter,
                 selected: false,
@@ -649,10 +581,19 @@ const BookableSpacesHomepage = ({
             lastAppliedIntentIdRef.current = null;
             setSelectedFacilityTypes(clearedFilters);
         } else {
+            setShowFavouriteSpacesOnly(false);
             applyIntentFilters(intent);
         }
         navigateToView('results', { intentId: intent.id, spaceId: null });
     };
+
+    const activateFavouritesResults = React.useCallback(() => {
+        setShowFavouriteSpacesOnly(true);
+        setSelectedIntentId(favouriteIntentDefinition.id);
+        setSelectedSpace(null);
+        lastAppliedIntentIdRef.current = null;
+        navigateToView('results', { intentId: favouriteIntentDefinition.id, spaceId: null });
+    }, [navigateToView]);
 
     const handleClearJourneyFilters = () => {
         const nextFilters = selectedFacilityTypes.map(filter => ({
@@ -662,6 +603,7 @@ const BookableSpacesHomepage = ({
         }));
         setSelectedFacilityTypes(nextFilters);
         setSelectedIntentId(null);
+        setShowFavouriteSpacesOnly(false);
         lastAppliedIntentIdRef.current = null;
     };
 
@@ -701,6 +643,16 @@ const BookableSpacesHomepage = ({
         let nextIntentId = parsedState.intentId;
         let nextSelectedSpace = null;
 
+        if (
+            nextView === 'landing' &&
+            initialView &&
+            initialView !== 'landing' &&
+            !parsedState.intentId &&
+            !parsedState.spaceId
+        ) {
+            nextView = initialView;
+        }
+
         if (nextView === 'landing' || nextView === 'intent') {
             nextIntentId = null;
         }
@@ -714,6 +666,7 @@ const BookableSpacesHomepage = ({
 
         setView(nextView);
         setSelectedIntentId(nextIntentId || null);
+        setShowFavouriteSpacesOnly(nextIntentId === favouriteIntentDefinition.id);
         setSelectedSpace(nextSelectedSpace);
         journeyHistoryRef.current = [nextView];
 
@@ -804,6 +757,7 @@ const BookableSpacesHomepage = ({
             }
 
             setSelectedIntentId(targetView === 'results' || targetView === 'details' ? targetIntentId || null : null);
+            setShowFavouriteSpacesOnly(targetIntentId === favouriteIntentDefinition.id);
             setSelectedSpace(targetView === 'details' ? targetSelectedSpace : null);
             navigateToView(targetView, { pushHistory: false, intentId: targetIntentId, spaceId: targetSpaceId });
         };
@@ -838,6 +792,7 @@ const BookableSpacesHomepage = ({
                     selectedIntentId={selectedIntentId}
                     handleIntentSelect={handleIntentSelect}
                     navigateToView={navigateToView}
+                    activateFavouritesResults={activateFavouritesResults}
                     setSelectedSpace={setSelectedSpace}
                     setSelectedIntentId={setSelectedIntentId}
                     goToLegacyBrowse={goToLegacyBrowse}
@@ -903,6 +858,10 @@ const BookableSpacesHomepage = ({
                         isFavouriteActionInProgress={isFavouriteActionInProgress}
                         onFavouriteToggle={handleJourneyFavouriteToggle}
                         spacesFavouritesList={spacesFavouritesList}
+                        showFavouriteSpacesOnly={showFavouriteSpacesOnly}
+                        setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                        isLoggedIn={isLoggedIn}
+                        hasFavouriteSpaces={hasFavourites}
                     />
                 </StandardPage>
             )}

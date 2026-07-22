@@ -234,7 +234,9 @@ export const parseJourneyStateFromUrl = availableIntentDefinitions => {
         }
 
         const decodedIntentId = decodeURIComponent(String(rawIntentId));
-        return availableIntentDefinitions?.some(intent => intent.id === decodedIntentId) ? decodedIntentId : null;
+        const isKnownIntent = availableIntentDefinitions?.some(intent => intent.id === decodedIntentId);
+        const isFavouriteIntent = decodedIntentId === 'favourite';
+        return isKnownIntent || isFavouriteIntent ? decodedIntentId : null;
     };
 
     if (pathname === '/spaces/mapresults' || pathname.startsWith('/spaces/mapresults/')) {

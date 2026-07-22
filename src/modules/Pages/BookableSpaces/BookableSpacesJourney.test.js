@@ -260,6 +260,31 @@ describe('BookableSpacesJourney browser back navigation', () => {
         expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
     });
 
+    it('lets users show only their favourite spaces from the sidebar filters', () => {
+        const otherSpace = {
+            ...baseSpace,
+            space_id: 102,
+            space_uuid: 'test-space-uuid-5678',
+            space_name: 'Shared Study Room',
+        };
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+            isLoggedIn: true,
+            filteredSpaceLocations: [baseSpace, otherSpace],
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Favourite study room' }],
+        });
+
+        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.getByText('Shared Study Room')).toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole('checkbox', { name: /show favourite spaces only/i }));
+
+        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.queryByText('Shared Study Room')).not.toBeInTheDocument();
+    });
+
     it('serialises and deserialises journey filter state for the map view', () => {
         const encodedState = serialiseJourneyMapFilterState({
             selectedFacilityTypes: [

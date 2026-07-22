@@ -34,6 +34,7 @@ export const FavouritesList = ({
     favouriteIntentDefinition,
     setSelectedIntentId,
     navigateToView,
+    activateFavouritesResults,
     allSpaceLocations,
     filteredSpaceLocations,
     highlightedSpace,
@@ -58,7 +59,7 @@ export const FavouritesList = ({
                     onClick={e => {
                         e.preventDefault();
                         setSelectedIntentId(favouriteIntentDefinition.id);
-                        navigateToView('results', { intentId: favouriteIntentDefinition.id });
+                        activateFavouritesResults();
                     }}
                 >
                     See all favourites
@@ -169,6 +170,7 @@ FavouritesList.propTypes = {
     spacesFavouritesList: PropTypes.any,
     selectedIntentId: PropTypes.any,
     setSelectedSpace: PropTypes.any,
+    activateFavouritesResults: PropTypes.func,
     handleJourneyFavouriteToggle: PropTypes.any,
     isFavouriteActionInProgress: PropTypes.any,
     findSpaceById: PropTypes.any,

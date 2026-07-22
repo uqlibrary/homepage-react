@@ -42,7 +42,6 @@ export const JourneyResultsView = ({
     librariesForCampus,
     selectedLibrary,
     handleLibrarySelection,
-    shouldShowAdvancedFilters,
     isDesktopResultsLayout,
     setShowAdvancedFilters,
     weeklyHours,
@@ -51,6 +50,10 @@ export const JourneyResultsView = ({
     isFavouriteActionInProgress,
     onFavouriteToggle,
     spacesFavouritesList,
+    showFavouriteSpacesOnly,
+    setShowFavouriteSpacesOnly,
+    isLoggedIn,
+    hasFavouriteSpaces,
 }) => {
     const theme = useTheme();
 
@@ -70,36 +73,38 @@ export const JourneyResultsView = ({
     return (
         <StyledJourneyPanel data-testid="bookable-spaces-journey-results-view" hasTopSpacing>
             <StyledResultsSplitLayout>
-                {shouldShowAdvancedFilters && (
-                    <StyledResultsSidebarPanel>
-                        <SidebarFilters
-                            facilityTypeList={facilityTypeList}
-                            facilityTypeListLoading={facilityTypeListLoading}
-                            facilityTypeListError={facilityTypeListError}
-                            selectedFacilityTypes={selectedFacilityTypes}
-                            setSelectedFacilityTypes={setSelectedFacilityTypes}
-                            filteredFacilityTypeList={filteredFacilityTypeList}
-                            suppliedClassName="journeyFilterSidebar"
-                            minimumSpaceCapacity={minimumSpaceCapacity}
-                            maximumSpaceCapacity={maximumSpaceCapacity}
-                            capacityFilterValue={capacityFilterValue}
-                            setCapacityFilterValue={setCapacityFilterValue}
-                            campusList={campusList}
-                            selectedCampus={selectedCampus}
-                            handleCampusSelection={handleCampusSelection}
-                            activeFilterCount={activeFilterCount}
-                            librariesForCampus={librariesForCampus}
-                            selectedLibrary={selectedLibrary}
-                            handleLibrarySelection={handleLibrarySelection}
-                            onApplyAllFilters={() => {
-                                if (!isDesktopResultsLayout) {
-                                    setShowAdvancedFilters(false);
-                                }
-                            }}
-                            showBottomActionButtons
-                        />
-                    </StyledResultsSidebarPanel>
-                )}
+                <StyledResultsSidebarPanel>
+                    <SidebarFilters
+                        facilityTypeList={facilityTypeList}
+                        facilityTypeListLoading={facilityTypeListLoading}
+                        facilityTypeListError={facilityTypeListError}
+                        selectedFacilityTypes={selectedFacilityTypes}
+                        setSelectedFacilityTypes={setSelectedFacilityTypes}
+                        filteredFacilityTypeList={filteredFacilityTypeList}
+                        suppliedClassName="journeyFilterSidebar"
+                        minimumSpaceCapacity={minimumSpaceCapacity}
+                        maximumSpaceCapacity={maximumSpaceCapacity}
+                        capacityFilterValue={capacityFilterValue}
+                        setCapacityFilterValue={setCapacityFilterValue}
+                        campusList={campusList}
+                        selectedCampus={selectedCampus}
+                        handleCampusSelection={handleCampusSelection}
+                        activeFilterCount={activeFilterCount}
+                        librariesForCampus={librariesForCampus}
+                        selectedLibrary={selectedLibrary}
+                        handleLibrarySelection={handleLibrarySelection}
+                        onApplyAllFilters={() => {
+                            if (!isDesktopResultsLayout) {
+                                setShowAdvancedFilters(false);
+                            }
+                        }}
+                        showBottomActionButtons
+                        showFavouriteSpacesOnly={showFavouriteSpacesOnly}
+                        setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                        isLoggedIn={isLoggedIn}
+                        hasFavouriteSpaces={hasFavouriteSpaces}
+                    />
+                </StyledResultsSidebarPanel>
 
                 <Box>
                     <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
@@ -289,6 +294,10 @@ JourneyResultsView.propTypes = {
     isFavouriteActionInProgress: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
     spacesFavouritesList: PropTypes.any,
+    showFavouriteSpacesOnly: PropTypes.bool,
+    setShowFavouriteSpacesOnly: PropTypes.func,
+    isLoggedIn: PropTypes.bool,
+    hasFavouriteSpaces: PropTypes.bool,
 };
 
 export default JourneyResultsView;

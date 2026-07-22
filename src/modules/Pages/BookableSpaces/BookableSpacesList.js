@@ -304,6 +304,7 @@ export const BookableSpacesList = ({
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [expandedSpaceId, setExpandedSpaceId] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
+    const [showFavouriteSpacesOnly, setShowFavouriteSpacesOnly] = useState(false);
     const [isMapReady, setIsMapReady] = useState(false);
     const useJourneyExperience = React.useMemo(() => {
         if (typeof window === 'undefined') return true;
@@ -720,6 +721,15 @@ export const BookableSpacesList = ({
             return false;
         }
 
+        if (showFavouriteSpacesOnly && isLoggedIn) {
+            const isFavouriteSpace = (spacesFavouritesList || []).some(
+                favourite => String(favourite?.space_id) === String(space?.space_id),
+            );
+            if (!isFavouriteSpace) {
+                return false;
+            }
+        }
+
         if (space.space_campus_id !== selectedCurrentCampus) {
             return false;
         }
@@ -1090,6 +1100,8 @@ export const BookableSpacesList = ({
         spacesFavouritesList,
         selectedCampus,
         selectedLibrary,
+        showFavouriteSpacesOnly,
+        isLoggedIn,
     ]);
     // const visibleSpacesCountBadge = () => {
     //     return sortedSpaceLocations?.length > 0 &&
@@ -1148,7 +1160,9 @@ export const BookableSpacesList = ({
         setExpandedSpaceId(space?.space_id ?? null);
     };
 
-    const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
+    const activeFilterCount =
+        (selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length || 0) +
+        (showFavouriteSpacesOnly ? 1 : 0);
     const hasActiveFilters = (activeFilterCount || 0) > 0;
     const advancedViewToggleLabel = hasActiveFilters ? 'Show in simple view' : 'Help me find a space';
     const highlightedSpace = React.useMemo(() => {
@@ -1228,6 +1242,10 @@ export const BookableSpacesList = ({
                             weeklyHoursError={weeklyHoursError}
                             onFavouriteToggle={handleFavouriteAction}
                             isFavouriteActionInProgress={isFavouriteActionInProgress}
+                            showFavouriteSpacesOnly={showFavouriteSpacesOnly}
+                            setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                            isLoggedIn={isLoggedIn}
+                            hasFavouriteSpaces={(spacesFavouritesList || []).length > 0}
                         />
                     );
                 } else {
@@ -1271,6 +1289,10 @@ export const BookableSpacesList = ({
                                     selectedLibrary={selectedLibrary}
                                     handleLibrarySelection={handleLibrarySelection}
                                     hasJourneyMapFilterState={Boolean(journeyMapFilterState)}
+                                    showFavouriteSpacesOnly={showFavouriteSpacesOnly}
+                                    setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                                    isLoggedIn={isLoggedIn}
+                                    hasFavouriteSpaces={(spacesFavouritesList || []).length > 0}
                                 />
                             </div>
                             {isDesktopView && (

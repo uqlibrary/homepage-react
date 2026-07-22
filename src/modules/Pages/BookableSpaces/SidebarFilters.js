@@ -175,6 +175,29 @@ const StyledFacilityGroup = styled('div')(({ theme }) => ({
         marginBottom: 0,
     },
 }));
+const StyledFavouriteFilterGroup = styled('div')(({ theme }) => ({
+    borderBottom: theme.palette.designSystem.border,
+    paddingBlock: '16px',
+    '& label': {
+        ...standardText(theme),
+        textDecoration: 'underline',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+        cursor: 'pointer',
+        '&:hover, :focus': {
+            '& > span:nth-of-type(2)': {
+                backgroundColor: theme.palette.primary.main,
+                color: '#fff',
+                textDecoration: 'underline',
+                lineHeight: 1.2,
+            },
+        },
+    },
+    '& span:not(.fortestfocus)': {
+        cursor: 'pointer',
+    },
+}));
 const StyledFilterSpaceListTypographyHeading = styled('h3')(() => ({
     display: 'flex',
     justifyContent: 'flex-start',
@@ -266,6 +289,10 @@ export const SidebarFilters = ({
     onApplyAllFilters,
     showBottomActionButtons = false,
     hasJourneyMapFilterState = false,
+    showFavouriteSpacesOnly = false,
+    setShowFavouriteSpacesOnly = () => {},
+    isLoggedIn = false,
+    hasFavouriteSpaces = false,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
     const [defaultCampus, setDefaultCampus] = React.useState(1);
@@ -799,10 +826,6 @@ export const SidebarFilters = ({
         );
     };
 
-    if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
-        return null;
-    }
-
     const isJourneyView = suppliedClassName?.includes('journey');
 
     return (
@@ -826,6 +849,26 @@ export const SidebarFilters = ({
                         </StyledCartoucheList>
                         {renderFilterActionButtons()}
                     </>
+                )}
+                {isLoggedIn && hasFavouriteSpaces && (
+                    <StyledFavouriteFilterGroup>
+                        <InputLabel
+                            title="Show favourite spaces only"
+                            htmlFor="filter-show-favourite-spaces-only"
+                            className="selectedFilterTypeLabel"
+                            style={{ marginLeft: '0.25rem' }}
+                        >
+                            <Checkbox
+                                checked={Boolean(showFavouriteSpacesOnly)}
+                                onChange={event => setShowFavouriteSpacesOnly(event?.target?.checked)}
+                                data-testid="filter-show-favourite-spaces-only"
+                                id="filter-show-favourite-spaces-only"
+                                className="selectedFilterType"
+                                inputProps={{ 'aria-label': 'Show favourite spaces only' }}
+                            />
+                            <span>Show favourite spaces only</span>
+                        </InputLabel>
+                    </StyledFavouriteFilterGroup>
                 )}
                 {campusList?.length > 0 && (
                     <StyledCampusWrapperDiv>
@@ -977,6 +1020,11 @@ SidebarFilters.propTypes = {
     handleLibrarySelection: PropTypes.func,
     onApplyAllFilters: PropTypes.func,
     showBottomActionButtons: PropTypes.bool,
+    showFavouriteSpacesOnly: PropTypes.bool,
+    setShowFavouriteSpacesOnly: PropTypes.func,
+    isLoggedIn: PropTypes.bool,
+    hasFavouriteSpaces: PropTypes.bool,
+    hasJourneyMapFilterState: PropTypes.bool,
 };
 
 export default React.memo(SidebarFilters);
