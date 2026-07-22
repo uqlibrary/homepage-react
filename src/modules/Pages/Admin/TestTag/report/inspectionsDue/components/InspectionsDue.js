@@ -89,16 +89,10 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
 
-    const {
-        userTeamList,
-        selectedTeam,
-        selectedTeamSlug,
-        teamSelectFieldName,
-        getTeamSlug,
-        setSelectedTeam,
-    } = useUserTeams({
-        user,
-    });
+    const { userTeamList, selectedTeam, selectedTeamSlug, teamSelectFieldName, getTeamSlug, setSelectedTeam } =
+        useUserTeams({
+            user,
+        });
 
     const [filterModel, setFilterModel] = useState({ items: [] });
 

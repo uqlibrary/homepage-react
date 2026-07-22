@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams, Link as RouterLink, useNavigate } from 'react-router';
 import { useCookies } from 'react-cookie';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -33,7 +33,8 @@ import {
 import { breadcrumbs } from 'config/routes';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { ClassicEditor, Essentials, Heading, Indent, Bold, Italic, Link, List } from 'ckeditor5';
+import 'ckeditor5/ckeditor5.css';
 import { useAccountContext } from 'context';
 
 const StyledDraggableListItem = styled('li')(({ theme }) => ({
@@ -129,14 +130,14 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
                 >
                     <DeleteForever />
                 </IconButton>
-                <a
+                <RouterLink
                     style={{ paddingTop: '3px' }}
-                    href={getDlorViewPageUrl(item?.object_public_uuid)}
+                    to={getDlorViewPageUrl(item?.object_public_uuid)}
                     data-testid={`dlor-series-edit-view-${item.object_id}`}
                     target="_blank"
                 >
                     <VisibilityIcon sx={{ color: 'black' }} />
-                </a>
+                </RouterLink>
             </div>
         </li>
     );
@@ -154,6 +155,7 @@ export const DLOSeriesEdit = ({
     mode,
 }) => {
     const { account } = useAccountContext();
+    const navigate = useNavigate();
     const handleEditorChange = (fieldname, newContent) => {
         const newValues = { ...formValues, [fieldname]: newContent };
         setFormValues(newValues);
@@ -188,18 +190,8 @@ export const DLOSeriesEdit = ({
     };
 
     const editorConfig = {
-        removePlugins: [
-            'Image',
-            'ImageCaption',
-            'ImageStyle',
-            'ImageToolbar',
-            'ImageUpload',
-            'EasyImage',
-            'CKFinder',
-            'BlockQuote',
-            'Table',
-            'MediaEmbed',
-        ],
+        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials],
+        toolbar: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
         heading: {
             options: [
                 { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -207,6 +199,7 @@ export const DLOSeriesEdit = ({
                 { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
             ],
         },
+        licenseKey: 'GPL',
     };
 
     useEffect(() => {
@@ -244,8 +237,8 @@ export const DLOSeriesEdit = ({
             if (Object.keys(seriesDetail).length === 0) {
                 console.log('Doing the things');
                 seriesDetail.object_series_id = dlorSeriesId;
-                (seriesDetail.object_series_name = dlorSeries?.series_name),
-                    (seriesDetail.object_series_description = dlorSeries?.series_description);
+                ((seriesDetail.object_series_name = dlorSeries?.series_name),
+                    (seriesDetail.object_series_description = dlorSeries?.series_description));
             }
             mode === 'EDIT' &&
                 setOriginalSeriesDetails({
@@ -279,12 +272,12 @@ export const DLOSeriesEdit = ({
 
     const navigateToSeriesManagementHomePage = () => {
         closeConfirmationBox();
-        window.location.href = dlorAdminLink('/series/manage', account);
+        navigate(dlorAdminLink('/series/manage', account));
         /* istanbul ignore next */
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
-        window.location.href = dlorAdminLink('/series/manage', account);
+        navigate(dlorAdminLink('/series/manage', account));
     };
 
     const clearForm = () => {
@@ -385,7 +378,7 @@ export const DLOSeriesEdit = ({
     };
 
     function toProperCase(text) {
-        return text.replace(/\w\S*/g, function(txt) {
+        return text.replace(/\w\S*/g, function (txt) {
             return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         });
     }
@@ -572,12 +565,12 @@ export const DLOSeriesEdit = ({
                                                                 >
                                                                     <AddCircle />
                                                                 </IconButton>
-                                                                <a
+                                                                <RouterLink
                                                                     style={{ paddingTop: '3px' }}
-                                                                    href={getDlorViewPageUrl(f?.object_public_uuid)}
+                                                                    to={getDlorViewPageUrl(f?.object_public_uuid)}
                                                                 >
                                                                     <VisibilityIcon sx={{ color: 'black' }} />
-                                                                </a>
+                                                                </RouterLink>
                                                             </div>
                                                         </StyledDraggableListItem>
                                                     );

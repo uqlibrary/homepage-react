@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router';
 
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -39,6 +40,7 @@ export const DLOTeamList = ({
     dlorTeamDeleteError,
 }) => {
     const { account } = useAccountContext();
+    const navigate = useNavigate();
     const DELETION_STEP_NULL = null;
     const DELETION_STEP_ONE_CONFIRM = 1;
     const DELETION_STEP_TWO_HAPPENING = 2;
@@ -76,7 +78,7 @@ export const DLOTeamList = ({
     }, [dlorTeamDeleting, dlorTeamDeleted, dlorTeamDeleteError, deleteStep]);
 
     const navigateToAddPage = () => {
-        window.location.href = dlorAdminLink('/team/add', account);
+        navigate(dlorAdminLink('/team/add', account));
     };
 
     const deleteADlorTeam = teamId => {
@@ -102,7 +104,7 @@ export const DLOTeamList = ({
     };
 
     const navigateToTeamEditPage = teamId => {
-        window.location.href = dlorAdminLink(`/team/edit/${teamId}`, account);
+        navigate(dlorAdminLink(`/team/edit/${teamId}`, account));
     };
     const deletionConfirmationBoxLocale = {
         confirmItMessage: {
@@ -226,8 +228,7 @@ export const DLOTeamList = ({
                                                 );
                                             }) || /* istanbul ignore next */ [];
 
-
-                                        console.log('visibleTeams', visibleTeams, account);    
+                                        console.log('visibleTeams', visibleTeams, account);
                                         if (visibleTeams.length === 0) {
                                             return (
                                                 <Typography variant="body1" data-testid="dlor-teamlist-no-access">
@@ -267,7 +268,9 @@ export const DLOTeamList = ({
                                                                 !(
                                                                     isDlorAdminUser(account) ||
                                                                     (Array.isArray(team.team_members) &&
-                                                                        team.team_members.some(m => m.team_admin_username === account.id))
+                                                                        team.team_members.some(
+                                                                            m => m.team_admin_username === account.id,
+                                                                        ))
                                                                 )
                                                             }
                                                         >

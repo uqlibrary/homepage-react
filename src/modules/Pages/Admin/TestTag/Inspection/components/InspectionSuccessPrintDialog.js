@@ -46,17 +46,17 @@ export const InspectionSuccessPrintDialog = ({
 }) => {
     const inspectionLocale = inspectLocale.pages.inspect;
     const [selectedPrinter, setSelectedPrinter] = useState(printerPreference);
-    const printerError = useMemo(() => hasPrinterError(selectedPrinter, availablePrinters), [
-        selectedPrinter,
-        availablePrinters,
-    ]);
+    const printerError = useMemo(
+        () => hasPrinterError(selectedPrinter, availablePrinters),
+        [selectedPrinter, availablePrinters],
+    );
     const templateError = useMemo(() => hasTemplateError(selectedPrinter), [selectedPrinter]);
 
     const { getAllLabelTemplatesForPrinter } = useLabelPrinterTemplate(templateStore);
-    const availableTemplates = useMemo(() => getAllLabelTemplatesForPrinter(selectedPrinter?.name), [
-        getAllLabelTemplatesForPrinter,
-        selectedPrinter,
-    ]);
+    const availableTemplates = useMemo(
+        () => getAllLabelTemplatesForPrinter(selectedPrinter?.name),
+        [getAllLabelTemplatesForPrinter, selectedPrinter],
+    );
 
     const [expanded, setExpanded] = useState(false);
 

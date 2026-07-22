@@ -3,8 +3,8 @@ import AlertsEdit from './AlertsEdit';
 import * as alertActions from 'data/actions/alertsActions';
 import { rtlRender, userEvent, fireEvent } from 'test-utils';
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: () => jest.fn(),
     useParams: () => ({ alertid: '1db618c0-d897-11eb-a27e-df4e46db7245' }),
 }));

@@ -344,7 +344,6 @@ describe('Manage Users', () => {
             },
             user_current_flag: 1,
             user_team: 'SPACES',
-            user_team_display: 'Work Station Support',
             user_id: 1,
             user_licence_number: 'NOT LICENSED',
             user_name: 'TEST USER',

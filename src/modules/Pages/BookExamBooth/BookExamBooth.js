@@ -43,9 +43,7 @@ const BookExamBooth = ({
     const defaultExamLength = 30; // minutes
     const setupAllowance = 30; // the number of minutes they can arrive and setup before their exam time starts
 
-    const yesterday = moment()
-        .subtract(1, 'days')
-        .format(dateFormat);
+    const yesterday = moment().subtract(1, 'days').format(dateFormat);
 
     // store the exam location
     const [chosenLocationCode, setLocation] = React.useState('unset');

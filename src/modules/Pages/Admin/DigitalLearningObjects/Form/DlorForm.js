@@ -30,7 +30,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { ClassicEditor, Essentials, Heading, Indent, Bold, Italic, Link, List } from 'ckeditor5';
+import 'ckeditor5/ckeditor5.css';
 
 import { scrollToTopOfPage } from 'helpers/general';
 
@@ -73,6 +74,7 @@ import Paper from '@mui/material/Paper';
 import parse from 'html-react-parser';
 
 import FuzzySearch from 'modules/Pages/DigitalLearningObjects/SharedComponents/FuzzySearch';
+import { Link as RouterLink } from 'react-router';
 
 const fuseOptions = {
     includeScore: true,
@@ -280,7 +282,6 @@ export const DlorForm = ({
         if (dlorItem && dlorItem?.object_public_uuid) {
             actions.loadDlorAdminNotes(dlorItem.object_public_uuid);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorItem, actions]);
 
     useEffect(() => {
@@ -325,18 +326,8 @@ export const DlorForm = ({
     };
 
     const editorConfig = {
-        removePlugins: [
-            'Image',
-            'ImageCaption',
-            'ImageStyle',
-            'ImageToolbar',
-            'ImageUpload',
-            'EasyImage',
-            'CKFinder',
-            'BlockQuote',
-            'Table',
-            'MediaEmbed',
-        ],
+        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials],
+        toolbar: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
         heading: {
             options: [
                 { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -355,6 +346,7 @@ export const DlorForm = ({
                 },
             },
         },
+        licenseKey: 'GPL',
     };
 
     const isValidUsername = testUserName => {
@@ -727,9 +719,9 @@ export const DlorForm = ({
                             A change here will affect all Objects for this team.
                             <br />
                             You can also{' '}
-                            <a target="_blank" href={dlorAdminLink('/team/manage', account)}>
+                            <RouterLink target="_blank" to={dlorAdminLink('/team/manage', account)}>
                                 Manage Teams
-                            </a>
+                            </RouterLink>
                         </Box>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_manager_edit">Name of Team manager *</InputLabel>
@@ -752,11 +744,13 @@ export const DlorForm = ({
                                 type="email"
                                 error={!isValidEmail(formValues?.team_email_edit)}
                             />
-                            {/* istanbul ignore next */ !isValidEmail(formValues?.team_email_edit) && (
-                                <StyledErrorMessageBox data-testid="error-message-team-email-edit">
-                                    This email address is not valid.
-                                </StyledErrorMessageBox>
-                            )}
+                            {
+                                /* istanbul ignore next */ !isValidEmail(formValues?.team_email_edit) && (
+                                    <StyledErrorMessageBox data-testid="error-message-team-email-edit">
+                                        This email address is not valid.
+                                    </StyledErrorMessageBox>
+                                )
+                            }
                         </FormControl>
                     </Grid>
                 )}
@@ -1453,10 +1447,9 @@ export const DlorForm = ({
         setIsNotificationLightboxOpen(false);
     };
 
-    const handleNotifyChange = e => {
-        e.preventDefault();
-        setIsNotifying(!!e.target.checked);
-        !!e.target.checked && openNotifyLightbox();
+    const handleNotifyChange = ({ target: { checked } }) => {
+        setIsNotifying(checked);
+        checked && openNotifyLightbox();
     };
 
     const stepPanelContentFilters = (
@@ -1669,7 +1662,9 @@ export const DlorForm = ({
                     <Typography id="notify-lightbox-description" sx={{ mt: '2px' }}>
                         We have updated{' '}
                         <b>
-                            <a href={getDlorViewPageUrl(dlorItem?.object_public_uuid)}>{dlorItem?.object_title}</a>
+                            <RouterLink to={getDlorViewPageUrl(dlorItem?.object_public_uuid)}>
+                                {dlorItem?.object_title}
+                            </RouterLink>
                         </b>
                     </Typography>
                     <Typography sx={{ mt: '2px' }}>Here is what is new:</Typography>
@@ -1783,7 +1778,6 @@ export const DlorForm = ({
             setShowFileTypeCreationForm(true);
             formDefaults.object_link_file_type = 'new';
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formDefaults]);
 
     useEffect(() => {

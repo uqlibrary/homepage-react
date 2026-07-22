@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
@@ -32,7 +32,7 @@ export const DLOTeamEdit = ({
     useEffect(() => {
         /* istanbul ignore else */
         if (!!dlorTeamId) {
-            actions.loadADLORTeam(dlorTeamId); 
+            actions.loadADLORTeam(dlorTeamId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorTeamId]);

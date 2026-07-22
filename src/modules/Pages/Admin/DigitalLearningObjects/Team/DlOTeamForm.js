@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { useCookies } from 'react-cookie';
 
 import Box from '@mui/material/Box';
@@ -49,10 +49,11 @@ export const DLOTeamForm = ({
     mode,
 }) => {
     const { account } = useAccountContext();
+    const navigate = useNavigate();
     const { dlorTeamId } = useParams();
     const [cookies, setCookie] = useCookies();
 
-    console.log("Account", account)
+    console.log('Account', account);
 
     const [formValues, setFormValues] = useState({
         team_name: '',
@@ -97,12 +98,12 @@ export const DLOTeamForm = ({
 
     const navigateToTeamManagementHomePage = () => {
         closeConfirmationBox();
-        window.location.href = dlorAdminLink('/team/manage', account);
+        navigate(dlorAdminLink('/team/manage', account));
         /* istanbul ignore next */
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
-        window.location.href = dlorAdminLink('/team/manage', account);
+        navigate(dlorAdminLink('/team/manage', account));
     };
 
     const clearForm = () => {
@@ -205,9 +206,10 @@ export const DLOTeamForm = ({
         !newMember.team_admin_username.trim() ||
         !isValidEmail(newMember.team_admin_email) ||
         !!addMemberError ||
-        !!dlorTeamSaving || !!dlorTeamLoading;
+        !!dlorTeamSaving ||
+        !!dlorTeamLoading;
 
-    console.log("Form Values")
+    console.log('Form Values');
     return (
         <Grid container spacing={2}>
             {(() => {
@@ -329,10 +331,14 @@ export const DLOTeamForm = ({
                                     <Grid item xs={12}>
                                         <Accordion
                                             sx={{ marginTop: 2 }}
-                                            defaultExpanded={!!formDefaults?.team_members && formDefaults.team_members.length > 0}
+                                            defaultExpanded={
+                                                !!formDefaults?.team_members && formDefaults.team_members.length > 0
+                                            }
                                         >
                                             <AccordionSummary expandIcon={<ExpandMore />}>
-                                                <Typography variant="p" data-testid='team-members-title'>Team Admins</Typography>
+                                                <Typography variant="p" data-testid="team-members-title">
+                                                    Team Admins
+                                                </Typography>
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <TableContainer component={Paper}>
@@ -360,38 +366,73 @@ export const DLOTeamForm = ({
                                                             </TableRow>
                                                         </TableHead>
                                                         <TableBody>
-                                                            {!!formDefaults?.team_members && formDefaults.team_members.length > 0 ? (
-                                                                formDefaults.team_members.map((member, idx) => (
+                                                            {!!formDefaults?.team_members &&
+                                                            formDefaults.team_members.length > 0 ? (
+                                                                formDefaults.team_members.map((member, idx) =>
                                                                     editingMemberIdx === idx ? (
                                                                         <TableRow key={idx}>
                                                                             <TableCell>
                                                                                 <Input
-                                                                                    value={editingMember.team_admin_username}
-                                                                                    onChange={e => setEditingMember({ ...editingMember, team_admin_username: e.target.value })}
+                                                                                    value={
+                                                                                        editingMember.team_admin_username
+                                                                                    }
+                                                                                    onChange={e =>
+                                                                                        setEditingMember({
+                                                                                            ...editingMember,
+                                                                                            team_admin_username:
+                                                                                                e.target.value,
+                                                                                        })
+                                                                                    }
                                                                                     fullWidth
                                                                                 />
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <Input
-                                                                                    value={editingMember.team_admin_email}
-                                                                                    onChange={e => setEditingMember({ ...editingMember, team_admin_email: e.target.value })}
+                                                                                    value={
+                                                                                        editingMember.team_admin_email
+                                                                                    }
+                                                                                    onChange={e =>
+                                                                                        setEditingMember({
+                                                                                            ...editingMember,
+                                                                                            team_admin_email:
+                                                                                                e.target.value,
+                                                                                        })
+                                                                                    }
                                                                                     fullWidth
                                                                                 />
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <Checkbox
-                                                                                    checked={editingMember.team_admin_receive_object_notifications}
-                                                                                    onChange={e => setEditingMember({ ...editingMember, team_admin_receive_object_notifications: e.target.checked })}
+                                                                                    checked={
+                                                                                        editingMember.team_admin_receive_object_notifications
+                                                                                    }
+                                                                                    onChange={e =>
+                                                                                        setEditingMember({
+                                                                                            ...editingMember,
+                                                                                            team_admin_receive_object_notifications:
+                                                                                                e.target.checked,
+                                                                                        })
+                                                                                    }
                                                                                 />
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <Checkbox
-                                                                                    checked={editingMember.team_admin_receive_overdue_notifications}
-                                                                                    onChange={e => setEditingMember({ ...editingMember, team_admin_receive_overdue_notifications: e.target.checked })}
+                                                                                    checked={
+                                                                                        editingMember.team_admin_receive_overdue_notifications
+                                                                                    }
+                                                                                    onChange={e =>
+                                                                                        setEditingMember({
+                                                                                            ...editingMember,
+                                                                                            team_admin_receive_overdue_notifications:
+                                                                                                e.target.checked,
+                                                                                        })
+                                                                                    }
                                                                                 />
                                                                             </TableCell>
                                                                             <TableCell>
-                                                                                {moment(editingMember.created_at).format('DD/MM/YYYY, h:mm A')}
+                                                                                {moment(
+                                                                                    editingMember.created_at,
+                                                                                ).format('DD/MM/YYYY, h:mm A')}
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <Button
@@ -414,32 +455,49 @@ export const DLOTeamForm = ({
                                                                         </TableRow>
                                                                     ) : (
                                                                         <TableRow key={idx}>
-                                                                            <TableCell data-testid={`team-member-username-${idx}`}>
+                                                                            <TableCell
+                                                                                data-testid={`team-member-username-${idx}`}
+                                                                            >
                                                                                 {member.team_admin_username}
                                                                             </TableCell>
-                                                                            <TableCell data-testid={`team-member-email-${idx}`}>
+                                                                            <TableCell
+                                                                                data-testid={`team-member-email-${idx}`}
+                                                                            >
                                                                                 {member.team_admin_email}
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <Checkbox
-                                                                                    checked={member.team_admin_receive_object_notifications}
+                                                                                    checked={
+                                                                                        member.team_admin_receive_object_notifications
+                                                                                    }
                                                                                     disabled
                                                                                 />
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <Checkbox
-                                                                                    checked={member.team_admin_receive_overdue_notifications}
+                                                                                    checked={
+                                                                                        member.team_admin_receive_overdue_notifications
+                                                                                    }
                                                                                     disabled
                                                                                 />
                                                                             </TableCell>
-                                                                            <TableCell data-testid={`team-member-date-${idx}`}>
-                                                                                {moment(member.created_at).format('DD/MM/YYYY, h:mm A')}
+                                                                            <TableCell
+                                                                                data-testid={`team-member-date-${idx}`}
+                                                                            >
+                                                                                {moment(member.created_at).format(
+                                                                                    'DD/MM/YYYY, h:mm A',
+                                                                                )}
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <IconButton
                                                                                     aria-label="Edit team admin"
                                                                                     data-testid={`team-member-edit-${idx}`}
-                                                                                    onClick={() => handleEditTeamMember(member, idx)}
+                                                                                    onClick={() =>
+                                                                                        handleEditTeamMember(
+                                                                                            member,
+                                                                                            idx,
+                                                                                        )
+                                                                                    }
                                                                                     size="small"
                                                                                 >
                                                                                     <EditIcon />
@@ -457,8 +515,8 @@ export const DLOTeamForm = ({
                                                                                 </IconButton>
                                                                             </TableCell>
                                                                         </TableRow>
-                                                                    )
-                                                                ))
+                                                                    ),
+                                                                )
                                                             ) : (
                                                                 <TableRow>
                                                                     <TableCell colSpan={5} align="center">
@@ -480,7 +538,9 @@ export const DLOTeamForm = ({
                                                                     <Input
                                                                         placeholder="Username"
                                                                         value={newMember.team_admin_username}
-                                                                        onChange={handleNewMemberChange('team_admin_username')}
+                                                                        onChange={handleNewMemberChange(
+                                                                            'team_admin_username',
+                                                                        )}
                                                                         fullWidth
                                                                         data-testid="add-team-member-username"
                                                                     />
@@ -489,7 +549,9 @@ export const DLOTeamForm = ({
                                                                     <Input
                                                                         placeholder="Email"
                                                                         value={newMember.team_admin_email}
-                                                                        onChange={handleNewMemberChange('team_admin_email')}
+                                                                        onChange={handleNewMemberChange(
+                                                                            'team_admin_email',
+                                                                        )}
                                                                         fullWidth
                                                                         data-testid="add-team-member-email"
                                                                     />
@@ -508,7 +570,11 @@ export const DLOTeamForm = ({
                                                                 </Grid>
                                                                 {addMemberError && (
                                                                     <Grid item xs={12}>
-                                                                        <Typography color="error" variant="body2" data-testid="add-team-member-error">
+                                                                        <Typography
+                                                                            color="error"
+                                                                            variant="body2"
+                                                                            data-testid="add-team-member-error"
+                                                                        >
                                                                             {addMemberError}
                                                                         </Typography>
                                                                     </Grid>
@@ -520,7 +586,6 @@ export const DLOTeamForm = ({
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>
-
                                 </Grid>
                             </Grid>
 
@@ -549,13 +614,16 @@ export const DLOTeamForm = ({
                                     confirmationBoxId="dlor-team-member-delete-confirm"
                                     isOpen={deleteConfirmOpen}
                                     locale={{
-                                        confirmationTitle: "Delete Team Admin",
+                                        confirmationTitle: 'Delete Team Admin',
                                         confirmationMessage: `Are you sure you want to delete ${memberToDelete?.team_admin_username}?`,
-                                        cancelButtonLabel: "Cancel",
-                                        confirmButtonLabel: "Delete",
+                                        cancelButtonLabel: 'Cancel',
+                                        confirmButtonLabel: 'Delete',
                                     }}
                                     onAction={() => {
-                                        actions.deleteDlorTeamMember(memberToDelete.team_admin_id, memberToDelete.team_id);
+                                        actions.deleteDlorTeamMember(
+                                            memberToDelete.team_admin_id,
+                                            memberToDelete.team_id,
+                                        );
                                         setDeleteConfirmOpen(false);
                                         setMemberToDelete(null);
                                     }}

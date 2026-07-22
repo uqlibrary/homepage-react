@@ -18,6 +18,7 @@ const deployment = {
             'https://assets.library.uq.edu.au/reusable-webcomponents-development/feature-leadegroot-B/uq-lib-reusable.min.js', // dev
         // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
         removeConsoleLog: false,
+        hashRouter: true,
     },
     staging: {
         url: () => 'https://homepage-staging.library.uq.edu.au/',

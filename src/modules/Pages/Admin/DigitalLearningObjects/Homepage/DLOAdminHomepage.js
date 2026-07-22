@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
-import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
@@ -25,7 +24,7 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SearchIcon from '@mui/icons-material/Search';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router';
 
 import { useConfirmationState } from 'hooks';
 
@@ -128,11 +127,8 @@ export const DLOAdminHomepage = ({
     const keyWordSearchRef = useRef('');
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
-    const [
-        isDeleteFailureConfirmationOpen,
-        showDeleteFailureConfirmation,
-        hideDeleteFailureConfirmation,
-    ] = useConfirmationState();
+    const [isDeleteFailureConfirmationOpen, showDeleteFailureConfirmation, hideDeleteFailureConfirmation] =
+        useConfirmationState();
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -462,8 +458,8 @@ export const DLOAdminHomepage = ({
                         </MenuItem>
                         <Divider />
                         <MenuItem
-                            component="a"
-                            href={`${getPathRoot()}/digital-learning-hub`}
+                            component={Link}
+                            to={'/digital-learning-hub'}
                             rel="noopener noreferrer"
                             onClick={handleMenuClose}
                             data-testid="dlor-admin-public-homepage-link"

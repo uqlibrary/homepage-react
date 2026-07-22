@@ -179,9 +179,10 @@ const Inspection = ({
     const { user } = useAccountUser();
     const deptPrinterDefault = getDefaultDeptPrinter(user?.user_department);
     const deptPrintingEnabled = getDeptLabelPrintingEnabled(user?.user_department);
-    const { printerTemplateList } = useLabelPrinterTemplateStore(actions);
+    const { printerTemplateList } = useLabelPrinterTemplateStore(actions, deptPrintingEnabled);
 
     const { printer, availablePrinters } = useLabelPrinter({
+        printingEnabled: deptPrintingEnabled,
         printerCode: deptPrinterDefault,
         shouldOverridePrinterDevEnv: true,
     });
@@ -192,11 +193,8 @@ const Inspection = ({
 
     const [selectedAsset, setSelectedAsset] = useState({});
     const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
-    const [
-        isPrinterSaveSuccessDialogOpen,
-        showPrinterSaveSuccessDialog,
-        hidePrinterSaveSuccessDialog,
-    ] = useConfirmationState();
+    const [isPrinterSaveSuccessDialogOpen, showPrinterSaveSuccessDialog, hidePrinterSaveSuccessDialog] =
+        useConfirmationState();
     const [successDialogLocale, setSuccessDialogLocale] = useState({});
 
     const errorMessageFormatter = useMemo(() => locale.config.alerts.error, []);
@@ -229,7 +227,8 @@ const Inspection = ({
                 inspection_device_id:
                     formValues?.inspection_device_id !== undefined
                         ? formValues?.inspection_device_id
-                        : inspectionConfig?.inspection_devices?.[0]?.device_id ?? /* istanbul ignore next */ undefined,
+                        : (inspectionConfig?.inspection_devices?.[0]?.device_id ??
+                          /* istanbul ignore next */ undefined),
             };
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -323,7 +322,7 @@ const Inspection = ({
             return;
         }
         try {
-            const selectedPrinter = availablePrinters.find(printer => printer.name === printerPreference.name);
+            const selectedPrinter = availablePrinters.find(printer => printer?.name === printerPreference.name);
             /* istanbul ignore next */
             if (!selectedPrinter) {
                 console.error('Selected printer not found in available printers', selectedPrinter, availablePrinters);

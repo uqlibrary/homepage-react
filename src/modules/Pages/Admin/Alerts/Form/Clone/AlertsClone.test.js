@@ -5,8 +5,8 @@ import * as routes from 'repositories/routes';
 
 const mockUseNavigate = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: () => mockUseNavigate,
     useParams: jest.fn(() => ({ alertid: '1db618c0-d897-11eb-a27e-df4e46db7245' })),
 }));
@@ -38,8 +38,7 @@ describe('Form Tests', () => {
             start: '2021-06-29 15:00:34',
             end: '2031-07-02 18:30:34',
             title: 'Example alert:',
-            body:
-                'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
+            body: 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
             priority_type: 'urgent',
             systems: ['homepage'],
             created_by: 'uqtest1',

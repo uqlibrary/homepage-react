@@ -9,15 +9,14 @@ import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import { useAccountContext } from 'context';
 
-import {
-    isDlorAdminUser,
-} from 'helpers/access';
+import { isDlorAdminUser } from 'helpers/access';
 
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
+import { Link } from 'react-router';
 
 const StyledTitleBox = styled(Box)(() => ({
-    '& p:first-child': {
+    '& p:first-of-type': {
         display: 'flex',
         alignItems: 'center',
         padding: 0,
@@ -31,16 +30,18 @@ const StyledTitleBox = styled(Box)(() => ({
 
 export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
     const { account } = useAccountContext();
-    console.log("ACCOUNT IN BREADCRUMBS", account)
     return (
         <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
             <Grid item xs={11}>
                 <StyledTitleBox>
                     <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
                         {/* istanbul ignore next */}
-                        <a data-testid="dlor-breadcrumb-admin-homelink" href={ dlorAdminLink(undefined, account) }>
-                            {isDlorAdminUser(account) ? /* istanbul ignore next */ `Digital Learning Hub admin` : /* istanbul ignore next */ `Digital Learning Hub`}
-                        </a>
+                        <Link to={dlorAdminLink(undefined, account)} data-testid="dlor-breadcrumb-admin-homelink">
+                            {isDlorAdminUser(account)
+                                ? /* istanbul ignore next */ 'Digital Learning Hub admin'
+                                : /* istanbul ignore next */ 'Digital Learning Hub'}
+                        </Link>
+
                         {breadCrumbList.map((b, index) => {
                             const entryId = !!b.id
                                 ? `dlor-breadcrumb-${b.id}`
@@ -61,27 +62,25 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
                                 return `${entryId}${shortType}-${index}`;
                             };
                             return (
-                                <>
+                                <React.Fragment key={`breadcrumb-${index}`}>
                                     <ArrowForwardIcon sx={{ height: '15px' }} />
-                                    <span key={`breadcrumb-${index}`} key={`${entryId}-span`}>
+                                    <span key={`${entryId}-span`}>
                                         {!!b.link ? (
-                                            <a data-testid={getDataTestid('link')} href={b.link}>
+                                            <Link data-testid={getDataTestid('link')} to={b.link}>
                                                 {b.title}
-                                            </a>
+                                            </Link>
                                         ) : (
                                             <span data-testid={getDataTestid('label')}>{b.title}</span>
                                         )}
                                     </span>
-                                </>
+                                </React.Fragment>
                             );
                         })}
                     </Typography>
                 </StyledTitleBox>
             </Grid>
             <Grid item xs={1}>
-                { isDlorAdminUser(account) && (
-                    <VisitHomepage />
-                )}
+                {isDlorAdminUser(account) && <VisitHomepage />}
             </Grid>
         </Grid>
     );

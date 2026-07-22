@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 import parse from 'html-react-parser';
 import { useCookies } from 'react-cookie';
 import { pathConfig } from 'config/pathConfig';
@@ -45,7 +45,6 @@ import {
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
     getDlorViewPageUrl,
-    getPathRoot,
     toTitleCase,
     convertSnakeCaseToKebabCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
@@ -489,7 +488,7 @@ export const DLOView = ({
         return (
             <StyledTitleBlockDiv>
                 <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                    <a href={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</a>
+                    <Link to={'/digital-learning-hub'}>Find a digital learning object</Link>
                 </Typography>
                 <ArrowForwardIcon />
                 <Typography>{detailTitle}</Typography>
@@ -1278,12 +1277,12 @@ export const DLOView = ({
                                                                     <span>{s.series_object_title}</span>
                                                                 </span>
                                                             ) : (
-                                                                <a
-                                                                    href={getDlorViewPageUrl(s?.series_object_uuid)}
+                                                                <Link
+                                                                    to={getDlorViewPageUrl(s?.series_object_uuid)}
                                                                     rel="noopener noreferrer"
                                                                 >
                                                                     {s.series_object_title}
-                                                                </a>
+                                                                </Link>
                                                             )}
                                                         </li>
                                                     );
@@ -1344,8 +1343,8 @@ export const DLOView = ({
                                             data-testid="detailpage-authenticated-link"
                                         >
                                             <strong>Secure URL: </strong>
-                                            <a
-                                                href={pathConfig.dlorViewSecure(dlorItem.object_public_uuid)}
+                                            <Link
+                                                to={pathConfig.dlorViewSecure(dlorItem.object_public_uuid)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 data-testid="detailpage-authenticated-link-url"
@@ -1353,7 +1352,7 @@ export const DLOView = ({
                                                 {`${window.location.origin}${pathConfig.dlorViewSecure(
                                                     dlorItem.object_public_uuid,
                                                 )}`}
-                                            </a>
+                                            </Link>
                                         </Typography>
                                     )}
                                 </StyledLayoutBox>
@@ -1404,13 +1403,13 @@ export const DLOView = ({
                                                                         </StyledFilterLink>
                                                                         {!!value?.help &&
                                                                             value?.help.startsWith('http') && (
-                                                                                <a
-                                                                                    href={value.help}
+                                                                                <Link
+                                                                                    to={value.help}
                                                                                     target="_blank"
                                                                                     title="View the help for this filter"
                                                                                 >
                                                                                     <HelpOutlineIcon size="small" />
-                                                                                </a>
+                                                                                </Link>
                                                                             )}
                                                                     </li>
                                                                 );
@@ -1429,10 +1428,10 @@ export const DLOView = ({
                                                         return (
                                                             <li key={index}>
                                                                 <StyledFilterLink
-                                                                    to={`/digital-learning-hub?keyword=${keyword
-                                                                        .charAt(0)
-                                                                        .toUpperCase() +
-                                                                        keyword.slice(1).replace(/\s/g, '+')}`}
+                                                                    to={`/digital-learning-hub?keyword=${
+                                                                        keyword.charAt(0).toUpperCase() +
+                                                                        keyword.slice(1).replace(/\s/g, '+')
+                                                                    }`}
                                                                 >
                                                                     {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
                                                                 </StyledFilterLink>

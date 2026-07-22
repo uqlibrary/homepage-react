@@ -751,14 +751,16 @@ export const DLOBulkSchedule = ({
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {/* istanbul ignore next */
-                                        scheduleItems.length === 0 && (
-                                            <TableRow>
-                                                <TableCell colSpan={3} align="center" sx={{ py: 1 }}>
-                                                    No items selected
-                                                </TableCell>
-                                            </TableRow>
-                                        )}
+                                        {
+                                            /* istanbul ignore next */
+                                            scheduleItems.length === 0 && (
+                                                <TableRow>
+                                                    <TableCell colSpan={3} align="center" sx={{ py: 1 }}>
+                                                        No items selected
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        }
                                         {scheduleItems.map((si, idx) => (
                                             <TableRow key={si.object_public_uuid}>
                                                 <TableCell sx={{ wordBreak: 'break-word' }}>

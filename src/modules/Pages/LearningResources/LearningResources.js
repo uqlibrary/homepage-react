@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import locale from './shared/learningResources.locale';
 import global from 'locale/global';
@@ -92,7 +92,7 @@ export const getQueryParams = qs => {
     const params = {};
 
     let tokens;
-    // eslint-disable-next-line no-cond-assign
+
     while ((tokens = re.exec(qs1))) {
         params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
     }
