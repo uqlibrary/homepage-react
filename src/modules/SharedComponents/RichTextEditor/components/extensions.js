@@ -4,7 +4,7 @@ import Text from '@tiptap/extension-text';
 import Heading from '@tiptap/extension-heading';
 import Bold from '@tiptap/extension-bold';
 import Italic from '@tiptap/extension-italic';
-import { ListItem, OrderedList, BulletList }  from '@tiptap/extension-list';
+import { ListItem, OrderedList, BulletList } from '@tiptap/extension-list';
 import History from '@tiptap/extension-history';
 import Link from '@tiptap/extension-link';
 import { LinkBubbleMenuHandler } from 'mui-tiptap';
