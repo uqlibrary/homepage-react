@@ -1,8 +1,8 @@
 import React from 'react';
-import Immutable from 'immutable';
+import { Map } from 'immutable';
 
 const FormErrorsContext = React.createContext({
-    formValues: Immutable.Map({}),
+    formValues: Map({}),
 });
 
 export default FormErrorsContext;
