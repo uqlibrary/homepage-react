@@ -227,7 +227,7 @@ export const JourneyResultsView = ({
                         </Stack>
                     )}
 
-                    {spaces.length > 0 && (
+                    {spaces.length > 0 && totalPages > 1 && (
                         <SpacesPagination
                             page={page}
                             count={totalPages}

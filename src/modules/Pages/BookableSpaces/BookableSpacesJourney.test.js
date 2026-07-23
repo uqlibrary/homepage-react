@@ -544,15 +544,15 @@ describe('BookableSpacesJourney browser back navigation', () => {
         const firstPageButton = screen.getByRole('button', { name: /page 1/i });
         const secondPageButton = screen.getByRole('button', { name: /page 2/i });
 
-        expect(firstPageButton).toHaveClass('Mui-selected');
-        expect(secondPageButton).not.toHaveClass('Mui-selected');
+        expect(firstPageButton).toHaveAttribute('aria-current', 'page');
+        expect(secondPageButton).not.toHaveAttribute('aria-current');
 
         fireEvent.click(secondPageButton);
 
         expect(screen.getByText(/11-20 of 25 spaces/i)).toBeInTheDocument();
         expect(screen.getByTestId('spaces-result-list-item-110')).toBeInTheDocument();
         expect(screen.queryByTestId('spaces-result-list-item-100')).not.toBeInTheDocument();
-        expect(secondPageButton).toHaveClass('Mui-selected');
+        expect(secondPageButton).toHaveAttribute('aria-current', 'page');
     });
 
     it('builds browser-router map URL with encoded mapFilters and autoSelectFirstSpace', () => {
