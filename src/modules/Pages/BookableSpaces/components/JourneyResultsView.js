@@ -141,7 +141,7 @@ export const JourneyResultsView = ({
                                         >
                                             <Box sx={{ position: 'relative' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                    <span className="spaceHolderForFavouriteStar" />
+                                                    {isLoggedIn && <span className="spaceHolderForFavouriteStar" />}
 
                                                     <Typography
                                                         component={'h3'}
@@ -207,15 +207,17 @@ export const JourneyResultsView = ({
                                                 )}
                                             </Box>
                                         </Button>
-                                        <SpaceFavouriteIcon
-                                            bookableSpace={space}
-                                            isFavourite={spacesFavouritesList?.some(
-                                                fav => fav.space_id === space?.space_id,
-                                            )}
-                                            onFavouriteToggle={() => onFavouriteToggle?.(space)}
-                                            isFavouriteActionInProgress={isFavouriteActionInProgress}
-                                            iconPosition="topLeft"
-                                        />
+                                        {isLoggedIn && (
+                                            <SpaceFavouriteIcon
+                                                bookableSpace={space}
+                                                isFavourite={spacesFavouritesList?.some(
+                                                    fav => fav.space_id === space?.space_id,
+                                                )}
+                                                onFavouriteToggle={() => onFavouriteToggle?.(space)}
+                                                isFavouriteActionInProgress={isFavouriteActionInProgress}
+                                                iconPosition="topLeft"
+                                            />
+                                        )}
                                         {!!space?.space_external_book_url && (
                                             <Box className="bookingLink">
                                                 <BookingLink bookableSpace={space} hideNoBookingRequired />
