@@ -1,8 +1,8 @@
 import React from 'react';
-import Immutable from 'immutable';
+import { Map } from 'immutable';
 
 const FormValuesContext = React.createContext({
-    formValues: Immutable.Map({}),
+    formValues: Map({}),
     onDeleteAttachedFile: () => {},
 });
 
