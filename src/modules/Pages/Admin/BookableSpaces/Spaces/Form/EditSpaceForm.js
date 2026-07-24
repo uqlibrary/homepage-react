@@ -616,7 +616,6 @@ export const EditSpaceForm = ({
     };
 
     const handleBack = () => {
-        // setEditorReady(false);
         document.activeElement.blur(); // defocus the button
         validateForm(formValues);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
