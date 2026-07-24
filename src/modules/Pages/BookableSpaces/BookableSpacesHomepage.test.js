@@ -341,7 +341,7 @@ describe('BookableSpacesHomepage browser back navigation', () => {
             capacityFilterValue: [4, 8],
         });
 
-        expect(encodedState).toContain('"selectedFacilityTypes":[11,12]');
+        expect(encodedState.startsWith('b64.')).toBe(true);
 
         const params = new URLSearchParams(`mapFilters=${encodedState}`);
         const parsedState = deserialiseJourneyMapFilterState(params);

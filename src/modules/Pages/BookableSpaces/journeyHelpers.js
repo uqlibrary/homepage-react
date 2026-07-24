@@ -2,6 +2,70 @@ export const JOURNEY_VIEWS = ['landing', 'intent', 'results', 'details'];
 export const JOURNEY_QUERY_PARAM_STEP = 'journeyStep';
 export const JOURNEY_QUERY_PARAM_INTENT = 'journeyIntent';
 export const JOURNEY_QUERY_PARAM_SPACE = 'journeySpace';
+const MAP_FILTERS_BASE64_PREFIX = 'b64.';
+
+const encodeBase64 = value => {
+    if (typeof btoa === 'function') {
+        return btoa(unescape(encodeURIComponent(value)));
+    }
+
+    if (typeof Buffer !== 'undefined') {
+        return Buffer.from(value, 'utf8').toString('base64');
+    }
+
+    return null;
+};
+
+const decodeBase64 = value => {
+    if (typeof atob === 'function') {
+        return decodeURIComponent(escape(atob(value)));
+    }
+
+    if (typeof Buffer !== 'undefined') {
+        return Buffer.from(value, 'base64').toString('utf8');
+    }
+
+    return null;
+};
+
+const toBase64Url = value => value.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+
+const fromBase64Url = value => {
+    const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
+    const paddingLength = normalized.length % 4;
+    if (paddingLength === 0) {
+        return normalized;
+    }
+
+    return normalized + '='.repeat(4 - paddingLength);
+};
+
+const parseMapFiltersPayload = candidate => {
+    try {
+        return JSON.parse(candidate);
+    } catch (error) {
+        // Continue trying alternate representations.
+    }
+
+    const maybeBase64Payload = candidate.startsWith(MAP_FILTERS_BASE64_PREFIX)
+        ? candidate.slice(MAP_FILTERS_BASE64_PREFIX.length)
+        : candidate;
+
+    if (!/^[A-Za-z0-9\-_]+$/.test(maybeBase64Payload)) {
+        return null;
+    }
+
+    const decodedBase64 = decodeBase64(fromBase64Url(maybeBase64Payload));
+    if (!decodedBase64) {
+        return null;
+    }
+
+    try {
+        return JSON.parse(decodedBase64);
+    } catch (error) {
+        return null;
+    }
+};
 
 export const getJourneySearchParams = url => {
     // Preserve original behaviour in Jest tests (which expect params in
@@ -93,7 +157,14 @@ export const serialiseJourneyMapFilterState = ({
         ...(showFavouriteSpacesOnly ? { showFavouriteSpacesOnly: true } : {}),
     };
 
-    return JSON.stringify(serialised);
+    const jsonPayload = JSON.stringify(serialised);
+    const encodedPayload = encodeBase64(jsonPayload);
+
+    if (!encodedPayload) {
+        return jsonPayload;
+    }
+
+    return `${MAP_FILTERS_BASE64_PREFIX}${toBase64Url(encodedPayload)}`;
 };
 
 export const deserialiseJourneyMapFilterState = searchParams => {
@@ -125,11 +196,7 @@ export const deserialiseJourneyMapFilterState = searchParams => {
                 return acc;
             }
 
-            try {
-                return JSON.parse(candidate);
-            } catch (error) {
-                return null;
-            }
+            return parseMapFiltersPayload(candidate);
         }, null);
 
         if (!parsed) {
