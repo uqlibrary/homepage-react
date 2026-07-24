@@ -200,7 +200,6 @@ export const buildJourneyNavigationUrl = ({
         }
     });
 
-    url.searchParams.delete('advanced');
     url.searchParams.delete('journeyStep');
     url.searchParams.delete('journeyIntent');
     url.searchParams.delete('journeySpace');
@@ -310,19 +309,14 @@ export const BookableSpacesList = ({
         if (typeof window === 'undefined') return true;
         if (forceAdvanced) return false;
 
-        const pathname = window.location.pathname || location.pathname || '';
-        if (pathname === '/spaces/mapresults' || pathname.startsWith('/spaces/mapresults/')) {
-            return false;
-        }
-
-        // Journey is the default view. ?advanced=1 switches to the legacy map/list view.
-        // Support both standard query params (?advanced=1) and hash-router query params (#/spaces?advanced=1)
         const hashValue = location.hash || window.location.hash || '';
-        const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
-        const searchValue = location.search || window.location.search || '';
-        const params = new URLSearchParams(searchValue || hashSearch);
-        return params.get('advanced') !== '1';
-    }, [forceAdvanced, location.hash, location.pathname, location.search]);
+        const routePath = hashValue.startsWith('#/')
+            ? hashValue.slice(2).split('?')[0]
+            : location.pathname || window.location.pathname || '';
+        const normalizedRoutePath = routePath.replace(/^\/+/, '');
+
+        return !normalizedRoutePath.startsWith('spaces/mapresults');
+    }, [forceAdvanced, location.hash, location.pathname]);
 
     const initialJourneyModeRef = useRef(useJourneyExperience);
 

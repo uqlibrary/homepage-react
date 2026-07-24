@@ -40,7 +40,7 @@ test.describe('Spaces', () => {
             await disableMazeMapAssets(page);
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
 
             // all space panels load visible (using filters changes which appear)
@@ -412,7 +412,7 @@ test.describe('Spaces', () => {
         test('homepage is accessible', async ({ page }) => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
             await assertAccessibility(page, '[data-testid="library-spaces"]');
@@ -420,7 +420,7 @@ test.describe('Spaces', () => {
         test('homepage with content panel open is accessible', async ({ page }) => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
             const panelOpenerButton = `${ARCH_REFERENCE}-toggle-panel-button`;
@@ -441,7 +441,7 @@ test.describe('Spaces', () => {
     test('can expand-collapse sub-panels', async ({ page }) => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-        await page.goto('spaces?advanced=1');
+        await page.goto('spaces/mapresults');
         await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         await expect(page.getByTestId(`${ARCH_REFERENCE}`).locator('h3')).toBeVisible();
@@ -515,7 +515,7 @@ test.describe('Spaces', () => {
     test('expanding a different space collapses the previously expanded space', async ({ page }) => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await page.goto('spaces?advanced=1');
+        await page.goto('spaces/mapresults');
         await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
@@ -541,7 +541,7 @@ test.describe('Spaces', () => {
     test('can open a space detail page from a panel', async ({ page, context }) => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-        await page.goto('spaces?advanced=1');
+        await page.goto('spaces/mapresults');
         await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         await expect(page.getByTestId(`${ARCH_REFERENCE}`).locator('h3')).toBeVisible();
@@ -570,7 +570,7 @@ test.describe('Spaces', () => {
             // so instead, load the homepage, resize, then navigate to spaces
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
         });
 
@@ -872,7 +872,7 @@ test.describe('Spaces', () => {
 
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
             const currentlyOpenCheckbox = page.getByTestId('facility-type-listitem-9001');
@@ -1059,12 +1059,12 @@ test.describe('Spaces', () => {
             await disableMazeMapAssets(page);
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
         });
 
         test('sidebar filter type group open-collapse loads correctly', async ({ page }) => {
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
 
@@ -1116,7 +1116,7 @@ test.describe('Spaces', () => {
             await expect(expandIcon(FILTER_GROUP_SPACE_FEATURES, page)).not.toBeVisible();
         });
         test('collapsing an open sidebar filter type group shows correctly', async ({ page }) => {
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
 
@@ -1169,7 +1169,7 @@ test.describe('Spaces', () => {
         });
         test('opening a collapsed sidebar filter type group shows correctly', async ({ page }) => {
             // "on this floor" loads collapsed. Confirm we can open it
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
 
@@ -1223,7 +1223,7 @@ test.describe('Spaces', () => {
             await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
         });
         test('multiple open-collapse sidebar filter type group shows correctly', async ({ page }) => {
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
 
@@ -1283,7 +1283,7 @@ test.describe('Spaces', () => {
             await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
         });
         test('sidebar filter type groups show count when selected and collapsed', async ({ page }) => {
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
 
@@ -1333,7 +1333,7 @@ test.describe('Spaces', () => {
         test('sidebar filter type groups show count when selected and collapsed with single entry', async ({
             page,
         }) => {
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
 
@@ -1395,7 +1395,7 @@ test.describe('Spaces', () => {
 
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
             // all space panels load visible (using filters changes which appear)
@@ -1431,7 +1431,7 @@ test.describe('Spaces', () => {
             const selectLibraryNameElement = page.getByTestId('filter-by-library').locator('[tabindex="0"]');
 
             // on inital load, it honours the non-default campus cookie
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(selectedCampusNameElement).toContainText('St Lucia');
             await expect(selectLibraryNameElement).toContainText('All libraries');
 
@@ -1448,7 +1448,7 @@ test.describe('Spaces', () => {
             ]);
 
             // reload the page - now the library cookie has an invalid value, it ignores the cookie value and uses the default
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(selectedCampusNameElement).toContainText('St Lucia');
             await expect(selectLibraryNameElement).toContainText('All libraries');
         });
@@ -1459,9 +1459,8 @@ test.describe('Spaces', () => {
             // which would otherwise cause BookableSpacesList to re-render and destabilise the toggle
             // buttons enough for Playwright's actionability check to time out in CI.
             await disableMazeMapAssets(page);
-            await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
             // all space panels load visible (using filters changes which appear)
@@ -1495,7 +1494,7 @@ test.describe('Spaces', () => {
         });
 
         test('it remembers the changed campus', async ({ page }) => {
-            await page.goto('spaces?advanced=1'); // reload page after campus change in before
+            await page.goto('spaces'); // reload page after campus change in before
             await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('Dutton Park');
         });
 
@@ -1607,7 +1606,7 @@ test.describe('Spaces', () => {
             context,
         }) => {
             // on inital load, it honours the non-default campus cookie
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('Dutton Park');
 
             await context.addCookies([
@@ -1615,7 +1614,7 @@ test.describe('Spaces', () => {
             ]);
 
             // after resetting the cookie invalidly, it ignores campus cookie and uses the default
-            await page.goto('spaces?advanced=1'); // reload page after campus change in before
+            await page.goto('spaces/mapresults'); // reload page after campus change in before
             await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('St Lucia');
         });
 
@@ -1632,7 +1631,7 @@ test.describe('Spaces', () => {
             const CAMPUS_ID_DUTTON_PARK = '3';
 
             // on inital load, it honours the non-default campus cookie
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
             await expect(changeCampusButton.locator('[tabindex="0"]')).toContainText('Dutton Park');
 
             await expect(panelLabel(PACE)).toContainText('Dutton Park Health Sciences');
@@ -1676,7 +1675,7 @@ test.describe('Spaces', () => {
         test('can UNfavourite a space on the map page', async ({ page }) => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
 
             // the space is currently favourited
             await expect(page.getByTestId('space-1-detail-unfavourite')).toBeVisible();
@@ -1690,9 +1689,8 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId('space-1-detail-unfavourite')).not.toBeVisible();
         });
         test('can favourite a space on the map page', async ({ page }) => {
-            await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces?advanced=1');
+            await page.goto('spaces/mapresults');
 
             // the space is currently UNfavourited
             await expect(page.getByTestId('space-43534-detail-favourite')).toBeVisible();

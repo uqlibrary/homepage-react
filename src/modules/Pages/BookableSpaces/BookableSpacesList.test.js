@@ -160,12 +160,12 @@ describe('BookableSpacesList campus selection', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        window.history.replaceState({}, '', '/spaces?advanced=1');
+        window.history.replaceState({}, '', '/spaces');
     });
 
     it('flies to selected campus when campus value is received as a string', async () => {
         rtlRender(
-            <WithRouter route="/spaces" initialEntries={['/spaces?advanced=1']}>
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
                 <BookableSpacesList {...baseProps} />
             </WithRouter>,
         );
@@ -196,16 +196,16 @@ describe('BookableSpacesList campus selection', () => {
             }),
         );
 
-        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
 
         const { rerender } = rtlRender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...baseProps} facilityTypeList={{ data: { facility_type_groups: [] } }} />
             </WithRouter>,
         );
 
         rerender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...baseProps} />
             </WithRouter>,
         );
@@ -236,10 +236,10 @@ describe('BookableSpacesList campus selection', () => {
             }),
         );
 
-        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
 
         rtlRender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...baseProps} />
             </WithRouter>,
         );
@@ -263,7 +263,7 @@ describe('BookableSpacesList campus selection', () => {
 
     it('returns to the journey landing state when the advanced-view button is used without active filters', () => {
         const navigatedUrl = buildJourneyNavigationUrl({
-            currentUrl: 'http://localhost/spaces?advanced=1',
+            currentUrl: 'http://localhost/spaces',
             selectedFacilityTypes: [],
             selectedCampus: 1,
             selectedLibrary: 0,
@@ -277,7 +277,7 @@ describe('BookableSpacesList campus selection', () => {
 
     it('defaults the journey handoff to the results step when filters are active', () => {
         const navigatedUrl = buildJourneyNavigationUrl({
-            currentUrl: 'http://localhost/spaces?advanced=1',
+            currentUrl: 'http://localhost/spaces',
             selectedFacilityTypes: [{ facility_type_id: 11, selected: true, unselected: false }],
             selectedCampus: 1,
             selectedLibrary: 11,
@@ -336,10 +336,10 @@ describe('BookableSpacesList campus selection', () => {
             },
         };
 
-        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
 
         rtlRender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...props} />
             </WithRouter>,
         );
@@ -409,10 +409,10 @@ describe('BookableSpacesList campus selection', () => {
             },
         };
 
-        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
 
         rtlRender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...props} />
             </WithRouter>,
         );
@@ -441,10 +441,10 @@ describe('BookableSpacesList campus selection', () => {
             }),
         );
 
-        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
 
         rtlRender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...baseProps} />
             </WithRouter>,
         );
