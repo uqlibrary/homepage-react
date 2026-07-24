@@ -30,6 +30,19 @@ const editorStyles = {
     },
 };
 
+const normalizeEditorHtml = htmlValue => {
+    if (typeof htmlValue !== 'string') {
+        return '';
+    }
+
+    const normalizedValue = htmlValue.replace(/\s/g, '');
+    if (normalizedValue === '<p></p>' || normalizedValue === '<p><br></p>' || normalizedValue === '<p><br/></p>') {
+        return '';
+    }
+
+    return htmlValue;
+};
+
 const RichTextEditor = ({ id, value, onChange, testId, ariaLabel }) => {
     return (
         <MuiRichTextEditor
@@ -40,7 +53,7 @@ const RichTextEditor = ({ id, value, onChange, testId, ariaLabel }) => {
             extensions={createExtensions()}
             renderControls={() => <RichTextToolbar />}
             onUpdate={({ editor }) => {
-                onChange(editor.getHTML());
+                onChange(normalizeEditorHtml(editor.getHTML()));
             }}
             sx={editorStyles}
             editorProps={{

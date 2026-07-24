@@ -624,7 +624,8 @@ export const EditSpaceForm = ({
     };
 
     const handleFieldCompletion = e => {
-        console.log('handleFieldCompletion', e.target, formValues);
+        const target = e?.target;
+        console.log('handleFieldCompletion', target, formValues);
         const validationResult = validateForm(formValues);
         if (validationResult !== true) {
             setErrorMessages(validationResult);
