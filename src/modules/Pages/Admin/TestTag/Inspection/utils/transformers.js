@@ -1,4 +1,4 @@
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 
 export const mutateKey = (data, oldKey, newKey) => {
     data[newKey] = data[oldKey];
@@ -17,7 +17,7 @@ export const mutateClearObject = (data, key) => {
 };
 
 export const transformer = (originalFormValues, transformerRules, extraParams = undefined) => {
-    const immFormData = Immutable.fromJS(originalFormValues);
+    const immFormData = fromJS(originalFormValues);
     const newFormData = immFormData.toJS();
     // reducer assumes each transform rule is a function, and must return
     // a keyed object
