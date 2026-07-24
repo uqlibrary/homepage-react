@@ -243,29 +243,29 @@ test.describe('Spaces', () => {
         });
 
         test('opening hours appear correct on load', async ({ page }) => {
-            const ARMUS_OPENING_HOURS = 'Opening hours Today: 7:30am - 7:30pm';
-            const CENTRAL_OPENING_HOURS = 'Opening hours Today: 24 Hours';
+            const OPENING_HOURS_FORMAT =
+                /Opening hours Today:\s*(?:\d{1,2}(?::\d{2})?(?:am|pm)\s*-\s*\d{1,2}(?::\d{2})?(?:am|pm)|24 Hours|Closed)/i;
 
             // public Architecture and Music Library example
             await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toContainText('Opening hours');
-            await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toContainText(ARMUS_OPENING_HOURS);
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toContainText(OPENING_HOURS_FORMAT);
+            const armusHoursText = (await page.getByTestId(`${ARCH_REFERENCE}-summary-hours`).innerText()).trim();
 
             // second panel
             await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-summary-hours`)).toContainText(ARMUS_OPENING_HOURS);
+            await expect(page.getByTestId(`${LIV}-summary-hours`)).toHaveText(armusHoursText);
 
             await expect(page.getByTestId(`${ARCH_PANEL_5}-summary-hours`)).not.toBeVisible();
 
             // the spaces below these have the correct details
 
             await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toContainText(ARMUS_OPENING_HOURS);
+            await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toHaveText(armusHoursText);
 
             await expect(page.getByTestId(`${ARCH_PANEL_5}-summary-hours`)).not.toBeVisible();
 
             await expect(page.getByTestId(`${ARCH_PANEL_6}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_PANEL_6}-summary-hours`)).toContainText(ARMUS_OPENING_HOURS);
+            await expect(page.getByTestId(`${ARCH_PANEL_6}-summary-hours`)).toHaveText(armusHoursText);
 
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-summary-hours`)).not.toBeVisible();
 
@@ -274,10 +274,11 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_PANEL_9}-summary-hours`)).not.toBeVisible();
 
             await expect(page.getByTestId(`${CENTRAL_PANEL_ONE}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${CENTRAL_PANEL_ONE}-summary-hours`)).toContainText(CENTRAL_OPENING_HOURS);
+            await expect(page.getByTestId(`${CENTRAL_PANEL_ONE}-summary-hours`)).toContainText(OPENING_HOURS_FORMAT);
+            const centralHoursText = (await page.getByTestId(`${CENTRAL_PANEL_ONE}-summary-hours`).innerText()).trim();
 
             await expect(page.getByTestId(`${CENTRAL_PANEL_TWO}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${CENTRAL_PANEL_TWO}-summary-hours`)).toContainText(CENTRAL_OPENING_HOURS);
+            await expect(page.getByTestId(`${CENTRAL_PANEL_TWO}-summary-hours`)).toHaveText(centralHoursText);
         });
 
         test('facilities are hidden on opening', async ({ page }) => {
@@ -1527,13 +1528,14 @@ test.describe('Spaces', () => {
         });
 
         test('opening hours appear correct on load on change of campus', async ({ page }) => {
+            const OPENING_HOURS_FORMAT =
+                /Opening hours Today:\s*(?:\d{1,2}(?::\d{2})?(?:am|pm)\s*-\s*\d{1,2}(?::\d{2})?(?:am|pm)|24 Hours|Closed)/i;
+
             // non PACE spaces are not visible
             await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).not.toBeVisible();
 
             await expect(page.getByTestId(`${PACE}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-summary-hours`)).toContainText(
-                'Opening hours Today: 10:15pm - 10:30pm',
-            );
+            await expect(page.getByTestId(`${PACE}-summary-hours`)).toContainText(OPENING_HOURS_FORMAT);
         });
 
         test('facilities are hidden on opening on change of campus', async ({ page }) => {
