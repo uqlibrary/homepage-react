@@ -1,6 +1,7 @@
 import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
+import { typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 
 import { COLOR_GLOBAL_ALERT_RED, COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 import { assertErrorPopupAppears } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
@@ -247,8 +248,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(descriptionCheckbox).toBeVisible();
         await descriptionCheckbox.check();
 
-        const descriptionField = page.getByRole('textbox', { name: /Editing area: main/i });
-        await descriptionField.fill('This is a sunny corner in the Law library where you blah blah blah');
+        await typeRichTextEditor(page, 'This is a sunny corner in the Law library where you blah blah blah');
 
         const bookingUrlField = page.getByTestId('space_external_book_url').locator('input');
         const isBookableCheckbox = page.getByTestId('space-can-book').locator('input');

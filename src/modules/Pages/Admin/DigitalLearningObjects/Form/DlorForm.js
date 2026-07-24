@@ -30,7 +30,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 
 import { RichTextEditor } from 'modules/SharedComponents/RichTextEditor';
-import { scrollToTopOfPage } from 'helpers/general';
+import { isValidUrl, scrollToTopOfPage, slugifyName } from 'helpers/general';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -43,7 +43,6 @@ import {
     getTotalSecondsFromMinutesAndSecond,
     isPreviewableUrl,
     isValidNumber,
-    slugifyName,
     validFileSizeUnits,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import {
@@ -51,7 +50,6 @@ import {
     isValidEmail,
     splitStringToArrayOnPipe,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isDlorAdminUser, isInDLOROwningTeam } from 'helpers/access';
 import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';

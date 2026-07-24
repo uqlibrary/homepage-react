@@ -30,7 +30,7 @@ const editorStyles = {
     },
 };
 
-const RichTextEditor = ({ id, value, onChange, testId }) => {
+const RichTextEditor = ({ id, value, onChange, testId, ariaLabel }) => {
     return (
         <MuiRichTextEditor
             id={id}
@@ -47,6 +47,9 @@ const RichTextEditor = ({ id, value, onChange, testId }) => {
                 attributes: {
                     ...(id ? { id } : {}),
                     ...(testId ? { 'data-testid': testId } : {}),
+                    role: 'textbox',
+                    'aria-multiline': 'true',
+                    ...(ariaLabel ? { 'aria-label': ariaLabel } : {}),
                 },
             }}
         >
@@ -64,6 +67,7 @@ RichTextEditor.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     testId: PropTypes.string,
+    ariaLabel: PropTypes.string,
 };
 
 export default RichTextEditor;

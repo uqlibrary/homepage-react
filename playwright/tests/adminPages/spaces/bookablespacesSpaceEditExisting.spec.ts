@@ -1,6 +1,7 @@
 import { expect, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
+import { typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
@@ -43,7 +44,7 @@ const openEditSpacePage = async (
     options: { waitForTitle?: boolean; waitForForm?: boolean } = {},
 ) => {
     const { waitForTitle = true, waitForForm = true } = options;
-    await page.goto(`/admin/spaces/edit/${spaceUuid}${search}`);
+    await page.goto(`http://localhost:2020/admin/spaces/edit/${spaceUuid}${search}`);
     await page.setViewportSize(EDIT_SPACE_VIEWPORT);
     await expect(page).toHaveURL(new RegExp(`/admin/spaces/edit/${spaceUuid}`), { timeout: 30_000 });
     if (waitForTitle) {
@@ -427,17 +428,11 @@ test.describe('Spaces Admin - edit space', () => {
         // clear as many of the non-required fields as is possible and confirm will submit
 
         // clear description field manually
-        const descriptionField = page.getByRole('textbox', { name: /Editing area: main/i });
-        await expect(descriptionField).toBeVisible({ timeout: 30_000 });
-        await descriptionField.click();
-        await descriptionField.press('ControlOrMeta+a');
-        await descriptionField.press('ControlOrMeta+x');
+        await expect(page.locator('.ProseMirror')).toBeVisible({ timeout: 30_000 });
+        await typeRichTextEditor(page, '');
 
         await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
-        await page
-            .getByTestId('space-can-book')
-            .locator('input')
-            .click();
+        await page.getByTestId('space-can-book').locator('input').click();
 
         // change to facility type tab
         await page.getByTestId(TAB_FACILITY_TYPES).click();
@@ -460,10 +455,7 @@ test.describe('Spaces Admin - edit space', () => {
             // SINGLE_OCCUPANCY,
         ]) {
             await expect(page.getByTestId(`filtertype-${facilityTypeId}`).locator('input')).toBeChecked();
-            await page
-                .getByTestId(`filtertype-${facilityTypeId}`)
-                .locator('input')
-                .click();
+            await page.getByTestId(`filtertype-${facilityTypeId}`).locator('input').click();
         }
 
         // change to Location tab
@@ -472,10 +464,7 @@ test.describe('Spaces Admin - edit space', () => {
         // locations are inherently unclearable
 
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
-        await page
-            .getByTestId('add-space-precise-location')
-            .locator('input')
-            .fill('');
+        await page.getByTestId('add-space-precise-location').locator('input').fill('');
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
@@ -489,10 +478,7 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('space_services_page').locator('input')).toHaveValue(
             'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
         );
-        await page
-            .getByTestId('space_services_page')
-            .locator('input')
-            .fill('');
+        await page.getByTestId('space_services_page').locator('input').fill('');
 
         // change to Imagery tab
         await page.getByTestId(TAB_IMAGERY).click();
@@ -539,10 +525,7 @@ test.describe('Spaces Admin - edit space', () => {
     test('tabs work as expected', async ({ page }) => {
         const cancelButton = page.getByTestId('admin-spaces-form-button-cancel');
         const saveButton = page.getByTestId('admin-spaces-save-button-submit');
-        const photoDescriptionField = page
-            .getByTestId(`space_photo_description`)
-            .locator('textarea')
-            .first();
+        const photoDescriptionField = page.getByTestId(`space_photo_description`).locator('textarea').first();
         const spaceNameField = page.getByTestId('space-name').locator('input');
         const ASKUS_FILTER_TYPE = 54;
         const firstFacilityTypeCheckbox = page.getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`).locator('input');
@@ -718,10 +701,7 @@ test.describe('Spaces Admin - edit space', () => {
         // change the title before save so we can confirm edit-again performs a true reload
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
-        await page
-            .getByTestId('space-name')
-            .locator('input')
-            .fill('New space name');
+        await page.getByTestId('space-name').locator('input').fill('New space name');
 
         await ensureSpaceTypeSelected(page);
 
@@ -776,9 +756,7 @@ test.describe('Spaces Admin - edit space', () => {
         const selectedSpaceTypeId = await chooseDifferentSpaceType(page);
 
         await page.getByText('Ut enim ad minim veniam, quis').click();
-        const descriptionField = page.getByRole('textbox', { name: /Editing area: main/i });
-        await descriptionField.press('ControlOrMeta+a');
-        await descriptionField.fill('a long description that has a number of words');
+        await typeRichTextEditor(page, 'a long description that has a number of words');
 
         await nameField.click();
 
@@ -823,19 +801,13 @@ test.describe('Spaces Admin - edit space', () => {
         // select a new facility type
         await expect(page.getByTestId(`filtertype-${EXAM_FRIENDLY}`).locator('input')).toBeVisible();
         await expect(page.getByTestId(`facility-type-listitem-${EXAM_FRIENDLY}`)).toContainText('Exam Friendly');
-        await page
-            .getByTestId(`filtertype-${EXAM_FRIENDLY}`)
-            .locator('input')
-            .click();
+        await page.getByTestId(`filtertype-${EXAM_FRIENDLY}`).locator('input').click();
         finalFilters.push(EXAM_FRIENDLY);
 
         // unselect an existing facility type
         await expect(page.getByTestId(`filtertype-${ADJUSTABLE_DESKS}`).locator('input')).toBeVisible();
         await expect(page.getByTestId(`facility-type-listitem-${ADJUSTABLE_DESKS}`)).toContainText('Adjustable desks');
-        await page
-            .getByTestId(`filtertype-${ADJUSTABLE_DESKS}`)
-            .locator('input')
-            .click();
+        await page.getByTestId(`filtertype-${ADJUSTABLE_DESKS}`).locator('input').click();
         finalFilters = originalFilters.filter(f => f !== ADJUSTABLE_DESKS);
 
         await page.getByTestId(TAB_ABOUT).click();
@@ -861,10 +833,7 @@ test.describe('Spaces Admin - edit space', () => {
 
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space_services_page')
-            .locator('input')
-            .fill('http://example.com');
+        await page.getByTestId('space_services_page').locator('input').fill('http://example.com');
 
         // change to imagery tab
         await page.getByTestId(TAB_IMAGERY).click();
@@ -1002,10 +971,7 @@ test.describe('Spaces admin - edit other spaces', () => {
         await expect(page.getByTestId('space-capacity-error')).not.toBeVisible();
 
         // make non-bookable
-        await page
-            .getByTestId('space-can-book')
-            .locator('input')
-            .uncheck();
+        await page.getByTestId('space-can-book').locator('input').uncheck();
 
         // the capacity field is no longer required, and its value is unchanged
         await expect(page.getByTestId('capacity-required-indicator')).not.toBeVisible();
@@ -1150,10 +1116,7 @@ test.describe('booking link controller works properly', () => {
         await expect(bookingUrlField).toHaveValue('https://uqbookit.uq.edu.au/#/app/booking-types/111');
 
         // remove booking url (uncheck box)
-        await page
-            .getByTestId('contains-bookable-checkbox')
-            .locator('input')
-            .uncheck();
+        await page.getByTestId('contains-bookable-checkbox').locator('input').uncheck();
         await expect(page.getByTestId('booking-link-details')).not.toBeVisible();
 
         // save changes
@@ -1217,10 +1180,7 @@ test.describe('booking link controller works properly', () => {
         await expect(page.getByTestId('booking-link-details')).not.toBeVisible();
 
         // make the space bookable (check box)
-        await page
-            .getByTestId('contains-bookable-checkbox')
-            .locator('input')
-            .check();
+        await page.getByTestId('contains-bookable-checkbox').locator('input').check();
         await expect(page.getByTestId('booking-link-details')).toBeVisible();
 
         await expect(page.getByTestId('spaces-button-error-list')).toBeVisible();
