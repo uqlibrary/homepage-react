@@ -323,8 +323,6 @@ const JourneyLandingView = ({
                         availableIntentDefinitionsForLanding={availableIntentDefinitionsForLanding}
                         favouriteIntentDefinition={favouriteIntentDefinition}
                         handleIntentSelect={handleIntentSelect}
-                        goToLegacyBrowse={goToLegacyBrowse}
-                        serialiseJourneyUrl={serialiseJourneyUrl}
                     />
                 </StandardPage>
             </div>
