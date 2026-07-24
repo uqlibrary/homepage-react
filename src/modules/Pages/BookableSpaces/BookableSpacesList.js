@@ -369,21 +369,74 @@ export const BookableSpacesList = ({
     );
 
     const [cookies, setCookie] = useCookies();
+    const getCampusCookieValue = React.useCallback(() => {
+        const spacesPreferredCampus = cookies?.UQLspacesPreferredCampus;
+        if (typeof spacesPreferredCampus === 'string' && spacesPreferredCampus.trim() !== '') {
+            return spacesPreferredCampus;
+        }
+
+        if (typeof document === 'undefined') {
+            return null;
+        }
+
+        const campusCookie = document.cookie
+            .split(';')
+            .map(cookie => cookie.trim())
+            .find(cookie => cookie.startsWith('UQLspacesPreferredCampus='));
+
+        if (!campusCookie) {
+            return null;
+        }
+
+        const cookieValue = campusCookie.split('=').slice(1).join('=');
+        return cookieValue ? decodeURIComponent(cookieValue) : null;
+    }, [cookies?.UQLspacesPreferredCampus]);
     const correctedCampusId = useCallback(
         campusId => {
             const normalizedCampusId = Number(campusId);
+            if (!Number.isFinite(normalizedCampusId) || normalizedCampusId <= 0) {
+                return FIRST_CAMPUS_ID;
+            }
+            if (!campusList?.length) {
+                return FIRST_CAMPUS_ID;
+            }
             return campusList?.find(c => c.campus_id === normalizedCampusId) ? normalizedCampusId : FIRST_CAMPUS_ID;
         },
         [campusList],
     );
-    const getCampusInitialState = () => {
-        const spacesPreferredCampus = cookies.UQLspacesPreferredCampus;
-        if (!!spacesPreferredCampus) {
-            return parseInt(spacesPreferredCampus, 10);
+    const getCampusInitialState = React.useCallback(() => {
+        const spacesPreferredCampus = getCampusCookieValue();
+        if (typeof spacesPreferredCampus === 'string' && spacesPreferredCampus.trim() !== '') {
+            const parsedCampusId = Number.parseInt(spacesPreferredCampus, 10);
+            return Number.isNaN(parsedCampusId) ? FIRST_CAMPUS_ID : parsedCampusId;
         }
         return FIRST_CAMPUS_ID;
-    };
-    const [selectedCampus, setSelectedCampus] = React.useState(getCampusInitialState());
+    }, [getCampusCookieValue]);
+    const [selectedCampus, setSelectedCampus] = React.useState(() => getCampusInitialState());
+    const hasInitialisedCampusFromCookie = React.useRef(false);
+
+    React.useEffect(() => {
+        if (!campusList?.length || hasInitialisedCampusFromCookie.current) {
+            return;
+        }
+
+        const explicitCampusFromUrl = journeyMapFilterState?.selectedCampus;
+        if (explicitCampusFromUrl !== null && explicitCampusFromUrl !== undefined) {
+            const validatedCampusId = correctedCampusId(explicitCampusFromUrl);
+            if (selectedCampus !== validatedCampusId) {
+                setSelectedCampus(validatedCampusId);
+            }
+            hasInitialisedCampusFromCookie.current = true;
+            return;
+        }
+
+        const campusIdFromCookie = getCampusInitialState();
+        const validatedCampusId = correctedCampusId(campusIdFromCookie);
+        if (selectedCampus !== validatedCampusId) {
+            setSelectedCampus(validatedCampusId);
+        }
+        hasInitialisedCampusFromCookie.current = true;
+    }, [campusList, correctedCampusId, getCampusInitialState, journeyMapFilterState?.selectedCampus, selectedCampus]);
 
     const journeyMapFilterState = React.useMemo(() => {
         if (typeof window === 'undefined') return null;
@@ -508,7 +561,7 @@ export const BookableSpacesList = ({
         const current = new Date();
         const nextYear = new Date();
         nextYear.setFullYear(current.getFullYear() + 1);
-        setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear });
+        setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear, path: '/' });
 
         setSelectedLibrary(ALL_LIBRARIES_ID); // clear the library on changing campus
 

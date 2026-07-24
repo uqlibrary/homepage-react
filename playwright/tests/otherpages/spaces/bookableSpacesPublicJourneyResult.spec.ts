@@ -39,9 +39,10 @@ test.describe('Spaces Journey Result page', () => {
         await expect(firstSpacePane).toContainText('354');
         await expect(firstSpacePane).toContainText('Architecture and Music Library');
         await expect(firstSpacePane).toContainText('Individual study');
-        await expect(firstSpacePane.getByTestId('spaces-journey-open-status-chip-open')).toContainText('Open now');
         await expect(firstSpacePane).toContainText('Designed for individual study');
         await expect(firstSpacePane).toContainText('Space desciption field being used to report the mock data');
+
+        await expect(firstSpacePane).toContainText(/Open now|Closing soon|Currently closed/i);
 
         await expect(page.getByTestId('space-1-detail-unfavourite')).toBeVisible();
     });

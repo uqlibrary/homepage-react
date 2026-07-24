@@ -1494,7 +1494,7 @@ test.describe('Spaces', () => {
         });
 
         test('it remembers the changed campus', async ({ page }) => {
-            await page.goto('spaces'); // reload page after campus change in before
+            await page.goto('spaces/mapresults'); // reload page after campus change in before
             await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('Dutton Park');
         });
 
@@ -1729,7 +1729,7 @@ test.describe('Spaces errors', () => {
     test('weekly hours list load error', async ({ page }) => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-        await page.goto('spaces?responseType=weeklyHoursError&advanced=1');
+        await page.goto('spaces/mapresults?responseType=weeklyHoursError');
         await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
 
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
