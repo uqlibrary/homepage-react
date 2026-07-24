@@ -57,7 +57,7 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
     '& p': {
         margin: '0 0 0 1rem',
     },
-    '&:has(.rightSlider)': {
+    '&.hasRightSlider': {
         display: 'block',
     },
     '& label': {
@@ -325,22 +325,39 @@ export const SidebarFilters = ({
 
     React.useEffect(() => {
         if (
+            facilityTypeListError !== false ||
+            facilityTypeListLoading !== false ||
+            !facilityTypeList?.data?.facility_type_groups?.length ||
+            facilityTypeFilterGroupExpandedness?.length > 0
+        ) {
+            return;
+        }
+
+        const expandednessList = [];
+        sortedUsedGroups()?.forEach(group => {
+            expandednessList.push({
+                groupId: group?.facility_type_group_id,
+                isGroupExpanded: group?.facility_type_group_loads_open,
+            });
+        });
+
+        setFacilityTypeFilterGroupExpandedness(expandednessList);
+    }, [
+        facilityTypeList,
+        facilityTypeListError,
+        facilityTypeListLoading,
+        facilityTypeFilterGroupExpandedness?.length,
+        filteredFacilityTypeList,
+    ]);
+
+    React.useEffect(() => {
+        if (
             !hasJourneyMapFilterState &&
             facilityTypeListError === false &&
             facilityTypeListLoading === false &&
             facilityTypeList?.data?.facility_type_groups?.length > 0 &&
             selectedFacilityTypes?.filter(ft => ft.select === true)?.length === 0
         ) {
-            // initialise openness storage
-            const expandednessList = [];
-            sortedUsedGroups()?.map(g => {
-                expandednessList?.push({
-                    groupId: g?.facility_type_group_id,
-                    isGroupExpanded: g?.facility_type_group_loads_open,
-                });
-            });
-            setFacilityTypeFilterGroupExpandedness(expandednessList);
-
             const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
             const newFilters = flatFacilityTypeList?.map(facilityType => {
                 return {
@@ -634,14 +651,16 @@ export const SidebarFilters = ({
         );
     };
     const getStyledInputListItem = facilityType => {
+        const isCapacityFilter = facilityType?.facility_type_id === FILTER_CAPACITY_TYPE_ID;
         return (
             <StyledInputListItem
                 key={`facility-type-listitem-${facilityType?.facility_type_id}`}
                 id={`facility-type-listitem-${facilityType?.facility_type_id}`}
                 data-testid={`facility-type-listitem-${facilityType?.facility_type_id}`}
+                className={isCapacityFilter ? 'hasRightSlider' : undefined}
             >
-                {facilityType.facility_type_id === FILTER_CAPACITY_TYPE_ID && writeCapacitySlider(facilityType)}
-                {facilityType.facility_type_id !== FILTER_CAPACITY_TYPE_ID && (
+                {isCapacityFilter && writeCapacitySlider(facilityType)}
+                {!isCapacityFilter && (
                     <>
                         <InputLabel
                             title={`Filter in Spaces with ${facilityType?.facility_type_name}`}

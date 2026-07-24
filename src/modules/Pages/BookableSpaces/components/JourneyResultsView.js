@@ -54,6 +54,7 @@ export const JourneyResultsView = ({
     setShowFavouriteSpacesOnly,
     isLoggedIn,
     hasFavouriteSpaces,
+    hasJourneyMapFilterState,
 }) => {
     const theme = useTheme();
 
@@ -103,6 +104,7 @@ export const JourneyResultsView = ({
                         setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
                         isLoggedIn={isLoggedIn}
                         hasFavouriteSpaces={hasFavouriteSpaces}
+                        hasJourneyMapFilterState={hasJourneyMapFilterState}
                     />
                 </StyledResultsSidebarPanel>
 
@@ -300,6 +302,7 @@ JourneyResultsView.propTypes = {
     setShowFavouriteSpacesOnly: PropTypes.func,
     isLoggedIn: PropTypes.bool,
     hasFavouriteSpaces: PropTypes.bool,
+    hasJourneyMapFilterState: PropTypes.bool,
 };
 
 export default JourneyResultsView;

@@ -181,6 +181,7 @@ export const buildJourneyNavigationUrl = ({
     selectedCampus,
     selectedLibrary,
     capacityFilterValue,
+    showFavouriteSpacesOnly = false,
 }) => {
     const url = new URL(currentUrl);
     const hashValue = url.hash || '';
@@ -188,9 +189,21 @@ export const buildJourneyNavigationUrl = ({
     const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
     const existingParams = new URLSearchParams(hashSearch || url.search || '');
 
-    const hasActiveJourneyFilters = (selectedFacilityTypes || []).some(
+    const hasSelectedFacilityFilters = (selectedFacilityTypes || []).some(
         filter => filter?.selected || filter?.unselected,
     );
+    const normalizedSelectedCampus = Number(selectedCampus);
+    const normalizedSelectedLibrary = Number(selectedLibrary);
+    const hasActiveCampusSelection = Number.isFinite(normalizedSelectedCampus) && normalizedSelectedCampus > 1;
+    const hasActiveLibrarySelection = Number.isFinite(normalizedSelectedLibrary) && normalizedSelectedLibrary !== 0;
+    const hasActiveCapacitySelection = Array.isArray(capacityFilterValue) && capacityFilterValue.length > 0;
+    const hasActiveFavouritesSelection = Boolean(showFavouriteSpacesOnly);
+    const hasActiveJourneyFilters =
+        hasSelectedFacilityFilters ||
+        hasActiveCampusSelection ||
+        hasActiveLibrarySelection ||
+        hasActiveCapacitySelection ||
+        hasActiveFavouritesSelection;
 
     const preservedQueryParams = new URLSearchParams();
     ['mapFilters', 'autoSelectFirstSpace'].forEach(key => {
@@ -214,6 +227,7 @@ export const buildJourneyNavigationUrl = ({
                 selectedCampus,
                 selectedLibrary,
                 capacityFilterValue,
+                showFavouriteSpacesOnly,
             });
             const nextSearchParams = new URLSearchParams(nextQueryString);
             nextSearchParams.set('mapFilters', encodedMapFilters);
@@ -230,6 +244,7 @@ export const buildJourneyNavigationUrl = ({
             selectedCampus,
             selectedLibrary,
             capacityFilterValue,
+            showFavouriteSpacesOnly,
         });
 
         url.pathname = '/spaces/results';
@@ -369,6 +384,15 @@ export const BookableSpacesList = ({
     );
 
     const [cookies, setCookie] = useCookies();
+    const journeyMapFilterState = React.useMemo(() => {
+        if (typeof window === 'undefined') return null;
+        const searchValue = location.search || window.location.search || '';
+        const hashValue = location.hash || window.location.hash || '';
+        const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
+        const params = new URLSearchParams(searchValue || hashSearch);
+        return deserialiseJourneyMapFilterState(params);
+    }, [location.search, location.hash]);
+
     const getCampusCookieValue = React.useCallback(() => {
         const spacesPreferredCampus = cookies?.UQLspacesPreferredCampus;
         if (typeof spacesPreferredCampus === 'string' && spacesPreferredCampus.trim() !== '') {
@@ -437,15 +461,6 @@ export const BookableSpacesList = ({
         }
         hasInitialisedCampusFromCookie.current = true;
     }, [campusList, correctedCampusId, getCampusInitialState, journeyMapFilterState?.selectedCampus, selectedCampus]);
-
-    const journeyMapFilterState = React.useMemo(() => {
-        if (typeof window === 'undefined') return null;
-        const searchValue = location.search || window.location.search || '';
-        const hashValue = location.hash || window.location.hash || '';
-        const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
-        const params = new URLSearchParams(searchValue || hashSearch);
-        return deserialiseJourneyMapFilterState(params);
-    }, [location.search, location.hash]);
 
     // based on https://stackoverflow.com/a/42234774
     // this isn't the formula I am used to, which has much more trig, but it seems good enough
@@ -602,6 +617,7 @@ export const BookableSpacesList = ({
             selectedCampus,
             selectedLibrary,
             capacityFilterValue,
+            showFavouriteSpacesOnly,
         });
         window.location.assign(nextUrl);
     };
@@ -794,8 +810,8 @@ export const BookableSpacesList = ({
 
         selectedFacilityTypes?.forEach(filter => {
             if (filter?.selected) {
-                const groupId = facilityTypeToGroup[filter?.facility_type_id];
-                if (groupId) {
+                const groupId = facilityTypeToGroup[filter?.facility_type_id] ?? filter?.facility_type_group_id;
+                if (groupId !== null && groupId !== undefined) {
                     if (!selectedFiltersByGroup[groupId]) {
                         selectedFiltersByGroup[groupId] = [];
                     }
@@ -1020,6 +1036,52 @@ export const BookableSpacesList = ({
             facility_special_action: facilityType?.facility_special_action,
         }));
 
+        const resolvedFacilityStateIds = (journeyMapFilterState.selectedFacilityTypes || [])
+            .map(candidate => {
+                if (typeof candidate === 'number' || typeof candidate === 'string') {
+                    const parsedFacilityTypeId = Number(candidate);
+                    return Number.isNaN(parsedFacilityTypeId) ? null : parsedFacilityTypeId;
+                }
+
+                const parsedFacilityTypeId = Number(candidate?.facility_type_id);
+                return Number.isNaN(parsedFacilityTypeId) ? null : parsedFacilityTypeId;
+            })
+            .filter(Boolean);
+
+        const baseFacilityTypeById = new Map(
+            baseFacilityTypes.map(facilityType => [Number(facilityType.facility_type_id), facilityType]),
+        );
+
+        // Keep selected filters from mapresults active in journey view, even when those
+        // filters are hidden in simple view (e.g. advanced-only filter groups).
+        resolvedFacilityStateIds.forEach(facilityTypeId => {
+            if (baseFacilityTypeById.has(facilityTypeId)) {
+                return;
+            }
+
+            const sourceGroup = (facilityTypeList?.data?.facility_type_groups || []).find(group =>
+                (group?.facility_type_children || []).some(child => Number(child?.facility_type_id) === facilityTypeId),
+            );
+            const sourceFacilityType = (sourceGroup?.facility_type_children || []).find(
+                child => Number(child?.facility_type_id) === facilityTypeId,
+            );
+
+            if (!sourceFacilityType) {
+                return;
+            }
+
+            const resolvedFacilityType = {
+                facility_type_group_id: sourceGroup?.facility_type_group_id,
+                facility_type_id: facilityTypeId,
+                selected: false,
+                unselected: false,
+                facility_special_action: sourceFacilityType?.facility_special_action || null,
+            };
+
+            baseFacilityTypeById.set(facilityTypeId, resolvedFacilityType);
+            baseFacilityTypes.push(resolvedFacilityType);
+        });
+
         if (!baseFacilityTypes.length) {
             return;
         }
@@ -1071,13 +1133,20 @@ export const BookableSpacesList = ({
         if (Array.isArray(journeyMapFilterState.capacityFilterValue)) {
             setCapacityFilterValue(journeyMapFilterState.capacityFilterValue);
         }
+        setShowFavouriteSpacesOnly(Boolean(journeyMapFilterState.showFavouriteSpacesOnly));
         if (nextFacilityTypes.length > 0) {
             setSelectedFacilityTypes(nextFacilityTypes);
         }
 
         hasAppliedJourneyMapFilterStateRef.current = true;
         journeyMapFilterStateSignatureRef.current = signature;
-    }, [filteredFacilityTypeList, journeyMapFilterState, selectedFacilityTypes, setSelectedFacilityTypes]);
+    }, [
+        filteredFacilityTypeList,
+        facilityTypeList,
+        journeyMapFilterState,
+        selectedFacilityTypes,
+        setSelectedFacilityTypes,
+    ]);
 
     const toggleFilterPopupVisibility = () => {
         setShowFilterSelectorPopup(!showFilterSelectorPopup);
@@ -1293,6 +1362,7 @@ export const BookableSpacesList = ({
                             setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
                             isLoggedIn={isLoggedIn}
                             hasFavouriteSpaces={(spacesFavouritesList || []).length > 0}
+                            hasJourneyMapFilterState={Boolean(journeyMapFilterState)}
                         />
                     );
                 } else {

@@ -306,8 +306,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
             capacityFilterValue: [4, 8],
         });
 
-        const decodedState = decodeURIComponent(encodedState);
-        expect(decodedState).toContain('"selectedFacilityTypes":[11,12]');
+        expect(encodedState).toContain('"selectedFacilityTypes":[11,12]');
 
         const params = new URLSearchParams(`mapFilters=${encodedState}`);
         const parsedState = deserialiseJourneyMapFilterState(params);

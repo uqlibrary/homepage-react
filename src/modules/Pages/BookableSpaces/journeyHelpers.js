@@ -62,6 +62,7 @@ export const serialiseJourneyMapFilterState = ({
     selectedCampus,
     selectedLibrary,
     capacityFilterValue,
+    showFavouriteSpacesOnly,
 }) => {
     const selectedFacilityIds = (selectedFacilityTypes || []).reduce((acc, filter) => {
         const facilityTypeId = filter?.facility_type_id;
@@ -89,9 +90,10 @@ export const serialiseJourneyMapFilterState = ({
         ...(selectedCampus !== null && selectedCampus !== undefined ? { selectedCampus } : {}),
         ...(selectedLibrary !== null && selectedLibrary !== undefined ? { selectedLibrary } : {}),
         ...(Array.isArray(capacityFilterValue) && capacityFilterValue.length > 0 ? { capacityFilterValue } : {}),
+        ...(showFavouriteSpacesOnly ? { showFavouriteSpacesOnly: true } : {}),
     };
 
-    return encodeURIComponent(JSON.stringify(serialised));
+    return JSON.stringify(serialised);
 };
 
 export const deserialiseJourneyMapFilterState = searchParams => {
@@ -101,7 +103,39 @@ export const deserialiseJourneyMapFilterState = searchParams => {
     }
 
     try {
-        const parsed = JSON.parse(decodeURIComponent(encodedState));
+        const candidates = [encodedState];
+        let decodedState = encodedState;
+
+        // Backward compatibility: historic URLs double-encoded mapFilters.
+        for (let i = 0; i < 2; i += 1) {
+            try {
+                const nextDecoded = decodeURIComponent(decodedState);
+                if (nextDecoded === decodedState) {
+                    break;
+                }
+                candidates.push(nextDecoded);
+                decodedState = nextDecoded;
+            } catch (error) {
+                break;
+            }
+        }
+
+        const parsed = candidates.reduce((acc, candidate) => {
+            if (acc) {
+                return acc;
+            }
+
+            try {
+                return JSON.parse(candidate);
+            } catch (error) {
+                return null;
+            }
+        }, null);
+
+        if (!parsed) {
+            return null;
+        }
+
         const selectedFacilityTypes = Array.isArray(parsed?.selectedFacilityTypes) ? parsed.selectedFacilityTypes : [];
         const unselectedFacilityTypes = Array.isArray(parsed?.unselectedFacilityTypes)
             ? parsed.unselectedFacilityTypes
@@ -159,6 +193,7 @@ export const deserialiseJourneyMapFilterState = searchParams => {
             selectedCampus: parsed?.selectedCampus ?? null,
             selectedLibrary: parsed?.selectedLibrary ?? null,
             capacityFilterValue: Array.isArray(parsed?.capacityFilterValue) ? parsed.capacityFilterValue : null,
+            showFavouriteSpacesOnly: parsed?.showFavouriteSpacesOnly === true,
         };
     } catch (error) {
         return null;

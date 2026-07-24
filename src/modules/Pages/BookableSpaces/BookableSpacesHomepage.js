@@ -385,6 +385,7 @@ const BookableSpacesHomepage = ({
     weeklyHoursError,
     onFavouriteToggle,
     isFavouriteActionInProgress,
+    hasJourneyMapFilterState = false,
     initialView = 'landing',
 }) => {
     const theme = useTheme();
@@ -860,6 +861,7 @@ const BookableSpacesHomepage = ({
                         setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
                         isLoggedIn={isLoggedIn}
                         hasFavouriteSpaces={hasFavourites}
+                        hasJourneyMapFilterState={hasJourneyMapFilterState}
                     />
                 </StandardPage>
             )}
@@ -911,6 +913,7 @@ BookableSpacesHomepage.propTypes = {
     weeklyHoursError: PropTypes.any,
     onFavouriteToggle: PropTypes.func,
     isFavouriteActionInProgress: PropTypes.any,
+    hasJourneyMapFilterState: PropTypes.bool,
     initialView: PropTypes.oneOf(['landing', 'results', 'details']),
 };
 

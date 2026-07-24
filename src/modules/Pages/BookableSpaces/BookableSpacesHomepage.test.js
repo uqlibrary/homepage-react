@@ -341,8 +341,7 @@ describe('BookableSpacesHomepage browser back navigation', () => {
             capacityFilterValue: [4, 8],
         });
 
-        const decodedState = decodeURIComponent(encodedState);
-        expect(decodedState).toContain('"selectedFacilityTypes":[11,12]');
+        expect(encodedState).toContain('"selectedFacilityTypes":[11,12]');
 
         const params = new URLSearchParams(`mapFilters=${encodedState}`);
         const parsedState = deserialiseJourneyMapFilterState(params);
@@ -402,6 +401,95 @@ describe('BookableSpacesHomepage browser back navigation', () => {
                 ]),
             );
         });
+    });
+
+    it('does not reset selected filters in journey results when mapFilters state is present', async () => {
+        const setSelectedFacilityTypes = jest.fn();
+        const preselectedFilters = [
+            {
+                facility_type_group_id: 10,
+                facility_type_id: 39,
+                selected: true,
+                unselected: false,
+                facility_special_action: null,
+            },
+            {
+                facility_type_group_id: 10,
+                facility_type_id: 8,
+                selected: true,
+                unselected: false,
+                facility_special_action: null,
+            },
+        ];
+        const encodedMapFilters = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [39, 8],
+                selectedCampus: 1,
+                selectedLibrary: 0,
+                capacityFilterValue: [1, 24],
+            }),
+        );
+
+        window.history.replaceState({}, '', `/#/spaces/results?mapFilters=${encodedMapFilters}&autoSelectFirstSpace=1`);
+
+        renderJourney({
+            ...defaultProps,
+            selectedFacilityTypes: preselectedFilters,
+            setSelectedFacilityTypes,
+            hasJourneyMapFilterState: true,
+            facilityTypeListError: false,
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 10,
+                            facility_type_group_name: 'Features',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: 1,
+                            facility_type_children: [
+                                {
+                                    facility_type_id: 39,
+                                    facility_type_name: 'Power points',
+                                    filter_display_on: 'both',
+                                },
+                                {
+                                    facility_type_id: 8,
+                                    facility_type_name: 'Whiteboards',
+                                    filter_display_on: 'both',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 10,
+                            facility_type_group_name: 'Features',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: 1,
+                            facility_type_children: [
+                                {
+                                    facility_type_id: 39,
+                                    facility_type_name: 'Power points',
+                                    filter_display_on: 'both',
+                                },
+                                {
+                                    facility_type_id: 8,
+                                    facility_type_name: 'Whiteboards',
+                                    filter_display_on: 'both',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+        });
+
+        await waitFor(() => expect(screen.getByTestId('bookable-spaces-journey-results-view')).toBeInTheDocument());
+        expect(setSelectedFacilityTypes).not.toHaveBeenCalled();
     });
 
     it('preserves a manual filter change after an intent is restored from the URL', () => {
@@ -582,5 +670,63 @@ describe('BookableSpacesHomepage browser back navigation', () => {
         expect(await screen.findByRole('option', { name: 'St Lucia' })).toBeInTheDocument();
         expect(await screen.findByRole('option', { name: 'Gatton' })).toBeInTheDocument();
         expect(screen.queryByRole('option', { name: 'Dutton Park' })).not.toBeInTheDocument();
+    });
+
+    it('preserves default filter-group open state when map filter state exists', async () => {
+        renderSidebarFilters({
+            hasJourneyMapFilterState: true,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 39,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [
+                                {
+                                    facility_type_id: 39,
+                                    facility_type_name: 'Power points',
+                                    filter_display_on: 'both',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [
+                                {
+                                    facility_type_id: 39,
+                                    facility_type_name: 'Power points',
+                                    filter_display_on: 'both',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+        });
+
+        await waitFor(() => {
+            expect(screen.getByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'block' });
+            expect(screen.getByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'none' });
+        });
     });
 });
