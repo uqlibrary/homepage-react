@@ -329,7 +329,7 @@ export const SidebarFilters = ({
             facilityTypeListError === false &&
             facilityTypeListLoading === false &&
             facilityTypeList?.data?.facility_type_groups?.length > 0 &&
-            selectedFacilityTypes?.length === 0
+            selectedFacilityTypes?.filter(ft => ft.select === true)?.length === 0
         ) {
             // initialise openness storage
             const expandednessList = [];
@@ -982,6 +982,7 @@ export const SidebarFilters = ({
                     vertical: 'bottom',
                     horizontal: 'center',
                 }}
+                data-testid="popover"
             >
                 <div style={{ maxWidth: '320px', padding: '0.75rem 1rem' }}>
                     <Typography component={'h4'} variant={'subtitle2'} sx={{ mb: 0.5 }}>
@@ -990,7 +991,12 @@ export const SidebarFilters = ({
                     <Typography component={'p'} variant={'body2'} sx={{ mb: 1 }}>
                         {activeFacilityTypeInfo?.facility_type_group_help || ''}
                     </Typography>
-                    <Button size="small" onClick={closeFacilityTypeInfo} sx={{ textTransform: 'none' }}>
+                    <Button
+                        size="small"
+                        onClick={closeFacilityTypeInfo}
+                        sx={{ textTransform: 'none' }}
+                        data-testid="close-popover-button"
+                    >
                         Close
                     </Button>
                 </div>
