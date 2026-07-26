@@ -18,10 +18,13 @@ test.describe('Spaces Homepage', () => {
         await page.goto('/?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('homepage-hours-bookit-link')).toHaveText(/Book a room/);
-        await page.getByTestId('homepage-hours-bookit-link').click();
-        await expect(page).toHaveURL('http://localhost:2020/spaces?user=s1111111');
 
-        // click on to the map page
+        // navigate to spaces homepage
+        await page.getByTestId('homepage-hours-bookit-link').click();
+        await expect(page).toHaveURL('/spaces?user=s1111111');
+
+        // navigate on to the map page
+        await expect(page.getByTestId('spaces-journey-landing-browse-all')).toBeVisible();
         await page.getByTestId('spaces-journey-landing-browse-all').click();
         await expect(page).toHaveURL('/spaces/mapresults');
         await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
