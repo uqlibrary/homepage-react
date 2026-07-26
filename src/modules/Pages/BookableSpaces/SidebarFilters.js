@@ -266,7 +266,29 @@ const StyledCartoucheList = styled('ul')(({ theme }) => ({
         },
     },
 }));
-
+const StyledUqTightLinkButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    fontWeight: 500,
+    fontSize: '16px',
+    textAlign: 'left',
+    textTransform: 'none',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    lineHeight: 'normal',
+    padding: '0 4px',
+    marginLeft: '1.5rem',
+    '&:hover': {
+        backgroundColor: 'inherit',
+    },
+    '& span': {
+        textDecoration: 'underline',
+        '&:hover': {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+        },
+    },
+}));
 export const SidebarFilters = ({
     facilityTypeList,
     facilityTypeListLoading,
@@ -770,79 +792,106 @@ export const SidebarFilters = ({
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
     const renderFilterActionButtons = ({ isBottom = false } = {}) => {
-        if (isBottom && !showBottomActionButtons) return null;
-        if (!checkFiltersList?.length) return null;
-        if (suppliedClassName?.includes('journey') && !isMobileView) return null;
+        if (isBottom && !showBottomActionButtons) {
+            console.log('renderFilterActionButtons return on bottom', isBottom, !showBottomActionButtons);
+            return null;
+        }
+        if (!checkFiltersList?.length) {
+            console.log('renderFilterActionButtons return on checkFiltersList length');
+            return null;
+        }
+        // if (suppliedClassName?.includes('journey') && !isMobileView) {
+        //     console.log('renderFilterActionButtons return on journey/mobile');
+        //     return null;
+        // }
 
-        const wrapperStyles = isBottom
-            ? {
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  flexWrap: 'wrap',
-                  marginTop: '1rem',
-                  paddingTop: '1rem',
-                  borderTop: '1px solid rgba(0, 0, 0, 0.12)',
-              }
-            : {
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  flexWrap: 'wrap',
-              };
+        // const wrapperStyles = isBottom
+        //     ? {
+        //           display: 'flex',
+        //           justifyContent: 'center',
+        //           alignItems: 'center',
+        //           gap: '0.75rem',
+        //           flexWrap: 'wrap',
+        //           marginTop: '1rem',
+        //           paddingTop: '1rem',
+        //           borderTop: '1px solid rgba(0, 0, 0, 0.12)',
+        //       }
+        //     : {
+        //           display: 'flex',
+        //           justifyContent: 'center',
+        //           alignItems: 'center',
+        //           gap: '0.75rem',
+        //           flexWrap: 'wrap',
+        //       };
 
-        return !!onApplyAllFilters ? (
-            <div style={wrapperStyles}>
-                <StyledPrimaryButton
-                    id={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    data-testid={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    onClick={deSelectAll}
-                    style={{
-                        padding: '0.5rem 1rem',
-                        margin: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        columnGap: '0.5rem',
-                    }}
-                >
-                    <ReplayIcon style={{ fontSize: '16px' }} />
-                    <span>Remove all filters</span>
-                </StyledPrimaryButton>
-                <StyledPrimaryButton
-                    onClick={onApplyAllFilters}
-                    style={{
-                        padding: '0.5rem 1rem',
-                        margin: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        columnGap: '0.5rem',
-                    }}
-                >
-                    <span>Apply all filters</span>
-                </StyledPrimaryButton>
-            </div>
-        ) : (
-            <div style={wrapperStyles}>
-                <StyledPrimaryButton
-                    id={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    data-testid={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    onClick={deSelectAll}
-                    style={{
-                        padding: '0.5rem 1rem',
-                        marginRight: 'auto',
-                        marginLeft: 'auto',
-                        display: 'flex',
-                        alignItems: 'center',
-                        columnGap: '0.5rem',
-                    }}
-                >
-                    <ReplayIcon style={{ fontSize: '16px' }} />
-                    <span>Remove all filters</span>
-                </StyledPrimaryButton>
-            </div>
+        return (
+            <StyledUqTightLinkButton
+                id={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
+                data-testid={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
+                onClick={deSelectAll}
+                style={{
+                    padding: '0.5rem 1rem',
+                    margin: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    columnGap: '0.5rem',
+                }}
+            >
+                {/* <ReplayIcon style={{ fontSize: '16px' }} />*/}
+                <span>Reset filters</span>
+            </StyledUqTightLinkButton>
         );
+
+        // return !!onApplyAllFilters ? (
+        //     <div style={wrapperStyles}>
+        //         <StyledPrimaryButton
+        //             id={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
+        //             data-testid={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
+        //             onClick={deSelectAll}
+        //             style={{
+        //                 padding: '0.5rem 1rem',
+        //                 margin: 0,
+        //                 display: 'flex',
+        //                 alignItems: 'center',
+        //                 columnGap: '0.5rem',
+        //             }}
+        //         >
+        //             <ReplayIcon style={{ fontSize: '16px' }} />
+        //             <span>Remove all filters</span>
+        //         </StyledPrimaryButton>
+        //         <StyledPrimaryButton
+        //             onClick={onApplyAllFilters}
+        //             style={{
+        //                 padding: '0.5rem 1rem',
+        //                 margin: 0,
+        //                 display: 'flex',
+        //                 alignItems: 'center',
+        //                 columnGap: '0.5rem',
+        //             }}
+        //         >
+        //             <span>Apply all filters</span>
+        //         </StyledPrimaryButton>
+        //     </div>
+        // ) : (
+        //     <div style={wrapperStyles}>
+        //         <StyledPrimaryButton
+        //             id={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
+        //             data-testid={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
+        //             onClick={deSelectAll}
+        //             style={{
+        //                 padding: '0.5rem 1rem',
+        //                 marginRight: 'auto',
+        //                 marginLeft: 'auto',
+        //                 display: 'flex',
+        //                 alignItems: 'center',
+        //                 columnGap: '0.5rem',
+        //             }}
+        //         >
+        //             <ReplayIcon style={{ fontSize: '16px' }} />
+        //             <span>Remove all filters</span>
+        //         </StyledPrimaryButton>
+        //     </div>
+        // );
     };
 
     const isJourneyView = suppliedClassName?.includes('journey');
@@ -855,9 +904,12 @@ export const SidebarFilters = ({
                         Skip to list of Spaces
                     </a>
                 )}
-                <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
-                    Filter Spaces
-                </Typography>
+                <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
+                        Filter Spaces
+                    </Typography>
+                    {renderFilterActionButtons()}
+                </div>
                 {!!hasActiveFilters && (
                     <>
                         <Typography component={'h3'} variant={'h6'} data-testid="space-filter-count">
@@ -866,7 +918,6 @@ export const SidebarFilters = ({
                         <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
                             {showCartoucheList(flatFacilityTypeList)}
                         </StyledCartoucheList>
-                        {renderFilterActionButtons()}
                     </>
                 )}
                 {isLoggedIn && hasFavouriteSpaces && (

@@ -118,9 +118,9 @@ export const JourneyResultsView = ({
                     </Typography>
 
                     <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
-                        <StyledSecondaryButton onClick={handleClearJourneyFilters}>
-                            Reset quick filters
-                        </StyledSecondaryButton>
+                        {/* <StyledSecondaryButton onClick={handleClearJourneyFilters}>*/}
+                        {/*    Reset quick filters*/}
+                        {/* </StyledSecondaryButton>*/}
                         <StyledSecondaryButton onClick={goToLegacyBrowse}>View on map</StyledSecondaryButton>
                     </Stack>
 
