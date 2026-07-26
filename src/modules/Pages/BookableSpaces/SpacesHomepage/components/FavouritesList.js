@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 import SingleLinkCard from 'modules/HomePage/publicComponents/HelpNavigation/SingleLinkCard';
 import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
 
-import { serialiseJourneyUrl } from '../journeyHelpers';
+import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
 import { StyledHeaderWithLinkToAllGridItem } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomepageStyles';
 
 const StyledFavouritesContainerGrid = styled(Grid)(() => ({

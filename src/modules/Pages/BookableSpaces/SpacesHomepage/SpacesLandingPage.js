@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import FavouritesList from 'modules/Pages/BookableSpaces/SpacesHomepage/FavouritesList';
-import SpacesQuickLinks from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesQuickLinks';
+import FavouritesList from 'modules/Pages/BookableSpaces/SpacesHomepage/components/FavouritesList';
+import SpacesQuickLinks from 'modules/Pages/BookableSpaces/SpacesHomepage/components/SpacesQuickLinks';
 import { getSpaceIdentifier, findSpaceById } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
