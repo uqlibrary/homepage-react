@@ -320,3 +320,15 @@ SpaceOpenStatusChip.propTypes = {
     weeklyHoursError: PropTypes.bool,
     chipStyles: PropTypes.any,
 };
+
+export const findSpaceById = (spaces, targetSpaceId) => {
+    if (!targetSpaceId) return null;
+    return (
+        spaces?.find(space => {
+            const spaceUuid = space?.space_uuid;
+            const spaceId = space?.space_id;
+            return String(spaceUuid || '') === String(targetSpaceId) || String(spaceId || '') === String(targetSpaceId);
+        }) || null
+    );
+};
+export const getSpaceIdentifier = space => space?.space_uuid || space?.space_id || null;
