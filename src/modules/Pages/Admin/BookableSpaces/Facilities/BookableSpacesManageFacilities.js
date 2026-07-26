@@ -41,7 +41,7 @@ import {
     showGenericConfirmAndDeleteDialog,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import {
-    FILTER_DISPLAY_ON_ADVANCED,
+    FILTER_DISPLAY_ON_MAP,
     FILTER_DISPLAY_ON_BOTH,
     FILTER_DISPLAY_ON_SIMPLE,
     getFlatFacilityTypeList,
@@ -268,7 +268,7 @@ export const BookableSpacesManageFacilities = ({
                 label: 'Simple',
             },
             {
-                value: FILTER_DISPLAY_ON_ADVANCED,
+                value: FILTER_DISPLAY_ON_MAP,
                 label: 'Advanced',
             },
             {

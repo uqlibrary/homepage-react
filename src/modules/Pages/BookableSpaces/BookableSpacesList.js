@@ -34,7 +34,7 @@ import {
     FILTER_BOOKABLE_TYPE_ID,
     FILTER_CAPACITY_TYPE_ID,
     FILTER_CURRENTLY_OPEN_ACTION_NAME,
-    FILTER_DISPLAY_ON_ADVANCED,
+    FILTER_DISPLAY_ON_MAP,
     FILTER_DISPLAY_ON_BOTH,
     FILTER_DISPLAY_ON_SIMPLE,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
@@ -915,7 +915,7 @@ export const BookableSpacesList = ({
                                 const isVisibleInCurrentView =
                                     displayOn === FILTER_DISPLAY_ON_BOTH ||
                                     (useJourneyExperience && displayOn === FILTER_DISPLAY_ON_SIMPLE) ||
-                                    (!useJourneyExperience && displayOn === FILTER_DISPLAY_ON_ADVANCED);
+                                    (!useJourneyExperience && displayOn === FILTER_DISPLAY_ON_MAP);
                                 return (
                                     spaceFiltersSet?.has(child?.facility_type_id) &&
                                     !isHiddenInPublicFilterList &&
@@ -1053,7 +1053,7 @@ export const BookableSpacesList = ({
         );
 
         // Keep selected filters from mapresults active in journey view, even when those
-        // filters are hidden in simple view (e.g. advanced-only filter groups).
+        // filters are hidden in non-map view (e.g. map-only filter groups).
         resolvedFacilityStateIds.forEach(facilityTypeId => {
             if (baseFacilityTypeById.has(facilityTypeId)) {
                 return;
@@ -1280,7 +1280,7 @@ export const BookableSpacesList = ({
         (selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length || 0) +
         (showFavouriteSpacesOnly ? 1 : 0);
     const hasActiveFilters = (activeFilterCount || 0) > 0;
-    const advancedViewToggleLabel = hasActiveFilters ? 'Show in simple view' : 'Help me find a space';
+    const mapViewToggleLabel = hasActiveFilters ? 'Hide map' : 'Help me find a space';
     const highlightedSpace = React.useMemo(() => {
         const validHighlightedSpaces =
             bookableSpacesRoomList?.data?.locations?.filter(
@@ -1496,7 +1496,7 @@ export const BookableSpacesList = ({
                                             },
                                         }}
                                     >
-                                        {advancedViewToggleLabel}
+                                        {mapViewToggleLabel}
                                     </Button>
                                 </Box>
                                 <BookableSpacesMap

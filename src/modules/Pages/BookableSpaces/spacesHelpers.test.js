@@ -1,6 +1,6 @@
 import {
-    FILTER_DISPLAY_ON_ADVANCED,
     FILTER_DISPLAY_ON_BOTH,
+    FILTER_DISPLAY_ON_MAP,
     FILTER_DISPLAY_ON_SIMPLE,
     getFriendlyFloorName,
     getOrdinalSuffixFor,
@@ -157,7 +157,7 @@ describe('spaces helpers', () => {
     it('normalizes filter display on values', () => {
         // Valid values should pass through
         expect(normalizeFilterDisplayOn(FILTER_DISPLAY_ON_SIMPLE)).toEqual(FILTER_DISPLAY_ON_SIMPLE);
-        expect(normalizeFilterDisplayOn(FILTER_DISPLAY_ON_ADVANCED)).toEqual(FILTER_DISPLAY_ON_ADVANCED);
+        expect(normalizeFilterDisplayOn(FILTER_DISPLAY_ON_MAP)).toEqual(FILTER_DISPLAY_ON_MAP);
         expect(normalizeFilterDisplayOn(FILTER_DISPLAY_ON_BOTH)).toEqual(FILTER_DISPLAY_ON_BOTH);
 
         // Invalid values should default to both
