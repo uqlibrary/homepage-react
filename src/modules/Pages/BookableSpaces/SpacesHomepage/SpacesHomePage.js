@@ -91,7 +91,7 @@ const StyledLandingHeroInner = styled('div')(({ theme }) => ({
     },
 }));
 
-export const SpacesLandingPage = ({
+export const SpacesHomePage = ({
     isLoggedIn,
     spacesFavouritesList,
     isFavouriteActionInProgress = false,
@@ -183,7 +183,7 @@ export const SpacesLandingPage = ({
     );
 };
 
-SpacesLandingPage.propTypes = {
+SpacesHomePage.propTypes = {
     isLoggedIn: PropTypes.bool,
     spacesFavouritesList: PropTypes.array,
     isFavourite: PropTypes.bool,
@@ -207,4 +207,4 @@ SpacesLandingPage.propTypes = {
     activateFavouritesResults: PropTypes.func,
 };
 
-export default SpacesLandingPage;
+export default SpacesHomePage;

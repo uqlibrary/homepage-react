@@ -13,7 +13,7 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import { JourneyDetailsView } from 'modules/Pages/BookableSpaces/components/JourneyDetailsView';
 import { JourneyResultsView } from 'modules/Pages/BookableSpaces/components/JourneyResultsView';
 import { BookableSpacesJourneyView } from 'modules/Pages/BookableSpaces/components/BookableSpacesJourneyView';
-import { SpacesLandingPage } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesLandingPage';
+import { SpacesHomePage } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomePage';
 import {
     getJourneySearchParams,
     JOURNEY_VIEWS,
@@ -144,7 +144,7 @@ const getIntentFilterIds = (facilityGroups, intent) => {
     return ids;
 };
 
-const BookableSpacesHomepage = ({
+const BookableSpacesWrapper = ({
     filteredSpaceLocations,
     allSpaceLocations,
     totalSpaceCount,
@@ -565,7 +565,7 @@ const BookableSpacesHomepage = ({
             setSelectedSpace={setSelectedSpace}
             journeyTopRef={journeyTopRef}
             renderLandingView={() => (
-                <SpacesLandingPage
+                <SpacesHomePage
                     isLoggedIn={isLoggedIn}
                     spacesFavouritesList={spacesFavouritesList}
                     isFavourite={spacesFavouritesList?.some(fav => fav.space_id === allSpaceLocations?.space_id)}
@@ -672,7 +672,7 @@ const BookableSpacesHomepage = ({
     );
 };
 
-BookableSpacesHomepage.propTypes = {
+BookableSpacesWrapper.propTypes = {
     filteredSpaceLocations: PropTypes.array,
     allSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
@@ -706,4 +706,4 @@ BookableSpacesHomepage.propTypes = {
     initialView: PropTypes.oneOf(['landing', 'results', 'details']),
 };
 
-export default React.memo(BookableSpacesHomepage);
+export default React.memo(BookableSpacesWrapper);
