@@ -28,7 +28,7 @@ import {
 export const JourneyResultsView = ({
     intentSpaceLocations,
     totalSpaceCount,
-    // handleClearJourneyFilters,
+    handleClearJourneyFilters,
     goToLegacyBrowse,
     selectedFacilityTypes,
     setSelectedFacilityTypes,
@@ -123,9 +123,9 @@ export const JourneyResultsView = ({
                     </Typography>
 
                     <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
-                        {/* <StyledSecondaryButton onClick={handleClearJourneyFilters}>*/}
-                        {/*    Reset quick filters*/}
-                        {/* </StyledSecondaryButton>*/}
+                        <StyledSecondaryButton onClick={handleClearJourneyFilters}>
+                            Reset quick filters
+                        </StyledSecondaryButton>
                         <StyledSecondaryButton onClick={goToLegacyBrowse}>View on map</StyledSecondaryButton>
                     </Stack>
 
@@ -275,7 +275,7 @@ export const JourneyResultsView = ({
 JourneyResultsView.propTypes = {
     intentSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
-    // handleClearJourneyFilters: PropTypes.func,
+    handleClearJourneyFilters: PropTypes.func,
     goToLegacyBrowse: PropTypes.func,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
