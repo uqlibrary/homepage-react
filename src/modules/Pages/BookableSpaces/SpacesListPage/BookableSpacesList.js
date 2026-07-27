@@ -1363,7 +1363,6 @@ export const BookableSpacesList = ({
                             isFavouriteActionInProgress={isFavouriteActionInProgress}
                             showFavouriteSpacesOnly={showFavouriteSpacesOnly}
                             setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
-                            isLoggedIn={isLoggedIn}
                             hasFavouriteSpaces={(spacesFavouritesList || []).length > 0}
                             hasJourneyMapFilterState={Boolean(journeyMapFilterState)}
                         />

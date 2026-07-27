@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
 
-import SpaceDetails from 'modules/Pages/BookableSpaces/SpaceDetails';
+import SpaceDetails from 'modules/Pages/BookableSpaces/SpacesMapPage/SpaceDetails';
 import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
 import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesMapPage/OpenSpaceNewWindowButton';
 
