@@ -4,10 +4,10 @@ import BookableSpacesListContainer from 'modules/Pages/BookableSpaces/BookableSp
 
 import BookableSpacesPageLayout from 'modules/Pages/BookableSpaces/Shared/BookableSpacesPageLayout';
 
-const BookableSpacesResultsPage = props => (
+const BookableSpacesSimpleListPage = props => (
     <BookableSpacesPageLayout>
         <BookableSpacesListContainer {...props} />
     </BookableSpacesPageLayout>
 );
 
-export default BookableSpacesResultsPage;
+export default BookableSpacesSimpleListPage;

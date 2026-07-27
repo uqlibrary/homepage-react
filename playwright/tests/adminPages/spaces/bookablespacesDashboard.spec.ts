@@ -24,10 +24,7 @@ const ARMUS7 = '7';
 
 test.describe('Spaces Admin - manage locations', () => {
     test('page has correct data', async ({ page }) => {
-        const visibleSpaces = page
-            .getByTestId('space-table')
-            .locator('tbody')
-            .locator(':scope > tr:not(.hidden)');
+        const visibleSpaces = page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)');
 
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -677,10 +674,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
         });
         test('by locations', async ({ page }) => {
-            const visibleSpaces = page
-                .getByTestId('space-table')
-                .locator('tbody')
-                .locator(':scope > tr:not(.hidden)');
+            const visibleSpaces = page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)');
             const lawSpace = page.getByTestId(`edit-space-${FORGEN}-button`);
             const paceSpace = page.getByTestId(`edit-space-${PACE}-button`);
             const liverisSpace = page.getByTestId(`edit-space-${LIVERIS}-button`);
@@ -698,12 +692,9 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(page.getByTestId('spaces-sort-button')).toContainText('Sort by name');
 
             // initially all first page space rows are visible in name order
-            await expect(
-                page
-                    .getByTestId('space-table')
-                    .locator('tbody')
-                    .locator(':scope > tr'),
-            ).toHaveCount(PAGINATE_TO_SHOW_5);
+            await expect(page.getByTestId('space-table').locator('tbody').locator(':scope > tr')).toHaveCount(
+                PAGINATE_TO_SHOW_5,
+            );
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).not.toBeVisible();
             await expect(liverisSpace).not.toBeVisible();
@@ -901,10 +892,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(expandButton).toBeVisible();
     });
     test('pagination works', async ({ page }) => {
-        const visibleSpaces = page
-            .getByTestId('space-table')
-            .locator('tbody')
-            .locator(':scope > tr:not(.hidden)');
+        const visibleSpaces = page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)');
 
         const campusSelector = page.getByTestId('filter-by-campus');
         const librarySelector = page.getByTestId('filter-by-library');
@@ -1027,12 +1015,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(pageCountDisplay2).toBeVisible();
         await expect(pageCountDisplay2).toContainText('1–5 of 16');
 
-        await expect(
-            page
-                .getByTestId('space-table')
-                .locator('tbody')
-                .locator(':scope > tr:not(.hidden)'),
-        ).toHaveCount(5);
+        await expect(page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)')).toHaveCount(
+            5,
+        );
 
         // cookie not present
         const cookies = await context.cookies();
@@ -1043,12 +1028,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('admin-spaces-list-paginator-select')).toBeVisible();
         await page.getByTestId('admin-spaces-list-paginator-select').selectOption('10');
 
-        await expect(
-            page
-                .getByTestId('space-table')
-                .locator('tbody')
-                .locator(':scope > tr:not(.hidden)'),
-        ).toHaveCount(10);
+        await expect(page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)')).toHaveCount(
+            10,
+        );
 
         // reload page to show number of rows has increased
         await page.goto('/admin/spaces?user=libSpaces');
@@ -1062,12 +1044,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(pageCountDisplay).toBeVisible();
         await expect(pageCountDisplay).toContainText('1–10 of 16');
 
-        await expect(
-            page
-                .getByTestId('space-table')
-                .locator('tbody')
-                .locator(':scope > tr:not(.hidden)'),
-        ).toHaveCount(10);
+        await expect(page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)')).toHaveCount(
+            10,
+        );
     });
     test.describe('can bulk manage facility types', () => {
         const changeCheckboxes = async (page: Page) => {

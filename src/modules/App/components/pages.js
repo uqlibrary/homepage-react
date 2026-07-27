@@ -57,7 +57,7 @@ export const DLOOwnTeamList = lazy(() => lazyRetry(() => import('modules/Pages/A
 export const DLOOwnTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamEditContainer')));
 
 export const BookableSpacesLandingPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/BookableSpacesLandingPage')));
-export const BookableSpacesResultsPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/SpacesListPage/BookableSpacesResultsPage')));
+export const BookableSpacesSimpleListPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/SpacesListPage/BookableSpacesSimpleListPage')));
 export const BookableSpacesMapPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/SpacesListPage/MapListPage/BookableSpacesMapPage')));
 export const BookableSpacesDetailPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/SpacesDetailPage/BookableSpacesDetailPage')));
 
