@@ -23,10 +23,10 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { addClass, removeClass, standardText } from 'helpers/general';
 import { useAccountContext } from 'context';
 
-import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
-import SidebarSpacesList from 'modules/Pages/BookableSpaces/SpacesMapPage/SidebarSpacesList';
-import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
-import BookableSpacesWrapper from './BookableSpacesWrapper';
+import BookableSpacesMap from '../BookableSpacesMap';
+import SidebarSpacesList from '../SpacesMapPage/SidebarSpacesList';
+import SidebarFilters from '../SidebarFilters';
+import BookableSpacesWrapper from '../BookableSpacesWrapper';
 import {
     FACILITY_TYPE_CHECKBOX,
     FACILITY_TYPE_SLIDER,
