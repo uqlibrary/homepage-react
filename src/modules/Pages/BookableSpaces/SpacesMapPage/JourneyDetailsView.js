@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
-import { StyledJourneyPanel } from './journeyViewStyles';
+
+import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesMapPage/JourneySpaceDetailsView';
+
+import { StyledJourneyPanel } from 'modules/Pages/BookableSpaces/components/journeyViewStyles';
 
 export const JourneyDetailsView = props => {
     return (

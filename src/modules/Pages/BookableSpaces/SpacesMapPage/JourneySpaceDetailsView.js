@@ -21,7 +21,7 @@ import {
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
-const journeyFallbackDetailImage = require('../../../../public/images/digital-learning-hub-hero-shot-wide.png');
+const journeyFallbackDetailImage = require('../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
 const StyledDetailSurface = styled('div')(({ theme }) => ({
     color: theme.palette.designSystem.bodyCopy,

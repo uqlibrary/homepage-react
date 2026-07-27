@@ -10,7 +10,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import TvIcon from '@mui/icons-material/Tv';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
-import { JourneyDetailsView } from 'modules/Pages/BookableSpaces/components/JourneyDetailsView';
+import { JourneyDetailsView } from './SpacesMapPage/JourneyDetailsView';
 import { JourneyResultsView } from 'modules/Pages/BookableSpaces/components/JourneyResultsView';
 import { BookableSpacesJourneyView } from 'modules/Pages/BookableSpaces/components/BookableSpacesJourneyView';
 import { SpacesHomePage } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomePage';
