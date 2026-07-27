@@ -57,7 +57,7 @@ import {
     getFlatFacilityTypeList,
     getFriendlyLocationDescription,
     isBookable,
-} from 'modules/Pages/BookableSpaces/spacesHelpers';
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { getSpaceOutageStatus } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import {
     addBreadcrumbsToSiteHeader,
@@ -95,9 +95,10 @@ const StyledTablePagination = styled(TablePagination)(() => ({
     '& .MuiTablePagination-spacer': {
         display: 'none',
     },
-    '& .MuiTablePagination-selectLabel, .MuiTablePagination-input, .MuiTablePagination-displayedRows, .MuiTablePagination-actions ': {
-        flexShrink: 0,
-    },
+    '& .MuiTablePagination-selectLabel, .MuiTablePagination-input, .MuiTablePagination-displayedRows, .MuiTablePagination-actions ':
+        {
+            flexShrink: 0,
+        },
     '& .MuiTablePagination-input': {
         marginLeft: 0,
         '& select': {
@@ -800,9 +801,9 @@ export const BookableSpacesManageSpaces = ({
             !!selectedCampus && selectedCampus?.libraries?.find(library => library?.library_id === selectedLibraryId);
         const selectedCampusFloors = selectedCampus?.libraries?.flatMap(library => library?.floors || []) || [];
         const availableFloors = selectedLibrary?.floors || selectedCampusFloors;
-        const floorFilterTypes = [
-            ...new Map(availableFloors?.map(floor => [floor?.floor_id, floor])).values(),
-        ]?.sort((a, b) => a?.floor_name?.localeCompare(b?.floor_name));
+        const floorFilterTypes = [...new Map(availableFloors?.map(floor => [floor?.floor_id, floor])).values()]?.sort(
+            (a, b) => a?.floor_name?.localeCompare(b?.floor_name),
+        );
         const selectedSpaceType = selectedFilters?.find(f => f?.filterType === 'spaceType')?.filterValue;
         const knownSpaceTypes =
             bookableSpacesRoomList?.data?.known_space_types

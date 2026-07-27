@@ -18,16 +18,15 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import ReplayIcon from '@mui/icons-material/Replay';
 
-import { addClass, removeClass, standardText, StyledPrimaryButton } from 'helpers/general';
+import { addClass, removeClass, standardText } from 'helpers/general';
 
 import {
     FILTER_BOOKABLE_TYPE_ID,
     FILTER_CAPACITY_TYPE_ID,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
     getFlatFacilityTypeList,
-} from 'modules/Pages/BookableSpaces/spacesHelpers';
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const StyledSlider = styled(Slider)(() => ({
     marginTop: '1rem', // space for tooltips to appear in

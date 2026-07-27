@@ -6,7 +6,7 @@ import {
     getOrdinalSuffixFor,
     isInt,
     normalizeFilterDisplayOn,
-} from 'modules/Pages/BookableSpaces/spacesHelpers';
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 describe('spaces helpers', () => {
     it('creates ordinal numbers correctly', () => {

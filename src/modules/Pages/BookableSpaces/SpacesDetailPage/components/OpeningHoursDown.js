@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Box, Stack, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 
-import { spaceOpeningHours } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { spaceOpeningHours } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const StyledHeadingTypography = styled(Typography)(() => ({
     fontSize: '1rem',

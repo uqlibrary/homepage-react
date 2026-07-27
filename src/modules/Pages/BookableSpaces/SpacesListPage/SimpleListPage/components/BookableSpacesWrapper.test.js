@@ -5,22 +5,27 @@ import { waitFor } from '@testing-library/react';
 import { fireEvent, rtlRender, screen, WithRouter } from 'test-utils';
 
 jest.mock(
-    '../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
+    '../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
     () => 'mock-journey-hero-image',
 );
-jest.mock('../../../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-journey-detail-image');
+jest.mock(
+    '../../../../../../../public/images/digital-learning-hub-hero-shot-wide.png',
+    () => 'mock-journey-detail-image',
+);
 
-import BookableSpacesWrapper from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/BookableSpacesWrapper';
-import { buildLegacyBrowseNavigationUrl } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/BookableSpacesWrapper';
-import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/JourneyResultsView';
-import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/OpenSpaceNewWindowButton';
+import BookableSpacesWrapper from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
+import { buildLegacyBrowseNavigationUrl } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
+import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
+
+import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceNewWindowButton';
+
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import {
     deserialiseJourneyMapFilterState,
     parseJourneyStateFromUrl,
     serialiseJourneyMapFilterState,
     serialiseJourneyUrl,
-} from 'modules/Pages/BookableSpaces/journeyHelpers';
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 jest.mock('@mui/material', () => {
     const actual = jest.requireActual('@mui/material');

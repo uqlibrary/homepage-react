@@ -8,8 +8,11 @@ import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouri
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPagination';
 
-import { defaultChipStyles, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
+import {
+    defaultChipStyles,
+    serialiseJourneyUrl,
+    SpaceOpenStatusChip,
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
@@ -20,12 +23,12 @@ import {
     StyledResultsSidebarPanel,
     StyledResultsSplitLayout,
     StyledListItemStack,
-} from 'modules/Pages/BookableSpaces/Shared/journeyViewStyles';
+} from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
 
 export const JourneyResultsView = ({
     intentSpaceLocations,
     totalSpaceCount,
-    handleClearJourneyFilters,
+    // handleClearJourneyFilters,
     goToLegacyBrowse,
     selectedFacilityTypes,
     setSelectedFacilityTypes,
@@ -272,7 +275,7 @@ export const JourneyResultsView = ({
 JourneyResultsView.propTypes = {
     intentSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
-    handleClearJourneyFilters: PropTypes.func,
+    // handleClearJourneyFilters: PropTypes.func,
     goToLegacyBrowse: PropTypes.func,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,

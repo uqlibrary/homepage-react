@@ -60,7 +60,6 @@ import {
     spacesAdminLink,
     validLibraryList,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
-import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { ImageUploadDropzone } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/ImageUploadDropzone';
 import SpaceOutagePanel from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceOutagePanel';
 import {
@@ -70,7 +69,12 @@ import {
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceLocationMap';
 import { orderFacilityTypeGroups } from 'modules/Pages/Admin/BookableSpaces/Facilities/facilityGroupOrderHelpers';
-import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/JourneySpaceDetailsView';
+
+import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/JourneySpaceDetailsView';
+import {
+    getFlatFacilityTypeList,
+    getFriendlyLocationDescription,
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),

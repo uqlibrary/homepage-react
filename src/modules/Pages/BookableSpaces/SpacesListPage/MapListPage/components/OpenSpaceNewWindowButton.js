@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { Tooltip } from '@mui/material';
 
-import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
+import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const StyledAnchor = styled('a')(() => ({
     display: 'inline-flex',

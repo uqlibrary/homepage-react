@@ -34,13 +34,16 @@ jest.mock('context', () => ({
 
 jest.mock('@mui/material/useMediaQuery', () => jest.fn(() => false));
 
-jest.mock('modules/Pages/BookableSpaces/SpacesListPage/SpacesMapPage/SidebarSpacesList', () => () => (
+jest.mock('modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/SidebarSpacesList', () => () => (
     <div data-testid="mock-spaces-list" />
 ));
-jest.mock('modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/BookableSpacesWrapper', () => props => {
-    mockJourneyRender(props);
-    return <div data-testid="mock-journey" />;
-});
+jest.mock(
+    'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper',
+    () => props => {
+        mockJourneyRender(props);
+        return <div data-testid="mock-journey" />;
+    },
+);
 
 jest.mock('modules/Pages/BookableSpaces/Shared/SidebarFilters', () => {
     return function MockSidebarFilters(props) {

@@ -14,8 +14,8 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { SpacesHomePage } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomePage';
 
-import { JourneyDetailsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/JourneyDetailsView';
-import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/JourneyResultsView';
+import { JourneyDetailsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyDetailsView';
+import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
 
 import {
     getJourneySearchParams,
@@ -23,11 +23,11 @@ import {
     parseJourneyStateFromUrl,
     serialiseJourneyMapFilterState,
     serialiseJourneyUrl,
-} from 'modules/Pages/BookableSpaces/journeyHelpers';
-import { findSpaceById, getSpaceIdentifier } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { BookableSpacesJourneyView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/BookableSpacesJourneyView';
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { findSpaceById, getSpaceIdentifier } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { BookableSpacesJourneyView } from './BookableSpacesJourneyView';
 
-const journeyFallbackImage = require('../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
+const journeyFallbackImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
 const intentDefinitions = [
     {

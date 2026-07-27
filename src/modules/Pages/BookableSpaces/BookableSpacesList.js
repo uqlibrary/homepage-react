@@ -23,9 +23,10 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { addClass, removeClass, standardText } from 'helpers/general';
 import { useAccountContext } from 'context';
 
-import BookableSpacesWrapper from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/BookableSpacesWrapper';
+import BookableSpacesWrapper from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
+import SidebarSpacesList from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/SidebarSpacesList';
+
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
-import SidebarSpacesList from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import {
     FACILITY_TYPE_CHECKBOX,
@@ -38,19 +39,17 @@ import {
     FILTER_DISPLAY_ON_BOTH,
     FILTER_DISPLAY_ON_SIMPLE,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
+    deserialiseJourneyMapFilterState,
     getFlatFacilityTypeList,
     isBookable,
     normalizeFilterDisplayOn,
-} from 'modules/Pages/BookableSpaces/spacesHelpers';
+    serialiseJourneyMapFilterState,
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import {
     displayToastErrorMessage,
     displayToastMessage,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { CAMPUS_DUTTON_PARK } from 'config/locale';
-import {
-    deserialiseJourneyMapFilterState,
-    serialiseJourneyMapFilterState,
-} from 'modules/Pages/BookableSpaces/journeyHelpers';
 
 const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     ...standardText(theme),

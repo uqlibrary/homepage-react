@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { breadcrumbs } from 'config/routes';
 
-import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
+import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 export const removeJourneyBreadcrumbsFromHeader = breadcrumbParent => {
     breadcrumbParent?.querySelectorAll('[data-journey-breadcrumb="true"]').forEach(node => node.remove());

@@ -13,13 +13,15 @@ import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 
 import { pluralise } from 'helpers/general';
 
-import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/JourneySpaceDetailsView';
+import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/JourneySpaceDetailsView';
 
 import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
-import { getFriendlyLocationDescription, isBookable } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-import { OpeningHoursShort } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursShort';
+import { getFriendlyLocationDescription, isBookable } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
+
+import { OpeningHoursShort } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursShort';
+
+import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
 const StyledFriendlyLocationDiv = styled('div')(() => ({
     marginTop: '5px',

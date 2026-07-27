@@ -46,7 +46,7 @@ import {
     FILTER_DISPLAY_ON_SIMPLE,
     getFlatFacilityTypeList,
     normalizeFilterDisplayOn,
-} from 'modules/Pages/BookableSpaces/spacesHelpers';
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { a11yProps, reverseA11yProps } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { TabPanel } from 'modules/Pages/LearningResources/shared/TabPanel';
 import { buildFacilityGroupOrderPayload, orderFacilityTypeGroups } from './facilityGroupOrderHelpers';
