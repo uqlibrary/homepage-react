@@ -4,7 +4,7 @@ import { act } from 'react-dom/test-utils';
 
 import { fireEvent, rtlRender, screen, waitFor, WithRouter } from 'test-utils';
 
-import { BookableSpacesList, buildJourneyNavigationUrl } from './BookableSpacesList';
+import { BookableSpacesList, buildJourneyNavigationUrl } from 'modules/Pages/BookableSpaces/BookableSpacesList';
 
 const mockDispatch = jest.fn();
 const mockFlyToSpace = jest.fn();
@@ -34,10 +34,10 @@ jest.mock('context', () => ({
 
 jest.mock('@mui/material/useMediaQuery', () => jest.fn(() => false));
 
-jest.mock('modules/Pages/BookableSpaces/SpacesMapPage/SidebarSpacesList', () => () => (
+jest.mock('modules/Pages/BookableSpaces/SpacesListPage/SpacesMapPage/SidebarSpacesList', () => () => (
     <div data-testid="mock-spaces-list" />
 ));
-jest.mock('modules/Pages/BookableSpaces/SpacesListPage/BookableSpacesWrapper', () => props => {
+jest.mock('modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/BookableSpacesWrapper', () => props => {
     mockJourneyRender(props);
     return <div data-testid="mock-journey" />;
 });

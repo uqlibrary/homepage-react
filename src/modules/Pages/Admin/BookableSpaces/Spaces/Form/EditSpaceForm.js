@@ -70,7 +70,7 @@ import {
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceLocationMap';
 import { orderFacilityTypeGroups } from 'modules/Pages/Admin/BookableSpaces/Facilities/facilityGroupOrderHelpers';
-import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesMapPage/JourneySpaceDetailsView';
+import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/JourneySpaceDetailsView';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),

@@ -4,12 +4,12 @@ import MockDate from 'mockdate';
 import { rtlRender, screen } from 'test-utils';
 
 jest.mock(
-    '../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
+    '../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
     () => 'mock-journey-hero-image',
 );
-jest.mock('../../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-journey-detail-image');
+jest.mock('../../../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-journey-detail-image');
 
-import SpaceDetails from './SpaceDetails';
+import SpaceDetails from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/SpaceDetails';
 
 describe('SpaceDetails outage notices', () => {
     afterEach(() => {

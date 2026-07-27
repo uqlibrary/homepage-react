@@ -1,6 +1,6 @@
 import React from 'react';
-import BookableSpacesListContainer from './BookableSpacesListContainer';
-import BookableSpacesPageLayout from './Shared/BookableSpacesPageLayout';
+import BookableSpacesListContainer from 'modules/Pages/BookableSpaces/BookableSpacesListContainer';
+import BookableSpacesPageLayout from 'modules/Pages/BookableSpaces/Shared/BookableSpacesPageLayout';
 
 const BookableSpacesDetailPage = props => (
     <BookableSpacesPageLayout>

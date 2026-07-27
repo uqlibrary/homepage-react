@@ -13,7 +13,7 @@ import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 
 import { pluralise } from 'helpers/general';
 
-import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesMapPage/JourneySpaceDetailsView';
+import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/JourneySpaceDetailsView';
 
 import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import { getFriendlyLocationDescription, isBookable } from 'modules/Pages/BookableSpaces/spacesHelpers';
