@@ -30,7 +30,7 @@ jest.mock('@mui/material', () => {
     };
 });
 
-jest.mock('modules/Pages/BookableSpaces/BookableSpacesMap', () => {
+jest.mock('modules/Pages/BookableSpaces/Shared/BookableSpacesMap', () => {
     return function MockBookableSpacesMap() {
         return <div data-testid="mock-bookable-spaces-map" />;
     };

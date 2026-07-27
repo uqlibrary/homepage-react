@@ -56,7 +56,7 @@ jest.mock('modules/Pages/BookableSpaces/Shared/SidebarFilters', () => {
     };
 });
 
-jest.mock('modules/Pages/BookableSpaces/BookableSpacesMap', () => {
+jest.mock('modules/Pages/BookableSpaces/Shared/BookableSpacesMap', () => {
     const ReactModule = jest.requireActual('react');
 
     return ReactModule.forwardRef(function MockBookableSpacesMap(props, ref) {

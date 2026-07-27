@@ -3,7 +3,7 @@ import MockDate from 'mockdate';
 
 import { rtlRender, screen } from 'test-utils';
 
-import { BookableSpacesMapPopupContent } from './BookableSpacesMap';
+import { BookableSpacesMapPopupContent } from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
 
 describe('BookableSpacesMapPopupContent', () => {
     afterEach(() => {
