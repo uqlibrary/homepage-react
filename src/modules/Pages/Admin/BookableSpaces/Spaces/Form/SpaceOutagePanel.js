@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
@@ -120,22 +121,24 @@ export const SpaceOutagePanel = ({
     const [isSaving, setIsSaving] = useState(false);
     const [deletingOutageId, setDeletingOutageId] = useState(null);
 
-    const validation = useMemo(() => validateSpaceOutageDraft(draft, outages, editingOutageId), [
-        draft,
-        outages,
-        editingOutageId,
-    ]);
+    const validation = useMemo(
+        () => validateSpaceOutageDraft(draft, outages, editingOutageId),
+        [draft, outages, editingOutageId],
+    );
 
-    const currentOutages = useMemo(() => outages.filter(outage => getSpaceOutageStatus(outage) === 'Current'), [
-        outages,
-    ]);
-    const upcomingOutages = useMemo(() => outages.filter(outage => getSpaceOutageStatus(outage) === 'Upcoming'), [
-        outages,
-    ]);
+    const currentOutages = useMemo(
+        () => outages.filter(outage => getSpaceOutageStatus(outage) === 'Current'),
+        [outages],
+    );
+    const upcomingOutages = useMemo(
+        () => outages.filter(outage => getSpaceOutageStatus(outage) === 'Upcoming'),
+        [outages],
+    );
     const pastOutages = useMemo(() => outages.filter(outage => getSpaceOutageStatus(outage) === 'Past'), [outages]);
-    const activeAndUpcomingOutages = useMemo(() => outages.filter(outage => getSpaceOutageStatus(outage) !== 'Past'), [
-        outages,
-    ]);
+    const activeAndUpcomingOutages = useMemo(
+        () => outages.filter(outage => getSpaceOutageStatus(outage) !== 'Past'),
+        [outages],
+    );
 
     const isPastOutage = outage => getSpaceOutageStatus(outage) === 'Past';
 

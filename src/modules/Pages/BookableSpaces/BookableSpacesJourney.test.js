@@ -13,7 +13,7 @@ jest.mock('../../../../public/images/digital-learning-hub-hero-shot-wide.png', (
 import BookableSpacesHomepage from './BookableSpacesHomepage';
 import { buildLegacyBrowseNavigationUrl } from './BookableSpacesHomepage';
 import JourneyResultsView from './components/JourneyResultsView';
-import JourneySpaceDetailsView from './JourneySpaceDetailsView';
+import OpenSpaceNewWindowButton from './SpacesMapPage/OpenSpaceNewWindowButton';
 import SidebarFilters from './SidebarFilters';
 import {
     deserialiseJourneyMapFilterState,
@@ -260,6 +260,31 @@ describe('BookableSpacesJourney browser back navigation', () => {
         expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
     });
 
+    it('lets users show only their favourite spaces from the sidebar filters', () => {
+        const otherSpace = {
+            ...baseSpace,
+            space_id: 102,
+            space_uuid: 'test-space-uuid-5678',
+            space_name: 'Shared Study Room',
+        };
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+            isLoggedIn: true,
+            filteredSpaceLocations: [baseSpace, otherSpace],
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Favourite study room' }],
+        });
+
+        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.getByText('Shared Study Room')).toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole('checkbox', { name: /show favourite spaces only/i }));
+
+        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.queryByText('Shared Study Room')).not.toBeInTheDocument();
+    });
+
     it('serialises and deserialises journey filter state for the map view', () => {
         const encodedState = serialiseJourneyMapFilterState({
             selectedFacilityTypes: [
@@ -281,8 +306,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
             capacityFilterValue: [4, 8],
         });
 
-        const decodedState = decodeURIComponent(encodedState);
-        expect(decodedState).toContain('"selectedFacilityTypes":[11,12]');
+        expect(encodedState.startsWith('b64.')).toBe(true);
 
         const params = new URLSearchParams(`mapFilters=${encodedState}`);
         const parsedState = deserialiseJourneyMapFilterState(params);
@@ -411,7 +435,7 @@ describe('BookableSpacesJourney browser back navigation', () => {
 
         rtlRender(
             <WithRouter>
-                <JourneySpaceDetailsView selectedSpace={baseSpace} narrowView />
+                <OpenSpaceNewWindowButton spaceDetails={baseSpace} />
             </WithRouter>,
         );
 
@@ -465,6 +489,69 @@ describe('BookableSpacesJourney browser back navigation', () => {
             'href',
             '#/spaces/detail/test-space-uuid-1234?mapFilters=abc123&autoSelectFirstSpace=1',
         );
+    });
+
+    it('paginates long spaces lists in the journey results view', () => {
+        const manySpaces = Array.from({ length: 25 }, (_, index) => ({
+            ...baseSpace,
+            space_id: 100 + index,
+            space_name: `Space ${index + 1}`,
+            space_uuid: `space-uuid-${index + 1}`,
+        }));
+
+        rtlRender(
+            <WithRouter>
+                <JourneyResultsView
+                    intentSpaceLocations={manySpaces}
+                    totalSpaceCount={manySpaces.length}
+                    handleClearJourneyFilters={jest.fn()}
+                    goToLegacyBrowse={jest.fn()}
+                    selectedFacilityTypes={[]}
+                    setSelectedFacilityTypes={jest.fn()}
+                    filteredFacilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeListLoading={false}
+                    facilityTypeListError={null}
+                    minimumSpaceCapacity={1}
+                    maximumSpaceCapacity={20}
+                    capacityFilterValue={[1, 20]}
+                    setCapacityFilterValue={jest.fn()}
+                    campusList={[]}
+                    selectedCampus={1}
+                    handleCampusSelection={jest.fn()}
+                    activeFilterCount={0}
+                    librariesForCampus={[]}
+                    selectedLibrary={1}
+                    handleLibrarySelection={jest.fn()}
+                    shouldShowAdvancedFilters={false}
+                    isDesktopResultsLayout
+                    setShowAdvancedFilters={jest.fn()}
+                    weeklyHours={null}
+                    weeklyHoursLoading={false}
+                    weeklyHoursError={null}
+                    isFavouriteActionInProgress={false}
+                    onFavouriteToggle={jest.fn()}
+                    spacesFavouritesList={[]}
+                />
+            </WithRouter>,
+        );
+
+        expect(screen.getByText(/1-10 of 25 spaces/i)).toBeInTheDocument();
+        expect(screen.getByTestId('spaces-result-list-item-100')).toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-result-list-item-120')).not.toBeInTheDocument();
+
+        const firstPageButton = screen.getByRole('button', { name: /page 1/i });
+        const secondPageButton = screen.getByRole('button', { name: /page 2/i });
+
+        expect(firstPageButton).toHaveAttribute('aria-current', 'page');
+        expect(secondPageButton).not.toHaveAttribute('aria-current');
+
+        fireEvent.click(secondPageButton);
+
+        expect(screen.getByText(/11-20 of 25 spaces/i)).toBeInTheDocument();
+        expect(screen.getByTestId('spaces-result-list-item-110')).toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-result-list-item-100')).not.toBeInTheDocument();
+        expect(secondPageButton).toHaveAttribute('aria-current', 'page');
     });
 
     it('builds browser-router map URL with encoded mapFilters and autoSelectFirstSpace', () => {

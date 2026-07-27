@@ -2,6 +2,70 @@ export const JOURNEY_VIEWS = ['landing', 'intent', 'results', 'details'];
 export const JOURNEY_QUERY_PARAM_STEP = 'journeyStep';
 export const JOURNEY_QUERY_PARAM_INTENT = 'journeyIntent';
 export const JOURNEY_QUERY_PARAM_SPACE = 'journeySpace';
+const MAP_FILTERS_BASE64_PREFIX = 'b64.';
+
+const encodeBase64 = value => {
+    if (typeof btoa === 'function') {
+        return btoa(unescape(encodeURIComponent(value)));
+    }
+
+    if (typeof Buffer !== 'undefined') {
+        return Buffer.from(value, 'utf8').toString('base64');
+    }
+
+    return null;
+};
+
+const decodeBase64 = value => {
+    if (typeof atob === 'function') {
+        return decodeURIComponent(escape(atob(value)));
+    }
+
+    if (typeof Buffer !== 'undefined') {
+        return Buffer.from(value, 'base64').toString('utf8');
+    }
+
+    return null;
+};
+
+const toBase64Url = value => value.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+
+const fromBase64Url = value => {
+    const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
+    const paddingLength = normalized.length % 4;
+    if (paddingLength === 0) {
+        return normalized;
+    }
+
+    return normalized + '='.repeat(4 - paddingLength);
+};
+
+const parseMapFiltersPayload = candidate => {
+    try {
+        return JSON.parse(candidate);
+    } catch (error) {
+        // Continue trying alternate representations.
+    }
+
+    const maybeBase64Payload = candidate.startsWith(MAP_FILTERS_BASE64_PREFIX)
+        ? candidate.slice(MAP_FILTERS_BASE64_PREFIX.length)
+        : candidate;
+
+    if (!/^[A-Za-z0-9\-_]+$/.test(maybeBase64Payload)) {
+        return null;
+    }
+
+    const decodedBase64 = decodeBase64(fromBase64Url(maybeBase64Payload));
+    if (!decodedBase64) {
+        return null;
+    }
+
+    try {
+        return JSON.parse(decodedBase64);
+    } catch (error) {
+        return null;
+    }
+};
 
 export const getJourneySearchParams = url => {
     // Preserve original behaviour in Jest tests (which expect params in
@@ -62,6 +126,7 @@ export const serialiseJourneyMapFilterState = ({
     selectedCampus,
     selectedLibrary,
     capacityFilterValue,
+    showFavouriteSpacesOnly,
 }) => {
     const selectedFacilityIds = (selectedFacilityTypes || []).reduce((acc, filter) => {
         const facilityTypeId = filter?.facility_type_id;
@@ -89,9 +154,17 @@ export const serialiseJourneyMapFilterState = ({
         ...(selectedCampus !== null && selectedCampus !== undefined ? { selectedCampus } : {}),
         ...(selectedLibrary !== null && selectedLibrary !== undefined ? { selectedLibrary } : {}),
         ...(Array.isArray(capacityFilterValue) && capacityFilterValue.length > 0 ? { capacityFilterValue } : {}),
+        ...(showFavouriteSpacesOnly ? { showFavouriteSpacesOnly: true } : {}),
     };
 
-    return encodeURIComponent(JSON.stringify(serialised));
+    const jsonPayload = JSON.stringify(serialised);
+    const encodedPayload = encodeBase64(jsonPayload);
+
+    if (!encodedPayload) {
+        return jsonPayload;
+    }
+
+    return `${MAP_FILTERS_BASE64_PREFIX}${toBase64Url(encodedPayload)}`;
 };
 
 export const deserialiseJourneyMapFilterState = searchParams => {
@@ -101,7 +174,35 @@ export const deserialiseJourneyMapFilterState = searchParams => {
     }
 
     try {
-        const parsed = JSON.parse(decodeURIComponent(encodedState));
+        const candidates = [encodedState];
+        let decodedState = encodedState;
+
+        // Backward compatibility: historic URLs double-encoded mapFilters.
+        for (let i = 0; i < 2; i += 1) {
+            try {
+                const nextDecoded = decodeURIComponent(decodedState);
+                if (nextDecoded === decodedState) {
+                    break;
+                }
+                candidates.push(nextDecoded);
+                decodedState = nextDecoded;
+            } catch (error) {
+                break;
+            }
+        }
+
+        const parsed = candidates.reduce((acc, candidate) => {
+            if (acc) {
+                return acc;
+            }
+
+            return parseMapFiltersPayload(candidate);
+        }, null);
+
+        if (!parsed) {
+            return null;
+        }
+
         const selectedFacilityTypes = Array.isArray(parsed?.selectedFacilityTypes) ? parsed.selectedFacilityTypes : [];
         const unselectedFacilityTypes = Array.isArray(parsed?.unselectedFacilityTypes)
             ? parsed.unselectedFacilityTypes
@@ -159,6 +260,7 @@ export const deserialiseJourneyMapFilterState = searchParams => {
             selectedCampus: parsed?.selectedCampus ?? null,
             selectedLibrary: parsed?.selectedLibrary ?? null,
             capacityFilterValue: Array.isArray(parsed?.capacityFilterValue) ? parsed.capacityFilterValue : null,
+            showFavouriteSpacesOnly: parsed?.showFavouriteSpacesOnly === true,
         };
     } catch (error) {
         return null;
@@ -186,7 +288,7 @@ export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
         const params = new URLSearchParams(hashQuery || url.search || '');
         const nextParams = new URLSearchParams();
 
-        ['mapFilters', 'autoSelectFirstSpace'].forEach(key => {
+        ['mapFilters', 'autoSelectFirstSpace', 'user'].forEach(key => {
             const value = params.get(key);
             if (value !== null) {
                 nextParams.set(key, value);
@@ -234,7 +336,9 @@ export const parseJourneyStateFromUrl = availableIntentDefinitions => {
         }
 
         const decodedIntentId = decodeURIComponent(String(rawIntentId));
-        return availableIntentDefinitions?.some(intent => intent.id === decodedIntentId) ? decodedIntentId : null;
+        const isKnownIntent = availableIntentDefinitions?.some(intent => intent.id === decodedIntentId);
+        const isFavouriteIntent = decodedIntentId === 'favourite';
+        return isKnownIntent || isFavouriteIntent ? decodedIntentId : null;
     };
 
     if (pathname === '/spaces/mapresults' || pathname.startsWith('/spaces/mapresults/')) {

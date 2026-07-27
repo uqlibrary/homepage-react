@@ -7,24 +7,19 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
-import { baseButtonStyles, baseHoverFocusStyles, pluralise, StyledPrimaryButton } from 'helpers/general';
+import { pluralise } from 'helpers/general';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
-import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
+import { BookingLink } from 'modules/Pages/BookableSpaces/BookingLink';
 import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/OpeningHoursDown';
+import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
+import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
 import {
     defaultChipStyles,
     getFriendlyLocationDescription,
     SpaceOpenStatusChip,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import {
-    formatSpaceOutageRangeForPublicNotice,
-    formatSpaceOutageUntilForPublicNotice,
-    getSpaceOutageShowTimePublic,
-    getVisibleSpaceOutage,
-} from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
+import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
 const journeyFallbackDetailImage = require('../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
@@ -127,66 +122,9 @@ const StyledTopBox = styled(Box)(() => ({
         gridTemplateColumns: '1fr 1fr',
     },
     // '&.verticallayout': {
-    //     gridTemplateColumns: '1fr',
     // },
 }));
 
-const StyledTightLinkButton = styled(Button)(({ theme }) => ({
-    ...baseButtonStyles,
-    padding: 0,
-    borderColor: '#fff',
-    textDecoration: 'underline',
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-    color: theme.palette.primary.main,
-    borderRadius: 0,
-    '&:hover, &:focus': {
-        ...baseHoverFocusStyles,
-        backgroundColor: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main,
-        color: '#fff',
-    },
-}));
-
-const OpenSpaceNewWindowButton = ({ spaceDetails }) => {
-    const detailUrl = React.useMemo(
-        () =>
-            serialiseJourneyUrl({
-                view: 'details',
-                spaceId: spaceDetails?.space_uuid || spaceDetails?.space_id || null,
-            }),
-        [spaceDetails?.space_uuid, spaceDetails?.space_id],
-    );
-
-    return (
-        <a
-            href={detailUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ display: 'inline-flex', pr: 0 }}
-            aria-label={`Open Space ${spaceDetails?.space_name} in a new window`}
-        >
-            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
-                <path
-                    d="m6.743 9.257-2.514 2.514-2.515 2.515M14.286 5.486V1.714h-3.772"
-                    stroke="#000"
-                    strokeWidth=".75"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-                <path
-                    d="M1.714 10.514v3.772h3.772M14.286 1.714 9.257 6.743"
-                    stroke="#000"
-                    strokeWidth=".75"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-            </svg>
-        </a>
-    );
-};
-OpenSpaceNewWindowButton.propTypes = {
-    spaceDetails: PropTypes.object,
-};
 const JourneySpaceDetailsView = ({
     selectedSpace,
     weeklyHours,
@@ -312,7 +250,7 @@ const JourneySpaceDetailsView = ({
                         <StyledSpaceTitleWrapperBox>
                             <span>
                                 {!narrowView && isLoggedIn && !!selectedSpace?.space_id && (
-                                    <RenderFavouriteIcon
+                                    <SpaceFavouriteIcon
                                         bookableSpace={selectedSpace}
                                         isFavourite={isSelectedSpaceFavourite}
                                         onFavouriteToggle={() => onFavouriteToggle?.(selectedSpace)}
@@ -322,14 +260,12 @@ const JourneySpaceDetailsView = ({
                                 <Typography
                                     component="h2"
                                     variant="h5"
-                                    data-testid={`spaces-${selectedSpace?.space_id}-details-name`}
+                                    data-testid={`space-${selectedSpace?.space_id}-details-name`}
                                 >
                                     {selectedSpace?.space_name}
                                 </Typography>
                             </span>
-                            {narrowView && <OpenSpaceNewWindowButton spaceDetails={selectedSpace} />}
                         </StyledSpaceTitleWrapperBox>
-                        {/* <StyledNameTypography variant="body2">{selectedSpace?.space_library_name}</StyledNameTypography>*/}
                         <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
                             {getFriendlyLocationDescription(selectedSpace, false, { space_name: true })}
                         </StyledFriendlyLocationDiv>{' '}
@@ -361,36 +297,11 @@ const JourneySpaceDetailsView = ({
                     </Box>
 
                     {!!visibleOutage && (
-                        <UserAttention
-                            titleText={visibleOutage.status === 'Current' ? 'Current closure' : 'Upcoming closure'}
-                            tone={visibleOutage.tone}
-                            variant="aligned"
-                        >
-                            <Typography
-                                variant="body2"
-                                data-testid={`spaces-journey-outage-message-${selectedSpace?.space_id}`}
-                            >
-                                {visibleOutage.status === 'Current'
-                                    ? `Currently unavailable until ${formatSpaceOutageUntilForPublicNotice(
-                                          visibleOutage.outage?.space_outage_end,
-                                          undefined,
-                                          getSpaceOutageShowTimePublic(visibleOutage.outage),
-                                      )}.`
-                                    : `Closed ${formatSpaceOutageRangeForPublicNotice(
-                                          visibleOutage.outage?.space_outage_start,
-                                          visibleOutage.outage?.space_outage_end,
-                                          getSpaceOutageShowTimePublic(visibleOutage.outage),
-                                      )}.`}
-                            </Typography>
-                            {!!visibleOutage.reason && (
-                                <Typography
-                                    variant="body2"
-                                    data-testid={`space-${selectedSpace?.space_id}-outage-reason`}
-                                >
-                                    Reason: {visibleOutage.reason}
-                                </Typography>
-                            )}
-                        </UserAttention>
+                        <SpaceOutageNotice
+                            bookableSpace={selectedSpace}
+                            visibleOutage={visibleOutage}
+                            hideReason={!visibleOutage.reason}
+                        />
                     )}
 
                     {!!(
@@ -428,22 +339,7 @@ const JourneySpaceDetailsView = ({
                     Space details
                 </StyledH3Typography>
                 <Stack spacing={2.5}>
-                    {!!selectedSpace?.space_external_book_url ? (
-                        <Box>
-                            <StyledPrimaryButton
-                                variant="contained"
-                                component="a"
-                                href={selectedSpace.space_external_book_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                sx={{ textTransform: 'none' }}
-                            >
-                                Book this space
-                            </StyledPrimaryButton>
-                        </Box>
-                    ) : (
-                        <Typography variant="body2">No booking required.</Typography>
-                    )}
+                    <BookingLink bookableSpace={selectedSpace} />
 
                     {!!(selectedSpace?.space_capacity && selectedSpace.space_capacity > 0) && (
                         <Box>

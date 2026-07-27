@@ -10,7 +10,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const typLeft = {
+const topLeft = {
     padding: '0.25rem',
     '&.topLeft': {
         // on the results page, we have to position it absolutely over the main panel, because we cant put a button within a link!
@@ -20,14 +20,16 @@ const typLeft = {
         left: '1.25rem',
     },
 };
-const StyledTooltip = styled(Tooltip)(() => typLeft);
-const StyledCircularProgress = styled(CircularProgress)(() => typLeft);
-export const RenderFavouriteIcon = ({
+const StyledTooltip = styled(Tooltip)(() => topLeft);
+const StyledCircularProgress = styled(CircularProgress)(() => topLeft);
+
+export const SpaceFavouriteIcon = ({
     bookableSpace,
     isFavourite,
     onFavouriteToggle,
     isFavouriteActionInProgress,
     iconPosition,
+    ariaLabel,
 }) => {
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
@@ -51,11 +53,10 @@ export const RenderFavouriteIcon = ({
 
     if (isFavourite) {
         return (
-            <StyledTooltip title="Remove from Favourites" arrow className={iconPosition}>
+            <StyledTooltip title={ariaLabel ? `${ariaLabel}` : 'Remove from Favourites'} arrow className={iconPosition}>
                 <IconButton
                     onClick={() => onFavouriteToggle('removeSpaceFavourite', bookableSpace?.space_id)}
-                    aria-label="Remove from Favourites"
-                    data-testid={`spaces-detail-${bookableSpace?.space_id}-unfavourite`}
+                    data-testid={`space-${bookableSpace?.space_id}-detail-unfavourite`}
                     size="large"
                 >
                     <StarIcon
@@ -76,7 +77,7 @@ export const RenderFavouriteIcon = ({
             <IconButton
                 onClick={() => onFavouriteToggle('addSpaceFavourite', bookableSpace?.space_id)}
                 aria-label="Add to Favourites"
-                data-testid={`spaces-detail-${bookableSpace?.space_id}-favourite`}
+                data-testid={`space-${bookableSpace?.space_id}-detail-favourite`}
                 size="large"
             >
                 <StarBorderIcon
@@ -91,11 +92,12 @@ export const RenderFavouriteIcon = ({
         </StyledTooltip>
     );
 };
-RenderFavouriteIcon.propTypes = {
+SpaceFavouriteIcon.propTypes = {
     bookableSpace: PropTypes.any,
     isFavourite: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
     isFavouriteActionInProgress: PropTypes.any,
     iconPosition: PropTypes.any,
+    ariaLabel: PropTypes.string,
 };
-export default RenderFavouriteIcon;
+export default SpaceFavouriteIcon;

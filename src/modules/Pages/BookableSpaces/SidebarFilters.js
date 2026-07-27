@@ -57,7 +57,7 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
     '& p': {
         margin: '0 0 0 1rem',
     },
-    '&:has(.rightSlider)': {
+    '&.hasRightSlider': {
         display: 'block',
     },
     '& label': {
@@ -175,6 +175,29 @@ const StyledFacilityGroup = styled('div')(({ theme }) => ({
         marginBottom: 0,
     },
 }));
+const StyledFavouriteFilterGroup = styled('div')(({ theme }) => ({
+    borderBottom: theme.palette.designSystem.border,
+    paddingBlock: '16px',
+    '& label': {
+        ...standardText(theme),
+        textDecoration: 'underline',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+        cursor: 'pointer',
+        '&:hover, :focus': {
+            '& > span:nth-of-type(2)': {
+                backgroundColor: theme.palette.primary.main,
+                color: '#fff',
+                textDecoration: 'underline',
+                lineHeight: 1.2,
+            },
+        },
+    },
+    '& span:not(.fortestfocus)': {
+        cursor: 'pointer',
+    },
+}));
 const StyledFilterSpaceListTypographyHeading = styled('h3')(() => ({
     display: 'flex',
     justifyContent: 'flex-start',
@@ -266,6 +289,10 @@ export const SidebarFilters = ({
     onApplyAllFilters,
     showBottomActionButtons = false,
     hasJourneyMapFilterState = false,
+    showFavouriteSpacesOnly = false,
+    setShowFavouriteSpacesOnly = () => {},
+    isLoggedIn = false,
+    hasFavouriteSpaces = false,
 }) => {
     const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
     const [defaultCampus, setDefaultCampus] = React.useState(1);
@@ -298,22 +325,39 @@ export const SidebarFilters = ({
 
     React.useEffect(() => {
         if (
+            facilityTypeListError !== false ||
+            facilityTypeListLoading !== false ||
+            !facilityTypeList?.data?.facility_type_groups?.length ||
+            facilityTypeFilterGroupExpandedness?.length > 0
+        ) {
+            return;
+        }
+
+        const expandednessList = [];
+        sortedUsedGroups()?.forEach(group => {
+            expandednessList.push({
+                groupId: group?.facility_type_group_id,
+                isGroupExpanded: group?.facility_type_group_loads_open,
+            });
+        });
+
+        setFacilityTypeFilterGroupExpandedness(expandednessList);
+    }, [
+        facilityTypeList,
+        facilityTypeListError,
+        facilityTypeListLoading,
+        facilityTypeFilterGroupExpandedness?.length,
+        filteredFacilityTypeList,
+    ]);
+
+    React.useEffect(() => {
+        if (
             !hasJourneyMapFilterState &&
             facilityTypeListError === false &&
             facilityTypeListLoading === false &&
             facilityTypeList?.data?.facility_type_groups?.length > 0 &&
-            selectedFacilityTypes?.length === 0
+            selectedFacilityTypes?.filter(ft => ft.select === true)?.length === 0
         ) {
-            // initialise openness storage
-            const expandednessList = [];
-            sortedUsedGroups()?.map(g => {
-                expandednessList?.push({
-                    groupId: g?.facility_type_group_id,
-                    isGroupExpanded: g?.facility_type_group_loads_open,
-                });
-            });
-            setFacilityTypeFilterGroupExpandedness(expandednessList);
-
             const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
             const newFilters = flatFacilityTypeList?.map(facilityType => {
                 return {
@@ -607,14 +651,16 @@ export const SidebarFilters = ({
         );
     };
     const getStyledInputListItem = facilityType => {
+        const isCapacityFilter = facilityType?.facility_type_id === FILTER_CAPACITY_TYPE_ID;
         return (
             <StyledInputListItem
                 key={`facility-type-listitem-${facilityType?.facility_type_id}`}
                 id={`facility-type-listitem-${facilityType?.facility_type_id}`}
                 data-testid={`facility-type-listitem-${facilityType?.facility_type_id}`}
+                className={isCapacityFilter ? 'hasRightSlider' : undefined}
             >
-                {facilityType.facility_type_id === FILTER_CAPACITY_TYPE_ID && writeCapacitySlider(facilityType)}
-                {facilityType.facility_type_id !== FILTER_CAPACITY_TYPE_ID && (
+                {isCapacityFilter && writeCapacitySlider(facilityType)}
+                {!isCapacityFilter && (
                     <>
                         <InputLabel
                             title={`Filter in Spaces with ${facilityType?.facility_type_name}`}
@@ -799,10 +845,6 @@ export const SidebarFilters = ({
         );
     };
 
-    if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
-        return null;
-    }
-
     const isJourneyView = suppliedClassName?.includes('journey');
 
     return (
@@ -826,6 +868,26 @@ export const SidebarFilters = ({
                         </StyledCartoucheList>
                         {renderFilterActionButtons()}
                     </>
+                )}
+                {isLoggedIn && hasFavouriteSpaces && (
+                    <StyledFavouriteFilterGroup>
+                        <InputLabel
+                            title="Show favourite spaces only"
+                            htmlFor="filter-show-favourite-spaces-only"
+                            className="selectedFilterTypeLabel"
+                            style={{ marginLeft: '0.25rem' }}
+                        >
+                            <Checkbox
+                                checked={Boolean(showFavouriteSpacesOnly)}
+                                onChange={event => setShowFavouriteSpacesOnly(event?.target?.checked)}
+                                data-testid="filter-show-favourite-spaces-only"
+                                id="filter-show-favourite-spaces-only"
+                                className="selectedFilterType"
+                                inputProps={{ 'aria-label': 'Show favourite spaces only' }}
+                            />
+                            <span>Show favourite spaces only</span>
+                        </InputLabel>
+                    </StyledFavouriteFilterGroup>
                 )}
                 {campusList?.length > 0 && (
                     <StyledCampusWrapperDiv>
@@ -939,6 +1001,7 @@ export const SidebarFilters = ({
                     vertical: 'bottom',
                     horizontal: 'center',
                 }}
+                data-testid="popover"
             >
                 <div style={{ maxWidth: '320px', padding: '0.75rem 1rem' }}>
                     <Typography component={'h4'} variant={'subtitle2'} sx={{ mb: 0.5 }}>
@@ -947,7 +1010,12 @@ export const SidebarFilters = ({
                     <Typography component={'p'} variant={'body2'} sx={{ mb: 1 }}>
                         {activeFacilityTypeInfo?.facility_type_group_help || ''}
                     </Typography>
-                    <Button size="small" onClick={closeFacilityTypeInfo} sx={{ textTransform: 'none' }}>
+                    <Button
+                        size="small"
+                        onClick={closeFacilityTypeInfo}
+                        sx={{ textTransform: 'none' }}
+                        data-testid="close-popover-button"
+                    >
                         Close
                     </Button>
                 </div>
@@ -977,6 +1045,11 @@ SidebarFilters.propTypes = {
     handleLibrarySelection: PropTypes.func,
     onApplyAllFilters: PropTypes.func,
     showBottomActionButtons: PropTypes.bool,
+    showFavouriteSpacesOnly: PropTypes.bool,
+    setShowFavouriteSpacesOnly: PropTypes.func,
+    isLoggedIn: PropTypes.bool,
+    hasFavouriteSpaces: PropTypes.bool,
+    hasJourneyMapFilterState: PropTypes.bool,
 };
 
 export default React.memo(SidebarFilters);

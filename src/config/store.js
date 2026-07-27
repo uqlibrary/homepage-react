@@ -1,10 +1,10 @@
 import { applyMiddleware, compose, createStore } from 'redux';
-import Immutable from 'immutable';
+import { Map } from 'immutable';
 import thunk from 'redux-thunk';
 import { saveReducerOnSessionExpired } from 'middleware';
 import rootReducer from '../reducer';
 
-export const getStore = (initialState = Immutable.Map()) => {
+export const getStore = (initialState = Map()) => {
     const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
     const store = createStore(

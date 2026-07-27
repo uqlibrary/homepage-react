@@ -31,10 +31,28 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
 }));
 
 // changing this? Consider updating SpacesAdminPage as well
-export const StandardPage = ({ title, children, standardPageId }) => {
+export const StandardPage = ({ title, children, standardPageId, fullWidth = false }) => {
+    const containerStyle = fullWidth
+        ? {
+              width: '100%',
+              maxWidth: '100%',
+              marginLeft: 0,
+              marginRight: 0,
+              paddingLeft: 0,
+              paddingRight: 0,
+          }
+        : undefined;
+
     return (
-        <div className="layout-card" id={standardPageId} data-testid={standardPageId}>
-            <Grid justifyContent={'flex-start'} container spacing={0} data-testid="StandardPage" id="StandardPage">
+        <div className="layout-card" id={standardPageId} data-testid={standardPageId} style={containerStyle}>
+            <Grid
+                justifyContent={'flex-start'}
+                container
+                spacing={0}
+                data-testid="StandardPage"
+                id="StandardPage"
+                style={fullWidth ? { width: '100%', maxWidth: '100%' } : undefined}
+            >
                 {title && (
                     <StyledGrid item xs className={'title'}>
                         <Typography
@@ -60,6 +78,7 @@ StandardPage.propTypes = {
     help: PropTypes.object,
     children: PropTypes.any,
     standardPageId: PropTypes.string,
+    fullWidth: PropTypes.bool,
 };
 
 export default StandardPage;

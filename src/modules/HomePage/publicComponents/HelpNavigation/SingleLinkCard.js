@@ -166,8 +166,9 @@ const SingleLinkCard = ({
     fillContainer,
     testId,
     onClick,
-    disableHover,
     showH3 = null,
+    followingElement,
+    ariaLabel,
 }) => {
     const _showH3 = showH3 === null ? loggedIn : showH3;
     return (
@@ -185,6 +186,7 @@ const SingleLinkCard = ({
                             onClick(e);
                         }
                     }}
+                    aria-label={ariaLabel}
                 >
                     <div className={'panelBodyWrapper'}>
                         {!!iconBackgroundImage && paneIcon(iconBackgroundImage)}
@@ -200,6 +202,7 @@ const SingleLinkCard = ({
                     </div>
                 </StyledLink>
             </div>
+            {followingElement}
         </StyledGridItem>
     );
 };
@@ -214,6 +217,8 @@ SingleLinkCard.propTypes = {
     testId: PropTypes.string,
     onClick: PropTypes.func,
     showH3: PropTypes.any,
+    followingElement: PropTypes.any,
+    ariaLabel: PropTypes.string,
 };
 
 export default SingleLinkCard;

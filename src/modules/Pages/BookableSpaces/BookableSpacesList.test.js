@@ -160,12 +160,12 @@ describe('BookableSpacesList campus selection', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        window.history.replaceState({}, '', '/spaces?advanced=1');
+        window.history.replaceState({}, '', '/spaces');
     });
 
     it('flies to selected campus when campus value is received as a string', async () => {
         rtlRender(
-            <WithRouter route="/spaces" initialEntries={['/spaces?advanced=1']}>
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
                 <BookableSpacesList {...baseProps} />
             </WithRouter>,
         );
@@ -196,16 +196,16 @@ describe('BookableSpacesList campus selection', () => {
             }),
         );
 
-        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
 
         const { rerender } = rtlRender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...baseProps} facilityTypeList={{ data: { facility_type_groups: [] } }} />
             </WithRouter>,
         );
 
         rerender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...baseProps} />
             </WithRouter>,
         );
@@ -236,10 +236,10 @@ describe('BookableSpacesList campus selection', () => {
             }),
         );
 
-        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
 
         rtlRender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...baseProps} />
             </WithRouter>,
         );
@@ -263,7 +263,7 @@ describe('BookableSpacesList campus selection', () => {
 
     it('returns to the journey landing state when the advanced-view button is used without active filters', () => {
         const navigatedUrl = buildJourneyNavigationUrl({
-            currentUrl: 'http://localhost/spaces?advanced=1',
+            currentUrl: 'http://localhost/spaces',
             selectedFacilityTypes: [],
             selectedCampus: 1,
             selectedLibrary: 0,
@@ -275,9 +275,36 @@ describe('BookableSpacesList campus selection', () => {
         expect(navigatedUrl).toContain('/spaces');
     });
 
+    it('routes to the journey results step when a non-default campus selection is active without facility filters', () => {
+        const navigatedUrl = buildJourneyNavigationUrl({
+            currentUrl: 'http://localhost/spaces',
+            selectedFacilityTypes: [],
+            selectedCampus: 2,
+            selectedLibrary: 0,
+            capacityFilterValue: [],
+        });
+
+        expect(navigatedUrl).toContain('/spaces/results');
+        expect(navigatedUrl).toContain('mapFilters=');
+    });
+
+    it('routes to journey results when favourites-only mode is active', () => {
+        const navigatedUrl = buildJourneyNavigationUrl({
+            currentUrl: 'http://localhost/spaces/mapresults',
+            selectedFacilityTypes: [],
+            selectedCampus: 1,
+            selectedLibrary: 0,
+            capacityFilterValue: [],
+            showFavouriteSpacesOnly: true,
+        });
+
+        expect(navigatedUrl).toContain('/spaces/results');
+        expect(navigatedUrl).toContain('mapFilters=');
+    });
+
     it('defaults the journey handoff to the results step when filters are active', () => {
         const navigatedUrl = buildJourneyNavigationUrl({
-            currentUrl: 'http://localhost/spaces?advanced=1',
+            currentUrl: 'http://localhost/spaces',
             selectedFacilityTypes: [{ facility_type_id: 11, selected: true, unselected: false }],
             selectedCampus: 1,
             selectedLibrary: 11,
@@ -336,10 +363,10 @@ describe('BookableSpacesList campus selection', () => {
             },
         };
 
-        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
 
         rtlRender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...props} />
             </WithRouter>,
         );
@@ -409,10 +436,10 @@ describe('BookableSpacesList campus selection', () => {
             },
         };
 
-        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
 
         rtlRender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...props} />
             </WithRouter>,
         );
@@ -441,10 +468,10 @@ describe('BookableSpacesList campus selection', () => {
             }),
         );
 
-        window.history.replaceState({}, '', `/spaces?advanced=1&mapFilters=${encodedState}`);
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
 
         rtlRender(
-            <WithRouter route="/spaces" initialEntries={[`/spaces?advanced=1&mapFilters=${encodedState}`]}>
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
                 <BookableSpacesList {...baseProps} />
             </WithRouter>,
         );
@@ -476,6 +503,104 @@ describe('BookableSpacesList campus selection', () => {
                 ]),
             );
         });
+    });
+
+    it('applies advanced-only map filters in journey results view', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [57],
+                selectedCampus: 1,
+                selectedLibrary: 0,
+                capacityFilterValue: [1, 24],
+            }),
+        );
+
+        const props = {
+            ...baseProps,
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Advanced facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: 1,
+                            facility_type_children: [
+                                {
+                                    facility_type_id: 57,
+                                    facility_type_name: 'Wireless charger',
+                                    filter_display_on: 'advanced',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[0],
+                            space_id: 301,
+                            space_name: 'St Lucia space with charger',
+                            facility_types: [{ facility_type_id: 57, facility_type_name: 'Wireless charger' }],
+                        },
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[0],
+                            space_id: 302,
+                            space_name: 'St Lucia space without charger',
+                            facility_types: [{ facility_type_id: 11, facility_type_name: 'Whiteboard' }],
+                        },
+                    ],
+                },
+            },
+        };
+
+        window.history.replaceState({}, '', `/spaces/results?mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces/results" initialEntries={[`/spaces/results?mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestJourneyProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+
+        expect(latestJourneyProps.filteredSpaceLocations).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    space_id: 301,
+                    space_name: 'St Lucia space with charger',
+                }),
+            ]),
+        );
+        expect(latestJourneyProps.filteredSpaceLocations).toHaveLength(1);
+    });
+
+    it('restores favourites-only mode from mapFilters state in the URL', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [],
+                selectedCampus: 1,
+                selectedLibrary: 0,
+                capacityFilterValue: [1, 50],
+                showFavouriteSpacesOnly: true,
+            }),
+        );
+
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...baseProps} spacesFavouritesList={[{ space_id: 101 }]} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        expect(latestSidebarProps.showFavouriteSpacesOnly).toBe(true);
     });
 
     it('passes null highlightedSpace when there are no valid highlighted spaces', async () => {

@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
-import { typeCKEditor } from '@uq/pw/lib/ckeditor';
+import { typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 test.describe('Digital Learning Hub admin Series management - add item', () => {
@@ -29,8 +29,10 @@ test.describe('Digital Learning Hub admin Series management - add item', () => {
 
             // series name input shows correctly
             await expect(page.locator('[data-testid="series-name"] input')).toBeVisible();
-            // CKEditor should show
-            await expect(page.locator('[class="ck ck-editor__main"]')).toBeVisible();
+            // RichTextEditor should show
+            await expect(
+                page.locator('.MuiTiptap-FieldContainer-root [data-testid="object-description"]'),
+            ).toBeVisible();
             await expect(page.locator('#dragLandingAarea').getByText('(None yet)')).toBeVisible();
         });
         test('is accessible', async ({ page }) => {
@@ -47,7 +49,7 @@ test.describe('Digital Learning Hub admin Series management - add item', () => {
             ).toBeVisible();
 
             await page.locator('[data-testid="series-name"] input').fill('Series without objects');
-            await typeCKEditor(page, 'This is a series without any objects');
+            await typeRichTextEditor(page, 'This is a series without any objects');
             // should have no current objects already in the series
             await expect(page.locator('#dragLandingAarea').getByText('(None yet)')).toBeVisible();
 

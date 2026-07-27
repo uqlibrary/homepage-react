@@ -38,13 +38,11 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { ClassicEditor, Essentials, Heading, Indent, Bold, Italic, Link, List } from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
 import parse from 'html-react-parser';
 
 import { useAccountContext } from 'context';
 import { useConfirmationState } from 'hooks';
+import { RichTextEditor } from 'modules/SharedComponents/RichTextEditor';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import {
     addClass,
@@ -422,19 +420,6 @@ export const EditSpaceForm = ({
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
-    const editorConfig = {
-        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials],
-        toolbar: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-        heading: {
-            options: [
-                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-            ],
-        },
-        licenseKey: 'GPL',
-    };
-
     const [isBookable, setIsBookable2] = useState();
     const setIsBookable = x => {
         console.log('setIsBookable', x);
@@ -631,7 +616,6 @@ export const EditSpaceForm = ({
     };
 
     const handleBack = () => {
-        // setEditorReady(false);
         document.activeElement.blur(); // defocus the button
         validateForm(formValues);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
@@ -639,7 +623,8 @@ export const EditSpaceForm = ({
     };
 
     const handleFieldCompletion = e => {
-        console.log('handleFieldCompletion', e.target, formValues);
+        const target = e?.target;
+        console.log('handleFieldCompletion', target, formValues);
         const validationResult = validateForm(formValues);
         if (validationResult !== true) {
             setErrorMessages(validationResult);
@@ -1699,30 +1684,15 @@ export const EditSpaceForm = ({
                                 type description. Leave blank to use only the standard description.
                             </span>
                         </label>
-                        <CKEditor
+                        <RichTextEditor
                             id="space_description"
-                            label="Space description"
-                            editor={ClassicEditor}
-                            config={editorConfig}
-                            data={formValues?.space_description || ''}
-                            onReady={editor => {
-                                editor.editing.view.change(writer => {
-                                    writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                                });
-
-                                const editableElement = editor.ui.getEditableElement();
-                                editableElement?.addEventListener('click', event => {
-                                    const anchorElement = event?.target?.closest?.('a');
-                                    if (!!anchorElement) {
-                                        event.preventDefault();
-                                    }
-                                });
-                            }}
-                            onChange={(event, editor) => {
-                                const htmlData = editor.getData();
+                            testId="space-description-rich-text"
+                            ariaLabel="Editing area: main"
+                            value={formValues?.space_description || ''}
+                            onChange={htmlData => {
                                 setFormValues({ ...formValues, space_description: htmlData });
+                                handleFieldCompletion();
                             }}
-                            onBlur={handleFieldCompletion}
                         />
                         <StyledErrorMessageTypography component={'div'}>
                             {reportErrorMessage('space_description')}
@@ -2099,26 +2069,12 @@ export const EditSpaceForm = ({
                     <>
                         <Grid item xs={12}>
                             <label htmlFor="space_note_note">New note</label>
-                            <CKEditor
+                            <RichTextEditor
                                 id="space_note_note"
-                                editor={ClassicEditor}
-                                config={editorConfig}
-                                data={spaceNoteDraft}
-                                onReady={editor => {
-                                    editor.editing.view.change(writer => {
-                                        writer.setStyle('height', '180px', editor.editing.view.document.getRoot());
-                                    });
-
-                                    const editableElement = editor.ui.getEditableElement();
-                                    editableElement?.addEventListener('click', event => {
-                                        const anchorElement = event?.target?.closest?.('a');
-                                        if (!!anchorElement) {
-                                            event.preventDefault();
-                                        }
-                                    });
-                                }}
-                                onChange={(event, editor) => {
-                                    const htmlData = editor.getData();
+                                testId="space-note-rich-text"
+                                ariaLabel="Editing area: main"
+                                value={spaceNoteDraft || ''}
+                                onChange={htmlData => {
                                     setSpaceNoteDraft(htmlData);
                                 }}
                             />

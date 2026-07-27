@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import { Box, Button, Chip, Stack, Typography, useTheme } from '@mui/material';
 
 import BookingLink from 'modules/Pages/BookableSpaces/BookingLink';
-import RenderFavouriteIcon from 'modules/Pages/BookableSpaces/RenderFavouriteIcon';
+import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
+import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPagination';
 
 import { defaultChipStyles, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
@@ -41,7 +42,6 @@ export const JourneyResultsView = ({
     librariesForCampus,
     selectedLibrary,
     handleLibrarySelection,
-    shouldShowAdvancedFilters,
     isDesktopResultsLayout,
     setShowAdvancedFilters,
     weeklyHours,
@@ -50,51 +50,70 @@ export const JourneyResultsView = ({
     isFavouriteActionInProgress,
     onFavouriteToggle,
     spacesFavouritesList,
+    showFavouriteSpacesOnly,
+    setShowFavouriteSpacesOnly,
+    isLoggedIn,
+    hasFavouriteSpaces,
+    hasJourneyMapFilterState,
 }) => {
     const theme = useTheme();
 
     const spaces = Array.isArray(intentSpaceLocations) ? intentSpaceLocations : [];
+    const [page, setPage] = React.useState(1);
+    const itemsPerPage = 10;
+    const totalPages = Math.max(1, Math.ceil(spaces.length / itemsPerPage));
+    const visibleSpaces = React.useMemo(() => {
+        const start = (page - 1) * itemsPerPage;
+        return spaces.slice(start, start + itemsPerPage);
+    }, [page, spaces]);
+
+    React.useEffect(() => {
+        setPage(prevPage => (prevPage > totalPages ? totalPages : prevPage));
+    }, [totalPages]);
 
     return (
         <StyledJourneyPanel data-testid="bookable-spaces-journey-results-view" hasTopSpacing>
             <StyledResultsSplitLayout>
-                {shouldShowAdvancedFilters && (
-                    <StyledResultsSidebarPanel>
-                        <SidebarFilters
-                            facilityTypeList={facilityTypeList}
-                            facilityTypeListLoading={facilityTypeListLoading}
-                            facilityTypeListError={facilityTypeListError}
-                            selectedFacilityTypes={selectedFacilityTypes}
-                            setSelectedFacilityTypes={setSelectedFacilityTypes}
-                            filteredFacilityTypeList={filteredFacilityTypeList}
-                            suppliedClassName="journeyFilterSidebar"
-                            minimumSpaceCapacity={minimumSpaceCapacity}
-                            maximumSpaceCapacity={maximumSpaceCapacity}
-                            capacityFilterValue={capacityFilterValue}
-                            setCapacityFilterValue={setCapacityFilterValue}
-                            campusList={campusList}
-                            selectedCampus={selectedCampus}
-                            handleCampusSelection={handleCampusSelection}
-                            activeFilterCount={activeFilterCount}
-                            librariesForCampus={librariesForCampus}
-                            selectedLibrary={selectedLibrary}
-                            handleLibrarySelection={handleLibrarySelection}
-                            onApplyAllFilters={() => {
-                                if (!isDesktopResultsLayout) {
-                                    setShowAdvancedFilters(false);
-                                }
-                            }}
-                            showBottomActionButtons
-                        />
-                    </StyledResultsSidebarPanel>
-                )}
+                <StyledResultsSidebarPanel>
+                    <SidebarFilters
+                        facilityTypeList={facilityTypeList}
+                        facilityTypeListLoading={facilityTypeListLoading}
+                        facilityTypeListError={facilityTypeListError}
+                        selectedFacilityTypes={selectedFacilityTypes}
+                        setSelectedFacilityTypes={setSelectedFacilityTypes}
+                        filteredFacilityTypeList={filteredFacilityTypeList}
+                        suppliedClassName="journeyFilterSidebar"
+                        minimumSpaceCapacity={minimumSpaceCapacity}
+                        maximumSpaceCapacity={maximumSpaceCapacity}
+                        capacityFilterValue={capacityFilterValue}
+                        setCapacityFilterValue={setCapacityFilterValue}
+                        campusList={campusList}
+                        selectedCampus={selectedCampus}
+                        handleCampusSelection={handleCampusSelection}
+                        activeFilterCount={activeFilterCount}
+                        librariesForCampus={librariesForCampus}
+                        selectedLibrary={selectedLibrary}
+                        handleLibrarySelection={handleLibrarySelection}
+                        onApplyAllFilters={() => {
+                            if (!isDesktopResultsLayout) {
+                                setShowAdvancedFilters(false);
+                            }
+                        }}
+                        showBottomActionButtons
+                        showFavouriteSpacesOnly={showFavouriteSpacesOnly}
+                        setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                        isLoggedIn={isLoggedIn}
+                        hasFavouriteSpaces={hasFavouriteSpaces}
+                        hasJourneyMapFilterState={hasJourneyMapFilterState}
+                    />
+                </StyledResultsSidebarPanel>
 
                 <Box>
                     <Typography component="h2" variant="h5" sx={{ fontWeight: 700, color: '#1f1230' }}>
                         Search results
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#666', mt: 1.5 }}>
-                        Showing {spaces.length}
+                    <Typography data-testid="spaces-results-summary" variant="body2" sx={{ color: '#666', mt: 1.5 }}>
+                        {spaces.length}
                         {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
                     </Typography>
 
@@ -105,9 +124,9 @@ export const JourneyResultsView = ({
                         <StyledSecondaryButton onClick={goToLegacyBrowse}>View on map</StyledSecondaryButton>
                     </Stack>
 
-                    {spaces.length > 0 ? (
+                    {spaces.length > 0 && (
                         <Stack spacing={4} sx={{ mt: 1.5 }}>
-                            {spaces.map(space => {
+                            {visibleSpaces.map(space => {
                                 const detailId = String(space?.space_uuid || space?.space_id || '');
                                 const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
                                 const detailUrl = serialiseJourneyUrl({
@@ -124,7 +143,7 @@ export const JourneyResultsView = ({
                                         >
                                             <Box sx={{ position: 'relative' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                    <span className="spaceHolderForFavouriteStar" />
+                                                    {isLoggedIn && <span className="spaceHolderForFavouriteStar" />}
 
                                                     <Typography
                                                         component={'h3'}
@@ -190,25 +209,39 @@ export const JourneyResultsView = ({
                                                 )}
                                             </Box>
                                         </Button>
-                                        <RenderFavouriteIcon
-                                            bookableSpace={space}
-                                            isFavourite={spacesFavouritesList?.some(
-                                                fav => fav.space_id === space?.space_id,
-                                            )}
-                                            onFavouriteToggle={() => onFavouriteToggle?.(space)}
-                                            isFavouriteActionInProgress={isFavouriteActionInProgress}
-                                            iconPosition="topLeft"
-                                        />
+                                        {isLoggedIn && (
+                                            <SpaceFavouriteIcon
+                                                bookableSpace={space}
+                                                isFavourite={spacesFavouritesList?.some(
+                                                    fav => fav.space_id === space?.space_id,
+                                                )}
+                                                onFavouriteToggle={() => onFavouriteToggle?.(space)}
+                                                isFavouriteActionInProgress={isFavouriteActionInProgress}
+                                                iconPosition="topLeft"
+                                            />
+                                        )}
                                         {!!space?.space_external_book_url && (
                                             <Box className="bookingLink">
-                                                <BookingLink bookableSpace={space} showRequired={false} />
+                                                <BookingLink bookableSpace={space} hideNoBookingRequired />
                                             </Box>
                                         )}
                                     </StyledListItemStack>
                                 );
                             })}
                         </Stack>
-                    ) : (
+                    )}
+
+                    {spaces.length > 0 && totalPages > 1 && (
+                        <SpacesPagination
+                            page={page}
+                            count={totalPages}
+                            onPageChange={setPage}
+                            totalItems={spaces.length}
+                            itemsPerPage={itemsPerPage}
+                        />
+                    )}
+
+                    {spaces.length === 0 && (
                         <Box
                             sx={{
                                 mt: 1.5,
@@ -265,6 +298,11 @@ JourneyResultsView.propTypes = {
     isFavouriteActionInProgress: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
     spacesFavouritesList: PropTypes.any,
+    showFavouriteSpacesOnly: PropTypes.bool,
+    setShowFavouriteSpacesOnly: PropTypes.func,
+    isLoggedIn: PropTypes.bool,
+    hasFavouriteSpaces: PropTypes.bool,
+    hasJourneyMapFilterState: PropTypes.bool,
 };
 
 export default JourneyResultsView;

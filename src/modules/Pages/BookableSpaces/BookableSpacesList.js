@@ -181,6 +181,7 @@ export const buildJourneyNavigationUrl = ({
     selectedCampus,
     selectedLibrary,
     capacityFilterValue,
+    showFavouriteSpacesOnly = false,
 }) => {
     const url = new URL(currentUrl);
     const hashValue = url.hash || '';
@@ -188,9 +189,21 @@ export const buildJourneyNavigationUrl = ({
     const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
     const existingParams = new URLSearchParams(hashSearch || url.search || '');
 
-    const hasActiveJourneyFilters = (selectedFacilityTypes || []).some(
+    const hasSelectedFacilityFilters = (selectedFacilityTypes || []).some(
         filter => filter?.selected || filter?.unselected,
     );
+    const normalizedSelectedCampus = Number(selectedCampus);
+    const normalizedSelectedLibrary = Number(selectedLibrary);
+    const hasActiveCampusSelection = Number.isFinite(normalizedSelectedCampus) && normalizedSelectedCampus > 1;
+    const hasActiveLibrarySelection = Number.isFinite(normalizedSelectedLibrary) && normalizedSelectedLibrary !== 0;
+    const hasActiveCapacitySelection = Array.isArray(capacityFilterValue) && capacityFilterValue.length > 0;
+    const hasActiveFavouritesSelection = Boolean(showFavouriteSpacesOnly);
+    const hasActiveJourneyFilters =
+        hasSelectedFacilityFilters ||
+        hasActiveCampusSelection ||
+        hasActiveLibrarySelection ||
+        hasActiveCapacitySelection ||
+        hasActiveFavouritesSelection;
 
     const preservedQueryParams = new URLSearchParams();
     ['mapFilters', 'autoSelectFirstSpace'].forEach(key => {
@@ -200,7 +213,6 @@ export const buildJourneyNavigationUrl = ({
         }
     });
 
-    url.searchParams.delete('advanced');
     url.searchParams.delete('journeyStep');
     url.searchParams.delete('journeyIntent');
     url.searchParams.delete('journeySpace');
@@ -215,6 +227,7 @@ export const buildJourneyNavigationUrl = ({
                 selectedCampus,
                 selectedLibrary,
                 capacityFilterValue,
+                showFavouriteSpacesOnly,
             });
             const nextSearchParams = new URLSearchParams(nextQueryString);
             nextSearchParams.set('mapFilters', encodedMapFilters);
@@ -231,6 +244,7 @@ export const buildJourneyNavigationUrl = ({
             selectedCampus,
             selectedLibrary,
             capacityFilterValue,
+            showFavouriteSpacesOnly,
         });
 
         url.pathname = '/spaces/results';
@@ -259,6 +273,7 @@ export const BookableSpacesList = ({
     spacesFavouritesList,
     drupalArticleList,
     forceAdvanced = false,
+    // isFavouriteActionInProgress,
 }) => {
     const { account } = useAccountContext();
     const location = useLocation();
@@ -303,24 +318,20 @@ export const BookableSpacesList = ({
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [expandedSpaceId, setExpandedSpaceId] = useState(null);
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
+    const [showFavouriteSpacesOnly, setShowFavouriteSpacesOnly] = useState(false);
     const [isMapReady, setIsMapReady] = useState(false);
     const useJourneyExperience = React.useMemo(() => {
         if (typeof window === 'undefined') return true;
         if (forceAdvanced) return false;
 
-        const pathname = window.location.pathname || location.pathname || '';
-        if (pathname === '/spaces/mapresults' || pathname.startsWith('/spaces/mapresults/')) {
-            return false;
-        }
-
-        // Journey is the default view. ?advanced=1 switches to the legacy map/list view.
-        // Support both standard query params (?advanced=1) and hash-router query params (#/spaces?advanced=1)
         const hashValue = location.hash || window.location.hash || '';
-        const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
-        const searchValue = location.search || window.location.search || '';
-        const params = new URLSearchParams(searchValue || hashSearch);
-        return params.get('advanced') !== '1';
-    }, [forceAdvanced, location.hash, location.pathname, location.search]);
+        const routePath = hashValue.startsWith('#/')
+            ? hashValue.slice(2).split('?')[0]
+            : location.pathname || window.location.pathname || '';
+        const normalizedRoutePath = routePath.replace(/^\/+/, '');
+
+        return !normalizedRoutePath.startsWith('spaces/mapresults');
+    }, [forceAdvanced, location.hash, location.pathname]);
 
     const initialJourneyModeRef = useRef(useJourneyExperience);
 
@@ -373,22 +384,6 @@ export const BookableSpacesList = ({
     );
 
     const [cookies, setCookie] = useCookies();
-    const correctedCampusId = useCallback(
-        campusId => {
-            const normalizedCampusId = Number(campusId);
-            return campusList?.find(c => c.campus_id === normalizedCampusId) ? normalizedCampusId : FIRST_CAMPUS_ID;
-        },
-        [campusList],
-    );
-    const getCampusInitialState = () => {
-        const spacesPreferredCampus = cookies.UQLspacesPreferredCampus;
-        if (!!spacesPreferredCampus) {
-            return parseInt(spacesPreferredCampus, 10);
-        }
-        return FIRST_CAMPUS_ID;
-    };
-    const [selectedCampus, setSelectedCampus] = React.useState(getCampusInitialState());
-
     const journeyMapFilterState = React.useMemo(() => {
         if (typeof window === 'undefined') return null;
         const searchValue = location.search || window.location.search || '';
@@ -397,6 +392,75 @@ export const BookableSpacesList = ({
         const params = new URLSearchParams(searchValue || hashSearch);
         return deserialiseJourneyMapFilterState(params);
     }, [location.search, location.hash]);
+
+    const getCampusCookieValue = React.useCallback(() => {
+        const spacesPreferredCampus = cookies?.UQLspacesPreferredCampus;
+        if (typeof spacesPreferredCampus === 'string' && spacesPreferredCampus.trim() !== '') {
+            return spacesPreferredCampus;
+        }
+
+        if (typeof document === 'undefined') {
+            return null;
+        }
+
+        const campusCookie = document.cookie
+            .split(';')
+            .map(cookie => cookie.trim())
+            .find(cookie => cookie.startsWith('UQLspacesPreferredCampus='));
+
+        if (!campusCookie) {
+            return null;
+        }
+
+        const cookieValue = campusCookie.split('=').slice(1).join('=');
+        return cookieValue ? decodeURIComponent(cookieValue) : null;
+    }, [cookies?.UQLspacesPreferredCampus]);
+    const correctedCampusId = useCallback(
+        campusId => {
+            const normalizedCampusId = Number(campusId);
+            if (!Number.isFinite(normalizedCampusId) || normalizedCampusId <= 0) {
+                return FIRST_CAMPUS_ID;
+            }
+            if (!campusList?.length) {
+                return FIRST_CAMPUS_ID;
+            }
+            return campusList?.find(c => c.campus_id === normalizedCampusId) ? normalizedCampusId : FIRST_CAMPUS_ID;
+        },
+        [campusList],
+    );
+    const getCampusInitialState = React.useCallback(() => {
+        const spacesPreferredCampus = getCampusCookieValue();
+        if (typeof spacesPreferredCampus === 'string' && spacesPreferredCampus.trim() !== '') {
+            const parsedCampusId = Number.parseInt(spacesPreferredCampus, 10);
+            return Number.isNaN(parsedCampusId) ? FIRST_CAMPUS_ID : parsedCampusId;
+        }
+        return FIRST_CAMPUS_ID;
+    }, [getCampusCookieValue]);
+    const [selectedCampus, setSelectedCampus] = React.useState(() => getCampusInitialState());
+    const hasInitialisedCampusFromCookie = React.useRef(false);
+
+    React.useEffect(() => {
+        if (!campusList?.length || hasInitialisedCampusFromCookie.current) {
+            return;
+        }
+
+        const explicitCampusFromUrl = journeyMapFilterState?.selectedCampus;
+        if (explicitCampusFromUrl !== null && explicitCampusFromUrl !== undefined) {
+            const validatedCampusId = correctedCampusId(explicitCampusFromUrl);
+            if (selectedCampus !== validatedCampusId) {
+                setSelectedCampus(validatedCampusId);
+            }
+            hasInitialisedCampusFromCookie.current = true;
+            return;
+        }
+
+        const campusIdFromCookie = getCampusInitialState();
+        const validatedCampusId = correctedCampusId(campusIdFromCookie);
+        if (selectedCampus !== validatedCampusId) {
+            setSelectedCampus(validatedCampusId);
+        }
+        hasInitialisedCampusFromCookie.current = true;
+    }, [campusList, correctedCampusId, getCampusInitialState, journeyMapFilterState?.selectedCampus, selectedCampus]);
 
     // based on https://stackoverflow.com/a/42234774
     // this isn't the formula I am used to, which has much more trig, but it seems good enough
@@ -512,7 +576,7 @@ export const BookableSpacesList = ({
         const current = new Date();
         const nextYear = new Date();
         nextYear.setFullYear(current.getFullYear() + 1);
-        setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear });
+        setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear, path: '/' });
 
         setSelectedLibrary(ALL_LIBRARIES_ID); // clear the library on changing campus
 
@@ -553,6 +617,7 @@ export const BookableSpacesList = ({
             selectedCampus,
             selectedLibrary,
             capacityFilterValue,
+            showFavouriteSpacesOnly,
         });
         window.location.assign(nextUrl);
     };
@@ -719,6 +784,15 @@ export const BookableSpacesList = ({
             return false;
         }
 
+        if (showFavouriteSpacesOnly && isLoggedIn) {
+            const isFavouriteSpace = (spacesFavouritesList || []).some(
+                favourite => String(favourite?.space_id) === String(space?.space_id),
+            );
+            if (!isFavouriteSpace) {
+                return false;
+            }
+        }
+
         if (space.space_campus_id !== selectedCurrentCampus) {
             return false;
         }
@@ -736,8 +810,8 @@ export const BookableSpacesList = ({
 
         selectedFacilityTypes?.forEach(filter => {
             if (filter?.selected) {
-                const groupId = facilityTypeToGroup[filter?.facility_type_id];
-                if (groupId) {
+                const groupId = facilityTypeToGroup[filter?.facility_type_id] ?? filter?.facility_type_group_id;
+                if (groupId !== null && groupId !== undefined) {
                     if (!selectedFiltersByGroup[groupId]) {
                         selectedFiltersByGroup[groupId] = [];
                     }
@@ -962,6 +1036,52 @@ export const BookableSpacesList = ({
             facility_special_action: facilityType?.facility_special_action,
         }));
 
+        const resolvedFacilityStateIds = (journeyMapFilterState.selectedFacilityTypes || [])
+            .map(candidate => {
+                if (typeof candidate === 'number' || typeof candidate === 'string') {
+                    const parsedFacilityTypeId = Number(candidate);
+                    return Number.isNaN(parsedFacilityTypeId) ? null : parsedFacilityTypeId;
+                }
+
+                const parsedFacilityTypeId = Number(candidate?.facility_type_id);
+                return Number.isNaN(parsedFacilityTypeId) ? null : parsedFacilityTypeId;
+            })
+            .filter(Boolean);
+
+        const baseFacilityTypeById = new Map(
+            baseFacilityTypes.map(facilityType => [Number(facilityType.facility_type_id), facilityType]),
+        );
+
+        // Keep selected filters from mapresults active in journey view, even when those
+        // filters are hidden in simple view (e.g. advanced-only filter groups).
+        resolvedFacilityStateIds.forEach(facilityTypeId => {
+            if (baseFacilityTypeById.has(facilityTypeId)) {
+                return;
+            }
+
+            const sourceGroup = (facilityTypeList?.data?.facility_type_groups || []).find(group =>
+                (group?.facility_type_children || []).some(child => Number(child?.facility_type_id) === facilityTypeId),
+            );
+            const sourceFacilityType = (sourceGroup?.facility_type_children || []).find(
+                child => Number(child?.facility_type_id) === facilityTypeId,
+            );
+
+            if (!sourceFacilityType) {
+                return;
+            }
+
+            const resolvedFacilityType = {
+                facility_type_group_id: sourceGroup?.facility_type_group_id,
+                facility_type_id: facilityTypeId,
+                selected: false,
+                unselected: false,
+                facility_special_action: sourceFacilityType?.facility_special_action || null,
+            };
+
+            baseFacilityTypeById.set(facilityTypeId, resolvedFacilityType);
+            baseFacilityTypes.push(resolvedFacilityType);
+        });
+
         if (!baseFacilityTypes.length) {
             return;
         }
@@ -1013,13 +1133,20 @@ export const BookableSpacesList = ({
         if (Array.isArray(journeyMapFilterState.capacityFilterValue)) {
             setCapacityFilterValue(journeyMapFilterState.capacityFilterValue);
         }
+        setShowFavouriteSpacesOnly(Boolean(journeyMapFilterState.showFavouriteSpacesOnly));
         if (nextFacilityTypes.length > 0) {
             setSelectedFacilityTypes(nextFacilityTypes);
         }
 
         hasAppliedJourneyMapFilterStateRef.current = true;
         journeyMapFilterStateSignatureRef.current = signature;
-    }, [filteredFacilityTypeList, journeyMapFilterState, selectedFacilityTypes, setSelectedFacilityTypes]);
+    }, [
+        filteredFacilityTypeList,
+        facilityTypeList,
+        journeyMapFilterState,
+        selectedFacilityTypes,
+        setSelectedFacilityTypes,
+    ]);
 
     const toggleFilterPopupVisibility = () => {
         setShowFilterSelectorPopup(!showFilterSelectorPopup);
@@ -1029,7 +1156,9 @@ export const BookableSpacesList = ({
     };
     const handleFavouriteAction = async (action, spaceId) => {
         /* istanbul ignore next */
-        if (isFavouriteActionInProgress) return;
+        if (isFavouriteActionInProgress) {
+            return;
+        }
         const isAddFavouriteAction = action === 'addSpaceFavourite';
         setIsFavouriteActionInProgress(spaceId);
         try {
@@ -1087,6 +1216,8 @@ export const BookableSpacesList = ({
         spacesFavouritesList,
         selectedCampus,
         selectedLibrary,
+        showFavouriteSpacesOnly,
+        isLoggedIn,
     ]);
     // const visibleSpacesCountBadge = () => {
     //     return sortedSpaceLocations?.length > 0 &&
@@ -1145,7 +1276,9 @@ export const BookableSpacesList = ({
         setExpandedSpaceId(space?.space_id ?? null);
     };
 
-    const activeFilterCount = selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length;
+    const activeFilterCount =
+        (selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length || 0) +
+        (showFavouriteSpacesOnly ? 1 : 0);
     const hasActiveFilters = (activeFilterCount || 0) > 0;
     const advancedViewToggleLabel = hasActiveFilters ? 'Show in simple view' : 'Help me find a space';
     const highlightedSpace = React.useMemo(() => {
@@ -1225,6 +1358,11 @@ export const BookableSpacesList = ({
                             weeklyHoursError={weeklyHoursError}
                             onFavouriteToggle={handleFavouriteAction}
                             isFavouriteActionInProgress={isFavouriteActionInProgress}
+                            showFavouriteSpacesOnly={showFavouriteSpacesOnly}
+                            setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                            isLoggedIn={isLoggedIn}
+                            hasFavouriteSpaces={(spacesFavouritesList || []).length > 0}
+                            hasJourneyMapFilterState={Boolean(journeyMapFilterState)}
                         />
                     );
                 } else {
@@ -1268,6 +1406,10 @@ export const BookableSpacesList = ({
                                     selectedLibrary={selectedLibrary}
                                     handleLibrarySelection={handleLibrarySelection}
                                     hasJourneyMapFilterState={Boolean(journeyMapFilterState)}
+                                    showFavouriteSpacesOnly={showFavouriteSpacesOnly}
+                                    setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                                    isLoggedIn={isLoggedIn}
+                                    hasFavouriteSpaces={(spacesFavouritesList || []).length > 0}
                                 />
                             </div>
                             {isDesktopView && (
@@ -1393,6 +1535,7 @@ BookableSpacesList.propTypes = {
     drupalArticlesLoading: PropTypes.bool,
     drupalArticlesError: PropTypes.bool,
     forceAdvanced: PropTypes.bool,
+    // isFavouriteActionInProgress: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesList);

@@ -1,7 +1,7 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
-import { typeCKEditor } from '@uq/pw/lib/ckeditor';
+import { typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 import moment from 'moment-timezone';
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
@@ -29,7 +29,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await reviewDateInput.blur();
                 await expect(reviewDateInput).toHaveValue(today);
 
-                await typeCKEditor(page, 'This is the admin notes');
+                await typeRichTextEditor(page, 'This is the admin notes');
 
                 // go to the second panel, Description
                 await page.getByTestId('dlor-form-next-button').click();
@@ -99,7 +99,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await expect(
                     page.locator('[data-testid="dlor-panel-validity-indicator-1"] span').getByText('2'),
                 ).toBeVisible(); // panel invalidity count present
-                await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
 
                 await expect(
                     page.locator('[data-testid="dlor-panel-validity-indicator-1"] span').getByText('1'),
@@ -250,12 +250,12 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-title"] input').pressSequentially('p');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
 
-                await typeCKEditor(page, 'd');
+                await typeRichTextEditor(page, 'd');
                 await expect(
                     page.locator('[data-testid="dlor-panel-validity-indicator-1"] span').getByText('1'),
                 ).toBeVisible();
 
-                await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
 
                 await page.locator('[data-testid="object-summary"] textarea:first-child').clear();
@@ -322,7 +322,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                         .getByTestId('input-characters-remaining-object-title')
                         .getByText('at least 5 more characters needed'),
                 ).toBeVisible();
-                await typeCKEditor(page, 'new description');
+                await typeRichTextEditor(page, 'new description');
                 await expect(
                     page
                         .getByTestId('input-characters-remaining-object-description')
@@ -355,7 +355,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 // a long description puts the first 150 char, breaking at a word break, into the summary suggestion
                 const longDescription =
                     'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.';
-                await typeCKEditor(page, longDescription);
+                await typeRichTextEditor(page, longDescription);
 
                 // suggestion panel is now open
                 await expect(page.getByTestId('admin-dlor-suggest-summary')).toBeVisible();
@@ -369,7 +369,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await expect(page.getByTestId('admin-dlor-suggest-summary')).not.toBeVisible();
 
                 // suggestion panel picks up first paragraph on carriage return after minimum char count
-                await typeCKEditor(page, `${longDescription}\na second paragraph`);
+                await typeRichTextEditor(page, `${longDescription}\na second paragraph`);
 
                 await expect(page.getByTestId('admin-dlor-suggest-summary-content')).toHaveText(
                     'The quick brown fox jumped over the lazy yellow dog and ran into the woods.',
@@ -453,13 +453,13 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('john Manager');
                 await page.locator('[data-testid="dlor-form-team-email-new"] input').fill('john@example.com');
 
-                await typeCKEditor(page, 'This is the admin notes');
+                await typeRichTextEditor(page, 'This is the admin notes');
 
                 // go to the second panel, Description
                 await page.getByTestId('dlor-form-next-button').click();
 
                 await page.locator('[data-testid="object-title"] input').fill('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                await typeCKEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await page
                     .locator('[data-testid="object-summary"] textarea:first-child')
                     .fill('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
@@ -617,7 +617,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-next-button').click();
 
                 await page.locator('[data-testid="object-title"] input').fill('xx'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                await typeCKEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await page
                     .locator('[data-testid="object-summary"] textarea:first-child')
                     .fill('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
@@ -667,7 +667,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 const typeableDownloadInstructions =
                     'Lorem ipsum dolor sit amet. In at sapien vel nisi congue fringilla. Maecenas non lacus dolor. Phasellus ornare condimentum est in cursus. Nam ac felis neque. Nulla at neque a mauris tristique ultrices ac ultrices ex. Suspendisse iaculis fermentum mi, non cursus augue eleifend in. Maecenas ut faucibus est. Phasellus a diam eget mauris feugiat vestibulum.';
-                await typeCKEditor(page, typeableDownloadInstructions);
+                await typeRichTextEditor(page, typeableDownloadInstructions);
 
                 // go to the fourth panel, Filtering
                 await page.getByTestId('dlor-form-next-button').click();
@@ -811,7 +811,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-next-button').click();
 
                 await page.locator('[data-testid="object-title"] input').fill('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                await typeCKEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await page
                     .locator('[data-testid="object-summary"] textarea:first-child')
                     .fill('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
@@ -847,7 +847,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-link-duration-minutes"] input').fill('3');
                 await page.locator('[data-testid="object-link-duration-seconds"] input').fill('47');
 
-                await typeCKEditor(page, downloadInstructionText);
+                await typeRichTextEditor(page, downloadInstructionText);
                 // go to the fourth panel, Filtering
                 await page.getByTestId('dlor-form-next-button').click();
 
@@ -980,7 +980,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 // go to panel 2
                 await page.getByTestId('dlor-form-next-button').click();
                 await page.locator('[data-testid="object-title"] input').fill('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                await typeCKEditor(page, 'x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await page.getByTestId('admin-dlor-suggest-summary-button').click();
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
 
@@ -1014,7 +1014,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('object-link-interaction-type').click();
                 await page.getByTestId('object-link-interaction-type-none').click();
 
-                await typeCKEditor(page, 'words');
+                await typeRichTextEditor(page, 'words');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-2')).not.toBeVisible();
 
                 // next panel
@@ -1118,7 +1118,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 // go to panel 2
                 await page.getByTestId('dlor-form-next-button').click();
                 await page.locator('[data-testid="object-title"] input').fill('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                await typeCKEditor(page, 'x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await page.getByTestId('admin-dlor-suggest-summary-button').click();
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
 
@@ -1145,7 +1145,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-link-duration-minutes"] input').fill('3');
                 await page.locator('[data-testid="object-link-duration-seconds"] input').fill('47');
 
-                await typeCKEditor(page, 'words');
+                await typeRichTextEditor(page, 'words');
                 await page.locator('[data-testid="object-link-file-type"]').click();
                 await page.waitForSelector('[data-testid="object-link-file-type-something"]', { state: 'visible' });
                 await page.locator('[data-testid="object-link-file-type-something"]').highlight();
@@ -1283,7 +1283,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 // team is valid as is, so go to the second panel, Description
                 await page.getByTestId('dlor-form-next-button').click();
                 await page.locator('[data-testid="object-title"] input').fill('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                await typeCKEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await page
                     .locator('[data-testid="object-summary"] textarea:first-child')
                     .fill('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));

@@ -27,9 +27,10 @@ const StyledBookitLinkWrapperDiv = styled('div')(({ theme }) => ({
         },
     },
 }));
-export const BookingLink = ({ bookableSpace, showRequired }) => {
+export const BookingLink = ({ bookableSpace, hideNoBookingRequired = false }) => {
     const uqBookitMakeABookingIcon = (
         <svg
+            data-testid={`space-${bookableSpace?.space_id}-booking-icon`}
             height="512"
             viewBox="0 0 24 24"
             width="512"
@@ -46,20 +47,24 @@ export const BookingLink = ({ bookableSpace, showRequired }) => {
         return (
             <StyledBookitLinkWrapperDiv data-testid={`space-${bookableSpace?.space_id}-booking-link`}>
                 {uqBookitMakeABookingIcon}
-                <a href={bookableSpace?.space_external_book_url} target={'_blank'}>
+                <a
+                    href={bookableSpace?.space_external_book_url}
+                    target={'_blank'}
+                    data-testid={`space-${bookableSpace?.space_id}-booking-link`}
+                >
                     <span>Book this space</span>
                 </a>
             </StyledBookitLinkWrapperDiv>
         );
     }
-    if (!isBookable(bookableSpace) && !!showRequired) {
+    if (!isBookable(bookableSpace) && !hideNoBookingRequired) {
         return <div data-testid={`space-${bookableSpace?.space_id}-not-bookable`}>No booking required.</div>;
     }
     return null;
 };
 BookingLink.propTypes = {
     bookableSpace: PropTypes.any,
-    showRequired: PropTypes.bool,
+    hideNoBookingRequired: PropTypes.bool,
 };
 
 export default BookingLink;

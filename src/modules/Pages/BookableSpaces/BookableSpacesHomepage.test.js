@@ -235,6 +235,52 @@ describe('BookableSpacesHomepage browser back navigation', () => {
         expect(parsedState).toEqual({ view: 'results', intentId: 'quiet', spaceId: null });
     });
 
+    it('treats the favourite intent as a valid journey intent when parsing direct URLs', () => {
+        window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
+
+        const parsedState = parseJourneyStateFromUrl([]);
+
+        expect(parsedState).toEqual({ view: 'results', intentId: 'favourite', spaceId: null });
+    });
+
+    it('restores the favourites-only filter when loading the favourite route directly', () => {
+        window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
+
+        const favouriteSpace = { ...baseSpace, space_id: 101, space_name: 'Favourite Study Room' };
+        const otherSpace = { ...baseSpace, space_id: 102, space_name: 'Other Study Room' };
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: true,
+            spacesFavouritesList: [{ space_id: 101, label: 'Favourite study room' }],
+            filteredSpaceLocations: [favouriteSpace, otherSpace],
+            highlightedSpace: favouriteSpace,
+        });
+
+        expect(screen.getByText('Favourite Study Room')).toBeInTheDocument();
+        expect(screen.queryByText('Other Study Room')).not.toBeInTheDocument();
+    });
+
+    it('allows the favourites-only sidebar filter to be unchecked after loading the favourite route directly', () => {
+        window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
+
+        const favouriteSpace = { ...baseSpace, space_id: 101, space_name: 'Favourite Study Room' };
+        const otherSpace = { ...baseSpace, space_id: 102, space_name: 'Other Study Room' };
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: true,
+            spacesFavouritesList: [{ space_id: 101, label: 'Favourite study room' }],
+            filteredSpaceLocations: [favouriteSpace, otherSpace],
+            highlightedSpace: favouriteSpace,
+        });
+
+        fireEvent.click(screen.getByRole('checkbox', { name: /show favourite spaces only/i }));
+
+        expect(screen.getByText('Favourite Study Room')).toBeInTheDocument();
+        expect(screen.getByText('Other Study Room')).toBeInTheDocument();
+    });
+
     it('treats the map-results path as a results route when parsing the URL', () => {
         window.history.replaceState({}, '', '/#/spaces/mapresults');
 
@@ -295,8 +341,7 @@ describe('BookableSpacesHomepage browser back navigation', () => {
             capacityFilterValue: [4, 8],
         });
 
-        const decodedState = decodeURIComponent(encodedState);
-        expect(decodedState).toContain('"selectedFacilityTypes":[11,12]');
+        expect(encodedState.startsWith('b64.')).toBe(true);
 
         const params = new URLSearchParams(`mapFilters=${encodedState}`);
         const parsedState = deserialiseJourneyMapFilterState(params);
@@ -356,6 +401,95 @@ describe('BookableSpacesHomepage browser back navigation', () => {
                 ]),
             );
         });
+    });
+
+    it('does not reset selected filters in journey results when mapFilters state is present', async () => {
+        const setSelectedFacilityTypes = jest.fn();
+        const preselectedFilters = [
+            {
+                facility_type_group_id: 10,
+                facility_type_id: 39,
+                selected: true,
+                unselected: false,
+                facility_special_action: null,
+            },
+            {
+                facility_type_group_id: 10,
+                facility_type_id: 8,
+                selected: true,
+                unselected: false,
+                facility_special_action: null,
+            },
+        ];
+        const encodedMapFilters = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [39, 8],
+                selectedCampus: 1,
+                selectedLibrary: 0,
+                capacityFilterValue: [1, 24],
+            }),
+        );
+
+        window.history.replaceState({}, '', `/#/spaces/results?mapFilters=${encodedMapFilters}&autoSelectFirstSpace=1`);
+
+        renderJourney({
+            ...defaultProps,
+            selectedFacilityTypes: preselectedFilters,
+            setSelectedFacilityTypes,
+            hasJourneyMapFilterState: true,
+            facilityTypeListError: false,
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 10,
+                            facility_type_group_name: 'Features',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: 1,
+                            facility_type_children: [
+                                {
+                                    facility_type_id: 39,
+                                    facility_type_name: 'Power points',
+                                    filter_display_on: 'both',
+                                },
+                                {
+                                    facility_type_id: 8,
+                                    facility_type_name: 'Whiteboards',
+                                    filter_display_on: 'both',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 10,
+                            facility_type_group_name: 'Features',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: 1,
+                            facility_type_children: [
+                                {
+                                    facility_type_id: 39,
+                                    facility_type_name: 'Power points',
+                                    filter_display_on: 'both',
+                                },
+                                {
+                                    facility_type_id: 8,
+                                    facility_type_name: 'Whiteboards',
+                                    filter_display_on: 'both',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+        });
+
+        await waitFor(() => expect(screen.getByTestId('bookable-spaces-journey-results-view')).toBeInTheDocument());
+        expect(setSelectedFacilityTypes).not.toHaveBeenCalled();
     });
 
     it('preserves a manual filter change after an intent is restored from the URL', () => {
@@ -479,6 +613,27 @@ describe('BookableSpacesHomepage browser back navigation', () => {
         expect(nextUrl).toContain('autoSelectFirstSpace=1');
     });
 
+    it('preserves the user query param when serialising the journey URL between views', () => {
+        window.history.replaceState({}, '', '/#/spaces/results?user=test-user');
+
+        const nextUrl = serialiseJourneyUrl({ view: 'details', intentId: null, spaceId: 'space-123' });
+
+        expect(nextUrl).toContain('user=test-user');
+    });
+
+    it('preserves the user query param when building a hash-router map URL', () => {
+        const nextUrl = buildLegacyBrowseNavigationUrl({
+            currentUrl: 'http://localhost:2020/#/spaces/results?user=test-user',
+            selectedFacilityTypes: [],
+            selectedCampus: null,
+            selectedLibrary: null,
+            capacityFilterValue: null,
+        });
+
+        expect(nextUrl).toContain('user=test-user');
+        expect(nextUrl).toContain('#/spaces/mapresults?');
+    });
+
     it('hides the landing highlighted space block when no highlighted space is available', () => {
         renderJourney({ ...defaultProps, highlightedSpace: null });
 
@@ -515,5 +670,63 @@ describe('BookableSpacesHomepage browser back navigation', () => {
         expect(await screen.findByRole('option', { name: 'St Lucia' })).toBeInTheDocument();
         expect(await screen.findByRole('option', { name: 'Gatton' })).toBeInTheDocument();
         expect(screen.queryByRole('option', { name: 'Dutton Park' })).not.toBeInTheDocument();
+    });
+
+    it('preserves default filter-group open state when map filter state exists', async () => {
+        renderSidebarFilters({
+            hasJourneyMapFilterState: true,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 39,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [
+                                {
+                                    facility_type_id: 39,
+                                    facility_type_name: 'Power points',
+                                    filter_display_on: 'both',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [
+                                {
+                                    facility_type_id: 39,
+                                    facility_type_name: 'Power points',
+                                    filter_display_on: 'both',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+        });
+
+        await waitFor(() => {
+            expect(screen.getByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'block' });
+            expect(screen.getByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'none' });
+        });
     });
 });
