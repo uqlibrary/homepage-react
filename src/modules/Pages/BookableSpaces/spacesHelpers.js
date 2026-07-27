@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Chip, useTheme } from '@mui/material';
 
-import { getVisibleSpaceOutage } from '../Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
 export const FILTER_BOOKABLE_TYPE_ID = 9002;
 export const FILTER_CAPACITY_TYPE_ID = 9003;
