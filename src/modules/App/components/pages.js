@@ -56,8 +56,6 @@ export const DLOVocabularyManage = lazy(() => lazyRetry(() => import('modules/Pa
 export const DLOOwnTeamList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamListContainer')));
 export const DLOOwnTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamEditContainer')));
 
-export const BookableSpacesList = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/BookableSpacesListContainer')));
-export const BookableSpacesPageLayout = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/Shared/BookableSpacesPageLayout')));
 export const BookableSpacesLandingPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/BookableSpacesLandingPage')));
 export const BookableSpacesResultsPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/SpacesListPage/BookableSpacesResultsPage')));
 export const BookableSpacesMapPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/SpacesListPage/MapListPage/BookableSpacesMapPage')));
