@@ -42,7 +42,10 @@ import {
     isBookable,
     normalizeFilterDisplayOn,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { displayToastErrorMessage, displayToastMessage } from '../Admin/BookableSpaces/bookableSpacesAdminHelpers';
+import {
+    displayToastErrorMessage,
+    displayToastMessage,
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { CAMPUS_DUTTON_PARK } from 'config/locale';
 import {
     deserialiseJourneyMapFilterState,
