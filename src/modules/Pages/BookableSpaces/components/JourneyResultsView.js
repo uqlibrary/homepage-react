@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Box, Button, Chip, Stack, Typography, useTheme } from '@mui/material';
 
-import BookingLink from 'modules/Pages/BookableSpaces/BookingLink';
+import BookingLink from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPagination';

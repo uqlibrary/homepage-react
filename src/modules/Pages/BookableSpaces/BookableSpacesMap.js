@@ -8,7 +8,7 @@ import { mui1theme } from 'config/theme';
 import { CAMPUS_ST_LUCIA } from 'config/locale';
 import { addClass, removeClass } from 'helpers/general';
 
-import { BookingLink } from 'modules/Pages/BookableSpaces/BookingLink';
+import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
 

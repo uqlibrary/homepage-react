@@ -10,7 +10,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { pluralise } from 'helpers/general';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
-import { BookingLink } from 'modules/Pages/BookableSpaces/BookingLink';
+import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/OpeningHoursDown';
 import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
 import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';

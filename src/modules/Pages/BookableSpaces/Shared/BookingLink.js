@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { styled } from '@mui/material/styles';
-import { isBookable } from './spacesHelpers';
+import { isBookable } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledBookitLinkWrapperDiv = styled('div')(({ theme }) => ({
     display: 'flex',
