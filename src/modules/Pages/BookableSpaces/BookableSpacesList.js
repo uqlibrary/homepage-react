@@ -24,7 +24,7 @@ import { addClass, removeClass, standardText } from 'helpers/general';
 import { useAccountContext } from 'context';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
-import SidebarSpacesList from 'modules/Pages/BookableSpaces/SidebarSpacesList';
+import SidebarSpacesList from 'modules/Pages/BookableSpaces/SpacesMapPage/SidebarSpacesList';
 import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
 import BookableSpacesWrapper from './BookableSpacesWrapper';
 import {
