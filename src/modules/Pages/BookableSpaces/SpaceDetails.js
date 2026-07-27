@@ -17,7 +17,7 @@ import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import { getFriendlyLocationDescription, isBookable } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
-import { OpeningHoursShort } from 'modules/Pages/BookableSpaces/OpeningHoursShort';
+import { OpeningHoursShort } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursShort';
 import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
 
 const StyledFriendlyLocationDiv = styled('div')(() => ({

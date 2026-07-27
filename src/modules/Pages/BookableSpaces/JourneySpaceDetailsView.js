@@ -11,7 +11,7 @@ import { pluralise } from 'helpers/general';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
-import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/OpeningHoursDown';
+import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursDown';
 import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
 import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
 import {
