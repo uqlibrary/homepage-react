@@ -42,7 +42,7 @@ jest.mock('modules/Pages/BookableSpaces/BookableSpacesWrapper', () => props => {
     return <div data-testid="mock-journey" />;
 });
 
-jest.mock('modules/Pages/BookableSpaces/SidebarFilters', () => {
+jest.mock('modules/Pages/BookableSpaces/Shared/SidebarFilters', () => {
     return function MockSidebarFilters(props) {
         mockSidebarRender(props);
         return (

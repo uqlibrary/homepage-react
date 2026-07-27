@@ -14,7 +14,7 @@ import BookableSpacesWrapper from './BookableSpacesWrapper';
 import { buildLegacyBrowseNavigationUrl } from './BookableSpacesWrapper';
 import JourneyResultsView from './components/JourneyResultsView';
 import OpenSpaceNewWindowButton from './SpacesMapPage/OpenSpaceNewWindowButton';
-import SidebarFilters from './SidebarFilters';
+import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import {
     deserialiseJourneyMapFilterState,
     parseJourneyStateFromUrl,

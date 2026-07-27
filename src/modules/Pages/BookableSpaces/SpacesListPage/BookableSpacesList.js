@@ -25,7 +25,7 @@ import { useAccountContext } from 'context';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/BookableSpacesMap';
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SpacesMapPage/SidebarSpacesList';
-import SidebarFilters from 'modules/Pages/BookableSpaces/SidebarFilters';
+import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import BookableSpacesWrapper from 'modules/Pages/BookableSpaces/BookableSpacesWrapper';
 import {
     FACILITY_TYPE_CHECKBOX,
