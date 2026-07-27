@@ -10,10 +10,12 @@ import PersonIcon from '@mui/icons-material/Person';
 import TvIcon from '@mui/icons-material/Tv';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
-import { JourneyDetailsView } from './SpacesMapPage/JourneyDetailsView';
-import { JourneyResultsView } from 'modules/Pages/BookableSpaces/components/JourneyResultsView';
-import { BookableSpacesJourneyView } from 'modules/Pages/BookableSpaces/components/BookableSpacesJourneyView';
+import { JourneyDetailsView } from 'modules/Pages/BookableSpaces/SpacesListPage/JourneyDetailsView';
+import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/JourneyResultsView';
+import { BookableSpacesJourneyView } from 'modules/Pages/BookableSpaces/SpacesListPage/BookableSpacesJourneyView';
+
 import { SpacesHomePage } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomePage';
+
 import {
     getJourneySearchParams,
     JOURNEY_VIEWS,
@@ -25,7 +27,7 @@ import {
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { findSpaceById, getSpaceIdentifier } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
-const journeyFallbackImage = require('../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
+const journeyFallbackImage = require('../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
 const intentDefinitions = [
     {

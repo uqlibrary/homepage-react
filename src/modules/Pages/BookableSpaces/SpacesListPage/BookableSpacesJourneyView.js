@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import JourneyBreadcrumbs from 'modules/Pages/BookableSpaces/components/JourneyBreadcrumbs';
-import { StyledJourneyContentShell } from './journeyViewStyles';
+import JourneyBreadcrumbs from 'modules/Pages/BookableSpaces/SpacesListPage/JourneyBreadcrumbs';
+import { StyledJourneyContentShell } from 'modules/Pages/BookableSpaces/Shared/journeyViewStyles';
 
 export const BookableSpacesJourneyView = ({
     view,

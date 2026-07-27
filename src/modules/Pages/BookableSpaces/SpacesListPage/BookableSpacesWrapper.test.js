@@ -5,22 +5,22 @@ import { waitFor } from '@testing-library/react';
 import { fireEvent, rtlRender, screen, WithRouter } from 'test-utils';
 
 jest.mock(
-    '../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
+    '../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
     () => 'mock-journey-hero-image',
 );
-jest.mock('../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-journey-detail-image');
+jest.mock('../../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-journey-detail-image');
 
 import BookableSpacesWrapper from './BookableSpacesWrapper';
 import { buildLegacyBrowseNavigationUrl } from './BookableSpacesWrapper';
-import JourneyResultsView from './components/JourneyResultsView';
-import OpenSpaceNewWindowButton from './SpacesMapPage/OpenSpaceNewWindowButton';
+import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/JourneyResultsView';
+import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesMapPage/OpenSpaceNewWindowButton';
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import {
     deserialiseJourneyMapFilterState,
     parseJourneyStateFromUrl,
     serialiseJourneyMapFilterState,
     serialiseJourneyUrl,
-} from './journeyHelpers';
+} from 'modules/Pages/BookableSpaces/journeyHelpers';
 
 jest.mock('@mui/material', () => {
     const actual = jest.requireActual('@mui/material');
@@ -30,7 +30,7 @@ jest.mock('@mui/material', () => {
     };
 });
 
-jest.mock('modules/Pages/BookableSpaces/Shared/BookableSpacesMap', () => {
+jest.mock('../Shared/BookableSpacesMap', () => {
     return function MockBookableSpacesMap() {
         return <div data-testid="mock-bookable-spaces-map" />;
     };

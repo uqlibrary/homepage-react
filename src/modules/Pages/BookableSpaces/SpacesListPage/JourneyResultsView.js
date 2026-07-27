@@ -3,22 +3,22 @@ import PropTypes from 'prop-types';
 
 import { Box, Button, Chip, Stack, Typography, useTheme } from '@mui/material';
 
-import BookingLink from 'modules/Pages/BookableSpaces/Shared/BookingLink';
-import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
-import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
-import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPagination';
+import BookingLink from '../Shared/BookingLink';
+import SpaceFavouriteIcon from '../Shared/SpaceFavouriteIcon';
+import SidebarFilters from '../Shared/SidebarFilters';
+import SpacesPagination from '../Shared/SpacesPagination';
 
-import { defaultChipStyles, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-import { StyledSecondaryButton } from 'helpers/general';
-import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
+import { defaultChipStyles, SpaceOpenStatusChip } from '../spacesHelpers';
+import { getVisibleSpaceOutage } from '../../Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+import { StyledSecondaryButton } from '../../../../helpers/general';
+import { serialiseJourneyUrl } from '../journeyHelpers';
 
 import {
     StyledJourneyPanel,
     StyledResultsSidebarPanel,
     StyledResultsSplitLayout,
     StyledListItemStack,
-} from './journeyViewStyles';
+} from '../Shared/journeyViewStyles';
 
 export const JourneyResultsView = ({
     intentSpaceLocations,

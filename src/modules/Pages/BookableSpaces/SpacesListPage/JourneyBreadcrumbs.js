@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { breadcrumbs } from 'config/routes';
-import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/journeyHelpers';
+import { breadcrumbs } from '../../../../config/routes';
+import { serialiseJourneyUrl } from '../journeyHelpers';
 
 export const removeJourneyBreadcrumbsFromHeader = breadcrumbParent => {
     breadcrumbParent?.querySelectorAll('[data-journey-breadcrumb="true"]').forEach(node => node.remove());
