@@ -90,6 +90,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.bookExamBooth.title,
         },
         {
+            path: pathConfig.membership,
+            element: <components.MembershipLanding />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
             path: pathConfig.dlorView(dlorId),
             element: <components.DLOView />,
             pageTitle: 'Digital Learning Object Repository - View Object',
@@ -416,4 +422,5 @@ export const breadcrumbs = {
     exampapers: { pathname: '/exams', title: 'Past exam papers' },
     learningresources: { pathname: '/learning-resources', title: 'Learning resources' },
     paymentreceipt: { pathname: '/payment-receipt', title: 'Payment receipt' },
+    membership: { pathname: '/membership', title: 'Membership' },
 };

@@ -1,5 +1,4 @@
 export const zeroPaddedYear = value => (value ? ('0000' + value).substr(-4) : '*');
-import { API_URL } from '../config';
 
 const getMillisecondCacheBuster = () => {
     return `${new Date().getTime()}`;
@@ -326,4 +325,14 @@ export const JOURNAL_SEARCH_API = () => ({ apiUrl: 'https://api.library.uq.edu.a
 export const LOANS_API = () => ({
     apiUrl: 'account/loans',
     options: { params: { ts: getMinuteCachebuster() } },
+});
+
+/** MEMBERSHIP **/
+// The membership form and landing chooser are built from this response: account_types, titles, hospital.* and
+// reciprocal.*
+export const MEMBERSHIP_FORM_DATA_API = () => ({ apiUrl: 'membership' });
+
+export const MEMBERSHIP_CHECK_RENEWING_API = () => ({
+    apiUrl: 'membership/check/renewing',
+    options: { params: { ts: getMillisecondCacheBuster() } },
 });

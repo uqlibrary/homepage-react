@@ -28,6 +28,8 @@ export const DLOSeriesEdit = lazy(() => lazyRetry(() => import('modules/Pages/Ad
 export const SeriesView = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Series/SeriesViewContainer')));
 export const DLOSeriesAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesAddContainer')));
 
+export const MembershipLanding = lazy(() => lazyRetry(() => import('modules/Pages/Membership/Landing/MembershipLandingContainer')));
+
 export const TestTagDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Dashboard/containers/Dashboard')));
 export const TestTagInspection = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Inspection/containers/Inspection')));
 export const TestTagManageAssetTypes = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/AssetTypes/containers/AssetTypes')));

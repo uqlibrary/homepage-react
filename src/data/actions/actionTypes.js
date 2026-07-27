@@ -443,3 +443,14 @@ export const LOANS_LOADED = 'LOANS_LOADED';
 export const VEMCOUNT_LOADING = 'VEMCOUNT_LOADING';
 export const VEMCOUNT_FAILED = 'VEMCOUNT_FAILED';
 export const VEMCOUNT_LOADED = 'VEMCOUNT_LOADED';
+
+// MEMBERSHIP
+// The data the form and landing chooser are built from: account_types, titles, hospital.*, reciprocal.*
+export const MEMBERSHIP_FORM_DATA_LOADING = 'MEMBERSHIP_FORM_DATA_LOADING';
+export const MEMBERSHIP_FORM_DATA_LOADED = 'MEMBERSHIP_FORM_DATA_LOADED';
+export const MEMBERSHIP_FORM_DATA_FAILED = 'MEMBERSHIP_FORM_DATA_FAILED';
+
+// whether the signed-in user has a renewal waiting
+export const MEMBERSHIP_RENEWING_LOADING = 'MEMBERSHIP_RENEWING_LOADING';
+export const MEMBERSHIP_RENEWING_LOADED = 'MEMBERSHIP_RENEWING_LOADED';
+export const MEMBERSHIP_RENEWING_FAILED = 'MEMBERSHIP_RENEWING_FAILED';

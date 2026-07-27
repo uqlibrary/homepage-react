@@ -26,6 +26,7 @@ import { libHours } from './data/libHours';
 import { training_object, training_object_hospital } from './data/training';
 import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
+import { membershipFormData, membershipRenewing } from './data/membership';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_PHYS1001 from './data/records/learningResources/examSearch_PHYS1001';
 import examSearch_ENGG from './data/records/learningResources/examSearch_ENGG';
@@ -358,6 +359,18 @@ mock.onGet(/alert\/.*/).reply(config => {
     }
     return [200, getSpecificAlert(alertId)];
 });
+
+// MEMBERSHIP
+// The data the form and landing chooser are built from, and whether the signed-in user has a renewal waiting.
+// Grown as the membership app is migrated across.
+mock.onGet(routes.MEMBERSHIP_FORM_DATA_API().apiUrl).reply(withDelay([200, membershipFormData]));
+// The real API answers `renewing: true` only for a member who actually has a renewal due. The mock mirrors that
+// so all three landing states are reachable locally: `?user=emcommunity` is due for renewal (renewal prompt);
+// any other signed-in user sees the "become a member" welcome; a signed-out visitor sees the returning-member
+// intro. Returning `renewing: true` for everyone hid the welcome state entirely.
+mock.onGet(new RegExp(escapeRegExp('membership/check/renewing.*'))).reply(() =>
+    withDelay([200, user === 'emcommunity' ? membershipRenewing : { renewing: false }])(),
+);
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {

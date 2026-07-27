@@ -390,3 +390,27 @@ describe('Backend routes method', () => {
         });
     });
 });
+
+describe('membership routes', () => {
+    const MockDate = require('mockdate');
+    const frozenTimestamp = '1577836800000';
+
+    beforeEach(() => {
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+    });
+
+    afterEach(() => {
+        MockDate.reset();
+    });
+
+    it('should construct url for MEMBERSHIP_FORM_DATA_API', () => {
+        expect(routes.MEMBERSHIP_FORM_DATA_API()).toEqual({ apiUrl: 'membership' });
+    });
+
+    it('should construct url for MEMBERSHIP_CHECK_RENEWING_API', () => {
+        expect(routes.MEMBERSHIP_CHECK_RENEWING_API()).toEqual({
+            apiUrl: 'membership/check/renewing',
+            options: { params: { ts: frozenTimestamp } },
+        });
+    });
+});

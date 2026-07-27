@@ -47,3 +47,9 @@ stats.json
 # Code Coverage checker temp dir
 .nyc_output
 .github/skills
+
+# AI
+CLAUDE.md
+.claude/
+src/.mcp.json
+src/boost.json
