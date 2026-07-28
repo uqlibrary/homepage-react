@@ -319,8 +319,8 @@ const ManageLocations = ({ actions }) => {
                                 rows={row}
                                 columns={columns}
                                 rowId={`${selectedLocation}_id`}
-                                components={{
-                                    Toolbar: () => (
+                                slots={{
+                                    toolbar: () => (
                                         <WithExportMenu id={componentId}>
                                             <AddButton label={addButtonLabel} onClick={handleAddClick} />
                                         </WithExportMenu>
