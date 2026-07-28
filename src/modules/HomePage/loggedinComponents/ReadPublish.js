@@ -29,13 +29,13 @@ export const ReadPublish = () => {
             title="Open access publishing"
         >
             <Grid container padding={3} spacing={2}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <a href="https://espace.library.uq.edu.au/journals/search/">Publish in the right journal</a>
                     <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
                         Find and evaluate the best publishing options using Journal Search.
                     </StyledBodyCopyDiv>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <StyledBodyCopyDiv>
                         Visit{' '}
                         <Link

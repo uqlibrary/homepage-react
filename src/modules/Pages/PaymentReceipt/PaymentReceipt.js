@@ -57,7 +57,7 @@ export const PaymentReceipt = () => {
                 <sub>{locale.maintenance}</sub>
             </StandardCard>
             <Grid container style={{ marginTop: 16 }}>
-                <Grid item xs>
+                <Grid xs>
                     <a href={pathConfig.index}>Return to the Library homepage</a>
                 </Grid>
             </Grid>

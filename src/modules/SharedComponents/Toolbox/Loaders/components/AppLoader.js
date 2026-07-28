@@ -37,7 +37,7 @@ export class AppLoader extends React.Component {
         const { title, logoImage, logoText } = this.props;
         return (
             <StyledLoader container spacing={0} direction="column" justifyContent="center" alignItems="center">
-                <Grid item className={'spaceBetween'}>
+                <Grid className={'spaceBetween'}>
                     <CircularProgress
                         size={80}
                         thickness={1}
@@ -45,10 +45,10 @@ export class AppLoader extends React.Component {
                         aria-label="Loading Library website"
                     />
                 </Grid>
-                <Grid item className={'spaceBetween'}>
+                <Grid className={'spaceBetween'}>
                     {logoImage && <div className={`${logoImage} logo`} alt={logoText} />}
                 </Grid>
-                <Grid item className={'spaceBetween'}>
+                <Grid className={'spaceBetween'}>
                     <Typography variant={'h6'} className={'white'}>
                         {title}
                     </Typography>

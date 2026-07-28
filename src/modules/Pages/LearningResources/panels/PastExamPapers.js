@@ -93,7 +93,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     /* istanbul ignore else */
                     if (examListLoading !== false) {
                         return (
-                            <Grid item xs={'auto'} style={{ width: 80, opacity: 0.3 }}>
+                            <Grid xs={'auto'} style={{ width: 80, opacity: 0.3 }}>
                                 <CircularProgress
                                     color="primary"
                                     size={20}

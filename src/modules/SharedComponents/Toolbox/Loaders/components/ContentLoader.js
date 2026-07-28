@@ -8,7 +8,7 @@ export default function ContentLoader({ message }) {
     return (
         <StandardPage>
             <Grid container>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <InlineLoader message={message} />
                 </Grid>
             </Grid>

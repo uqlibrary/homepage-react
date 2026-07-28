@@ -164,7 +164,7 @@ export const DLOVocabularyManage = ({ actions, dlorKeywords, dlorKeywordsLoading
                     dlorKeywords.length > 0 &&
                     dlorKeywords.map(keyword => (
                         <React.Fragment key={keyword?.keyword_vocabulary_id}>
-                            <Grid item xs={10} sx={{ display: 'flex', padding: '8px 0px', backgroundColor: '#d0d0d0' }}>
+                            <Grid xs={10} sx={{ display: 'flex', padding: '8px 0px', backgroundColor: '#d0d0d0' }}>
                                 <Typography
                                     component="p"
                                     sx={{ fontWeight: 'bold' }}
@@ -227,7 +227,7 @@ export const DLOVocabularyManage = ({ actions, dlorKeywords, dlorKeywordsLoading
                                             >
                                                 <Typography component="p">{synonym} - (synonym)</Typography>
                                             </Grid>
-                                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                            <Grid xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
                                                 <IconButton
                                                     color="secondary"
                                                     onClick={() => {
@@ -239,7 +239,7 @@ export const DLOVocabularyManage = ({ actions, dlorKeywords, dlorKeywordsLoading
                                                     <EditIcon />
                                                 </IconButton>
                                             </Grid>
-                                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                            <Grid xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
                                                 <IconButton
                                                     color="secondary"
                                                     onClick={() => {

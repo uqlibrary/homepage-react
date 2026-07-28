@@ -27,14 +27,14 @@ export const ReferencingPanel = ({ account }) => {
             title="Referencing"
         >
             <Grid container padding={3} spacing={2}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <a href={'https://guides.library.uq.edu.au/referencing'} data-testid={'referencing-style'}>
                         Referencing style guides
                     </a>
                     <StyledBodyCopyDiv>APA, Chicago, Vancouver and more</StyledBodyCopyDiv>
                 </Grid>
                 {canSeeEndnoteReferencing(account) && (
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <a
                             href={'https://guides.library.uq.edu.au/tools-and-techniques/endnote-referencing-software'}
                             data-testid={'referencing-endnote'}

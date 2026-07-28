@@ -67,7 +67,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStat
     return (
         <Fragment>
             <Grid container style={{ paddingBottom: '1em', display: 'block' }}>
-                <Grid item id="previewWrapper" sx={{ transition: 'visibility 0s, opacity 0.5s linear' }} />
+                <Grid id="previewWrapper" sx={{ transition: 'visibility 0s, opacity 0.5s linear' }} />
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">

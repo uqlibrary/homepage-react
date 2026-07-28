@@ -150,7 +150,7 @@ export const LearningResourcesPanel = ({ account }) => {
             standardCardId="learning-resources-homepage-panel"
             title={
                 <Grid container>
-                    <Grid item xs id={`${learningResourceId}-autocomplete2-label`}>
+                    <Grid xs id={`${learningResourceId}-autocomplete2-label`}>
                         {locale.homepagePanel.title}
                     </Grid>
                 </Grid>

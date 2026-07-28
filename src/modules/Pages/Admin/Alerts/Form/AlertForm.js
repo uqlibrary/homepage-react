@@ -527,7 +527,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     />
                 )}
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <FormControl variant="standard" fullWidth title={locale.form.tooltips.title}>
                             <InputLabel htmlFor="alertTitle">{locale.form.labels.title}</InputLabel>
                             <Input
@@ -542,7 +542,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <FormControl variant="standard" fullWidth title={locale.form.tooltips.message}>
                             <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
                                 {locale.form.labels.message}
@@ -570,7 +570,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 spacing={2}
                                 style={{ marginTop: 12 }}
                             >
-                                <Grid item md={5} xs={12}>
+                                <Grid md={5} xs={12}>
                                     <TextField
                                         variant="standard"
                                         id={`startDate-${index}`}
@@ -588,7 +588,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         }}
                                     />
                                 </Grid>
-                                <Grid item md={5} xs={12}>
+                                <Grid md={5} xs={12}>
                                     <TextField
                                         variant="standard"
                                         id={`endDate-${index}`}
@@ -606,7 +606,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         }}
                                     />
                                 </Grid>
-                                <Grid item md={2} xs={12} data-testid={`admin-alerts-form-add-remove-buttons-${index}`}>
+                                <Grid md={2} xs={12} data-testid={`admin-alerts-form-add-remove-buttons-${index}`}>
                                     {['add', 'clone'].includes(defaults.type) &&
                                     index === values.dateList.length - 1 ? (
                                         <IconButton
@@ -640,7 +640,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         );
                     })}
                 <StyledCheckBoxes container spacing={2} style={{ minHeight: '4rem', paddingTop: '1rem' }}>
-                    <Grid item sm={4} xs={12}>
+                    <Grid sm={4} xs={12}>
                         <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.link.checkbox}>
                             <Checkbox
                                 checked={!!values.linkRequired}
@@ -651,7 +651,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             {locale.form.labels.link.checkbox}
                         </InputLabel>
                     </Grid>
-                    <Grid item sm={4} xs={12}>
+                    <Grid sm={4} xs={12}>
                         <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.permanent}>
                             <Checkbox
                                 data-testid="admin-alerts-form-checkbox-permanent"
@@ -664,7 +664,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             {locale.form.labels.permanent}
                         </InputLabel>
                     </Grid>
-                    <Grid item sm={4} xs={12}>
+                    <Grid sm={4} xs={12}>
                         <InputLabel
                             style={{ color: 'rgba(0, 0, 0, 0.87)' }}
                             title={locale.form.tooltips.priority.title}
@@ -702,7 +702,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         display: values.linkRequired ? 'flex' : 'none',
                     }}
                 >
-                    <Grid item md={6} xs={12}>
+                    <Grid md={6} xs={12}>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="linkTitle">{locale.form.labels.link.title}</InputLabel>
                             <Input
@@ -717,7 +717,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item md={6} xs={12}>
+                    <Grid md={6} xs={12}>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="linkUrl">{locale.form.labels.link.url}</InputLabel>
                             <Input
@@ -733,10 +733,10 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     </Grid>
                 </StyledBox>
                 <StyledBox container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <p>{locale.form.labels.systems}</p>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         {systemList.map(system => {
                             const isChecked = values?.systems?.find(s => s === system.slug) || null;
                             const displayColor = !!system.removed
@@ -768,7 +768,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 {defaults.type === 'edit' && values.createdBy !== '?' && (
                     <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                         {/* created_by entries before we started recording the creator are marked as '?' */}
-                        <Grid item data-testid="admin-alerts-form-created-by">{`Created by: ${values.createdBy}`}</Grid>
+                        <Grid data-testid="admin-alerts-form-created-by">{`Created by: ${values.createdBy}`}</Grid>
                     </Grid>
                 )}
                 {defaults.type === 'edit' && !!values.updatedBy && (
@@ -780,14 +780,14 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     </Grid>
                 )}
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
-                    <Grid item xs={3} align="left">
+                    <Grid xs={3} align="left">
                         <StyledSecondaryButton
                             children="Cancel"
                             data-testid="admin-alerts-form-button-cancel"
                             onClick={() => navigateToListPage()}
                         />
                     </Grid>
-                    <Grid item xs={9} align="right">
+                    <Grid xs={9} align="right">
                         <StyledTertiaryButton
                             id="admin-alerts-form-button-preview"
                             data-testid="admin-alerts-form-button-preview"

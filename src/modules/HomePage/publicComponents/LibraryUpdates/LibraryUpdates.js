@@ -51,13 +51,13 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesError, drupalArticles
                 {(() => {
                     if (!!drupalArticlesError) {
                         return (
-                            <Grid item xs={12}>
+                            <Grid xs={12}>
                                 <p data-testid="drupal-error">No articles found</p>
                             </Grid>
                         );
                     } else if (!!drupalArticlesLoading) {
                         return (
-                            <Grid item xs={12}>
+                            <Grid xs={12}>
                                 <p data-testid="drupal-loading">Loading</p>
                             </Grid>
                         );
@@ -69,7 +69,7 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesError, drupalArticles
                         });
                     } else {
                         return (
-                            <Grid item xs={12}>
+                            <Grid xs={12}>
                                 <p data-testid="drupal-empty">No articles found</p>
                             </Grid>
                         );

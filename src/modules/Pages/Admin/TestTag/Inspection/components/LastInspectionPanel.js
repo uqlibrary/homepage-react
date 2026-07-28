@@ -179,7 +179,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
         >
             <Collapse in={forceOpen || testPanelExpanded} timeout="auto">
                 <Grid container spacing={1}>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <Typography component={'span'} className={'pastTestLabel'}>
                             {formLocale.statusLabel}
                         </Typography>
@@ -191,7 +191,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                             {assetStatus?.toUpperCase() ?? formLocale.statusUnknownLabel}
                         </Typography>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <Typography component={'span'} className={'pastTestLabel'}>
                             {formLocale.testDateLabel}
                         </Typography>
@@ -199,7 +199,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                             {!!lastTest?.inspect_date && moment(lastTest.inspect_date).format(dateFormatPattern)}
                         </Typography>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <Typography component={'span'} className={'pastTestLabel'}>
                             {formLocale.lastTestedByLabel}
                         </Typography>
@@ -213,7 +213,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                     </Grid>
 
                     <Grid container item xs={12}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid xs={12} sm={6}>
                             <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.siteLabel}
                             </Typography>
@@ -227,7 +227,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                                 {lastLocation?.site_name ?? ''}
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid xs={12} sm={6}>
                             <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.buildingLabel}
                             </Typography>
@@ -241,7 +241,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                                 {lastLocation?.building_name ?? ''}
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid xs={12} sm={6}>
                             <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.floorLabel}
                             </Typography>
@@ -253,7 +253,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                                 {lastLocation?.floor_id_displayed}
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
+                        <Grid xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
                             <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.roomLabel}
                             </Typography>
@@ -266,7 +266,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                             </Typography>
                         </Grid>
                         {!!mismatchingLocation && (
-                            <Grid item xs={12} lg={6}>
+                            <Grid xs={12} lg={6}>
                                 <Box display={'flex'}>
                                     <ReportProblemOutlinedIcon
                                         className={'problemIconInline'}
@@ -289,7 +289,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                         )}
                     </Grid>
                     {!didPass && (
-                        <Grid item xs={12}>
+                        <Grid xs={12}>
                             <Typography component={'p'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.failReasonLabel}
                             </Typography>
@@ -302,7 +302,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                             </Typography>
                         </Grid>
                     )}
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <Typography component={'p'} sx={{ fontWeight: 'bold' }}>
                             {formLocale.testNotesLabel}
                         </Typography>
@@ -315,7 +315,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                         </Typography>
                     </Grid>
                     {didPass && (
-                        <Grid item xs={12}>
+                        <Grid xs={12}>
                             <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.nextTestDateLabel}
                             </Typography>
@@ -329,7 +329,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                         </Grid>
                     )}
                     {!!isRepair && (
-                        <Grid item xs={12}>
+                        <Grid xs={12}>
                             <Typography component={'p'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.repairDetailsLabel}
                             </Typography>
@@ -343,7 +343,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                         </Grid>
                     )}
                     {!!isDiscard && (
-                        <Grid item xs={12}>
+                        <Grid xs={12}>
                             <Typography component={'p'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.discardReasonLabel}
                             </Typography>

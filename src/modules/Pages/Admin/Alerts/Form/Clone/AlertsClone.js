@@ -72,7 +72,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
     return (
         <Fragment>
             <Grid container style={{ paddingBottom: '1em', display: 'block' }}>
-                <Grid item id="previewWrapper" sx={{ transition: 'visibility 0s, opacity 10s ease-out' }} />
+                <Grid id="previewWrapper" sx={{ transition: 'visibility 0s, opacity 10s ease-out' }} />
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">

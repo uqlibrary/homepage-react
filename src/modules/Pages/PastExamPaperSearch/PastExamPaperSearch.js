@@ -71,9 +71,7 @@ export const PastExamPaperSearch = ({
         const noOptionsTextNoResultsFoundPanel = () => {
             return (
                 <Grid container>
-                    <Grid item xs={12}>
-                        {noResultsFoundBlock(searchTerm)}
-                    </Grid>
+                    <Grid xs={12}>{noResultsFoundBlock(searchTerm)}</Grid>
                 </Grid>
             );
         };
@@ -189,12 +187,12 @@ export const PastExamPaperSearch = ({
                         renderOption={(props, option) => (
                             <Box component="li" {...props} key={option.name}>
                                 <Grid container>
-                                    <Grid item xs={12}>
+                                    <Grid xs={12}>
                                         <Typography variant="body1" color="textPrimary">
                                             {option.name}
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid xs={12}>
                                         <Typography variant="body2" color="textSecondary">
                                             {option.course_title}
                                         </Typography>
@@ -223,13 +221,13 @@ export const PastExamPaperSearch = ({
                 )}
                 {!!examSuggestionListError && (
                     <StyledSearchPanel container spacing={2} data-testid={'past-exam-paper-error'}>
-                        <Grid item xs={12} sm={12} md className={'searchPanelInfo'}>
+                        <Grid xs={12} sm={12} md className={'searchPanelInfo'}>
                             <span>Autocomplete suggestions currently unavailable - please try again later</span>
                         </Grid>
                     </StyledSearchPanel>
                 )}
                 <Grid container>
-                    <Grid item xs={'auto'}>
+                    <Grid xs={'auto'}>
                         <StyledAboutLink>
                             <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
                                 Read more about searching for past exam papers

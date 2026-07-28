@@ -12,7 +12,7 @@ const testStatusEnum = statusEnum(locale.pages.inspect.config);
 export const savedDialogMessages = {
     [testStatusEnum.CURRENT.value]: (data, locale) => (
         <Grid container item xs={12} sm={8} alignItems="center" className={'dialogContainer dialogPassedContainer'}>
-            <Grid item xs={12} className={'dialogTitle dialogSuccessTitle'} variant="subtitle1">
+            <Grid xs={12} className={'dialogTitle dialogSuccessTitle'} variant="subtitle1">
                 <Typography
                     gutterBottom
                     id="saved-licence-number-container"
@@ -26,27 +26,27 @@ export const savedDialogMessages = {
                     </span>
                 </Typography>
             </Grid>
-            <Grid item xs={12} className={'dialogBarcode'}>
+            <Grid xs={12} className={'dialogBarcode'}>
                 <Typography gutterBottom variant="h6" id="saved-asset-id" data-testid="saved-asset-id">
                     {data.asset_id_displayed}
                 </Typography>
             </Grid>
-            <Grid item xs={12} sm={6} className={'dialogSuccessLineItems'} variant="subtitle1">
+            <Grid xs={12} sm={6} className={'dialogSuccessLineItems'} variant="subtitle1">
                 <Typography gutterBottom id="saved-test-date-label" data-testid="saved-test-date-label">
                     {locale.testedDate}
                 </Typography>
             </Grid>
-            <Grid item xs={12} sm={6} className={'dialogSuccessLineItems'} variant="subtitle1">
+            <Grid xs={12} sm={6} className={'dialogSuccessLineItems'} variant="subtitle1">
                 <Typography gutterBottom id="saved-test-date" data-testid="saved-test-date">
                     {data.action_date}
                 </Typography>
             </Grid>
-            <Grid item xs={12} sm={6} className={'dialogSuccessLineItems'} variant="subtitle1">
+            <Grid xs={12} sm={6} className={'dialogSuccessLineItems'} variant="subtitle1">
                 <Typography gutterBottom id="saved-next-test-date-label" data-testid="saved-next-test-date-label">
                     {locale.dateNextDue}
                 </Typography>
             </Grid>
-            <Grid item xs={12} sm={6} className={'dialogSuccessLineItems'} variant="subtitle1">
+            <Grid xs={12} sm={6} className={'dialogSuccessLineItems'} variant="subtitle1">
                 <Typography gutterBottom id="saved-asset-id" data-testid="saved-asset-id">
                     {data.asset_next_test_due_date}
                 </Typography>
@@ -55,17 +55,17 @@ export const savedDialogMessages = {
     ),
     other: (data, locale) => (
         <Grid container item xs={12} sm={8} alignItems="center" className={'dialogContainer dialogFailedContainer'}>
-            <Grid item xs={12} className={'dialogTitle dialogFailedTitle'}>
+            <Grid xs={12} className={'dialogTitle dialogFailedTitle'}>
                 <Typography gutterBottom variant="h4" id="saved-title-label" data-testid="saved-title-label">
                     {locale.outOfService}
                 </Typography>
             </Grid>
-            <Grid item xs={12} className={'dialogBarcode'}>
+            <Grid xs={12} className={'dialogBarcode'}>
                 <Typography gutterBottom variant="h6" id="saved-asset-id" data-testid="saved-asset-id">
                     {data.asset_id_displayed}
                 </Typography>
             </Grid>
-            <Grid item xs={12} className={'dialogFailedLineItems'} variant="subtitle1">
+            <Grid xs={12} className={'dialogFailedLineItems'} variant="subtitle1">
                 <Typography gutterBottom>
                     <span id="saved-licence-number-label" data-testid="saved-licence-number-label">
                         {locale.tagPlacedBy}

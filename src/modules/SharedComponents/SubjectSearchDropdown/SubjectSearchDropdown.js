@@ -196,7 +196,7 @@ export const SubjectSearchDropdown = ({
                         {locale.search.placeholder}
                     </label>
                 </SearchLabelGridItem>
-                <Grid item xs={12} sm>
+                <Grid xs={12} sm>
                     <StyledAutocomplete
                         filterOptions={options => {
                             return options;
@@ -279,7 +279,7 @@ export const SubjectSearchDropdown = ({
             {!!CRsuggestionsError && (
                 /* istanbul ignore next */
                 <StyledSearchPanel container spacing={2} className={'searchPanel'} data-testid={`${elementId}-links`}>
-                    <Grid item xs={12} sm={12} md className={'searchPanelInfo'}>
+                    <Grid xs={12} sm={12} md className={'searchPanelInfo'}>
                         <span>Autocomplete suggestions unavailable</span>
                     </Grid>
                 </StyledSearchPanel>

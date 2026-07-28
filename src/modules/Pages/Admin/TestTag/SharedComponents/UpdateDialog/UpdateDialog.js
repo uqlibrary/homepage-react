@@ -155,7 +155,7 @@ export const UpdateDialogue = ({
                             <React.Fragment key={field}>
                                 {((action === 'edit' && !!(dataFields[field]?.fieldParams?.renderInUpdate ?? true)) ||
                                     (action === 'add' && !!(dataFields[field]?.fieldParams?.renderInAdd ?? true))) && (
-                                    <Grid item xs={12}>
+                                    <Grid xs={12}>
                                         {((action === 'edit' && !!!(dataFields[field]?.fieldParams?.canEdit ?? true)) ||
                                             (action === 'add' &&
                                                 !!!(dataFields[field]?.fieldParams?.canAdd ?? true))) && (

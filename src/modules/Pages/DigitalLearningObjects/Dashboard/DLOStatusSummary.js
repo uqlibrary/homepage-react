@@ -47,7 +47,7 @@ const DLOStatusSummary = ({ data }) => (
         <Grid container spacing={0.5} alignItems="center" justifyContent="center" wrap="nowrap">
             {statusConfig.map((status, idx) => (
                 <React.Fragment key={status.key}>
-                    <Grid item xs zeroMinWidth sx={{ p: 0, m: 0 }}>
+                    <Grid xs zeroMinWidth sx={{ p: 0, m: 0 }}>
                         <Box sx={{ textAlign: 'center', p: 0, m: 0 }}>
                             <Typography
                                 variant="h3"

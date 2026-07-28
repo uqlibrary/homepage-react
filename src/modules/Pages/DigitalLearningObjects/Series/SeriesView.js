@@ -378,7 +378,7 @@ export const SeriesView = ({
             {getTitleBlock()}
             {!!dlorSeries && !dlorSeriesLoading && (
                 <StyledContentGrid container spacing={4} data-testid="dlor-seriespage">
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <Box sx={{ marginBottom: '12px' }}>
                             <StyledTitleTypography component={'h1'} variant={'h4'}>
                                 {dlorSeries?.series_name}

@@ -99,10 +99,10 @@ export const InspectionSuccessPrintDialog = ({
             <DialogActions>
                 <Grid container spacing={1} padding={2} justifyContent="space-between">
                     <Hidden smDown>
-                        <Grid item xs />
+                        <Grid xs />
                     </Hidden>
 
-                    <Grid item xs={12} sm={'auto'}>
+                    <Grid xs={12} sm={'auto'}>
                         <StyledPrimaryButton
                             children={locale.confirmButtonLabel}
                             fullWidth
@@ -113,7 +113,7 @@ export const InspectionSuccessPrintDialog = ({
                         />
                     </Grid>
 
-                    <Grid item xs={12} sm={'auto'}>
+                    <Grid xs={12} sm={'auto'}>
                         <StyledSecondaryButton
                             variant={'contained'}
                             onClick={_onPrint}

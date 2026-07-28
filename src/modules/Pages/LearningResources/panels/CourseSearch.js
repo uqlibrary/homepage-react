@@ -236,7 +236,7 @@ export const CourseSearch = ({
 
     return (
         <Grid container spacing={3} id={'full-learningresource'} data-testid={'full-learningresource'}>
-            <Grid item xs={12} id="learningresource-search">
+            <Grid xs={12} id="learningresource-search">
                 <SubjectSearchDropdown
                     displayType="full"
                     elementId="full-learningresource"
@@ -244,7 +244,7 @@ export const CourseSearch = ({
                 />
             </Grid>
             {!!listSearchedSubjects && listSearchedSubjects.length > 0 && (
-                <Grid item xs={12} role="region" aria-live="assertive" aria-label="Learning Resource Search Results">
+                <Grid xs={12} role="region" aria-live="assertive" aria-label="Learning Resource Search Results">
                     <Typography component="h2" variant="h6" id="learning-resource-search-results">
                         {locale.searchResultsTitle}
                     </Typography>

@@ -99,7 +99,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                     {pageLocale.deleteReassignWarningPrompt(row?.asset_count)}
                 </Alert>
                 <Grid container spacing={4} sx={{ marginTop: '10px' }}>
-                    <Grid item xs={12} sm={6} container justifyContent="flex-start">
+                    <Grid xs={12} sm={6} container justifyContent="flex-start">
                         <Button
                             variant="contained"
                             color="secondary"
@@ -111,7 +111,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                             {pageLocale.cancelButtonLabel}
                         </Button>
                     </Grid>
-                    <Grid item xs={12} sm={6} container justifyContent="flex-end">
+                    <Grid xs={12} sm={6} container justifyContent="flex-end">
                         <Button
                             color="error"
                             variant="contained"

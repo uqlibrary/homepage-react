@@ -470,12 +470,12 @@ const Locations = ({
                             <>
                                 {/* Header Row */}
                                 <Grid container className="table-row table-row-header">
-                                    <Grid item id="header-library" className={'table-column-name'} aria-hidden="true">
+                                    <Grid id="header-library" className={'table-column-name'} aria-hidden="true">
                                         <Typography component="h3" variant="h6">
                                             Library
                                         </Typography>
                                     </Grid>
-                                    <Grid item className="table-column-hours" id="header-hours" aria-hidden="true">
+                                    <Grid className="table-column-hours" id="header-hours" aria-hidden="true">
                                         <Typography component="h3" variant="h6">
                                             Opening hours*
                                         </Typography>

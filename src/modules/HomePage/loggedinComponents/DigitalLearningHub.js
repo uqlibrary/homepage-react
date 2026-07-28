@@ -36,7 +36,7 @@ export const DigitalLearningHub = ({
             title={title}
         >
             <Grid container padding={3} spacing={2}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Link to="/digital-learning-hub">Digital Learning Hub</Link>
                     <StyledBodyCopyDiv style={{ marginTop: '8px' }}>{subText}</StyledBodyCopyDiv>
                     {hasStatistics && (

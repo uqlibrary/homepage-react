@@ -374,7 +374,7 @@ export const Alert = ({
             <StyledAlert className={`common ${!!customIcon ? customType : type}`} data-testid={alertId} id={alertId}>
                 <div className="layout-card">
                     <Grid container spacing={1} justifyContent="center" alignItems="center" alignContent="center">
-                        <Grid item xs={12} sm className={action && !disableAlertClick && 'linked'}>
+                        <Grid xs={12} sm className={action && !disableAlertClick && 'linked'}>
                             <Grid container justifyContent="center" alignItems="center" alignContent="center">
                                 <Grid
                                     item
@@ -412,7 +412,7 @@ export const Alert = ({
                                 </Grid>
                                 {allowDismiss && dismissAction && (
                                     <Hidden smUp>
-                                        <Grid item className={'dismissButton'}>
+                                        <Grid className={'dismissButton'}>
                                             <IconButton
                                                 onClick={dismissAction}
                                                 aria-label={dismissTitle}
@@ -427,7 +427,7 @@ export const Alert = ({
                                 )}
                                 {canHide && (
                                     <Hidden smUp>
-                                        <Grid item className={'dismissButton'}>
+                                        <Grid className={'dismissButton'}>
                                             <IconButton
                                                 onClick={hideThisAlert}
                                                 aria-label={dismissTitle}
@@ -443,7 +443,7 @@ export const Alert = ({
                             </Grid>
                         </Grid>
                         {action && actionButtonLabel && (
-                            <Grid item xs sm="auto" className={'actionButton'}>
+                            <Grid xs sm="auto" className={'actionButton'}>
                                 <Button
                                     variant="text"
                                     children={actionButtonLabel}
@@ -457,7 +457,7 @@ export const Alert = ({
                         )}
                         {allowDismiss && dismissAction && (
                             <Hidden smDown>
-                                <Grid item className={'dismissButton'}>
+                                <Grid className={'dismissButton'}>
                                     <IconButton
                                         onClick={dismissAction}
                                         aria-label={dismissTitle}
@@ -472,7 +472,7 @@ export const Alert = ({
                         )}
                         {!!canHide && (
                             <Hidden smDown>
-                                <Grid item className={'dismissButton'}>
+                                <Grid className={'dismissButton'}>
                                     <IconButton
                                         onClick={hideThisAlert}
                                         aria-label={dismissTitle}
