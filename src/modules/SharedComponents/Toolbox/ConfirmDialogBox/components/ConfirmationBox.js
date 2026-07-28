@@ -6,7 +6,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
 import Grid from '@mui/material/Grid';
-import Hidden from '@mui/material/Hidden';
 import { StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
 
 export const ConfirmationBox = ({
@@ -70,9 +69,9 @@ export const ConfirmationBox = ({
             </DialogContent>
             <DialogActions>
                 <Grid container spacing={1} justifyContent="space-between">
-                    <Hidden smDown>
+                    <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                         <Grid item xs />
-                    </Hidden>
+                    </Box>
                     {!hideActionButton && (
                         <Grid item xs={12} sm={'auto'}>
                             <StyledPrimaryButton
