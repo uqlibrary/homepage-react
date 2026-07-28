@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useMemo, useRef, useCallback } from 'reac
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 

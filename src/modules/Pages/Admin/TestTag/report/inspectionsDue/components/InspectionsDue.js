@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 
 import { useSelector } from 'react-redux';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
