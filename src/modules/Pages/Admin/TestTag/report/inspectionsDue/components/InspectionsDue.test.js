@@ -109,7 +109,7 @@ describe('InspectionsDue', () => {
         expect(row.getByText('UQL000007')).toBeInTheDocument();
         expect(row.getByText('Power Cord - C5')).toBeInTheDocument();
         // expect a red cell with alert icon
-        expect(row.getAllByRole('cell')[2]).toHaveStyle('background-color: #951126');
+        expect(row.getAllByRole('gridcell')[3]).toHaveStyle('background-color: #951126');
         expect(row.getByText('2010-04-25')).toBeInTheDocument();
         expect(row.getByTestId('tooltip-overdue')).toBeInTheDocument();
         expect(row.getByText('2022-10-25')).toBeInTheDocument();
