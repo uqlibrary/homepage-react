@@ -65,7 +65,7 @@ describe('Membership actions', () => {
     describe('submitMembership', () => {
         it('dispatches saving then saved, and resolves with the saved record', async () => {
             const saved = { id: 'abc-123', type: 'community', status: 'unconfirmed' };
-            mockApi.onPost(repositories.routes.MEMBERSHIP_CREATE_API().apiUrl).reply(200, saved);
+            mockApi.onPost(repositories.routes.MEMBERSHIP_CREATE_API().apiUrl).reply(201, saved);
 
             const result = await mockActionsStore.dispatch(submitMembership({ type: 'community' }));
 

@@ -35,7 +35,10 @@ export function submitMembership(membership) {
     return async dispatch => {
         dispatch({ type: actions.MEMBERSHIP_SAVING });
         try {
-            const saved = await post(MEMBERSHIP_CREATE_API(), membership);
+            // The API answers a create with 201, for which the shared axios interceptor resolves the whole
+            // response rather than its body — so the saved record is on `.data`.
+            const response = await post(MEMBERSHIP_CREATE_API(), membership);
+            const saved = response.data;
             dispatch({ type: actions.MEMBERSHIP_SAVED, payload: saved });
             return saved;
         } catch (error) {

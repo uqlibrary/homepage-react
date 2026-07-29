@@ -371,10 +371,10 @@ mock.onGet(routes.MEMBERSHIP_FORM_DATA_API().apiUrl).reply(withDelay([200, membe
 mock.onGet(new RegExp(escapeRegExp('membership/check/renewing.*'))).reply(() =>
     withDelay([200, user === 'emcommunity' ? membershipRenewing : { renewing: false }])(),
 );
-// A submitted application: the API answers with the saved record, echoing the type back.
+// A submitted application: the API answers 201 with the saved record, echoing the type back.
 mock.onPost(routes.MEMBERSHIP_CREATE_API().apiUrl).reply(config => {
     const { type } = JSON.parse(config.data);
-    return withDelay([200, membershipSubmitted('00000000-0000-0000-0000-000000000123', type)])();
+    return withDelay([201, membershipSubmitted('00000000-0000-0000-0000-000000000123', type)])();
 });
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
