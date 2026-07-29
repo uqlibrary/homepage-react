@@ -407,6 +407,10 @@ describe('membership routes', () => {
         expect(routes.MEMBERSHIP_FORM_DATA_API()).toEqual({ apiUrl: 'membership' });
     });
 
+    it('should construct url for MEMBERSHIP_CREATE_API', () => {
+        expect(routes.MEMBERSHIP_CREATE_API()).toEqual({ apiUrl: 'membership' });
+    });
+
     it('should construct url for MEMBERSHIP_CHECK_RENEWING_API', () => {
         expect(routes.MEMBERSHIP_CHECK_RENEWING_API()).toEqual({
             apiUrl: 'membership/check/renewing',

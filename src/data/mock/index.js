@@ -26,7 +26,7 @@ import { libHours } from './data/libHours';
 import { training_object, training_object_hospital } from './data/training';
 import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
-import { membershipFormData, membershipRenewing } from './data/membership';
+import { membershipFormData, membershipRenewing, membershipSubmitted } from './data/membership';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_PHYS1001 from './data/records/learningResources/examSearch_PHYS1001';
 import examSearch_ENGG from './data/records/learningResources/examSearch_ENGG';
@@ -371,6 +371,11 @@ mock.onGet(routes.MEMBERSHIP_FORM_DATA_API().apiUrl).reply(withDelay([200, membe
 mock.onGet(new RegExp(escapeRegExp('membership/check/renewing.*'))).reply(() =>
     withDelay([200, user === 'emcommunity' ? membershipRenewing : { renewing: false }])(),
 );
+// A submitted application: the API answers with the saved record, echoing the type back.
+mock.onPost(routes.MEMBERSHIP_CREATE_API().apiUrl).reply(config => {
+    const { type } = JSON.parse(config.data);
+    return withDelay([200, membershipSubmitted('00000000-0000-0000-0000-000000000123', type)])();
+});
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {

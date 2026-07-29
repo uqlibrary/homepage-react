@@ -39,6 +39,7 @@ export const pathConfig = {
     bookExamBooth: '/book-exam-booth',
     membership: '/membership',
     membershipForm: type => `/membership/form/${type}`,
+    membershipReceived: id => `/membership/received/${id}`,
     membershipRenewal: (type, id, code) => `/membership/form/${type}/${id}/${code}`,
     dlorProtected: '/digital-learning-hub-list',
     dlorHome: '/digital-learning-hub',

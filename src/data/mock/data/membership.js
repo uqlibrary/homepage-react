@@ -160,3 +160,15 @@ export const membershipRenewing = {
     id: '00000000-0000-0000-0000-000000000009',
     renewal_code: 'renew-me-123',
 };
+
+// The saved record the API answers a submission with: an unconfirmed application, echoing back the type, plus
+// the gateway URL a paying type is sent to.
+export const membershipSubmitted = (id, type) => ({
+    id,
+    type,
+    status: 'unconfirmed',
+    uq_payments_url:
+        '/membership/paymentconfirmation?UQ_LIB_ID=' +
+        id +
+        '&ReceiptNo=R7654321&MembershipCode=COM&Success=Y&AmountPaid=25.00',
+});

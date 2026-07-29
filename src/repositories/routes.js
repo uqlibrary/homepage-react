@@ -332,6 +332,9 @@ export const LOANS_API = () => ({
 // reciprocal.*
 export const MEMBERSHIP_FORM_DATA_API = () => ({ apiUrl: 'membership' });
 
+// Submit a new membership application.
+export const MEMBERSHIP_CREATE_API = () => ({ apiUrl: 'membership' });
+
 export const MEMBERSHIP_CHECK_RENEWING_API = () => ({
     apiUrl: 'membership/check/renewing',
     options: { params: { ts: getMillisecondCacheBuster() } },

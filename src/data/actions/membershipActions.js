@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
-import { get } from 'repositories/generic';
-import { MEMBERSHIP_CHECK_RENEWING_API, MEMBERSHIP_FORM_DATA_API } from 'repositories/routes';
+import { get, post } from 'repositories/generic';
+import { MEMBERSHIP_CHECK_RENEWING_API, MEMBERSHIP_CREATE_API, MEMBERSHIP_FORM_DATA_API } from 'repositories/routes';
 
 /**
  * Load the data the membership form and landing chooser are built from: account_types, titles, hospital.* and
@@ -25,4 +25,29 @@ export function checkIsRenewing() {
             .then(response => dispatch({ type: actions.MEMBERSHIP_RENEWING_LOADED, payload: response }))
             .catch(error => dispatch({ type: actions.MEMBERSHIP_RENEWING_FAILED, payload: error.message }));
     };
+}
+
+/**
+ * Submit a new membership application. Resolves with the saved record — the received page is reached with its
+ * id — and, on failure, rejects with the error so the form can surface the API's field messages.
+ */
+export function submitMembership(membership) {
+    return async dispatch => {
+        dispatch({ type: actions.MEMBERSHIP_SAVING });
+        try {
+            const saved = await post(MEMBERSHIP_CREATE_API(), membership);
+            dispatch({ type: actions.MEMBERSHIP_SAVED, payload: saved });
+            return saved;
+        } catch (error) {
+            dispatch({ type: actions.MEMBERSHIP_SAVE_FAILED, payload: error });
+            throw error;
+        }
+    };
+}
+
+/**
+ * Drop the current membership record from the store — used when the form unmounts.
+ */
+export function clearMembership() {
+    return dispatch => dispatch({ type: actions.MEMBERSHIP_CLEAR });
 }

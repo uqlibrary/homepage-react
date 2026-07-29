@@ -52,7 +52,7 @@ export default {
         findAPostcode: {
             before: 'You may find the Australia Post ',
             label: 'Find a postcode',
-            url: 'https://auspost.com.au/apps/postcode.html',
+            url: 'https://auspost.com.au/postcode',
             after: ' page useful.',
         },
     },

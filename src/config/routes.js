@@ -96,6 +96,18 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.membership.title,
         },
         {
+            path: pathConfig.membershipForm(':type'),
+            element: <components.MembershipForm />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            path: pathConfig.membershipReceived(':id'),
+            element: <components.MembershipReceived />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
             path: pathConfig.dlorView(dlorId),
             element: <components.DLOView />,
             pageTitle: 'Digital Learning Object Repository - View Object',
