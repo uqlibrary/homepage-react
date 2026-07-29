@@ -349,9 +349,9 @@ const InspectionsByLicencedUser = ({
                                 loading={userInspectionsLoading}
                                 disableColumnFilter
                                 disableColumnMenu
-                                components={{
-                                    Toolbar: () => <WithExportMenu id={componentId} />,
-                                    Footer: () => (
+                                slots={{
+                                    toolbar: () => <WithExportMenu id={componentId} />,
+                                    footer: () => (
                                         <FooterRow count={totalInspections} columns={columns} locale={pageLocale} />
                                     ),
                                 }}
