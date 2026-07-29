@@ -313,7 +313,7 @@
         "unmockedModulePathPatterns": [
             "react"
         ],
-        "collectCoverage": true,
+        "collectCoverage": false,
         "coveragePathIgnorePatterns": [
             "<rootDir>/playwright/"
         ],
