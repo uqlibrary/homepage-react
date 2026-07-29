@@ -259,8 +259,8 @@ const InspectionDevices = ({
                                 rows={row}
                                 columns={columns}
                                 rowId={'device_id'}
-                                components={{
-                                    Toolbar: () => (
+                                slots={{
+                                    toolbar: () => (
                                         <WithExportMenu id={componentId}>
                                             {canManage && (
                                                 <AddButton

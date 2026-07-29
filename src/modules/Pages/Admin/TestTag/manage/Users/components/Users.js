@@ -268,8 +268,8 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
                             columns={columns}
                             rowId="user_id"
                             loading={userListLoading || teamListLoading}
-                            components={{
-                                Toolbar: () => (
+                            slots={{
+                                toolbar: () => (
                                     <WithExportMenu id={componentId}>
                                         <AddButton
                                             label={pageLocale.form.addButtonLabel}

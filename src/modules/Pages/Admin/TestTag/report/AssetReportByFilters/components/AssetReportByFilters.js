@@ -331,8 +331,8 @@ const AssetReportByFilters = ({
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
-                                components={{
-                                    Toolbar: () => <WithExportMenu id={componentId} />,
+                                slots={{
+                                    toolbar: () => <WithExportMenu id={componentId} />,
                                 }}
                             />
                         </Grid>

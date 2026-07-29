@@ -367,8 +367,8 @@ const PrinterTemplates = () => {
                             columns={columns}
                             rowId="printer_template_id"
                             loading={printerTemplateListLoading}
-                            components={{
-                                Toolbar: () => (
+                            slots={{
+                                toolbar: () => (
                                     <WithExportMenu id={componentId}>
                                         <AddButton
                                             label={pageLocale.buttons.add.label}

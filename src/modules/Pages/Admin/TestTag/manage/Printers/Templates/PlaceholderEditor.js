@@ -182,10 +182,10 @@ const PlaceholderEditor = ({ label, onChange, value, error, setIsEditing, InputL
                 onRowEditStop={handleRowEditStop}
                 processRowUpdate={processRowUpdate}
                 onProcessRowUpdateError={_onError}
-                components={{
-                    Toolbar: AddToolbar,
+                slots={{
+                    toolbar: AddToolbar,
                 }}
-                componentsProps={{
+                slotProps={{
                     toolbar: { rows, setRows, setRowModesModel, setIsEditing, id: componentId },
                 }}
                 disableIgnoreModificationsIfProcessingProps

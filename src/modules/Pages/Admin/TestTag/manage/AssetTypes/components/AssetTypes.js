@@ -277,8 +277,8 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                 columns={columns}
                                 rowId="asset_type_id"
                                 loading={assetTypesListLoading}
-                                components={{
-                                    Toolbar: () => (
+                                slots={{
+                                    toolbar: () => (
                                         <WithExportMenu id={componentId}>
                                             <AddButton
                                                 label={pageLocale.header.addButtonLabel}

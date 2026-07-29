@@ -229,8 +229,8 @@ const Teams = ({ actions, teamListLoading, teamList, teamListError }) => {
                             columns={columns}
                             rowId="team_slug"
                             loading={teamListLoading}
-                            components={{
-                                Toolbar: () => (
+                            slots={{
+                                toolbar: () => (
                                     <WithExportMenu id={componentId}>
                                         <AddButton label={pageLocale.form.addButtonLabel} onClick={handleAddClick} />
                                     </WithExportMenu>

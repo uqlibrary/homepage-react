@@ -163,8 +163,8 @@ const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen,
                         columns={columns}
                         rowId={'asset_id'}
                         handleDeleteClick={handleDeleteClick}
-                        components={{ Footer: FooterBar }}
-                        componentsProps={{
+                        slots={{ footer: FooterBar }}
+                        slotProps={{
                             footer: {
                                 id: componentId,
                                 actionLabel: stepOneLocale.button.next,

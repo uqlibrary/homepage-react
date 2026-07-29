@@ -231,8 +231,8 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
-                                components={{
-                                    Toolbar: () => <WithExportMenu id={componentId} />,
+                                slots={{
+                                    toolbar: () => <WithExportMenu id={componentId} />,
                                 }}
                             />
                         </Grid>
