@@ -2,9 +2,6 @@ import React from 'react';
 import { rtlRender } from 'test-utils';
 import RichTextEditor from './RichTextEditor';
 
-// mui-tiptap renders a ProseMirror editor that needs browser APIs jsdom lacks, so stand it in
-// with a lightweight double. The double invokes the render props and update callback it is given
-// so their code paths are exercised here rather than only in the browser e2e run.
 jest.mock('mui-tiptap', () => {
     const react = require('react');
     return {
@@ -23,8 +20,6 @@ jest.mock('mui-tiptap', () => {
     };
 });
 
-// The toolbar and extensions pull their pieces from mui-tiptap's editor context, which the mock
-// above does not provide; they have their own coverage, so stub them out of this component's test.
 jest.mock('./RichTextToolbar', () => () => <div data-testid="mock-rich-text-toolbar" />);
 jest.mock('./extensions', () => ({ createExtensions: () => [] }));
 
