@@ -27,9 +27,8 @@ describe('SwitchIncludeAllTeams', () => {
     });
 
     it('renders the switch with the correct label', () => {
-        const { getByText, getByRole } = setup();
-        expect(getByText('All team assets')).toBeInTheDocument();
-        expect(getByRole('checkbox')).toBeInTheDocument();
+        const { getByRole } = setup();
+        expect(getByRole('switch', { name: 'All team assets' })).toBeInTheDocument();
     });
 
     it('fires onChange on mount when fireOnChangeOnMount is true (default)', () => {
