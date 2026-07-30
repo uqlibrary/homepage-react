@@ -557,8 +557,9 @@ describe('PrinterTemplates', () => {
     it('renders in mobile view with full screen dialog styles', () => {
         const createMatchMedia = width => query => ({
             matches: require('css-mediaquery').match(query, { width }),
-            addListener: () => {},
-            removeListener: () => {},
+            // MUI v7 requires these
+            addEventListener: jest.fn(),
+            removeEventListener: jest.fn(),
         });
         const originalMatchMedia = window.matchMedia;
         window.matchMedia = createMatchMedia(375);
