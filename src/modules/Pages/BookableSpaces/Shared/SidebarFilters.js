@@ -846,6 +846,10 @@ export const SidebarFilters = ({
     };
 
     const isJourneyView = suppliedClassName?.includes('journey');
+    const selectedCampusValue =
+        selectedCampus === 0
+            ? 0
+            : campusList?.find(c => c.campus_id === selectedCampus)?.campus_id || defaultCampus || 1;
 
     return (
         <StyledSidebarDiv id="StyledSidebarDivTemp" className={`filterSideBar ${suppliedClassName}`}>
@@ -899,15 +903,16 @@ export const SidebarFilters = ({
                             id="filter-by-campus"
                             labelId="filter-by-campus-label"
                             data-testid="filter-by-campus"
-                            value={
-                                campusList?.find(c => c.campus_id === selectedCampus)?.campus_id || defaultCampus || 1
-                            }
+                            value={selectedCampusValue}
                             onChange={handleCampusSelection}
                             inputProps={{
                                 id: 'filter-by-campus-input',
                                 title: 'Filter the displayed Spaces by campus',
                             }}
                         >
+                            <MenuItem value={0} data-testid="campus-all">
+                                All campuses
+                            </MenuItem>
                             {campusList
                                 ?.filter(campus => campus.campus_space_count > 0)
                                 ?.map((campus, index) => (

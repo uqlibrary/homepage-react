@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 
 import { act } from 'react-dom/test-utils';
@@ -5,10 +6,12 @@ import { act } from 'react-dom/test-utils';
 import { fireEvent, rtlRender, screen, waitFor, WithRouter } from 'test-utils';
 
 import { BookableSpacesList, buildJourneyNavigationUrl } from 'modules/Pages/BookableSpaces/BookableSpacesList';
+import { deserialiseJourneyMapFilterState } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const mockDispatch = jest.fn();
 const mockFlyToSpace = jest.fn();
 const mockSetCookie = jest.fn();
+const mockRemoveCookie = jest.fn();
 const mockJourneyRender = jest.fn();
 const mockSidebarRender = jest.fn();
 
@@ -25,7 +28,7 @@ jest.mock('react-redux', () => {
 });
 
 jest.mock('react-cookie', () => ({
-    useCookies: () => [{}, mockSetCookie],
+    useCookies: () => [{}, mockSetCookie, mockRemoveCookie],
 }));
 
 jest.mock('context', () => ({
@@ -49,12 +52,23 @@ jest.mock('modules/Pages/BookableSpaces/Shared/SidebarFilters', () => {
     return function MockSidebarFilters(props) {
         mockSidebarRender(props);
         return (
-            <button
-                data-testid="trigger-campus-change"
-                onClick={() => props.handleCampusSelection({ target: { value: '2' } })}
-            >
-                Trigger campus change
-            </button>
+            <>
+                <button
+                    data-testid="trigger-campus-change"
+                    onClick={() => props.handleCampusSelection({ target: { value: '2' } })}
+                >
+                    Trigger campus change
+                </button>
+                <button
+                    data-testid="trigger-all-campuses"
+                    onClick={() => props.handleCampusSelection({ target: { value: '0' } })}
+                >
+                    Trigger all campuses
+                </button>
+                <button data-testid="toggle-favourites-only" onClick={() => props.setShowFavouriteSpacesOnly(true)}>
+                    Toggle favourites only
+                </button>
+            </>
         );
     };
 });
@@ -168,6 +182,19 @@ describe('BookableSpacesList campus selection', () => {
         window.history.replaceState({}, '', '/spaces');
     });
 
+    it('defaults to all campuses when no saved preference exists', async () => {
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        expect(latestSidebarProps.selectedCampus).toBe(0);
+    });
+
     it('flies to selected campus when campus value is received as a string', async () => {
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
@@ -187,6 +214,115 @@ describe('BookableSpacesList campus selection', () => {
             2,
             expect.objectContaining({ expires: expect.any(Date) }),
         );
+    });
+
+    it('clears the saved campus preference when all campuses is selected', async () => {
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        fireEvent.click(screen.getByTestId('trigger-all-campuses'));
+
+        await waitFor(() => expect(mockRemoveCookie).toHaveBeenCalledWith('UQLspacesPreferredCampus', { path: '/' }));
+    });
+
+    it('does not restore a specific campus from the URL when the current state is all campuses', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [],
+                selectedCampus: 1,
+                selectedLibrary: 0,
+                capacityFilterValue: [1, 50],
+            }),
+        );
+
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        expect(latestSidebarProps.selectedCampus).toBe(0);
+    });
+
+    it('keeps the favourites-only filter enabled when the URL does not explicitly carry that state', async () => {
+        const { rerender } = rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        fireEvent.click(screen.getByTestId('toggle-favourites-only'));
+
+        await waitFor(() => {
+            const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+            expect(latestSidebarProps.showFavouriteSpacesOnly).toBe(true);
+        });
+
+        rerender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults?mapFilters=abc']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => {
+            const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+            expect(latestSidebarProps.showFavouriteSpacesOnly).toBe(true);
+        });
+    });
+
+    it('writes the active filter state into the URL as filters are changed', async () => {
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        fireEvent.click(screen.getByTestId('toggle-favourites-only'));
+
+        await waitFor(() => {
+            const searchValue =
+                window.location.search ||
+                (window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '');
+            const params = new URLSearchParams(searchValue);
+            const parsedState = deserialiseJourneyMapFilterState(params);
+            expect(parsedState.showFavouriteSpacesOnly).toBe(true);
+        });
+    });
+
+    it('keeps a manually selected campus when journey map filters are present in the URL', async () => {
+        const encodedState = encodeURIComponent(
+            JSON.stringify({
+                selectedFacilityTypes: [],
+                selectedCampus: 1,
+                selectedLibrary: 0,
+                capacityFilterValue: [1, 50],
+            }),
+        );
+
+        window.history.replaceState({}, '', `/spaces/mapresults?mapFilters=${encodedState}`);
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={[`/spaces/mapresults?mapFilters=${encodedState}`]}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        fireEvent.click(screen.getByTestId('trigger-campus-change'));
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
+
+        expect(latestSidebarProps.selectedCampus).toBe(2);
     });
 
     it('applies journey map filter state once facility filters become available', async () => {

@@ -306,6 +306,7 @@ export const BookableSpacesList = ({
     const FACILITY_TYPE_NAME_CAPACITY = 'Bookable';
 
     const FIRST_CAMPUS_ID = 1;
+    const ALL_CAMPUSES_ID = 0;
     const ALL_LIBRARIES_ID = 0;
     const ZOOM_IN_TO_LIBRARY = 20;
 
@@ -385,7 +386,8 @@ export const BookableSpacesList = ({
         [expandedSpaceId, handleSpaceSelect],
     );
 
-    const [cookies, setCookie] = useCookies();
+    const [cookies, setCookie, removeCookie] = useCookies();
+    const ALL_CAMPUSES_SELECTION_STORAGE_KEY = 'bookableSpacesAllCampusesSelected';
     const journeyMapFilterState = React.useMemo(() => {
         if (typeof window === 'undefined') return null;
         const searchValue = location.search || window.location.search || '';
@@ -417,27 +419,44 @@ export const BookableSpacesList = ({
         const cookieValue = campusCookie.split('=').slice(1).join('=');
         return cookieValue ? decodeURIComponent(cookieValue) : null;
     }, [cookies?.UQLspacesPreferredCampus]);
+    const getPersistedAllCampusesSelection = React.useCallback(() => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return false;
+        }
+        return window.sessionStorage.getItem(ALL_CAMPUSES_SELECTION_STORAGE_KEY) === 'true';
+    }, []);
+
     const correctedCampusId = useCallback(
         campusId => {
             const normalizedCampusId = Number(campusId);
+            if (normalizedCampusId === ALL_CAMPUSES_ID) {
+                return ALL_CAMPUSES_ID;
+            }
             if (!Number.isFinite(normalizedCampusId) || normalizedCampusId <= 0) {
-                return FIRST_CAMPUS_ID;
+                return ALL_CAMPUSES_ID;
             }
             if (!campusList?.length) {
-                return FIRST_CAMPUS_ID;
+                return ALL_CAMPUSES_ID;
             }
-            return campusList?.find(c => c.campus_id === normalizedCampusId) ? normalizedCampusId : FIRST_CAMPUS_ID;
+            return campusList?.find(c => c.campus_id === normalizedCampusId) ? normalizedCampusId : ALL_CAMPUSES_ID;
         },
         [campusList],
     );
     const getCampusInitialState = React.useCallback(() => {
+        if (getPersistedAllCampusesSelection()) {
+            return ALL_CAMPUSES_ID;
+        }
+
         const spacesPreferredCampus = getCampusCookieValue();
         if (typeof spacesPreferredCampus === 'string' && spacesPreferredCampus.trim() !== '') {
             const parsedCampusId = Number.parseInt(spacesPreferredCampus, 10);
-            return Number.isNaN(parsedCampusId) ? FIRST_CAMPUS_ID : parsedCampusId;
+            if (Number.isNaN(parsedCampusId) || parsedCampusId === ALL_CAMPUSES_ID) {
+                return ALL_CAMPUSES_ID;
+            }
+            return parsedCampusId;
         }
-        return FIRST_CAMPUS_ID;
-    }, [getCampusCookieValue]);
+        return ALL_CAMPUSES_ID;
+    }, [getCampusCookieValue, getPersistedAllCampusesSelection]);
     const [selectedCampus, setSelectedCampus] = React.useState(() => getCampusInitialState());
     const hasInitialisedCampusFromCookie = React.useRef(false);
 
@@ -447,22 +466,32 @@ export const BookableSpacesList = ({
         }
 
         const explicitCampusFromUrl = journeyMapFilterState?.selectedCampus;
-        if (explicitCampusFromUrl !== null && explicitCampusFromUrl !== undefined) {
-            const validatedCampusId = correctedCampusId(explicitCampusFromUrl);
-            if (selectedCampus !== validatedCampusId) {
-                setSelectedCampus(validatedCampusId);
-            }
-            hasInitialisedCampusFromCookie.current = true;
-            return;
-        }
-
-        const campusIdFromCookie = getCampusInitialState();
-        const validatedCampusId = correctedCampusId(campusIdFromCookie);
-        if (selectedCampus !== validatedCampusId) {
-            setSelectedCampus(validatedCampusId);
+        const campusCookieValue = getCampusCookieValue();
+        const hasExplicitAllCampusesSelection = getPersistedAllCampusesSelection();
+        const hasSavedCampusPreference =
+            typeof campusCookieValue === 'string' &&
+            campusCookieValue.trim() !== '' &&
+            Number(campusCookieValue) !== ALL_CAMPUSES_ID;
+        const useCampusFromUrl = !hasExplicitAllCampusesSelection && !hasSavedCampusPreference;
+        const campusIdFromStore = getCampusInitialState();
+        const derivedCampusId = correctedCampusId(
+            useCampusFromUrl && explicitCampusFromUrl !== null && explicitCampusFromUrl !== undefined
+                ? explicitCampusFromUrl
+                : campusIdFromStore,
+        );
+        if (selectedCampus !== derivedCampusId) {
+            setSelectedCampus(derivedCampusId);
         }
         hasInitialisedCampusFromCookie.current = true;
-    }, [campusList, correctedCampusId, getCampusInitialState, journeyMapFilterState?.selectedCampus, selectedCampus]);
+    }, [
+        campusList,
+        correctedCampusId,
+        getCampusCookieValue,
+        getCampusInitialState,
+        getPersistedAllCampusesSelection,
+        journeyMapFilterState?.selectedCampus,
+        selectedCampus,
+    ]);
 
     // based on https://stackoverflow.com/a/42234774
     // this isn't the formula I am used to, which has much more trig, but it seems good enough
@@ -485,7 +514,9 @@ export const BookableSpacesList = ({
         }
 
         const normalizedSelectedCampusId = Number(selectedCampusId);
-        const spacesListForCampus = spacesList?.filter(s => s.space_campus_id === normalizedSelectedCampusId);
+        const fallbackCampusId =
+            normalizedSelectedCampusId === ALL_CAMPUSES_ID ? FIRST_CAMPUS_ID : normalizedSelectedCampusId;
+        const spacesListForCampus = spacesList?.filter(s => s.space_campus_id === fallbackCampusId);
 
         const buildingsOnCampus =
             !!spacesListForCampus &&
@@ -562,28 +593,66 @@ export const BookableSpacesList = ({
         return formattedGeolocatedLocation(
             radiansToDegrees(lat),
             radiansToDegrees(lon),
-            normalizedSelectedCampusId,
+            fallbackCampusId,
             buildingsOnCampus.at(0).building_campus_name,
         );
     }
+
+    const hasUserOverriddenCampusSelectionRef = React.useRef(false);
+    const lastPersistedCampusIdRef = React.useRef(null);
+
+    const persistCampusPreference = useCallback(
+        campusSelection => {
+            const normalizedCampusSelection = correctedCampusId(campusSelection);
+            if (lastPersistedCampusIdRef.current === normalizedCampusSelection) {
+                return;
+            }
+
+            lastPersistedCampusIdRef.current = normalizedCampusSelection;
+
+            if (normalizedCampusSelection === ALL_CAMPUSES_ID) {
+                removeCookie('UQLspacesPreferredCampus', { path: '/' });
+                if (typeof window !== 'undefined' && window.sessionStorage) {
+                    window.sessionStorage.setItem(ALL_CAMPUSES_SELECTION_STORAGE_KEY, 'true');
+                }
+                return;
+            }
+
+            if (typeof window !== 'undefined' && window.sessionStorage) {
+                window.sessionStorage.removeItem(ALL_CAMPUSES_SELECTION_STORAGE_KEY);
+            }
+
+            const current = new Date();
+            const nextYear = new Date();
+            nextYear.setFullYear(current.getFullYear() + 1);
+            setCookie('UQLspacesPreferredCampus', normalizedCampusSelection, { expires: nextYear, path: '/' });
+        },
+        [correctedCampusId, removeCookie, setCookie],
+    );
+
+    React.useEffect(() => {
+        if (!hasInitialisedCampusFromCookie.current || !hasUserOverriddenCampusSelectionRef.current) {
+            return;
+        }
+
+        persistCampusPreference(selectedCampus);
+    }, [persistCampusPreference, selectedCampus]);
 
     const handleCampusSelection = e => {
         const campusId = Number(e?.target?.value);
         if (Number.isNaN(campusId)) {
             return;
         }
+        hasUserOverriddenCampusSelectionRef.current = true;
         setSelectedCampus(campusId);
         setSelectedFacilityTypes([]); // reset so the useEffect re-initializes with the new campus's facility types
 
-        const current = new Date();
-        const nextYear = new Date();
-        nextYear.setFullYear(current.getFullYear() + 1);
-        setCookie('UQLspacesPreferredCampus', campusId, { expires: nextYear, path: '/' });
-
         setSelectedLibrary(ALL_LIBRARIES_ID); // clear the library on changing campus
 
-        const locationOfCentreOfCampus = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
         setExpandedSpaceId(null);
+        persistCampusPreference(campusId);
+
+        const locationOfCentreOfCampus = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
         !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
     };
 
@@ -592,6 +661,7 @@ export const BookableSpacesList = ({
         if (Number.isNaN(libraryId)) {
             return;
         }
+        hasUserOverriddenCampusSelectionRef.current = true;
         setSelectedLibrary(libraryId);
 
         if (libraryId === ALL_LIBRARIES_ID) {
@@ -623,6 +693,82 @@ export const BookableSpacesList = ({
         });
         window.location.assign(nextUrl);
     };
+
+    const hasSyncedUrlStateRef = React.useRef(false);
+    const syncJourneyMapFilterStateInUrl = React.useCallback(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        if (!hasSyncedUrlStateRef.current) {
+            hasSyncedUrlStateRef.current = true;
+            return;
+        }
+
+        const currentUrl = new URL(window.location.href);
+        const hashValue = currentUrl.hash || '';
+        const isHashRouting = hashValue.startsWith('#/');
+        const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
+        const existingParams = new URLSearchParams(hashSearch || currentUrl.search || '');
+        const preservedQueryParams = new URLSearchParams();
+
+        ['mapFilters', 'autoSelectFirstSpace'].forEach(key => {
+            const value = existingParams.get(key);
+            if (value !== null) {
+                preservedQueryParams.set(key, value);
+            }
+        });
+
+        const hasSelectedFacilityFilters = (selectedFacilityTypes || []).some(
+            filter => filter?.selected || filter?.unselected,
+        );
+        const normalizedSelectedCampus = Number(selectedCampus);
+        const normalizedSelectedLibrary = Number(selectedLibrary);
+        const hasActiveCampusSelection = Number.isFinite(normalizedSelectedCampus) && normalizedSelectedCampus > 1;
+        const hasActiveLibrarySelection = Number.isFinite(normalizedSelectedLibrary) && normalizedSelectedLibrary !== 0;
+        const hasActiveCapacitySelection = Array.isArray(capacityFilterValue) && capacityFilterValue.length > 0;
+        const hasActiveFavouritesSelection = Boolean(showFavouriteSpacesOnly);
+        const hasActiveJourneyFilters =
+            hasSelectedFacilityFilters ||
+            hasActiveCampusSelection ||
+            hasActiveLibrarySelection ||
+            hasActiveCapacitySelection ||
+            hasActiveFavouritesSelection;
+
+        const nextSearchParams = new URLSearchParams(preservedQueryParams.toString());
+        if (hasActiveJourneyFilters) {
+            const encodedMapFilters = serialiseJourneyMapFilterState({
+                selectedFacilityTypes,
+                selectedCampus,
+                selectedLibrary,
+                capacityFilterValue,
+                showFavouriteSpacesOnly,
+            });
+            nextSearchParams.set('mapFilters', encodedMapFilters);
+        } else {
+            nextSearchParams.delete('mapFilters');
+        }
+
+        if (isHashRouting) {
+            const nextHashPath = hashValue.split('?')[0] || '#/';
+            const nextHashValue = nextSearchParams.toString()
+                ? `${nextHashPath}?${nextSearchParams.toString()}`
+                : nextHashPath;
+            currentUrl.hash = nextHashValue;
+            currentUrl.search = '';
+        } else {
+            currentUrl.search = nextSearchParams.toString();
+        }
+
+        const nextUrl = currentUrl.toString();
+        if (nextUrl !== window.location.href) {
+            window.history.replaceState({}, '', nextUrl);
+        }
+    }, [capacityFilterValue, selectedCampus, selectedFacilityTypes, selectedLibrary, showFavouriteSpacesOnly]);
+
+    React.useEffect(() => {
+        syncJourneyMapFilterStateInUrl();
+    }, [syncJourneyMapFilterStateInUrl]);
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -695,7 +841,10 @@ export const BookableSpacesList = ({
             const currentLibraryList = Object.values(
                 bookableSpacesRoomList?.data?.locations?.reduce(
                     (acc, { space_campus_id, space_library_id, space_library_name }) => {
-                        if (space_campus_id === selectedCampus) {
+                        const shouldIncludeLibraryForCurrentCampus =
+                            selectedCampus === ALL_CAMPUSES_ID || space_campus_id === selectedCampus;
+
+                        if (shouldIncludeLibraryForCurrentCampus) {
                             if (!acc[space_library_id]) {
                                 acc[space_library_id] = {
                                     library_id: space_library_id,
@@ -795,7 +944,7 @@ export const BookableSpacesList = ({
             }
         }
 
-        if (space.space_campus_id !== selectedCurrentCampus) {
+        if (selectedCurrentCampus !== ALL_CAMPUSES_ID && space.space_campus_id !== selectedCurrentCampus) {
             return false;
         }
 
@@ -893,8 +1042,10 @@ export const BookableSpacesList = ({
     const getFilteredFacilityTypeList = useCallback(
         (bookableSpacesRoomList, facilityTypeList) => {
             // get a list of the filters used in spaces
+            const campusFilterValue = correctedCampusId(selectedCampus);
+            const isAllCampusesSelected = campusFilterValue === ALL_CAMPUSES_ID;
             const spaceFilters = bookableSpacesRoomList?.data?.locations
-                ?.filter(space => space.space_campus_id === correctedCampusId(selectedCampus))
+                ?.filter(space => isAllCampusesSelected || space.space_campus_id === campusFilterValue)
                 ?.flatMap(space => space?.facility_types || [])
                 ?.map(facilityType => facilityType?.facility_type_id);
             const spaceFiltersSet = new Set(spaceFilters);
@@ -1126,16 +1277,31 @@ export const BookableSpacesList = ({
             };
         });
 
-        if (journeyMapFilterState.selectedCampus !== null) {
+        const campusCookieValue = getCampusCookieValue();
+        const hasSavedCampusPreference =
+            typeof campusCookieValue === 'string' &&
+            campusCookieValue.trim() !== '' &&
+            Number(campusCookieValue) !== ALL_CAMPUSES_ID;
+        const hasExplicitAllCampusesSelection = getPersistedAllCampusesSelection();
+
+        if (
+            !hasUserOverriddenCampusSelectionRef.current &&
+            !hasSavedCampusPreference &&
+            !hasExplicitAllCampusesSelection &&
+            journeyMapFilterState.selectedCampus !== null
+        ) {
             setSelectedCampus(Number(journeyMapFilterState.selectedCampus));
         }
-        if (journeyMapFilterState.selectedLibrary !== null) {
+
+        if (!hasUserOverriddenCampusSelectionRef.current && journeyMapFilterState.selectedLibrary !== null) {
             setSelectedLibrary(Number(journeyMapFilterState.selectedLibrary));
         }
         if (Array.isArray(journeyMapFilterState.capacityFilterValue)) {
             setCapacityFilterValue(journeyMapFilterState.capacityFilterValue);
         }
-        setShowFavouriteSpacesOnly(Boolean(journeyMapFilterState.showFavouriteSpacesOnly));
+        if (journeyMapFilterState.showFavouriteSpacesOnly === true && !hasUserOverriddenCampusSelectionRef.current) {
+            setShowFavouriteSpacesOnly(true);
+        }
         if (nextFacilityTypes.length > 0) {
             setSelectedFacilityTypes(nextFacilityTypes);
         }
@@ -1148,6 +1314,9 @@ export const BookableSpacesList = ({
         journeyMapFilterState,
         selectedFacilityTypes,
         setSelectedFacilityTypes,
+        getCampusCookieValue,
+        getPersistedAllCampusesSelection,
+        hasUserOverriddenCampusSelectionRef,
     ]);
 
     const toggleFilterPopupVisibility = () => {

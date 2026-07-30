@@ -352,6 +352,65 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(screen.queryByText('Shared Study Room')).not.toBeInTheDocument();
     });
 
+    it('respects a parent-controlled favourites-only filter state', async () => {
+        const favouriteSpace = { ...baseSpace, space_id: 101, space_name: 'Favourite Study Room' };
+        const otherSpace = { ...baseSpace, space_id: 102, space_name: 'Other Study Room' };
+
+        const ControlledWrapper = () => {
+            const [showFavouriteSpacesOnly, setShowFavouriteSpacesOnly] = React.useState(false);
+
+            return (
+                <>
+                    <button type="button" onClick={() => setShowFavouriteSpacesOnly(true)}>
+                        Enable favourites only
+                    </button>
+                    <BookableSpacesWrapper
+                        {...defaultProps}
+                        initialView="results"
+                        isLoggedIn
+                        filteredSpaceLocations={[favouriteSpace, otherSpace]}
+                        highlightedSpace={favouriteSpace}
+                        spacesFavouritesList={[{ space_id: 101, label: 'Favourite study room' }]}
+                        showFavouriteSpacesOnly={showFavouriteSpacesOnly}
+                        setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                    />
+                </>
+            );
+        };
+
+        rtlRender(
+            <WithRouter>
+                <ControlledWrapper />
+            </WithRouter>,
+        );
+
+        expect(screen.getByText('Favourite Study Room')).toBeInTheDocument();
+        expect(screen.getByText('Other Study Room')).toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole('button', { name: /enable favourites only/i }));
+
+        await waitFor(() => {
+            expect(screen.getByText('Favourite Study Room')).toBeInTheDocument();
+            expect(screen.queryByText('Other Study Room')).not.toBeInTheDocument();
+        });
+    });
+
+    it('includes the favourites-only filter when navigating from journey results to the map view', () => {
+        const nextUrl = buildLegacyBrowseNavigationUrl({
+            currentUrl: 'https://example.com/spaces/results',
+            selectedFacilityTypes: [],
+            selectedCampus: 1,
+            selectedLibrary: 0,
+            capacityFilterValue: [1, 20],
+            showFavouriteSpacesOnly: true,
+        });
+
+        const params = new URLSearchParams(new URL(nextUrl).search);
+        const parsedState = deserialiseJourneyMapFilterState(params);
+
+        expect(parsedState.showFavouriteSpacesOnly).toBe(true);
+    });
+
     it('serialises and deserialises journey filter state for the map view', () => {
         const encodedState = serialiseJourneyMapFilterState({
             selectedFacilityTypes: [

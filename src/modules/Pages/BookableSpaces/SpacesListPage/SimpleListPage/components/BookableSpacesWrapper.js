@@ -100,6 +100,7 @@ export const buildLegacyBrowseNavigationUrl = ({
     selectedCampus,
     selectedLibrary,
     capacityFilterValue,
+    showFavouriteSpacesOnly = false,
 }) => {
     const url = new URL(currentUrl);
     const encodedMapFilters = serialiseJourneyMapFilterState({
@@ -107,6 +108,7 @@ export const buildLegacyBrowseNavigationUrl = ({
         selectedCampus,
         selectedLibrary,
         capacityFilterValue,
+        showFavouriteSpacesOnly,
     });
     const searchParams = new URLSearchParams();
     searchParams.set('mapFilters', encodedMapFilters);
@@ -178,13 +180,30 @@ const BookableSpacesWrapper = ({
     isFavouriteActionInProgress,
     hasJourneyMapFilterState = false,
     initialView = 'landing',
+    showFavouriteSpacesOnly: controlledShowFavouriteSpacesOnly,
+    setShowFavouriteSpacesOnly: setControlledShowFavouriteSpacesOnly,
 }) => {
     const theme = useTheme();
     const isDesktopResultsLayout = useMediaQuery(theme.breakpoints.up('lg'));
     const [view, setView] = React.useState(initialView || 'landing');
     const [selectedIntentId, setSelectedIntentId] = React.useState(null);
     const [selectedSpace, setSelectedSpace] = React.useState(null);
-    const [showFavouriteSpacesOnly, setShowFavouriteSpacesOnly] = React.useState(false);
+    const [internalShowFavouriteSpacesOnly, setInternalShowFavouriteSpacesOnly] = React.useState(false);
+    const isFavouriteFilterControlled = controlledShowFavouriteSpacesOnly !== undefined;
+    const showFavouriteSpacesOnly = isFavouriteFilterControlled
+        ? controlledShowFavouriteSpacesOnly
+        : internalShowFavouriteSpacesOnly;
+    const setShowFavouriteSpacesOnly = React.useCallback(
+        nextValue => {
+            if (isFavouriteFilterControlled && typeof setControlledShowFavouriteSpacesOnly === 'function') {
+                setControlledShowFavouriteSpacesOnly(nextValue);
+                return;
+            }
+
+            setInternalShowFavouriteSpacesOnly(nextValue);
+        },
+        [isFavouriteFilterControlled, setControlledShowFavouriteSpacesOnly],
+    );
     const journeyTopRef = React.useRef(null);
     const [showAdvancedFilters, setShowAdvancedFilters] = React.useState(false);
     const canShowAdvancedFilters = view === 'results';
@@ -354,6 +373,7 @@ const BookableSpacesWrapper = ({
             selectedCampus,
             selectedLibrary,
             capacityFilterValue,
+            showFavouriteSpacesOnly,
         });
         window.location.assign(nextUrl);
     };
@@ -456,7 +476,11 @@ const BookableSpacesWrapper = ({
 
         setView(nextView);
         setSelectedIntentId(nextIntentId || null);
-        setShowFavouriteSpacesOnly(nextIntentId === favouriteIntentDefinition.id);
+
+        if (!isFavouriteFilterControlled) {
+            setShowFavouriteSpacesOnly(nextIntentId === favouriteIntentDefinition.id);
+        }
+
         setSelectedSpace(nextSelectedSpace);
         journeyHistoryRef.current = [nextView];
 
@@ -547,7 +571,9 @@ const BookableSpacesWrapper = ({
             }
 
             setSelectedIntentId(targetView === 'results' || targetView === 'details' ? targetIntentId || null : null);
-            setShowFavouriteSpacesOnly(targetIntentId === favouriteIntentDefinition.id);
+            if (!isFavouriteFilterControlled) {
+                setShowFavouriteSpacesOnly(targetIntentId === favouriteIntentDefinition.id);
+            }
             setSelectedSpace(targetView === 'details' ? targetSelectedSpace : null);
             navigateToView(targetView, { pushHistory: false, intentId: targetIntentId, spaceId: targetSpaceId });
         };
@@ -706,6 +732,8 @@ BookableSpacesWrapper.propTypes = {
     isFavouriteActionInProgress: PropTypes.any,
     hasJourneyMapFilterState: PropTypes.bool,
     initialView: PropTypes.oneOf(['landing', 'results', 'details']),
+    showFavouriteSpacesOnly: PropTypes.bool,
+    setShowFavouriteSpacesOnly: PropTypes.func,
 };
 
 export default React.memo(BookableSpacesWrapper);
