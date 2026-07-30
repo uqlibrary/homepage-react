@@ -142,7 +142,7 @@ describe('InspectionDetails', () => {
             getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle(null, 'Library')),
         ).toBeInTheDocument();
 
-        const toggle = getByRole('checkbox', { name: 'All team assets' });
+        const toggle = getByRole('switch', { name: 'All team assets' });
         await userEvent.click(toggle);
         expect(toggle).toBeChecked();
 
