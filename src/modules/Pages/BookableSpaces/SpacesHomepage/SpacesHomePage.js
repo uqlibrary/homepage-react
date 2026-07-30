@@ -80,6 +80,19 @@ const StyledLandingHeroCard = styled('div')(({ theme }) => ({
         marginRight: '-5.5rem',
         padding: '2.25rem 2.5rem',
     },
+    '& h1': {
+        margin: 0,
+        fontWeight: 400,
+        lineHeight: 1.12,
+
+        letterSpacing: '-0.02em',
+    },
+    '& p': {
+        mt: 2,
+        maxWidth: '30rem',
+        color: 'rgba(255, 255, 255, 0.88)',
+        lineHeight: 1.7,
+    },
 }));
 
 const StyledLandingHeroInner = styled('div')(({ theme }) => ({
@@ -121,28 +134,10 @@ export const SpacesHomePage = ({
                     <StyledLandingHeroLayout data-testid="spaces-journey-landing-hero-layout">
                         <StyledLandingHeroContentColumn data-testid="spaces-journey-landing-hero-content-column">
                             <StyledLandingHeroCard data-testid="spaces-journey-landing-hero-card">
-                                <Typography
-                                    component="h1"
-                                    sx={{
-                                        margin: 0,
-                                        fontWeight: 400,
-                                        lineHeight: 1.12,
-                                        fontSize: { xs: '2.05rem', md: '2.8rem' },
-                                        letterSpacing: '-0.02em',
-                                    }}
-                                >
+                                <Typography component="h1" sx={{ fontSize: { xs: '2.05rem', md: '2.8rem' } }}>
                                     Find library study spaces
                                 </Typography>
-                                <Typography
-                                    variant="body1"
-                                    sx={{
-                                        mt: 2,
-                                        maxWidth: '30rem',
-                                        color: 'rgba(255, 255, 255, 0.88)',
-                                        lineHeight: 1.7,
-                                        fontSize: { xs: '1rem', md: '1.08rem' },
-                                    }}
-                                >
+                                <Typography variant="body1" sx={{ fontSize: { xs: '1rem', md: '1.08rem' } }}>
                                     Discover spaces to study, collaborate and relax in UQ libraries.
                                 </Typography>
                             </StyledLandingHeroCard>
