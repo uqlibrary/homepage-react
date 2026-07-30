@@ -131,7 +131,7 @@ export const SpacesHomePage = ({
                                         letterSpacing: '-0.02em',
                                     }}
                                 >
-                                    Find study spaces
+                                    Find library study spaces
                                 </Typography>
                                 <Typography
                                     variant="body1"
@@ -143,7 +143,7 @@ export const SpacesHomePage = ({
                                         fontSize: { xs: '1rem', md: '1.08rem' },
                                     }}
                                 >
-                                    Discover study space options across UQ libraries.
+                                    Discover spaces to study, collaborate and relax in UQ libraries.
                                 </Typography>
                             </StyledLandingHeroCard>
                         </StyledLandingHeroContentColumn>
