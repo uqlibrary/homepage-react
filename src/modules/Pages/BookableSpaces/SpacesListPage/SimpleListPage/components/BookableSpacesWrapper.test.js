@@ -55,7 +55,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     const baseSpace = {
         space_id: 101,
         space_uuid: 'test-space-uuid-1234',
-        space_name: 'Quiet Study Room A',
+        space_name: 'Space999',
         space_library_name: 'Central Library',
         space_type: 'Silent study',
         space_type_details: {
@@ -206,7 +206,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         renderJourney(defaultProps);
 
-        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.getByText('Space999')).toBeInTheDocument();
     });
 
     it('restores details view and selected space from permalink params', () => {
@@ -215,7 +215,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         renderJourney(defaultProps);
 
         expect(screen.getByText(/space details/i)).toBeInTheDocument();
-        expect(screen.getByText('Silent study Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
     });
 
     it('restores details view from a hash URL using the full space list when the filtered list does not contain the space', async () => {
@@ -230,7 +230,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         await waitFor(() => {
             expect(screen.getByText(/space details/i)).toBeInTheDocument();
-            expect(screen.getByText('Silent study Quiet Study Room A')).toBeInTheDocument();
+            expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
         });
     });
 
@@ -324,7 +324,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
 
         expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
-        expect(screen.getByText('Silent study Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
     });
 
     it('lets users show only their favourite spaces from the sidebar filters', () => {
@@ -343,12 +343,12 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Favourite study room' }],
         });
 
-        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.getByText('Space999')).toBeInTheDocument();
         expect(screen.getByText('Shared Study Room')).toBeInTheDocument();
 
         fireEvent.click(screen.getByRole('checkbox', { name: /show favourite spaces only/i }));
 
-        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.getByText('Space999')).toBeInTheDocument();
         expect(screen.queryByText('Shared Study Room')).not.toBeInTheDocument();
     });
 
@@ -595,7 +595,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             </WithRouter>,
         );
 
-        expect(screen.getByRole('link', { name: /open space quiet study room a in a new window/i })).toHaveAttribute(
+        expect(screen.getByRole('link', { name: /open space Space999 in a new window/i })).toHaveAttribute(
             'href',
             '#/spaces/detail/test-space-uuid-1234?mapFilters=abc123&autoSelectFirstSpace=1',
         );
