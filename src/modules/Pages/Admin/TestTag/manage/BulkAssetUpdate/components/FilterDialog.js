@@ -167,7 +167,7 @@ const FilterDialog = ({
                 </DialogTitle>
                 <DialogContent sx={{ overflowX: 'hidden' }}>
                     <Grid container spacing={3}>
-                        <Grid xs={12} sm={3}>
+                        <Grid size={{ xs: 12, sm: 3 }}>
                             <TeamSelector
                                 id={teamSelectFieldName}
                                 options={userTeamList}
@@ -188,7 +188,7 @@ const FilterDialog = ({
                         />
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid xs={12} sm={6} md={3}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                             <AssetTypeSelector
                                 id={rootId}
                                 locale={assetTypeLocale}
@@ -204,7 +204,7 @@ const FilterDialog = ({
                                 disableClearable={false}
                             />
                         </Grid>
-                        <Grid xs={12} sm={6} md={6}>
+                        <Grid size={{ xs: 12, sm: 6, md: 6 }}>
                             <DebouncedTextField
                                 id={`${componentId}-search-notes`}
                                 inputProps={{
@@ -254,7 +254,7 @@ const FilterDialog = ({
                         </Grid>
                     </Grid>
                     <Grid container spacing={4} className={'actionButtons'}>
-                        <Grid xs={12} sm={6} container justifyContent="flex-start">
+                        <Grid size={{ xs: 12, sm: 6 }} container justifyContent="flex-start">
                             <Button
                                 variant="outlined"
                                 onClick={handleCancelAction}
@@ -265,7 +265,7 @@ const FilterDialog = ({
                                 {locale.button.cancel}
                             </Button>
                         </Grid>
-                        <Grid xs={12} sm={6} container justifyContent="flex-end">
+                        <Grid size={{ xs: 12, sm: 6 }} container justifyContent="flex-end">
                             <Button
                                 variant="contained"
                                 color="primary"

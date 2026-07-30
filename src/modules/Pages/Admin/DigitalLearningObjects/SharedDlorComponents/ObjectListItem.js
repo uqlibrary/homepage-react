@@ -22,8 +22,8 @@ export const ObjectListItem = ({ object, listParentName = 'team' }) => {
 
     return (
         <Grid container key={`${listParentName}-object-${object.object_id}`}>
-            <Grid xs={1} />
-            <Grid xs={8}>
+            <Grid size={{ xs: 1 }} />
+            <Grid size={{ xs: 8 }}>
                 <div>
                     <Typography component={'h2'} variant={'h6'}>
                         {object?.object_title}
@@ -34,7 +34,7 @@ export const ObjectListItem = ({ object, listParentName = 'team' }) => {
                     </Typography>
                 </div>
             </Grid>
-            <Grid xs={1}>
+            <Grid size={{ xs: 1 }}>
                 <Link
                     data-testid={`dlor-${listParentName}-object-list-item-view-${object?.object_id}`}
                     to={getDlorViewPageUrl(object?.object_public_uuid)}
@@ -42,7 +42,7 @@ export const ObjectListItem = ({ object, listParentName = 'team' }) => {
                     <VisibilityIcon sx={{ color: 'black', marginTop: '8px' }} />
                 </Link>
             </Grid>
-            <Grid xs={1}>
+            <Grid size={{ xs: 1 }}>
                 <IconButton
                     data-testid={`dlor-${listParentName}-object-list-item-${object?.object_id}`}
                     onClick={() => navigateToDlorEditPage(object?.object_public_uuid)}
@@ -51,7 +51,7 @@ export const ObjectListItem = ({ object, listParentName = 'team' }) => {
                     <EditIcon />
                 </IconButton>
             </Grid>
-            <Grid xs={1} />
+            <Grid size={{ xs: 1 }} />
         </Grid>
     );
 };

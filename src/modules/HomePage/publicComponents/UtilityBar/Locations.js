@@ -481,7 +481,6 @@ const Locations = ({
                                         </Typography>
                                     </Grid>
                                     <Grid
-                                        item
                                         className="table-column-busy occupancyWrapper"
                                         id="header-busy"
                                         aria-hidden="true"
@@ -505,7 +504,6 @@ const Locations = ({
                                                 data-testid={librarySlug}
                                             >
                                                 <Grid
-                                                    item
                                                     id={`library-name-${location.abbr}`}
                                                     className="table-cell table-column-name has-ellipsis"
                                                     aria-labelledby="header-library"
@@ -523,7 +521,6 @@ const Locations = ({
                                                     </Link>
                                                 </Grid>
                                                 <Grid
-                                                    item
                                                     className="table-cell table-column-hours table-cell-hastext"
                                                     aria-labelledby={`header-hours library-name-${location.abbr}`}
                                                     aria-hidden="true"
@@ -536,7 +533,6 @@ const Locations = ({
                                                     </Typography>
                                                 </Grid>
                                                 <Grid
-                                                    item
                                                     className="table-cell table-cell-busy table-column-busy"
                                                     data-testid={`hours-item-busy-${location.abbr}`}
                                                     aria-labelledby={`header-busy library-name-${location.abbr}`}

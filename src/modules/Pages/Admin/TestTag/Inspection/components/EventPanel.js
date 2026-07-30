@@ -93,7 +93,7 @@ const EventPanel = ({
         >
             <Collapse in={eventExpanded} timeout="auto">
                 <Grid container spacing={3}>
-                    <Grid xs={12} sm={6} md={3}>
+                    <Grid size={{ md: 3, sm: 6, xs: 12 }}>
                         <DatePicker
                             {...pageLocale.form.event.date}
                             DialogProps={{
@@ -132,7 +132,7 @@ const EventPanel = ({
                             }}
                         />
                     </Grid>
-                    <Grid xs={12} sm={12}>
+                    <Grid size={{ xs: 12, sm: 12 }}>
                         <Typography component={'h3'} variant={'h6'}>
                             {pageLocale.form.event.location.title}
                         </Typography>

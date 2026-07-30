@@ -441,7 +441,7 @@ export const DLOBulkSchedule = ({
                     Create New Bulk Schedule
                 </Typography>
                 <Grid container spacing={2}>
-                    <Grid xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="schedule_name">Schedule name *</InputLabel>
                             <Input
@@ -456,7 +456,7 @@ export const DLOBulkSchedule = ({
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={6}>
+                    <Grid size={{ xs: 6 }}>
                         <FormControl variant="standard" fullWidth>
                             <FormLabel>Status for this schedule</FormLabel>
 
@@ -474,7 +474,7 @@ export const DLOBulkSchedule = ({
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid size={{ xs: 3 }}>
                         <DatePicker
                             slotProps={{
                                 textField: {
@@ -493,7 +493,7 @@ export const DLOBulkSchedule = ({
                             format="DD/MM/YYYY"
                         />
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid size={{ xs: 3 }}>
                         <DatePicker
                             slotProps={{
                                 textField: {
@@ -511,7 +511,7 @@ export const DLOBulkSchedule = ({
                             format="DD/MM/YYYY"
                         />
                     </Grid>
-                    <Grid xs={9}>
+                    <Grid size={{ xs: 9 }}>
                         <Typography variant="body1" component="div">
                             This schedule will set the assigned items to 'featured', and will change to{' '}
                             <b>
@@ -524,7 +524,7 @@ export const DLOBulkSchedule = ({
                             applied to this schedule
                         </Typography>
                     </Grid>
-                    <Grid xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                             <Button
                                 variant="contained"
@@ -551,7 +551,7 @@ export const DLOBulkSchedule = ({
                         </Box>
                     </Grid>
                 </Grid>
-                <Grid xs={12}>
+                <Grid size={{ xs: 12 }}>
                     {runningSchedules.length > 0 && (
                         <ScheduleTableSection
                             title="Running Schedules"
@@ -649,7 +649,7 @@ export const DLOBulkSchedule = ({
                             </FormControl>
 
                             <Grid container spacing={1} sx={{ mb: 2 }}>
-                                <Grid xs={6}>
+                                <Grid size={{ xs: 6 }}>
                                     <FormControl variant="standard" fullWidth>
                                         <FormLabel>Status for this schedule</FormLabel>
                                         <FormControlLabel
@@ -666,7 +666,7 @@ export const DLOBulkSchedule = ({
                                         />
                                     </FormControl>
                                 </Grid>
-                                <Grid xs={3}>
+                                <Grid size={{ xs: 3 }}>
                                     <DatePicker
                                         slotProps={{
                                             textField: { 'data-testid': 'modal_schedule_start_date', fullWidth: true },
@@ -681,7 +681,7 @@ export const DLOBulkSchedule = ({
                                         format="DD/MM/YYYY"
                                     />
                                 </Grid>
-                                <Grid xs={3}>
+                                <Grid size={{ xs: 3 }}>
                                     <DatePicker
                                         slotProps={{
                                             textField: { 'data-testid': 'modal_schedule_end_date', fullWidth: true },

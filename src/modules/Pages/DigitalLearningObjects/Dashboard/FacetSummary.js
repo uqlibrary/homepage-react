@@ -45,7 +45,7 @@ export default function FacetSummary({ objectsByFacet }) {
     return (
         <Box sx={{ mt: 2, mb: 2 }}>
             <Grid container spacing={2}>
-                <Grid xs={12} md={3}>
+                <Grid size={{ xs: 12, md: 3 }}>
                     <Paper sx={{ p: 2 }}>
                         <Typography variant="h6" component="h2" sx={{ mb: 0.05, textAlign: 'center' }}>
                             Top Topics
@@ -69,7 +69,7 @@ export default function FacetSummary({ objectsByFacet }) {
                         ))}
                     </Paper>
                 </Grid>
-                <Grid xs={12} md={3}>
+                <Grid size={{ xs: 12, md: 3 }}>
                     <Paper sx={{ p: 2 }}>
                         <Typography variant="h6" component="h2" sx={{ mb: 0.05, textAlign: 'center' }}>
                             Top Audiences
@@ -96,7 +96,7 @@ export default function FacetSummary({ objectsByFacet }) {
                         ))}
                     </Paper>
                 </Grid>
-                <Grid xs={12} md={3}>
+                <Grid size={{ xs: 12, md: 3 }}>
                     <Paper sx={{ p: 2 }}>
                         <Typography variant="h6" component="h2" sx={{ mb: 0.05, textAlign: 'center' }}>
                             Top Types
@@ -123,7 +123,7 @@ export default function FacetSummary({ objectsByFacet }) {
                         ))}
                     </Paper>
                 </Grid>
-                <Grid xs={12} md={3}>
+                <Grid size={{ xs: 12, md: 3 }}>
                     <Paper sx={{ p: 2 }}>
                         <Typography variant="h6" component="h2" sx={{ mb: 0.05, textAlign: 'center' }}>
                             Top Formats

@@ -169,8 +169,7 @@ export const AlertsListAsTable = ({
     if (!!alertsLoading) {
         return (
             <Grid
-                item
-                xs={'auto'}
+                size={{ xs: 'auto' }}
                 style={{
                     width: 80,
                     marginRight: 20,

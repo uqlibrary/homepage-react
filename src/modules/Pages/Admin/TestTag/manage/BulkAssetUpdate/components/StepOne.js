@@ -98,7 +98,7 @@ const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen,
     return (
         <StandardCard title={stepOneLocale.title} standardCardId={`standard_card-${componentId}-step-1`}>
             <Grid container spacing={3}>
-                <Grid xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                     <AssetSelector
                         id={componentId}
                         locale={stepOneLocale}
@@ -114,10 +114,10 @@ const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen,
                         onClear={onClear}
                     />
                 </Grid>
-                <Grid xs={12} md={2} className={'centredGrid'}>
+                <Grid size={{ xs: 12, md: 2 }} className={'centredGrid'}>
                     or
                 </Grid>
-                <Grid xs={12} md={6} className={'centredGridNoJustify'}>
+                <Grid size={{ xs: 12, md: 6 }} className={'centredGridNoJustify'}>
                     <Button
                         variant="outlined"
                         id={`${componentIdLower}-feature-button`}
@@ -131,7 +131,7 @@ const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen,
                 </Grid>
             </Grid>
             <Grid container>
-                <Grid xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <SwitchIncludeAllTeams
                         id={componentIdLower}
                         locale={pageLocale.form.step}
@@ -141,7 +141,7 @@ const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen,
             </Grid>
             {list.data.length > 0 && (
                 <Grid container spacing={3}>
-                    <Grid xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Alert
                             severity="info"
                             id={`${componentIdLower}-count-alert`}

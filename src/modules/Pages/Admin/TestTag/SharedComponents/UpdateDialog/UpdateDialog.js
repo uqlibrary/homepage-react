@@ -155,7 +155,7 @@ export const UpdateDialogue = ({
                             <React.Fragment key={field}>
                                 {((action === 'edit' && !!(dataFields[field]?.fieldParams?.renderInUpdate ?? true)) ||
                                     (action === 'add' && !!(dataFields[field]?.fieldParams?.renderInAdd ?? true))) && (
-                                    <Grid xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         {((action === 'edit' && !!!(dataFields[field]?.fieldParams?.canEdit ?? true)) ||
                                             (action === 'add' &&
                                                 !!!(dataFields[field]?.fieldParams?.canAdd ?? true))) && (
@@ -218,8 +218,7 @@ export const UpdateDialogue = ({
                 <DialogActions id={`${rootId}-actions`} data-testid={`${rootId}-actions`}>
                     <Grid container className={'footerActions'}>
                         <Grid
-                            item
-                            xs={12}
+                            size={{ xs: 12 }}
                             display={'flex'}
                             justifyContent={'space-between'}
                             flexWrap={'wrap'}

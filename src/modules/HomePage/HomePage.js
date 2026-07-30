@@ -243,7 +243,7 @@ export const HomePage = ({
                     <StyledGridWrapper>
                         <StandardPage>
                             <Grid container spacing={!!verySimplelayout ? 2 : 0}>
-                                <Grid xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
                                         Hi, {account.firstName || /* istanbul ignore next */ ''}
                                     </StyledHeading>
@@ -293,7 +293,7 @@ export const HomePage = ({
                                     </>
                                 ) : (
                                     <>
-                                        <Grid uqDsDesktop={4} xs={12}>
+                                        <Grid uqDsDesktop={4} size={{ xs: 12 }}>
                                             <Grid container>
                                                 <StyledGridItemLoggedInLeftMost
                                                     item
@@ -336,7 +336,7 @@ export const HomePage = ({
                                                 </StyledGridItemLoggedInLeftMost> */}
                                             </Grid>
                                         </Grid>
-                                        <Grid uqDsDesktop={8} xs={12}>
+                                        <Grid uqDsDesktop={8} size={{ xs: 12 }}>
                                             <Grid container>
                                                 {canSeeLearningResourcesPanel(account) && (
                                                     <StyledGridItemLoggedIn
@@ -348,7 +348,7 @@ export const HomePage = ({
                                                     </StyledGridItemLoggedIn>
                                                 )}
 
-                                                <Grid uqDsDesktop={6} xs={12}>
+                                                <Grid uqDsDesktop={6} size={{ xs: 12 }}>
                                                     <Grid container>
                                                         <StyledGridItemLoggedIn
                                                             item
@@ -380,7 +380,7 @@ export const HomePage = ({
                                                         </StyledGridItemLoggedIn>
                                                     </Grid>
                                                 </Grid>
-                                                <Grid uqDsDesktop={6} xs={12}>
+                                                <Grid uqDsDesktop={6} size={{ xs: 12 }}>
                                                     <Grid container>
                                                         {isEspaceAuthor(account, author) && (
                                                             <StyledGridItemLoggedIn

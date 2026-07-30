@@ -32,7 +32,7 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
     const { account } = useAccountContext();
     return (
         <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
-            <Grid xs={11}>
+            <Grid size={{ xs: 11 }}>
                 <StyledTitleBox>
                     <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
                         {/* istanbul ignore next */}
@@ -79,7 +79,7 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
                     </Typography>
                 </StyledTitleBox>
             </Grid>
-            <Grid xs={1}>{isDlorAdminUser(account) && <VisitHomepage />}</Grid>
+            <Grid size={{ xs: 1 }}>{isDlorAdminUser(account) && <VisitHomepage />}</Grid>
         </Grid>
     );
 };

@@ -374,10 +374,9 @@ export const Alert = ({
             <StyledAlert className={`common ${!!customIcon ? customType : type}`} data-testid={alertId} id={alertId}>
                 <div className="layout-card">
                     <Grid container spacing={1} justifyContent="center" alignItems="center" alignContent="center">
-                        <Grid xs={12} sm className={action && !disableAlertClick && 'linked'}>
+                        <Grid size={{ xs: 12 }} className={action && !disableAlertClick && 'linked'}>
                             <Grid container justifyContent="center" alignItems="center" alignContent="center">
                                 <Grid
-                                    item
                                     className={`icon alert-icon ${wiggle ? 'wiggler' : ''}`}
                                     onClick={!disableAlertClick && action}
                                     onKeyDown={!disableAlertClick && action}
@@ -398,8 +397,6 @@ export const Alert = ({
                                     )}
                                 </Grid>
                                 <Grid
-                                    item
-                                    xs
                                     className={'text alert-text'}
                                     onClick={!disableAlertClick && action}
                                     onKeyDown={!disableAlertClick && action}
@@ -443,7 +440,7 @@ export const Alert = ({
                             </Grid>
                         </Grid>
                         {action && actionButtonLabel && (
-                            <Grid xs sm="auto" className={'actionButton'}>
+                            <Grid size={{ sm: 'auto' }} className={'actionButton'}>
                                 <Button
                                     variant="text"
                                     children={actionButtonLabel}

@@ -192,7 +192,7 @@ const InspectionsByLicencedUser = ({
             <StyledWrapper>
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={1}>
-                        <Grid xs={12} md={4}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <TeamSelector
                                 id={teamSelectFieldName}
                                 options={userTeamList}
@@ -203,7 +203,7 @@ const InspectionsByLicencedUser = ({
                         </Grid>
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid xs={12} md={4}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <FormControl variant="standard" fullWidth className={'formControl'}>
                                 <InputLabel>Inspector Name</InputLabel>
                                 <Select
@@ -269,7 +269,7 @@ const InspectionsByLicencedUser = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid xs={12} md={4}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
@@ -304,7 +304,7 @@ const InspectionsByLicencedUser = ({
                                 }}
                             />
                         </Grid>
-                        <Grid xs={12} md={4}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}

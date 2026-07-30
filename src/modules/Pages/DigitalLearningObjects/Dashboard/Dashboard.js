@@ -116,7 +116,7 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                     </StyledDashboardTitle>
                 </StyledDashboardTitleWrapper>
                 <Grid container spacing={3}>
-                    <Grid xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Accordion defaultExpanded sx={{ background: 'rgba(120, 90, 200, 0.08)', borderRadius: 2 }}>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
@@ -133,7 +133,7 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                             </AccordionDetails>
                         </Accordion>
                     </Grid>
-                    <Grid xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Accordion defaultExpanded sx={{ background: 'rgba(120, 90, 200, 0.08)', borderRadius: 2 }}>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
@@ -144,13 +144,13 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Grid container spacing={3}>
-                                    <Grid xs={12} data-testid="engagement-summary-section">
+                                    <Grid size={{ xs: 12 }} data-testid="engagement-summary-section">
                                         <EngagementSummary data={dlorDashboardData} />
                                     </Grid>
 
                                     {/* Only show Team Breakdown chart for DLOR admin */}
                                     {isDlorAdminUser(account) && (
-                                        <Grid xs={6} md={3} data-testid="team-breakdown-chart-section">
+                                        <Grid size={{ xs: 6, md: 3 }} data-testid="team-breakdown-chart-section">
                                             <GenericBreakdownChart
                                                 chartData={dlorDashboardData}
                                                 dataKey="team_breakdown"
@@ -160,9 +160,7 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                     )}
 
                                     <Grid
-                                        item
-                                        xs={6}
-                                        md={isDlorAdminUser(account) ? 3 : 4}
+                                        size={{ xs: 6, md: isDlorAdminUser(account) ? 3 : 4 }}
                                         data-testid="object-types-chart-section"
                                     >
                                         <GenericBreakdownChart
@@ -172,9 +170,7 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                         />
                                     </Grid>
                                     <Grid
-                                        item
-                                        xs={6}
-                                        md={isDlorAdminUser(account) ? 3 : 4}
+                                        size={{ xs: 6, md: isDlorAdminUser(account) ? 3 : 4 }}
                                         data-testid="keywords-chart-section"
                                     >
                                         <GenericBreakdownChart
@@ -184,9 +180,7 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                         />
                                     </Grid>
                                     <Grid
-                                        item
-                                        xs={6}
-                                        md={isDlorAdminUser(account) ? 3 : 4}
+                                        size={{ xs: 6, md: isDlorAdminUser(account) ? 3 : 4 }}
                                         data-testid="review-status-chart-section"
                                     >
                                         <GenericBreakdownChart
@@ -195,10 +189,10 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
                                             title="Review Status"
                                         />
                                     </Grid>
-                                    <Grid xs={12} data-testid="object-management-section">
+                                    <Grid size={{ xs: 12 }} data-testid="object-management-section">
                                         <ObjectManagement data={dlorDashboardData} />
                                     </Grid>
-                                    <Grid xs={12} data-testid="facet-summary-section">
+                                    <Grid size={{ xs: 12 }} data-testid="facet-summary-section">
                                         {dlorDashboardData?.objects_by_facet && (
                                             <FacetSummary objectsByFacet={dlorDashboardData.objects_by_facet} />
                                         )}

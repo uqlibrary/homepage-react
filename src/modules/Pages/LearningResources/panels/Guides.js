@@ -53,7 +53,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                     </StyledBodyText>
                 )}
                 {!guideListError && !!guideListLoading && (
-                    <Grid xs={12} style={{ width: 80, opacity: 0.3 }}>
+                    <Grid size={{ xs: 12 }} style={{ width: 80, opacity: 0.3 }}>
                         <CircularProgress
                             color="primary"
                             size={20}

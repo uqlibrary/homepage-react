@@ -196,7 +196,7 @@ export const SubjectSearchDropdown = ({
                         {locale.search.placeholder}
                     </label>
                 </SearchLabelGridItem>
-                <Grid xs={12} sm>
+                <Grid size={{ xs: 12 }}>
                     <StyledAutocomplete
                         filterOptions={options => {
                             return options;
@@ -262,8 +262,7 @@ export const SubjectSearchDropdown = ({
                 <div data-testid={`${elementId}-results`}>
                     {CRsuggestionsLoading && (
                         <Grid
-                            item
-                            xs={'auto'}
+                            size={{ xs: 'auto' }}
                             style={{ width: 80, marginLeft: -100, marginRight: 20, marginBottom: 6, opacity: 0.3 }}
                         >
                             <CircularProgress
@@ -279,7 +278,7 @@ export const SubjectSearchDropdown = ({
             {!!CRsuggestionsError && (
                 /* istanbul ignore next */
                 <StyledSearchPanel container spacing={2} className={'searchPanel'} data-testid={`${elementId}-links`}>
-                    <Grid xs={12} sm={12} md className={'searchPanelInfo'}>
+                    <Grid size={{ xs: 12, sm: 12 }} className={'searchPanelInfo'}>
                         <span>Autocomplete suggestions unavailable</span>
                     </Grid>
                 </StyledSearchPanel>

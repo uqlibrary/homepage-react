@@ -72,7 +72,7 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                     /* istanbul ignore else */
                     if (!!readingListLoading) {
                         return (
-                            <Grid xs={'auto'} style={{ width: 80, opacity: 0.3 }}>
+                            <Grid size={{ xs: 'auto' }} style={{ width: 80, opacity: 0.3 }}>
                                 <CircularProgress
                                     color="primary"
                                     size={20}

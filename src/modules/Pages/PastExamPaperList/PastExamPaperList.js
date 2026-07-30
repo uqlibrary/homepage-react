@@ -435,7 +435,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     return (
                         <StyledStandardCard noHeader>
                             <Grid container>
-                                <Grid xs={'auto'}>
+                                <Grid size={{ xs: 'auto' }}>
                                     <CircularProgress
                                         color="primary"
                                         size={20}
@@ -450,7 +450,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     return (
                         <StyledStandardCard noHeader>
                             <Grid container spacing={2} className={'searchPanel'} data-testid={'past-exam-paper-error'}>
-                                <Grid xs={12} sm={12} md className={'searchPanelInfo'}>
+                                <Grid size={{ xs: 12, sm: 12 }} className={'searchPanelInfo'}>
                                     <span>
                                         Past exam paper search is currently unavailable - please try again later
                                     </span>
@@ -470,7 +470,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     return (
                         <StyledStandardCard style={{ marginInline: '-1rem' }} noHeader>
                             <Grid container>
-                                <Grid xs={12} data-testid="past-exam-paper-missing">
+                                <Grid size={{ xs: 12 }} data-testid="past-exam-paper-missing">
                                     {noResultsFoundBlock(displayedCourseHint, StyledBodyText)}
                                 </Grid>
                             </Grid>

@@ -178,7 +178,7 @@ export const DLOSeriesList = ({
                 {(() => {
                     if (!!dlorSeriesListLoading || !!dlorSeriesDeleting) {
                         return (
-                            <Grid xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Grid size={{ xs: 12, md: 9 }} sx={{ marginTop: '12px' }}>
                                 <Box sx={{ minHeight: '600px' }}>
                                     <InlineLoader message="Loading" />
                                 </Box>
@@ -186,7 +186,7 @@ export const DLOSeriesList = ({
                         );
                     } else if (!!dlorSeriesListError) {
                         return (
-                            <Grid xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Grid size={{ xs: 12, md: 9 }} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-serieslist-error">
                                     {dlorSeriesListError}
                                 </Typography>
@@ -194,7 +194,7 @@ export const DLOSeriesList = ({
                         );
                     } else if (!dlorSeriesList || dlorSeriesList.length === 0) {
                         return (
-                            <Grid xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Grid size={{ xs: 12, md: 9 }} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-serieslist-noresult">
                                     We did not find any entries in the system - please try again later.
                                 </Typography>
@@ -220,15 +220,14 @@ export const DLOSeriesList = ({
                                                 <div key={`list-series-${series?.series_id}`}>
                                                     <Grid container alignItems="center">
                                                         <Grid
-                                                            item
-                                                            xs={10}
+                                                            size={{ xs: 10 }}
                                                             data-testid={`dlor-serieslist-panel-${series?.series_id}`}
                                                         >
                                                             <Typography variant="body1">
                                                                 {series?.series_name}
                                                             </Typography>{' '}
                                                         </Grid>
-                                                        <Grid xs={1}>
+                                                        <Grid size={{ xs: 1 }}>
                                                             {!series?.objects_count && series?.series_id !== null && (
                                                                 <IconButton
                                                                     data-testid={`dlor-serieslist-delete-${series?.series_id}`}
@@ -242,7 +241,7 @@ export const DLOSeriesList = ({
                                                                 </IconButton>
                                                             )}
                                                         </Grid>
-                                                        <Grid xs={1}>
+                                                        <Grid size={{ xs: 1 }}>
                                                             {series?.series_id !== null && (
                                                                 <IconButton
                                                                     data-testid={`dlor-serieslist-edit-${series?.series_id}`}
@@ -257,7 +256,7 @@ export const DLOSeriesList = ({
                                                     </Grid>
                                                     {(series?.objects_count > 0 || series.series_id === null) && (
                                                         <Grid container>
-                                                            <Grid xs={12} sx={{ marginBottom: '24px' }}>
+                                                            <Grid size={{ xs: 12 }} sx={{ marginBottom: '24px' }}>
                                                                 <StyledObjectDetails
                                                                     data-testid={`dlor-series-object-list-${series?.series_id}`}
                                                                 >

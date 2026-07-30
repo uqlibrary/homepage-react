@@ -150,9 +150,7 @@ export const LearningResourcesPanel = ({ account }) => {
             standardCardId="learning-resources-homepage-panel"
             title={
                 <Grid container>
-                    <Grid xs id={`${learningResourceId}-autocomplete2-label`}>
-                        {locale.homepagePanel.title}
-                    </Grid>
+                    <Grid id={`${learningResourceId}-autocomplete2-label`}>{locale.homepagePanel.title}</Grid>
                 </Grid>
             }
         >
@@ -220,7 +218,7 @@ export const LearningResourcesPanel = ({ account }) => {
                     {displayedClasses.length > MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES && (
                         <Grid
                             item
-                            xs={12}
+                            size={{ xs: 12 }}
                             style={{ marginTop: '8px', marginBottom: '22px', paddingLeft: '12px' }}
                             data-testid={'learning-resource-panel-course-multi-footer'}
                         >

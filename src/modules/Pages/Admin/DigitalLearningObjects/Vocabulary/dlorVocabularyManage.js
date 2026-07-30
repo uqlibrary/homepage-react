@@ -164,7 +164,10 @@ export const DLOVocabularyManage = ({ actions, dlorKeywords, dlorKeywordsLoading
                     dlorKeywords.length > 0 &&
                     dlorKeywords.map(keyword => (
                         <React.Fragment key={keyword?.keyword_vocabulary_id}>
-                            <Grid xs={10} sx={{ display: 'flex', padding: '8px 0px', backgroundColor: '#d0d0d0' }}>
+                            <Grid
+                                size={{ xs: 10 }}
+                                sx={{ display: 'flex', padding: '8px 0px', backgroundColor: '#d0d0d0' }}
+                            >
                                 <Typography
                                     component="p"
                                     sx={{ fontWeight: 'bold' }}
@@ -174,8 +177,7 @@ export const DLOVocabularyManage = ({ actions, dlorKeywords, dlorKeywordsLoading
                                 </Typography>
                             </Grid>
                             <Grid
-                                item
-                                xs={1}
+                                size={{ xs: 1 }}
                                 sx={{ display: 'flex', justifyContent: 'center', backgroundColor: '#d0d0d0' }}
                             >
                                 <IconButton
@@ -196,8 +198,7 @@ export const DLOVocabularyManage = ({ actions, dlorKeywords, dlorKeywordsLoading
                                 </IconButton>
                             </Grid>
                             <Grid
-                                item
-                                xs={1}
+                                size={{ xs: 1 }}
                                 sx={{ display: 'flex', justifyContent: 'center', backgroundColor: '#d0d0d0' }}
                             >
                                 <IconButton
@@ -221,13 +222,12 @@ export const DLOVocabularyManage = ({ actions, dlorKeywords, dlorKeywordsLoading
                                     <React.Fragment key={`${keyword?.keyword_vocabulary_id}-${index}`}>
                                         <Grid container sx={{ backgroundColor: index % 2 === 0 ? 'white' : '#f0f0f0' }}>
                                             <Grid
-                                                item
-                                                xs={10}
+                                                size={{ xs: 10 }}
                                                 sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
                                             >
                                                 <Typography component="p">{synonym} - (synonym)</Typography>
                                             </Grid>
-                                            <Grid xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                            <Grid size={{ xs: 1 }} sx={{ display: 'flex', justifyContent: 'center' }}>
                                                 <IconButton
                                                     color="secondary"
                                                     onClick={() => {
@@ -239,7 +239,7 @@ export const DLOVocabularyManage = ({ actions, dlorKeywords, dlorKeywordsLoading
                                                     <EditIcon />
                                                 </IconButton>
                                             </Grid>
-                                            <Grid xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                            <Grid size={{ xs: 1 }} sx={{ display: 'flex', justifyContent: 'center' }}>
                                                 <IconButton
                                                     color="secondary"
                                                     onClick={() => {

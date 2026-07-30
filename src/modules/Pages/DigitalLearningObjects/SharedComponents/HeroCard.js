@@ -48,13 +48,13 @@ const HeroCard = ({ heroTitle, heroDescription, heroBackgroundImage }) => {
     return (
         <Box sx={{ backgroundColor: '#4b2271' }}>
             <StyledHeroParent container direction={{ xs: 'column', md: 'row' }}>
-                <Grid xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <StyledHeroImage
                         sx={{ backgroundImage: `url(${heroBackgroundImage})` }}
                         data-testid="hero-card-image"
                     />
                 </Grid>
-                <Grid xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <StyledHeroWrapper>
                         <StyledHeroContent>
                             <Typography

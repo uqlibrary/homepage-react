@@ -117,7 +117,7 @@ const InspectionPanel = ({
         >
             <StyledCollapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
                 <Grid container spacing={3}>
-                    <Grid xs={12} sm={6} md={4}>
+                    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                         <FormControl
                             variant="standard"
                             className={'formControl'}
@@ -188,7 +188,7 @@ const InspectionPanel = ({
                             )}
                         </FormControl>
                     </Grid>
-                    <Grid xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Box>
                             <InputLabel
                                 shrink
@@ -241,7 +241,7 @@ const InspectionPanel = ({
                         </Box>
                     </Grid>
                     {formValues.inspection_status === testStatusEnum.PASSED.value && (
-                        <Grid xs={12} sm={4}>
+                        <Grid size={{ xs: 12, sm: 4 }}>
                             <MonthsSelector
                                 id={componentId}
                                 label={pageLocale.form.inspection.nextTestDateLabel}
@@ -260,7 +260,7 @@ const InspectionPanel = ({
                         </Grid>
                     )}
                     {formValues.inspection_status === testStatusEnum.FAILED.value && (
-                        <Grid xs={12} sm={12}>
+                        <Grid size={{ xs: 12, sm: 12 }}>
                             <FormControl variant="standard" className={'formControl'} fullWidth>
                                 <TextField
                                     {...pageLocale.form.inspection.failReason}
@@ -283,7 +283,7 @@ const InspectionPanel = ({
                         </Grid>
                     )}
 
-                    <Grid xs={12} sm={12}>
+                    <Grid size={{ xs: 12, sm: 12 }}>
                         <FormControl variant="standard" className={'formControl'} fullWidth>
                             <TextField
                                 {...pageLocale.form.inspection.inspectionNotes}

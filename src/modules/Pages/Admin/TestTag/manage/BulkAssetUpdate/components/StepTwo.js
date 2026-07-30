@@ -149,7 +149,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
     return (
         <StandardCard title={stepTwoLocale.title} standardCardId={`standard_card-${componentId}-step-2`}>
             <Grid container spacing={3}>
-                <Grid xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Alert
                         severity="warning"
                         id={`${componentIdLower}-summary-alert`}
@@ -168,7 +168,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                 </Grid>
             </Grid>
             <Grid container spacing={3}>
-                <Grid xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <AccordionWithCheckbox
                         id="location"
                         label={stepTwoLocale.checkbox.location}

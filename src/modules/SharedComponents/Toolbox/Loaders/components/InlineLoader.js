@@ -26,9 +26,9 @@ export class InlineLoader extends React.Component {
                     alignContent={'center'}
                 >
                     <Hidden smUp>
-                        <Grid xs />
+                        <Grid />
                     </Hidden>
-                    <Grid xs={'auto'} style={{ textAlign: 'center' }}>
+                    <Grid size={{ xs: 'auto' }} style={{ textAlign: 'center' }}>
                         <CircularProgress
                             sx={{ color: 'primary.light' }}
                             size={18}
@@ -36,7 +36,7 @@ export class InlineLoader extends React.Component {
                             aria-labelledby="loading-icon"
                         />
                     </Grid>
-                    <Grid xs={'auto'} style={{ textAlign: 'center' }}>
+                    <Grid size={{ xs: 'auto' }} style={{ textAlign: 'center' }}>
                         <Typography
                             id="loading-icon"
                             sx={{ color: 'primary.light', fontSize: '1.33rem' }}
@@ -47,7 +47,7 @@ export class InlineLoader extends React.Component {
                         </Typography>
                     </Grid>
                     <Hidden smUp>
-                        <Grid xs />
+                        <Grid />
                     </Hidden>
                 </Grid>
             </div>

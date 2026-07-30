@@ -160,7 +160,9 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
         <StandardPage notitle>
             <StandardCard title="Confirming your Digital Learning Hub notification request">
                 <Grid container>
-                    <Grid xs={12}>{pageContents(dlorItemUpdating, dlorUpdatedItemError, dlorUpdatedItem)}</Grid>
+                    <Grid size={{ xs: 12 }}>
+                        {pageContents(dlorItemUpdating, dlorUpdatedItemError, dlorUpdatedItem)}
+                    </Grid>
                 </Grid>
             </StandardCard>
         </StandardPage>

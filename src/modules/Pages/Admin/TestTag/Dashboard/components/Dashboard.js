@@ -112,7 +112,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
             <StyledWrapper>
                 <Grid container spacing={3} sx={{ paddingBottom: 1.5 }}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                        <Grid xs={12} sm className={'flexParent'}>
+                        <Grid size={{ xs: 12 }} sm className={'flexParent'}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton
                                     animation="wave"
@@ -149,7 +149,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                             )}
                         </Grid>
                     </AuthWrapper>
-                    <Grid xs={12} md className={'flexParent'}>
+                    <Grid size={{ xs: 12 }} className={'flexParent'}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton
                                 animation="wave"
@@ -175,7 +175,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                 standardCardId={`${componentId}-${pageLocale.panel.assets.id}-panel`}
                             >
                                 <Grid container style={{ marginBottom: 5 }}>
-                                    <Grid xs={6}>
+                                    <Grid size={{ xs: 6 }}>
                                         <Box borderRight={1} borderColor="grey.500">
                                             <Typography
                                                 component={'div'}
@@ -196,7 +196,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                         </Box>
                                     </Grid>
 
-                                    <Grid xs={6}>
+                                    <Grid size={{ xs: 6 }}>
                                         <Typography
                                             component={'div'}
                                             variant={'h4'}
@@ -247,7 +247,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                             </StandardCard>
                         )}
                     </Grid>
-                    <Grid xs={12} md className={'flexParent'}>
+                    <Grid size={{ xs: 12 }} className={'flexParent'}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton
                                 animation="wave"

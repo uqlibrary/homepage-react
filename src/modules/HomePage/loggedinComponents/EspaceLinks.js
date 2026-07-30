@@ -150,7 +150,7 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
                 <EspaceEditorialAppointments />
                 {!authorNeedsToUpdateRecords && <EspaceUpdateWorks />}
                 {(authorIsMissingOrcid || authorNeedsToUpdateRecords || authorHasIncompleteNtro) && (
-                    <Grid xs={12} style={{ margin: '16px 0' }}>
+                    <Grid size={{ xs: 12 }} style={{ margin: '16px 0' }}>
                         <UserAttention titleText="Update the following items:">
                             <StyledActionsUl>
                                 {authorIsMissingOrcid && <EspaceOrcid />}

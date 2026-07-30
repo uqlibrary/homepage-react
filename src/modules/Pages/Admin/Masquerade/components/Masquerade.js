@@ -47,7 +47,7 @@ const Masquerade = ({ account }) => {
             <StyledStandardCard noHeader standardCardId="masquerade">
                 <Typography>{userCapabilityStatement(account.canMasqueradeType)}</Typography>
                 <Grid container spacing={3} alignItems={'flex-end'} style={{ marginTop: 12 }}>
-                    <Grid xs>
+                    <Grid>
                         <TextField
                             variant="standard"
                             data-testid="masquerade-userName"
@@ -58,7 +58,7 @@ const Masquerade = ({ account }) => {
                             InputProps={{ onKeyPress: masqueradeAs }}
                         />
                     </Grid>
-                    <Grid xs={12} sm={'auto'}>
+                    <Grid size={{ xs: 12, sm: 'auto' }}>
                         <StyledPrimaryButton
                             id="submitMasquerade"
                             data-analyticsid="submitMasquerade"

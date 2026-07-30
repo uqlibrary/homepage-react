@@ -837,19 +837,19 @@ export const DLOList = ({
         return (
             <>
                 <Grid container data-testid="sidebar-panel-heading">
-                    <Grid xs={10} md={8}>
+                    <Grid size={{ xs: 12, xs: 10, md: 8 }}>
                         <Typography component={'h2'} variant={'h6'}>
                             Filters
                         </Typography>
                     </Grid>
-                    <Grid xs={2} md={1}>
+                    <Grid size={{ xs: 2, md: 1 }}>
                         <StyledSidebarFilterIcon id="filterIconHideId" data-testid="sidebar-filter-icon-hide-id">
                             <IconButton aria-label="hide the filters" onClick={() => hideFilters()}>
                                 <CloseIcon />
                             </IconButton>
                         </StyledSidebarFilterIcon>
                     </Grid>
-                    <Grid xs={12} md={3}>
+                    <Grid size={{ xs: 12, md: 3 }}>
                         <UQActionButton
                             data-testid="sidebar-filter-reset-button"
                             onClick={() => handleResetClick()}
@@ -877,7 +877,7 @@ export const DLOList = ({
                                 }}
                             >
                                 <StyledSidebarFilterTypeHeadingGrid container>
-                                    <Grid md={10} sx={{ position: 'relative' }}>
+                                    <Grid size={{ md: 10 }} sx={{ position: 'relative' }}>
                                         <Typography
                                             component={'h3'}
                                             variant="subtitle1"
@@ -919,7 +919,7 @@ export const DLOList = ({
                                                 parse(facetType.facet_type_help_public)}
                                         </StyledSidebarFilterFacetHelpPopupBox>
                                     </Grid>
-                                    <Grid md={2}>
+                                    <Grid size={{ md: 2 }}>
                                         <IconButton
                                             aria-label={
                                                 openPanelListContains(facetType?.facet_type_id)
@@ -1250,8 +1250,7 @@ export const DLOList = ({
 
         return (
             <Grid
-                item
-                xs={12}
+                size={{ xs: 12 }}
                 sx={{
                     paddingLeft: '16px',
                     paddingBottom: '16px',
@@ -1441,7 +1440,7 @@ export const DLOList = ({
                 />
                 <StandardPage>
                     <Grid container spacing={2}>
-                        <Grid md={12}>
+                        <Grid size={{ md: 12 }}>
                             <Box sx={{ minHeight: '600px' }}>
                                 <InlineLoader message="Loading" />
                             </Box>
@@ -1508,7 +1507,7 @@ export const DLOList = ({
                     justifyContent="space-between"
                     sx={{ marginBlock: '2em 1em' }}
                 >
-                    <Grid xs={11} md="auto">
+                    <Grid size={{ xs: 11, md: 'auto' }}>
                         <Typography component={'p'} sx={{ fontSize: '1.2em', fontWeight: 400 }}>
                             Find out{' '}
                             <a href="https://guides.library.uq.edu.au/research-and-teaching-staff/link-embed-resources/digital-learning-objects">
@@ -1524,7 +1523,7 @@ export const DLOList = ({
                         </Typography>
                     </Grid>
                     {!!(isDlorTeamMember || isDlorAuthor) && (
-                        <Grid xs={1} md="auto" sx={{ textAlign: 'right' }}>
+                        <Grid size={{ xs: 1, md: 'auto' }} sx={{ textAlign: 'right' }}>
                             <IconButton
                                 color="primary"
                                 aria-controls={menuOpen ? 'team-admin-dlor-menu' : undefined}
@@ -1590,7 +1589,7 @@ export const DLOList = ({
                         </Grid>
                     )}
                     {!!account?.id && !!!isDlorAdminUser(account) && !isDlorTeamMember && !isDlorAuthor && (
-                        <Grid xs={12} md="auto" sx={{ textAlign: 'right' }}>
+                        <Grid size={{ xs: 12, md: 'auto' }} sx={{ textAlign: 'right' }}>
                             <UqActionLink
                                 data-testid="dlor-homepage-request-new-item"
                                 onClick={handleRequestNewItem}
@@ -1602,7 +1601,7 @@ export const DLOList = ({
                             </UqActionLink>
                         </Grid>
                     )}
-                    <Grid xs={12} sx={{ marginTop: '20px' }}>
+                    <Grid size={{ xs: 12 }} sx={{ marginTop: '20px' }}>
                         <LoginPrompt account={account} />
                     </Grid>
                 </Grid>
@@ -1631,7 +1630,7 @@ export const DLOList = ({
                             </UQActionButton>
                         )} */}
                     </StyledFilterSidebarGrid>
-                    <Grid xs={12} md={9}>
+                    <Grid size={{ md: 9, xs: 12 }}>
                         <TextField
                             sx={{
                                 width: 'calc(100% - 24px)',
@@ -1671,7 +1670,7 @@ export const DLOList = ({
                             inputRef={keyWordSearchRef}
                         />
                         {!!viewType && (
-                            <Grid xs={12} sx={{ marginLeft: '12px', marginBottom: '12px' }}>
+                            <Grid size={{ xs: 12 }} sx={{ marginLeft: '12px', marginBottom: '12px' }}>
                                 Restricting the list view to:
                                 <Chip
                                     data-testid="homepage-view-type-chip"
@@ -1749,7 +1748,7 @@ export const DLOList = ({
                             } else if (!dlorList || dlorList.length === 0) {
                                 return (
                                     <Grid container spacing={3}>
-                                        <Grid xs={12}>
+                                        <Grid size={{ xs: 12 }}>
                                             <Typography variant="body1" data-testid="dlor-homepage-noresult">
                                                 We did not find any entries in the system - please try again later.
                                             </Typography>
@@ -1771,8 +1770,8 @@ export const DLOList = ({
                                 if (!dlorData || dlorData.length === 0) {
                                     return (
                                         <Grid container spacing={3}>
-                                            <Grid xs={1} />
-                                            <Grid xs={11} data-testid="dlor-homepage-empty">
+                                            <Grid size={{ xs: 1 }} />
+                                            <Grid size={{ xs: 11 }} data-testid="dlor-homepage-empty">
                                                 <p>Can't find what you are looking for?</p>
                                                 <ul>
                                                     <li>Check your search terms and filters are correct.</li>

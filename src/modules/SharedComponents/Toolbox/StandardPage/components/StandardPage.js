@@ -46,7 +46,7 @@ export const StandardPage = ({ title, children }) => {
                         </Typography>
                     </StyledGrid>
                 )}
-                <Grid xs={12}>{children}</Grid>
+                <Grid size={{ xs: 12 }}>{children}</Grid>
             </Grid>
         </div>
     );

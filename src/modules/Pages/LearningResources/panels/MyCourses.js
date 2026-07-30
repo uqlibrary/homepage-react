@@ -131,10 +131,10 @@ export const MyCourses = ({
                 </>
             ) : (
                 <Grid container spacing={3} data-testid="no-classes" className={'noreadingLists'}>
-                    <Grid item>
+                    <Grid>
                         <Typography variant={'h5'}>No enrolled courses available</Typography>
                     </Grid>
-                    <Grid xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
                         <p>Search for learning resources using the &apos;Course search&apos; tab, above.</p>
                     </Grid>

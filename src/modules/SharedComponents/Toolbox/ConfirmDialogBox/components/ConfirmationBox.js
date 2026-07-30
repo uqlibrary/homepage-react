@@ -71,10 +71,10 @@ export const ConfirmationBox = ({
             <DialogActions>
                 <Grid container spacing={1} justifyContent="space-between">
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                        <Grid xs />
+                        <Grid />
                     </Box>
                     {!hideActionButton && (
-                        <Grid xs={12} sm={'auto'}>
+                        <Grid size={{ xs: 12, sm: 'auto' }}>
                             <StyledPrimaryButton
                                 children={locale.confirmButtonLabel}
                                 autoFocus={!!autoFocusPrimaryButton}
@@ -88,7 +88,7 @@ export const ConfirmationBox = ({
                     )}
                     {showAlternateActionButton && (
                         // an optional middle button that will display in a warning colour
-                        <Grid xs={12} sm={'auto'}>
+                        <Grid size={{ xs: 12, sm: 'auto' }}>
                             <StyledTertiaryButton
                                 variant={'contained'}
                                 children={locale.alternateActionButtonLabel}
@@ -101,7 +101,7 @@ export const ConfirmationBox = ({
                         </Grid>
                     )}
                     {!hideCancelButton && (
-                        <Grid xs={12} sm={'auto'}>
+                        <Grid size={{ xs: 12, sm: 'auto' }}>
                             <StyledSecondaryButton
                                 variant={'contained'}
                                 children={locale.cancelButtonLabel}

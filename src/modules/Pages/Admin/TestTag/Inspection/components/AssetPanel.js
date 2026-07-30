@@ -166,7 +166,7 @@ const AssetPanel = ({
                 isBusy={dialogueBusy}
             />
             <Grid container spacing={3}>
-                <Grid xs={12} item sm={6} md={6}>
+                <Grid size={{ xs: 12, sm: 6, md: 6 }}>
                     <FormGroup>
                         <AssetSelector
                             id={componentId}
@@ -184,7 +184,7 @@ const AssetPanel = ({
                         />
                     </FormGroup>
                 </Grid>
-                <Grid xs={12} item sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                     <FormControl variant="standard" className={'formControl'} fullWidth>
                         <AssetTypeSelector
                             id={componentId}
@@ -206,7 +206,7 @@ const AssetPanel = ({
                 </Grid>
             </Grid>
             <Grid container spacing={3}>
-                <Grid xs={12} item>
+                <Grid size={{ xs: 12 }} item>
                     <SwitchIncludeAllTeams id={componentIdLower} locale={pageLocale} onChange={onAllTeamsChange} />
                     {!!allTeams &&
                         Object.keys(selectedAsset ?? {}).length > 0 &&

@@ -172,7 +172,7 @@ export const DLOTeamList = ({
             />
             {isDlorAdminUser(account) && (
                 <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
-                    <Grid xs={12} sx={{ textAlign: 'right' }}>
+                    <Grid size={{ xs: 12 }} sx={{ textAlign: 'right' }}>
                         <Button
                             children="Add team"
                             color="primary"
@@ -187,7 +187,7 @@ export const DLOTeamList = ({
                 {(() => {
                     if (!!dlorTeamListLoading || !!dlorTeamDeleting) {
                         return (
-                            <Grid xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Grid size={{ xs: 12, md: 9 }} sx={{ marginTop: '12px' }}>
                                 <div sx={{ minHeight: '600px' }}>
                                     <InlineLoader message="Loading" />
                                 </div>
@@ -195,7 +195,7 @@ export const DLOTeamList = ({
                         );
                     } else if (!!dlorTeamListError) {
                         return (
-                            <Grid xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Grid size={{ xs: 12, md: 9 }} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-teamlist-error">
                                     {dlorTeamListError}
                                 </Typography>
@@ -203,7 +203,7 @@ export const DLOTeamList = ({
                         );
                     } else if (!dlorTeamList || dlorTeamList.length === 0) {
                         return (
-                            <Grid xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Grid size={{ xs: 12, md: 9 }} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-teamlist-noresult">
                                     We did not find any entries in the system - please try again later.
                                 </Typography>
@@ -242,13 +242,12 @@ export const DLOTeamList = ({
                                             <div key={`list-team-${team?.team_id}`}>
                                                 <Grid container alignItems="center">
                                                     <Grid
-                                                        item
-                                                        xs={10}
+                                                        size={{ xs: 10 }}
                                                         data-testid={`dlor-teamlist-panel-${team?.team_id}`}
                                                     >
                                                         <Typography variant="body1">{team?.team_name}</Typography>
                                                     </Grid>
-                                                    <Grid xs={1}>
+                                                    <Grid size={{ xs: 1 }}>
                                                         {team?.objects_count === 0 && (
                                                             <IconButton
                                                                 data-testid={`dlor-teamlist-delete-${team?.team_id}`}
@@ -260,7 +259,7 @@ export const DLOTeamList = ({
                                                             </IconButton>
                                                         )}
                                                     </Grid>
-                                                    <Grid xs={1}>
+                                                    <Grid size={{ xs: 1 }}>
                                                         <IconButton
                                                             data-testid={`dlor-teamlist-edit-${team?.team_id}`}
                                                             onClick={() => navigateToTeamEditPage(team?.team_id)}
@@ -279,7 +278,7 @@ export const DLOTeamList = ({
                                                     </Grid>
                                                 </Grid>
                                                 <Grid container>
-                                                    <Grid xs={12} sx={{ marginBottom: '24px' }}>
+                                                    <Grid size={{ xs: 12 }} sx={{ marginBottom: '24px' }}>
                                                         {!dlorTeamListLoading &&
                                                             !dlorListError &&
                                                             !!dlorList &&
