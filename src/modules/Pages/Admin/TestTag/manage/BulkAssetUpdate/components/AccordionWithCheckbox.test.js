@@ -96,7 +96,7 @@ describe('AccordionWithCheckbox', () => {
         const { getByTestId } = setup({ disabled: true });
 
         const checkbox = getByTestId('accordionWithCheckbox-test-accordion-checkbox');
-        expect(checkbox).toHaveAttribute('aria-disabled', 'true');
+        expect(checkbox).toHaveClass('Mui-disabled');
     });
 
     it('disables accordion when disabled prop is true', () => {
