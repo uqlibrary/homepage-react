@@ -13,8 +13,10 @@ import { useForm } from 'modules/SharedComponents/Toolbox/ReactHookForm';
 import { pathConfig } from 'config/pathConfig';
 import { breadcrumbs } from 'config/routes';
 
+import { MEMBERSHIP_TYPES } from '../membershipFieldRules';
 import { transformRequest } from '../membershipTransformers';
 import locale from '../membership.locale';
+import ConfigText from '../SharedComponents/ConfigText';
 import MembershipFormSections from './MembershipFormSections';
 
 const { form } = locale;
@@ -94,6 +96,11 @@ export const MembershipForm = ({
     return (
         <StandardPage title={`${form.title} - ${current.title}`}>
             <div data-testid="membership-form">
+                {/* The per-type introduction from the form config — who the type is for and how long it takes. */}
+                {!!current.conditions && (
+                    <ConfigText component="p" data-testid="membership-form-conditions" text={current.conditions} />
+                )}
+
                 {/*
                  * noValidate hands validation to us rather than the browser. Without it the browser blocks the
                  * submit on the first empty required field with a transient bubble a screen reader does not
@@ -123,13 +130,16 @@ export const MembershipForm = ({
                             </a>{' '}
                             {form.contactUs.text}
                         </Typography>
-                        <Typography data-testid="membership-form-postcode-help">
-                            {form.findAPostcode.before}
-                            <a href={form.findAPostcode.url} target="_blank" rel="noopener noreferrer">
-                                {form.findAPostcode.label}
-                            </a>
-                            {form.findAPostcode.after}
-                        </Typography>
+                        {/* The postcode helper is only relevant where a home address is collected — fryer has none. */}
+                        {type !== MEMBERSHIP_TYPES.FRYER && (
+                            <Typography data-testid="membership-form-postcode-help">
+                                {form.findAPostcode.before}
+                                <a href={form.findAPostcode.url} target="_blank" rel="noopener noreferrer">
+                                    {form.findAPostcode.label}
+                                </a>
+                                {form.findAPostcode.after}
+                            </Typography>
+                        )}
                     </Box>
 
                     {/*

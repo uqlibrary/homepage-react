@@ -50,7 +50,13 @@ export const SelectFieldWrapper = React.forwardRef((props, ref) => {
     return (
         <FormControl variant="standard" fullWidth error={!!errorMessage} required={!!required} disabled={!!disabled}>
             {labelIsVisible && (
-                <InputLabel id={`${id}-label`} data-testid={`${id}-label`}>
+                <InputLabel
+                    id={`${id}-label`}
+                    data-testid={`${id}-label`}
+                    // The placeholder is always shown in the collapsed control (displayEmpty), so float the
+                    // label clear of it — otherwise the resting label sits on top of the placeholder text.
+                    shrink={placeholder ? true : undefined}
+                >
                     {label}
                 </InputLabel>
             )}

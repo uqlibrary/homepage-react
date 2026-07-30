@@ -107,6 +107,18 @@ describe('SelectField', () => {
         expect(screen.getByTestId('title-helper-text')).toHaveTextContent('Please choose a title');
     });
 
+    it('floats the label clear of the placeholder shown in the collapsed control', () => {
+        // The placeholder is always visible in the collapsed control, so the label must shrink (float up)
+        // rather than rest on top of the placeholder text.
+        setup({ fieldProps: { placeholder: 'Select' } });
+        expect(screen.getByTestId('title-label')).toHaveClass('MuiInputLabel-shrink');
+    });
+
+    it('leaves the label at its resting position when there is no placeholder', () => {
+        setup();
+        expect(screen.getByTestId('title-label')).not.toHaveClass('MuiInputLabel-shrink');
+    });
+
     it('marks itself required', () => {
         const { container } = setup({ fieldProps: { required: true } });
         expect(container.querySelector('.Mui-required')).toBeInTheDocument();

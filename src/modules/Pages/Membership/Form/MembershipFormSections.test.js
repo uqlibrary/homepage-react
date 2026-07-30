@@ -25,8 +25,34 @@ describe('MembershipFormSections', () => {
         expect(screen.getByTestId('membership-form-group-home-address')).toBeInTheDocument();
     });
 
+    it('titles the account section for the nominated borrower on a proxy application', () => {
+        renderWithControl(<MembershipFormSections type="proxy" formData={{ titles: ['Mr'] }} current={{}} />);
+
+        expect(screen.getByTestId('membership-form-section-account')).toHaveTextContent('Nominated borrower details');
+        expect(screen.getByTestId('membership-form-section-nominated')).toBeInTheDocument();
+        expect(screen.getByTestId('membership-form-section-authorising')).toBeInTheDocument();
+    });
+
+    it('shows the UQ student section for an alumni application but not for community', () => {
+        renderWithControl(<MembershipFormSections type="alumni" formData={{ titles: ['Mr'] }} current={{}} />);
+        expect(screen.getByTestId('membership-form-section-student')).toBeInTheDocument();
+    });
+
     it('renders a plain row without a legend fieldset', () => {
         renderWithControl(<MembershipFormRow row={{ fields: ['mail'] }} type="community" formData={{}} current={{}} />);
+        expect(screen.getByTestId('mail-input')).toBeInTheDocument();
+    });
+
+    it('gives a captioned-row field with no width of its own an equal share', () => {
+        // mail carries no gridSm, so under a legend it falls back to an equal share of the row.
+        renderWithControl(
+            <MembershipFormRow
+                row={{ legend: 'Contact', fields: ['mail'] }}
+                type="community"
+                formData={{}}
+                current={{}}
+            />,
+        );
         expect(screen.getByTestId('mail-input')).toBeInTheDocument();
     });
 
@@ -49,6 +75,11 @@ describe('MembershipFormSections', () => {
 
         it('lists the sections the type sees', () => {
             expect(getVisibleSections('community').map(section => section.id)).toEqual(['account', 'contact']);
+        });
+
+        it('includes a type-specific section only for the types that declare it', () => {
+            expect(getVisibleSections('alumni').map(section => section.id)).toContain('student');
+            expect(getVisibleSections('community').map(section => section.id)).not.toContain('student');
         });
     });
 });

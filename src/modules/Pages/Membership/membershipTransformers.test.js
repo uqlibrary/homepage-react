@@ -6,6 +6,7 @@ import {
     derivePaymentCode,
     getBirthDays,
     getBirthYears,
+    isAlumniType,
     isRenewal,
     parseDateOfBirth,
     transformRequest,
@@ -64,19 +65,37 @@ describe('membershipTransformers', () => {
 
     describe('derivePaymentCode', () => {
         it('assigns community its single option code', () => {
-            expect(derivePaymentCode('community', [{ code: 'COM' }])).toBe('COM');
+            expect(derivePaymentCode('community', {}, [{ code: 'COM' }])).toBe('COM');
         });
 
         it('is empty for community when no options are offered', () => {
-            expect(derivePaymentCode('community', [])).toBe('');
+            expect(derivePaymentCode('community', {}, [])).toBe('');
+        });
+
+        it('uses the alumni friends period chosen on the form', () => {
+            expect(derivePaymentCode('alumnifriends', { alumnifriendshipLevel: 'AF24' }, [])).toBe('AF24');
+        });
+
+        it('is empty for alumni friends when no period is chosen', () => {
+            expect(derivePaymentCode('alumnifriends', {})).toBe('');
         });
 
         it('is empty for a type that does not pay', () => {
-            expect(derivePaymentCode('somethingelse', [{ code: 'COM' }])).toBe('');
+            expect(derivePaymentCode('hospital', {}, [{ code: 'COM' }])).toBe('');
         });
 
-        it('defaults to no options when none are given', () => {
+        it('defaults its arguments', () => {
             expect(derivePaymentCode('community')).toBe('');
+        });
+    });
+
+    describe('isAlumniType', () => {
+        it('recognises the three alumni flavours and nothing else', () => {
+            expect(isAlumniType('alumni')).toBe(true);
+            expect(isAlumniType('alumninew')).toBe(true);
+            expect(isAlumniType('alumnifriends')).toBe(true);
+            expect(isAlumniType('community')).toBe(false);
+            expect(isAlumniType(undefined)).toBe(false);
         });
     });
 
@@ -109,13 +128,29 @@ describe('membershipTransformers', () => {
         });
 
         it('splits the stored date of birth back into the selects', () => {
-            expect(transformResponse({ first_name: 'Ada', date_of_birth: '1-2-1970' })).toEqual({
+            expect(transformResponse({ type: 'community', first_name: 'Ada', date_of_birth: '1-2-1970' })).toEqual({
+                type: 'community',
                 first_name: 'Ada',
                 date_of_birth: '1-2-1970',
                 date_of_birth_day: 1,
                 date_of_birth_month: '02',
                 date_of_birth_year: 1970,
             });
+        });
+
+        it('turns a retired record’s years of service back into a number', () => {
+            const result = transformResponse({ type: 'retired', retired_years: '15' });
+            expect(result.retired_years).toBe(15);
+        });
+
+        it('turns an alumni record’s graduation year back into a number', () => {
+            const result = transformResponse({ type: 'alumni', alumni_graduated: '1995' });
+            expect(result.alumni_graduated).toBe(1995);
+        });
+
+        it('leaves number fields alone when they are not present', () => {
+            expect(transformResponse({ type: 'retired' }).retired_years).toBeUndefined();
+            expect(transformResponse({ type: 'alumni' }).alumni_graduated).toBeUndefined();
         });
     });
 

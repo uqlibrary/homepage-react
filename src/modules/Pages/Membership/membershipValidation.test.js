@@ -1,5 +1,16 @@
 import locale from './membership.locale';
-import { email, maxLength, minLength, phone, postcode } from './membershipValidation';
+import {
+    RETIRED_MINIMUM_YEARS,
+    email,
+    graduatedYear,
+    maxLength,
+    minLength,
+    phone,
+    postcode,
+    proxyDate,
+    retiredYears,
+    studentNumber,
+} from './membershipValidation';
 
 const { validationErrors } = locale;
 
@@ -64,6 +75,93 @@ describe('membershipValidation', () => {
         it('leaves an empty value to the required check', () => {
             expect(maxLength(3, 'Too long')('')).toBeUndefined();
             expect(minLength(3, 'Too short')('')).toBeUndefined();
+        });
+    });
+
+    describe('studentNumber', () => {
+        it('accepts an s followed by seven digits', () => {
+            expect(studentNumber('s1234567')).toBeUndefined();
+        });
+
+        it('rejects anything else', () => {
+            expect(studentNumber('1234567')).toBe(validationErrors.studentNumber);
+            expect(studentNumber('s123456')).toBe(validationErrors.studentNumber);
+            expect(studentNumber('S1234567')).toBe(validationErrors.studentNumber);
+        });
+
+        it('leaves an empty value to the required check', () => {
+            expect(studentNumber('')).toBeUndefined();
+        });
+    });
+
+    describe('proxyDate', () => {
+        it('accepts a date written as the field asks', () => {
+            expect(proxyDate('01-02-2026')).toBeUndefined();
+            expect(proxyDate('1-2-2026')).toBeUndefined();
+        });
+
+        it('rejects any other shape', () => {
+            expect(proxyDate('2026-02-01')).toBe(validationErrors.proxyDate);
+            expect(proxyDate('01/02/2026')).toBe(validationErrors.proxyDate);
+            expect(proxyDate('01-02-26')).toBe(validationErrors.proxyDate);
+        });
+
+        it('leaves an empty value to the required check', () => {
+            expect(proxyDate('')).toBeUndefined();
+        });
+    });
+
+    describe('graduatedYear', () => {
+        it('accepts a year', () => {
+            expect(graduatedYear('1995')).toBeUndefined();
+            expect(graduatedYear(2020)).toBeUndefined();
+        });
+
+        it('rejects something that is not a number', () => {
+            expect(graduatedYear('last year')).toBe(validationErrors.graduatedYear);
+        });
+
+        it('rejects a value that is too short or too long', () => {
+            expect(graduatedYear('5')).toBe(validationErrors.graduatedYear);
+            expect(graduatedYear('19955')).toBe(validationErrors.graduatedYear);
+        });
+
+        it('accepts the same loose two-digit values the form has always accepted', () => {
+            expect(graduatedYear('10')).toBeUndefined();
+            expect(graduatedYear('99')).toBeUndefined();
+        });
+
+        it('leaves an empty value to the required check', () => {
+            expect(graduatedYear('')).toBeUndefined();
+            expect(graduatedYear(null)).toBeUndefined();
+            expect(graduatedYear(undefined)).toBeUndefined();
+        });
+    });
+
+    describe('retiredYears', () => {
+        it('accepts a length of service that meets the eligibility rule', () => {
+            expect(retiredYears('10')).toBeUndefined();
+            expect(retiredYears('35')).toBeUndefined();
+            expect(retiredYears(15)).toBeUndefined();
+        });
+
+        it('rejects a length of service below the eligibility rule', () => {
+            expect(retiredYears('09')).toBe(validationErrors.retiredYears);
+            expect(RETIRED_MINIMUM_YEARS).toBe(10);
+        });
+
+        it('rejects a value that is not two digits', () => {
+            expect(retiredYears('5')).toBe(validationErrors.retiredYears);
+            expect(retiredYears('100')).toBe(validationErrors.retiredYears);
+        });
+
+        it('rejects something that is not a number', () => {
+            expect(retiredYears('ab')).toBe(validationErrors.retiredYears);
+        });
+
+        it('leaves an empty value to the required check', () => {
+            expect(retiredYears('')).toBeUndefined();
+            expect(retiredYears(null)).toBeUndefined();
         });
     });
 });

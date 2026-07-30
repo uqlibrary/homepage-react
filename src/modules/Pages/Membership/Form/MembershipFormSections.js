@@ -6,7 +6,12 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 import { isFieldVisible } from '../membershipFieldRules';
-import { getFieldConfig, getSectionTitle, membershipFormSections } from '../membershipFormFields';
+import {
+    getFieldConfig,
+    getSectionTitle,
+    isSectionDeclaredForType,
+    membershipFormSections,
+} from '../membershipFormFields';
 import MembershipFormField from './MembershipFormField';
 
 export const visibleFieldsInRow = (row, type) => row.fields.filter(field => isFieldVisible(field, type));
@@ -19,7 +24,9 @@ export const visibleRowsInSection = (section, type) =>
  * the config never has to repeat what the rules already say.
  */
 export const getVisibleSections = type =>
-    membershipFormSections.filter(section => visibleRowsInSection(section, type).length > 0);
+    membershipFormSections
+        .filter(section => isSectionDeclaredForType(section, type))
+        .filter(section => visibleRowsInSection(section, type).length > 0);
 
 /**
  * A row of the form. Where several controls sit under one heading — "Your Name", "Date of Birth" — the row
@@ -76,7 +83,7 @@ export const MembershipFormSections = ({ type, ...fieldProps }) => (
         {getVisibleSections(type).map(section => (
             <section key={section.id} data-testid={`membership-form-section-${section.id}`}>
                 <Typography component="h2" variant="h6" sx={{ marginTop: 3, marginBottom: 1 }}>
-                    {getSectionTitle(section)}
+                    {getSectionTitle(section, type)}
                 </Typography>
                 {visibleRowsInSection(section, type).map((row, index) => (
                     <MembershipFormRow key={index} row={row} type={type} {...fieldProps} />

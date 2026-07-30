@@ -18,7 +18,13 @@ jest.mock('react-router', () => ({
 
 const membershipFormData = {
     account_types: [
-        { title: 'Community', value: 'community', payment_options: [{ code: 'COM', description: '12 months ($25)' }] },
+        {
+            title: 'Community',
+            value: 'community',
+            conditions: 'For members of the general public. Membership costs $25 per year.',
+            payment_options: [{ code: 'COM', description: '12 months ($25)' }],
+        },
+        { title: 'Fryer Library', value: 'fryer' },
     ],
     titles: ['Mr', 'Ms', 'Dr'],
 };
@@ -103,6 +109,23 @@ describe('MembershipForm', () => {
         const contactUs = screen.getByTestId('membership-form-contact-us');
         expect(contactUs).toHaveAttribute('target', '_blank');
         expect(contactUs).toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
+    it('introduces the type with its conditions text from the form config', () => {
+        setup();
+
+        expect(screen.getByTestId('membership-form-conditions')).toHaveTextContent(
+            'For members of the general public. Membership costs $25 per year.',
+        );
+    });
+
+    it('omits the postcode helper for a type that collects no home address', () => {
+        setup({}, '/membership/form/fryer');
+
+        expect(screen.getByTestId('membership-form-section-organisation')).toBeInTheDocument();
+        expect(screen.queryByTestId('membership-form-postcode-help')).not.toBeInTheDocument();
+        // This fixture entry carries no conditions text, so none is shown.
+        expect(screen.queryByTestId('membership-form-conditions')).not.toBeInTheDocument();
     });
 
     it('sets the second-level breadcrumb on the site header when one is present', () => {

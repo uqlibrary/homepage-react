@@ -29,18 +29,18 @@ export const membershipFormData = {
             "title": "UQ Alumni",
             "value": "alumni",
             "description": "For UQ graduates who have a UQ username and password.",
-            "conditions": "Please allow 5 working days for your application to be processed. Please note that <a target=\"_blank\" href=\"https://app.library.uq.edu.au/#/membership/form/alumninew\">new graduates</a> (those in the first year following graduation or completion of program) should complete the application for new graduates.",
+            "conditions": "Please allow 5 working days for your application to be processed. Please note that new graduates (those in the first year following graduation or completion of program) should complete the <a href=\"/membership/form/alumninew\">application for new graduates</a>.",
             "agreement": [
                 "And I have read the <a target=\"_blank\" href=\"https://web.library.uq.edu.au/find-and-borrow/library-memberships/uq-alumni-membership\">list of services available to UQ Alumni</a> and I am aware of my entitlements"
             ]
         },
         {
-            "title": "RBWH",
+            "title": "RBWH and STARS",
             "value": "hospital",
-            "description": "For employees of RBWH. Please allow 2 working days for your application to be processed.",
+            "description": "For employees of Royal Brisbane and Women's Hospital (RBWH) and Surgical, Treatment and Rehabilitation Service (STARS). Please allow 2 working days for your application to be processed.",
             "agreement": [],
             "upload": "Please upload an image of your hospital ID that clearly shows your name and payroll number. If you are unable to upload your document it will need to be presented in person at the AskUs desk at Herston Health Sciences Library or alternatively, emailed to <a href=\"mailto:hhsl@library.uq.edu.au\">hhsl@library.uq.edu.au</a>.",
-            "conditions": "For employees of RBWH. Please allow 2 working days for your application to be processed."
+            "conditions": "For employees of Royal Brisbane and Women's Hospital (RBWH) and Surgical, Treatment and Rehabilitation Service (STARS). Please allow 2 working days for your application to be processed."
         },
         {
             "title": "Retired UQ Staff",
