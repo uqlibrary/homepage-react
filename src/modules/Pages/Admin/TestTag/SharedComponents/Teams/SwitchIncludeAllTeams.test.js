@@ -47,35 +47,35 @@ describe('SwitchIncludeAllTeams', () => {
         mockCookies.TNT_ALL_TEAMS = true;
         const onChange = jest.fn();
         const { getByRole } = setup({ onChange });
-        expect(getByRole('checkbox')).toBeChecked();
+        expect(getByRole('switch')).toBeChecked();
         expect(onChange).toHaveBeenCalledWith(true);
     });
 
     it('initialises unchecked when cookie is absent and withCookie is true', () => {
         const { getByRole } = setup();
-        expect(getByRole('checkbox')).not.toBeChecked();
+        expect(getByRole('switch')).not.toBeChecked();
     });
 
     it('initialises from defaultValue when withCookie is false', () => {
         const onChange = jest.fn();
         const { getByRole } = setup({ onChange, withCookie: false, defaultValue: true });
-        expect(getByRole('checkbox')).toBeChecked();
+        expect(getByRole('switch')).toBeChecked();
         expect(onChange).toHaveBeenCalledWith(true);
     });
 
     it('initialises unchecked when withCookie is false and defaultValue is false', () => {
         const { getByRole } = setup({ withCookie: false, defaultValue: false });
-        expect(getByRole('checkbox')).not.toBeChecked();
+        expect(getByRole('switch')).not.toBeChecked();
     });
 
     it('toggles the switch and calls onChange and setCookie on click', async () => {
         const onChange = jest.fn();
         const { getByRole } = setup({ onChange });
-        const checkbox = getByRole('checkbox');
+        const switchElement = getByRole('switch');
 
         // Initially unchecked, toggle on
-        await userEvent.click(checkbox);
-        expect(checkbox).toBeChecked();
+        await userEvent.click(switchElement);
+        expect(switchElement).toBeChecked();
         expect(mockSetCookie).toHaveBeenCalledWith('TNT_ALL_TEAMS', true, { path: '/' });
         expect(onChange).toHaveBeenCalledWith(true);
     });
@@ -83,10 +83,10 @@ describe('SwitchIncludeAllTeams', () => {
     it('does not set cookie when withCookie is false and switch is toggled', async () => {
         const onChange = jest.fn();
         const { getByRole } = setup({ onChange, withCookie: false, fireOnChangeOnMount: false });
-        const checkbox = getByRole('checkbox');
+        const switchElement = getByRole('switch');
 
-        await userEvent.click(checkbox);
-        expect(checkbox).toBeChecked();
+        await userEvent.click(switchElement);
+        expect(switchElement).toBeChecked();
         expect(mockSetCookie).not.toHaveBeenCalled();
         expect(onChange).toHaveBeenCalledWith(true);
     });
@@ -94,9 +94,9 @@ describe('SwitchIncludeAllTeams', () => {
     it('uses a custom cookieName when provided', async () => {
         mockCookies.MY_COOKIE = true;
         const { getByRole } = setup({ cookieName: 'MY_COOKIE' });
-        expect(getByRole('checkbox')).toBeChecked();
+        expect(getByRole('switch')).toBeChecked();
 
-        await userEvent.click(getByRole('checkbox'));
+        await userEvent.click(getByRole('switch'));
         expect(mockSetCookie).toHaveBeenCalledWith('MY_COOKIE', false, { path: '/' });
     });
 
