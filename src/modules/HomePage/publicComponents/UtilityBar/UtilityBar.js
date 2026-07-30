@@ -301,7 +301,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         </span>
                     </StyledLocationOpenerButton>
                     <StyledBookingLink href={getSpacesUrl()} data-testid="homepage-hours-bookit-link" id="bookit-link">
-                        <span>Book a room</span>
+                        <span>Find library study spaces</span>
                     </StyledBookingLink>
                 </StyledButtonAreaDiv>
                 <StyledLocationBox

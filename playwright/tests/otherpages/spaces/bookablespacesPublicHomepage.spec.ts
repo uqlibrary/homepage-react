@@ -17,7 +17,7 @@ test.describe('Spaces Homepage', () => {
     test('library homepage can navigate to Spaces public page', async ({ page }) => {
         await page.goto('/?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.getByTestId('homepage-hours-bookit-link')).toHaveText(/Book a room/);
+        await expect(page.getByTestId('homepage-hours-bookit-link')).toHaveText(/Find library study spaces/);
 
         // navigate to spaces homepage
         await page.getByTestId('homepage-hours-bookit-link').click();
