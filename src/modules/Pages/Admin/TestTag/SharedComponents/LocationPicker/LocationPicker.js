@@ -20,13 +20,7 @@ export const GridWrapper = ({ withGrid = true, divisor = 1, children }) => {
         children: PropTypes.node,
     };
 
-    return withGrid ? (
-        <Grid xs={12} sm={6} md={12 / divisor}>
-            {children}
-        </Grid>
-    ) : (
-        children
-    );
+    return withGrid ? <Grid size={{ xs: 12, sm: 6, md: 12 / divisor }}>{children}</Grid> : children;
 };
 
 export const getBuildingLabel = building => {
