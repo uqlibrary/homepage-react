@@ -136,14 +136,11 @@ export const SpacesQuickLinks = ({
             <StyledBrowseAllSpacesCard>
                 <StyledBrowseAllSpacesIcon aria-hidden="true" />
                 <Typography component="h3" sx={{ fontSize: { xs: '1.5rem', md: '1.75rem' } }}>
-                    Browse all spaces
-                </Typography>
-                <Typography component="p" sx={{ fontSize: { xs: '1rem', md: '1.1rem' } }}>
-                    Explore all library study spaces on the map!
+                    Explore on the map
                 </Typography>
                 <div>
                     <Link data-testid="spaces-journey-landing-browse-all" to="/spaces/mapresults">
-                        Browse all library study spaces
+                        Browse all library study spaces with UQ Maps
                     </Link>
                 </div>
             </StyledBrowseAllSpacesCard>
