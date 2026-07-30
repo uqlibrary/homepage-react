@@ -253,7 +253,7 @@ describe('StepOne', () => {
             await userEvent.paste(searchPattern);
 
             // Toggle all teams on — should call loadAssetsFiltered since searchTerm is set
-            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            const toggle = getByRole('switch', { name: 'All team assets' });
             await userEvent.click(toggle);
 
             expect(loadAssetsFilteredFn).toHaveBeenLastCalledWith(
