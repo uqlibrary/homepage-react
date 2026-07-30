@@ -35,7 +35,7 @@ export const StandardPage = ({ title, children }) => {
         <div className="layout-card">
             <Grid justifyContent={'flex-start'} container spacing={0} data-testid="StandardPage" id="StandardPage">
                 {title && (
-                    <StyledGrid item xs className={'title'}>
+                    <StyledGrid size="grow" className={'title'}>
                         <Typography
                             className={'layoutTitle'}
                             component={'h1'}

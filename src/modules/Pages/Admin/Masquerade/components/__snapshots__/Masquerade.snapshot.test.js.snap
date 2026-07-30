@@ -6,35 +6,36 @@ exports[`Component Masquerade Should render form as expected 1`] = `
     class="layout-card"
   >
     <div
-      class="MuiGrid-root MuiGrid-container css-1bzpx2o-MuiGrid-root"
+      class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row css-1iqomnd-MuiGrid-root"
       data-testid="StandardPage"
       id="StandardPage"
     >
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true title css-envbrb-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-grow title css-vqpccx-MuiGrid-root"
       >
         <h1
-          class="MuiTypography-root MuiTypography-h4 layoutTitle css-v0z470-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 layoutTitle css-159lv86-MuiTypography-root"
           data-testid="StandardPage-title"
         >
           Masquerade
         </h1>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-ox0vta-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 css-yqiqnf-MuiGrid-root"
       >
         <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard css-ykldcu-MuiPaper-root-MuiCard-root"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard css-3d2wqj-MuiPaper-root-MuiCard-root"
           data-analyticsid="masquerade"
           data-testid="masquerade"
           id="masquerade"
+          style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
         >
           <div
-            class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+            class="MuiCardContent-root css-1lt5qva-MuiCardContent-root"
             data-testid="masquerade-content"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 css-t4ynyp-MuiTypography-root"
             >
               <span>
                 <strong>
@@ -44,31 +45,31 @@ exports[`Component Masquerade Should render form as expected 1`] = `
               </span>
             </p>
             <div
-              class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3 css-1vne64g-MuiGrid-root"
+              class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-3 css-2kdqtc-MuiGrid-root"
               style="margin-top: 12px;"
             >
               <div
-                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1svz66l-MuiGrid-root"
+                class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
               >
                 <div
-                  class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+                  class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-cmpglg-MuiFormControl-root-MuiTextField-root"
                   data-testid="masquerade-userName"
                 >
                   <label
-                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard css-4g43m5-MuiFormLabel-root-MuiInputLabel-root"
+                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard css-qi4ndz-MuiFormLabel-root-MuiInputLabel-root"
                     data-shrink="false"
-                    for=":r1:"
-                    id=":r1:-label"
+                    for="_r_1_"
+                    id="_r_1_-label"
                   >
                     Enter a UQ staff or student username (eg. uqjsmith1 or s123456)
                   </label>
                   <div
-                    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-4fh863-MuiInputBase-root-MuiInput-root"
+                    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1im4li3-MuiInputBase-root-MuiInput-root"
                   >
                     <input
                       aria-invalid="false"
-                      class="MuiInputBase-input MuiInput-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
-                      id=":r1:"
+                      class="MuiInputBase-input MuiInput-input css-1yrc8ca-MuiInputBase-input-MuiInput-input"
+                      id="_r_1_"
                       type="text"
                       value=""
                     />
@@ -76,10 +77,10 @@ exports[`Component Masquerade Should render form as expected 1`] = `
                 </div>
               </div>
               <div
-                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-auto css-drrzl8-MuiGrid-root"
+                class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-sm-auto css-1lu29ow-MuiGrid-root"
               >
                 <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-1257td4-MuiButtonBase-root-MuiButton-root"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-idrfek-MuiButtonBase-root-MuiButton-root"
                   data-analyticsid="submitMasquerade"
                   data-testid="masquerade-submit"
                   id="submitMasquerade"
@@ -87,9 +88,6 @@ exports[`Component Masquerade Should render form as expected 1`] = `
                   type="button"
                 >
                   Masquerade
-                  <span
-                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                  />
                 </button>
               </div>
             </div>
@@ -107,35 +105,36 @@ exports[`Component Masquerade Should render readonly description 1`] = `
     class="layout-card"
   >
     <div
-      class="MuiGrid-root MuiGrid-container css-1bzpx2o-MuiGrid-root"
+      class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row css-1iqomnd-MuiGrid-root"
       data-testid="StandardPage"
       id="StandardPage"
     >
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true title css-envbrb-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-grow title css-vqpccx-MuiGrid-root"
       >
         <h1
-          class="MuiTypography-root MuiTypography-h4 layoutTitle css-v0z470-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 layoutTitle css-159lv86-MuiTypography-root"
           data-testid="StandardPage-title"
         >
           Masquerade
         </h1>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-ox0vta-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 css-yqiqnf-MuiGrid-root"
       >
         <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard css-ykldcu-MuiPaper-root-MuiCard-root"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard css-3d2wqj-MuiPaper-root-MuiCard-root"
           data-analyticsid="masquerade"
           data-testid="masquerade"
           id="masquerade"
+          style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
         >
           <div
-            class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+            class="MuiCardContent-root css-1lt5qva-MuiCardContent-root"
             data-testid="masquerade-content"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 css-t4ynyp-MuiTypography-root"
             >
               <span>
                 <strong>
@@ -145,31 +144,31 @@ exports[`Component Masquerade Should render readonly description 1`] = `
               </span>
             </p>
             <div
-              class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3 css-1vne64g-MuiGrid-root"
+              class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-3 css-2kdqtc-MuiGrid-root"
               style="margin-top: 12px;"
             >
               <div
-                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1svz66l-MuiGrid-root"
+                class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
               >
                 <div
-                  class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+                  class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-cmpglg-MuiFormControl-root-MuiTextField-root"
                   data-testid="masquerade-userName"
                 >
                   <label
-                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard css-4g43m5-MuiFormLabel-root-MuiInputLabel-root"
+                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard css-qi4ndz-MuiFormLabel-root-MuiInputLabel-root"
                     data-shrink="false"
-                    for=":r3:"
-                    id=":r3:-label"
+                    for="_r_4_"
+                    id="_r_4_-label"
                   >
                     Enter a UQ staff or student username (eg. uqjsmith1 or s123456)
                   </label>
                   <div
-                    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-4fh863-MuiInputBase-root-MuiInput-root"
+                    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1im4li3-MuiInputBase-root-MuiInput-root"
                   >
                     <input
                       aria-invalid="false"
-                      class="MuiInputBase-input MuiInput-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
-                      id=":r3:"
+                      class="MuiInputBase-input MuiInput-input css-1yrc8ca-MuiInputBase-input-MuiInput-input"
+                      id="_r_4_"
                       type="text"
                       value=""
                     />
@@ -177,10 +176,10 @@ exports[`Component Masquerade Should render readonly description 1`] = `
                 </div>
               </div>
               <div
-                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-auto css-drrzl8-MuiGrid-root"
+                class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-sm-auto css-1lu29ow-MuiGrid-root"
               >
                 <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-1257td4-MuiButtonBase-root-MuiButton-root"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-idrfek-MuiButtonBase-root-MuiButton-root"
                   data-analyticsid="submitMasquerade"
                   data-testid="masquerade-submit"
                   id="submitMasquerade"
@@ -188,9 +187,6 @@ exports[`Component Masquerade Should render readonly description 1`] = `
                   type="button"
                 >
                   Masquerade
-                  <span
-                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                  />
                 </button>
               </div>
             </div>
