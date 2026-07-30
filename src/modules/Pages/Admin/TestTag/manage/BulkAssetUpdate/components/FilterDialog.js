@@ -247,7 +247,7 @@ const FilterDialog = ({
                                 loading={!!assetsMineListLoading}
                                 checkboxSelection
                                 disableRowSelectionOnClick
-                                onSelectionModelChange={handleAssetSelectionChange}
+                                onRowSelectionModelChange={handleAssetSelectionChange}
                                 disableSelectionOnClick={false}
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
