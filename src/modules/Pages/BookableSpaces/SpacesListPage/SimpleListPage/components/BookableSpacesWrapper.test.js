@@ -215,7 +215,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         renderJourney(defaultProps);
 
         expect(screen.getByText(/space details/i)).toBeInTheDocument();
-        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.getByText('Silent study Quiet Study Room A')).toBeInTheDocument();
     });
 
     it('restores details view from a hash URL using the full space list when the filtered list does not contain the space', async () => {
@@ -230,7 +230,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         await waitFor(() => {
             expect(screen.getByText(/space details/i)).toBeInTheDocument();
-            expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+            expect(screen.getByText('Silent study Quiet Study Room A')).toBeInTheDocument();
         });
     });
 
@@ -324,7 +324,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
 
         expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
-        expect(screen.getByText('Quiet Study Room A')).toBeInTheDocument();
+        expect(screen.getByText('Silent study Quiet Study Room A')).toBeInTheDocument();
     });
 
     it('lets users show only their favourite spaces from the sidebar filters', () => {

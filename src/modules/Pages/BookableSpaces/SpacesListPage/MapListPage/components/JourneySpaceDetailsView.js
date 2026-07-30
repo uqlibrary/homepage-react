@@ -263,38 +263,25 @@ const JourneySpaceDetailsView = ({
                                     variant="h5"
                                     data-testid={`space-${selectedSpace?.space_id}-details-name`}
                                 >
-                                    {selectedSpace?.space_name}
+                                    {selectedSpace?.space_type} {selectedSpace?.space_name}
                                 </Typography>
                             </span>
                         </StyledSpaceTitleWrapperBox>
                         <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
                             {getFriendlyLocationDescription(selectedSpace, false, { space_name: true })}
                         </StyledFriendlyLocationDiv>{' '}
-                        {!!(selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type) && (
-                            <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
-                                <Chip
-                                    label={
-                                        selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type
-                                    }
-                                    size="small"
-                                    sx={{
-                                        ...defaultChipStyles(theme),
-                                        backgroundColor: theme.palette.designSystem.purple.purple50,
-                                        fontWeight: 700,
-                                    }}
-                                />
-                                <SpaceOpenStatusChip
-                                    space={selectedSpace}
-                                    weeklyHours={weeklyHours}
-                                    weeklyHoursLoading={weeklyHoursLoading}
-                                    weeklyHoursError={weeklyHoursError}
-                                    chipStyles={{
-                                        ...defaultChipStyles(theme),
-                                        fontWeight: 700,
-                                    }}
-                                />
-                            </Stack>
-                        )}
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
+                            <SpaceOpenStatusChip
+                                space={selectedSpace}
+                                weeklyHours={weeklyHours}
+                                weeklyHoursLoading={weeklyHoursLoading}
+                                weeklyHoursError={weeklyHoursError}
+                                chipStyles={{
+                                    ...defaultChipStyles(theme),
+                                    fontWeight: 700,
+                                }}
+                            />
+                        </Stack>
                     </Box>
 
                     {!!visibleOutage && (
