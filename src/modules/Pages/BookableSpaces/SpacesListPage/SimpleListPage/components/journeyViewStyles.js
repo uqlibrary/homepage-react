@@ -36,10 +36,10 @@ export const StyledJourneyPanel = styled('section', {
 export const StyledResultsSplitLayout = styled('div')(({ theme }) => ({
     display: 'grid',
     gap: '2rem',
-    gridTemplateColumns: 'minmax(0, 4fr) minmax(0, 8fr)',
+    gridTemplateColumns: 'minmax(0, 3fr) minmax(0, 9fr)',
     alignItems: 'start',
     width: '100%',
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('md')]: {
         gridTemplateColumns: '1fr',
         width: '100%',
     },
