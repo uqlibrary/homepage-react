@@ -588,7 +588,10 @@ const BookableSpacesWrapper = ({
             return;
         }
 
-        const intentFilterIds = getIntentFilterIds(filteredFacilityTypeList?.data?.facility_type_groups, requestedIntent);
+        const intentFilterIds = getIntentFilterIds(
+            filteredFacilityTypeList?.data?.facility_type_groups,
+            requestedIntent,
+        );
         if (!intentFilterIds.length) {
             return;
         }
