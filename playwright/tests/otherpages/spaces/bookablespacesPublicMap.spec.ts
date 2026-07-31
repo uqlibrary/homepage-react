@@ -110,9 +110,7 @@ test.describe('Spaces', () => {
             await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
 
             // the panel has expanded
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-details-name`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-details-name`)).toContainText('339');
-
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-details-name`)).not.toBeVisible();
             // the booking link appears
             // await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toBeVisible();
             await expect(page.locator(`a[data-testid="${ARCH_BOOKABLE}-booking-link"]`)).toBeVisible();
@@ -134,12 +132,14 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-booking-icon`)).not.toBeVisible();
 
             // expand the panel
+            await expect(page.getByTestId(`${LIV}-friendly-location`)).not.toBeVisible();
             await expect(page.getByTestId(`${LIV}-toggle-panel-button`)).toBeVisible();
             await page.getByTestId(`${LIV}-toggle-panel-button`).click();
 
             // the panel has expanded
-            await expect(page.getByTestId(`${LIV}-details-name`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-details-name`)).toContainText('46-342/343');
+            await expect(page.getByTestId(`${LIV}-details-name`)).not.toBeVisible();
+
+            await expect(page.getByTestId(`${LIV}-friendly-location`)).toBeVisible();
 
             // "no booking required" prompt appears
             await expect(page.getByTestId(`${LIV}-booking-link`)).not.toBeVisible();

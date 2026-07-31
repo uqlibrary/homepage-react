@@ -258,13 +258,15 @@ const JourneySpaceDetailsView = ({
                                         isFavouriteActionInProgress={isFavouriteActionInProgress}
                                     />
                                 )}
-                                <Typography
-                                    component="h2"
-                                    variant="h5"
-                                    data-testid={`space-${selectedSpace?.space_id}-details-name`}
-                                >
-                                    {selectedSpace?.space_type} {selectedSpace?.space_name}
-                                </Typography>
+                                {!narrowView && (
+                                    <Typography
+                                        component="h2"
+                                        variant="h5"
+                                        data-testid={`space-${selectedSpace?.space_id}-details-name`}
+                                    >
+                                        {selectedSpace?.space_type} {selectedSpace?.space_name}
+                                    </Typography>
+                                )}
                             </span>
                         </StyledSpaceTitleWrapperBox>
                         <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
