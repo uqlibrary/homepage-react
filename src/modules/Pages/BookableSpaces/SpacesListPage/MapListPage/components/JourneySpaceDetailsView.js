@@ -261,7 +261,7 @@ const JourneySpaceDetailsView = ({
                                 )}
                                 {(!narrowView || !!verticalView) && (
                                     <Typography
-                                        component="h2"
+                                        component="h1"
                                         variant="h5"
                                         data-testid={`space-${selectedSpace?.space_id}-details-name`}
                                     >
@@ -326,7 +326,7 @@ const JourneySpaceDetailsView = ({
             </StyledTopBox>
 
             <StyledDetailSurface>
-                <StyledH3Typography component="h3" variant="h6">
+                <StyledH3Typography component="h2" variant="h6">
                     Space details
                 </StyledH3Typography>
                 <Stack spacing={2.5}>
@@ -334,7 +334,7 @@ const JourneySpaceDetailsView = ({
 
                     {!!(selectedSpace?.space_capacity && selectedSpace.space_capacity > 0) && (
                         <Box data-testid={`space-${selectedSpace?.space_id}-capacity`}>
-                            <Typography component="h4" style={{ display: 'inline' }}>
+                            <Typography component="h3" style={{ display: 'inline' }}>
                                 Capacity
                             </Typography>
                             <Typography variant="body2" style={{ display: 'inline' }}>
@@ -346,7 +346,7 @@ const JourneySpaceDetailsView = ({
 
                     {selectedSpace?.facility_types?.length > 0 && (
                         <Box data-testid={`space-${selectedSpace.space_id}-facility`}>
-                            <StyledH4Typography component="h4" variant="body2" sx={{ mb: 0.75 }}>
+                            <StyledH4Typography component="h3" variant="body2" sx={{ mb: 0.75 }}>
                                 Facilities
                             </StyledH4Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -375,7 +375,7 @@ const JourneySpaceDetailsView = ({
 
             {showMap && (
                 <StyledDetailSurface sx={{ p: 0, overflow: 'hidden' }}>
-                    <StyledH3Typography component="h3" variant="h6" sx={{ pb: '1rem' }}>
+                    <StyledH3Typography component="h2" variant="h6" sx={{ pb: '1rem' }}>
                         Location
                     </StyledH3Typography>
                     <div style={{ height: isMobileLayout ? '260px' : '340px' }}>
