@@ -261,6 +261,7 @@ const SpaceDetails = ({
                         showMap={false}
                         showBackButton={false}
                         narrowView
+                        verticalView={false}
                     />
                 )}
             </StyledSpaceDiv>

@@ -133,6 +133,7 @@ const JourneySpaceDetailsView = ({
     weeklyHoursError,
     showBackButton = true,
     narrowView = true,
+    verticalView = true,
     backLabel = 'Back to results',
     onBack,
     isSelectedSpaceFavourite = false,
@@ -232,7 +233,7 @@ const JourneySpaceDetailsView = ({
                 id={`space-${selectedSpace?.space_id}-details`}
                 className={isMobileLayout ? 'verticallayout' : 'horizontallayout'}
             >
-                <StyledDetailImage>
+                <StyledDetailImage data-testid={`space-${selectedSpace?.space_id}-details-image`}>
                     {detailImages?.[0]?.src ? (
                         <img
                             src={detailImages[0].src}
@@ -250,7 +251,7 @@ const JourneySpaceDetailsView = ({
                     <Box>
                         <StyledSpaceTitleWrapperBox>
                             <span>
-                                {!narrowView && isLoggedIn && !!selectedSpace?.space_id && (
+                                {!narrowView && !verticalView && isLoggedIn && !!selectedSpace?.space_id && (
                                     <SpaceFavouriteIcon
                                         bookableSpace={selectedSpace}
                                         isFavourite={isSelectedSpaceFavourite}
@@ -258,7 +259,7 @@ const JourneySpaceDetailsView = ({
                                         isFavouriteActionInProgress={isFavouriteActionInProgress}
                                     />
                                 )}
-                                {!narrowView && (
+                                {(!narrowView || !!verticalView) && (
                                     <Typography
                                         component="h2"
                                         variant="h5"
@@ -332,7 +333,7 @@ const JourneySpaceDetailsView = ({
                     <BookingLink bookableSpace={selectedSpace} />
 
                     {!!(selectedSpace?.space_capacity && selectedSpace.space_capacity > 0) && (
-                        <Box>
+                        <Box data-testid={`space-${selectedSpace?.space_id}-capacity`}>
                             <Typography component="h4" style={{ display: 'inline' }}>
                                 Capacity
                             </Typography>
@@ -398,6 +399,7 @@ JourneySpaceDetailsView.propTypes = {
     weeklyHoursError: PropTypes.any,
     showBackButton: PropTypes.bool,
     narrowView: PropTypes.bool,
+    verticalView: PropTypes.bool,
     backLabel: PropTypes.string,
     onBack: PropTypes.func,
     isSelectedSpaceFavourite: PropTypes.bool,

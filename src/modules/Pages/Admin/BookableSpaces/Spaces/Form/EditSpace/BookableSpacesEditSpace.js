@@ -172,7 +172,7 @@ export const BookableSpacesEditSpace = ({
                 space_precise: bookableSpaceGetResult?.data?.space_precise,
                 space_services_page: bookableSpaceGetResult?.data?.space_services_page,
                 archibus_room_id: bookableSpaceGetResult?.data?.archibus_room_id || null,
-                space_type: bookableSpaceGetResult?.data?.space_type,
+                space_type: bookableSpaceGetResult?.data?.space_type_details?.space_type_name,
                 space_type_id: bookableSpaceGetResult?.data?.space_type_id,
                 space_uuid: bookableSpaceGetResult?.data?.space_uuid,
                 space_deleted: bookableSpaceGetResult?.data?.space_deleted || false,

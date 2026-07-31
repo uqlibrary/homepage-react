@@ -12,6 +12,7 @@ export const JourneyDetailsView = props => {
                 {...props}
                 showBackButton={false}
                 narrowView={false}
+                verticalView={false}
                 showFavouriteControls
                 showMap
             />
