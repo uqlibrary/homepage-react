@@ -100,7 +100,7 @@ export const FavouritesList = ({
                             intentId: selectedIntentId,
                             spaceId: getSpaceIdentifier(space) || landingSpaceId,
                         });
-                        const displayedSpaceName = `${space?.space_type} ${space?.space_name || fav?.label || String(fav?.space_id)}`;
+                        const displayedSpaceName = `${space?.space_type_details?.space_type_name} ${space?.space_name || fav?.label || String(fav?.space_id)}`;
                         return (
                             <>
                                 <SingleLinkCard

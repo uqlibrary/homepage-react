@@ -264,7 +264,7 @@ const JourneySpaceDetailsView = ({
                                         variant="h5"
                                         data-testid={`space-${selectedSpace?.space_id}-details-name`}
                                     >
-                                        {selectedSpace?.space_type} {selectedSpace?.space_name}
+                                        {selectedSpace?.space_type_details?.space_type_name} {selectedSpace?.space_name}
                                     </Typography>
                                 )}
                             </span>

@@ -155,7 +155,8 @@ export const JourneyResultsView = ({
                                                         variant={'h6'}
                                                         data-testid={`spaces-${space?.space_id}-name`}
                                                     >
-                                                        {space?.space_type} {space?.space_name || 'Unnamed space'}
+                                                        {space?.space_type_details?.space_type_name}{' '}
+                                                        {space?.space_name || 'Unnamed space'}
                                                     </Typography>
                                                 </div>
                                                 <Typography

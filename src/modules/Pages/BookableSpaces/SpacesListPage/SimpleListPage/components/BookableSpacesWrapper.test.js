@@ -57,7 +57,6 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         space_uuid: 'test-space-uuid-1234',
         space_name: 'Space999',
         space_library_name: 'Central Library',
-        space_type: 'Silent study',
         space_type_details: {
             space_type_name: 'Silent study',
             space_type_description: 'Designed for quiet independent study.',
@@ -253,8 +252,18 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     it('restores the favourites-only filter when loading the favourite route directly', () => {
         window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
 
-        const favouriteSpace = { ...baseSpace, space_id: 101, space_name: 'Fav888', space_type: 'favspace' };
-        const otherSpace = { ...baseSpace, space_id: 102, space_name: 'Space123', space_type: 'otherspace' };
+        const favouriteSpace = {
+            ...baseSpace,
+            space_id: 101,
+            space_name: 'Fav888',
+            space_type_details: { space_type_name: 'favspace' },
+        };
+        const otherSpace = {
+            ...baseSpace,
+            space_id: 102,
+            space_name: 'Space123',
+            space_type_details: { space_type_name: 'otherspace' },
+        };
 
         renderJourney({
             ...defaultProps,
@@ -271,8 +280,18 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     it('allows the favourites-only sidebar filter to be unchecked after loading the favourite route directly', () => {
         window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
 
-        const favouriteSpace = { ...baseSpace, space_id: 101, space_name: 'Fav888', space_type: 'favspace' };
-        const otherSpace = { ...baseSpace, space_id: 102, space_name: 'Space123', space_type: 'otherspace' };
+        const favouriteSpace = {
+            ...baseSpace,
+            space_id: 101,
+            space_name: 'Fav888',
+            space_type_details: { space_type_name: 'favspace' },
+        };
+        const otherSpace = {
+            ...baseSpace,
+            space_id: 102,
+            space_name: 'Space123',
+            space_type_details: { space_type_name: 'otherspace' },
+        };
 
         renderJourney({
             ...defaultProps,
@@ -333,7 +352,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             space_id: 102,
             space_uuid: 'test-space-uuid-5678',
             space_name: 'Space123',
-            space_type: 'A type',
+            space_type_details: { space_type_name: 'A type' },
         };
 
         renderJourney({
@@ -341,7 +360,13 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             initialView: 'results',
             isLoggedIn: true,
             filteredSpaceLocations: [baseSpace, otherSpace],
-            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Favourite study room' }],
+            spacesFavouritesList: [
+                {
+                    space_id: baseSpace.space_id,
+                    label: 'Space999',
+                    space_type_details: { space_type_name: 'Silent study' },
+                },
+            ],
         });
 
         expect(screen.getByText('Silent study Space999')).toBeInTheDocument();

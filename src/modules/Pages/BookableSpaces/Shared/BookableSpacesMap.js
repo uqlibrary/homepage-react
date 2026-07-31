@@ -80,7 +80,7 @@ const StyledPopupBookingDiv = styled('div')(() => ({
 
 export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) => {
     const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
-    const spaceTypeName = space?.space_type_details?.space_type_name ?? space?.space_type;
+    const spaceTypeName = space?.space_type_details?.space_type_name ?? null;
 
     return (
         <StyledPopupContent data-testid={`space-${space?.space_id}-map-popup`}>
