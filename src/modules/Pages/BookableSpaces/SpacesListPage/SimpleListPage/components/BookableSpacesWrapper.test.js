@@ -253,39 +253,39 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     it('restores the favourites-only filter when loading the favourite route directly', () => {
         window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
 
-        const favouriteSpace = { ...baseSpace, space_id: 101, space_name: 'Favourite Study Room' };
-        const otherSpace = { ...baseSpace, space_id: 102, space_name: 'Other Study Room' };
+        const favouriteSpace = { ...baseSpace, space_id: 101, space_name: 'Fav888' };
+        const otherSpace = { ...baseSpace, space_id: 102, space_name: 'Space123' };
 
         renderJourney({
             ...defaultProps,
             isLoggedIn: true,
-            spacesFavouritesList: [{ space_id: 101, label: 'Favourite study room' }],
+            spacesFavouritesList: [{ space_id: 101, label: 'Fav888' }],
             filteredSpaceLocations: [favouriteSpace, otherSpace],
             highlightedSpace: favouriteSpace,
         });
 
-        expect(screen.getByText('Favourite Study Room')).toBeInTheDocument();
-        expect(screen.queryByText('Other Study Room')).not.toBeInTheDocument();
+        expect(screen.getByText('Fav888')).toBeInTheDocument();
+        expect(screen.queryByText('Space123')).not.toBeInTheDocument();
     });
 
     it('allows the favourites-only sidebar filter to be unchecked after loading the favourite route directly', () => {
         window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
 
-        const favouriteSpace = { ...baseSpace, space_id: 101, space_name: 'Favourite Study Room' };
-        const otherSpace = { ...baseSpace, space_id: 102, space_name: 'Other Study Room' };
+        const favouriteSpace = { ...baseSpace, space_id: 101, space_name: 'Fav888' };
+        const otherSpace = { ...baseSpace, space_id: 102, space_name: 'Space123' };
 
         renderJourney({
             ...defaultProps,
             isLoggedIn: true,
-            spacesFavouritesList: [{ space_id: 101, label: 'Favourite study room' }],
+            spacesFavouritesList: [{ space_id: 101, label: 'Fav888' }],
             filteredSpaceLocations: [favouriteSpace, otherSpace],
             highlightedSpace: favouriteSpace,
         });
 
         fireEvent.click(screen.getByRole('checkbox', { name: /show favourite spaces only/i }));
 
-        expect(screen.getByText('Favourite Study Room')).toBeInTheDocument();
-        expect(screen.getByText('Other Study Room')).toBeInTheDocument();
+        expect(screen.getByText('Fav888')).toBeInTheDocument();
+        expect(screen.getByText('Space123')).toBeInTheDocument();
     });
 
     it('treats the map-results path as a results route when parsing the URL', () => {
@@ -332,7 +332,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             ...baseSpace,
             space_id: 102,
             space_uuid: 'test-space-uuid-5678',
-            space_name: 'Shared Study Room',
+            space_name: 'Space123',
         };
 
         renderJourney({
@@ -344,12 +344,12 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
 
         expect(screen.getByText('Space999')).toBeInTheDocument();
-        expect(screen.getByText('Shared Study Room')).toBeInTheDocument();
+        expect(screen.getByText('Space123')).toBeInTheDocument();
 
         fireEvent.click(screen.getByRole('checkbox', { name: /show favourite spaces only/i }));
 
         expect(screen.getByText('Space999')).toBeInTheDocument();
-        expect(screen.queryByText('Shared Study Room')).not.toBeInTheDocument();
+        expect(screen.queryByText('Space123')).not.toBeInTheDocument();
     });
 
     it('serialises and deserialises journey filter state for the map view', () => {
