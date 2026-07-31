@@ -120,6 +120,7 @@ export const SpacesHomePage = ({
     activateFavouritesResults,
     setSelectedSpace,
     setSelectedIntentId,
+    getIntentLandingUrl,
 }) => {
     const hasFavourites = isLoggedIn && (spacesFavouritesList?.length || 0) > 0;
     const availableIntentDefinitionsForLanding = React.useMemo(
@@ -171,6 +172,7 @@ export const SpacesHomePage = ({
                         availableIntentDefinitionsForLanding={availableIntentDefinitionsForLanding}
                         favouriteIntentDefinition={favouriteIntentDefinition}
                         handleIntentSelect={handleIntentSelect}
+                        getIntentLandingUrl={getIntentLandingUrl}
                     />
                 </StandardPage>
             </div>
@@ -195,6 +197,7 @@ SpacesHomePage.propTypes = {
     navigateToView: PropTypes.func,
     setSelectedSpace: PropTypes.func,
     setSelectedIntentId: PropTypes.func,
+    getIntentLandingUrl: PropTypes.func.isRequired,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,

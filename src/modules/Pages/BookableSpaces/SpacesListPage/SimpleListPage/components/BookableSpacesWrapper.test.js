@@ -201,6 +201,41 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(window.location.pathname).toBe(`/spaces/detail/${baseSpace.space_uuid}`);
     });
 
+    it('serialises the quiet-space landing card href with the selected filter state', () => {
+        window.history.replaceState({}, '', '/spaces');
+
+        renderJourney({
+            ...defaultProps,
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Acceptable noise',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Low noise level' }],
+                        },
+                    ],
+                },
+            },
+        });
+
+        const quietLink = screen.getByTestId('spaces-journey-intent-card-quiet');
+        const hrefValue = quietLink.getAttribute('href');
+        expect(hrefValue).toContain('/spaces/results/filters=quiet');
+        expect(hrefValue).toContain('mapFilters=');
+
+        const parsedUrl = new URL(hrefValue, 'http://localhost:2020');
+        const decodedState = deserialiseJourneyMapFilterState(parsedUrl.searchParams);
+
+        expect(decodedState?.selectedFacilityTypes).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ facility_type_id: 11, selected: true, unselected: false }),
+            ]),
+        );
+    });
+
     it('restores results and selected intent from permalink params', () => {
         window.history.replaceState({}, '', '/spaces/results/filters=quiet');
 
@@ -304,12 +339,12 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(parsedState).toEqual({ view: 'landing', intentId: null, spaceId: null });
     });
 
-    it('shows a booking link in results for bookable spaces', () => {
+    it('shows a booking link in results for bookable spaces', async () => {
         renderJourney(defaultProps);
 
         fireEvent.click(screen.getByRole('link', { name: /quiet space/i }));
 
-        const bookLink = screen.getByRole('link', { name: /book this space/i });
+        const bookLink = await screen.findByRole('link', { name: /book this space/i });
         expect(bookLink).toHaveAttribute('href', baseSpace.space_external_book_url);
         expect(bookLink).toHaveAttribute('target', '_blank');
     });
@@ -491,6 +526,76 @@ describe('BookableSpacesWrapper browser back navigation', () => {
                     expect.objectContaining({ facility_type_id: 11, selected: true, unselected: false }),
                 ]),
             );
+        });
+    });
+
+    it('retries applying an intent filter after the filter list loads if the user clicked too early', async () => {
+        const placeholderFacilityTypeList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 99,
+                        facility_type_group_name: 'Open',
+                        facility_type_group_order: -999,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [
+                            {
+                                facility_type_id: 9001,
+                                facility_type_name: 'Currently open',
+                                facility_special_action: 'open',
+                            },
+                        ],
+                    },
+                ],
+            },
+        };
+        const delayedFacilityTypeList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Low noise level' }],
+                    },
+                ],
+            },
+        };
+
+        const Harness = () => {
+            const [filters, setFilters] = React.useState([]);
+            const [availableFilters, setAvailableFilters] = React.useState(placeholderFacilityTypeList);
+
+            return (
+                <>
+                    <button type="button" onClick={() => setAvailableFilters(delayedFacilityTypeList)}>
+                        load facility filters
+                    </button>
+                    <BookableSpacesWrapper
+                        {...defaultProps}
+                        selectedFacilityTypes={filters}
+                        setSelectedFacilityTypes={setFilters}
+                        filteredFacilityTypeList={availableFilters}
+                        facilityTypeList={availableFilters}
+                    />
+                </>
+            );
+        };
+
+        window.history.replaceState({}, '', '/#/spaces');
+
+        rtlRender(
+            <WithRouter>
+                <Harness />
+            </WithRouter>,
+        );
+
+        fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
+        fireEvent.click(screen.getByRole('button', { name: /load facility filters/i }));
+
+        await waitFor(() => {
+            expect(screen.getByTestId('button-deselect-selected-11')).toBeInTheDocument();
         });
     });
 

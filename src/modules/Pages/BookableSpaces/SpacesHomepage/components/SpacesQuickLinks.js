@@ -83,6 +83,7 @@ export const SpacesQuickLinks = ({
     availableIntentDefinitionsForLanding,
     favouriteIntentDefinition,
     handleIntentSelect,
+    getIntentLandingUrl,
 }) => {
     return (
         <Box className="spaces-list" sx={{ mb: 3 }}>
@@ -115,7 +116,7 @@ export const SpacesQuickLinks = ({
                         intent => intent && intent.id !== favouriteIntentDefinition.id,
                     );
                     return intentsToShow.map((intent, idx) => {
-                        const landingUrl = serialiseJourneyUrl({ view: 'results', intentId: intent.id });
+                        const landingUrl = getIntentLandingUrl(intent);
                         return (
                             <SingleLinkCard
                                 key={intent.id || `intent-${idx}`}
@@ -152,6 +153,7 @@ SpacesQuickLinks.propTypes = {
     availableIntentDefinitionsForLanding: PropTypes.any,
     favouriteIntentDefinition: PropTypes.any,
     handleIntentSelect: PropTypes.any,
+    getIntentLandingUrl: PropTypes.func.isRequired,
 };
 
 export default SpacesQuickLinks;

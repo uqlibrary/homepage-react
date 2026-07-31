@@ -613,7 +613,7 @@ const getJourneyPathname = url => {
     return pathValue.replace(/\/+$/, '') || '/spaces';
 };
 
-export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
+export const serialiseJourneyUrl = ({ view, intentId, spaceId, mapFilterState }) => {
     const url = new URL(window.location.href);
     const hashValue = url.hash || '';
     const isHashRouting = hashValue.startsWith('#/');
@@ -629,6 +629,14 @@ export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
                 nextParams.set(key, value);
             }
         });
+
+        if (mapFilterState !== undefined) {
+            if (mapFilterState === null) {
+                nextParams.delete('mapFilters');
+            } else {
+                nextParams.set('mapFilters', serialiseJourneyMapFilterState(mapFilterState));
+            }
+        }
 
         return nextParams.toString();
     };
