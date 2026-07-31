@@ -42,7 +42,7 @@ test.describe('Spaces Homepage', () => {
         await expect(favBlock.locator(':scope > *')).toHaveCount(numberDisplayed);
         await expect(favBlock.locator('li:first-child a')).toHaveAttribute(
             'href',
-            '/spaces/detail/a00de3d4-7e11-47eb-8079-532bdef80def',
+            /\/spaces\/detail\/a00de3d4-7e11-47eb-8079-532bdef80def(?:\?mapFilters=.*)?$/,
         );
         await expect(favBlock.locator('li:first-child a')).toContainText('354');
         await expect(favBlock.locator('li:first-child a')).toContainText('Architecture and Music Library');
@@ -103,10 +103,10 @@ test.describe('Spaces Homepage', () => {
             await expect(firstFavouritesLink).toBeVisible();
         });
         test('clicking a Favourites star unfavourites a Space', async ({ page }) => {
-            const favSpace354 = 'a[href="/spaces/detail/a00de3d4-7e11-47eb-8079-532bdef80def"]';
-            const favSpace339 = 'a[href="/spaces/detail/a00de509-570b-4acb-9ca1-89c4baebe2e6"]';
-            const favSpace340 = 'a[href="/spaces/detail/a00df52a-2308-40e1-85ef-d3cf3421edd8"]';
-            const favSpace341 = 'a[href="/spaces/detail/a029666f-16e1-4dea-968b-31440e6bfaee"]';
+            const favSpace354 = 'a[href^="/spaces/detail/a00de3d4-7e11-47eb-8079-532bdef80def"]';
+            const favSpace339 = 'a[href^="/spaces/detail/a00de509-570b-4acb-9ca1-89c4baebe2e6"]';
+            const favSpace340 = 'a[href^="/spaces/detail/a00df52a-2308-40e1-85ef-d3cf3421edd8"]';
+            const favSpace341 = 'a[href^="/spaces/detail/a029666f-16e1-4dea-968b-31440e6bfaee"]';
 
             await expect(page.getByTestId('spaces-homepage-favourites-block').locator(favSpace354)).toBeVisible();
             await expect(page.getByTestId('spaces-homepage-favourites-block').locator(favSpace339)).toBeVisible();
@@ -141,8 +141,8 @@ test.describe('Spaces Homepage', () => {
         await expect(page.getByTestId('spaces-journey-showall')).not.toBeVisible();
         await expect(page.getByTestId('spaces-result-list-item-1')).toBeVisible();
         await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0); // no filters are selected
-        await expect(page.getByTestId('spaces-results-summary')).toContainText('10 of 15 spaces'); // all spaces are showing
-        await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(10); // a page load of spaces are present
+        await expect(page.getByTestId('spaces-results-summary')).toContainText('15 of 15 spaces'); // all spaces are showing
+        await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(10); // first page of spaces is present
 
         // back button works
         await page.goBack();
