@@ -18,6 +18,7 @@ import { transformRequest } from '../membershipTransformers';
 import locale from '../membership.locale';
 import ConfigText from '../SharedComponents/ConfigText';
 import MembershipFormSections from './MembershipFormSections';
+import MembershipTerms from './MembershipTerms';
 
 const { form } = locale;
 
@@ -140,6 +141,10 @@ export const MembershipForm = ({
                                 {form.findAPostcode.after}
                             </Typography>
                         )}
+                    </Box>
+
+                    <Box sx={{ marginTop: 3 }}>
+                        <MembershipTerms type={type} control={control} current={current} />
                     </Box>
 
                     {/*

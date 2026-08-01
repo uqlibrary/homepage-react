@@ -138,3 +138,58 @@ test.describe('Membership application form (type-specific rendering)', () => {
         await assertAccessibility(page, '[data-testid="membership-form"]');
     });
 });
+
+// Terms, conditions & privacy consent: the two alumni types must tick a box before applying; every other type
+// agrees by submitting. The privacy notice and policy links show for everyone.
+
+const fillAlumniForm = async page => {
+    await fillBaseIdentity(page);
+    await page.getByTestId('home_address_0-input').fill('123 Library Way');
+    await page.getByTestId('home_address_city-input').fill('Brisbane');
+    await page.getByTestId('alumni_num-input').fill('s1234567');
+    await page.getByTestId('alumni_awards-input').fill('BSc');
+    await page.getByTestId('alumni_graduated-input').fill('2000');
+};
+
+test.describe('Membership terms & consent', () => {
+    test('shows the terms, privacy notice and entitlements for an alumni applicant', async ({ page }) => {
+        await page.goto('/membership/form/alumni?user=public');
+        await expect(page.getByTestId('membership-form')).toBeVisible();
+
+        await expect(page.getByTestId('membership-terms')).toBeVisible();
+        await expect(page.getByTestId('accept_mandatory_terms-input')).toBeVisible();
+        await expect(
+            page.getByTestId('membership-terms').getByRole('link', { name: /list of services/i }),
+        ).toBeVisible();
+        await expect(page.getByTestId('membership-privacy')).toContainText(/personal information/i);
+
+        await assertAccessibility(page, '[data-testid="membership-form"]');
+    });
+
+    test('an alumni applicant cannot apply without accepting, then can once accepted', async ({ page }) => {
+        await page.goto('/membership/form/alumni?user=public');
+        await expect(page.getByTestId('membership-form')).toBeVisible();
+
+        await fillAlumniForm(page);
+        await page.getByTestId('membership-form-submit').click();
+
+        // Everything else is filled, so the unticked box is what holds the application back.
+        await expect(page.getByTestId('accept_mandatory_terms-error')).toBeVisible();
+        await expect(page).toHaveURL(/\/membership\/form\/alumni/);
+
+        await page.getByTestId('accept_mandatory_terms-input').check();
+        await page.getByTestId('membership-form-submit').click();
+
+        await expect(page).toHaveURL(/\/membership\/received\//);
+        await expect(page.getByTestId('membership-received-reference')).toContainText('123');
+    });
+
+    test('a community applicant agrees by submitting, with no checkbox', async ({ page }) => {
+        await page.goto('/membership/form/community?user=public');
+        await expect(page.getByTestId('membership-form')).toBeVisible();
+
+        await expect(page.getByTestId('membership-terms')).toContainText(/submission of this form indicates/i);
+        await expect(page.getByTestId('accept_mandatory_terms-input')).toHaveCount(0);
+        await expect(page.getByTestId('membership-privacy')).toBeVisible();
+    });
+});
