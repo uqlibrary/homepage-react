@@ -178,6 +178,7 @@ const StyledFacilityGroup = styled('div')(({ theme }) => ({
 const StyledFavouriteFilterGroup = styled('div')(({ theme }) => ({
     borderBottom: theme.palette.designSystem.border,
     paddingBlock: '16px',
+    marginLeft: '-12px',
     '& label': {
         ...standardText(theme),
         textDecoration: 'underline',
@@ -873,26 +874,6 @@ export const SidebarFilters = ({
                         {renderFilterActionButtons()}
                     </>
                 )}
-                {isLoggedIn && hasFavouriteSpaces && (
-                    <StyledFavouriteFilterGroup>
-                        <InputLabel
-                            title="Show favourite spaces only"
-                            htmlFor="filter-show-favourite-spaces-only"
-                            className="selectedFilterTypeLabel"
-                            style={{ marginLeft: '0.25rem' }}
-                        >
-                            <Checkbox
-                                checked={Boolean(showFavouriteSpacesOnly)}
-                                onChange={event => setShowFavouriteSpacesOnly(event?.target?.checked)}
-                                data-testid="filter-show-favourite-spaces-only"
-                                id="filter-show-favourite-spaces-only"
-                                className="selectedFilterType"
-                                inputProps={{ 'aria-label': 'Show favourite spaces only' }}
-                            />
-                            <span>Show favourite spaces only</span>
-                        </InputLabel>
-                    </StyledFavouriteFilterGroup>
-                )}
                 {campusList?.length > 0 && (
                     <StyledCampusWrapperDiv>
                         <h3 id="filter-by-campus-label" htmlFor="filter-by-campus-input">
@@ -960,6 +941,26 @@ export const SidebarFilters = ({
                             </>
                         )}
                     </StyledCampusWrapperDiv>
+                )}
+                {isLoggedIn && hasFavouriteSpaces && (
+                    <StyledFavouriteFilterGroup>
+                        <InputLabel
+                            title="Favourites"
+                            htmlFor="filter-show-favourite-spaces-only"
+                            className="selectedFilterTypeLabel"
+                            style={{ marginLeft: '0.25rem' }}
+                        >
+                            <Checkbox
+                                checked={Boolean(showFavouriteSpacesOnly)}
+                                onChange={event => setShowFavouriteSpacesOnly(event?.target?.checked)}
+                                data-testid="filter-show-favourite-spaces-only"
+                                id="filter-show-favourite-spaces-only"
+                                className="selectedFilterType"
+                                inputProps={{ 'aria-label': 'Only show favourite spaces' }}
+                            />
+                            <span>Your favourites</span>
+                        </InputLabel>
+                    </StyledFavouriteFilterGroup>
                 )}
                 {sortedUsedGroups()?.map(group => {
                     const filterGroupId = group?.facility_type_group_id;

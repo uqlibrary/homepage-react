@@ -501,7 +501,7 @@ export const BookableSpacesManageSpaces = ({
                         if (String(spaceTypeId) !== String(f?.filterValue)) {
                             showSpaceByFilter = false;
                         }
-                    } else if (String(space?.space_type || '') !== String(f?.filterValue)) {
+                    } else if (String(space?.space_type_details?.space_type_name || '') !== String(f?.filterValue)) {
                         showSpaceByFilter = false;
                     }
                 }
@@ -818,8 +818,8 @@ export const BookableSpacesManageSpaces = ({
                     ?.map(space => {
                         const id = !!space?.space_type_id
                             ? String(space?.space_type_id)
-                            : String(space?.space_type || '');
-                        const label = space?.space_type || id;
+                            : String(space?.space_type_details?.space_type_name || '');
+                        const label = space?.space_type_details?.space_type_name || id;
                         return [id, { id, label }];
                     })
                     ?.filter(([id, spaceType]) => !!id && !!spaceType?.label),
@@ -1451,7 +1451,7 @@ export const BookableSpacesManageSpaces = ({
                                                             </IconButton>
                                                         </div>
                                                         <div className="spaceDescription">
-                                                            {bookableSpace?.space_type}
+                                                            {bookableSpace?.space_type_details?.space_type_name}
                                                             <IconButton
                                                                 id={expandButtonElementId(bookableSpace?.space_id)}
                                                                 data-testid={`space-${bookableSpace?.space_id}-expand-button`}

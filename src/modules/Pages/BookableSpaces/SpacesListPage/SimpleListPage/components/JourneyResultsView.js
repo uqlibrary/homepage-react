@@ -155,6 +155,7 @@ export const JourneyResultsView = ({
                                                         variant={'h6'}
                                                         data-testid={`spaces-${space?.space_id}-name`}
                                                     >
+                                                        {space?.space_type_details?.space_type_name}{' '}
                                                         {space?.space_name || 'Unnamed space'}
                                                     </Typography>
                                                 </div>
@@ -162,9 +163,6 @@ export const JourneyResultsView = ({
                                                     sx={{ color: theme.palette.designSystem.bodyCopy, mb: 0.5 }}
                                                 >
                                                     {space?.space_library_name}
-                                                </Typography>
-                                                <Typography sx={{ color: theme.palette.designSystem.bodyCopy }}>
-                                                    {space?.space_type_details?.space_type_name || space?.space_type}
                                                 </Typography>
                                                 <Box sx={{ mt: 0.75, mb: 1 }}>
                                                     <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>

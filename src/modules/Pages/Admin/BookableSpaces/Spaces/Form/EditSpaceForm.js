@@ -1012,7 +1012,7 @@ export const EditSpaceForm = ({
             space_zlevel: formValues?.space_zlevel,
             space_external_book_url: formValues?.space_external_book_url || null,
             space_type_id: formValues?.space_type_id || selectedSpaceType?.space_type_id || null,
-            space_type: formValues?.space_type || selectedSpaceType?.space_type_name || '',
+            space_type: formValues?.space_type || selectedSpaceType?.space_type_details?.space_type_name || '',
             space_type_details: {
                 space_type_id: formValues?.space_type_id || selectedSpaceType?.space_type_id || null,
                 space_type_name: formValues?.space_type || selectedSpaceType?.space_type_name || '',
@@ -2241,6 +2241,7 @@ export const EditSpaceForm = ({
                         weeklyHoursError={weeklyHoursError}
                         showBackButton={false}
                         showMap
+                        verticalView
                     />
                 </DialogContent>
                 <DialogActions>

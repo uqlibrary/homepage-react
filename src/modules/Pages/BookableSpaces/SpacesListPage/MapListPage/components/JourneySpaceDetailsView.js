@@ -133,6 +133,7 @@ const JourneySpaceDetailsView = ({
     weeklyHoursError,
     showBackButton = true,
     narrowView = true,
+    verticalView = true,
     backLabel = 'Back to results',
     onBack,
     isSelectedSpaceFavourite = false,
@@ -232,7 +233,7 @@ const JourneySpaceDetailsView = ({
                 id={`space-${selectedSpace?.space_id}-details`}
                 className={isMobileLayout ? 'verticallayout' : 'horizontallayout'}
             >
-                <StyledDetailImage>
+                <StyledDetailImage data-testid={`space-${selectedSpace?.space_id}-details-image`}>
                     {detailImages?.[0]?.src ? (
                         <img
                             src={detailImages[0].src}
@@ -250,7 +251,7 @@ const JourneySpaceDetailsView = ({
                     <Box>
                         <StyledSpaceTitleWrapperBox>
                             <span>
-                                {!narrowView && isLoggedIn && !!selectedSpace?.space_id && (
+                                {!narrowView && !verticalView && isLoggedIn && !!selectedSpace?.space_id && (
                                     <SpaceFavouriteIcon
                                         bookableSpace={selectedSpace}
                                         isFavourite={isSelectedSpaceFavourite}
@@ -258,43 +259,32 @@ const JourneySpaceDetailsView = ({
                                         isFavouriteActionInProgress={isFavouriteActionInProgress}
                                     />
                                 )}
-                                <Typography
-                                    component="h2"
-                                    variant="h5"
-                                    data-testid={`space-${selectedSpace?.space_id}-details-name`}
-                                >
-                                    {selectedSpace?.space_name}
-                                </Typography>
+                                {(!narrowView || !!verticalView) && (
+                                    <Typography
+                                        component="h1"
+                                        variant="h5"
+                                        data-testid={`space-${selectedSpace?.space_id}-details-name`}
+                                    >
+                                        {selectedSpace?.space_type_details?.space_type_name} {selectedSpace?.space_name}
+                                    </Typography>
+                                )}
                             </span>
                         </StyledSpaceTitleWrapperBox>
                         <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
                             {getFriendlyLocationDescription(selectedSpace, false, { space_name: true })}
                         </StyledFriendlyLocationDiv>{' '}
-                        {!!(selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type) && (
-                            <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
-                                <Chip
-                                    label={
-                                        selectedSpace?.space_type_details?.space_type_name || selectedSpace?.space_type
-                                    }
-                                    size="small"
-                                    sx={{
-                                        ...defaultChipStyles(theme),
-                                        backgroundColor: theme.palette.designSystem.purple.purple50,
-                                        fontWeight: 700,
-                                    }}
-                                />
-                                <SpaceOpenStatusChip
-                                    space={selectedSpace}
-                                    weeklyHours={weeklyHours}
-                                    weeklyHoursLoading={weeklyHoursLoading}
-                                    weeklyHoursError={weeklyHoursError}
-                                    chipStyles={{
-                                        ...defaultChipStyles(theme),
-                                        fontWeight: 700,
-                                    }}
-                                />
-                            </Stack>
-                        )}
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
+                            <SpaceOpenStatusChip
+                                space={selectedSpace}
+                                weeklyHours={weeklyHours}
+                                weeklyHoursLoading={weeklyHoursLoading}
+                                weeklyHoursError={weeklyHoursError}
+                                chipStyles={{
+                                    ...defaultChipStyles(theme),
+                                    fontWeight: 700,
+                                }}
+                            />
+                        </Stack>
                     </Box>
 
                     {!!visibleOutage && (
@@ -336,15 +326,15 @@ const JourneySpaceDetailsView = ({
             </StyledTopBox>
 
             <StyledDetailSurface>
-                <StyledH3Typography component="h3" variant="h6">
+                <StyledH3Typography component="h2" variant="h6">
                     Space details
                 </StyledH3Typography>
                 <Stack spacing={2.5}>
                     <BookingLink bookableSpace={selectedSpace} />
 
                     {!!(selectedSpace?.space_capacity && selectedSpace.space_capacity > 0) && (
-                        <Box>
-                            <Typography component="h4" style={{ display: 'inline' }}>
+                        <Box data-testid={`space-${selectedSpace?.space_id}-capacity`}>
+                            <Typography component="h3" style={{ display: 'inline' }}>
                                 Capacity
                             </Typography>
                             <Typography variant="body2" style={{ display: 'inline' }}>
@@ -356,7 +346,7 @@ const JourneySpaceDetailsView = ({
 
                     {selectedSpace?.facility_types?.length > 0 && (
                         <Box data-testid={`space-${selectedSpace.space_id}-facility`}>
-                            <StyledH4Typography component="h4" variant="body2" sx={{ mb: 0.75 }}>
+                            <StyledH4Typography component="h3" variant="body2" sx={{ mb: 0.75 }}>
                                 Facilities
                             </StyledH4Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -385,7 +375,7 @@ const JourneySpaceDetailsView = ({
 
             {showMap && (
                 <StyledDetailSurface sx={{ p: 0, overflow: 'hidden' }}>
-                    <StyledH3Typography component="h3" variant="h6" sx={{ pb: '1rem' }}>
+                    <StyledH3Typography component="h2" variant="h6" sx={{ pb: '1rem' }}>
                         Location
                     </StyledH3Typography>
                     <div style={{ height: isMobileLayout ? '260px' : '340px' }}>
@@ -409,6 +399,7 @@ JourneySpaceDetailsView.propTypes = {
     weeklyHoursError: PropTypes.any,
     showBackButton: PropTypes.bool,
     narrowView: PropTypes.bool,
+    verticalView: PropTypes.bool,
     backLabel: PropTypes.string,
     onBack: PropTypes.func,
     isSelectedSpaceFavourite: PropTypes.bool,

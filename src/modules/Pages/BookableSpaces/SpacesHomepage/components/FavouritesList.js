@@ -100,12 +100,13 @@ export const FavouritesList = ({
                             intentId: selectedIntentId,
                             spaceId: getSpaceIdentifier(space) || landingSpaceId,
                         });
+                        const displayedSpaceName = `${space?.space_type_details?.space_type_name} ${space?.space_name || fav?.label || String(fav?.space_id)}`;
                         return (
                             <>
                                 <SingleLinkCard
-                                    key={fav?.space_id || `fav-${idx}`}
+                                    key={`fav-${fav?.space_id || idx}`}
                                     testId={`spaces-journey-favourite-card-${idx + 1}`}
-                                    cardHeading={space?.space_name || fav?.label || String(fav?.space_id)}
+                                    cardHeading={displayedSpaceName}
                                     sx={{
                                         marginBottom: '0px !important',
                                         pr: { xs: '10px' },

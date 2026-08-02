@@ -135,7 +135,8 @@ const SidebarSpacesList = ({
                                             title="Show on map"
                                             data-testid={`space-${bookableSpace.space_id}-name`}
                                         >
-                                            {bookableSpace?.space_type_details?.space_type_name}
+                                            {bookableSpace?.space_type_details?.space_type_name}{' '}
+                                            {bookableSpace?.space_name}
                                         </span>
                                         {isExpanded && (
                                             <span className="openNewWrapper" style={{ paddingBlock: '0.2rem' }}>
