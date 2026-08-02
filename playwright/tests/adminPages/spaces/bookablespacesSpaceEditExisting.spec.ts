@@ -1011,11 +1011,11 @@ test.describe('Spaces Admin - edit space', () => {
         await page.getByTestId('space-123456-facility').scrollIntoViewIfNeeded();
 
         await expect(page.getByTestId('space-123456-capacity')).toBeVisible();
-        await expect(page.getByTestId('space-123456-capacity').locator('h4')).toContainText('Capacity');
+        await expect(page.getByTestId('space-123456-capacity').locator('h3')).toContainText('Capacity');
         await expect(page.getByTestId('space-123456-capacity').locator('p')).toContainText('7 people');
 
-        await expect(page.getByTestId('space-123456-facility').locator('h4')).toBeVisible();
-        await expect(page.getByTestId('space-123456-facility').locator('h4')).toContainText('Facilities');
+        await expect(page.getByTestId('space-123456-facility').locator('h3')).toBeVisible();
+        await expect(page.getByTestId('space-123456-facility').locator('h3')).toContainText('Facilities');
         await expect(page.getByTestId('space-123456-facility').locator('div').locator(':scope > div')).toHaveCount(13);
 
         await expect(page.getByTestId('space-123456-openingHours-0')).toBeVisible();
