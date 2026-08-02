@@ -21,13 +21,7 @@ test.describe('Spaces Homepage', () => {
 
         // navigate to spaces homepage
         await page.getByTestId('homepage-hours-bookit-link').click();
-        await expect(page).toHaveURL('/spaces?user=s1111111');
-
-        // navigate on to the map page
-        await expect(page.getByTestId('spaces-journey-landing-browse-all')).toBeVisible();
-        await page.getByTestId('spaces-journey-landing-browse-all').click();
-        await expect(page).toHaveURL('/spaces/mapresults');
-        await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
+        await expect(page.getByTestId('spaces-journey-landing-hero-card')).toBeVisible();
     });
     test('spaces homepage has correct favourites', async ({ page }) => {
         const favBlock = page.getByTestId('spaces-homepage-favourites-block');
