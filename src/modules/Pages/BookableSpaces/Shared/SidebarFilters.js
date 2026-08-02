@@ -956,7 +956,7 @@ export const SidebarFilters = ({
                                 data-testid="filter-show-favourite-spaces-only"
                                 id="filter-show-favourite-spaces-only"
                                 className="selectedFilterType"
-                                inputProps={{ 'aria-label': 'Only show favourite spaces' }}
+                                inputProps={{ 'aria-label': 'your favourites' }}
                             />
                             <span>Your favourites</span>
                         </InputLabel>

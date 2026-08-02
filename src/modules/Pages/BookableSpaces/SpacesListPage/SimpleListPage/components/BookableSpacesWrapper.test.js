@@ -336,7 +336,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             highlightedSpace: favouriteSpace,
         });
 
-        fireEvent.click(screen.getByRole('checkbox', { name: /show favourite spaces only/i }));
+        fireEvent.click(screen.getByRole('checkbox', { name: /your favourites/i }));
 
         expect(screen.getByText('favspace Fav888')).toBeInTheDocument();
         expect(screen.getByText('otherspace Space123')).toBeInTheDocument();
@@ -407,7 +407,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
         expect(screen.getByText('A type Space123')).toBeInTheDocument();
 
-        fireEvent.click(screen.getByRole('checkbox', { name: /show favourite spaces only/i }));
+        fireEvent.click(screen.getByRole('checkbox', { name: /your favourites/i }));
 
         expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
         expect(screen.queryByText('A type Space123')).not.toBeInTheDocument();
