@@ -193,3 +193,29 @@ test.describe('Membership terms & consent', () => {
         await expect(page.getByTestId('membership-privacy')).toBeVisible();
     });
 });
+
+// Planned outages: both configured windows are in the past, so we move the browser clock into them to prove
+// the form is replaced by the maintenance / gateway-outage message during a window, and shows outside it.
+
+test.describe('Membership planned outages', () => {
+    test('closes the form for everyone during a maintenance freeze', async ({ page }) => {
+        await page.clock.setFixedTime(new Date('2017-06-15T03:00:00Z'));
+        await page.goto('/membership/form/community?user=public');
+
+        await expect(page.getByTestId('membership-form-frozen')).toBeVisible();
+        await expect(page.getByTestId('membership-form')).toHaveCount(0);
+    });
+
+    test('turns paying types away during a payment gateway outage, but not free types', async ({ page }) => {
+        await page.clock.setFixedTime(new Date('2025-01-19T22:00:00Z'));
+
+        await page.goto('/membership/form/community?user=public');
+        await expect(page.getByTestId('membership-form-outage')).toBeVisible();
+        await expect(page.getByTestId('membership-form')).toHaveCount(0);
+
+        // Fryer never reaches the gateway, so the outage does not stop it.
+        await page.goto('/membership/form/fryer?user=public');
+        await expect(page.getByTestId('membership-form')).toBeVisible();
+        await expect(page.getByTestId('membership-form-outage')).toHaveCount(0);
+    });
+});

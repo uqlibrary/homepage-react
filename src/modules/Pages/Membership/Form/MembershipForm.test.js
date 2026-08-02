@@ -6,6 +6,7 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { mui1theme } from 'config';
 
 import locale from '../membership.locale';
+import { isFrozen, isPaymentGatewayOutage } from '../membershipOutage';
 import MembershipForm from './MembershipForm';
 
 const { form } = locale;
@@ -14,6 +15,12 @@ const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: () => mockNavigate,
+}));
+
+// Both outage windows are in the past, so the real functions are always false; force them on to test the guards.
+jest.mock('../membershipOutage', () => ({
+    isFrozen: jest.fn(() => false),
+    isPaymentGatewayOutage: jest.fn(() => false),
 }));
 
 const membershipFormData = {
@@ -78,6 +85,24 @@ const fillInCommunityForm = async () => {
 describe('MembershipForm', () => {
     beforeEach(() => {
         mockNavigate.mockClear();
+        isFrozen.mockReturnValue(false);
+        isPaymentGatewayOutage.mockReturnValue(false);
+    });
+
+    it('closes the form for everyone during a maintenance freeze', () => {
+        isFrozen.mockReturnValue(true);
+        setup();
+
+        expect(screen.getByTestId('membership-form-frozen')).toHaveTextContent(form.frozen);
+        expect(screen.queryByTestId('membership-form')).not.toBeInTheDocument();
+    });
+
+    it('turns a paying type away during a payment gateway outage', () => {
+        isPaymentGatewayOutage.mockReturnValue(true);
+        setup();
+
+        expect(screen.getByTestId('membership-form-outage')).toHaveTextContent(form.paymentGatewayOutage);
+        expect(screen.queryByTestId('membership-form')).not.toBeInTheDocument();
     });
 
     it('loads the form data when it is not yet in the store', () => {

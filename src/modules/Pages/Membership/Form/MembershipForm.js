@@ -14,6 +14,7 @@ import { pathConfig } from 'config/pathConfig';
 import { breadcrumbs } from 'config/routes';
 
 import { MEMBERSHIP_TYPES } from '../membershipFieldRules';
+import { isFrozen, isPaymentGatewayOutage } from '../membershipOutage';
 import { transformRequest } from '../membershipTransformers';
 import locale from '../membership.locale';
 import ConfigText from '../SharedComponents/ConfigText';
@@ -73,6 +74,28 @@ export const MembershipForm = ({
             throw error;
         }
     });
+
+    // During a scheduled maintenance window the form is closed to everyone, so nothing is asked for or submitted.
+    if (isFrozen()) {
+        return (
+            <StandardPage title={form.title}>
+                <Alert severity="error" data-testid="membership-form-frozen">
+                    {form.frozen}
+                </Alert>
+            </StandardPage>
+        );
+    }
+
+    // A payment gateway outage turns away only the types that would have to pay; the free types are unaffected.
+    if (isPaymentGatewayOutage(type)) {
+        return (
+            <StandardPage title={form.title}>
+                <Alert severity="error" data-testid="membership-form-outage">
+                    {form.paymentGatewayOutage}
+                </Alert>
+            </StandardPage>
+        );
+    }
 
     if (membershipFormDataError) {
         return (
