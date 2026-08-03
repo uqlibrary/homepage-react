@@ -13,7 +13,7 @@ export const StyledJourneyContentShell = styled(Box)(({ theme }) => ({
     },
 }));
 
-export const StyledJourneyPanel = styled('section', {
+export const StyledJourneyPanelSection = styled('section', {
     shouldForwardProp: prop => prop !== 'hasTopSpacing',
 })(({ theme, hasTopSpacing }) => ({
     maxWidth: '1200px',
@@ -33,7 +33,7 @@ export const StyledJourneyPanel = styled('section', {
     },
 }));
 
-export const StyledResultsSplitLayout = styled('div')(({ theme }) => ({
+export const StyledResultsSplitLayoutDiv = styled('div')(({ theme }) => ({
     display: 'grid',
     gap: '2rem',
     gridTemplateColumns: 'minmax(0, 3fr) minmax(0, 9fr)',
@@ -53,7 +53,7 @@ export const StyledResultsSplitLayout = styled('div')(({ theme }) => ({
         color: theme.palette.designSystem.bodyCopy,
         marginTop: 1.5,
     },
-    '> aside': {
+    '> .aside': {
         order: -1, // flip the order to get the heading structures right
     },
     '& .showsOnlyOnFocus': {
@@ -76,7 +76,7 @@ export const StyledButtonWrapperStack = styled(Stack)(() => ({
     marginTop: '0.75rem',
 }));
 
-export const StyledResultsSidebarPanel = styled('aside')(({ theme }) => ({
+export const StyledResultsSidebarPanelDiv = styled('div')(({ theme }) => ({
     padding: '0',
     position: 'sticky',
     top: '1rem',

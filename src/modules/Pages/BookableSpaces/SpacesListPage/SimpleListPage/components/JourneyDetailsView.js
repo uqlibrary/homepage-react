@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/JourneySpaceDetailsView';
 
-import { StyledJourneyPanel } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
+import { StyledJourneyPanelSection } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
 
 export const JourneyDetailsView = props => {
     return (
-        <StyledJourneyPanel hasTopSpacing>
+        <StyledJourneyPanelSection hasTopSpacing>
             <JourneySpaceDetailsView
                 {...props}
                 showBackButton={false}
@@ -16,7 +16,7 @@ export const JourneyDetailsView = props => {
                 showFavouriteControls
                 showMap
             />
-        </StyledJourneyPanel>
+        </StyledJourneyPanelSection>
     );
 };
 

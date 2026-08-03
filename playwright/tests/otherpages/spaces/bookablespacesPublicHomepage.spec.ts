@@ -64,7 +64,7 @@ test.describe('Spaces Homepage', () => {
             // the results page has loaded, with favourites loaded
             await expect(page.getByTestId('spaces-homepage-favourites-all-link')).not.toBeVisible();
             await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
-            await expect(page.getByRole('heading', { level: 2, name: 'Search results' })).toBeVisible();
+            await expect(page.getByRole('heading', { level: 1, name: 'Search results' })).toBeVisible();
             await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(
                 VANILLA_USER_FAVOURITE_COUNT,
             );

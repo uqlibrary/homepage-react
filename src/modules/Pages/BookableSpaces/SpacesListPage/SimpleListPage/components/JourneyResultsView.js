@@ -19,9 +19,9 @@ import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces
 import { StyledSecondaryButton } from 'helpers/general';
 
 import {
-    StyledJourneyPanel,
-    StyledResultsSidebarPanel,
-    StyledResultsSplitLayout,
+    StyledJourneyPanelSection,
+    StyledResultsSidebarPanelDiv,
+    StyledResultsSplitLayoutDiv,
     StyledListItemStack,
     StyledButtonWrapperStack,
 } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
@@ -78,8 +78,8 @@ export const JourneyResultsView = ({
     }, [totalPages]);
 
     return (
-        <StyledJourneyPanel data-testid="bookable-spaces-journey-results-view" hasTopSpacing>
-            <StyledResultsSplitLayout>
+        <StyledJourneyPanelSection data-testid="bookable-spaces-journey-results-view" hasTopSpacing>
+            <StyledResultsSplitLayoutDiv>
                 <Box>
                     <Typography component="h1" variant="h5">
                         Search results
@@ -232,7 +232,7 @@ export const JourneyResultsView = ({
                     )}
                 </Box>
 
-                <StyledResultsSidebarPanel>
+                <StyledResultsSidebarPanelDiv className="aside">
                     <SidebarFilters
                         facilityTypeList={facilityTypeList}
                         facilityTypeListLoading={facilityTypeListLoading}
@@ -264,9 +264,9 @@ export const JourneyResultsView = ({
                         hasFavouriteSpaces={hasFavouriteSpaces}
                         hasJourneyMapFilterState={hasJourneyMapFilterState}
                     />
-                </StyledResultsSidebarPanel>
-            </StyledResultsSplitLayout>
-        </StyledJourneyPanel>
+                </StyledResultsSidebarPanelDiv>
+            </StyledResultsSplitLayoutDiv>
+        </StyledJourneyPanelSection>
     );
 };
 

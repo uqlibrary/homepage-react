@@ -199,11 +199,15 @@ const StyledFavouriteFilterGroup = styled('div')(({ theme }) => ({
         cursor: 'pointer',
     },
 }));
-const StyledFilterSpaceListTypographyHeading = styled('h3')(() => ({
+const StyledFilterControlsDiv = styled('div')(() => ({
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginBottom: 0,
+    '& h3': {
+        fontWeight: 700,
+        fontSize: '1.17em',
+    },
     '& .countSelectedCheckboxes': {
         paddingLeft: '0.5rem',
         fontSize: '0.75rem',
@@ -266,6 +270,10 @@ const StyledCartoucheList = styled('ul')(({ theme }) => ({
             },
         },
     },
+}));
+const StyledCapacityLabelTypography = styled(Typography)(() => ({
+    fontSize: '1.17em',
+    marginLeft: '1rem',
 }));
 
 export const SidebarFilters = ({
@@ -623,14 +631,9 @@ export const SidebarFilters = ({
         }
         return (
             <>
-                <Typography
-                    // class="group-heading"
-                    style={{ fontSize: '1.17em', marginLeft: '1rem' }}
-                    component={'h4'}
-                    variant={'h6'}
-                >
+                <StyledCapacityLabelTypography component={'h4'} variant={'h6'}>
                     Space capacity
-                </Typography>
+                </StyledCapacityLabelTypography>
                 <InputLabel
                     title={`Filter in Spaces with ${facilityType?.facility_type_name}`}
                     htmlFor={`filtertype-${facilityType?.facility_type_id}`}
@@ -732,16 +735,18 @@ export const SidebarFilters = ({
     };
     const showFilterGroupHeading = (group, isGroupExpanded, numberChecked, filterGroupId, groupLength) => {
         return (
-            <StyledFilterSpaceListTypographyHeading component={'h3'} variant={'h6'} className="group-heading">
-                {group?.facility_type_group_name}{' '}
-                {!isGroupExpanded && numberChecked > 0 && (
-                    <span
-                        className="countSelectedCheckboxes"
-                        data-testid={`facility-type-group-${filterGroupId}-expanded-count`}
-                    >
-                        ({numberChecked} of {groupLength})
-                    </span>
-                )}
+            <StyledFilterControlsDiv>
+                <Typography component={'h3'} variant={'h6'} className="group-heading">
+                    {group?.facility_type_group_name}{' '}
+                    {!isGroupExpanded && numberChecked > 0 && (
+                        <span
+                            className="countSelectedCheckboxes"
+                            data-testid={`facility-type-group-${filterGroupId}-expanded-count`}
+                        >
+                            ({numberChecked} of {groupLength})
+                        </span>
+                    )}
+                </Typography>
                 <IconButton
                     id={`facility-type-group-${filterGroupId}`}
                     data-testid={`facility-type-group-${filterGroupId}`}
@@ -776,7 +781,7 @@ export const SidebarFilters = ({
                         <InfoOutlinedIcon fontSize="small" />
                     </IconButton>
                 )}
-            </StyledFilterSpaceListTypographyHeading>
+            </StyledFilterControlsDiv>
         );
     };
     const showCartoucheList = flatFacilityTypeList => {
@@ -1030,7 +1035,7 @@ export const SidebarFilters = ({
                                             getStyledInputListItem(facilityType),
                                         )
                                     ) : (
-                                        <li className="no-items">No facility types available</li>
+                                        <li className="no-items">No filters available</li>
                                     )}
                                 </StyledFilterSpaceList>
                             )}

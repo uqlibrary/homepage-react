@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { COLOR_UQPURPLE, COLOUR_UQ_WARNING_50 } from '@uq/pw/lib/constants';
+import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
 const NUMBER_SPACES_DEFAULT = 10;
 
@@ -33,7 +33,7 @@ test.describe('Spaces Journey Result page', () => {
 
             await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
 
-            await assertAccessibility(page, '[data-testid="library-spaces"]');
+            await assertAccessibility(page, '[data-testid="bookable-spaces-journey-results-view"]');
         });
         test('the skip to filters button works', async ({ page }) => {
             // load the spaces results page
@@ -94,7 +94,7 @@ test.describe('Spaces Journey Result page', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
 
         await expect(page.getByTestId('sidebarCheckboxes')).toBeVisible();
-        await expect(page.getByRole('heading', { level: 2, name: 'Search results' })).toBeVisible();
+        await expect(page.getByRole('heading', { level: 1, name: 'Search results' })).toBeVisible();
         await expect(page.getByTestId('spaces-results-summary')).toContainText('15 of 15 spaces'); // all spaces are showing
         await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(NUMBER_SPACES_DEFAULT); // a page load of spaces are present
 
