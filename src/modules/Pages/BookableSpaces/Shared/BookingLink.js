@@ -1,33 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { styled } from '@mui/material/styles';
-
 import { isBookable } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { StyledIconWordWrapperDiv } from 'modules/Pages/BookableSpaces/Shared/SharedStyles';
 
-const StyledBookitLinkWrapperDiv = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: '0.5rem',
-    '& svg': {
-        width: '24px',
-        height: '24px',
-        stroke: theme.palette.primary.main,
-    },
-    '& a': {
-        color: theme.palette.primary.main,
-        fontWeight: 500,
-        paddingBlock: '2px',
-        textDecoration: 'underline',
-        '&:hover, &:focus': {
-            backgroundColor: 'transparent',
-            '& span': {
-                backgroundColor: theme.palette.primary.main,
-                color: '#fff',
-            },
-        },
-    },
-}));
 export const BookingLink = ({ bookableSpace, hideNoBookingRequired = false }) => {
     const uqBookitMakeABookingIcon = (
         <svg
@@ -46,7 +22,7 @@ export const BookingLink = ({ bookableSpace, hideNoBookingRequired = false }) =>
     );
     if (isBookable(bookableSpace)) {
         return (
-            <StyledBookitLinkWrapperDiv data-testid={`space-${bookableSpace?.space_id}-booking-link`}>
+            <StyledIconWordWrapperDiv data-testid={`space-${bookableSpace?.space_id}-booking-link`}>
                 {uqBookitMakeABookingIcon}
                 <a
                     href={bookableSpace?.space_external_book_url}
@@ -55,7 +31,7 @@ export const BookingLink = ({ bookableSpace, hideNoBookingRequired = false }) =>
                 >
                     <span>Book this space</span>
                 </a>
-            </StyledBookitLinkWrapperDiv>
+            </StyledIconWordWrapperDiv>
         );
     }
     if (!isBookable(bookableSpace) && !hideNoBookingRequired) {

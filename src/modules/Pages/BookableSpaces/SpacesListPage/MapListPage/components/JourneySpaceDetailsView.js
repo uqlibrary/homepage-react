@@ -14,11 +14,7 @@ import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursDown';
 import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
 import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
-import {
-    defaultChipStyles,
-    getFriendlyLocationDescription,
-    SpaceOpenStatusChip,
-} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { getFriendlyLocationDescription, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
@@ -279,10 +275,6 @@ const JourneySpaceDetailsView = ({
                                 weeklyHours={weeklyHours}
                                 weeklyHoursLoading={weeklyHoursLoading}
                                 weeklyHoursError={weeklyHoursError}
-                                chipStyles={{
-                                    ...defaultChipStyles(theme),
-                                    fontWeight: 700,
-                                }}
                             />
                         </Stack>
                     </Box>

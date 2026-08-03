@@ -1,18 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Box, Button, Chip, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Stack, Typography, useTheme } from '@mui/material';
 
 import BookingLink from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPagination';
 
-import {
-    defaultChipStyles,
-    serialiseJourneyUrl,
-    SpaceOpenStatusChip,
-} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { serialiseJourneyUrl, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
@@ -140,18 +136,6 @@ export const JourneyResultsView = ({
                                                             weeklyHoursLoading={weeklyHoursLoading}
                                                             weeklyHoursError={weeklyHoursError}
                                                         />
-                                                        {!!visibleOutage && visibleOutage.status !== 'Current' && (
-                                                            <Chip
-                                                                data-testid={`spaces-journey-outage-chip-${space?.space_id}`}
-                                                                label="Upcoming closure"
-                                                                size="small"
-                                                                sx={{
-                                                                    ...defaultChipStyles(theme),
-                                                                    backgroundColor:
-                                                                        theme.palette.designSystem.alert.warning,
-                                                                }}
-                                                            />
-                                                        )}
                                                     </Stack>
                                                 </Box>
                                                 {!!space?.space_type_details?.space_type_description && (
