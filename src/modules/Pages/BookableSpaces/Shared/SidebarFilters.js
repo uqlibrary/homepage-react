@@ -295,7 +295,8 @@ export const SidebarFilters = ({
     isLoggedIn = false,
     hasFavouriteSpaces = false,
 }) => {
-    const [facilityTypeFilterGroupExpandedness, setFacilityTypeFilterGroupExpandedness] = React.useState([]);
+    const [facilityGroupOpenState, setFacilityGroupOpenState] = React.useState([]);
+    const hasAutoExpandedSelectedGroupsRef = React.useRef(false);
     const [defaultCampus, setDefaultCampus] = React.useState(1);
     const [facilityTypeInfoAnchorEl, setFacilityTypeInfoAnchorEl] = React.useState(null);
     const [activeFacilityTypeInfo, setActiveFacilityTypeInfo] = React.useState(null);
@@ -329,7 +330,7 @@ export const SidebarFilters = ({
             facilityTypeListError !== false ||
             facilityTypeListLoading !== false ||
             !facilityTypeList?.data?.facility_type_groups?.length ||
-            facilityTypeFilterGroupExpandedness?.length > 0
+            facilityGroupOpenState?.length > 0
         ) {
             return;
         }
@@ -342,12 +343,12 @@ export const SidebarFilters = ({
             });
         });
 
-        setFacilityTypeFilterGroupExpandedness(expandednessList);
+        setFacilityGroupOpenState(expandednessList);
     }, [
         facilityTypeList,
         facilityTypeListError,
         facilityTypeListLoading,
-        facilityTypeFilterGroupExpandedness?.length,
+        facilityGroupOpenState?.length,
         filteredFacilityTypeList,
     ]);
 
@@ -380,15 +381,58 @@ export const SidebarFilters = ({
         }
     }, [campusList]);
 
-    const resetFacilityTypeFilterGroupExpandedness = (filterGroupId, isGroupExpandedInput) => {
-        const newExpandedness = facilityTypeFilterGroupExpandedness?.filter(g => {
+    React.useEffect(() => {
+        if (!hasJourneyMapFilterState) {
+            hasAutoExpandedSelectedGroupsRef.current = false;
+            return;
+        }
+
+        if (hasAutoExpandedSelectedGroupsRef.current || facilityGroupOpenState?.length === 0) {
+            return;
+        }
+
+        const selectedGroupIds = new Set(
+            (selectedFacilityTypes || [])
+                .filter(filter => !!filter?.selected)
+                .map(filter => Number(filter?.facility_type_group_id))
+                .filter(groupId => Number.isFinite(groupId)),
+        );
+
+        if (selectedGroupIds.size === 0) {
+            return;
+        }
+
+        let hasChanges = false;
+        const nextExpandedness = facilityGroupOpenState.map(groupState => {
+            const groupId = Number(groupState?.groupId);
+            const shouldExpand = selectedGroupIds.has(groupId);
+            if (!shouldExpand || !!groupState?.isGroupExpanded) {
+                return groupState;
+            }
+
+            hasChanges = true;
+            return {
+                ...groupState,
+                isGroupExpanded: true,
+            };
+        });
+
+        hasAutoExpandedSelectedGroupsRef.current = true;
+
+        if (hasChanges) {
+            setFacilityGroupOpenState(nextExpandedness);
+        }
+    }, [hasJourneyMapFilterState, facilityGroupOpenState, selectedFacilityTypes]);
+
+    const updateFacilityGroupOpenState = (filterGroupId, isGroupExpandedInput) => {
+        const newExpandedness = facilityGroupOpenState?.filter(g => {
             return g?.groupId !== filterGroupId;
         });
         newExpandedness?.push({
             groupId: filterGroupId,
             isGroupExpanded: isGroupExpandedInput,
         });
-        setFacilityTypeFilterGroupExpandedness(newExpandedness);
+        setFacilityGroupOpenState(newExpandedness);
     };
 
     // TODO remove isUnselected, remove unselected
@@ -531,7 +575,7 @@ export const SidebarFilters = ({
     const toggleFilterGroup = filterGroupId => {
         const filterGroupPanelVisible = document.getElementById(`filter-group-list-${filterGroupId}`);
         // reverse the panel show/ hide
-        resetFacilityTypeFilterGroupExpandedness(filterGroupId, !filterGroupPanelVisible);
+        updateFacilityGroupOpenState(filterGroupId, !filterGroupPanelVisible);
     };
 
     const deSelectSelected = e => {
@@ -964,7 +1008,7 @@ export const SidebarFilters = ({
                 )}
                 {sortedUsedGroups()?.map(group => {
                     const filterGroupId = group?.facility_type_group_id;
-                    const isGroupExpanded = !!facilityTypeFilterGroupExpandedness?.find(
+                    const isGroupExpanded = !!facilityGroupOpenState?.find(
                         o => o?.groupId === filterGroupId,
                     )?.isGroupExpanded;
                     const groupLength = selectedFacilityTypes?.filter(
