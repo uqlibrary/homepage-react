@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Tooltip } from '@mui/material';
+import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const topLeft = {
@@ -33,6 +34,7 @@ export const SpacesFavouriteIcon = ({
 }) => {
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
+    const theme = useTheme();
 
     if (!isLoggedIn || !onFavouriteToggle) {
         return null;
@@ -61,7 +63,7 @@ export const SpacesFavouriteIcon = ({
                 >
                     <StarIcon
                         sx={{
-                            fill: '#FFD700',
+                            fill: theme.palette.primary.main,
                             cursor: isFavouriteActionInProgress ? 'not-allowed' : 'pointer',
                             fontSize: '1.5rem',
                             flexShrink: 0,
