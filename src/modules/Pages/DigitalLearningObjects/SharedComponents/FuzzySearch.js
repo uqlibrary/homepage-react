@@ -26,8 +26,6 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
     const [options, setOptions] = useState(data);
     const [selectedItems, setSelectedItems] = useState(existingItems || /* istanbul ignore next */ []);
 
-    console.log('data is ', data);
-
     const debouncedInputValue = useDebounce(inputValue, delay);
 
     const fuse = useMemo(() => new Fuse(data, fuseOptions), [data, fuseOptions]);

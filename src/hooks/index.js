@@ -4,19 +4,13 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 export const useConfirmationState = () => {
-    const [isOpen, setIsOpen2] = useState(false);
-    const setIsOpen = x => {
-        console.log('ConfirmationBox: setIsOpen', x);
-        setIsOpen2(x);
-    };
+    const [isOpen, setIsOpen] = useState(false);
 
     const showConfirmation = useCallback(() => {
-        console.log('ConfirmationBox: showConfirmation');
         setIsOpen(true);
     }, []);
 
     const hideConfirmation = useCallback(() => {
-        console.log('ConfirmationBox: hideConfirmation');
         setIsOpen(false);
     }, []);
 
@@ -28,7 +22,6 @@ export const useWidth = () => {
     const keys = [...theme.breakpoints.keys].reverse();
     return (
         keys.reduce((output, key) => {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
             const matches = useMediaQuery(theme.breakpoints.up(key));
             return !output && matches ? key : output;
         }, null) || 'xs'

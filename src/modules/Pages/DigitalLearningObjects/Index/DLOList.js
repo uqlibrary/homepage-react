@@ -1104,7 +1104,6 @@ export const DLOList = ({
                     theSearch = theSearch.filter(item => isUserSubmitted(item));
                     break;
                 case 'mine':
-                    console.log('theSearch before mine filter:', theSearch);
                     theSearch = theSearch.filter(item => isMine(item, account?.mail, account?.id));
                     break;
                 case 'popular':

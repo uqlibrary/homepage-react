@@ -580,7 +580,6 @@ mock.onGet(/dlor\/(public|auth)\/find\/.*/)
     .onPut(/dlor\/auth\/object\/.*/)
     .reply(() => {
         if (responseType === 'saveError') {
-            console.log('SAVE ERROR? WHY?');
             return [500, {}];
         } else {
             // return [200, { data: getSpecificDlorObject('98j3-fgf95-8j34') }]; //any old id
@@ -821,7 +820,6 @@ mock.onGet(/dlor\/(public|auth)\/find\/.*/)
     })
     .onPost('dlor/auth/favourites')
     .reply(() => {
-        console.log('POST FAVOURITES');
         return [
             200,
             {
@@ -1574,7 +1572,6 @@ mock.onGet('exams/course/FREN1010/summary')
     //    const params = url.searchParams;
     //    const location = params.has('location_type') ? `${params.get('location_type')}_id` : 'room_id';
     //    const locationId = params.has('location_type') ? parseInt(params.get('location_id'),10) : undefined;
-    //    console.log(config, params.toString(), params.get('asset_type_id'), params.get('inspect_comment'), location, locationId)
 
     //     return [200, {data: test_tag_assets_mine.data.filter(asset=> asset.asset_type_id === (params.get('asset_type_id') ?? asset.asset_type_id) &&
     //         asset[location] === (locationId ?? asset[location]) &&

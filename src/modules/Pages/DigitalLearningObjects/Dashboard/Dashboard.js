@@ -93,7 +93,6 @@ export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlo
     useEffect(() => {
         actions.loadDLORDashboard();
     }, [actions]);
-    console.log('DLOR DASHBOARD DATA', dlorDashboardData, dlorDashboardLoading, dlorDashboardError);
     if (dlorDashboardLoading || !dlorDashboardData) {
         return (
             <StandardPage>

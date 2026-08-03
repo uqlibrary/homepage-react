@@ -226,13 +226,11 @@ export const DLOBulkSchedule = ({
     }, [dlorScheduleError, dlorScheduleLoading, dlorSchedule, actions]);
 
     const handleChange = prop => e => {
-        console.log('handleChange', prop, e);
         const theNewValue = e.target.value;
 
         const newValues = { ...formValues, schedule_status: true, [prop]: theNewValue };
 
         setFormValues(newValues);
-        console.log('formValues =>', newValues);
     };
 
     const handleDeleteSchedule = id => {
@@ -242,7 +240,6 @@ export const DLOBulkSchedule = ({
         actions
             .deleteDlorSchedule(id)
             .then(() => {
-                console.log('Schedule deleted successfully');
                 setFormMessage('Schedule deleted successfully');
                 setIsAlertOpen(true);
             })
@@ -410,7 +407,6 @@ export const DLOBulkSchedule = ({
 
         actionPromise
             .then(() => {
-                console.log('Schedule saved successfully');
                 setFormMessage('Schedule saved successfully');
                 setIsEditBoxOpened(false);
                 setFormValues(defaultFormValues);

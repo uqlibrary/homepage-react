@@ -17,6 +17,7 @@ import { styled } from '@mui/material/styles';
 
 import { IconButton } from '@mui/material';
 import { AddCircle, DeleteForever } from '@mui/icons-material';
+
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -215,12 +216,10 @@ export const DLOSeriesEdit = ({
     }, []);
 
     useEffect(() => {
-        console.log('DLOR SERIES', dlorSeries);
         if (!dlorListLoading && !dlorListError && (!!dlorList || !!dlorSeries?.series_name)) {
             setConfirmationOpen(false);
             const seriesDetail = (!!dlorList && dlorList?.find(s => s.object_series_id === Number(dlorSeriesId))) || {};
             if (Object.keys(seriesDetail).length === 0) {
-                console.log('Doing the things');
                 seriesDetail.object_series_id = dlorSeriesId;
                 ((seriesDetail.object_series_name = dlorSeries?.series_name),
                     (seriesDetail.object_series_description = dlorSeries?.series_description));
@@ -231,7 +230,6 @@ export const DLOSeriesEdit = ({
                     series_name: seriesDetail?.object_series_name,
                     series_description: seriesDetail?.object_series_description,
                 });
-            console.log('About to set the values', seriesDetail, dlorSeries);
             setFormValues({
                 series_name: seriesDetail?.object_series_name,
                 series_description: seriesDetail?.object_series_description,
@@ -296,7 +294,6 @@ export const DLOSeriesEdit = ({
         }
         thisdlor.object_series_order = null;
         unassigned.push(thisdlor);
-        console.log('index', index, 'uuid', uuid, indexToRemove);
         linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
         unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
         newValues = {
@@ -310,7 +307,6 @@ export const DLOSeriesEdit = ({
 
     const handleAdd = uuid => {
         let newValues;
-        console.log(uuid);
         let linked = formValues.object_list_linked;
         const unassigned = formValues.object_list_unassigned;
         const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);

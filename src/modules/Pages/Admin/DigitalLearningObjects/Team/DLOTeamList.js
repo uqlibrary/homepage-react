@@ -210,7 +210,6 @@ export const DLOTeamList = ({
                             </Grid>
                         );
                     } else {
-                        console.log('dlorTeamList', dlorTeamList, account);
                         return (
                             <>
                                 <Grid item sx={{ width: '100%' }} data-testid="dlor-teamlist-list">
@@ -228,7 +227,6 @@ export const DLOTeamList = ({
                                                 );
                                             }) || /* istanbul ignore next */ [];
 
-                                        console.log('visibleTeams', visibleTeams, account);
                                         if (visibleTeams.length === 0) {
                                             return (
                                                 <Typography variant="body1" data-testid="dlor-teamlist-no-access">

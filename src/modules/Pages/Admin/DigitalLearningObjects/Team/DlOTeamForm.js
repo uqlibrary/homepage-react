@@ -23,7 +23,7 @@ import { scrollToTopOfPage } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 import { useAccountContext } from 'context';
 import { Accordion, AccordionDetails, AccordionSummary, Checkbox, TableContainer } from '@mui/material';
-import { ExpandMore, PausePresentation } from '@mui/icons-material';
+import { ExpandMore } from '@mui/icons-material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
@@ -52,8 +52,6 @@ export const DLOTeamForm = ({
     const navigate = useNavigate();
     const { dlorTeamId } = useParams();
     const [cookies, setCookie] = useCookies();
-
-    console.log('Account', account);
 
     const [formValues, setFormValues] = useState({
         team_name: '',
@@ -174,7 +172,6 @@ export const DLOTeamForm = ({
             team_id: formDefaults.team_id,
         });
 
-        console.log('Save edited team member:', editingMember);
         setEditingMemberIdx(null);
         setEditingMember(null);
     };
@@ -209,7 +206,6 @@ export const DLOTeamForm = ({
         !!dlorTeamSaving ||
         !!dlorTeamLoading;
 
-    console.log('Form Values');
     return (
         <Grid container spacing={2}>
             {(() => {

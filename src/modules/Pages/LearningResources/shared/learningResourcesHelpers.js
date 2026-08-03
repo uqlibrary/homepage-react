@@ -21,7 +21,6 @@ export function getHomepageLink(hostname = null, protocol = null, port = null, p
         const linkParameters = !!userParam ? `?user=${userParam}` : '';
         homepagelink = `${_protocol}//${_hostname}:${_port}/${linkParameters}`;
     }
-    // console.log('getHomepageLink:: homepagelink=', homepagelink);
     return homepagelink;
 }
 
