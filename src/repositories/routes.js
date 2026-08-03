@@ -338,6 +338,9 @@ export const MEMBERSHIP_CREATE_API = () => ({ apiUrl: 'membership' });
 // Read a single application back by id — the received page falls back to this on a reload.
 export const MEMBERSHIP_BY_ID_API = ({ id }) => ({ apiUrl: `membership/${id}` });
 
+// Record a payment against an application, from the gateway's return leg.
+export const MEMBERSHIP_PAYMENT_API = ({ id }) => ({ apiUrl: `membership/${id}/payment` });
+
 export const MEMBERSHIP_CHECK_RENEWING_API = () => ({
     apiUrl: 'membership/check/renewing',
     options: { params: { ts: getMillisecondCacheBuster() } },

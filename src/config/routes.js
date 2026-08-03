@@ -108,6 +108,13 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.membership.title,
         },
         {
+            // Where the payment gateway sends the applicant back to.
+            path: pathConfig.membershipPaymentConfirmation,
+            element: <components.MembershipPaymentConfirmation />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
             path: pathConfig.dlorView(dlorId),
             element: <components.DLOView />,
             pageTitle: 'Digital Learning Object Repository - View Object',

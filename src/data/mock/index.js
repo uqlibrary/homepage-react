@@ -395,6 +395,9 @@ mock.onGet(new RegExp('^membership/[0-9a-f-]{36}$')).reply(config => {
     return withDelay([200, membershipSubmitted(id, 'community')])();
 });
 
+// Recording a payment on the gateway's return leg.
+mock.onPost(new RegExp('^membership/[^/]+/payment$')).reply(withDelay([200, { status: 'ok' }]));
+
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {
         key: '123456-123456-123456-123456-123456',

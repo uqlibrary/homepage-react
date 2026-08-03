@@ -5,6 +5,7 @@ import {
     MEMBERSHIP_CHECK_RENEWING_API,
     MEMBERSHIP_CREATE_API,
     MEMBERSHIP_FORM_DATA_API,
+    MEMBERSHIP_PAYMENT_API,
 } from 'repositories/routes';
 
 /**
@@ -67,7 +68,27 @@ export function loadMembership(id) {
 }
 
 /**
- * Drop the current membership record from the store — used when the form unmounts.
+ * Record a payment against an application when the gateway sends the applicant back. By this point the money
+ * has changed hands, so this only writes down what happened; the outcome reported to the applicant is whether
+ * that record was written, not whether they paid.
+ */
+export function saveMembershipPayment(payment) {
+    return async dispatch => {
+        dispatch({ type: actions.MEMBERSHIP_SAVING });
+
+        try {
+            const response = await post(MEMBERSHIP_PAYMENT_API({ id: payment.id }), payment);
+            dispatch({ type: actions.MEMBERSHIP_SAVED, payload: response });
+            return Promise.resolve(response);
+        } catch (error) {
+            dispatch({ type: actions.MEMBERSHIP_SAVE_FAILED, payload: error });
+            return Promise.reject(error);
+        }
+    };
+}
+
+/**
+ * Drop the current membership record from the store — used when the form mounts.
  */
 export function clearMembership() {
     return dispatch => dispatch({ type: actions.MEMBERSHIP_CLEAR });

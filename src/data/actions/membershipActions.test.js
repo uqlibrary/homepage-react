@@ -5,6 +5,7 @@ import {
     clearMembership,
     loadMembership,
     loadMembershipFormData,
+    saveMembershipPayment,
     submitMembership,
 } from './membershipActions';
 
@@ -115,6 +116,31 @@ describe('Membership actions', () => {
             expect(mockActionsStore.getActions()).toHaveDispatchedActions([
                 actions.MEMBERSHIP_LOADING,
                 actions.MEMBERSHIP_FAILED,
+            ]);
+        });
+    });
+
+    describe('saveMembershipPayment', () => {
+        it('dispatches saving then saved, and resolves when the payment is recorded', async () => {
+            const payment = { id: 'abc-123', payment_receipt: 'R123456' };
+            mockApi.onPost(repositories.routes.MEMBERSHIP_PAYMENT_API({ id: 'abc-123' }).apiUrl).reply(200, payment);
+
+            await mockActionsStore.dispatch(saveMembershipPayment(payment));
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_SAVING,
+                actions.MEMBERSHIP_SAVED,
+            ]);
+        });
+
+        it('dispatches save failed and rejects when it cannot be recorded', async () => {
+            mockApi.onPost(repositories.routes.MEMBERSHIP_PAYMENT_API({ id: 'abc-123' }).apiUrl).reply(422);
+
+            await expect(mockActionsStore.dispatch(saveMembershipPayment({ id: 'abc-123' }))).rejects.toBeDefined();
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_SAVING,
+                actions.MEMBERSHIP_SAVE_FAILED,
             ]);
         });
     });

@@ -31,6 +31,7 @@ export const DLOSeriesAdd = lazy(() => lazyRetry(() => import('modules/Pages/Adm
 export const MembershipLanding = lazy(() => lazyRetry(() => import('modules/Pages/Membership/Landing/MembershipLandingContainer')));
 export const MembershipForm = lazy(() => lazyRetry(() => import('modules/Pages/Membership/Form/MembershipFormContainer')));
 export const MembershipReceived = lazy(() => lazyRetry(() => import('modules/Pages/Membership/Received/MembershipReceivedContainer')));
+export const MembershipPaymentConfirmation = lazy(() => lazyRetry(() => import('modules/Pages/Membership/Payment/MembershipPaymentConfirmationContainer')));
 
 export const TestTagDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Dashboard/containers/Dashboard')));
 export const TestTagInspection = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Inspection/containers/Inspection')));
