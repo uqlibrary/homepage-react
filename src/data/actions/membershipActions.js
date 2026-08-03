@@ -1,11 +1,13 @@
 import * as actions from './actionTypes';
 import { get, post } from 'repositories/generic';
 import {
+    MEMBERSHIP_BY_CODE_API,
     MEMBERSHIP_BY_ID_API,
     MEMBERSHIP_CHECK_RENEWING_API,
     MEMBERSHIP_CREATE_API,
     MEMBERSHIP_FORM_DATA_API,
     MEMBERSHIP_PAYMENT_API,
+    MEMBERSHIP_RENEW_API,
 } from 'repositories/routes';
 
 /**
@@ -64,6 +66,38 @@ export function loadMembership(id) {
         return get(MEMBERSHIP_BY_ID_API({ id }))
             .then(response => dispatch({ type: actions.MEMBERSHIP_LOADED, payload: response }))
             .catch(error => dispatch({ type: actions.MEMBERSHIP_FAILED, payload: error.message }));
+    };
+}
+
+/**
+ * Read an application via a renewal link, authenticated on the id + code pair from the link rather than a
+ * session. Used to open a renewal prefilled from the record it points at.
+ */
+export function loadMembershipByCode(id, code) {
+    return dispatch => {
+        dispatch({ type: actions.MEMBERSHIP_LOADING });
+        return get(MEMBERSHIP_BY_CODE_API({ id, code }))
+            .then(response => dispatch({ type: actions.MEMBERSHIP_LOADED, payload: response }))
+            .catch(error => dispatch({ type: actions.MEMBERSHIP_FAILED, payload: error.message }));
+    };
+}
+
+/**
+ * Submit a renewal. The renewal endpoint authenticates on the id + code from the link, so they travel with
+ * the body. Resolves with the saved record so the received page can be reached with its id.
+ */
+export function renewMembership(membership) {
+    return async dispatch => {
+        dispatch({ type: actions.MEMBERSHIP_SAVING });
+
+        try {
+            const saved = await post(MEMBERSHIP_RENEW_API({ id: membership.id, code: membership.code }), membership);
+            dispatch({ type: actions.MEMBERSHIP_SAVED, payload: saved });
+            return Promise.resolve(saved);
+        } catch (error) {
+            dispatch({ type: actions.MEMBERSHIP_SAVE_FAILED, payload: error });
+            return Promise.reject(error);
+        }
     };
 }
 

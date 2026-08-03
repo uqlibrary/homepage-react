@@ -5,6 +5,7 @@ import {
     getFieldValidators,
     getRequiredFields,
     getVisibleFields,
+    isFieldDisabled,
     isFieldRequired,
     isFieldVisible,
     isKnownField,
@@ -132,6 +133,29 @@ describe('membershipFieldRules', () => {
             expect(isFieldRequired('hospital_class', COMMUNITY)).toBe(false);
             expect(isFieldVisible('not_a_field', COMMUNITY)).toBe(false);
             expect(isFieldRequired('not_a_field', COMMUNITY)).toBe(false);
+        });
+    });
+
+    describe('isFieldDisabled', () => {
+        it.each([
+            'title',
+            'first_name',
+            'sn',
+            'otherName',
+            'date_of_birth_day',
+            'date_of_birth_month',
+            'date_of_birth_year',
+        ])('locks %s on a renewal, because a renewal cannot rewrite who the member is', field => {
+            expect(isFieldDisabled(field, true)).toBe(true);
+            expect(isFieldDisabled(field, false)).toBe(false);
+        });
+
+        it.each(['mail', 'phone', 'home_address_0'])('leaves %s editable on a renewal', field => {
+            expect(isFieldDisabled(field, true)).toBe(false);
+        });
+
+        it('treats a missing renewal flag as not renewing', () => {
+            expect(isFieldDisabled('title', undefined)).toBe(false);
         });
     });
 

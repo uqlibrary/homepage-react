@@ -26,7 +26,7 @@ import { libHours } from './data/libHours';
 import { training_object, training_object_hospital } from './data/training';
 import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
-import { membershipFormData, membershipRenewing, membershipSubmitted } from './data/membership';
+import { membershipFormData, membershipRenewal, membershipRenewing, membershipSubmitted } from './data/membership';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_PHYS1001 from './data/records/learningResources/examSearch_PHYS1001';
 import examSearch_ENGG from './data/records/learningResources/examSearch_ENGG';
@@ -397,6 +397,14 @@ mock.onGet(new RegExp('^membership/[0-9a-f-]{36}$')).reply(config => {
 
 // Recording a payment on the gateway's return leg.
 mock.onPost(new RegExp('^membership/[^/]+/payment$')).reply(withDelay([200, { status: 'ok' }]));
+
+// A renewal link — membership/{id}/{code} — resolves to the record the form opens prefilled.
+mock.onGet(new RegExp(`^membership/${membershipRenewal.id}/[^/]+$`)).reply(withDelay([200, membershipRenewal]));
+
+// Submitting a renewal answers with the saved record, the same as a fresh application.
+mock.onPost(new RegExp('^membership/[^/]+/[^/]+/renew$')).reply(
+    withDelay([200, membershipSubmitted(membershipRenewal.id, membershipRenewal.type)]),
+);
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {

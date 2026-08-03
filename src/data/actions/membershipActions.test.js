@@ -4,7 +4,9 @@ import {
     checkIsRenewing,
     clearMembership,
     loadMembership,
+    loadMembershipByCode,
     loadMembershipFormData,
+    renewMembership,
     saveMembershipPayment,
     submitMembership,
 } from './membershipActions';
@@ -116,6 +118,66 @@ describe('Membership actions', () => {
             expect(mockActionsStore.getActions()).toHaveDispatchedActions([
                 actions.MEMBERSHIP_LOADING,
                 actions.MEMBERSHIP_FAILED,
+            ]);
+        });
+    });
+
+    describe('loadMembershipByCode', () => {
+        it('dispatches loading then loaded with the record the link points at', async () => {
+            const record = { id: 'abc-123', type: 'community', status: 'renewing' };
+            mockApi
+                .onGet(repositories.routes.MEMBERSHIP_BY_CODE_API({ id: 'abc-123', code: 'the-code' }).apiUrl)
+                .reply(200, record);
+
+            await mockActionsStore.dispatch(loadMembershipByCode('abc-123', 'the-code'));
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_LOADING,
+                actions.MEMBERSHIP_LOADED,
+            ]);
+        });
+
+        it('dispatches loading then failed when the link is not honoured', async () => {
+            mockApi.onGet(repositories.routes.MEMBERSHIP_BY_CODE_API({ id: 'abc-123', code: 'bad' }).apiUrl).reply(403);
+
+            await mockActionsStore.dispatch(loadMembershipByCode('abc-123', 'bad'));
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_LOADING,
+                actions.MEMBERSHIP_FAILED,
+            ]);
+        });
+    });
+
+    describe('renewMembership', () => {
+        it('dispatches saving then saved, and resolves with the saved record', async () => {
+            const membership = { id: 'abc-123', code: 'the-code', type: 'community' };
+            const saved = { id: 'abc-123', type: 'community', status: 'unconfirmed' };
+            mockApi
+                .onPost(repositories.routes.MEMBERSHIP_RENEW_API({ id: 'abc-123', code: 'the-code' }).apiUrl)
+                .reply(200, saved);
+
+            const result = await mockActionsStore.dispatch(renewMembership(membership));
+
+            expect(result).toEqual(saved);
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_SAVING,
+                actions.MEMBERSHIP_SAVED,
+            ]);
+        });
+
+        it('dispatches save failed and rejects when the renewal fails', async () => {
+            mockApi
+                .onPost(repositories.routes.MEMBERSHIP_RENEW_API({ id: 'abc-123', code: 'the-code' }).apiUrl)
+                .reply(422);
+
+            await expect(
+                mockActionsStore.dispatch(renewMembership({ id: 'abc-123', code: 'the-code' })),
+            ).rejects.toBeDefined();
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_SAVING,
+                actions.MEMBERSHIP_SAVE_FAILED,
             ]);
         });
     });

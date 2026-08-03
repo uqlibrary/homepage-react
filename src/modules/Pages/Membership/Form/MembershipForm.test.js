@@ -40,19 +40,21 @@ const setup = (props = {}, route = '/membership/form/community') => {
     const actions = {
         loadMembershipFormData: jest.fn(),
         clearMembership: jest.fn(),
+        loadMembershipByCode: jest.fn(),
         submitMembership: jest.fn().mockResolvedValue({ id: 'abc-123' }),
+        renewMembership: jest.fn().mockResolvedValue({ id: 'abc-123' }),
         ...props.actions,
     };
+
+    const element = <MembershipForm {...{ membershipFormData, ...props, actions }} />;
 
     const utils = render(
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={mui1theme}>
                 <MemoryRouter initialEntries={[route]}>
                     <Routes>
-                        <Route
-                            path="/membership/form/:type"
-                            element={<MembershipForm {...{ membershipFormData, ...props, actions }} />}
-                        />
+                        <Route path="/membership/form/:type" element={element} />
+                        <Route path="/membership/form/:type/:id/:code" element={element} />
                     </Routes>
                 </MemoryRouter>
             </ThemeProvider>
@@ -216,5 +218,79 @@ describe('MembershipForm', () => {
         const { actions } = setup();
 
         expect(actions.clearMembership).toHaveBeenCalled();
+    });
+
+    describe('renewing from an emailed link', () => {
+        const renewalRoute = '/membership/form/community/abc-009/the-code';
+        const renewalRecord = {
+            id: 'abc-009',
+            type: 'community',
+            status: 'renewing',
+            title: 'Ms',
+            first_name: 'Renewing',
+            sn: 'Member',
+            date_of_birth: '2-12-1985',
+            mail: 'renewing.member@example.org',
+            phone: '0733654000',
+            home_address_0: '123 Library Way',
+            home_address_city: 'Brisbane',
+            home_address_state: 'QLD',
+            home_address_postcode: '4067',
+        };
+
+        it('fetches the record the renewal link points at', () => {
+            const { actions } = setup({ membership: null }, renewalRoute);
+
+            expect(actions.loadMembershipByCode).toHaveBeenCalledWith('abc-009', 'the-code');
+        });
+
+        it('waits for the record before showing the form', () => {
+            setup({ membership: null, membershipLoading: true }, renewalRoute);
+
+            expect(screen.getByText('Loading the application form')).toBeInTheDocument();
+            expect(screen.queryByTestId('membership-form')).not.toBeInTheDocument();
+        });
+
+        it('prefills the form and locks the identity fields', async () => {
+            setup({ membership: renewalRecord }, renewalRoute);
+
+            await waitFor(() => expect(screen.getByTestId('first_name-input')).toHaveValue('Renewing'));
+            expect(screen.getByTestId('first_name-input')).toBeDisabled();
+            expect(screen.getByTestId('sn-input')).toBeDisabled();
+            // An editable field is not locked.
+            expect(screen.getByTestId('mail-input')).not.toBeDisabled();
+            // A renewal keeps the address it already has, so the postcode helper drops away.
+            expect(screen.queryByTestId('membership-form-postcode-help')).not.toBeInTheDocument();
+        });
+
+        it('renews and goes to the received page', async () => {
+            const { actions } = setup({ membership: renewalRecord }, renewalRoute);
+
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+            await waitFor(() => expect(actions.renewMembership).toHaveBeenCalledTimes(1));
+            expect(actions.renewMembership).toHaveBeenCalledWith(
+                expect.objectContaining({ id: 'abc-009', code: 'the-code' }),
+            );
+            await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/membership/received/abc-123'));
+        });
+
+        it('labels the button as a renewal', () => {
+            setup({ membership: renewalRecord }, renewalRoute);
+
+            expect(screen.getByTestId('membership-form-submit')).toHaveTextContent(form.renew);
+        });
+
+        it('says it is renewing while the renewal is in flight', () => {
+            setup({ membership: renewalRecord, membershipSaving: true }, renewalRoute);
+
+            expect(screen.getByTestId('membership-form-submit')).toHaveTextContent(form.renewing);
+        });
+
+        it('reports a renewal whose record could not be loaded', () => {
+            setup({ membership: null, membershipError: 'Forbidden' }, renewalRoute);
+
+            expect(screen.getByTestId('membership-form-load-error')).toHaveTextContent(form.renewalLoadFailed);
+        });
     });
 });

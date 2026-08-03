@@ -102,8 +102,29 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.membership.title,
         },
         {
+            // The shape renewal emails sent over the years carry, so it has to keep working.
+            path: pathConfig.membershipRenewal(':type', ':id', ':code'),
+            element: <components.MembershipForm />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
             path: pathConfig.membershipReceived(':id'),
             element: <components.MembershipReceived />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            // Nothing in the app routes here — a renewal goes to the received page — but the route existed and
+            // links to it may still be in circulation.
+            path: pathConfig.membershipRenewed(':id'),
+            element: <components.MembershipReceived />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            path: pathConfig.membershipRenewedIndex,
+            element: <components.MembershipRenewed />,
             exact: true,
             pageTitle: locale.pages.membership.title,
         },

@@ -273,6 +273,22 @@ export const isFieldVisible = (field, type) => !!ruleFor(field)?.visibleFor.incl
 export const isFieldRequired = (field, type) =>
     isFieldVisible(field, type) && !!ruleFor(field)?.requiredFor.includes(type);
 
+// Identity is fixed once an application exists, so a renewal cannot rewrite who the member is.
+const LOCKED_ON_RENEWAL = [
+    'title',
+    'first_name',
+    'sn',
+    'otherName',
+    'date_of_birth_day',
+    'date_of_birth_month',
+    'date_of_birth_year',
+];
+
+/**
+ * A renewal locks the applicant's identity, so those fields are shown but cannot be edited.
+ */
+export const isFieldDisabled = (field, isRenewing) => !!isRenewing && LOCKED_ON_RENEWAL.includes(field);
+
 /**
  * Every validator that applies to a field for a given type, `required` first so a missing value is reported
  * as missing rather than as malformed.

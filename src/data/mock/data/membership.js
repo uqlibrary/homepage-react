@@ -161,6 +161,26 @@ export const membershipRenewing = {
     renewal_code: 'renew-me-123',
 };
 
+// The record a renewal link resolves to: a `renewing` application the form opens prefilled, with identity
+// fields locked. Its id and code match membershipRenewing above, so the landing renewal prompt links straight
+// to it.
+export const membershipRenewal = {
+    id: '00000000-0000-0000-0000-000000000009',
+    type: 'community',
+    status: 'renewing',
+    title: 'Ms',
+    first_name: 'Renewing',
+    sn: 'Member',
+    date_of_birth: '2-12-1985',
+    mail: 'renewing.member@example.org',
+    phone: '0733654000',
+    home_address_0: '123 Library Way',
+    home_address_1: 'St Lucia',
+    home_address_city: 'Brisbane',
+    home_address_state: 'QLD',
+    home_address_postcode: '4067',
+};
+
 // The saved record the API answers a submission with: an unconfirmed application, echoing back the type, plus
 // the gateway URL a paying type is sent to.
 export const membershipSubmitted = (id, type) => ({

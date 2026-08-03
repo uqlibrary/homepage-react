@@ -341,6 +341,12 @@ export const MEMBERSHIP_BY_ID_API = ({ id }) => ({ apiUrl: `membership/${id}` })
 // Record a payment against an application, from the gateway's return leg.
 export const MEMBERSHIP_PAYMENT_API = ({ id }) => ({ apiUrl: `membership/${id}/payment` });
 
+// Read an application via a renewal link, which authenticates on the id + code pair rather than a session.
+export const MEMBERSHIP_BY_CODE_API = ({ id, code }) => ({ apiUrl: `membership/${id}/${code}` });
+
+// Submit a renewal, authenticated by the same id + code from the link.
+export const MEMBERSHIP_RENEW_API = ({ id, code }) => ({ apiUrl: `membership/${id}/${code}/renew` });
+
 export const MEMBERSHIP_CHECK_RENEWING_API = () => ({
     apiUrl: 'membership/check/renewing',
     options: { params: { ts: getMillisecondCacheBuster() } },

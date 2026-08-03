@@ -40,6 +40,8 @@ export const pathConfig = {
     membership: '/membership',
     membershipForm: type => `/membership/form/${type}`,
     membershipReceived: id => `/membership/received/${id}`,
+    membershipRenewed: id => `/membership/renewed/${id}`,
+    membershipRenewedIndex: '/membership/renewed',
     membershipPaymentConfirmation: '/membership/paymentconfirmation',
     membershipRenewal: (type, id, code) => `/membership/form/${type}/${id}/${code}`,
     dlorProtected: '/digital-learning-hub-list',

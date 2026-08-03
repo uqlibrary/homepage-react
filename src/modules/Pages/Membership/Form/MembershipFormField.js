@@ -5,7 +5,7 @@ import { Field } from 'modules/SharedComponents/Toolbox/ReactHookForm';
 import { TextField } from 'modules/SharedComponents/Toolbox/TextField';
 import { SelectField } from 'modules/SharedComponents/Toolbox/SelectField';
 
-import { getFieldValidators, isFieldRequired, isFieldVisible } from '../membershipFieldRules';
+import { getFieldValidators, isFieldDisabled, isFieldRequired, isFieldVisible } from '../membershipFieldRules';
 import { getFieldConfig, getFieldOptions, isSelectField } from '../membershipFormFields';
 
 /**
@@ -14,7 +14,7 @@ import { getFieldConfig, getFieldOptions, isSelectField } from '../membershipFor
  * What it looks like comes from membershipFormFields; whether it is shown at all, whether it is required and
  * how it is checked come from membershipFieldRules. Nothing here decides any of that.
  */
-export const MembershipFormField = ({ field, control, type, formData, current, hideLabel }) => {
+export const MembershipFormField = ({ field, control, type, formData, current, isRenewing, hideLabel }) => {
     const config = getFieldConfig(field);
 
     // A field this type never asks for is simply not drawn, so it can neither be filled in nor validated.
@@ -35,6 +35,8 @@ export const MembershipFormField = ({ field, control, type, formData, current, h
         label: config.label,
         hideLabel: !!hideLabel,
         required,
+        // A renewal cannot rewrite who the member is, so those fields are shown but locked.
+        disabled: isFieldDisabled(field, isRenewing),
     };
 
     if (isSelectField(field)) {
@@ -67,6 +69,7 @@ MembershipFormField.propTypes = {
     type: PropTypes.string,
     formData: PropTypes.object,
     current: PropTypes.object,
+    isRenewing: PropTypes.bool,
     hideLabel: PropTypes.bool,
 };
 
