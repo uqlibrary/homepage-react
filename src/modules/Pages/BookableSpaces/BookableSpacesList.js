@@ -40,6 +40,7 @@ import {
     FILTER_DISPLAY_ON_SIMPLE,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
     deserialiseJourneyMapFilterState,
+    getJourneySearchParams,
     getFlatFacilityTypeList,
     isBookable,
     normalizeFilterDisplayOn,
@@ -390,10 +391,7 @@ export const BookableSpacesList = ({
     const ALL_CAMPUSES_SELECTION_STORAGE_KEY = 'bookableSpacesAllCampusesSelected';
     const journeyMapFilterState = React.useMemo(() => {
         if (typeof window === 'undefined') return null;
-        const searchValue = location.search || window.location.search || '';
-        const hashValue = location.hash || window.location.hash || '';
-        const hashSearch = hashValue.includes('?') ? hashValue.split('?')[1] : '';
-        const params = new URLSearchParams(searchValue || hashSearch);
+        const { params } = getJourneySearchParams(new URL(window.location.href));
         return deserialiseJourneyMapFilterState(params);
     }, [location.search, location.hash]);
 
