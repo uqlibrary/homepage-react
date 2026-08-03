@@ -504,6 +504,15 @@ const BookableSpacesWrapper = ({
         [servicesAndSpacesArticles],
     );
 
+    const hasJourneyMapFiltersInUrl = React.useMemo(() => {
+        if (typeof window === 'undefined') {
+            return false;
+        }
+
+        const { params } = getJourneySearchParams(new URL(window.location.href));
+        return params.get('mapFilters') !== null;
+    }, [location.hash, location.pathname, location.search]);
+
     const highlightSpaceDescription = React.useMemo(() => {
         if (!highlightedSpace?.space_description) return '';
         return String(highlightedSpace.space_description)
@@ -583,6 +592,12 @@ const BookableSpacesWrapper = ({
             return;
         }
 
+        // If URL already has explicit journey map filters, preserve them instead
+        // This should stop the intent filters from overriding any existing map filters in the URL (hopefully)
+        if (hasJourneyMapFiltersInUrl) {
+            return;
+        }
+
         const requestedIntent = availableIntentDefinitions.find(intent => intent.id === selectedIntentId) || null;
         if (!requestedIntent) {
             return;
@@ -611,6 +626,7 @@ const BookableSpacesWrapper = ({
         applyIntentFilters,
         availableIntentDefinitions,
         filteredFacilityTypeList,
+        hasJourneyMapFiltersInUrl,
         selectedFacilityTypes,
         selectedIntentId,
         view,
