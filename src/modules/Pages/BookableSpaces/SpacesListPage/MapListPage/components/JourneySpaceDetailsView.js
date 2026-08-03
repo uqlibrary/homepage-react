@@ -13,7 +13,7 @@ import BookableSpacesMap from 'modules/Pages/BookableSpaces/Shared/BookableSpace
 import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursDown';
 import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
-import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
+import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
 import {
     defaultChipStyles,
     getFriendlyLocationDescription,
@@ -288,7 +288,7 @@ const JourneySpaceDetailsView = ({
                     </Box>
 
                     {!!visibleOutage && (
-                        <SpaceOutageNotice
+                        <SpacesOutageNotice
                             bookableSpace={selectedSpace}
                             visibleOutage={visibleOutage}
                             hideReason={!visibleOutage.reason}

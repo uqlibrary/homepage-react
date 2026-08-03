@@ -17,7 +17,7 @@ import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage
 
 import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import { getFriendlyLocationDescription, isBookable } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
-import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
+import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
 
 import { OpeningHoursShort } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursShort';
 
@@ -99,7 +99,7 @@ const CollapsedSection = ({
                 {getFriendlyLocationDescription(bookableSpace, true)}
             </StyledFriendlyLocationDiv>
             {!!visibleOutage && (
-                <SpaceOutageNotice bookableSpace={bookableSpace} visibleOutage={visibleOutage} hideReason />
+                <SpacesOutageNotice bookableSpace={bookableSpace} visibleOutage={visibleOutage} hideReason />
             )}
             <BookingLink bookableSpace={bookableSpace} />
             {isBookable(bookableSpace) && !!bookableSpace?.space_capacity && bookableSpace?.space_capacity > 0 && (
