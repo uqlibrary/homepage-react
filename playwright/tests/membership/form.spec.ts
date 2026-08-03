@@ -26,16 +26,16 @@ const fillCommunityForm = async page => {
 };
 
 test.describe('Membership application form (community)', () => {
-    test('a community applicant can fill and submit the form and reach the received page', async ({ page }) => {
+    test('a community applicant can fill and submit the form and is taken to pay', async ({ page }) => {
         await page.goto('/membership/form/community?user=public');
         await expect(page.getByTestId('membership-form')).toBeVisible();
 
         await fillCommunityForm(page);
         await page.getByTestId('membership-form-submit').click();
 
-        await expect(page).toHaveURL(/\/membership\/received\//);
-        await expect(page.getByTestId('membership-received')).toBeVisible();
-        await expect(page.getByTestId('membership-received-reference')).toContainText('123');
+        // Community is a paying type, so a successful submit takes the applicant on to the payment gateway,
+        // carrying the new application's reference with it.
+        await expect(page).toHaveURL(/\/membership\/paymentconfirmation\?.*UQ_LIB_ID=[^&]*123/);
     });
 
     test('submitting an incomplete form reports the problem instead of proceeding', async ({ page }) => {
@@ -92,8 +92,10 @@ test.describe('Membership application form (type-specific rendering)', () => {
         await fillBaseIdentity(page);
         await page.getByTestId('membership-form-submit').click();
 
+        // Fryer does not pay, so a successful submit lands on the received page telling them what happens next.
         await expect(page).toHaveURL(/\/membership\/received\//);
-        await expect(page.getByTestId('membership-received-reference')).toContainText('123');
+        await expect(page.getByTestId('membership-received')).toBeVisible();
+        await expect(page.getByTestId('membership-received-notified')).toBeVisible();
     });
 
     test('a proxy application is about the nominated borrower and names both parties', async ({ page }) => {
@@ -180,8 +182,11 @@ test.describe('Membership terms & consent', () => {
         await page.getByTestId('accept_mandatory_terms-input').check();
         await page.getByTestId('membership-form-submit').click();
 
+        // Alumni does not pay, so a successful submit lands on the received page with the entitlements
+        // acknowledgement it shows to alumni applicants.
         await expect(page).toHaveURL(/\/membership\/received\//);
-        await expect(page.getByTestId('membership-received-reference')).toContainText('123');
+        await expect(page.getByTestId('membership-received')).toBeVisible();
+        await expect(page.getByTestId('membership-alumni-ack')).toBeVisible();
     });
 
     test('a community applicant agrees by submitting, with no checkbox', async ({ page }) => {

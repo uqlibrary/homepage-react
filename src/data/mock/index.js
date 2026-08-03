@@ -377,6 +377,24 @@ mock.onPost(routes.MEMBERSHIP_CREATE_API().apiUrl).reply(config => {
     return withDelay([201, membershipSubmitted('00000000-0000-0000-0000-000000000123', type)])();
 });
 
+// Whether the mock user is in the group the API gates the membership back-office on.
+const isMembershipAdmin = () =>
+    (mockData.accounts[user]?.groups ?? []).some(group => group.includes('lib_libapi_MembershipAdmins'));
+
+// Reading an application back by id, which the received page falls back to on a reload.
+//
+// This is admin-only in production - it sits in the lib_libapi_MembershipAdmins route group - so an applicant
+// reloading /membership/received/:id is refused and loses their Pay now link. That is modelled here rather
+// than answering 200 to everyone, which would tell a developer the reload worked when it never can, and leave
+// the page's real fallback wording unreachable locally.
+mock.onGet(new RegExp('^membership/[0-9a-f-]{36}$')).reply(config => {
+    if (!isMembershipAdmin()) {
+        return withDelay([403, {}])();
+    }
+    const id = config.url.split('/')[1];
+    return withDelay([200, membershipSubmitted(id, 'community')])();
+});
+
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {
         key: '123456-123456-123456-123456-123456',

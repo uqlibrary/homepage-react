@@ -212,10 +212,8 @@ describe('MembershipForm', () => {
         expect(screen.getByTestId('membership-form-submit')).toHaveTextContent(form.applying);
     });
 
-    it('drops the record from the store when it unmounts', () => {
-        const { unmount, actions } = setup();
-
-        unmount();
+    it('clears any earlier record when it mounts, so a fresh application starts clean', () => {
+        const { actions } = setup();
 
         expect(actions.clearMembership).toHaveBeenCalled();
     });

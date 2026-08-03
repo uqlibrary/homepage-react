@@ -1,6 +1,12 @@
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
-import { checkIsRenewing, clearMembership, loadMembershipFormData, submitMembership } from './membershipActions';
+import {
+    checkIsRenewing,
+    clearMembership,
+    loadMembership,
+    loadMembershipFormData,
+    submitMembership,
+} from './membershipActions';
 
 describe('Membership actions', () => {
     beforeEach(() => {
@@ -84,6 +90,31 @@ describe('Membership actions', () => {
             expect(mockActionsStore.getActions()).toHaveDispatchedActions([
                 actions.MEMBERSHIP_SAVING,
                 actions.MEMBERSHIP_SAVE_FAILED,
+            ]);
+        });
+    });
+
+    describe('loadMembership', () => {
+        it('dispatches loading then loaded with the record', async () => {
+            const record = { id: 'abc-123', type: 'community', status: 'unconfirmed' };
+            mockApi.onGet(repositories.routes.MEMBERSHIP_BY_ID_API({ id: 'abc-123' }).apiUrl).reply(200, record);
+
+            await mockActionsStore.dispatch(loadMembership('abc-123'));
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_LOADING,
+                actions.MEMBERSHIP_LOADED,
+            ]);
+        });
+
+        it('dispatches loading then failed when the record cannot be read', async () => {
+            mockApi.onGet(repositories.routes.MEMBERSHIP_BY_ID_API({ id: 'abc-123' }).apiUrl).reply(403);
+
+            await mockActionsStore.dispatch(loadMembership('abc-123'));
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_LOADING,
+                actions.MEMBERSHIP_FAILED,
             ]);
         });
     });

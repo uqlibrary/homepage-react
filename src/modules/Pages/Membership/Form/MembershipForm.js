@@ -52,8 +52,11 @@ export const MembershipForm = ({
         }
     }, [actions, membershipFormData, membershipFormDataError, membershipFormDataLoading]);
 
-    // Leaving the record behind would show it to the next application started in this session.
-    useEffect(() => () => actions.clearMembership(), [actions]);
+    // Clear any record left from an earlier application so a fresh one starts clean. Done on mount rather
+    // than on the way out so the record this form saves survives for the received page to read.
+    useEffect(() => {
+        actions.clearMembership();
+    }, [actions]);
 
     // An unrecognised type has no form to show, so it is sent back to the landing chooser.
     useEffect(() => {

@@ -335,6 +335,9 @@ export const MEMBERSHIP_FORM_DATA_API = () => ({ apiUrl: 'membership' });
 // Submit a new membership application.
 export const MEMBERSHIP_CREATE_API = () => ({ apiUrl: 'membership' });
 
+// Read a single application back by id — the received page falls back to this on a reload.
+export const MEMBERSHIP_BY_ID_API = ({ id }) => ({ apiUrl: `membership/${id}` });
+
 export const MEMBERSHIP_CHECK_RENEWING_API = () => ({
     apiUrl: 'membership/check/renewing',
     options: { params: { ts: getMillisecondCacheBuster() } },

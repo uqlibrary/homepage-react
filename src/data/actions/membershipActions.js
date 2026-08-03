@@ -1,6 +1,11 @@
 import * as actions from './actionTypes';
 import { get, post } from 'repositories/generic';
-import { MEMBERSHIP_CHECK_RENEWING_API, MEMBERSHIP_CREATE_API, MEMBERSHIP_FORM_DATA_API } from 'repositories/routes';
+import {
+    MEMBERSHIP_BY_ID_API,
+    MEMBERSHIP_CHECK_RENEWING_API,
+    MEMBERSHIP_CREATE_API,
+    MEMBERSHIP_FORM_DATA_API,
+} from 'repositories/routes';
 
 /**
  * Load the data the membership form and landing chooser are built from: account_types, titles, hospital.* and
@@ -45,6 +50,19 @@ export function submitMembership(membership) {
             dispatch({ type: actions.MEMBERSHIP_SAVE_FAILED, payload: error });
             throw error;
         }
+    };
+}
+
+/**
+ * Read a single application back by id. The record normally arrives in the store from the submit that reached
+ * the received page; this fills it in on a reload or a bookmarked link, where the store starts empty.
+ */
+export function loadMembership(id) {
+    return dispatch => {
+        dispatch({ type: actions.MEMBERSHIP_LOADING });
+        return get(MEMBERSHIP_BY_ID_API({ id }))
+            .then(response => dispatch({ type: actions.MEMBERSHIP_LOADED, payload: response }))
+            .catch(error => dispatch({ type: actions.MEMBERSHIP_FAILED, payload: error.message }));
     };
 }
 
