@@ -10,6 +10,7 @@ import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesListPag
 import SpaceDetails from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/SpaceDetails';
 
 import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
+import { StyledSkipLinkAnchor } from 'helpers/general';
 
 const StyledHeadingWrapperSpan = styled(Grid)(() => ({
     display: 'inline-flex',
@@ -34,16 +35,6 @@ const StyledSpaceGridWrapperDiv = styled('div')(() => ({
     maxHeight: '99vh',
     paddingTop: '0.5rem',
     paddingLeft: '1rem',
-    '& .showsOnlyOnFocus': {
-        position: 'absolute',
-        left: '-999px',
-        top: '-999px',
-        '&:focus': {
-            position: 'relative',
-            top: 'inherit',
-            left: 'inherit',
-        },
-    },
 }));
 
 const SidebarSpacesList = ({
@@ -80,9 +71,7 @@ const SidebarSpacesList = ({
 
     return (
         <StyledSpaceGridWrapperDiv id="space-wrapper" data-testid="space-wrapper" className={suppliedClassName}>
-            <a className="showsOnlyOnFocus" href="#topOfSidebar">
-                Skip back to list of filters
-            </a>
+            <StyledSkipLinkAnchor href="#topOfSidebar">Skip back to list of filters</StyledSkipLinkAnchor>
             {filteredSpaceLocations?.length === 0 && (
                 <p data-testid="no-spaces-visible">
                     No Spaces match these filters - change your selection in the sidebar to show some spaces.
@@ -92,7 +81,6 @@ const SidebarSpacesList = ({
                 <Typography
                     component={'h2'}
                     variant={'h6'}
-                    // className="showsOnlyOnFocus"
                     data-testid={
                         !!activeFilterCount && filteredSpaceLocations?.length < totalSpaceCount
                             ? 'space-space-count'

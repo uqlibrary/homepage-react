@@ -16,7 +16,7 @@ import {
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
-import { StyledSecondaryButton } from 'helpers/general';
+import { StyledSkipLinkAnchor, StyledSecondaryButton } from 'helpers/general';
 
 import {
     StyledJourneyPanelSection,
@@ -88,9 +88,9 @@ export const JourneyResultsView = ({
                         {spaces.length}
                         {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
                     </Typography>
-                    <a href="#topOfSidebar" className="showsOnlyOnFocus" data-testid="skip-to-filter-list">
+                    <StyledSkipLinkAnchor href="#topOfSidebar" data-testid="skip-to-filter-list">
                         Skip to filters
-                    </a>
+                    </StyledSkipLinkAnchor>
                     <StyledButtonWrapperStack direction="row" spacing={1}>
                         <StyledSecondaryButton onClick={handleClearJourneyFilters}>
                             Reset quick filters

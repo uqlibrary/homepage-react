@@ -304,3 +304,18 @@ export const standardisedExtension = url => {
     const dotPosition = url?.lastIndexOf('.');
     return dotPosition > -1 ? url.substring(dotPosition + 1).toUpperCase() : '';
 };
+
+export const StyledSkipLinkAnchor = styled('a')(({ theme }) => ({
+    position: 'absolute',
+    left: '-999px',
+    top: '-999px',
+    '&:focus': {
+        position: 'relative',
+        top: 'inherit',
+        left: 'inherit',
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+        fontWeight: 500,
+        textDecoration: 'underline',
+    },
+}));

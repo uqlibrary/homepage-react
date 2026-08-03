@@ -20,7 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import ReplayIcon from '@mui/icons-material/Replay';
 
-import { addClass, removeClass, standardText, StyledPrimaryButton } from 'helpers/general';
+import { addClass, removeClass, StyledSkipLinkAnchor, standardText, StyledPrimaryButton } from 'helpers/general';
 
 import {
     FILTER_BOOKABLE_TYPE_ID,
@@ -106,17 +106,6 @@ const StyledSidebarDiv = styled('div')(() => ({
         flexBasis: '100%',
         maxWidth: '100%',
         minWidth: 0,
-    },
-
-    '& .showsOnlyOnFocus': {
-        position: 'absolute',
-        left: '-999px',
-        top: '-999px',
-        '&:focus': {
-            position: 'relative',
-            top: 'inherit',
-            left: 'inherit',
-        },
     },
     '&::-webkit-scrollbar': {
         width: '8px',
@@ -917,9 +906,9 @@ export const SidebarFilters = ({
         <StyledSidebarDiv id="StyledSidebarDivTemp" className={`filterSideBar ${suppliedClassName}`}>
             <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
                 {!isJourneyView && (
-                    <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
+                    <StyledSkipLinkAnchor href="#space-wrapper" data-testid="skip-to-spaces-list">
                         Skip to list of Spaces
-                    </a>
+                    </StyledSkipLinkAnchor>
                 )}
                 <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
                     Filter Spaces

@@ -56,20 +56,6 @@ export const StyledResultsSplitLayoutDiv = styled('div')(({ theme }) => ({
     '> .aside': {
         order: -1, // flip the order to get the heading structures right
     },
-    '& .showsOnlyOnFocus': {
-        position: 'absolute',
-        left: '-999px',
-        top: '-999px',
-        '&:focus': {
-            position: 'relative',
-            top: 'inherit',
-            left: 'inherit',
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-            fontWeight: 500,
-            textDecoration: 'underline',
-        },
-    },
 }));
 
 export const StyledButtonWrapperStack = styled(Stack)(() => ({
