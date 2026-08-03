@@ -112,7 +112,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
             <StyledWrapper>
                 <Grid container spacing={3} sx={{ paddingBottom: 1.5 }}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                        <Grid size={{ xs: 12 }} sm className={'flexParent'}>
+                        <Grid size={{ xs: 12 }} className={'flexParent'}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton
                                     animation="wave"
