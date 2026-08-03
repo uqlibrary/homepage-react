@@ -864,7 +864,6 @@ export const DLOList = ({
                     {filterListTrimmed?.map(facetType => {
                         return (
                             <Grid
-                                item
                                 key={facetType?.facet_type_slug}
                                 sx={{
                                     width: '100%',

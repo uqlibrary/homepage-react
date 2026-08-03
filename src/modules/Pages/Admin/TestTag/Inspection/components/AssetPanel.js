@@ -206,7 +206,7 @@ const AssetPanel = ({
                 </Grid>
             </Grid>
             <Grid container spacing={3}>
-                <Grid size={{ xs: 12 }} item>
+                <Grid size={{ xs: 12 }}>
                     <SwitchIncludeAllTeams id={componentIdLower} locale={pageLocale} onChange={onAllTeamsChange} />
                     {!!allTeams &&
                         Object.keys(selectedAsset ?? {}).length > 0 &&
