@@ -1,4 +1,6 @@
 import { expect, Page, test } from '@uq/pw/test';
+import { assertAccessibility } from '@uq/pw/lib/axe';
+import { COLOR_UQPURPLE, COLOUR_UQ_WARNING_50 } from '@uq/pw/lib/constants';
 
 const NUMBER_SPACES_DEFAULT = 10;
 
@@ -22,6 +24,67 @@ test.describe('Spaces Journey Result page', () => {
     test.beforeEach(async ({ page, context }) => {
         // await disableMazeMapAssets(page);
         await context.clearCookies();
+    });
+    test.describe('Spaces Journey Result page accessibility', () => {
+        test('spaces result page is accessible', async ({ page }) => {
+            // load the spaces results page
+            await page.goto('/spaces/results');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+
+            await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
+
+            await assertAccessibility(page, '[data-testid="library-spaces"]');
+        });
+        test('the skip to filters button works', async ({ page }) => {
+            // load the spaces results page
+            await page.goto('/spaces/results');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+
+            await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
+
+            // the first field in the filter sidebar is not focussed
+            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
+                'border-left-color',
+                'rgba(0, 0, 0, 0.23)',
+            );
+            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
+                'border-left-width',
+                '0px',
+            );
+
+            // tab through allll the links to give a realistic experience
+            // (also because when we focus somewhere nearer, it does weird things - do it properly!)
+            await page.keyboard.press('Tab'); // tab to uq home link
+            await page.keyboard.press('Tab'); // tab to primary nav study link
+            await page.keyboard.press('Tab'); // tab to primary nav research link
+            await page.keyboard.press('Tab'); // tab to primary nav partners link
+            await page.keyboard.press('Tab'); // tab to primary nav about link
+            await page.keyboard.press('Tab'); // tab to search button
+            await page.keyboard.press('Tab'); // tab to secondary nav uq home link
+            await page.keyboard.press('Tab'); // tab to secondary nav news link
+            await page.keyboard.press('Tab'); // tab to secondary nav events link
+            await page.keyboard.press('Tab'); // tab to secondary nav give link
+            await page.keyboard.press('Tab'); // tab to secondary nav contact link
+            await page.keyboard.press('Tab'); // tab to breadcrumb uq home link
+            await page.keyboard.press('Tab'); // tab to breadcrumb library local link
+            await page.keyboard.press('Tab'); // tab to breadcrumb spaces link
+            await page.keyboard.press('Tab'); // tab to login
+            await page.keyboard.press('Tab'); // tab to collapsed proactive chat icon
+            await page.keyboard.press('Tab'); // tab to CA link
+
+            await page.keyboard.press('Tab'); // tab to skip to filters
+            await page.keyboard.press('Enter'); // activate skip to filters link, lands on filter sidebar
+            await page.keyboard.press('Tab'); // tab to choose a campus
+
+            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
+                'border-left-color',
+                COLOR_UQPURPLE,
+            );
+            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
+                'border-left-width',
+                '2px',
+            );
+        });
     });
     test('spaces result page has the correct parts', async ({ page }) => {
         const firstSpacePane = page.getByTestId('spaces-result-list-item-1');

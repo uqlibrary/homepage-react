@@ -43,6 +43,37 @@ export const StyledResultsSplitLayout = styled('div')(({ theme }) => ({
         gridTemplateColumns: '1fr',
         width: '100%',
     },
+    '& h1': {
+        fontFamily: theme.palette.designSystem.fontFamilyH1,
+        fontWeight: 500,
+        color: theme.palette.designSystem.headingColor,
+        fontSize: '40px',
+    },
+    '& h2': {
+        color: theme.palette.designSystem.bodyCopy,
+        marginTop: 1.5,
+    },
+    '> aside': {
+        order: -1, // flip the order to get the heading structures right
+    },
+    '& .showsOnlyOnFocus': {
+        position: 'absolute',
+        left: '-999px',
+        top: '-999px',
+        '&:focus': {
+            position: 'relative',
+            top: 'inherit',
+            left: 'inherit',
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+            fontWeight: 500,
+            textDecoration: 'underline',
+        },
+    },
+}));
+
+export const StyledButtonWrapperStack = styled(Stack)(() => ({
+    marginTop: '0.75rem',
 }));
 
 export const StyledResultsSidebarPanel = styled('aside')(({ theme }) => ({
