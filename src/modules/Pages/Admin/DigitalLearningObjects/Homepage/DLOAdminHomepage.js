@@ -570,8 +570,7 @@ export const DLOAdminHomepage = ({
                                                         )}
                                                     </Grid>
                                                     <StyleObjectDetailGridItem
-                                                        item
-                                                        xs={7}
+                                                        size={{ xs: 7 }}
                                                         data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
                                                             o?.object_public_uuid,
                                                         )}`}

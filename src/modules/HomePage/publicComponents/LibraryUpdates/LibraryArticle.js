@@ -245,10 +245,7 @@ const LibraryArticle = ({ article, articleindex }) => {
             key={articleindex}
             articleindex={articleindex}
             theme={theme}
-            item
-            xs={12}
-            sm={articleindex === 0 ? 12 : 6}
-            md={articleindex === 0 ? 12 : 4}
+            size={{ xs: 12, sm: articleindex === 0 ? 12 : 6, md: articleindex === 0 ? 12 : 4 }}
             className="article-container"
         >
             <StandardCard className={'article-card'} noPadding noHeader style={{ boxShadow: 'none' }}>

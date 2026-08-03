@@ -105,7 +105,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
                 <section aria-live="assertive">
                     <StandardCard title="System temporarily unavailable" noPadding>
                         <Grid container>
-                            <StyledPageLayout item xs={12} data-testid="admin-alerts-list-error">
+                            <StyledPageLayout size={{ xs: 12 }} data-testid="admin-alerts-list-error">
                                 <p>
                                     We're working on the issue and will have service restored as soon as possible.
                                     Please try again later.
@@ -128,14 +128,14 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
         <StandardPage title="Alerts Management">
             <section aria-live="assertive">
                 <Grid container>
-                    <StyledMobileView item xs={12}>
+                    <StyledMobileView size={{ xs: 12 }}>
                         <p>Mobile? You might want to turn your phone sideways!</p>
                     </StyledMobileView>
                 </Grid>
                 <AlertsUtilityArea actions={actions} helpContent={locale.listPage.help} showAddButton />
                 <StandardCard title="All alerts" noPadding>
                     <Grid container>
-                        <StyledPageLayout item xs={12} id="admin-alerts-list" data-testid="admin-alerts-list">
+                        <StyledPageLayout size={{ xs: 12 }} id="admin-alerts-list" data-testid="admin-alerts-list">
                             <div data-testid="admin-alerts-list-current-list">
                                 <AlertsListAsTable
                                     rows={currentAlerts}

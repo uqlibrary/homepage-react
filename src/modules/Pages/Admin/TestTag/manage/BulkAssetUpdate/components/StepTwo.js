@@ -238,7 +238,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                     },
                                 }}
                             />
-                            <Grid xs={12} sm={4}>
+                            <Grid size={{ xs: 12, sm: 4 }}>
                                 <MonthsSelector
                                     id={componentId}
                                     disabled={isLocationDisabled}
@@ -278,7 +278,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             }}
                         >
                             <Grid container spacing={3}>
-                                <Grid xs={12} sm={6}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <TeamSelector
                                         id={componentId}
                                         options={userTeamList}
@@ -315,13 +315,13 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             }}
                         >
                             <Grid container spacing={3}>
-                                <Grid xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <Typography variant="body2">
                                         Selecting this option will exclude any chosen assets with status:{' '}
                                         {assetStatusOptionExcludes.join(', ')}
                                     </Typography>
                                 </Grid>
-                                <Grid xs={12} sm={6}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <AssetStatusSelector
                                         id={componentId}
                                         options={
@@ -364,7 +364,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             }}
                         >
                             <Grid container>
-                                <Grid xs={12} sm={6}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <AssetTypeSelector
                                         id={componentId}
                                         locale={pageLocale.form.assetType}
@@ -427,7 +427,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
             </Grid>
 
             <Grid container spacing={3} mt={3}>
-                <Grid xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -446,7 +446,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
             </Grid>
 
             <Grid container spacing={4} padding={2} className={'actionButtons'}>
-                <Grid xs={12} sm={6} container justifyContent="flex-start">
+                <Grid size={{ xs: 12, sm: 6 }} container justifyContent="flex-start">
                     <Button
                         variant="outlined"
                         onClick={handlePrevStep}
@@ -457,7 +457,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                         {pageLocale.form.step.button.previous}
                     </Button>
                 </Grid>
-                <Grid xs={12} sm={6} container justifyContent="flex-end">
+                <Grid size={{ xs: 12, sm: 6 }} container justifyContent="flex-end">
                     <Button
                         variant="contained"
                         color="primary"

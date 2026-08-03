@@ -1606,7 +1606,7 @@ export const DLOList = ({
                     </Grid>
                 </Grid>
                 <Grid container>
-                    <StyledFilterSidebarGrid item xs={12} md={3} id="filterSidebar" data-testid="filter-sidebar">
+                    <StyledFilterSidebarGrid size={{ xs: 12, md: 3 }} id="filterSidebar" data-testid="filter-sidebar">
                         {(() => {
                             if (!!dlorFilterListError || !filterListTrimmed || filterListTrimmed.length === 0) {
                                 return (

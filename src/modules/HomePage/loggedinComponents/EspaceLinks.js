@@ -43,7 +43,7 @@ const StyledActionsUl = styled('ul')(() => ({
 
 const EspacePossible = ({ recordCount }) => {
     return (
-        <StyledGridListItem component={'li'} item xs={12}>
+        <StyledGridListItem component={'li'} size={{ xs: 12 }}>
             <MuiLink
                 component={RouterLink}
                 to={'https://espace.library.uq.edu.au/records/possible'}
@@ -61,7 +61,7 @@ const EspacePossible = ({ recordCount }) => {
 };
 const EspaceUpdateWorks = () => {
     return (
-        <StyledGridItem component={'div'} item xs={12}>
+        <StyledGridItem component={'div'} size={{ xs: 12 }}>
             <MuiLink
                 component={RouterLink}
                 to={'https://espace.library.uq.edu.au/dashboard'}
@@ -78,7 +78,7 @@ const EspaceUpdateWorks = () => {
 
 const EspaceEditorialAppointments = () => {
     return (
-        <StyledGridItem component={'div'} item xs={12}>
+        <StyledGridItem component={'div'} size={{ xs: 12 }}>
             <MuiLink
                 component={RouterLink}
                 to={'https://espace.library.uq.edu.au/editorial-appointments'}
@@ -94,7 +94,7 @@ const EspaceEditorialAppointments = () => {
 };
 const EspaceOrcid = () => {
     return (
-        <StyledGridListItem component={'li'} item xs={12}>
+        <StyledGridListItem component={'li'} size={{ xs: 12 }}>
             <MuiLink
                 component={RouterLink}
                 to={'https://espace.library.uq.edu.au/author-identifiers/orcid/link'}
@@ -111,7 +111,7 @@ const EspaceOrcid = () => {
 };
 const EspaceNTROs = ({ recordCount }) => {
     return (
-        <StyledGridListItem component={'li'} item xs={12}>
+        <StyledGridListItem component={'li'} size={{ xs: 12 }}>
             <MuiLink
                 component={RouterLink}
                 to={'https://espace.library.uq.edu.au/records/incomplete'}
@@ -137,7 +137,7 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
     return (
         <StandardCard subCard fullHeight primaryHeader noPadding standardCardId="espace-panel" title={'UQ eSpace'}>
             <Grid container component={'ul'} spacing={0} style={{ paddingInline: '24px', marginTop: '24px' }}>
-                <StyledGridItem component={'li'} item xs={12}>
+                <StyledGridItem component={'li'} size={{ xs: 12 }}>
                     <MuiLink
                         component={RouterLink}
                         to={'https://espace.library.uq.edu.au/dashboard'}

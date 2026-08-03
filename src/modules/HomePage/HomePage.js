@@ -251,8 +251,7 @@ export const HomePage = ({
                                 {!!verySimplelayout ? (
                                     <>
                                         <StyledGridItemLoggedInLeftMost
-                                            item
-                                            xs={12}
+                                            size={{ xs: 12 }}
                                             uqDsDesktop={4}
                                             data-testid="account-panel"
                                             style={{ paddingTop: 0 }}
@@ -268,8 +267,7 @@ export const HomePage = ({
                                         </StyledGridItemLoggedInLeftMost>
                                         {canSeeTrainingPanel(account) && (
                                             <StyledGridItemLoggedInLeftMost
-                                                item
-                                                xs={12}
+                                                size={{ xs: 12 }}
                                                 uqDsDesktop={4}
                                                 data-testid="training-panel"
                                                 style={{ paddingTop: 0 }}
@@ -282,8 +280,7 @@ export const HomePage = ({
                                             </StyledGridItemLoggedInLeftMost>
                                         )}
                                         <StyledGridItemLoggedInLeftMost
-                                            item
-                                            xs={12}
+                                            size={{ xs: 12 }}
                                             uqDsDesktop={4}
                                             data-testid="referencing-panel"
                                             style={{ paddingTop: 0 }}
@@ -296,8 +293,7 @@ export const HomePage = ({
                                         <Grid uqDsDesktop={4} size={{ xs: 12 }}>
                                             <Grid container>
                                                 <StyledGridItemLoggedInLeftMost
-                                                    item
-                                                    xs={12}
+                                                    size={{ xs: 12 }}
                                                     data-testid="account-panel"
                                                 >
                                                     <AccountPanel
@@ -311,8 +307,7 @@ export const HomePage = ({
                                                 </StyledGridItemLoggedInLeftMost>
                                                 {canSeeTrainingPanel(account) && (
                                                     <StyledGridItemLoggedInLeftMost
-                                                        item
-                                                        xs={12}
+                                                        size={{ xs: 12 }}
                                                         data-testid="training-panel"
                                                     >
                                                         <Training
@@ -323,8 +318,7 @@ export const HomePage = ({
                                                     </StyledGridItemLoggedInLeftMost>
                                                 )}
                                                 {/* <StyledGridItemLoggedInLeftMost
-                                                    item
-                                                    xs={12}
+                                                    size={{ xs: 12 }}
                                                     data-testid="espace-links-panel"
                                                 >
                                                     <DigitalLearningHub
@@ -340,8 +334,7 @@ export const HomePage = ({
                                             <Grid container>
                                                 {canSeeLearningResourcesPanel(account) && (
                                                     <StyledGridItemLoggedIn
-                                                        item
-                                                        xs={12}
+                                                        size={{ xs: 12 }}
                                                         data-testid="learning-resources-panel"
                                                     >
                                                         <LearningResourcesPanel account={account} history={history} />
@@ -351,24 +344,21 @@ export const HomePage = ({
                                                 <Grid uqDsDesktop={6} size={{ xs: 12 }}>
                                                     <Grid container>
                                                         <StyledGridItemLoggedIn
-                                                            item
-                                                            xs={12}
+                                                            size={{ xs: 12 }}
                                                             data-testid="referencing-panel"
                                                         >
                                                             <ReferencingPanel account={account} />
                                                         </StyledGridItemLoggedIn>
                                                         {canSeeReadPublish(account) && (
                                                             <StyledGridItemLoggedIn
-                                                                item
-                                                                xs={12}
+                                                                size={{ xs: 12 }}
                                                                 data-testid="readpublish-panel"
                                                             >
                                                                 <ReadPublish />
                                                             </StyledGridItemLoggedIn>
                                                         )}
                                                         <StyledGridItemLoggedIn
-                                                            item
-                                                            xs={12}
+                                                            size={{ xs: 12 }}
                                                             data-testid="dlor-links-panel"
                                                         >
                                                             <DigitalLearningHub
@@ -384,8 +374,7 @@ export const HomePage = ({
                                                     <Grid container>
                                                         {isEspaceAuthor(account, author) && (
                                                             <StyledGridItemLoggedIn
-                                                                item
-                                                                xs={12}
+                                                                size={{ xs: 12 }}
                                                                 data-testid="espace-links-panel"
                                                             >
                                                                 <EspaceLinks

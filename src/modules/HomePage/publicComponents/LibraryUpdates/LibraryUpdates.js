@@ -44,7 +44,7 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesError, drupalArticles
                 data-testid="library-updates-parent"
                 key="library-updates-parent"
             >
-                <StyledHeaderGridItem item xs={12}>
+                <StyledHeaderGridItem size={{ xs: 12 }}>
                     <Typography component={'h2'}>Library updates</Typography>
                     <Link to={linkToDrupal('/about/updates')}>See more updates</Link>
                 </StyledHeaderGridItem>

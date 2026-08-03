@@ -141,7 +141,7 @@ export const PastExamPaperSearch = ({
         <StandardPage title="Search for a past exam paper" style={{ marginTop: '16px' }}>
             <StandardCard>
                 <Grid container alignItems={'flex-end'}>
-                    <StyledAboutBlock item xs={12} sm>
+                    <StyledAboutBlock size={{ xs: 12 }}>
                         <StyledBodyText>
                             Enter a full or partial course code (between 2 and 9 characters) to find available past exam
                             papers. For example:

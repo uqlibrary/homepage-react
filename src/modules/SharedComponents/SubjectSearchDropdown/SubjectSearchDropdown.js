@@ -188,7 +188,7 @@ export const SubjectSearchDropdown = ({
     return (
         <form>
             <StyledSearchPanel container spacing={1} alignItems={'flex-end'}>
-                <SearchLabelGridItem item xs={12}>
+                <SearchLabelGridItem size={{ xs: 12 }}>
                     <label
                         htmlFor="homepage-learningresource-autocomplete"
                         id="homepage-learningresource-autocomplete-label"

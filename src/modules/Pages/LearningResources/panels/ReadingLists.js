@@ -54,7 +54,7 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
 
     const WriteReadingListTeaser = () => {
         return (
-            <StyledItem item xs={12}>
+            <StyledItem size={{ xs: 12 }}>
                 <StyledBodyText variant={'span'} className={'presentLabel'}>
                     View required and recommended readings on your course reading list.
                 </StyledBodyText>
@@ -91,12 +91,12 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                     } else if (!listOfReadingLists || listOfReadingLists.length === 0) {
                         return (
                             <>
-                                <StyledItem item xs={12}>
+                                <StyledItem size={{ xs: 12 }}>
                                     <StyledBodyText variant={'span'} data-testid="no-reading-lists">
                                         No Reading list for this course.
                                     </StyledBodyText>
                                 </StyledItem>
-                                <StyledItem item xs={12}>
+                                <StyledItem size={{ xs: 12 }}>
                                     <a href={talisSubjectUrl(courseCode)}>
                                         <SpacedArrowForwardIcon />
                                         <StyledBodyText>View older lists</StyledBodyText>
@@ -108,7 +108,7 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                         return (
                             <>
                                 <WriteReadingListTeaser />
-                                <StyledItem item xs={12} data-testid="reading-list-link">
+                                <StyledItem size={{ xs: 12 }} data-testid="reading-list-link">
                                     <a href={listOfReadingLists[0].url}>
                                         <SpacedArrowForwardIcon />
                                         <StyledBodyText variant={'span'}>{`${courseCode} Reading list (contains ${
@@ -123,7 +123,7 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                             <>
                                 <WriteReadingListTeaser />
                                 {listOfReadingLists.length > 1 && (
-                                    <StyledItem item xs={12} data-testid="reading-list-link">
+                                    <StyledItem size={{ xs: 12 }} data-testid="reading-list-link">
                                         <a href={talisSubjectUrl(courseCode)}>
                                             <SpacedArrowForwardIcon />
                                             <StyledBodyText variant={'span'}>{`${courseCode} (has ${

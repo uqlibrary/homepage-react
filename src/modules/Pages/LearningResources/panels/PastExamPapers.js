@@ -111,12 +111,12 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     } else if (!listOfExams || listOfExams.length === 0) {
                         return (
                             <>
-                                <StyledItem item xs={12}>
+                                <StyledItem size={{ xs: 12 }}>
                                     <StyledBodyText style={{ marginBlock: 0 }} data-testid="no-exam-papers">
                                         No Past Exam Papers for this course.
                                     </StyledBodyText>
                                 </StyledItem>
-                                <StyledItem item xs={12}>
+                                <StyledItem size={{ xs: 12 }}>
                                     <a href="https://www.library.uq.edu.au/exams/">
                                         <SpacedArrowForwardIcon />
                                         <span>Search for other exam papers</span>
@@ -131,13 +131,13 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                                     listOfExams.length > 0 &&
                                     listOfExams.map((paper, index) => {
                                         return (
-                                            <StyledItem item xs={12} key={`examPapers-${index}`}>
+                                            <StyledItem size={{ xs: 12 }} key={`examPapers-${index}`}>
                                                 {showLinkToPaper(paper, index)}
                                             </StyledItem>
                                         );
                                     })}
                                 {!!numberExcessExams && numberExcessExams > 0 && (
-                                    <StyledItem item xs={12} data-testid="exam-more-link">
+                                    <StyledItem size={{ xs: 12 }} data-testid="exam-more-link">
                                         {showLinkToExamPaperSearch}
                                     </StyledItem>
                                 )}
@@ -148,7 +148,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     }
                 })()}
             </Grid>
-            <StyledItem item xs={12} data-testid="exams-readmore">
+            <StyledItem size={{ xs: 12 }} data-testid="exams-readmore">
                 <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
                     <QuestionMarkIcon style={{ marginRight: 6 }} />
                     <span>Read more about past exam papers</span>

@@ -273,7 +273,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                 standardCardId={`${componentId}-${pageLocale.panel.inspectionDevices.id}-panel`}
                             >
                                 <Grid container style={{ marginBottom: 5 }}>
-                                    <Grid xs={6}>
+                                    <Grid size={{ xs: 6 }}>
                                         <Box borderRight={1} borderColor="grey.500">
                                             <Typography
                                                 component={'div'}
@@ -294,7 +294,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                         </Box>
                                     </Grid>
 
-                                    <Grid xs={6}>
+                                    <Grid size={{ xs: 6 }}>
                                         <Typography
                                             component={'div'}
                                             variant={'h4'}
@@ -348,7 +348,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                 </Grid>
                 <Grid container spacing={3}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
-                        <Grid xs={12} md className={'flexParent'}>
+                        <Grid size={{ xs: 12 }} className={'flexParent'}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton
                                     animation="wave"
@@ -411,7 +411,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                         requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter, PERMISSIONS.can_admin]}
                         inclusive={false}
                     >
-                        <Grid xs={12} md className={'flexParent'}>
+                        <Grid size={{ xs: 12 }} className={'flexParent'}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton
                                     animation="wave"

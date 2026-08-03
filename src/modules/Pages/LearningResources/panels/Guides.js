@@ -63,7 +63,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                     </Grid>
                 )}
                 {!guideListError && !guideListLoading && (!guideList || guideList.length === 0) && (
-                    <StyledItem item xs={12} data-testid="no-guides">
+                    <StyledItem size={{ xs: 12 }} data-testid="no-guides">
                         <StyledBodyText>No subject guides for this course.</StyledBodyText>
                     </StyledItem>
                 )}
@@ -73,7 +73,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                     guideList.length > 0 &&
                     guideList.slice(0, 3).map((guide, index) => {
                         return (
-                            <StyledItem item xs={12} key={`guides-${index}`}>
+                            <StyledItem size={{ xs: 12 }} key={`guides-${index}`}>
                                 <a
                                     aria-label={`library guide for ${guide.title}`}
                                     className="library-guide-item"
@@ -87,7 +87,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                             </StyledItem>
                         );
                     })}
-                <StyledItem item key={'studylink-0'} xs={12}>
+                <StyledItem key={'studylink-0'} size={{ xs: 12 }}>
                     <a
                         data-testid="referencingGuides"
                         id="referencingGuides"
@@ -98,7 +98,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                     </a>
                 </StyledItem>
                 {/* guides doesnt display a 'view N more' link because Guides doesnt have a search-by-course-code fn*/}
-                <StyledItem item key={'studylink-1'} xs={12}>
+                <StyledItem key={'studylink-1'} size={{ xs: 12 }}>
                     <a data-testid="all-guides" id="all-guides" href="https://guides.library.uq.edu.au/all-guides">
                         <SpacedArrowForwardIcon />
                         <span>All library guides</span>
