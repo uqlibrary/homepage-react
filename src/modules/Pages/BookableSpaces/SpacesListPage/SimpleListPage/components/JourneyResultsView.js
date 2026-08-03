@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Box, Button, Chip, Stack, Typography, useTheme } from '@mui/material';
 
 import BookingLink from 'modules/Pages/BookableSpaces/Shared/BookingLink';
-import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
+import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPagination';
 
@@ -213,7 +213,7 @@ export const JourneyResultsView = ({
                                             </Box>
                                         </Button>
                                         {isLoggedIn && (
-                                            <SpaceFavouriteIcon
+                                            <SpacesFavouriteIcon
                                                 bookableSpace={space}
                                                 isFavourite={spacesFavouritesList?.some(
                                                     fav => fav.space_id === space?.space_id,

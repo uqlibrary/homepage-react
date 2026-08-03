@@ -79,7 +79,7 @@ export const formatSpaceOutageUntilForPublicNotice = (endValue, currentTime, sho
     return endDate.format('h:mma D MMMM YYYY');
 };
 
-export const SpaceOutageNotice = ({ bookableSpace, visibleOutage, hideReason }) => {
+export const SpacesOutageNotice = ({ bookableSpace, visibleOutage, hideReason }) => {
     if (!visibleOutage) {
         return null;
     }
@@ -114,10 +114,10 @@ export const SpaceOutageNotice = ({ bookableSpace, visibleOutage, hideReason }) 
         </StyledOutageNotice>
     );
 };
-SpaceOutageNotice.propTypes = {
+SpacesOutageNotice.propTypes = {
     bookableSpace: PropTypes.any,
     visibleOutage: PropTypes.any,
     hideReason: PropTypes.any,
 };
 
-export default SpaceOutageNotice;
+export default SpacesOutageNotice;

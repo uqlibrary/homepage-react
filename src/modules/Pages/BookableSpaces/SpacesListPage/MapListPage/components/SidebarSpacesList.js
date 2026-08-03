@@ -9,7 +9,7 @@ import { useTheme } from '@mui/material';
 import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceNewWindowButton';
 import SpaceDetails from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/SpaceDetails';
 
-import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
+import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
 
 const StyledHeadingWrapperSpan = styled(Grid)(() => ({
     display: 'inline-flex',
@@ -121,7 +121,7 @@ const SidebarSpacesList = ({
                                 fullHeight
                                 title={
                                     <StyledHeadingWrapperSpan>
-                                        <SpaceFavouriteIcon
+                                        <SpacesFavouriteIcon
                                             bookableSpace={bookableSpace}
                                             isFavourite={spacesFavouritesList?.some(
                                                 fav => fav.space_id === bookableSpace?.space_id,

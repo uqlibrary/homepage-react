@@ -10,7 +10,7 @@ import { addClass, removeClass } from 'helpers/general';
 
 import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
+import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
 
 const StyledMapWrapperDiv = styled('div')(() => ({
     position: 'absolute',
@@ -105,7 +105,7 @@ export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) =>
             </StyledPopupBookingDiv>
 
             {!!visibleOutage && (
-                <SpaceOutageNotice
+                <SpacesOutageNotice
                     bookableSpace={space}
                     visibleOutage={visibleOutage}
                     hideReason={!visibleOutage.reason}
