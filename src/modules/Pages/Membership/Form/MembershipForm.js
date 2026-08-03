@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router';
 
@@ -18,10 +18,14 @@ import { isFrozen, isPaymentGatewayOutage } from '../membershipOutage';
 import { isRenewal, transformRequest, transformResponse } from '../membershipTransformers';
 import locale from '../membership.locale';
 import ConfigText from '../SharedComponents/ConfigText';
+import MembershipFileUpload from './MembershipFileUpload';
 import MembershipFormSections from './MembershipFormSections';
 import MembershipTerms from './MembershipTerms';
 
 const { form } = locale;
+
+// These two collect their documents another way, so they are not told to bring them to a service point.
+export const NO_IN_PERSON_NOTE_TYPES = [MEMBERSHIP_TYPES.HOSPITAL, MEMBERSHIP_TYPES.VISITORS];
 
 export const findAccountType = (membershipFormData, type) =>
     membershipFormData?.account_types?.find(accountType => accountType.value === type);
@@ -45,6 +49,11 @@ export const MembershipForm = ({
     const type = membership?.type ?? typeParam;
     const isRenewing = isRenewal(membership);
     const current = findAccountType(membershipFormData, type);
+
+    // Attachments live beside the form rather than in it: they are uploaded as they are chosen, not validated
+    // as a field, and the form only needs the stored result at submit time.
+    const [attachments, setAttachments] = useState([]);
+    const [hasPendingUploads, setHasPendingUploads] = useState(false);
 
     const { control, formState, reset, safelyHandleSubmit, setServerFieldErrors } = useForm();
 
@@ -83,6 +92,8 @@ export const MembershipForm = ({
             return;
         }
         reset(transformResponse(membership));
+        // A renewal already carries the documents from last time; they are kept unless replaced.
+        setAttachments(membership.attachments ?? []);
     }, [membership, reset]);
 
     // An unrecognised type has no form to show, so it is sent back to the landing chooser.
@@ -93,7 +104,16 @@ export const MembershipForm = ({
     }, [current, membershipFormData, membershipFormDataLoading, navigate]);
 
     const onSubmit = safelyHandleSubmit(async values => {
-        const request = transformRequest(values, { type, paymentOptions: current?.payment_options });
+        // Applying now would drop documents the applicant chose but has not uploaded. safelyHandleSubmit turns
+        // this into the form's server-error slot, which the summary below reports.
+        if (hasPendingUploads) {
+            throw new Error(locale.upload.pendingUploads);
+        }
+
+        const request = transformRequest(
+            { ...values, ...(attachments.length > 0 ? { attachments } : {}) },
+            { type, paymentOptions: current?.payment_options },
+        );
 
         try {
             // A renewal authenticates on the id and code from the link, so they travel with the body.
@@ -179,6 +199,18 @@ export const MembershipForm = ({
                         isRenewing={isRenewing}
                     />
 
+                    {/* Only the types whose config carries upload instructions ask for documents. */}
+                    {!!current.upload && (
+                        <MembershipFileUpload
+                            instructions={current.upload}
+                            showInPersonNote={!NO_IN_PERSON_NOTE_TYPES.includes(type)}
+                            attachments={attachments}
+                            onChange={setAttachments}
+                            onUpload={file => actions.uploadMembershipFile(file)}
+                            onPendingChange={setHasPendingUploads}
+                        />
+                    )}
+
                     <Box sx={{ marginTop: 3 }}>
                         <Typography>
                             <a
@@ -219,7 +251,7 @@ export const MembershipForm = ({
                         )}
                         {!!formState.hasServerError && (
                             <Alert severity="error" data-testid="membership-form-server-error">
-                                {form.submitFailed}
+                                {formState.serverError?.message || form.submitFailed}
                             </Alert>
                         )}
                     </Box>

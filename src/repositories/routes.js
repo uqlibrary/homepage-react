@@ -347,6 +347,9 @@ export const MEMBERSHIP_BY_CODE_API = ({ id, code }) => ({ apiUrl: `membership/$
 // Submit a renewal, authenticated by the same id + code from the link.
 export const MEMBERSHIP_RENEW_API = ({ id, code }) => ({ apiUrl: `membership/${id}/${code}/renew` });
 
+// Upload a supporting document for an application.
+export const MEMBERSHIP_FILE_UPLOAD_API = () => ({ apiUrl: 'file/membership' });
+
 export const MEMBERSHIP_CHECK_RENEWING_API = () => ({
     apiUrl: 'membership/check/renewing',
     options: { params: { ts: getMillisecondCacheBuster() } },

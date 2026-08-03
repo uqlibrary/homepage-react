@@ -26,7 +26,13 @@ import { libHours } from './data/libHours';
 import { training_object, training_object_hospital } from './data/training';
 import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
-import { membershipFormData, membershipRenewal, membershipRenewing, membershipSubmitted } from './data/membership';
+import {
+    membershipAttachment,
+    membershipFormData,
+    membershipRenewal,
+    membershipRenewing,
+    membershipSubmitted,
+} from './data/membership';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_PHYS1001 from './data/records/learningResources/examSearch_PHYS1001';
 import examSearch_ENGG from './data/records/learningResources/examSearch_ENGG';
@@ -405,6 +411,9 @@ mock.onGet(new RegExp(`^membership/${membershipRenewal.id}/[^/]+$`)).reply(withD
 mock.onPost(new RegExp('^membership/[^/]+/[^/]+/renew$')).reply(
     withDelay([200, membershipSubmitted(membershipRenewal.id, membershipRenewal.type)]),
 );
+
+// Uploading a supporting document answers with the stored attachment.
+mock.onPost(routes.MEMBERSHIP_FILE_UPLOAD_API().apiUrl).reply(withDelay([200, [membershipAttachment]]));
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {

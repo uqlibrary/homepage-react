@@ -181,6 +181,12 @@ export const membershipRenewal = {
     home_address_postcode: '4067',
 };
 
+// What the file-upload endpoint answers with: the stored attachment the form carries into the application.
+export const membershipAttachment = {
+    id: 'file-1',
+    filename: 'uploaded-document.pdf',
+};
+
 // The saved record the API answers a submission with: an unconfirmed application, echoing back the type, plus
 // the gateway URL a paying type is sent to.
 export const membershipSubmitted = (id, type) => ({

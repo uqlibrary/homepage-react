@@ -3,12 +3,15 @@ import * as repositories from 'repositories';
 import {
     checkIsRenewing,
     clearMembership,
+    convertAttachments,
+    flattenAttachments,
     loadMembership,
     loadMembershipByCode,
     loadMembershipFormData,
     renewMembership,
     saveMembershipPayment,
     submitMembership,
+    uploadMembershipFile,
 } from './membershipActions';
 
 describe('Membership actions', () => {
@@ -204,6 +207,49 @@ describe('Membership actions', () => {
                 actions.MEMBERSHIP_SAVING,
                 actions.MEMBERSHIP_SAVE_FAILED,
             ]);
+        });
+    });
+
+    describe('attachments', () => {
+        it('convertAttachments turns attachment_0..n into a list', () => {
+            const record = { id: 'x', attachment_0: '{"id":"a"}', attachment_1: '{"id":"b"}' };
+
+            expect(convertAttachments(record).attachments).toEqual([{ id: 'a' }, { id: 'b' }]);
+        });
+
+        it('convertAttachments accepts an already-parsed attachment', () => {
+            const record = { id: 'x', attachment_0: { id: 'a' } };
+
+            expect(convertAttachments(record).attachments).toEqual([{ id: 'a' }]);
+        });
+
+        it('convertAttachments leaves a record with no attachments untouched', () => {
+            expect(convertAttachments({ id: 'x' })).toEqual({ id: 'x' });
+            expect(convertAttachments(null)).toBeNull();
+        });
+
+        it('flattenAttachments spreads a list back into the fields the API expects', () => {
+            const flattened = flattenAttachments({ id: 'x', attachments: [{ id: 'a' }, { id: 'b' }] });
+
+            expect(flattened.attachment_0).toBe('{"id":"a"}');
+            expect(flattened.attachment_1).toBe('{"id":"b"}');
+        });
+
+        it('flattenAttachments leaves a record with no attachments untouched', () => {
+            expect(flattenAttachments({ id: 'x' })).toEqual({ id: 'x' });
+            expect(flattenAttachments(undefined)).toBeUndefined();
+        });
+    });
+
+    describe('uploadMembershipFile', () => {
+        it('uploads a file and returns the stored attachment', async () => {
+            mockApi
+                .onPost(repositories.routes.MEMBERSHIP_FILE_UPLOAD_API().apiUrl)
+                .reply(200, [{ id: 'file-1', filename: 'card.pdf' }]);
+
+            const result = await mockActionsStore.dispatch(uploadMembershipFile(new File(['x'], 'card.pdf')));
+
+            expect(result).toEqual({ id: 'file-1', filename: 'card.pdf' });
         });
     });
 

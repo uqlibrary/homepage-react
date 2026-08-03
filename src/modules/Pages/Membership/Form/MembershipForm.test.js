@@ -23,12 +23,33 @@ jest.mock('../membershipOutage', () => ({
     isPaymentGatewayOutage: jest.fn(() => false),
 }));
 
+// The upload component has its own test; here it stands in for driving the form's wiring — its onChange feeds
+// the submit payload and its onPendingChange gates the submit.
+jest.mock('./MembershipFileUpload', () => {
+    const MockFileUpload = ({ onChange, onPendingChange }) => (
+        <div data-testid="membership-file-upload">
+            <button type="button" data-testid="mock-add-attachment" onClick={() => onChange([{ id: 'stored-1' }])}>
+                add
+            </button>
+            <button type="button" data-testid="mock-set-pending" onClick={() => onPendingChange(true)}>
+                pending
+            </button>
+        </div>
+    );
+    MockFileUpload.propTypes = {
+        onChange: require('prop-types').func,
+        onPendingChange: require('prop-types').func,
+    };
+    return MockFileUpload;
+});
+
 const membershipFormData = {
     account_types: [
         {
             title: 'Community',
             value: 'community',
             conditions: 'For members of the general public. Membership costs $25 per year.',
+            upload: 'Please upload proof of eligibility.',
             payment_options: [{ code: 'COM', description: '12 months ($25)' }],
         },
         { title: 'Fryer Library', value: 'fryer' },
@@ -43,6 +64,7 @@ const setup = (props = {}, route = '/membership/form/community') => {
         loadMembershipByCode: jest.fn(),
         submitMembership: jest.fn().mockResolvedValue({ id: 'abc-123' }),
         renewMembership: jest.fn().mockResolvedValue({ id: 'abc-123' }),
+        uploadMembershipFile: jest.fn(),
         ...props.actions,
     };
 
@@ -218,6 +240,46 @@ describe('MembershipForm', () => {
         const { actions } = setup();
 
         expect(actions.clearMembership).toHaveBeenCalled();
+    });
+
+    describe('supporting documents', () => {
+        it('asks for documents on a type whose config wants them', () => {
+            setup();
+
+            expect(screen.getByTestId('membership-file-upload')).toBeInTheDocument();
+        });
+
+        it('does not ask for documents on a type that does not', () => {
+            setup({}, '/membership/form/fryer');
+
+            expect(screen.queryByTestId('membership-file-upload')).not.toBeInTheDocument();
+        });
+
+        it('will not apply while a document is still waiting to upload', async () => {
+            const { actions } = setup();
+
+            await fillInCommunityForm();
+            await userEvent.click(screen.getByTestId('mock-set-pending'));
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+            await waitFor(() =>
+                expect(screen.getByTestId('membership-form-server-error')).toHaveTextContent(
+                    'Please upload the documents you have selected',
+                ),
+            );
+            expect(actions.submitMembership).not.toHaveBeenCalled();
+        });
+
+        it('carries uploaded documents into the submission', async () => {
+            const { actions } = setup();
+
+            await fillInCommunityForm();
+            await userEvent.click(screen.getByTestId('mock-add-attachment'));
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+            await waitFor(() => expect(actions.submitMembership).toHaveBeenCalled());
+            expect(actions.submitMembership.mock.calls[0][0].attachments).toEqual([{ id: 'stored-1' }]);
+        });
     });
 
     describe('renewing from an emailed link', () => {
