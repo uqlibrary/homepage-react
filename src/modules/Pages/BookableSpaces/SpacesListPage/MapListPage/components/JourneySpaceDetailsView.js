@@ -12,7 +12,7 @@ import { pluralise } from 'helpers/general';
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
 import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursDown';
-import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
+import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
 import SpaceOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpaceOutageNotice';
 import {
     defaultChipStyles,
@@ -252,7 +252,7 @@ const JourneySpaceDetailsView = ({
                         <StyledSpaceTitleWrapperBox>
                             <span>
                                 {!narrowView && !verticalView && isLoggedIn && !!selectedSpace?.space_id && (
-                                    <SpaceFavouriteIcon
+                                    <SpacesFavouriteIcon
                                         bookableSpace={selectedSpace}
                                         isFavourite={isSelectedSpaceFavourite}
                                         onFavouriteToggle={() => onFavouriteToggle?.(selectedSpace)}

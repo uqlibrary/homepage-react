@@ -6,7 +6,7 @@ import { Box, Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import SingleLinkCard from 'modules/HomePage/publicComponents/HelpNavigation/SingleLinkCard';
-import SpaceFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpaceFavouriteIcon';
+import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
 
 import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { StyledHeaderWithLinkToAllGridItem } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomepageStyles';
@@ -143,7 +143,7 @@ export const FavouritesList = ({
                                         }
                                     }}
                                     followingElement={
-                                        <SpaceFavouriteIcon
+                                        <SpacesFavouriteIcon
                                             bookableSpace={space}
                                             isFavourite
                                             onFavouriteToggle={() => handleJourneyFavouriteToggle?.(fav)}

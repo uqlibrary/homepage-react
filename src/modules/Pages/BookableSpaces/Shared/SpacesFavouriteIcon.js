@@ -23,7 +23,7 @@ const topLeft = {
 const StyledTooltip = styled(Tooltip)(() => topLeft);
 const StyledCircularProgress = styled(CircularProgress)(() => topLeft);
 
-export const SpaceFavouriteIcon = ({
+export const SpacesFavouriteIcon = ({
     bookableSpace,
     isFavourite,
     onFavouriteToggle,
@@ -92,7 +92,7 @@ export const SpaceFavouriteIcon = ({
         </StyledTooltip>
     );
 };
-SpaceFavouriteIcon.propTypes = {
+SpacesFavouriteIcon.propTypes = {
     bookableSpace: PropTypes.any,
     isFavourite: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
@@ -100,4 +100,4 @@ SpaceFavouriteIcon.propTypes = {
     iconPosition: PropTypes.any,
     ariaLabel: PropTypes.string,
 };
-export default SpaceFavouriteIcon;
+export default SpacesFavouriteIcon;
