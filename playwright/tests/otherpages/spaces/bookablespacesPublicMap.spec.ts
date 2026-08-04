@@ -365,7 +365,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-38`)).toContainText('Whiteboard');
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-39`)).toContainText('Adjustable desks');
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-8`)).toContainText('AV equipment');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-13`)).toContainText('Postgraduate spaces');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-13`)).toContainText('Postgraduate only space');
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-14`)).toContainText('Undergrad spaces');
 
             // close first panel
@@ -383,7 +383,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-facility-33`)).toContainText('Client accessible power point');
             await expect(page.getByTestId(`${LIV}-facility-8`)).toContainText('AV equipment');
             await expect(page.getByTestId(`${LIV}-facility-50`)).toContainText('Natural');
-            await expect(page.getByTestId(`${LIV}-facility-13`)).toContainText('Postgraduate spaces');
+            await expect(page.getByTestId(`${LIV}-facility-13`)).toContainText('Postgraduate only space');
             await expect(page.getByTestId(`${LIV}-facility-14`)).toContainText('Undergrad spaces');
 
             // close third panel

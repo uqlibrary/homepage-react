@@ -252,7 +252,7 @@ export default {
                 },
                 {
                     "facility_type_id": 13,
-                    "facility_type_name": "Postgraduate spaces"
+                    "facility_type_name": "Postgraduate only space"
                 },
                 {
                     "facility_type_id": 12,

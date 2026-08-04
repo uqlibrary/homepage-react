@@ -48,11 +48,82 @@ describe('SidebarFilters campus selector', () => {
         onApplyAllFilters: jest.fn(),
     };
 
+    const facilityGroupFixture = {
+        data: {
+            facility_type_groups: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_group_name: 'Facilities',
+                    facility_type_group_order: 1,
+                    facility_type_group_loads_open: false,
+                    facility_type_children: [
+                        {
+                            facility_type_id: 57,
+                            facility_type_name: 'Natural light',
+                            facility_special_action: null,
+                        },
+                    ],
+                },
+            ],
+        },
+    };
+
+    const selectedNaturalLightFilter = [
+        {
+            facility_type_group_id: 1,
+            facility_type_id: 57,
+            selected: true,
+            unselected: false,
+            facility_special_action: null,
+        },
+    ];
+
     it('offers an all-campuses option in the campus selector', async () => {
         renderWithTheme(baseProps);
 
         fireEvent.mouseDown(screen.getByRole('combobox'));
 
         expect(await screen.findByRole('option', { name: 'All campuses' })).toBeInTheDocument();
+    });
+
+    it('opens the parent group for journey intent preselected filters', async () => {
+        renderWithTheme({
+            ...baseProps,
+            suppliedClassName: 'journeyFilterSidebar',
+            facilityTypeList: facilityGroupFixture,
+            filteredFacilityTypeList: facilityGroupFixture,
+            selectedFacilityTypes: selectedNaturalLightFilter,
+        });
+
+        expect(await screen.findByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'block' });
+        expect(screen.getByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'none' });
+    });
+
+    it('does not force reopen after user manually collapses an auto-opened selected group', async () => {
+        const props = {
+            ...baseProps,
+            suppliedClassName: 'journeyFilterSidebar',
+            facilityTypeList: facilityGroupFixture,
+            filteredFacilityTypeList: facilityGroupFixture,
+            selectedFacilityTypes: selectedNaturalLightFilter,
+        };
+
+        const { rerender } = renderWithTheme(props);
+
+        expect(await screen.findByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'block' });
+
+        fireEvent.click(screen.getByTestId('facility-type-group-1'));
+
+        expect(screen.getByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'none' });
+        expect(screen.getByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'block' });
+
+        rerender(
+            <ThemeProvider theme={theme}>
+                <SidebarFilters {...props} />
+            </ThemeProvider>,
+        );
+
+        expect(screen.getByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'none' });
+        expect(screen.getByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'block' });
     });
 });
