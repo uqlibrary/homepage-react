@@ -441,6 +441,8 @@ test.describe('Alerts Admin Form Pages', () => {
 
             // after clicking, the preview button looks like Primary button
             await previewButton.click();
+            await expect(page.locator('#previewWrapper')).toBeVisible();
+            await previewButton.hover();
             await expect(previewButton).toHaveCSS('background-color', COLOR_UQPURPLE);
             await expect(previewButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(previewButton).toHaveCSS('color', 'rgb(255, 255, 255)');
