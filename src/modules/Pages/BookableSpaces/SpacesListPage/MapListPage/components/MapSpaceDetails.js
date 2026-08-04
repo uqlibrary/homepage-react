@@ -150,7 +150,7 @@ CollapsedSection.propTypes = {
     isMobileView: PropTypes.any,
 };
 
-const SpaceDetails = ({
+const MapSpaceDetails = ({
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
@@ -269,7 +269,7 @@ const SpaceDetails = ({
     );
 };
 
-SpaceDetails.propTypes = {
+MapSpaceDetails.propTypes = {
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
@@ -282,4 +282,4 @@ SpaceDetails.propTypes = {
     isSelectedSpaceFavourite: PropTypes.bool,
 };
 
-export default React.memo(SpaceDetails);
+export default React.memo(MapSpaceDetails);

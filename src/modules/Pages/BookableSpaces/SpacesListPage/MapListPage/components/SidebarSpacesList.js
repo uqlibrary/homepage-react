@@ -7,7 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
 
 import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceNewWindowButton';
-import SpaceDetails from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/SpaceDetails';
+import MapSpaceDetails from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/MapSpaceDetails';
 
 import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
 import { StyledSkipLinkAnchor } from 'helpers/general';
@@ -137,7 +137,7 @@ const SidebarSpacesList = ({
                                 squareTop
                                 subCard
                             >
-                                <SpaceDetails
+                                <MapSpaceDetails
                                     weeklyHours={weeklyHours}
                                     weeklyHoursLoading={weeklyHoursLoading}
                                     weeklyHoursError={weeklyHoursError}

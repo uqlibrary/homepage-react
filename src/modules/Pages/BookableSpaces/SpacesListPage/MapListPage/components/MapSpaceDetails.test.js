@@ -3,6 +3,8 @@ import MockDate from 'mockdate';
 
 import { rtlRender, screen } from 'test-utils';
 
+import MapSpaceDetails from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/MapSpaceDetails';
+
 jest.mock(
     '../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
     () => 'mock-journey-hero-image',
@@ -12,9 +14,7 @@ jest.mock(
     () => 'mock-journey-detail-image',
 );
 
-import SpaceDetails from './SpaceDetails';
-
-describe('SpaceDetails outage notices', () => {
+describe('MapSpaceDetails outage notices', () => {
     afterEach(() => {
         MockDate.reset();
     });
@@ -31,7 +31,7 @@ describe('SpaceDetails outage notices', () => {
 
     it('renders a red current outage notice and keeps booking link', () => {
         rtlRender(
-            <SpaceDetails
+            <MapSpaceDetails
                 {...baseProps}
                 isFavouriteActionInProgress={false}
                 bookableSpace={{
@@ -63,7 +63,7 @@ describe('SpaceDetails outage notices', () => {
         MockDate.set('2026-04-24T09:00:00');
 
         rtlRender(
-            <SpaceDetails
+            <MapSpaceDetails
                 {...baseProps}
                 bookableSpace={{
                     space_id: 124,
@@ -91,7 +91,7 @@ describe('SpaceDetails outage notices', () => {
         MockDate.set('2026-04-24T10:00:00');
 
         rtlRender(
-            <SpaceDetails
+            <MapSpaceDetails
                 {...baseProps}
                 bookableSpace={{
                     space_id: 456,
@@ -122,7 +122,7 @@ describe('SpaceDetails outage notices', () => {
         MockDate.set('2026-04-24T10:00:00');
 
         rtlRender(
-            <SpaceDetails
+            <MapSpaceDetails
                 {...baseProps}
                 bookableSpace={{
                     space_id: 457,
