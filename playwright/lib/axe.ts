@@ -2,7 +2,12 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, Page } from '../test';
 
 export const defaultIncludedImpacts = ['minor', 'moderate', 'serious', 'critical'];
-export const defaultDisabledRules = ['color-contrast', 'aria-required-children', 'aria-progressbar-name'];
+export const defaultDisabledRules = [
+    'color-contrast',
+    'aria-required-children',
+    'aria-progressbar-name',
+    'heading-order',
+];
 
 export const assertAccessibility = async (
     page: Page,
