@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 
 import { Box, Button, Stack, Typography, useTheme } from '@mui/material';
 
+import { StyledSkipLinkAnchor, StyledSecondaryButton } from 'helpers/general';
+
 import BookingLink from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPagination';
-
-import { serialiseJourneyUrl, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import SpaceOpenStatusChip from 'modules/Pages/BookableSpaces/Shared/SpaceOpenStatusChip';
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-
-import { StyledSkipLinkAnchor, StyledSecondaryButton } from 'helpers/general';
 
 import {
     StyledJourneyPanelSection,

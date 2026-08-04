@@ -981,8 +981,10 @@ test.describe('Spaces Admin - edit space', () => {
             'Westernmost corner',
         );
 
-        await expect(page.getByTestId('spaces-journey-open-status-chip-open')).toBeVisible();
-        await expect(page.getByTestId('spaces-journey-open-status-chip-open')).toContainText('Open now');
+        // as this is a "closing soon" Space, none of the chips display
+        await expect(page.getByTestId('spaces-journey-open-status-chip-open')).not.toBeVisible();
+        await expect(page.getByTestId('spaces-journey-open-status-chip-closing-soon')).not.toBeVisible();
+        await expect(page.getByTestId('spaces-journey-open-status-chip-closed')).not.toBeVisible();
 
         await expect(page.getByTestId('space-123456-outage').locator('h4')).toBeVisible();
         await expect(page.getByTestId('space-123456-outage').locator('h4')).toContainText('Upcoming closure');

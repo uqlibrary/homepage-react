@@ -11,10 +11,12 @@ import { pluralise } from 'helpers/general';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
 import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
-import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursDown';
 import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
 import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
-import { getFriendlyLocationDescription, SpaceOpenStatusChip } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import SpaceOpenStatusChip from 'modules/Pages/BookableSpaces/Shared/SpaceOpenStatusChip';
+
+import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursDown';
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
@@ -198,11 +200,6 @@ const JourneySpaceDetailsView = ({
         return uniqueImages;
     }, [selectedSpace]);
 
-    // const spaceHours = React.useMemo(
-    //     () => (!weeklyHoursLoading && !weeklyHoursError ? spaceOpeningHours(selectedSpace, weeklyHours) || [] : []),
-    //     [selectedSpace, weeklyHours, weeklyHoursLoading, weeklyHoursError],
-    // );
-
     const visibleOutage = React.useMemo(
         () => getVisibleSpaceOutage(selectedSpace?.space_outages),
         [selectedSpace?.space_outages],
@@ -269,14 +266,14 @@ const JourneySpaceDetailsView = ({
                         <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
                             {getFriendlyLocationDescription(selectedSpace, false, { space_name: true })}
                         </StyledFriendlyLocationDiv>{' '}
-                        <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
+                        {!visibleOutage && (
                             <SpaceOpenStatusChip
                                 space={selectedSpace}
                                 weeklyHours={weeklyHours}
                                 weeklyHoursLoading={weeklyHoursLoading}
                                 weeklyHoursError={weeklyHoursError}
                             />
-                        </Stack>
+                        )}
                     </Box>
 
                     {!!visibleOutage && (
