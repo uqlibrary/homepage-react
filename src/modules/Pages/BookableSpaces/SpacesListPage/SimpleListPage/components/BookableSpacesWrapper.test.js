@@ -582,6 +582,130 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
     });
 
+    it('opens the selected filter group when intent-selected filters are present in journey results', async () => {
+        const facilityTypeList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: 11, facility_type_name: 'Low noise level' },
+                            { facility_type_id: 12, facility_type_name: 'Natural light' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        const Harness = () => {
+            const [filters, setFilters] = React.useState([
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 12,
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ]);
+
+            return (
+                <BookableSpacesWrapper
+                    {...defaultProps}
+                    facilityTypeListError={false}
+                    selectedFacilityTypes={filters}
+                    setSelectedFacilityTypes={setFilters}
+                    filteredFacilityTypeList={facilityTypeList}
+                    facilityTypeList={facilityTypeList}
+                />
+            );
+        };
+
+        window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
+
+        rtlRender(
+            <WithRouter>
+                <Harness />
+            </WithRouter>,
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('button-deselect-selected-11')).toBeInTheDocument();
+            expect(screen.getByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'block' });
+            expect(screen.getByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'none' });
+        });
+    });
+
+    it('allows clearing an intent-selected filter in results without it being reapplied', async () => {
+        const facilityTypeList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Low noise level' }],
+                    },
+                ],
+            },
+        };
+
+        const Harness = () => {
+            const [filters, setFilters] = React.useState([
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ]);
+
+            return (
+                <>
+                    <div data-testid="current-filters">{JSON.stringify(filters)}</div>
+                    <BookableSpacesWrapper
+                        {...defaultProps}
+                        facilityTypeListError={false}
+                        selectedFacilityTypes={filters}
+                        setSelectedFacilityTypes={setFilters}
+                        filteredFacilityTypeList={facilityTypeList}
+                        facilityTypeList={facilityTypeList}
+                    />
+                </>
+            );
+        };
+
+        window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
+
+        rtlRender(
+            <WithRouter>
+                <Harness />
+            </WithRouter>,
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('button-deselect-selected-11')).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByTestId('button-deselect-selected-11'));
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('button-deselect-selected-11')).not.toBeInTheDocument();
+            expect(screen.getByTestId('current-filters')).toHaveTextContent('"selected":false');
+        });
+    });
+
     it('does not reset selected filters in journey results when mapFilters state is present', async () => {
         const setSelectedFacilityTypes = jest.fn();
         const preselectedFilters = [

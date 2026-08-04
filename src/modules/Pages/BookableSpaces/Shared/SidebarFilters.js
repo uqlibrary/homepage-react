@@ -296,7 +296,7 @@ export const SidebarFilters = ({
     hasFavouriteSpaces = false,
 }) => {
     const [facilityGroupOpenState, setFacilityGroupOpenState] = React.useState([]);
-    const hasAutoExpandedSelectedGroupsRef = React.useRef(false);
+    const lastAutoExpandedGroupKeyRef = React.useRef('');
     const [defaultCampus, setDefaultCampus] = React.useState(1);
     const [facilityTypeInfoAnchorEl, setFacilityTypeInfoAnchorEl] = React.useState(null);
     const [activeFacilityTypeInfo, setActiveFacilityTypeInfo] = React.useState(null);
@@ -382,12 +382,15 @@ export const SidebarFilters = ({
     }, [campusList]);
 
     React.useEffect(() => {
-        if (!hasJourneyMapFilterState) {
-            hasAutoExpandedSelectedGroupsRef.current = false;
+        const shouldAutoExpandSelectedGroups =
+            hasJourneyMapFilterState || Boolean(suppliedClassName?.includes('journey'));
+
+        if (!shouldAutoExpandSelectedGroups) {
+            lastAutoExpandedGroupKeyRef.current = '';
             return;
         }
 
-        if (hasAutoExpandedSelectedGroupsRef.current || facilityGroupOpenState?.length === 0) {
+        if (facilityGroupOpenState?.length === 0) {
             return;
         }
 
@@ -399,6 +402,15 @@ export const SidebarFilters = ({
         );
 
         if (selectedGroupIds.size === 0) {
+            lastAutoExpandedGroupKeyRef.current = '';
+            return;
+        }
+
+        const selectedGroupKey = Array.from(selectedGroupIds)
+            .sort((a, b) => a - b)
+            .join(',');
+
+        if (lastAutoExpandedGroupKeyRef.current === selectedGroupKey) {
             return;
         }
 
@@ -417,12 +429,12 @@ export const SidebarFilters = ({
             };
         });
 
-        hasAutoExpandedSelectedGroupsRef.current = true;
+        lastAutoExpandedGroupKeyRef.current = selectedGroupKey;
 
         if (hasChanges) {
             setFacilityGroupOpenState(nextExpandedness);
         }
-    }, [hasJourneyMapFilterState, facilityGroupOpenState, selectedFacilityTypes]);
+    }, [hasJourneyMapFilterState, suppliedClassName, facilityGroupOpenState, selectedFacilityTypes]);
 
     const updateFacilityGroupOpenState = (filterGroupId, isGroupExpandedInput) => {
         const newExpandedness = facilityGroupOpenState?.filter(g => {
@@ -1008,9 +1020,8 @@ export const SidebarFilters = ({
                 )}
                 {sortedUsedGroups()?.map(group => {
                     const filterGroupId = group?.facility_type_group_id;
-                    const isGroupExpanded = !!facilityGroupOpenState?.find(
-                        o => o?.groupId === filterGroupId,
-                    )?.isGroupExpanded;
+                    const isGroupExpanded = !!facilityGroupOpenState?.find(o => o?.groupId === filterGroupId)
+                        ?.isGroupExpanded;
                     const groupLength = selectedFacilityTypes?.filter(
                         ftf => ftf?.facility_type_group_id === filterGroupId,
                     )?.length;

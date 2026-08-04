@@ -10,6 +10,7 @@ import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import PersonIcon from '@mui/icons-material/Person';
 import TvIcon from '@mui/icons-material/Tv';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import FoodIcon from '@mui/icons-material/Fastfood';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
@@ -43,47 +44,47 @@ const intentDefinitions = [
     {
         id: 'collaborative',
         label: 'Collaborative space',
-        description: 'Work together with your team.',
+        description: 'For group study and discussion.',
         icon: GroupsIcon,
         IconSvg:
             'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-width=%27.75%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpath d=%27M5.914 11.344 4.23 12.602v-2.516H2.543a.829.829 0 0 1-.828-.828V2.543c0-.457.37-.828.828-.828h9.227a.83.83 0 0 1 .832.828v2.516M4.23 4.23h5.856M4.23 6.742h1.684%27%3e%3c/path%3e%3cpath d=%27M14.285 11.77h-1.683v2.515l-2.516-2.515H7.57V6.742h6.715zm-1.683-3.34H9.258m3.344 1.656H9.258%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
-        matchers: [/collaborative/i, /group/i, /communal/i],
+        matchers: [/group study/i],
     },
     {
-        id: 'computer',
-        label: 'Computer access',
-        description: 'Access library computers and software.',
-        icon: ComputerIcon,
+        id: 'food',
+        label: 'Near kitchens or cafés',
+        description: 'Close to food options or places to eat.',
+        icon: FoodIcon,
         IconSvg:
-            'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cpath fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27 d=%27M13.03 9.14V3.7a.83.83 0 0 0-.83-.83H3.8a.83.83 0 0 0-.83.83v5.45zm1.17 2.6c.2.43 0 .92-.43 1.12a.73.73 0 0 1-.34.08H2.54a.83.83 0 0 1-.83-.83c0-.11.03-.22.1-.34l1.16-2.6h10.06zm-7.03-.51h1.69%27%3e%3c/path%3e%3c/svg%3e")',
-        matchers: [/computer/i, /byod/i],
+            'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M5.06 14.29H2.97L1.71 5.06h7.12l-.2 1.51%27%3e%3c/path%3e%3cpath d=%27M4.66 10.94 5.9 1.71l2.52.43M7.57 12.6h5.86v.83c0 .46-.37.83-.83.83H8.43a.83.83 0 0 1-.83-.83v-.83zm1.69-4.17h2.51c.92 0 1.69.74 1.69 1.68v.83H7.57v-.83c0-.94.77-1.68 1.69-1.68zm-1.69 2.51h5.86a.83.83 0 0 1 0 1.66H7.57a.83.83 0 0 1 0-1.66zm0 0%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
+        matchers: [/Food – retail outlet/i, /Kitchen/i, /Toilets \(all\)/i, /Vending machine/i],
     },
     {
         id: 'bookable',
         label: 'Bookable room',
-        description: 'Reserve a private or group meeting room.',
+        description: 'Reserve a room or desk.',
         icon: MeetingRoomIcon,
         IconSvg:
             'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg stroke=%27%2351247A%27 stroke-width=%27.75%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpath d=%27M2.543 3.398H13.43a.83.83 0 0 1 .828.832v9.227a.829.829 0 0 1-.828.828H2.543a.829.829 0 0 1-.828-.828V4.23a.83.83 0 0 1 .828-.832zm-.828 3.344h12.57M5.059 4.656V1.715m5.882 2.941V1.715%27 fill=%27none%27%3e%3c/path%3e%3cpath d=%27M4.43 8.828c-.118 0-.2.086-.2.2 0 .117.082.202.2.202a.196.196 0 0 0 .199-.203c.027-.086-.086-.199-.2-.199zm0 2.942c-.118 0-.2.085-.2.203 0 .113.082.199.2.199a.195.195 0 0 0 .199-.2.196.196 0 0 0-.2-.202zM8 8.828c-.113 0-.2.086-.2.2 0 .117.087.202.2.202.113 0 .2-.085.2-.203 0-.086-.087-.199-.2-.199zm0 2.942c-.113 0-.2.085-.2.203 0 .113.087.199.2.199.113 0 .2-.086.2-.2a.196.196 0 0 0-.2-.202zm3.57-2.942a.195.195 0 0 0-.199.2c0 .117.086.202.2.202a.194.194 0 0 0 .199-.203c0-.086-.083-.199-.2-.199zm0 2.942a.196.196 0 0 0-.199.203c0 .113.086.199.2.199a.194.194 0 0 0 .199-.2.194.194 0 0 0-.2-.202zm0 0%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
-        matchers: [/bookable/i, /meeting room/i, /training room/i],
+        matchers: [/bookable/i],
     },
     {
         id: 'postgrad',
         label: 'Postgraduate space',
-        description: 'Dedicated spaces for research and higher-degree study.',
+        description: 'For research and higher-degree study.',
         icon: PersonIcon,
         IconSvg:
             'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M10.94 4.66a2.94 2.94 0 1 1-5.88 0V1.7h5.85v2.95zm-8.4 9.63a5.46 5.46 0 0 1 10.92 0M1.71 1.71H14.3M5.06 4.23h5.85M2.54 1.71v4.2%27%3e%3c/path%3e%3cpath d=%27M5.2 9.6 8 11.77l2.8-2.17%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
-        matchers: [/postgraduate/i],
+        matchers: [/Postgraduate only space/i],
     },
     {
-        id: 'av',
-        label: 'AV equipment',
-        description: 'Spaces equipped with screens, projectors and audio.',
+        id: 'lowlightpower',
+        label: 'Low light with power',
+        description: 'Dim lighting, lamps and power for devices.',
         icon: TvIcon,
         IconSvg:
-            'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M3.8 10.09h8.37m-2.08 4.2H5.9l-.43-4.2h5.04zM8 4.23c.8 0 1.46.66 1.46 1.46a1.46 1.46 0 0 1-2.92 0c0-.8.66-1.46 1.46-1.46zm1.83 4.2a2.4 2.4 0 0 0-3.37-.26c-.09.09-.2.17-.26.26%27%3e%3c/path%3e%3cpath d=%27M3.8 8.43H2.54a.83.83 0 0 1-.83-.83V2.54c0-.45.38-.83.83-.83h10.89c.48 0 .86.38.86.83v5.03c0 .46-.38.83-.83.83H12.2%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
-        matchers: [/av equipment/i],
+            'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-miterlimit=%278%27 stroke-width=%27.75%27%3e%3cpath d=%27M14.11 10.69H2.17a.45.45 0 0 1-.46-.46c0-.06 0-.12.06-.17l2.29-4.97h8.11l2.29 4.97c.11.23 0 .46-.23.57 0 .06-.06.06-.12.06zm0 0%27%3e%3c/path%3e%3cpath d=%27m3.03 14.52 1.26-3.9 1.25 3.9m5.2 0 1.26-3.9 1.26 3.9m-2.8-5.55L9.6 6.8H6.63l-.86 2.17m6.4-3.83V3.43c0-.97-.74-1.72-1.71-1.72h-3.2c-.46 0-.86.4-.86.86v.86h3.43V1.71%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
+        matchers: [/Low light/i, /Desk lamps/i, /USB-C large device charging/i, /USB-C small device charging/i],
     },
 ];
 
@@ -611,13 +612,13 @@ const BookableSpacesWrapper = ({
             return;
         }
 
-        const hasIntentFilterSelected = intentFilterIds.some(facilityTypeId => {
-            return (selectedFacilityTypes || []).some(filter => {
-                return Number(filter?.facility_type_id) === Number(facilityTypeId) && !!filter?.selected;
-            });
-        });
+        // const hasIntentFilterSelected = intentFilterIds.some(facilityTypeId => {
+        //     return (selectedFacilityTypes || []).some(filter => {
+        //         return Number(filter?.facility_type_id) === Number(facilityTypeId) && !!filter?.selected;
+        //     });
+        // });
 
-        if (lastAppliedIntentIdRef.current === selectedIntentId && hasIntentFilterSelected) {
+        if (lastAppliedIntentIdRef.current === selectedIntentId) {
             return;
         }
 

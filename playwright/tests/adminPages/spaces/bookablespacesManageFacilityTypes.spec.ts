@@ -191,7 +191,7 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-52')).toContainText('Exam Friendly');
 
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-13')).toBeVisible();
-        await expect(roomFeatureGroup.getByTestId('facilitytype-name-13')).toContainText('Postgraduate spaces');
+        await expect(roomFeatureGroup.getByTestId('facilitytype-name-13')).toContainText('Postgraduate only space');
 
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-12')).toBeVisible();
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-12')).toContainText('Power outlets');
