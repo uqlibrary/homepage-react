@@ -95,10 +95,7 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(saveButton).toHaveCSS('color', 'rgba(0, 0, 0, 0.26)');
 
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title');
-            await page
-                .locator('[data-testid="admin-alerts-form-body"] textarea')
-                .first()
-                .fill('the body');
+            await page.locator('[data-testid="admin-alerts-form-body"] textarea').first().fill('the body');
         });
         test('an url must be valid', async ({ page }) => {
             await page.locator('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
@@ -118,10 +115,7 @@ test.describe('Alerts Admin Form Pages', () => {
             // then hide it again
             await previewButton.click();
 
-            await page
-                .locator('[data-testid="admin-alerts-form-body"] textarea')
-                .first()
-                .fill('body 3');
+            await page.locator('[data-testid="admin-alerts-form-body"] textarea').first().fill('body 3');
             await page.getByTestId('admin-alerts-form-button-save').click();
             await expect(page.getByTestId('confirm-alert-add-save-succeeded')).toBeVisible();
             await expect(
@@ -139,10 +133,7 @@ test.describe('Alerts Admin Form Pages', () => {
         });
         test('can save an alert (more complex)', async ({ page }) => {
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title 4');
-            await page
-                .locator('[data-testid="admin-alerts-form-body"] textarea')
-                .first()
-                .fill('body 4');
+            await page.locator('[data-testid="admin-alerts-form-body"] textarea').first().fill('body 4');
             await selectPriorityType(page, 'urgent');
             await page.locator('[data-testid="admin-alerts-form-checkbox-permanent"] input').check();
             await expect(page.getByTestId('admin-alerts-form-link-title')).not.toBeVisible();
@@ -185,10 +176,7 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(page.getByTestId('admin-alerts-form-button-preview')).not.toBeDisabled(); // preview button is always available
             await expect(page.getByTestId('admin-alerts-form-button-save')).toBeDisabled();
 
-            await page
-                .locator('[data-testid="admin-alerts-form-body"] textarea')
-                .first()
-                .fill('body 5');
+            await page.locator('[data-testid="admin-alerts-form-body"] textarea').first().fill('body 5');
             await expect(page.getByTestId('admin-alerts-form-button-preview')).not.toBeDisabled();
             await expect(page.getByTestId('admin-alerts-form-button-save')).not.toBeDisabled();
 
@@ -327,6 +315,8 @@ test.describe('Alerts Admin Form Pages', () => {
 
             // after clicking, the preview button looks like Primary button
             await previewButton.click();
+            await expect(page.locator('#previewWrapper')).toBeVisible();
+            await previewButton.hover();
             await expect(previewButton).toHaveCSS('background-color', COLOR_UQPURPLE);
             await expect(previewButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(previewButton).toHaveCSS('color', 'rgb(255, 255, 255)');
@@ -384,11 +374,7 @@ test.describe('Alerts Admin Form Pages', () => {
                 page.locator('[data-testid="admin-alerts-form-checkbox-system-homepage"] input'),
             ).toBeChecked();
             await expect(
-                page
-                    .getByTestId('admin-alerts-form-checkbox-system-primo')
-                    .locator('..')
-                    .getByText(/Primo/)
-                    .first(),
+                page.getByTestId('admin-alerts-form-checkbox-system-primo').locator('..').getByText(/Primo/).first(),
             ).toBeVisible();
             await expect(page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input')).toBeChecked();
         });
@@ -563,11 +549,7 @@ test.describe('Alerts Admin Form Pages', () => {
                 page.locator('[data-testid="admin-alerts-form-checkbox-system-homepage"] input'),
             ).toBeChecked();
             await expect(
-                page
-                    .getByTestId('admin-alerts-form-checkbox-system-primo')
-                    .locator('..')
-                    .getByText(/Primo/)
-                    .first(),
+                page.getByTestId('admin-alerts-form-checkbox-system-primo').locator('..').getByText(/Primo/).first(),
             ).toBeVisible();
             await expect(page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input')).toBeChecked();
             await page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input').uncheck();
