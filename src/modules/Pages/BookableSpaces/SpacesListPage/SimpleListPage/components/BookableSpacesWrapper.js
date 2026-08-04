@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useLocation } from 'react-router';
 
 import { useMediaQuery, useTheme } from '@mui/material';
-import ComputerIcon from '@mui/icons-material/Computer';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
@@ -20,13 +19,12 @@ import { JourneyDetailsView } from 'modules/Pages/BookableSpaces/SpacesListPage/
 import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
 
 import {
+    findSpaceById,
     getJourneySearchParams,
     JOURNEY_VIEWS,
     parseJourneyStateFromUrl,
     serialiseJourneyMapFilterState,
-    serialiseJourneyUrl,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
-import { findSpaceById, getSpaceIdentifier } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { BookableSpacesJourneyView } from './BookableSpacesJourneyView';
 
 const journeyFallbackImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
@@ -105,49 +103,60 @@ export const buildLegacyBrowseNavigationUrl = ({
     showFavouriteSpacesOnly = false,
 }) => {
     const url = new URL(currentUrl);
-    const encodedMapFilters = serialiseJourneyMapFilterState({
-        selectedFacilityTypes,
-        selectedCampus,
-        selectedLibrary,
-        capacityFilterValue,
-        showFavouriteSpacesOnly,
-    });
-    const searchParams = new URLSearchParams();
-    searchParams.set('mapFilters', encodedMapFilters);
-    searchParams.set('autoSelectFirstSpace', '1');
-
-    const journeySearchParams = getJourneySearchParams(url);
-    const userValue = journeySearchParams.params.get('user');
-    if (userValue !== null) {
-        searchParams.set('user', userValue);
-    }
-
     const hashValue = url.hash || '';
     const isHashRouting = hashValue.startsWith('#/');
+    const journeySearchParams = getJourneySearchParams(url);
+
+    const hasSelectedFacilityFilters = (selectedFacilityTypes || []).some(
+        filter => filter?.selected || filter?.unselected,
+    );
+    const normalizedSelectedCampus = Number(selectedCampus);
+    const normalizedSelectedLibrary = Number(selectedLibrary);
+    const hasActiveCampusSelection = Number.isFinite(normalizedSelectedCampus) && normalizedSelectedCampus > 1;
+    const hasActiveLibrarySelection = Number.isFinite(normalizedSelectedLibrary) && normalizedSelectedLibrary !== 0;
+    const hasActiveCapacitySelection = Array.isArray(capacityFilterValue) && capacityFilterValue.length > 0;
+    const hasActiveFavouritesSelection = Boolean(showFavouriteSpacesOnly);
+    const hasActiveJourneyFilters =
+        hasSelectedFacilityFilters ||
+        hasActiveCampusSelection ||
+        hasActiveLibrarySelection ||
+        hasActiveCapacitySelection ||
+        hasActiveFavouritesSelection;
+
+    const nextSearchParams = new URLSearchParams();
+    ['autoSelectFirstSpace', 'user'].forEach(key => {
+        const value = journeySearchParams.params.get(key);
+        if (value !== null) {
+            nextSearchParams.set(key, value);
+        }
+    });
+
+    if (hasActiveJourneyFilters) {
+        nextSearchParams.set(
+            'mapFilters',
+            serialiseJourneyMapFilterState({
+                selectedFacilityTypes,
+                selectedCampus,
+                selectedLibrary,
+                capacityFilterValue,
+                showFavouriteSpacesOnly,
+            }),
+        );
+    }
+
+    const queryString = nextSearchParams.toString();
+    const querySuffix = queryString ? `?${queryString}` : '';
 
     if (isHashRouting) {
         url.search = '';
-        url.hash = `#/spaces/mapresults?${searchParams.toString()}`;
+        url.hash = `#/spaces/mapresults${querySuffix}`;
         return url.toString();
     }
 
     url.pathname = '/spaces/mapresults';
-    url.search = searchParams.toString();
+    url.search = queryString;
     url.hash = '';
     return url.toString();
-};
-
-const getIntentFilterIds = (facilityGroups, intent) => {
-    const ids = [];
-    facilityGroups?.forEach(group => {
-        group?.facility_type_children?.forEach(child => {
-            const name = child?.facility_type_name || '';
-            if (intent?.matchers?.some(matcher => matcher.test(name))) {
-                ids.push(child?.facility_type_id);
-            }
-        });
-    });
-    return ids;
 };
 
 const BookableSpacesWrapper = ({
@@ -180,7 +189,7 @@ const BookableSpacesWrapper = ({
     weeklyHoursError,
     onFavouriteToggle,
     isFavouriteActionInProgress,
-    hasJourneyMapFilterState = false,
+    onResetAllFilters,
     initialView = 'landing',
     showFavouriteSpacesOnly: controlledShowFavouriteSpacesOnly,
     setShowFavouriteSpacesOnly: setControlledShowFavouriteSpacesOnly,
@@ -272,128 +281,98 @@ const BookableSpacesWrapper = ({
     }, [canShowAdvancedFilters, isDesktopResultsLayout]);
 
     const lastAppliedIntentIdRef = React.useRef(null);
-
-    const buildIntentFilters = React.useCallback(
-        intent => {
-            const ids = getIntentFilterIds(filteredFacilityTypeList?.data?.facility_type_groups, intent);
-            const existingFilters = Array.isArray(selectedFacilityTypes) ? selectedFacilityTypes : [];
-            const facilityTypeEntries = (filteredFacilityTypeList?.data?.facility_type_groups || []).flatMap(group => {
-                const children = Array.isArray(group?.facility_type_children) ? group.facility_type_children : [];
-                return children
-                    .map(child => {
-                        const facilityTypeId = Number(child?.facility_type_id);
-                        if (!Number.isFinite(facilityTypeId)) {
-                            return null;
-                        }
-
-                        const existingFilter = existingFilters.find(
-                            filter => Number(filter?.facility_type_id) === facilityTypeId,
-                        );
-
-                        return {
-                            ...(existingFilter || {}),
-                            facility_type_id: facilityTypeId,
-                            facility_type_name: child?.facility_type_name || existingFilter?.facility_type_name || null,
-                            selected: false,
-                            unselected: false,
-                            facility_special_action: existingFilter?.facility_special_action || null,
-                        };
-                    })
-                    .filter(Boolean);
-            });
-
-            if (facilityTypeEntries.length === 0) {
-                return null;
-            }
-
-            if (ids.length === 0) {
-                return null;
-            }
-
-            return facilityTypeEntries.map(filter => ({
-                ...filter,
-                selected: ids.includes(Number(filter.facility_type_id)),
-                unselected: false,
-            }));
-        },
-        [filteredFacilityTypeList, selectedFacilityTypes],
-    );
+    const lastHydratedUrlIntentKeyRef = React.useRef(null);
 
     const applyIntentFilters = React.useCallback(
         intent => {
-            const nextFilters = buildIntentFilters(intent);
-            if (!nextFilters?.length) {
+            const existingFilters = Array.isArray(selectedFacilityTypes) ? selectedFacilityTypes : [];
+            const sourceFacilityGroups =
+                filteredFacilityTypeList?.data?.facility_type_groups || facilityTypeList?.data?.facility_type_groups;
+            if (!sourceFacilityGroups?.length) {
                 lastAppliedIntentIdRef.current = null;
-                return;
+                return false;
+            }
+
+            const sourceEntries = sourceFacilityGroups.flatMap(group =>
+                (Array.isArray(group?.facility_type_children) ? group.facility_type_children : []).map(child => ({
+                    facilityTypeId: Number(child?.facility_type_id),
+                    facilityTypeName: child?.facility_type_name || '',
+                    facilityTypeGroupId: group?.facility_type_group_id,
+                    facilitySpecialAction: child?.facility_special_action || null,
+                })),
+            );
+            const sourceNameById = new Map(
+                sourceEntries
+                    .filter(entry => Number.isFinite(entry.facilityTypeId))
+                    .map(entry => [entry.facilityTypeId, entry.facilityTypeName]),
+            );
+
+            const baseFilters =
+                existingFilters.length > 0
+                    ? existingFilters
+                    : sourceEntries
+                          .filter(entry => Number.isFinite(entry.facilityTypeId))
+                          .map(entry => ({
+                              facility_type_group_id: entry.facilityTypeGroupId,
+                              facility_type_id: entry.facilityTypeId,
+                              facility_type_name: entry.facilityTypeName || null,
+                              selected: false,
+                              unselected: false,
+                              facility_special_action: entry.facilitySpecialAction,
+                          }));
+
+            if (!baseFilters.length) {
+                lastAppliedIntentIdRef.current = null;
+                return false;
+            }
+
+            const nextFilters = baseFilters.map(filter => {
+                const normalizedFacilityTypeId = Number(filter?.facility_type_id);
+                const resolvedFacilityTypeName =
+                    filter?.facility_type_name || sourceNameById.get(normalizedFacilityTypeId) || '';
+                const isIntentMatch = intent?.matchers?.some(matcher => matcher.test(resolvedFacilityTypeName));
+                return {
+                    ...filter,
+                    facility_type_id: Number.isFinite(normalizedFacilityTypeId)
+                        ? normalizedFacilityTypeId
+                        : filter?.facility_type_id,
+                    facility_type_name: resolvedFacilityTypeName || null,
+                    selected: isIntentMatch,
+                    unselected: false,
+                };
+            });
+
+            if (!nextFilters.some(filter => filter?.selected)) {
+                lastAppliedIntentIdRef.current = null;
+                return false;
+            }
+
+            const hasStateDifference = nextFilters.some((nextFilter, index) => {
+                const existingFilter = baseFilters[index];
+                return (
+                    !!nextFilter?.selected !== !!existingFilter?.selected ||
+                    !!nextFilter?.unselected !== !!existingFilter?.unselected
+                );
+            });
+
+            if (!hasStateDifference) {
+                lastAppliedIntentIdRef.current = intent?.id || null;
+                return true;
             }
 
             lastAppliedIntentIdRef.current = intent?.id || null;
             setSelectedFacilityTypes(nextFilters);
+            return true;
         },
-        [buildIntentFilters, setSelectedFacilityTypes],
+        [facilityTypeList, filteredFacilityTypeList, selectedFacilityTypes, setSelectedFacilityTypes],
     );
 
-    // Keep browser history and journey views aligned so browser Back stays inside journey steps.
-    const journeyHistoryRef = React.useRef(['landing']);
-
-    const buildHistoryState = React.useCallback((nextView, nextIntentId = null, nextSpaceId = null) => {
-        return {
-            journeyView: nextView,
-            journeyIntentId: nextIntentId,
-            journeySpaceId: nextSpaceId ? String(nextSpaceId) : null,
-        };
+    const navigateToView = React.useCallback(nextView => {
+        if (!JOURNEY_VIEWS.includes(nextView)) {
+            return;
+        }
+        setView(nextView);
     }, []);
-
-    const writeJourneyHistory = React.useCallback(
-        ({ nextView, nextIntentId = null, nextSpaceId = null, method = 'replaceState', mapFilterState }) => {
-            const nextUrl = serialiseJourneyUrl({
-                view: nextView,
-                intentId: nextIntentId,
-                spaceId: nextSpaceId,
-                mapFilterState,
-            });
-            const nextState = buildHistoryState(nextView, nextIntentId, nextSpaceId);
-
-            window.history[method](nextState, '', nextUrl);
-        },
-        [buildHistoryState],
-    );
-
-    const navigateToView = React.useCallback(
-        (
-            nextView,
-            {
-                pushHistory = true,
-                intentId = selectedIntentId,
-                spaceId = getSpaceIdentifier(selectedSpace),
-                mapFilterState,
-            } = {},
-        ) => {
-            if (!JOURNEY_VIEWS.includes(nextView)) {
-                return;
-            }
-
-            const currentHistory = journeyHistoryRef.current;
-            const lastView = currentHistory[currentHistory.length - 1];
-            if (nextView === lastView) {
-                setView(nextView);
-                return;
-            }
-
-            currentHistory.push(nextView);
-            if (pushHistory) {
-                writeJourneyHistory({
-                    nextView,
-                    nextIntentId: intentId,
-                    nextSpaceId: spaceId,
-                    method: 'pushState',
-                    mapFilterState,
-                });
-            }
-            setView(nextView);
-        },
-        [selectedIntentId, selectedSpace, writeJourneyHistory],
-    );
 
     const goToLegacyBrowse = () => {
         const nextUrl = buildLegacyBrowseNavigationUrl({
@@ -410,7 +389,6 @@ const BookableSpacesWrapper = ({
     const handleIntentSelect = intent => {
         setSelectedIntentId(intent.id);
         setSelectedSpace(null);
-        let nextMapFilterState;
         if (intent.id === favouriteIntentDefinition.id) {
             setShowFavouriteSpacesOnly(true);
             const clearedFilters = (selectedFacilityTypes || []).map(filter => ({
@@ -420,31 +398,11 @@ const BookableSpacesWrapper = ({
             }));
             lastAppliedIntentIdRef.current = null;
             setSelectedFacilityTypes(clearedFilters);
-            nextMapFilterState = {
-                selectedFacilityTypes: clearedFilters,
-                selectedCampus,
-                selectedLibrary,
-                capacityFilterValue,
-                showFavouriteSpacesOnly: true,
-            };
         } else {
             setShowFavouriteSpacesOnly(false);
-            const nextFilters = buildIntentFilters(intent);
-            if (nextFilters?.length) {
-                lastAppliedIntentIdRef.current = intent.id;
-                setSelectedFacilityTypes(nextFilters);
-                nextMapFilterState = {
-                    selectedFacilityTypes: nextFilters,
-                    selectedCampus,
-                    selectedLibrary,
-                    capacityFilterValue,
-                    showFavouriteSpacesOnly: false,
-                };
-            } else {
-                lastAppliedIntentIdRef.current = null;
-            }
+            applyIntentFilters(intent);
         }
-        navigateToView('results', { intentId: intent.id, spaceId: null, mapFilterState: nextMapFilterState });
+        navigateToView('results', { intentId: intent.id, spaceId: null });
     };
 
     const activateFavouritesResults = React.useCallback(() => {
@@ -453,41 +411,21 @@ const BookableSpacesWrapper = ({
         setSelectedSpace(null);
         lastAppliedIntentIdRef.current = null;
         navigateToView('results', { intentId: favouriteIntentDefinition.id, spaceId: null });
-    }, [navigateToView]);
+    }, [navigateToView, setShowFavouriteSpacesOnly]);
 
     const handleClearJourneyFilters = () => {
-        const nextFilters = selectedFacilityTypes.map(filter => ({
-            ...filter,
-            selected: false,
-            unselected: false,
-        }));
-        setSelectedFacilityTypes(nextFilters);
+        onResetAllFilters?.();
         setSelectedIntentId(null);
         setShowFavouriteSpacesOnly(false);
         lastAppliedIntentIdRef.current = null;
     };
 
-    const getIntentLandingUrl = React.useCallback(
-        intent => {
-            const nextFilters = buildIntentFilters(intent);
-            const mapFilterState = nextFilters?.length
-                ? {
-                      selectedFacilityTypes: nextFilters,
-                      selectedCampus,
-                      selectedLibrary,
-                      capacityFilterValue,
-                      showFavouriteSpacesOnly: false,
-                  }
-                : undefined;
-
-            return serialiseJourneyUrl({
-                view: 'results',
-                intentId: intent?.id,
-                mapFilterState,
-            });
-        },
-        [buildIntentFilters, capacityFilterValue, selectedCampus, selectedLibrary],
-    );
+    const getIntentLandingUrl = React.useCallback(intent => {
+        if (!intent?.id) {
+            return '/spaces/results';
+        }
+        return `/spaces/results/filters=${encodeURIComponent(String(intent.id))}`;
+    }, []);
 
     const landingHighlights = React.useMemo(
         () =>
@@ -505,15 +443,6 @@ const BookableSpacesWrapper = ({
         [servicesAndSpacesArticles],
     );
 
-    const hasJourneyMapFiltersInUrl = React.useMemo(() => {
-        if (typeof window === 'undefined') {
-            return false;
-        }
-
-        const { params } = getJourneySearchParams(new URL(window.location.href));
-        return params.get('mapFilters') !== null;
-    }, [location.hash, location.pathname, location.search]);
-
     const highlightSpaceDescription = React.useMemo(() => {
         if (!highlightedSpace?.space_description) return '';
         return String(highlightedSpace.space_description)
@@ -522,70 +451,109 @@ const BookableSpacesWrapper = ({
             .trim();
     }, [highlightedSpace]);
 
-    React.useEffect(() => {
-        const spacesForLookup = [
+    const urlJourneyState = parseJourneyStateFromUrl(availableIntentDefinitions);
+
+    const spacesForUrlLookup = React.useMemo(
+        () => [
             ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : []),
             ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
             ...(highlightedSpace ? [highlightedSpace] : []),
-        ];
-        const parsedState = parseJourneyStateFromUrl(availableIntentDefinitions);
+        ],
+        [allSpaceLocations, filteredSpaceLocations, highlightedSpace],
+    );
 
-        let nextView = parsedState.view;
-        let nextIntentId = parsedState.intentId;
-        let nextSelectedSpace = null;
+    React.useEffect(() => {
+        if (urlJourneyState?.view === 'details') {
+            if (view !== 'details') {
+                setView('details');
+            }
 
-        if (
-            nextView === 'landing' &&
-            initialView &&
-            initialView !== 'landing' &&
-            !parsedState.intentId &&
-            !parsedState.spaceId
-        ) {
-            nextView = initialView;
+            const resolvedSpace = findSpaceById(spacesForUrlLookup, urlJourneyState?.spaceId);
+            if (resolvedSpace) {
+                if (
+                    String(selectedSpace?.space_id || selectedSpace?.space_uuid) !==
+                    String(resolvedSpace?.space_id || resolvedSpace?.space_uuid)
+                ) {
+                    setSelectedSpace(resolvedSpace);
+                }
+            } else if (selectedSpace) {
+                setSelectedSpace(null);
+            }
+
+            return;
         }
 
-        if (nextView === 'landing' || nextView === 'intent') {
-            nextIntentId = null;
-        }
-
-        if (nextView === 'details') {
-            nextSelectedSpace = findSpaceById(spacesForLookup, parsedState.spaceId);
-            if (!nextSelectedSpace) {
-                nextView = nextIntentId ? 'results' : 'landing';
+        if (urlJourneyState?.view === 'results') {
+            if (view !== 'results') {
+                setView('results');
+            }
+            if (selectedSpace) {
+                setSelectedSpace(null);
+            }
+            if (urlJourneyState?.intentId && selectedIntentId !== urlJourneyState.intentId) {
+                setSelectedIntentId(urlJourneyState.intentId);
             }
         }
+    }, [selectedIntentId, selectedSpace, spacesForUrlLookup, urlJourneyState, view]);
 
-        setView(nextView);
-        setSelectedIntentId(nextIntentId || null);
+    const intentIdFromUrl = React.useMemo(() => {
+        const currentJourneyUrl = `${location.pathname}${location.search}${location.hash}`;
+        const intentMatch = currentJourneyUrl.match(/\/spaces\/results\/filters=([^?#&]+)/);
+        const parsedIntentId = intentMatch?.[1] ? decodeURIComponent(intentMatch[1]) : null;
+        const hasKnownIntent = availableIntentDefinitions.some(intent => intent.id === parsedIntentId);
+        return hasKnownIntent ? parsedIntentId : null;
+    }, [availableIntentDefinitions, location.hash, location.pathname, location.search]);
 
-        if (!isFavouriteFilterControlled) {
-            setShowFavouriteSpacesOnly(nextIntentId === favouriteIntentDefinition.id);
+    React.useEffect(() => {
+        if (!intentIdFromUrl) {
+            return;
         }
 
-        setSelectedSpace(nextSelectedSpace);
-        journeyHistoryRef.current = [nextView];
+        setView('results');
+        setSelectedSpace(null);
+        setSelectedIntentId(intentIdFromUrl);
+        if (intentIdFromUrl === favouriteIntentDefinition.id) {
+            setShowFavouriteSpacesOnly(true);
+        }
+        lastAppliedIntentIdRef.current = null;
+    }, [intentIdFromUrl, setShowFavouriteSpacesOnly]);
 
-        if (!nextIntentId || nextView !== 'results') {
-            lastAppliedIntentIdRef.current = null;
+    React.useEffect(() => {
+        if (!intentIdFromUrl || view !== 'results') {
+            return;
         }
 
-        writeJourneyHistory({
-            nextView,
-            nextIntentId: nextIntentId || null,
-            nextSpaceId: getSpaceIdentifier(nextSelectedSpace) || null,
-            method: 'replaceState',
-        });
+        const urlIntentKey = `${location.pathname}${location.search}${location.hash}::${intentIdFromUrl}`;
+        if (lastHydratedUrlIntentKeyRef.current === urlIntentKey) {
+            return;
+        }
+
+        const intent = availableIntentDefinitions.find(candidate => candidate.id === intentIdFromUrl);
+        if (!intent) {
+            return;
+        }
+
+        const hasSelectedFiltersAlready = (selectedFacilityTypes || []).some(
+            filter => !!filter?.selected || !!filter?.unselected,
+        );
+        if (hasSelectedFiltersAlready) {
+            lastHydratedUrlIntentKeyRef.current = urlIntentKey;
+            return;
+        }
+
+        const didHydrateFromUrl = applyIntentFilters(intent);
+        if (didHydrateFromUrl) {
+            lastHydratedUrlIntentKeyRef.current = urlIntentKey;
+        }
     }, [
-        allSpaceLocations,
+        applyIntentFilters,
         availableIntentDefinitions,
+        intentIdFromUrl,
         location.hash,
         location.pathname,
         location.search,
-        filteredFacilityTypeList,
-        filteredSpaceLocations,
-        highlightedSpace,
         selectedFacilityTypes,
-        writeJourneyHistory,
+        view,
     ]);
 
     React.useEffect(() => {
@@ -593,22 +561,8 @@ const BookableSpacesWrapper = ({
             return;
         }
 
-        // If URL already has explicit journey map filters, preserve them instead
-        // This should stop the intent filters from overriding any existing map filters in the URL (hopefully)
-        if (hasJourneyMapFiltersInUrl) {
-            return;
-        }
-
         const requestedIntent = availableIntentDefinitions.find(intent => intent.id === selectedIntentId) || null;
         if (!requestedIntent) {
-            return;
-        }
-
-        const intentFilterIds = getIntentFilterIds(
-            filteredFacilityTypeList?.data?.facility_type_groups,
-            requestedIntent,
-        );
-        if (!intentFilterIds.length) {
             return;
         }
 
@@ -622,81 +576,29 @@ const BookableSpacesWrapper = ({
             return;
         }
 
+        const hasSelectedFiltersAlready = (selectedFacilityTypes || []).some(
+            filter => !!filter?.selected || !!filter?.unselected,
+        );
+        if (hasSelectedFiltersAlready) {
+            lastAppliedIntentIdRef.current = selectedIntentId;
+            return;
+        }
+
         applyIntentFilters(requestedIntent);
     }, [
         applyIntentFilters,
         availableIntentDefinitions,
         filteredFacilityTypeList,
-        hasJourneyMapFiltersInUrl,
         selectedFacilityTypes,
         selectedIntentId,
         view,
     ]);
 
     React.useEffect(() => {
-        const historyTop = journeyHistoryRef.current[journeyHistoryRef.current.length - 1];
-        if (historyTop !== view) {
-            return;
-        }
-
-        writeJourneyHistory({
-            nextView: view,
-            nextIntentId: selectedIntentId,
-            nextSpaceId: getSpaceIdentifier(selectedSpace) || null,
-            method: 'replaceState',
-        });
-    }, [selectedIntentId, selectedSpace, view, writeJourneyHistory]);
-
-    React.useEffect(() => {
         if (view === 'details') {
             journeyTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }, [view]);
-
-    React.useEffect(() => {
-        const handlePopState = event => {
-            const currentHistory = journeyHistoryRef.current;
-            const parsedState = parseJourneyStateFromUrl(availableIntentDefinitions);
-            let targetView = event?.state?.journeyView || parsedState.view;
-            const targetIntentId = event?.state?.journeyIntentId || parsedState.intentId;
-            const targetSpaceId = event?.state?.journeySpaceId || parsedState.spaceId;
-
-            if (!JOURNEY_VIEWS.includes(targetView)) {
-                return;
-            }
-
-            const spacesForLookup = [
-                ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : []),
-                ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
-                ...(highlightedSpace ? [highlightedSpace] : []),
-            ];
-            let targetSelectedSpace = null;
-            if (targetView === 'details') {
-                targetSelectedSpace = findSpaceById(spacesForLookup, targetSpaceId);
-                if (!targetSelectedSpace) {
-                    targetView = targetIntentId ? 'results' : 'landing';
-                }
-            }
-
-            while (currentHistory.length > 1 && currentHistory[currentHistory.length - 1] !== targetView) {
-                currentHistory.pop();
-            }
-
-            if (currentHistory[currentHistory.length - 1] !== targetView) {
-                currentHistory.push(targetView);
-            }
-
-            setSelectedIntentId(targetView === 'results' || targetView === 'details' ? targetIntentId || null : null);
-            if (!isFavouriteFilterControlled) {
-                setShowFavouriteSpacesOnly(targetIntentId === favouriteIntentDefinition.id);
-            }
-            setSelectedSpace(targetView === 'details' ? targetSelectedSpace : null);
-            navigateToView(targetView, { pushHistory: false, intentId: targetIntentId, spaceId: targetSpaceId });
-        };
-
-        window.addEventListener('popstate', handlePopState);
-        return () => window.removeEventListener('popstate', handlePopState);
-    }, [allSpaceLocations, availableIntentDefinitions, filteredSpaceLocations, highlightedSpace, navigateToView]);
 
     return (
         <BookableSpacesJourneyView
@@ -793,9 +695,10 @@ const BookableSpacesWrapper = ({
                         spacesFavouritesList={spacesFavouritesList}
                         showFavouriteSpacesOnly={showFavouriteSpacesOnly}
                         setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                        onResetAllFilters={onResetAllFilters}
                         isLoggedIn={isLoggedIn}
                         hasFavouriteSpaces={hasFavourites}
-                        hasJourneyMapFilterState={hasJourneyMapFilterState}
+                        hasJourneyMapFilterState={false}
                     />
                 </StandardPage>
             )}
@@ -847,7 +750,7 @@ BookableSpacesWrapper.propTypes = {
     weeklyHoursError: PropTypes.any,
     onFavouriteToggle: PropTypes.func,
     isFavouriteActionInProgress: PropTypes.any,
-    hasJourneyMapFilterState: PropTypes.bool,
+    onResetAllFilters: PropTypes.func,
     initialView: PropTypes.oneOf(['landing', 'results', 'details']),
     showFavouriteSpacesOnly: PropTypes.bool,
     setShowFavouriteSpacesOnly: PropTypes.func,

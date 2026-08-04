@@ -127,7 +127,6 @@ export const SpacesQuickLinks = ({
                                 shortParagraph={intent.description || ''}
                                 fillContainer
                                 sx={{ pr: { xs: '10px' }, pl: { xs: 0 } }}
-                                onClick={() => handleIntentSelect(intent)}
                                 showH3
                             />
                         );
