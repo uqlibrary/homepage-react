@@ -6,6 +6,7 @@ import { lazyRetry } from 'helpers/general';
 export const NotFound = lazy(() => lazyRetry(() => import('modules/Pages/NotFound/containers/NotFound')));
 export const LearningResources = lazy(() => lazyRetry(() => import('modules/Pages/LearningResources/LearningResourcesContainer')));
 export const PaymentReceipt = lazy(() => lazyRetry(() => import('modules/Pages/PaymentReceipt/PaymentReceipt')));
+export const ArtTrail = lazy(() => lazyRetry(() => import('modules/Pages/ArtTrail/ArtTrailLanding')));
 export const BookExamBooth = lazy(() => lazyRetry(() => import('modules/Pages/BookExamBooth/BookExamBoothContainer')));
 export const AlertsAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Form/Add/AlertsAddContainer')));
 export const AlertsEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Form/Edit/AlertsEditContainer')));

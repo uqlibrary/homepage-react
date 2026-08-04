@@ -2,6 +2,8 @@ export const pathConfig = {
     index: '/',
     learningresources: '/learning-resources',
     paymentReceipt: '/payment-receipt',
+    // A standalone section with its own look and feel — rendered without the shared Library chrome.
+    artTrail: '/art-trail',
     admin: {
         alertsadd: '/admin/alerts/add',
         alertsedit: alertid => `/admin/alerts/edit/${alertid}`,

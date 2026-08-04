@@ -84,6 +84,13 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.paymentReceipt.title,
         },
         {
+            // A standalone section with its own look and feel — App renders it without the shared chrome.
+            path: pathConfig.artTrail,
+            element: <components.ArtTrail />,
+            exact: true,
+            pageTitle: 'Art Trail',
+        },
+        {
             path: pathConfig.bookExamBooth,
             element: <components.BookExamBooth />,
             exact: false,
