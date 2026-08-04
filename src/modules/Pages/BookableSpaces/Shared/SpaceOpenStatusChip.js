@@ -203,14 +203,12 @@ export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, we
     }
 
     if (weeklyHoursLoading || weeklyHoursError || !weeklyHours) {
-        return 'hours';
-        // return null;
+        return null;
     }
 
     const status = getSpaceHoursStatus(space, weeklyHours);
     if (!status) {
-        return 'no status';
-        // return null;
+        return null;
     }
 
     if (status === 'open') {
@@ -224,8 +222,7 @@ export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, we
     }
 
     console.log('unexpectedly no valid status available');
-    return 'droptrough';
-    // return null;
+    return null;
 };
 
 SpaceOpenStatusChip.propTypes = {
