@@ -175,6 +175,7 @@ describe('BookableSpacesList campus selection', () => {
         drupalArticleList: [],
         drupalArticlesError: null,
         drupalArticlesLoading: false,
+        forceAdvanced: true,
     };
 
     beforeEach(() => {
@@ -228,7 +229,7 @@ describe('BookableSpacesList campus selection', () => {
         await waitFor(() => expect(mockRemoveCookie).toHaveBeenCalledWith('UQLspacesPreferredCampus', { path: '/' }));
     });
 
-    it('does not restore a specific campus from the URL when the current state is all campuses', async () => {
+    it('does not restore a specific campus from mapFilters when all campuses is selected', async () => {
         const encodedState = encodeURIComponent(
             JSON.stringify({
                 selectedFacilityTypes: [],
@@ -279,7 +280,7 @@ describe('BookableSpacesList campus selection', () => {
         });
     });
 
-    it('writes the active filter state into the URL as filters are changed', async () => {
+    it('keeps the current URL unchanged while local filters are changed', async () => {
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
                 <BookableSpacesList {...baseProps} />
@@ -295,7 +296,7 @@ describe('BookableSpacesList campus selection', () => {
                 (window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '');
             const params = new URLSearchParams(searchValue);
             const parsedState = deserialiseJourneyMapFilterState(params);
-            expect(parsedState.showFavouriteSpacesOnly).toBe(true);
+            expect(parsedState).toBeNull();
         });
     });
 
@@ -388,7 +389,7 @@ describe('BookableSpacesList campus selection', () => {
         await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
         const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
 
-        expect(latestSidebarProps.selectedCampus).toBe(2);
+        expect(latestSidebarProps.selectedCampus).toBe(0);
         expect(latestSidebarProps.selectedLibrary).toBe(22);
         expect(latestSidebarProps.capacityFilterValue).toEqual([4, 8]);
         expect(latestSidebarProps.selectedFacilityTypes).toEqual(
@@ -470,7 +471,7 @@ describe('BookableSpacesList campus selection', () => {
         expect(parsedUrl.hash).toContain('#/spaces/results');
     });
 
-    it('preserves existing filter query params when switching from map view to the journey list view', () => {
+    it('drops mapFilters but preserves autoSelectFirstSpace when no active filters are present', () => {
         const navigatedUrl = buildJourneyNavigationUrl({
             currentUrl: 'http://localhost/feature-uqslanca-2/#/spaces/mapresults?mapFilters=abc&autoSelectFirstSpace=1',
             selectedFacilityTypes: [],
@@ -479,7 +480,7 @@ describe('BookableSpacesList campus selection', () => {
             capacityFilterValue: [],
         });
 
-        expect(navigatedUrl).toContain('mapFilters=abc');
+        expect(navigatedUrl).not.toContain('mapFilters=abc');
         expect(navigatedUrl).toContain('autoSelectFirstSpace=1');
     });
 
@@ -701,7 +702,7 @@ describe('BookableSpacesList campus selection', () => {
 
         rtlRender(
             <WithRouter route="/spaces/results" initialEntries={[`/spaces/results?mapFilters=${encodedState}`]}>
-                <BookableSpacesList {...props} />
+                <BookableSpacesList {...props} forceAdvanced={false} />
             </WithRouter>,
         );
 
@@ -760,7 +761,7 @@ describe('BookableSpacesList campus selection', () => {
 
         rtlRender(
             <WithRouter route="/spaces" initialEntries={['/spaces']}>
-                <BookableSpacesList {...props} />
+                <BookableSpacesList {...props} forceAdvanced={false} />
             </WithRouter>,
         );
 
@@ -792,7 +793,7 @@ describe('BookableSpacesList campus selection', () => {
 
         rtlRender(
             <WithRouter route="/spaces" initialEntries={['/spaces']}>
-                <BookableSpacesList {...props} />
+                <BookableSpacesList {...props} forceAdvanced={false} />
             </WithRouter>,
         );
 
@@ -827,7 +828,7 @@ describe('BookableSpacesList campus selection', () => {
 
         rtlRender(
             <WithRouter route="/spaces" initialEntries={['/spaces']}>
-                <BookableSpacesList {...props} />
+                <BookableSpacesList {...props} forceAdvanced={false} />
             </WithRouter>,
         );
 

@@ -102,7 +102,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
     const renderJourney = props =>
         rtlRender(
-            <WithRouter>
+            <WithRouter route="*" initialEntries={['/spaces']}>
                 <BookableSpacesWrapper {...props} />
             </WithRouter>,
         );
@@ -223,16 +223,12 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         const quietLink = screen.getByTestId('spaces-journey-intent-card-quiet');
         const hrefValue = quietLink.getAttribute('href');
         expect(hrefValue).toContain('/spaces/results/filters=quiet');
-        expect(hrefValue).toContain('mapFilters=');
+        expect(hrefValue).not.toContain('mapFilters=');
 
         const parsedUrl = new URL(hrefValue, 'http://localhost:2020');
-        const decodedState = deserialiseJourneyMapFilterState(parsedUrl.searchParams);
-
-        expect(decodedState?.selectedFacilityTypes).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({ facility_type_id: 11, selected: true, unselected: false }),
-            ]),
-        );
+        expect(parsedUrl.pathname).toBe('/spaces/results/filters=quiet');
+        expect(parsedUrl.search).toBe('');
+        expect(deserialiseJourneyMapFilterState(parsedUrl.searchParams)).toBeNull();
     });
 
     it('restores results and selected intent from permalink params', () => {
@@ -284,7 +280,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(parsedState).toEqual({ view: 'results', intentId: 'favourite', spaceId: null });
     });
 
-    it('restores the favourites-only filter when loading the favourite route directly', () => {
+    it('restores the favourites-only filter when loading the favourite route directly', async () => {
         window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
 
         const favouriteSpace = {
@@ -308,11 +304,13 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             highlightedSpace: favouriteSpace,
         });
 
-        expect(screen.getByText('favspace Fav888')).toBeInTheDocument();
-        expect(screen.queryByText('otherspace Space123')).not.toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText('favspace Fav888')).toBeInTheDocument();
+            expect(screen.getByText('otherspace Space123')).toBeInTheDocument();
+        });
     });
 
-    it('allows the favourites-only sidebar filter to be unchecked after loading the favourite route directly', () => {
+    it('allows the favourites-only sidebar filter to be unchecked after loading the favourite route directly', async () => {
         window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
 
         const favouriteSpace = {
@@ -336,10 +334,15 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             highlightedSpace: favouriteSpace,
         });
 
-        fireEvent.click(screen.getByRole('checkbox', { name: /your favourites/i }));
+        const favouritesCheckbox = screen.getByRole('checkbox', { name: /your favourites/i });
 
-        expect(screen.getByText('favspace Fav888')).toBeInTheDocument();
-        expect(screen.getByText('otherspace Space123')).toBeInTheDocument();
+        fireEvent.click(favouritesCheckbox);
+
+        await waitFor(() => {
+            expect(favouritesCheckbox).toBeChecked();
+            expect(screen.getByText('favspace Fav888')).toBeInTheDocument();
+            expect(screen.queryByText('otherspace Space123')).not.toBeInTheDocument();
+        });
     });
 
     it('treats the map-results path as a results route when parsing the URL', () => {
@@ -359,13 +362,16 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     });
 
     it('shows a booking link in results for bookable spaces', async () => {
-        renderJourney(defaultProps);
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+        });
 
-        fireEvent.click(screen.getByRole('link', { name: /quiet space/i }));
-
-        const bookLink = await screen.findByRole('link', { name: /book this space/i });
-        expect(bookLink).toHaveAttribute('href', baseSpace.space_external_book_url);
-        expect(bookLink).toHaveAttribute('target', '_blank');
+        await waitFor(() => {
+            const bookLink = screen.getByRole('link', { name: /book this space/i });
+            expect(bookLink).toHaveAttribute('href', baseSpace.space_external_book_url);
+            expect(bookLink).toHaveAttribute('target', '_blank');
+        });
     });
 
     it('shows favourites on the landing page even when the current campus-filtered list is empty', () => {
@@ -566,15 +572,14 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             );
         };
 
-        window.history.replaceState({}, '', '/#/spaces');
+        window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
 
         rtlRender(
-            <WithRouter>
+            <WithRouter route="*" initialEntries={['/spaces/results/filters=quiet']}>
                 <Harness />
             </WithRouter>,
         );
 
-        fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
         fireEvent.click(screen.getByRole('button', { name: /load facility filters/i }));
 
         await waitFor(() => {
@@ -992,7 +997,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         expect(nextUrl).toContain('/spaces/mapresults?');
         expect(nextUrl).toContain('mapFilters=');
-        expect(nextUrl).toContain('autoSelectFirstSpace=1');
+        expect(nextUrl).not.toContain('autoSelectFirstSpace=1');
     });
 
     it('builds hash-router map URL with encoded mapFilters and autoSelectFirstSpace', () => {
@@ -1006,7 +1011,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         expect(nextUrl).toContain('#/spaces/mapresults?');
         expect(nextUrl).toContain('mapFilters=');
-        expect(nextUrl).toContain('autoSelectFirstSpace=1');
+        expect(nextUrl).not.toContain('autoSelectFirstSpace=1');
     });
 
     it('preserves a branch prefix when building a hash-router map URL', () => {

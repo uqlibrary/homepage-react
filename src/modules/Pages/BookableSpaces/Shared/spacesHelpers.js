@@ -337,6 +337,7 @@ export const JOURNEY_VIEWS = ['landing', 'intent', 'results', 'details'];
 export const JOURNEY_QUERY_PARAM_STEP = 'journeyStep';
 export const JOURNEY_QUERY_PARAM_INTENT = 'journeyIntent';
 export const JOURNEY_QUERY_PARAM_SPACE = 'journeySpace';
+export const JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY = 'bookableSpacesJourneyReturnFilterState';
 const MAP_FILTERS_BASE64_PREFIX = 'b64.';
 
 const encodeBase64 = value => {
