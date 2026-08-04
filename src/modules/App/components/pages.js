@@ -33,6 +33,7 @@ export const MembershipForm = lazy(() => lazyRetry(() => import('modules/Pages/M
 export const MembershipReceived = lazy(() => lazyRetry(() => import('modules/Pages/Membership/Received/MembershipReceivedContainer')));
 export const MembershipRenewed = lazy(() => lazyRetry(() => import('modules/Pages/Membership/Received/MembershipRenewed')));
 export const MembershipPaymentConfirmation = lazy(() => lazyRetry(() => import('modules/Pages/Membership/Payment/MembershipPaymentConfirmationContainer')));
+export const MembershipAdminList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Membership/List/MembershipListContainer')));
 
 export const TestTagDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Dashboard/containers/Dashboard')));
 export const TestTagInspection = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Inspection/containers/Inspection')));

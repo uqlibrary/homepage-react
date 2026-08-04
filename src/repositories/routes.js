@@ -350,6 +350,29 @@ export const MEMBERSHIP_RENEW_API = ({ id, code }) => ({ apiUrl: `membership/${i
 // Upload a supporting document for an application.
 export const MEMBERSHIP_FILE_UPLOAD_API = () => ({ apiUrl: 'file/membership' });
 
+// The admin listing of applications. The filter is passed through as `filter[name]`, `filter[type]` and
+// `filter[status]`, and a status filter orders oldest-first so the queue is worked in the order it arrived.
+export const MEMBERSHIPS_LIST_API = ({ filter = {}, limit } = {}) => {
+    const params = { ts: getMillisecondCacheBuster() };
+
+    Object.entries(filter).forEach(([key, value]) => {
+        if (value === null || value === undefined || value === '') {
+            return;
+        }
+        params[`filter[${key}]`] =
+            typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'id') ? value.id : value;
+        if (key === 'status') {
+            params['orderBy[submitted_on]'] = 'ASC';
+        }
+    });
+
+    if (limit !== undefined) {
+        params.limit = limit;
+    }
+
+    return { apiUrl: 'memberships', options: { params } };
+};
+
 export const MEMBERSHIP_CHECK_RENEWING_API = () => ({
     apiUrl: 'membership/check/renewing',
     options: { params: { ts: getMillisecondCacheBuster() } },

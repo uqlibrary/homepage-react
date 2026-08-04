@@ -1,6 +1,7 @@
 import * as actions from './actionTypes';
 import { get, post } from 'repositories/generic';
 import {
+    MEMBERSHIPS_LIST_API,
     MEMBERSHIP_BY_CODE_API,
     MEMBERSHIP_BY_ID_API,
     MEMBERSHIP_CHECK_RENEWING_API,
@@ -186,4 +187,29 @@ export function uploadMembershipFile(file) {
  */
 export function clearMembership() {
     return dispatch => dispatch({ type: actions.MEMBERSHIP_CLEAR });
+}
+
+/**
+ * Load the admin listing of applications for the given search filter. Each record's flat attachment fields are
+ * turned into an `attachments` list, the same as a single record read.
+ */
+export function loadMemberships(filter, limit) {
+    return dispatch => {
+        dispatch({ type: actions.MEMBERSHIPS_LOADING });
+        return get(MEMBERSHIPS_LIST_API({ filter, limit }))
+            .then(response =>
+                dispatch({
+                    type: actions.MEMBERSHIPS_LOADED,
+                    payload: response.map(membership => convertAttachments(membership)),
+                }),
+            )
+            .catch(error => dispatch({ type: actions.MEMBERSHIPS_FAILED, payload: error.message }));
+    };
+}
+
+/**
+ * Drop the admin listing from the store.
+ */
+export function clearMemberships() {
+    return dispatch => dispatch({ type: actions.MEMBERSHIPS_CLEAR });
 }

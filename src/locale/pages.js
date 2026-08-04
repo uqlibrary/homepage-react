@@ -38,6 +38,9 @@ export default {
             masquerade: {
                 title: 'Masquerade',
             },
+            membership: {
+                title: 'Membership administration',
+            },
             alerts: {
                 title: 'Alerts administration',
                 form: {

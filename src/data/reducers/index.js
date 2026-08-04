@@ -54,3 +54,4 @@ export { default as dlorDashboardReducer } from './dlorDashboardReducer';
 export { default as membershipFormDataReducer } from './membershipFormDataReducer';
 export { default as membershipRenewingReducer } from './membershipRenewingReducer';
 export { default as membershipReducer } from './membershipReducer';
+export { default as membershipListReducer } from './membershipListReducer';

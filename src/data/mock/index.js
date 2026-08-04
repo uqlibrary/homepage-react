@@ -29,6 +29,7 @@ import { alertList } from './data/alertsLong';
 import {
     membershipAttachment,
     membershipFormData,
+    membershipList,
     membershipRenewal,
     membershipRenewing,
     membershipSubmitted,
@@ -414,6 +415,27 @@ mock.onPost(new RegExp('^membership/[^/]+/[^/]+/renew$')).reply(
 
 // Uploading a supporting document answers with the stored attachment.
 mock.onPost(routes.MEMBERSHIP_FILE_UPLOAD_API().apiUrl).reply(withDelay([200, [membershipAttachment]]));
+
+// The admin back-office at /admin/membership. The filter is applied here so the search is worth using: name
+// matches on any part of the name, and type and status match exactly - which is what the API does.
+mock.onGet(new RegExp('^memberships')).reply(config => {
+    const params = config.params ?? {};
+    const matches = membership =>
+        [
+            !params['filter[name]'] ||
+                `${membership.first_name} ${membership.sn}`
+                    .toLowerCase()
+                    .includes(String(params['filter[name]']).toLowerCase()),
+            !params['filter[type]'] || membership.type === params['filter[type]'],
+            // The API reads `unconfirmed` as "not yet confirmed" and `reconfirm` as "renewing".
+            !params['filter[status]'] ||
+                (params['filter[status]'] === 'reconfirm'
+                    ? membership.status === 'renewing'
+                    : membership.status === 'unconfirmed'),
+        ].every(Boolean);
+
+    return withDelay([200, membershipList.filter(matches)])();
+});
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {

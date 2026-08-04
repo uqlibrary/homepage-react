@@ -3,11 +3,13 @@ import * as repositories from 'repositories';
 import {
     checkIsRenewing,
     clearMembership,
+    clearMemberships,
     convertAttachments,
     flattenAttachments,
     loadMembership,
     loadMembershipByCode,
     loadMembershipFormData,
+    loadMemberships,
     renewMembership,
     saveMembershipPayment,
     submitMembership,
@@ -258,6 +260,41 @@ describe('Membership actions', () => {
             mockActionsStore.dispatch(clearMembership());
 
             expect(mockActionsStore.getActions()).toHaveDispatchedActions([actions.MEMBERSHIP_CLEAR]);
+        });
+    });
+
+    describe('loadMemberships', () => {
+        it("dispatches loading then loaded, turning each record's attachment fields into a list", async () => {
+            mockApi
+                .onGet(new RegExp('memberships'))
+                .reply(200, [{ id: 'abc-123', attachment_0: '{"key":"a"}' }, { id: 'def-456' }]);
+
+            await mockActionsStore.dispatch(loadMemberships({ name: 'smith' }, 100));
+
+            const dispatched = mockActionsStore.getActions();
+            expect(dispatched).toHaveDispatchedActions([actions.MEMBERSHIPS_LOADING, actions.MEMBERSHIPS_LOADED]);
+            expect(
+                dispatched.find(action => action.type === actions.MEMBERSHIPS_LOADED).payload[0].attachments,
+            ).toEqual([{ key: 'a' }]);
+        });
+
+        it('dispatches loading then failed when the listing cannot be read', async () => {
+            mockApi.onGet(new RegExp('memberships')).reply(404);
+
+            await mockActionsStore.dispatch(loadMemberships({}, 100));
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIPS_LOADING,
+                actions.MEMBERSHIPS_FAILED,
+            ]);
+        });
+    });
+
+    describe('clearMemberships', () => {
+        it('dispatches the clear action', () => {
+            mockActionsStore.dispatch(clearMemberships());
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([actions.MEMBERSHIPS_CLEAR]);
         });
     });
 });

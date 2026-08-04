@@ -417,4 +417,41 @@ describe('membership routes', () => {
             options: { params: { ts: frozenTimestamp } },
         });
     });
+
+    it('MEMBERSHIPS_LIST_API defaults to no filter and no limit', () => {
+        expect(routes.MEMBERSHIPS_LIST_API()).toEqual({
+            apiUrl: 'memberships',
+            options: { params: { ts: frozenTimestamp } },
+        });
+    });
+
+    it('MEMBERSHIPS_LIST_API passes the filter through, orders on a status filter, and applies the limit', () => {
+        const result = routes.MEMBERSHIPS_LIST_API({
+            filter: {
+                name: 'smith',
+                type: '', // an empty value is left off entirely
+                missing: null,
+                absent: undefined,
+                status: 'unconfirmed',
+                team: { id: 7 }, // an object value is reduced to its id
+                group: { label: 'x' }, // an object without an id is passed as-is
+            },
+            limit: 100,
+        });
+
+        expect(result).toEqual({
+            apiUrl: 'memberships',
+            options: {
+                params: {
+                    ts: frozenTimestamp,
+                    'filter[name]': 'smith',
+                    'filter[status]': 'unconfirmed',
+                    'orderBy[submitted_on]': 'ASC',
+                    'filter[team]': 7,
+                    'filter[group]': { label: 'x' },
+                    limit: 100,
+                },
+            },
+        });
+    });
 });

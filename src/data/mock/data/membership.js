@@ -198,3 +198,65 @@ export const membershipSubmitted = (id, type) => ({
         id +
         '&ReceiptNo=R7654321&MembershipCode=COM&Success=Y&AmountPaid=25.00',
 });
+
+// The admin queue: a spread of types and states so the listing, the filters, and the empty state are all
+// reachable locally. Dates are day-first, the shape the API emits.
+export const membershipList = [
+    {
+        id: '00000000-0000-0000-0000-000000000101',
+        type: 'community',
+        status: 'unconfirmed',
+        title: 'Mr',
+        first_name: 'Newly',
+        sn: 'Applied',
+        mail: 'newly.applied@example.org',
+        date_of_birth: '04-05-1990', // 4 May, which a month-first parser would read as 5 April
+        submitted_on: '01-07-2026 13:15:00',
+    },
+    {
+        id: '00000000-0000-0000-0000-000000000102',
+        type: 'alumni',
+        status: 'confirmed',
+        title: 'Dr',
+        first_name: 'Already',
+        sn: 'Confirmed',
+        mail: 'already.confirmed@example.org',
+        alumni_num: 's1234567',
+        submitted_on: '02-06-2026 11:00:00',
+        confirmed_on: '03-06-2026',
+    },
+    {
+        id: '00000000-0000-0000-0000-000000000103',
+        type: 'community',
+        status: 'renewing',
+        title: 'Ms',
+        first_name: 'Renewing',
+        sn: 'Member',
+        mail: 'renewing.member@example.org',
+        submitted_on: '20-05-2026 14:30:00',
+        confirmed_on: '21-05-2025',
+    },
+    {
+        id: '00000000-0000-0000-0000-000000000104',
+        type: 'hospital',
+        status: 'unconfirmed',
+        title: 'Mrs',
+        first_name: 'Halfway',
+        sn: 'Through',
+        mail: 'halfway.through@example.org',
+        hospital_service: 'Royal Brisbane and Women\'s Hospital',
+        submitted_on: '10-07-2026 15:00:00',
+    },
+    {
+        id: '00000000-0000-0000-0000-000000000105',
+        type: 'hospital',
+        status: 'unconfirmed',
+        title: 'Mr',
+        first_name: 'With',
+        sn: 'Documents',
+        mail: 'with.documents@example.org',
+        hospital_service: 'Princess Alexandra Hospital',
+        submitted_on: '13-07-2026 08:45:00',
+        attachment_0: JSON.stringify({ key: 'file-1', name: 'proof-of-employment.pdf' }),
+    },
+];
