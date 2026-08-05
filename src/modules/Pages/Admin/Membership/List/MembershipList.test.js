@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { mui1theme } from 'config';
 
-import MembershipList, { SEARCH_LIMIT, typeTitlesFrom } from './MembershipList';
+import MembershipList, { typeTitlesFrom } from './MembershipList';
 
 jest.mock('modules/Pages/Membership/membershipOutage', () => ({ isFrozen: jest.fn(() => false) }));
 const { isFrozen } = require('modules/Pages/Membership/membershipOutage');
@@ -17,22 +17,35 @@ const membershipFormData = {
     ],
 };
 
-const memberships = [
+const page = [
     { id: '101', type: 'community', status: 'unconfirmed', first_name: 'Newly', sn: 'Applied' },
-    { id: '104', type: 'hospital', status: 'unconfirmed', first_name: 'Halfway', sn: 'Through' },
+    { id: '102', type: 'hospital', status: 'confirmed', first_name: 'Already', sn: 'Confirmed' },
 ];
+
+const pagination = { total: 42, page: 1, per_page: 20, pages: 3 };
+const counts = { all: 42, unconfirmed: 10, renewing: 12, confirmed: 20 };
+
+const INITIAL_QUERY = { name: '', type: '', status: 'all', sort: 'newest', page: 1, perPage: 20 };
 
 const setup = (props = {}) => {
     const actions = { loadMembershipFormData: jest.fn(), loadMemberships: jest.fn(), ...props.actions };
-    return render(
+    render(
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={mui1theme}>
                 <MemoryRouter>
-                    <MembershipList membershipFormData={membershipFormData} {...props} actions={actions} />
+                    <MembershipList
+                        membershipFormData={membershipFormData}
+                        memberships={page}
+                        pagination={pagination}
+                        counts={counts}
+                        {...props}
+                        actions={actions}
+                    />
                 </MemoryRouter>
             </ThemeProvider>
         </StyledEngineProvider>,
     );
+    return actions;
 };
 
 beforeEach(() => isFrozen.mockReturnValue(false));
@@ -42,24 +55,15 @@ afterEach(() => {
 });
 
 describe('MembershipList', () => {
-    it('shows a loader and does not fetch the form data again while it is loading', () => {
-        const actions = { loadMembershipFormData: jest.fn(), loadMemberships: jest.fn() };
-        setup({ membershipFormData: null, membershipFormDataLoading: true, actions });
-
-        expect(screen.getByText('Loading membership applications')).toBeInTheDocument();
-        expect(actions.loadMembershipFormData).not.toHaveBeenCalled();
-    });
-
-    it('fetches the form data on mount when the store has none', () => {
-        const actions = { loadMembershipFormData: jest.fn(), loadMemberships: jest.fn() };
-        setup({ membershipFormData: null, actions });
+    it('loads the first page and the form data on mount', () => {
+        const actions = setup({ memberships: null, membershipFormData: null });
 
         expect(actions.loadMembershipFormData).toHaveBeenCalled();
+        expect(actions.loadMemberships).toHaveBeenCalledWith(INITIAL_QUERY);
     });
 
-    it('does not fetch the form data again when the store already has it', () => {
-        const actions = { loadMembershipFormData: jest.fn(), loadMemberships: jest.fn() };
-        setup({ actions });
+    it('does not refetch the form data when the store already holds it', () => {
+        const actions = setup();
 
         expect(actions.loadMembershipFormData).not.toHaveBeenCalled();
     });
@@ -74,48 +78,108 @@ describe('MembershipList', () => {
         expect(siteHeader.getAttribute('secondLevelUrl')).toBe('/admin/membership');
     });
 
-    it('searches with the entered filter, capped at the search limit', async () => {
-        const actions = { loadMembershipFormData: jest.fn(), loadMemberships: jest.fn() };
-        setup({ actions });
+    it('shows the triage tiles with server counts, the toolbar span and a card per application', () => {
+        setup();
 
-        await userEvent.click(screen.getByTestId('membership-search-button'));
-
-        await waitFor(() => expect(actions.loadMemberships).toHaveBeenCalled());
-        expect(actions.loadMemberships).toHaveBeenCalledWith({ name: '', type: '', status: '' }, SEARCH_LIMIT);
-    });
-
-    it('announces the count and lists a card per application', () => {
-        setup({ memberships });
-
-        expect(screen.getByTestId('membership-list-status')).toHaveTextContent('2 membership applications found');
+        expect(screen.getByTestId('membership-status-tile-all')).toHaveTextContent('42');
+        expect(screen.getByTestId('membership-list-status')).toHaveTextContent('Showing 1–20 of 42 applications');
         expect(screen.getByTestId('membership-row-101')).toBeInTheDocument();
-        expect(screen.getByTestId('membership-row-104')).toBeInTheDocument();
+        expect(screen.getByTestId('membership-row-102')).toBeInTheDocument();
     });
 
-    it('uses the singular wording for a single result', () => {
-        setup({ memberships: [memberships[0]] });
+    it('re-queries the server when a triage tile is chosen, from page one', async () => {
+        const actions = setup();
 
-        expect(screen.getByTestId('membership-list-status')).toHaveTextContent('1 membership application found');
+        await userEvent.click(screen.getByTestId('membership-status-tile-unconfirmed'));
+
+        await waitFor(() =>
+            expect(actions.loadMemberships).toHaveBeenCalledWith({ ...INITIAL_QUERY, status: 'unconfirmed' }),
+        );
     });
 
-    it('shows the empty state when a search returns nothing', () => {
-        setup({ memberships: [] });
+    it('re-queries the server on a type filter and a sort change', async () => {
+        const actions = setup();
 
-        expect(screen.getByTestId('membership-list-empty')).toBeInTheDocument();
-        expect(screen.getByTestId('membership-list-status')).toHaveTextContent('No membership applications found');
+        await userEvent.selectOptions(screen.getByTestId('membership-filter-type'), 'hospital');
+        await waitFor(() =>
+            expect(actions.loadMemberships).toHaveBeenCalledWith({ ...INITIAL_QUERY, type: 'hospital' }),
+        );
+
+        await userEvent.selectOptions(screen.getByTestId('membership-sort'), 'oldest');
+        await waitFor(() =>
+            expect(actions.loadMemberships).toHaveBeenCalledWith(expect.objectContaining({ sort: 'oldest', page: 1 })),
+        );
     });
 
-    it('shows a skeleton while a search is running', () => {
+    it('debounces the search into a server query that starts at page one', async () => {
+        const actions = setup();
+
+        await userEvent.type(screen.getByTestId('membership-search-name'), 'renew');
+
+        await waitFor(() => expect(actions.loadMemberships).toHaveBeenCalledWith({ ...INITIAL_QUERY, name: 'renew' }));
+    });
+
+    it('fetches the next page from the pager', async () => {
+        const actions = setup();
+
+        await userEvent.click(screen.getByRole('button', { name: 'Go to page 2' }));
+
+        await waitFor(() => expect(actions.loadMemberships).toHaveBeenCalledWith({ ...INITIAL_QUERY, page: 2 }));
+    });
+
+    it('does not show a pager when there is only one page', () => {
+        setup({ pagination: { total: 5, page: 1, per_page: 20, pages: 1 } });
+
+        expect(screen.queryByTestId('membership-pager')).not.toBeInTheDocument();
+    });
+
+    it('re-runs the current query on reload', async () => {
+        const actions = setup();
+
+        await userEvent.click(screen.getByTestId('membership-reload'));
+
+        await waitFor(() => expect(actions.loadMemberships).toHaveBeenCalledWith(INITIAL_QUERY));
+    });
+
+    it('shows the queue-empty state when nothing is loaded and no filter is set', () => {
+        setup({ memberships: [], pagination: { total: 0, page: 1, per_page: 20, pages: 0 } });
+
+        expect(screen.getByTestId('membership-list-empty')).toHaveTextContent('No membership applications found');
+        expect(screen.queryByTestId('membership-clear-filters')).not.toBeInTheDocument();
+    });
+
+    it('offers a way back when a filter matches nothing', async () => {
+        const actions = setup({ memberships: [], pagination: { total: 0, page: 1, per_page: 20, pages: 0 } });
+
+        await userEvent.click(screen.getByTestId('membership-status-tile-renewing'));
+        expect(screen.getByTestId('membership-list-empty')).toHaveTextContent('No applications match your filters');
+
+        await userEvent.click(screen.getByTestId('membership-clear-filters'));
+        await waitFor(() => expect(actions.loadMemberships).toHaveBeenCalledWith(INITIAL_QUERY));
+    });
+
+    it('shows a skeleton and keeps the workspace while a page is loading', () => {
         setup({ membershipsLoading: true });
 
         expect(screen.getByTestId('membership-list-skeleton')).toBeInTheDocument();
-        expect(screen.queryByTestId('membership-list')).not.toBeInTheDocument();
+        expect(screen.getByTestId('membership-status-tiles')).toBeInTheDocument();
     });
 
-    it('shows an error when the listing cannot be loaded', () => {
-        setup({ membershipsError: 'It broke' });
+    it('shows only a skeleton on the very first load, before any page arrives', () => {
+        setup({ memberships: null, pagination: null, counts: null, membershipsLoading: true });
+
+        expect(screen.getByTestId('membership-list-skeleton')).toBeInTheDocument();
+        expect(screen.queryByTestId('membership-status-tiles')).not.toBeInTheDocument();
+    });
+
+    it('reports a load failure and can try again', async () => {
+        const actions = setup({ membershipsError: 'It broke' });
 
         expect(screen.getByTestId('membership-list-error')).toBeInTheDocument();
+        expect(screen.queryByTestId('membership-status-tiles')).not.toBeInTheDocument();
+
+        await userEvent.click(screen.getByTestId('membership-retry'));
+        await waitFor(() => expect(actions.loadMemberships).toHaveBeenCalledWith(INITIAL_QUERY));
     });
 
     it('replaces the page with a maintenance message during the outage window', () => {
@@ -123,7 +187,7 @@ describe('MembershipList', () => {
         setup();
 
         expect(screen.getByTestId('membership-admin-frozen')).toBeInTheDocument();
-        expect(screen.queryByTestId('membership-search-form')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('membership-toolbar')).not.toBeInTheDocument();
     });
 
     it('typeTitlesFrom maps types to titles and defaults to an empty map', () => {

@@ -190,17 +190,22 @@ export function clearMembership() {
 }
 
 /**
- * Load the admin listing of applications for the given search filter. Each record's flat attachment fields are
- * turned into an `attachments` list, the same as a single record read.
+ * Load one page of the admin listing for the given query. The API answers with an envelope - a page of records
+ * under `data`, the `pagination` that sizes the pager, and the per-status `counts` the triage tiles read. Each
+ * record's flat attachment fields are turned into an `attachments` list, the same as a single record read.
  */
-export function loadMemberships(filter, limit) {
+export function loadMemberships(query) {
     return dispatch => {
         dispatch({ type: actions.MEMBERSHIPS_LOADING });
-        return get(MEMBERSHIPS_LIST_API({ filter, limit }))
+        return get(MEMBERSHIPS_LIST_API(query))
             .then(response =>
                 dispatch({
                     type: actions.MEMBERSHIPS_LOADED,
-                    payload: response.map(membership => convertAttachments(membership)),
+                    payload: {
+                        memberships: (response.data ?? []).map(membership => convertAttachments(membership)),
+                        pagination: response.pagination,
+                        counts: response.counts,
+                    },
                 }),
             )
             .catch(error => dispatch({ type: actions.MEMBERSHIPS_FAILED, payload: error.message }));

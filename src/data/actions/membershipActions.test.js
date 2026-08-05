@@ -264,24 +264,36 @@ describe('Membership actions', () => {
     });
 
     describe('loadMemberships', () => {
-        it("dispatches loading then loaded, turning each record's attachment fields into a list", async () => {
-            mockApi
-                .onGet(new RegExp('memberships'))
-                .reply(200, [{ id: 'abc-123', attachment_0: '{"key":"a"}' }, { id: 'def-456' }]);
+        it('dispatches loading then loaded with the page, pagination and counts, converting attachments', async () => {
+            mockApi.onGet(new RegExp('memberships')).reply(200, {
+                data: [{ id: 'abc-123', attachment_0: '{"key":"a"}' }, { id: 'def-456' }],
+                pagination: { total: 42, page: 1, per_page: 20, pages: 3 },
+                counts: { all: 42, unconfirmed: 10, renewing: 12, confirmed: 20 },
+            });
 
-            await mockActionsStore.dispatch(loadMemberships({ name: 'smith' }, 100));
+            await mockActionsStore.dispatch(loadMemberships({ name: 'smith', page: 1 }));
 
             const dispatched = mockActionsStore.getActions();
             expect(dispatched).toHaveDispatchedActions([actions.MEMBERSHIPS_LOADING, actions.MEMBERSHIPS_LOADED]);
-            expect(
-                dispatched.find(action => action.type === actions.MEMBERSHIPS_LOADED).payload[0].attachments,
-            ).toEqual([{ key: 'a' }]);
+            const loaded = dispatched.find(action => action.type === actions.MEMBERSHIPS_LOADED).payload;
+            expect(loaded.memberships[0].attachments).toEqual([{ key: 'a' }]);
+            expect(loaded.pagination).toEqual({ total: 42, page: 1, per_page: 20, pages: 3 });
+            expect(loaded.counts.renewing).toBe(12);
+        });
+
+        it('treats a body without a data array as an empty page', async () => {
+            mockApi.onGet(new RegExp('memberships')).reply(200, { pagination: { total: 0 } });
+
+            await mockActionsStore.dispatch(loadMemberships({}));
+
+            const loaded = mockActionsStore.getActions().find(action => action.type === actions.MEMBERSHIPS_LOADED);
+            expect(loaded.payload.memberships).toEqual([]);
         });
 
         it('dispatches loading then failed when the listing cannot be read', async () => {
             mockApi.onGet(new RegExp('memberships')).reply(404);
 
-            await mockActionsStore.dispatch(loadMemberships({}, 100));
+            await mockActionsStore.dispatch(loadMemberships({}));
 
             expect(mockActionsStore.getActions()).toHaveDispatchedActions([
                 actions.MEMBERSHIPS_LOADING,

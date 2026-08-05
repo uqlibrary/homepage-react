@@ -416,25 +416,58 @@ mock.onPost(new RegExp('^membership/[^/]+/[^/]+/renew$')).reply(
 // Uploading a supporting document answers with the stored attachment.
 mock.onPost(routes.MEMBERSHIP_FILE_UPLOAD_API().apiUrl).reply(withDelay([200, [membershipAttachment]]));
 
-// The admin back-office at /admin/membership. The filter is applied here so the search is worth using: name
-// matches on any part of the name, and type and status match exactly - which is what the API does.
+// The admin back-office at /admin/membership. The real queue is ~9,500 applications, so this endpoint answers
+// with one searched, filtered, ordered page at a time inside an envelope - `{ data, pagination, counts }`. The
+// filtering, paging and counting are all modelled here so the frontend is built against the intended contract.
+//
+// Day-first submitted dates are turned into a sortable YYYYMMDDHHmmss key.
+const membershipSortKey = membership => {
+    const [date = '', time = ''] = String(membership.submitted_on ?? '').split(' ');
+    const [day = '', month = '', year = ''] = date.split('-');
+    return `${year}${month}${day}${time.replace(/:/g, '')}`;
+};
+
 mock.onGet(new RegExp('^memberships')).reply(config => {
     const params = config.params ?? {};
-    const matches = membership =>
-        [
-            !params['filter[name]'] ||
-                `${membership.first_name} ${membership.sn}`
-                    .toLowerCase()
-                    .includes(String(params['filter[name]']).toLowerCase()),
-            !params['filter[type]'] || membership.type === params['filter[type]'],
-            // The API reads `unconfirmed` as "not yet confirmed" and `reconfirm` as "renewing".
-            !params['filter[status]'] ||
-                (params['filter[status]'] === 'reconfirm'
-                    ? membership.status === 'renewing'
-                    : membership.status === 'unconfirmed'),
-        ].every(Boolean);
+    const name = params['filter[name]'];
+    const type = params['filter[type]'];
+    const status = params['filter[status]'];
+    const ascending = params['orderBy[submitted_on]'] === 'ASC';
+    const page = Number(params.page ?? 1);
+    const perPage = Number(params.per_page ?? 20);
 
-    return withDelay([200, membershipList.filter(matches)])();
+    // Name matches on any part of the name or the email; type matches exactly.
+    const scoped = membershipList.filter(
+        membership =>
+            (!name ||
+                `${membership.first_name} ${membership.sn} ${membership.mail}`
+                    .toLowerCase()
+                    .includes(String(name).toLowerCase())) &&
+            (!type || membership.type === type),
+    );
+
+    // Counts respect the name and type search but not the status filter, so the triage tiles keep their totals
+    // as the admin moves between statuses.
+    const countFor = value => scoped.filter(membership => membership.status === value).length;
+    const counts = {
+        all: scoped.length,
+        unconfirmed: countFor('unconfirmed'),
+        renewing: countFor('renewing'),
+        confirmed: countFor('confirmed'),
+    };
+
+    const filtered = scoped.filter(membership => !status || status === 'all' || membership.status === status);
+    const sorted = [...filtered].sort((a, b) => {
+        const comparison = membershipSortKey(a).localeCompare(membershipSortKey(b));
+        return ascending ? comparison : -comparison;
+    });
+
+    const total = sorted.length;
+    const start = (page - 1) * perPage;
+    const data = sorted.slice(start, start + perPage);
+    const pagination = { total, page, per_page: perPage, pages: Math.ceil(total / perPage) };
+
+    return withDelay([200, { data, pagination, counts }])();
 });
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [

@@ -350,24 +350,33 @@ export const MEMBERSHIP_RENEW_API = ({ id, code }) => ({ apiUrl: `membership/${i
 // Upload a supporting document for an application.
 export const MEMBERSHIP_FILE_UPLOAD_API = () => ({ apiUrl: 'file/membership' });
 
-// The admin listing of applications. The filter is passed through as `filter[name]`, `filter[type]` and
-// `filter[status]`, and a status filter orders oldest-first so the queue is worked in the order it arrived.
-export const MEMBERSHIPS_LIST_API = ({ filter = {}, limit } = {}) => {
-    const params = { ts: getMillisecondCacheBuster() };
+// The admin listing of applications - a searched, filtered, ordered page at a time, since the queue holds
+// thousands. Name and type search as `filter[name]` / `filter[type]`; `status` filters to one bucket unless it
+// is `all`; the sort maps to the submitted date; page and per_page ask for one page. The response is an
+// envelope: `{ data, pagination, counts }`.
+export const MEMBERSHIPS_LIST_API = ({
+    name = '',
+    type = '',
+    status = '',
+    sort = 'newest',
+    page = 1,
+    perPage = 20,
+} = {}) => {
+    const params = {
+        ts: getMillisecondCacheBuster(),
+        page,
+        per_page: perPage,
+        'orderBy[submitted_on]': sort === 'oldest' ? 'ASC' : 'DESC',
+    };
 
-    Object.entries(filter).forEach(([key, value]) => {
-        if (value === null || value === undefined || value === '') {
-            return;
-        }
-        params[`filter[${key}]`] =
-            typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'id') ? value.id : value;
-        if (key === 'status') {
-            params['orderBy[submitted_on]'] = 'ASC';
-        }
-    });
-
-    if (limit !== undefined) {
-        params.limit = limit;
+    if (name) {
+        params['filter[name]'] = name;
+    }
+    if (type) {
+        params['filter[type]'] = type;
+    }
+    if (status && status !== 'all') {
+        params['filter[status]'] = status;
     }
 
     return { apiUrl: 'memberships', options: { params } };

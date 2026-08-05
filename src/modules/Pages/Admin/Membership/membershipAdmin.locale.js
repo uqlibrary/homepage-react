@@ -7,27 +7,40 @@ export default {
             'Membership applications will be unavailable from 12-2pm AEST Thursday 15th June 2017.',
         loading: 'Loading membership applications',
         loadFailed: 'The membership applications could not be loaded. Please try again.',
-        search: {
-            legend: 'Find membership applications',
-            name: { label: 'Name', placeholder: 'Search by name' },
-            type: { label: 'Membership type', placeholder: 'Any type' },
-            status: {
-                label: 'Status',
-                any: 'Any status',
-                unconfirmed: 'Unconfirmed only',
-                reconfirm: 'Reconfirm only',
-            },
-            submit: 'Search',
-            submitting: 'Searching..',
+        retry: 'Try again',
+        reload: 'Reload applications',
+        // The triage tiles: a count per status that doubles as the status filter.
+        tiles: {
+            legend: 'Filter by status',
+            all: 'All',
+            unconfirmed: 'Unconfirmed',
+            renewing: 'Renewing',
+            confirmed: 'Confirmed',
+            // The accessible name of a tile pairs its label with its count, since the two are drawn apart.
+            label: (label, count) => `${label}, ${count}`,
+        },
+        toolbar: {
+            search: { label: 'Search', placeholder: 'Search by name or email', clear: 'Clear search' },
+            type: { label: 'Membership type', any: 'All types' },
+            sort: { label: 'Sort', newest: 'Newest first', oldest: 'Oldest first' },
         },
         results: {
-            none: 'No membership applications found',
-            noneHint: 'Try a different name, or widen the type and status filters.',
-            // Announced when a search finishes, because the results appear below the button rather than where
-            // focus is.
-            count: count => `${count} membership application${count === 1 ? '' : 's'} found`,
+            // Announced as the query changes, because the list updates below where focus is. The noun is
+            // pluralised by the caller, so this string carries no branch a browser test would have to reach.
+            showing: (start, end, total, noun) => `Showing ${start}–${end} of ${total} ${noun}`,
+            noneShort: 'No applications',
             // Names the list itself, since there are no column headers to say what it holds.
             caption: 'Membership applications',
+            // Nothing in the queue at all — a different thing to say than nothing matching the filters.
+            none: 'No membership applications found',
+            noneHint: 'There are no applications in the queue right now.',
+            noMatch: 'No applications match your filters',
+            noMatchHint: 'Try a different search, or widen the type and status filters.',
+            clear: 'Clear filters',
+        },
+        // The pager beneath the list.
+        pager: {
+            label: 'Membership applications pages',
         },
         row: {
             mailSubject: 'UQ Library Membership Application',

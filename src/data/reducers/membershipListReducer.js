@@ -2,6 +2,8 @@ import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
     memberships: null,
+    pagination: null,
+    counts: null,
     membershipsLoading: null,
     membershipsError: null,
 };
@@ -18,7 +20,9 @@ const handlers = {
         ...state,
         membershipsLoading: false,
         membershipsError: false,
-        memberships: action.payload,
+        memberships: action.payload.memberships,
+        pagination: action.payload.pagination,
+        counts: action.payload.counts,
     }),
     [actions.MEMBERSHIPS_FAILED]: (state, action) => ({
         ...initialState,

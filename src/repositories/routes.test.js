@@ -418,40 +418,43 @@ describe('membership routes', () => {
         });
     });
 
-    it('MEMBERSHIPS_LIST_API defaults to no filter and no limit', () => {
+    it('MEMBERSHIPS_LIST_API defaults to page 1, the default page size and newest-first', () => {
         expect(routes.MEMBERSHIPS_LIST_API()).toEqual({
             apiUrl: 'memberships',
-            options: { params: { ts: frozenTimestamp } },
+            options: { params: { ts: frozenTimestamp, page: 1, per_page: 20, 'orderBy[submitted_on]': 'DESC' } },
         });
     });
 
-    it('MEMBERSHIPS_LIST_API passes the filter through, orders on a status filter, and applies the limit', () => {
-        const result = routes.MEMBERSHIPS_LIST_API({
-            filter: {
+    it('MEMBERSHIPS_LIST_API carries the search, type, status, sort and page', () => {
+        expect(
+            routes.MEMBERSHIPS_LIST_API({
                 name: 'smith',
-                type: '', // an empty value is left off entirely
-                missing: null,
-                absent: undefined,
-                status: 'unconfirmed',
-                team: { id: 7 }, // an object value is reduced to its id
-                group: { label: 'x' }, // an object without an id is passed as-is
-            },
-            limit: 100,
-        });
-
-        expect(result).toEqual({
+                type: 'community',
+                status: 'renewing',
+                sort: 'oldest',
+                page: 3,
+                perPage: 25,
+            }),
+        ).toEqual({
             apiUrl: 'memberships',
             options: {
                 params: {
                     ts: frozenTimestamp,
-                    'filter[name]': 'smith',
-                    'filter[status]': 'unconfirmed',
+                    page: 3,
+                    per_page: 25,
                     'orderBy[submitted_on]': 'ASC',
-                    'filter[team]': 7,
-                    'filter[group]': { label: 'x' },
-                    limit: 100,
+                    'filter[name]': 'smith',
+                    'filter[type]': 'community',
+                    'filter[status]': 'renewing',
                 },
             },
         });
+    });
+
+    it('MEMBERSHIPS_LIST_API leaves the status filter off when it is "all"', () => {
+        const params = routes.MEMBERSHIPS_LIST_API({ status: 'all' }).options.params;
+
+        expect(params['filter[status]']).toBeUndefined();
+        expect(params['orderBy[submitted_on]']).toBe('DESC');
     });
 });

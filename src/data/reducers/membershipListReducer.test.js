@@ -20,10 +20,17 @@ describe('membershipListReducer', () => {
         expect(result.membershipsError).toBe(false);
     });
 
-    it('stores a loaded listing', () => {
-        const result = membershipListReducer(initialState, { type: actions.MEMBERSHIPS_LOADED, payload: memberships });
+    it('stores a loaded page with its pagination and counts', () => {
+        const pagination = { total: 42, page: 1, per_page: 20, pages: 3 };
+        const counts = { all: 42, unconfirmed: 10, renewing: 12, confirmed: 20 };
+        const result = membershipListReducer(initialState, {
+            type: actions.MEMBERSHIPS_LOADED,
+            payload: { memberships, pagination, counts },
+        });
 
         expect(result.memberships).toEqual(memberships);
+        expect(result.pagination).toEqual(pagination);
+        expect(result.counts).toEqual(counts);
         expect(result.membershipsLoading).toBe(false);
         expect(result.membershipsError).toBe(false);
     });
