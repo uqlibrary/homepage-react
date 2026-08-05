@@ -220,7 +220,11 @@ export const DLOVocabularyManage = ({ actions, dlorKeywords, dlorKeywordsLoading
                                 keyword?.synonyms.length > 0 &&
                                 keyword?.synonyms.map((synonym, index) => (
                                     <React.Fragment key={`${keyword?.keyword_vocabulary_id}-${index}`}>
-                                        <Grid container sx={{ backgroundColor: index % 2 === 0 ? 'white' : '#f0f0f0' }}>
+                                        <Grid
+                                            size={12}
+                                            container
+                                            sx={{ backgroundColor: index % 2 === 0 ? 'white' : '#f0f0f0' }}
+                                        >
                                             <Grid
                                                 size={{ xs: 10 }}
                                                 sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
