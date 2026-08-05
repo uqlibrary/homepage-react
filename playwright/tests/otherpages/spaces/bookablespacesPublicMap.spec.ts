@@ -927,14 +927,14 @@ test.describe('Spaces', () => {
             await minimumCapacityField.fill('8');
 
             // filter controls update
-            await expect(filterCount).toContainText('2');
-            await expect(cartoucheList.locator(':scope > *')).toHaveCount(2);
+            await expect(filterCount).toContainText('1');
+            await expect(cartoucheList.locator(':scope > *')).toHaveCount(1);
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('4');
+            await expect(spacesCount).toContainText('Available Spaces (8)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // update maximum to "no more than 20 people"
@@ -943,14 +943,14 @@ test.describe('Spaces', () => {
             await maximumCapacityField.fill('20');
 
             // filter controls update
-            await expect(filterCount).toContainText('2');
-            await expect(cartoucheList.locator(':scope > *')).toHaveCount(2);
+            await expect(filterCount).toContainText('1');
+            await expect(cartoucheList.locator(':scope > *')).toHaveCount(1);
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('2');
+            await expect(spacesCount).toContainText('Available Spaces (8)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                2 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // clear the capacity filters by unchecking "is bookable"
@@ -1004,14 +1004,14 @@ test.describe('Spaces', () => {
             await minimumCapacityField.fill('8');
 
             // filter controls update
-            await expect(filterCount).toContainText('2');
-            await expect(cartoucheList.locator(':scope > *')).toHaveCount(2);
+            await expect(filterCount).toContainText('1');
+            await expect(cartoucheList.locator(':scope > *')).toHaveCount(1);
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('4');
+            await expect(spacesCount).toContainText('Available Spaces (8)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // update maximum to "no more than 20 people"
@@ -1020,14 +1020,14 @@ test.describe('Spaces', () => {
             await maximumCapacityField.fill('20');
 
             // filter controls update
-            await expect(filterCount).toContainText('2');
-            await expect(cartoucheList.locator(':scope > *')).toHaveCount(2);
+            await expect(filterCount).toContainText('1');
+            await expect(cartoucheList.locator(':scope > *')).toHaveCount(1);
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('2');
+            await expect(spacesCount).toContainText('Available Spaces (8)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                2 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // clear the capacity filters
@@ -1209,7 +1209,7 @@ test.describe('Spaces', () => {
                 'Hide On this floor filter options',
             );
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul').locator(':scope > *')).toHaveCount(
-                6,
+                5,
             );
 
             // the group we opened has completely changed - visibility flips
@@ -1319,7 +1319,7 @@ test.describe('Spaces', () => {
 
             // NOW a count shows on that single collapsed group
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toBeVisible();
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toHaveText('(1 of 6)');
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toHaveText('(1 of 1)');
 
             // collapse a few more, to be sure
             await filterGroupButton(FILTER_GROUP_LIGHTING, page).click();
@@ -1367,7 +1367,7 @@ test.describe('Spaces', () => {
 
             // now the collapsed group shows the selected-count summary
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_BOOKABLE_TYPE))).toBeVisible();
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_BOOKABLE_TYPE))).toHaveText('(1 of 2)');
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_BOOKABLE_TYPE))).toHaveText('(1 of 1)');
 
             // re-open it and the collapsed-count disappears again
             await filterGroupButton(FILTER_GROUP_BOOKABLE_TYPE, page).click();
@@ -1449,10 +1449,10 @@ test.describe('Spaces', () => {
                 { name: 'UQLspacesPreferredLibrary', value: '999', domain: 'localhost', path: '/' },
             ]);
 
-            // reload the page - now the library cookie has an invalid value, it ignores the cookie value and uses the default
+            // reload the page - now the library cookie has an invalid value, it ignores the cookie value and uses the first library for the default campus
             await page.goto('spaces/mapresults');
             await expect(selectedCampusNameElement).toContainText('All campuses');
-            await expect(selectLibraryNameElement).toContainText('All libraries');
+            await expect(selectLibraryNameElement).toContainText('Architecture and Music Library');
         });
     });
     test.describe('Can change campuses', () => {

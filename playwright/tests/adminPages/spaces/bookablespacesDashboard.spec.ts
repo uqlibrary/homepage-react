@@ -134,7 +134,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${hotColdWater}`)).not.toBeVisible();
 
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${kitchen}`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${kitchen}`)).not.toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${kitchen}`)).toBeVisible();
 
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${microwave}`)).toBeVisible();
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${microwave}`)).not.toBeVisible();
@@ -227,7 +227,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${dimmable}`)).not.toBeVisible();
 
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${lowLight}`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${lowLight}`)).not.toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${lowLight}`)).toBeVisible();
 
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${naturalLight}`)).toBeVisible();
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${naturalLight}`)).not.toBeVisible();

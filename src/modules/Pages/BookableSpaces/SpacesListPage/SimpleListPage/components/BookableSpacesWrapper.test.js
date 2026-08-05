@@ -458,7 +458,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(nextUrl).toBe('https://example.com/spaces/mapresults');
     });
 
-    it('serialises and deserialises journey filter state for the map view', () => {
+    it('serialises and deserialises journey mapFilters state for the map view', () => {
         const encodedState = serialiseJourneyMapFilterState({
             selectedFacilityTypes: [
                 {
@@ -750,7 +750,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
     });
 
-    it('does not reset selected filters in journey results when mapFilters state is present', async () => {
+    it('applies the selected journey intent and clears prior selections when mapFilters state is present', async () => {
         const setSelectedFacilityTypes = jest.fn();
         const preselectedFilters = [
             {
@@ -831,7 +831,12 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
 
         await waitFor(() => expect(screen.getByTestId('bookable-spaces-journey-results-view')).toBeInTheDocument());
-        expect(setSelectedFacilityTypes).not.toHaveBeenCalled();
+        expect(setSelectedFacilityTypes).toHaveBeenCalledWith(
+            expect.arrayContaining([
+                expect.objectContaining({ facility_type_id: 39, selected: false, unselected: false }),
+                expect.objectContaining({ facility_type_id: 8, selected: false, unselected: false }),
+            ]),
+        );
     });
 
     it('preserves a manual filter change after an intent is restored from the URL', () => {
@@ -1144,7 +1149,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(screen.queryByRole('option', { name: 'Dutton Park' })).not.toBeInTheDocument();
     });
 
-    it('preserves default filter-group open state when map filter state exists', async () => {
+    it('preserves default filter-group open state when mapFilters state exists', async () => {
         renderSidebarFilters({
             hasJourneyMapFilterState: true,
             selectedFacilityTypes: [

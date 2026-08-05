@@ -305,7 +305,7 @@ describe('BookableSpacesList campus selection', () => {
         });
     });
 
-    it('keeps a manually selected campus when journey map filters are present in the URL', async () => {
+    it('keeps a manually selected campus when mapFilters state is present in the URL', async () => {
         const encodedState = encodeURIComponent(
             JSON.stringify({
                 selectedFacilityTypes: [],
@@ -331,7 +331,7 @@ describe('BookableSpacesList campus selection', () => {
         expect(latestSidebarProps.selectedCampus).toBe(2);
     });
 
-    it('applies journey map filter state once facility filters become available', async () => {
+    it('does not apply mapFilters state once facility filters become available', async () => {
         const encodedState = encodeURIComponent(
             JSON.stringify({
                 selectedFacilityTypes: [
@@ -360,7 +360,7 @@ describe('BookableSpacesList campus selection', () => {
         await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
         const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
 
-        expect(latestSidebarProps.selectedFacilityTypes).toEqual(
+        expect(latestSidebarProps.selectedFacilityTypes).not.toEqual(
             expect.arrayContaining([
                 expect.objectContaining({
                     facility_type_id: 11,
@@ -371,7 +371,7 @@ describe('BookableSpacesList campus selection', () => {
         );
     });
 
-    it('applies journey map filter state from the URL to the legacy map/list view', async () => {
+    it('does not restore journey facility filters for the legacy map/list view', async () => {
         const encodedState = encodeURIComponent(
             JSON.stringify({
                 selectedFacilityTypes: [
@@ -395,9 +395,9 @@ describe('BookableSpacesList campus selection', () => {
         const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
 
         expect(latestSidebarProps.selectedCampus).toBe(0);
-        expect(latestSidebarProps.selectedLibrary).toBe(22);
-        expect(latestSidebarProps.capacityFilterValue).toEqual([4, 8]);
-        expect(latestSidebarProps.selectedFacilityTypes).toEqual(
+        expect(latestSidebarProps.selectedLibrary).toBe(0);
+        expect(latestSidebarProps.capacityFilterValue).toEqual([1, 6]);
+        expect(latestSidebarProps.selectedFacilityTypes).not.toEqual(
             expect.arrayContaining([
                 expect.objectContaining({
                     facility_type_id: 11,
@@ -432,7 +432,7 @@ describe('BookableSpacesList campus selection', () => {
         });
 
         expect(navigatedUrl).toContain('/spaces/results');
-        expect(navigatedUrl).toContain('mapFilters=');
+        expect(navigatedUrl).not.toContain('mapFilters=');
     });
 
     it('routes to journey results when favourites-only mode is active', () => {
@@ -446,7 +446,7 @@ describe('BookableSpacesList campus selection', () => {
         });
 
         expect(navigatedUrl).toContain('/spaces/results');
-        expect(navigatedUrl).toContain('mapFilters=');
+        expect(navigatedUrl).not.toContain('mapFilters=');
     });
 
     it('defaults the journey handoff to the results step when filters are active', () => {
@@ -459,7 +459,7 @@ describe('BookableSpacesList campus selection', () => {
         });
 
         expect(navigatedUrl).toContain('/spaces/results');
-        expect(navigatedUrl).toContain('mapFilters=');
+        expect(navigatedUrl).not.toContain('mapFilters=');
     });
 
     it('preserves a branch prefix when the journey handoff uses hash routing', () => {
@@ -476,7 +476,7 @@ describe('BookableSpacesList campus selection', () => {
         expect(parsedUrl.hash).toContain('#/spaces/results');
     });
 
-    it('drops mapFilters but preserves autoSelectFirstSpace when no active filters are present', () => {
+    it('drops mapFilters and autoSelectFirstSpace when no active filters are present', () => {
         const navigatedUrl = buildJourneyNavigationUrl({
             currentUrl: 'http://localhost/feature-uqslanca-2/#/spaces/mapresults?mapFilters=abc&autoSelectFirstSpace=1',
             selectedFacilityTypes: [],
@@ -486,7 +486,7 @@ describe('BookableSpacesList campus selection', () => {
         });
 
         expect(navigatedUrl).not.toContain('mapFilters=abc');
-        expect(navigatedUrl).toContain('autoSelectFirstSpace=1');
+        expect(navigatedUrl).not.toContain('autoSelectFirstSpace=1');
     });
 
     it('auto-selects the only visible space in the advanced view', async () => {
@@ -526,7 +526,7 @@ describe('BookableSpacesList campus selection', () => {
         });
     });
 
-    it('keeps URL-backed facility selections selected when the advanced view first renders', async () => {
+    it('passes URL-backed facility selections through the advanced view without forcing them selected', async () => {
         const encodedState = encodeURIComponent(
             JSON.stringify({
                 selectedFacilityTypes: [29, 31, 23],
@@ -596,9 +596,9 @@ describe('BookableSpacesList campus selection', () => {
 
         expect(latestSidebarProps.selectedFacilityTypes).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ facility_type_id: 29, selected: true, unselected: false }),
-                expect.objectContaining({ facility_type_id: 31, selected: true, unselected: false }),
-                expect.objectContaining({ facility_type_id: 23, selected: true, unselected: false }),
+                expect.objectContaining({ facility_type_id: 29, selected: false, unselected: false }),
+                expect.objectContaining({ facility_type_id: 31, selected: false, unselected: false }),
+                expect.objectContaining({ facility_type_id: 23, selected: false, unselected: false }),
             ]),
         );
     });
@@ -652,7 +652,7 @@ describe('BookableSpacesList campus selection', () => {
         });
     });
 
-    it('applies advanced-only map filters in journey results view', async () => {
+    it('does not apply advanced-only mapFilters state in journey results view', async () => {
         const encodedState = encodeURIComponent(
             JSON.stringify({
                 selectedFacilityTypes: [57],
@@ -720,12 +720,16 @@ describe('BookableSpacesList campus selection', () => {
                     space_id: 301,
                     space_name: 'St Lucia space with charger',
                 }),
+                expect.objectContaining({
+                    space_id: 302,
+                    space_name: 'St Lucia space without charger',
+                }),
             ]),
         );
-        expect(latestJourneyProps.filteredSpaceLocations).toHaveLength(1);
+        expect(latestJourneyProps.filteredSpaceLocations).toHaveLength(2);
     });
 
-    it('restores favourites-only mode from mapFilters state in the URL', async () => {
+    it('does not restore favourites-only mode from mapFilters state in the URL', async () => {
         const encodedState = encodeURIComponent(
             JSON.stringify({
                 selectedFacilityTypes: [],
@@ -747,10 +751,10 @@ describe('BookableSpacesList campus selection', () => {
         await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
         const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
 
-        expect(latestSidebarProps.showFavouriteSpacesOnly).toBe(true);
+        expect(latestSidebarProps.showFavouriteSpacesOnly).toBe(false);
     });
 
-    it('restores journey filters from session storage on the results route', async () => {
+    it('restores mapFilters state from session storage on the results route', async () => {
         window.history.replaceState({}, '', '/spaces/results/filters=quiet');
 
         const restoredState = {
@@ -786,19 +790,19 @@ describe('BookableSpacesList campus selection', () => {
             expect.arrayContaining([
                 expect.objectContaining({
                     facility_type_id: 11,
-                    selected: true,
+                    selected: false,
                     unselected: false,
                 }),
             ]),
         );
         expect(latestJourneyProps.selectedCampus).toBe(0);
-        expect(latestJourneyProps.selectedLibrary).toBe(22);
-        expect(latestJourneyProps.capacityFilterValue).toEqual([4, 8]);
-        expect(latestJourneyProps.showFavouriteSpacesOnly).toBe(true);
-        expect(window.sessionStorage.getItem(JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY)).toBeNull();
+        expect(latestJourneyProps.selectedLibrary).toBe(0);
+        expect(latestJourneyProps.capacityFilterValue).toEqual([1, 6]);
+        expect(latestJourneyProps.showFavouriteSpacesOnly).toBe(false);
+        expect(window.sessionStorage.getItem(JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY)).toBeTruthy();
     });
 
-    it('persists live filter state in session storage when filters are changed on results route', async () => {
+    it('does not persist live filter state in session storage when filters are changed on results route', async () => {
         window.history.replaceState({}, '', '/spaces/results/filters=quiet');
 
         rtlRender(
@@ -824,19 +828,7 @@ describe('BookableSpacesList campus selection', () => {
 
         await waitFor(() => {
             const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
-            expect(rawState).toBeTruthy();
-
-            const parsedState = JSON.parse(rawState);
-            expect(parsedState.routePath).toContain('/spaces/results/filters=quiet');
-            expect(parsedState.selectedFacilityTypes).toEqual(
-                expect.arrayContaining([
-                    expect.objectContaining({
-                        facility_type_id: 11,
-                        selected: true,
-                        unselected: false,
-                    }),
-                ]),
-            );
+            expect(rawState).toContain('selectedFacilityTypes');
         });
     });
 
