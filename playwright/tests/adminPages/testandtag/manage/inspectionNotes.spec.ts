@@ -32,7 +32,7 @@ test.describe('Test and Tag Manage Inspection Notes', () => {
         await checkBaseline(page);
         // Check the "All team assets" checkbox
 
-        const checkbox = page.getByRole('checkbox', { name: 'All team assets' });
+        const checkbox = page.getByRole('switch', { name: 'All team assets' });
         if (await checkbox.isChecked()) {
             await checkbox.uncheck();
         }
