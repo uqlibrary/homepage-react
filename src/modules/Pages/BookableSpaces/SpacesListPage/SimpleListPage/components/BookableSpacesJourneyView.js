@@ -12,6 +12,7 @@ export const BookableSpacesJourneyView = ({
     navigateToView,
     setSelectedIntentId,
     setSelectedSpace,
+    persistJourneyReturnFilterState,
     journeyTopRef,
     renderLandingView,
     renderResultsView,
@@ -26,6 +27,7 @@ export const BookableSpacesJourneyView = ({
                 navigateToView={navigateToView}
                 setSelectedIntentId={setSelectedIntentId}
                 setSelectedSpace={setSelectedSpace}
+                persistJourneyReturnFilterState={persistJourneyReturnFilterState}
             />
             {view === 'landing' && renderLandingView?.()}
             {view === 'results' && renderResultsView?.()}
@@ -42,6 +44,7 @@ BookableSpacesJourneyView.propTypes = {
     navigateToView: PropTypes.func.isRequired,
     setSelectedIntentId: PropTypes.func.isRequired,
     setSelectedSpace: PropTypes.func.isRequired,
+    persistJourneyReturnFilterState: PropTypes.func,
     journeyTopRef: PropTypes.object,
     renderLandingView: PropTypes.func,
     renderResultsView: PropTypes.func,

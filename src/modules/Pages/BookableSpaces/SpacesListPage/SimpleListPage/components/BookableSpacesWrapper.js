@@ -21,6 +21,7 @@ import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/
 import {
     findSpaceById,
     getJourneySearchParams,
+    JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY,
     JOURNEY_VIEWS,
     parseJourneyStateFromUrl,
     serialiseJourneyMapFilterState,
@@ -600,6 +601,34 @@ const BookableSpacesWrapper = ({
         }
     }, [view]);
 
+    const persistJourneyReturnFilterState = React.useCallback(
+        targetRoute => {
+            if (typeof window === 'undefined' || !window.sessionStorage) {
+                return;
+            }
+
+            const resolvedTargetUrl = new URL(targetRoute || window.location.href, window.location.origin);
+            const statePayload = {
+                routePath: `${resolvedTargetUrl.pathname}${resolvedTargetUrl.search}${resolvedTargetUrl.hash}`,
+                selectedFacilityTypes: selectedFacilityTypes || [],
+                selectedCampus,
+                selectedLibrary,
+                capacityFilterValue: Array.isArray(capacityFilterValue) ? capacityFilterValue : [],
+                showFavouriteSpacesOnly: Boolean(showFavouriteSpacesOnly),
+                createdAt: Date.now(),
+            };
+
+            window.sessionStorage.setItem(JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY, JSON.stringify(statePayload));
+        },
+        [
+            capacityFilterValue,
+            selectedCampus,
+            selectedFacilityTypes,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
+
     return (
         <BookableSpacesJourneyView
             view={view}
@@ -609,6 +638,7 @@ const BookableSpacesWrapper = ({
             navigateToView={navigateToView}
             setSelectedIntentId={setSelectedIntentId}
             setSelectedSpace={setSelectedSpace}
+            persistJourneyReturnFilterState={persistJourneyReturnFilterState}
             journeyTopRef={journeyTopRef}
             renderLandingView={() => (
                 <SpacesHomePage

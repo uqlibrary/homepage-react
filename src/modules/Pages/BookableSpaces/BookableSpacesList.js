@@ -42,6 +42,7 @@ import {
     getJourneySearchParams,
     getFlatFacilityTypeList,
     isBookable,
+    JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
     JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY,
     normalizeFilterDisplayOn,
     serialiseJourneyMapFilterState,
@@ -1037,6 +1038,8 @@ export const BookableSpacesList = ({
 
     const hasHydratedMapFilterStateRef = React.useRef(false);
     const hasHydratedJourneyReturnStateRef = React.useRef(false);
+    const hasHydratedLiveFilterStateRef = React.useRef(false);
+    const hasSkippedInitialLiveFilterPersistRef = React.useRef(false);
     const shouldSkipInitialFilterBootstrapRef = React.useRef(false);
 
     React.useEffect(() => {
@@ -1171,6 +1174,64 @@ export const BookableSpacesList = ({
     }, [setSelectedFacilityTypes]);
 
     React.useEffect(() => {
+        if (hasHydratedLiveFilterStateRef.current || typeof window === 'undefined' || !window.sessionStorage) {
+            return;
+        }
+
+        const currentRoutePath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+        const isResultsRoute =
+            currentRoutePath.includes('/spaces/results') ||
+            currentRoutePath.includes('#/spaces/results') ||
+            currentRoutePath.includes('/spaces/mapresults') ||
+            currentRoutePath.includes('#/spaces/mapresults');
+
+        if (!isResultsRoute) {
+            hasHydratedLiveFilterStateRef.current = true;
+            return;
+        }
+
+        const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        if (!rawState) {
+            hasHydratedLiveFilterStateRef.current = true;
+            return;
+        }
+
+        try {
+            const parsedState = JSON.parse(rawState);
+            const routePathMatches = parsedState?.routePath === currentRoutePath;
+            const hasRecentTimestamp =
+                Number.isFinite(parsedState?.createdAt) &&
+                Date.now() - Number(parsedState.createdAt) < 24 * 60 * 60 * 1000;
+
+            if (!routePathMatches || !hasRecentTimestamp) {
+                window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+                hasHydratedLiveFilterStateRef.current = true;
+                return;
+            }
+
+            shouldSkipInitialFilterBootstrapRef.current = true;
+
+            if (Array.isArray(parsedState?.selectedFacilityTypes)) {
+                setSelectedFacilityTypes(parsedState.selectedFacilityTypes);
+            }
+            if (parsedState?.selectedCampus !== null && parsedState?.selectedCampus !== undefined) {
+                setSelectedCampus(Number(parsedState.selectedCampus));
+            }
+            if (parsedState?.selectedLibrary !== null && parsedState?.selectedLibrary !== undefined) {
+                setSelectedLibrary(Number(parsedState.selectedLibrary));
+            }
+            if (Array.isArray(parsedState?.capacityFilterValue) && parsedState.capacityFilterValue.length > 0) {
+                setCapacityFilterValue(parsedState.capacityFilterValue);
+            }
+            setShowFavouriteSpacesOnly(parsedState?.showFavouriteSpacesOnly === true);
+        } catch (error) {
+            window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        } finally {
+            hasHydratedLiveFilterStateRef.current = true;
+        }
+    }, [setSelectedFacilityTypes]);
+
+    React.useEffect(() => {
         if (shouldSkipInitialFilterBootstrapRef.current) {
             return;
         }
@@ -1194,6 +1255,40 @@ export const BookableSpacesList = ({
         }));
         setSelectedFacilityTypes(newFilters);
     }, [filteredFacilityTypeList, selectedFacilityTypes, setSelectedFacilityTypes]);
+
+    React.useEffect(() => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return;
+        }
+
+        const currentRoutePath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+        const isResultsRoute =
+            currentRoutePath.includes('/spaces/results') ||
+            currentRoutePath.includes('#/spaces/results') ||
+            currentRoutePath.includes('/spaces/mapresults') ||
+            currentRoutePath.includes('#/spaces/mapresults');
+
+        if (!isResultsRoute) {
+            return;
+        }
+
+        if (!hasSkippedInitialLiveFilterPersistRef.current) {
+            hasSkippedInitialLiveFilterPersistRef.current = true;
+            return;
+        }
+
+        const statePayload = {
+            routePath: currentRoutePath,
+            selectedFacilityTypes: selectedFacilityTypes || [],
+            selectedCampus,
+            selectedLibrary,
+            capacityFilterValue: Array.isArray(capacityFilterValue) ? capacityFilterValue : [],
+            showFavouriteSpacesOnly: Boolean(showFavouriteSpacesOnly),
+            createdAt: Date.now(),
+        };
+
+        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(statePayload));
+    }, [capacityFilterValue, selectedCampus, selectedFacilityTypes, selectedLibrary, showFavouriteSpacesOnly]);
 
     const toggleFilterPopupVisibility = () => {
         setShowFilterSelectorPopup(!showFilterSelectorPopup);

@@ -22,6 +22,7 @@ import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesListPag
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import {
     deserialiseJourneyMapFilterState,
+    JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY,
     parseJourneyStateFromUrl,
     serialiseJourneyMapFilterState,
     serialiseJourneyUrl,
@@ -98,6 +99,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
     beforeEach(() => {
         window.history.replaceState({}, '', '/#/spaces');
+        window.sessionStorage.clear();
     });
 
     const renderJourney = props =>
@@ -875,6 +877,63 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             'href',
             '#/spaces/detail/test-space-uuid-1234?mapFilters=abc123&autoSelectFirstSpace=1',
         );
+    });
+
+    it('persists return filter state when the details breadcrumb is clicked', async () => {
+        const siteHeader = document.createElement('uq-site-header');
+        const shadowRoot = siteHeader.attachShadow({ mode: 'open' });
+        const breadcrumbNav = document.createElement('ol');
+        breadcrumbNav.id = 'breadcrumb_nav';
+        shadowRoot.appendChild(breadcrumbNav);
+        document.body.appendChild(siteHeader);
+
+        window.history.replaceState({}, '', `/spaces/detail/${baseSpace.space_uuid}`);
+
+        const selectedFacilityTypes = [
+            {
+                facility_type_group_id: 1,
+                facility_type_id: 11,
+                selected: true,
+                unselected: false,
+                facility_special_action: null,
+            },
+        ];
+
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        renderJourney({
+            ...defaultProps,
+            selectedFacilityTypes,
+            selectedCampus: 2,
+            selectedLibrary: 22,
+            capacityFilterValue: [4, 8],
+            showFavouriteSpacesOnly: true,
+            setShowFavouriteSpacesOnly: jest.fn(),
+        });
+
+        const breadcrumbLink = await waitFor(() => {
+            const node = siteHeader.shadowRoot?.querySelector('#journey-site-breadcrumb-0');
+            expect(node).toBeTruthy();
+            return node;
+        });
+
+        breadcrumbLink.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+
+        await waitFor(() => {
+            const rawState = window.sessionStorage.getItem(JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY);
+            expect(rawState).toBeTruthy();
+            const parsedState = JSON.parse(rawState);
+
+            expect(parsedState.routePath).toContain('/spaces/results');
+            expect(parsedState.selectedFacilityTypes).toEqual(selectedFacilityTypes);
+            expect(parsedState.selectedCampus).toBe(2);
+            expect(parsedState.selectedLibrary).toBe(22);
+            expect(parsedState.capacityFilterValue).toEqual([4, 8]);
+            expect(parsedState.showFavouriteSpacesOnly).toBe(true);
+        });
+
+        consoleErrorSpy.mockRestore();
+        siteHeader.remove();
     });
 
     it('uses the shared journey URL serializer for results-card detail links in hash routing', () => {

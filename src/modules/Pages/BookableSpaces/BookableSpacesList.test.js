@@ -6,7 +6,11 @@ import { act } from 'react-dom/test-utils';
 import { fireEvent, rtlRender, screen, waitFor, WithRouter } from 'test-utils';
 
 import { BookableSpacesList, buildJourneyNavigationUrl } from 'modules/Pages/BookableSpaces/BookableSpacesList';
-import { deserialiseJourneyMapFilterState } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import {
+    deserialiseJourneyMapFilterState,
+    JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
+    JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY,
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const mockDispatch = jest.fn();
 const mockFlyToSpace = jest.fn();
@@ -181,6 +185,7 @@ describe('BookableSpacesList campus selection', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         window.history.replaceState({}, '', '/spaces');
+        window.sessionStorage.clear();
     });
 
     it('defaults to all campuses when no saved preference exists', async () => {
@@ -743,6 +748,143 @@ describe('BookableSpacesList campus selection', () => {
         const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
 
         expect(latestSidebarProps.showFavouriteSpacesOnly).toBe(true);
+    });
+
+    it('restores journey filters from session storage on the results route', async () => {
+        window.history.replaceState({}, '', '/spaces/results/filters=quiet');
+
+        const restoredState = {
+            routePath: '/spaces/results/filters=quiet',
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            selectedCampus: 2,
+            selectedLibrary: 22,
+            capacityFilterValue: [4, 8],
+            showFavouriteSpacesOnly: true,
+            createdAt: Date.now(),
+        };
+
+        window.sessionStorage.setItem(JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY, JSON.stringify(restoredState));
+
+        rtlRender(
+            <WithRouter route="/spaces/results/filters=quiet" initialEntries={['/spaces/results/filters=quiet']}>
+                <BookableSpacesList {...baseProps} forceAdvanced={false} spacesFavouritesList={[{ space_id: 201 }]} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestJourneyProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+
+        expect(latestJourneyProps.selectedFacilityTypes).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                }),
+            ]),
+        );
+        expect(latestJourneyProps.selectedCampus).toBe(0);
+        expect(latestJourneyProps.selectedLibrary).toBe(22);
+        expect(latestJourneyProps.capacityFilterValue).toEqual([4, 8]);
+        expect(latestJourneyProps.showFavouriteSpacesOnly).toBe(true);
+        expect(window.sessionStorage.getItem(JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY)).toBeNull();
+    });
+
+    it('persists live filter state in session storage when filters are changed on results route', async () => {
+        window.history.replaceState({}, '', '/spaces/results/filters=quiet');
+
+        rtlRender(
+            <WithRouter route="/spaces/results/filters=quiet" initialEntries={['/spaces/results/filters=quiet']}>
+                <BookableSpacesList {...baseProps} forceAdvanced={false} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestJourneyProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+
+        act(() => {
+            latestJourneyProps.setSelectedFacilityTypes([
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ]);
+        });
+
+        await waitFor(() => {
+            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            expect(rawState).toBeTruthy();
+
+            const parsedState = JSON.parse(rawState);
+            expect(parsedState.routePath).toContain('/spaces/results/filters=quiet');
+            expect(parsedState.selectedFacilityTypes).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({
+                        facility_type_id: 11,
+                        selected: true,
+                        unselected: false,
+                    }),
+                ]),
+            );
+        });
+    });
+
+    it('restores live filter state from session storage on refresh of results route', async () => {
+        window.history.replaceState({}, '', '/spaces/results/filters=quiet');
+
+        const persistedLiveState = {
+            routePath: '/spaces/results/filters=quiet',
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            selectedCampus: 2,
+            selectedLibrary: 22,
+            capacityFilterValue: [4, 8],
+            showFavouriteSpacesOnly: true,
+            createdAt: Date.now(),
+        };
+
+        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(persistedLiveState));
+
+        rtlRender(
+            <WithRouter route="/spaces/results/filters=quiet" initialEntries={['/spaces/results/filters=quiet']}>
+                <BookableSpacesList {...baseProps} forceAdvanced={false} spacesFavouritesList={[{ space_id: 201 }]} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestJourneyProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+
+        expect(latestJourneyProps.selectedFacilityTypes).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                }),
+            ]),
+        );
+        expect(latestJourneyProps.selectedCampus).toBe(0);
+        expect(latestJourneyProps.selectedLibrary).toBe(22);
+        expect(latestJourneyProps.capacityFilterValue).toEqual([4, 8]);
+        expect(latestJourneyProps.showFavouriteSpacesOnly).toBe(true);
     });
 
     it('passes null highlightedSpace when there are no valid highlighted spaces', async () => {
