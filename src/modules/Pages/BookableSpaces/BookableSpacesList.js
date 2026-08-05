@@ -549,7 +549,6 @@ export const BookableSpacesList = ({
         }
         hasUserOverriddenCampusSelectionRef.current = true;
         setSelectedCampus(campusId);
-        setSelectedFacilityTypes([]); // reset so the useEffect re-initializes with the new campus's facility types
 
         setSelectedLibrary(ALL_LIBRARIES_ID); // clear the library on changing campus
 
