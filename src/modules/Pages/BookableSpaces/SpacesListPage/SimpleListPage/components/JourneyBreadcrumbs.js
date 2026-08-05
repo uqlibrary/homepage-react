@@ -125,8 +125,7 @@ const JourneyBreadcrumbs = ({
                 if (typeof item.onClick !== 'function' || !item.href) return [];
                 const el = breadcrumbParent.querySelector(`#journey-site-breadcrumb-${index}`);
                 if (!el) return [];
-                const handler = e => {
-                    e.preventDefault();
+                const handler = () => {
                     item.onClick();
                 };
                 el.addEventListener('click', handler);
