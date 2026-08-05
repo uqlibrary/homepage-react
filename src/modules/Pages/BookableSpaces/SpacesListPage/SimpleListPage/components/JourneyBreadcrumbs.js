@@ -25,7 +25,6 @@ export const buildJourneyBreadcrumbItems = ({
     selectedIntentId,
     navigateToView,
     setSelectedSpace,
-    persistJourneyReturnFilterState,
 }) => {
     const buildEntry = (label, nextView, intentId, spaceId, onClick) => ({
         label,
@@ -56,10 +55,8 @@ export const buildJourneyBreadcrumbItems = ({
     }
 
     if (view === 'details') {
-        const resultsUrl = serialiseJourneyUrl({ view: 'results', intentId: selectedIntentId, spaceId: null });
         items.push(
             buildEntry(selectedIntent?.label || 'Results', 'results', selectedIntentId, null, () => {
-                persistJourneyReturnFilterState?.(resultsUrl);
                 setSelectedSpace(null);
                 navigateToView('results', { intentId: selectedIntentId, spaceId: null });
             }),
@@ -77,7 +74,6 @@ const JourneyBreadcrumbs = ({
     navigateToView,
     setSelectedIntentId,
     setSelectedSpace,
-    persistJourneyReturnFilterState,
 }) => {
     const items = React.useMemo(
         () =>
@@ -88,17 +84,8 @@ const JourneyBreadcrumbs = ({
                 navigateToView,
                 setSelectedIntentId,
                 setSelectedSpace,
-                persistJourneyReturnFilterState,
             }),
-        [
-            view,
-            selectedIntent,
-            selectedIntentId,
-            navigateToView,
-            setSelectedIntentId,
-            setSelectedSpace,
-            persistJourneyReturnFilterState,
-        ],
+        [view, selectedIntent, selectedIntentId, navigateToView, setSelectedIntentId, setSelectedSpace],
     );
 
     React.useEffect(() => {
@@ -167,7 +154,6 @@ JourneyBreadcrumbs.propTypes = {
     navigateToView: PropTypes.func.isRequired,
     setSelectedIntentId: PropTypes.func.isRequired,
     setSelectedSpace: PropTypes.func.isRequired,
-    persistJourneyReturnFilterState: PropTypes.func,
 };
 
 export default JourneyBreadcrumbs;

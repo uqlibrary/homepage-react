@@ -22,7 +22,6 @@ import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesListPag
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import {
     deserialiseJourneyMapFilterState,
-    JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY,
     parseJourneyStateFromUrl,
     serialiseJourneyMapFilterState,
     serialiseJourneyUrl,
@@ -102,12 +101,16 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         window.sessionStorage.clear();
     });
 
-    const renderJourney = props =>
-        rtlRender(
-            <WithRouter route="*" initialEntries={['/spaces']}>
+    const renderJourney = props => {
+        const currentHashRoute = window.location.hash.startsWith('#/') ? window.location.hash.slice(1) : '';
+        const currentRoute = currentHashRoute || window.location.pathname || '/spaces';
+
+        return rtlRender(
+            <WithRouter route={currentRoute} initialEntries={[currentRoute]}>
                 <BookableSpacesWrapper {...props} />
             </WithRouter>,
         );
+    };
 
     const renderSidebarFilters = props =>
         rtlRender(
@@ -224,8 +227,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         const quietLink = screen.getByTestId('spaces-journey-intent-card-quiet');
         const hrefValue = quietLink.getAttribute('href');
-        expect(hrefValue).toContain('/spaces/results/filters=quiet');
-        expect(hrefValue).not.toContain('mapFilters=');
+        expect(hrefValue).toBe('/spaces/results/filters=quiet');
 
         const parsedUrl = new URL(hrefValue, 'http://localhost:2020');
         expect(parsedUrl.pathname).toBe('/spaces/results/filters=quiet');
@@ -233,15 +235,23 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(deserialiseJourneyMapFilterState(parsedUrl.searchParams)).toBeNull();
     });
 
-    it('restores results and selected intent from permalink params', () => {
-        window.history.replaceState({}, '', '/spaces/results/filters=quiet');
+    it('restores results and selected intent from session state', () => {
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/spaces/results');
 
         renderJourney(defaultProps);
 
         expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
     });
 
-    it('restores details view and selected space from permalink params', () => {
+    it('restores details view and selected space from session state', () => {
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'details', intentId: null, spaceId: baseSpace.space_uuid }),
+        );
         window.history.replaceState({}, '', `/spaces/detail/${baseSpace.space_uuid}`);
 
         renderJourney(defaultProps);
@@ -283,7 +293,11 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     });
 
     it('restores the favourites-only filter when loading the favourite route directly', async () => {
-        window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
+        window.history.replaceState({}, '', '/#/spaces/results');
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'favourite', spaceId: null }),
+        );
 
         const favouriteSpace = {
             ...baseSpace,
@@ -308,12 +322,22 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         await waitFor(() => {
             expect(screen.getByText('favspace Fav888')).toBeInTheDocument();
-            expect(screen.getByText('otherspace Space123')).toBeInTheDocument();
+            expect(screen.queryByText('otherspace Space123')).not.toBeInTheDocument();
         });
     });
 
     it('allows the favourites-only sidebar filter to be unchecked after loading the favourite route directly', async () => {
-        window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
+        window.history.replaceState({}, '', '/#/spaces/results');
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'favourite', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'favourite', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
 
         const favouriteSpace = {
             ...baseSpace,
@@ -341,9 +365,9 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         fireEvent.click(favouritesCheckbox);
 
         await waitFor(() => {
-            expect(favouritesCheckbox).toBeChecked();
+            expect(favouritesCheckbox).not.toBeChecked();
             expect(screen.getByText('favspace Fav888')).toBeInTheDocument();
-            expect(screen.queryByText('otherspace Space123')).not.toBeInTheDocument();
+            expect(screen.getByText('otherspace Space123')).toBeInTheDocument();
         });
     });
 
@@ -431,10 +455,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             showFavouriteSpacesOnly: true,
         });
 
-        const params = new URLSearchParams(new URL(nextUrl).search);
-        const parsedState = deserialiseJourneyMapFilterState(params);
-
-        expect(parsedState.showFavouriteSpacesOnly).toBe(true);
+        expect(nextUrl).toBe('https://example.com/spaces/mapresults');
     });
 
     it('serialises and deserialises journey filter state for the map view', () => {
@@ -485,9 +506,13 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     it('applies an intent filter when the current filter list is empty on initial load', async () => {
         const setSelectedFacilityTypes = jest.fn();
 
-        window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
         rtlRender(
-            <WithRouter>
+            <WithRouter route="/spaces/results" initialEntries={['/spaces/results']}>
                 <BookableSpacesWrapper
                     {...defaultProps}
                     selectedFacilityTypes={[]}
@@ -574,10 +599,14 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             );
         };
 
-        window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
 
         rtlRender(
-            <WithRouter route="*" initialEntries={['/spaces/results/filters=quiet']}>
+            <WithRouter route="*" initialEntries={['/spaces/results']}>
                 <Harness />
             </WithRouter>,
         );
@@ -637,10 +666,14 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             );
         };
 
-        window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
 
         rtlRender(
-            <WithRouter>
+            <WithRouter route="/spaces/results" initialEntries={['/spaces/results']}>
                 <Harness />
             </WithRouter>,
         );
@@ -693,10 +726,14 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             );
         };
 
-        window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
 
         rtlRender(
-            <WithRouter>
+            <WithRouter route="/spaces/results" initialEntries={['/spaces/results']}>
                 <Harness />
             </WithRouter>,
         );
@@ -731,16 +768,11 @@ describe('BookableSpacesWrapper browser back navigation', () => {
                 facility_special_action: null,
             },
         ];
-        const encodedMapFilters = encodeURIComponent(
-            JSON.stringify({
-                selectedFacilityTypes: [39, 8],
-                selectedCampus: 1,
-                selectedLibrary: 0,
-                capacityFilterValue: [1, 24],
-            }),
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
         );
-
-        window.history.replaceState({}, '', `/#/spaces/results?mapFilters=${encodedMapFilters}&autoSelectFirstSpace=1`);
+        window.history.replaceState({}, '', '/#/spaces/results');
 
         renderJourney({
             ...defaultProps,
@@ -851,7 +883,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             );
         };
 
-        window.history.replaceState({}, '', '/spaces/results/filters=quiet');
+        window.history.replaceState({}, '', '/spaces/results');
         rtlRender(
             <WithRouter>
                 <Harness />
@@ -865,7 +897,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     });
 
     it('uses the shared journey URL serializer for the details link in hash routing', () => {
-        window.history.replaceState({}, '', '/#/spaces/results?mapFilters=abc123&autoSelectFirstSpace=1');
+        window.history.replaceState({}, '', '/#/spaces/results');
 
         rtlRender(
             <WithRouter>
@@ -875,69 +907,12 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         expect(screen.getByRole('link', { name: /open space Space999 in a new window/i })).toHaveAttribute(
             'href',
-            '#/spaces/detail/test-space-uuid-1234?mapFilters=abc123&autoSelectFirstSpace=1',
+            '#/spaces/detail/test-space-uuid-1234',
         );
     });
 
-    it('persists return filter state when the details breadcrumb is clicked', async () => {
-        const siteHeader = document.createElement('uq-site-header');
-        const shadowRoot = siteHeader.attachShadow({ mode: 'open' });
-        const breadcrumbNav = document.createElement('ol');
-        breadcrumbNav.id = 'breadcrumb_nav';
-        shadowRoot.appendChild(breadcrumbNav);
-        document.body.appendChild(siteHeader);
-
-        window.history.replaceState({}, '', `/spaces/detail/${baseSpace.space_uuid}`);
-
-        const selectedFacilityTypes = [
-            {
-                facility_type_group_id: 1,
-                facility_type_id: 11,
-                selected: true,
-                unselected: false,
-                facility_special_action: null,
-            },
-        ];
-
-        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-        renderJourney({
-            ...defaultProps,
-            selectedFacilityTypes,
-            selectedCampus: 2,
-            selectedLibrary: 22,
-            capacityFilterValue: [4, 8],
-            showFavouriteSpacesOnly: true,
-            setShowFavouriteSpacesOnly: jest.fn(),
-        });
-
-        const breadcrumbLink = await waitFor(() => {
-            const node = siteHeader.shadowRoot?.querySelector('#journey-site-breadcrumb-0');
-            expect(node).toBeTruthy();
-            return node;
-        });
-
-        breadcrumbLink.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-
-        await waitFor(() => {
-            const rawState = window.sessionStorage.getItem(JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY);
-            expect(rawState).toBeTruthy();
-            const parsedState = JSON.parse(rawState);
-
-            expect(parsedState.routePath).toContain('/spaces/results');
-            expect(parsedState.selectedFacilityTypes).toEqual(selectedFacilityTypes);
-            expect(parsedState.selectedCampus).toBe(2);
-            expect(parsedState.selectedLibrary).toBe(22);
-            expect(parsedState.capacityFilterValue).toEqual([4, 8]);
-            expect(parsedState.showFavouriteSpacesOnly).toBe(true);
-        });
-
-        consoleErrorSpy.mockRestore();
-        siteHeader.remove();
-    });
-
     it('uses the shared journey URL serializer for results-card detail links in hash routing', () => {
-        window.history.replaceState({}, '', '/#/spaces/results?mapFilters=abc123&autoSelectFirstSpace=1');
+        window.history.replaceState({}, '', '/#/spaces/results');
 
         rtlRender(
             <WithRouter>
@@ -978,7 +953,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         expect(screen.getByTestId('spaces-result-list-item-101')).toHaveAttribute(
             'href',
-            '#/spaces/detail/test-space-uuid-1234?mapFilters=abc123&autoSelectFirstSpace=1',
+            '#/spaces/detail/test-space-uuid-1234',
         );
     });
 
@@ -1047,35 +1022,31 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
     it('builds browser-router map URL with encoded mapFilters and autoSelectFirstSpace', () => {
         const nextUrl = buildLegacyBrowseNavigationUrl({
-            currentUrl: 'http://localhost:2020/spaces/results/filters=quiet',
+            currentUrl: 'http://localhost:2020/spaces/results',
             selectedFacilityTypes: [{ facility_type_id: 10, selected: true, unselected: false }],
             selectedCampus: 1,
             selectedLibrary: 0,
             capacityFilterValue: [1, 24],
         });
 
-        expect(nextUrl).toContain('/spaces/mapresults?');
-        expect(nextUrl).toContain('mapFilters=');
-        expect(nextUrl).not.toContain('autoSelectFirstSpace=1');
+        expect(nextUrl).toBe('http://localhost:2020/spaces/mapresults');
     });
 
     it('builds hash-router map URL with encoded mapFilters and autoSelectFirstSpace', () => {
         const nextUrl = buildLegacyBrowseNavigationUrl({
-            currentUrl: 'http://localhost:2020/#/spaces/results/filters=quiet',
+            currentUrl: 'http://localhost:2020/#/spaces/results',
             selectedFacilityTypes: [{ facility_type_id: 10, selected: true, unselected: false }],
             selectedCampus: 1,
             selectedLibrary: 0,
             capacityFilterValue: [1, 24],
         });
 
-        expect(nextUrl).toContain('#/spaces/mapresults?');
-        expect(nextUrl).toContain('mapFilters=');
-        expect(nextUrl).not.toContain('autoSelectFirstSpace=1');
+        expect(nextUrl).toBe('http://localhost:2020/#/spaces/mapresults');
     });
 
     it('preserves a branch prefix when building a hash-router map URL', () => {
         const nextUrl = buildLegacyBrowseNavigationUrl({
-            currentUrl: 'http://localhost:2020/feature-uqslanca-2/#/spaces/results/filters=quiet',
+            currentUrl: 'http://localhost:2020/feature-uqslanca-2/#/spaces/results',
             selectedFacilityTypes: [{ facility_type_id: 10, selected: true, unselected: false }],
             selectedCampus: 1,
             selectedLibrary: 0,
@@ -1084,54 +1055,55 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         const parsedUrl = new URL(nextUrl);
         expect(parsedUrl.pathname).toBe('/feature-uqslanca-2/');
-        expect(parsedUrl.hash).toContain('#/spaces/mapresults?');
+        expect(parsedUrl.hash).toBe('#/spaces/mapresults');
     });
 
     it('returns a path-relative URL for browser-router links', () => {
         window.history.replaceState({}, '', '/spaces');
+        window.location.hash = '';
 
         const nextUrl = serialiseJourneyUrl({ view: 'details', intentId: null, spaceId: 'space-123' });
 
         expect(nextUrl).toBe('/spaces/detail/space-123');
     });
 
-    it('preserves mapFilters when serialising the journey URL between views', () => {
-        window.history.replaceState({}, '', '/#/spaces/results?mapFilters=abc123&autoSelectFirstSpace=1');
+    it('returns a plain detail URL when serialising the journey URL between views', () => {
+        window.history.replaceState({}, '', '/#/spaces/results');
+        window.location.hash = '';
 
         const nextUrl = serialiseJourneyUrl({ view: 'details', intentId: null, spaceId: 'space-123' });
 
-        expect(nextUrl).toContain('mapFilters=abc123');
-        expect(nextUrl).toContain('autoSelectFirstSpace=1');
+        expect(nextUrl).toBe('/spaces/detail/space-123');
     });
 
     it('preserves a branch prefix when serialising detail links for hash routing', () => {
         window.history.replaceState({}, '', '/feature-branch/');
-        window.location.hash = '#/spaces/results?mapFilters=abc123';
+        window.location.hash = '#/spaces/results';
 
         const nextUrl = serialiseJourneyUrl({ view: 'details', intentId: null, spaceId: 'space-123' });
 
-        expect(nextUrl).toBe('/feature-branch/#/spaces/detail/space-123?mapFilters=abc123');
+        expect(nextUrl).toBe('/feature-branch/#/spaces/detail/space-123');
     });
 
-    it('preserves the user query param when serialising the journey URL between views', () => {
-        window.history.replaceState({}, '', '/#/spaces/results?user=test-user');
+    it('returns a plain detail URL when serialising the journey URL without query params', () => {
+        window.history.replaceState({}, '', '/#/spaces/results');
+        window.location.hash = '';
 
         const nextUrl = serialiseJourneyUrl({ view: 'details', intentId: null, spaceId: 'space-123' });
 
-        expect(nextUrl).toContain('user=test-user');
+        expect(nextUrl).toBe('/spaces/detail/space-123');
     });
 
-    it('preserves the user query param when building a hash-router map URL', () => {
+    it('builds a plain hash-router map URL', () => {
         const nextUrl = buildLegacyBrowseNavigationUrl({
-            currentUrl: 'http://localhost:2020/#/spaces/results?user=test-user',
+            currentUrl: 'http://localhost:2020/#/spaces/results',
             selectedFacilityTypes: [],
             selectedCampus: null,
             selectedLibrary: null,
             capacityFilterValue: null,
         });
 
-        expect(nextUrl).toContain('user=test-user');
-        expect(nextUrl).toContain('#/spaces/mapresults?');
+        expect(nextUrl).toBe('http://localhost:2020/#/spaces/mapresults');
     });
 
     it('hides the landing highlighted space block when no highlighted space is available', () => {

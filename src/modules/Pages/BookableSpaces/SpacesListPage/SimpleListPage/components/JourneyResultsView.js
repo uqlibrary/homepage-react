@@ -10,7 +10,6 @@ import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPaginati
 
 import {
     defaultChipStyles,
-    JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY,
     serialiseJourneyUrl,
     SpaceOpenStatusChip,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
@@ -79,25 +78,6 @@ export const JourneyResultsView = ({
         setPage(prevPage => (prevPage > totalPages ? totalPages : prevPage));
     }, [totalPages]);
 
-    const persistJourneyReturnFilterState = React.useCallback(() => {
-        if (typeof window === 'undefined' || !window.sessionStorage) {
-            return;
-        }
-
-        const currentRoutePath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-        const statePayload = {
-            routePath: currentRoutePath,
-            selectedFacilityTypes: selectedFacilityTypes || [],
-            selectedCampus,
-            selectedLibrary,
-            capacityFilterValue: Array.isArray(capacityFilterValue) ? capacityFilterValue : [],
-            showFavouriteSpacesOnly: Boolean(showFavouriteSpacesOnly),
-            createdAt: Date.now(),
-        };
-
-        window.sessionStorage.setItem(JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY, JSON.stringify(statePayload));
-    }, [capacityFilterValue, selectedCampus, selectedFacilityTypes, selectedLibrary, showFavouriteSpacesOnly]);
-
     return (
         <StyledJourneyPanelSection data-testid="bookable-spaces-journey-results-view" hasTopSpacing>
             <StyledResultsSplitLayoutDiv>
@@ -134,7 +114,6 @@ export const JourneyResultsView = ({
                                             className="cardBody"
                                             href={detailUrl}
                                             data-testid={`spaces-result-list-item-${space?.space_id}`}
-                                            onClick={persistJourneyReturnFilterState}
                                         >
                                             <Box sx={{ position: 'relative' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>

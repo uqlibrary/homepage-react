@@ -615,33 +615,10 @@ const getJourneyPathname = url => {
     return pathValue.replace(/\/+$/, '') || '/spaces';
 };
 
-export const serialiseJourneyUrl = ({ view, intentId, spaceId, mapFilterState }) => {
+export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
     const url = new URL(window.location.href);
     const hashValue = url.hash || '';
     const isHashRouting = hashValue.startsWith('#/');
-
-    const getPreservedQueryParams = () => {
-        const hashQuery = hashValue.includes('?') ? hashValue.split('?')[1] : '';
-        const params = new URLSearchParams(hashQuery || url.search || '');
-        const nextParams = new URLSearchParams();
-
-        ['mapFilters', 'autoSelectFirstSpace', 'user'].forEach(key => {
-            const value = params.get(key);
-            if (value !== null) {
-                nextParams.set(key, value);
-            }
-        });
-
-        if (mapFilterState !== undefined) {
-            if (mapFilterState === null) {
-                nextParams.delete('mapFilters');
-            } else {
-                nextParams.set('mapFilters', serialiseJourneyMapFilterState(mapFilterState));
-            }
-        }
-
-        return nextParams.toString();
-    };
 
     const buildPath = ({ nextView, nextIntentId, nextSpaceId }) => {
         if (nextView === 'results') {
@@ -659,16 +636,14 @@ export const serialiseJourneyUrl = ({ view, intentId, spaceId, mapFilterState })
     };
 
     const nextPath = buildPath({ nextView: view, nextIntentId: intentId, nextSpaceId: spaceId });
-    const preservedQueryParams = getPreservedQueryParams();
-    const querySuffix = preservedQueryParams ? `?${preservedQueryParams}` : '';
 
     if (isHashRouting) {
         const branchPrefix = url.pathname && url.pathname !== '/' ? url.pathname.replace(/\/+$/, '') : '';
         const branchPrefixPath = branchPrefix ? `${branchPrefix}/` : '';
-        return `${branchPrefixPath}#${nextPath}${querySuffix}`;
+        return `${branchPrefixPath}#${nextPath}`;
     }
 
-    return `${nextPath}${querySuffix}`;
+    return `${nextPath}`;
 };
 
 export const parseJourneyStateFromUrl = availableIntentDefinitions => {

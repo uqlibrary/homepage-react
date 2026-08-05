@@ -25,7 +25,7 @@ import { addClass, removeClass, standardText, StyledPrimaryButton } from 'helper
 import {
     FILTER_BOOKABLE_TYPE_ID,
     FILTER_CAPACITY_TYPE_ID,
-    JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY,
+    JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
     getFlatFacilityTypeList,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
@@ -363,14 +363,11 @@ export const SidebarFilters = ({
     ]);
 
     React.useEffect(() => {
-        const hasIntentFilterTokenInUrl =
-            typeof window !== 'undefined' && /\/spaces\/results\/filters=[^/?#&]+/.test(window.location.href);
-        const hasMapFilterTokenInUrl = typeof window !== 'undefined' && /[?&]mapFilters=/.test(window.location.href);
-        const hasJourneyReturnFilterState =
+        const hasLiveJourneyFilterState =
             typeof window !== 'undefined' &&
             !!window.sessionStorage &&
-            !!window.sessionStorage.getItem(JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY);
-        if (hasIntentFilterTokenInUrl || hasMapFilterTokenInUrl || hasJourneyReturnFilterState) {
+            !!window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        if (hasLiveJourneyFilterState) {
             return;
         }
 
