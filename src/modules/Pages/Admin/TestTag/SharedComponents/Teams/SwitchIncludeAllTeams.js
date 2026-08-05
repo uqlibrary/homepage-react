@@ -49,7 +49,11 @@ const SwitchIncludeAllTeams = ({
                     color="primary"
                     id={componentIdLower}
                     {...props}
-                    inputProps={{ 'data-testid': componentIdLower }}
+                    slotProps={{
+                        input: {
+                            'data-testid': componentIdLower,
+                        },
+                    }}
                 />
             }
             label={locale.includeAllTeams}
