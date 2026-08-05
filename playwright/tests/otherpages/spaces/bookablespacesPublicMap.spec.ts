@@ -1362,16 +1362,16 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
 
             // collapse the single-entry public group
-            const FILTER_GROUP_BOOKABLE_TYPE = 10;
-            await filterGroupButton(FILTER_GROUP_BOOKABLE_TYPE, page).click();
+            const FILTER_GROUP_AVAILABILITY_TYPE = 9;
+            await filterGroupButton(FILTER_GROUP_AVAILABILITY_TYPE, page).click();
 
             // now the collapsed group shows the selected-count summary
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_BOOKABLE_TYPE))).toBeVisible();
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_BOOKABLE_TYPE))).toHaveText('(1 of 2)');
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_AVAILABILITY_TYPE))).toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_AVAILABILITY_TYPE))).toHaveText('(1 of 3)');
 
             // re-open it and the collapsed-count disappears again
-            await filterGroupButton(FILTER_GROUP_BOOKABLE_TYPE, page).click();
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_BOOKABLE_TYPE))).not.toBeVisible();
+            await filterGroupButton(FILTER_GROUP_AVAILABILITY_TYPE, page).click();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_AVAILABILITY_TYPE))).not.toBeVisible();
 
             // collapse a few more, to be sure
             await filterGroupButton(FILTER_GROUP_NOISE_LEVEL, page).click();

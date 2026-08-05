@@ -303,8 +303,7 @@ export const BookableSpacesList = ({
     const isTabletView = isMobileView ? false : _isTabletViewJust;
     const isDesktopView = !isTabletView && !isMobileView;
 
-    const FACILITY_TYPE_NAME_CURRENTLY_OPEN = 'Open';
-    const FACILITY_TYPE_NAME_CAPACITY = 'Bookable';
+    const FACILITY_TYPE_NAME_AVAILABILITY = 'Availability';
 
     const FIRST_CAMPUS_ID = 1;
     const ALL_CAMPUSES_ID = 0;
@@ -1078,11 +1077,11 @@ export const BookableSpacesList = ({
                 },
             };
 
-            // manually add a "Currently Open" filter
-            const filterOpenFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
+            // manually add filters
+            const filterCapacityFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
                 facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
-                facility_type_group_name: FACILITY_TYPE_NAME_CURRENTLY_OPEN,
-                facility_type_group_order: -999, // force to top of list
+                facility_type_group_name: FACILITY_TYPE_NAME_AVAILABILITY,
+                facility_type_group_order: -998, // force to second in list
                 facility_type_group_loads_open: 1,
                 facility_type_group_type: 'choose-many',
                 filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
@@ -1094,20 +1093,6 @@ export const BookableSpacesList = ({
                         facility_type: FACILITY_TYPE_CHECKBOX,
                         filter_display_on: FILTER_DISPLAY_ON_BOTH,
                     },
-                ],
-            };
-            !!filterOpenFacilityType &&
-                filteredFacilityTypeList?.data?.facility_type_groups?.push(filterOpenFacilityType);
-
-            // manually add a "Bookable/Choose number of people" filter
-            const filterCapacityFacilityType = filteredFacilityTypeList?.data?.facility_type_groups && {
-                facility_type_group_id: nextFacilityTypeId(filteredFacilityTypeList),
-                facility_type_group_name: FACILITY_TYPE_NAME_CAPACITY,
-                facility_type_group_order: -998, // force to second in list
-                facility_type_group_loads_open: 1,
-                facility_type_group_type: 'choose-many',
-                filterType: FACILITY_TYPE_CHECKBOX, // what sort of filter is this? checkbox and slider available
-                facility_type_children: [
                     {
                         facility_type_id: FILTER_BOOKABLE_TYPE_ID, // must be unique!
                         facility_type_name: 'Bookable',
@@ -1124,8 +1109,7 @@ export const BookableSpacesList = ({
                     },
                 ],
             };
-            !!filterOpenFacilityType &&
-                filteredFacilityTypeList?.data?.facility_type_groups?.push(filterCapacityFacilityType);
+            filteredFacilityTypeList?.data?.facility_type_groups?.push(filterCapacityFacilityType);
 
             return filteredFacilityTypeList;
         },
