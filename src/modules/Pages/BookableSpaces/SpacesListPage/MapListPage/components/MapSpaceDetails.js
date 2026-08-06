@@ -18,8 +18,7 @@ import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage
 import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import { getFriendlyLocationDescription, isBookable } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
-
-import { OpeningHoursShort } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursShort';
+import { OpeningHoursShort } from 'modules/Pages/BookableSpaces/Shared/OpeningHoursShort';
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 

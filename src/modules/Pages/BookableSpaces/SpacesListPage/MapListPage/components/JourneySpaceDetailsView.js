@@ -15,8 +15,7 @@ import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavou
 import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import SpaceOpenStatusChip from 'modules/Pages/BookableSpaces/Shared/SpaceOpenStatusChip';
-
-import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/SpacesDetailPage/components/OpeningHoursDown';
+import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/Shared/OpeningHoursDown';
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
