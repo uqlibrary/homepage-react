@@ -51,6 +51,28 @@ export default {
             // Prefixes its value on the line of facts, rather than heading a column, so it is as short as it
             // can be and still say what the value is.
             birthdate: 'Born',
+            // The action that turns an application into an account. It reads 'Re-confirm' where the applicant
+            // has been confirmed before, since confirming again is a different, deliberate thing to do.
+            confirm: 'Confirm',
+            reconfirm: 'Re-confirm',
+            confirming: 'Confirming',
+            // The button sits among identical buttons down the page, so its accessible name says which
+            // applicant it acts on.
+            confirmLabel: (action, name) => `${action} the application for ${name}`,
+            // A confirmation the backend has started but not finished. Neither confirming again nor deleting is
+            // safe until it settles, so the card shows this in place of those actions.
+            inProgress: 'In progress',
+        },
+        // What an admin action failed with. The lead-in is fixed and names no particular action, since it
+        // fronts whatever the admin tried; the backend's own reason, where there is one, is appended to it.
+        errorDialog: {
+            confirmationBoxId: 'membership-error',
+            confirmationTitle: 'Error',
+            confirmationMessage: 'That action could not be completed:',
+            confirmButtonLabel: 'Close',
+            // Stands in when the backend gives no reason we can show. Reads as the tail of the lead-in above,
+            // so it must not repeat it.
+            unknown: 'Please try again, or contact support if the problem continues.',
         },
     },
 };

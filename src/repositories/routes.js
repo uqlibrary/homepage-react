@@ -350,6 +350,10 @@ export const MEMBERSHIP_RENEW_API = ({ id, code }) => ({ apiUrl: `membership/${i
 // Upload a supporting document for an application.
 export const MEMBERSHIP_FILE_UPLOAD_API = () => ({ apiUrl: 'file/membership' });
 
+// Confirm an application, turning it into an issued library account. The backend posts to Alma and Prism, and
+// reports a rejection in a 200 body rather than as an error status.
+export const MEMBERSHIP_CONFIRM_API = ({ id }) => ({ apiUrl: `membership/${id}/confirm` });
+
 // The admin listing of applications - a searched, filtered, ordered page at a time, since the queue holds
 // thousands. Name and type search as `filter[name]` / `filter[type]`; `status` filters to one bucket unless it
 // is `all`; the sort maps to the submitted date; page and per_page ask for one page. The response is an

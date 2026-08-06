@@ -4,6 +4,7 @@ import {
     checkIsRenewing,
     clearMembership,
     clearMemberships,
+    confirmMembership,
     convertAttachments,
     flattenAttachments,
     loadMembership,
@@ -94,6 +95,55 @@ describe('Membership actions', () => {
             mockApi.onPost(repositories.routes.MEMBERSHIP_CREATE_API().apiUrl).reply(422);
 
             await expect(mockActionsStore.dispatch(submitMembership({ type: 'community' }))).rejects.toBeDefined();
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_SAVING,
+                actions.MEMBERSHIP_SAVE_FAILED,
+            ]);
+        });
+    });
+
+    describe('confirmMembership', () => {
+        it('dispatches saving then saved, and resolves with the confirmed record', async () => {
+            const confirmed = {
+                status: 'confirmed',
+                confirmed_on: '17-07-2026',
+                attachment_0: '{"key":"f1","name":"a.pdf"}',
+            };
+            mockApi.onPost(repositories.routes.MEMBERSHIP_CONFIRM_API({ id: 'abc-123' }).apiUrl).reply(200, confirmed);
+
+            const result = await mockActionsStore.dispatch(confirmMembership({ id: 'abc-123' }));
+
+            // Success answers with the confirmed record, its flat attachment fields turned into a list.
+            expect(result.status).toBe('confirmed');
+            expect(result.attachments).toEqual([{ key: 'f1', name: 'a.pdf' }]);
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_SAVING,
+                actions.MEMBERSHIP_SAVED,
+            ]);
+        });
+
+        it('rejects with the backend reason when a confirmation is refused', async () => {
+            // A refusal comes back as a 422 whose body carries the reason - the shape BaseController::error
+            // frames it in, a single-element array - which the axios interceptor surfaces as `message`.
+            mockApi
+                .onPost(repositories.routes.MEMBERSHIP_CONFIRM_API({ id: 'abc-123' }).apiUrl)
+                .reply(422, ['This applicant is already a member.']);
+
+            await expect(mockActionsStore.dispatch(confirmMembership({ id: 'abc-123' }))).rejects.toMatchObject({
+                message: 'This applicant is already a member.',
+            });
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_SAVING,
+                actions.MEMBERSHIP_SAVE_FAILED,
+            ]);
+        });
+
+        it('dispatches save failed and rejects when the request cannot be reached at all', async () => {
+            mockApi.onPost(repositories.routes.MEMBERSHIP_CONFIRM_API({ id: 'abc-123' }).apiUrl).networkError();
+
+            await expect(mockActionsStore.dispatch(confirmMembership({ id: 'abc-123' }))).rejects.toBeDefined();
 
             expect(mockActionsStore.getActions()).toHaveDispatchedActions([
                 actions.MEMBERSHIP_SAVING,

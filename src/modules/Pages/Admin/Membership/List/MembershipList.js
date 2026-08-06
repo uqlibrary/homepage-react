@@ -11,6 +11,7 @@ import SearchOffIcon from '@mui/icons-material/SearchOff';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { breadcrumbs } from 'config/routes';
 
 import { isFrozen } from 'modules/Pages/Membership/membershipOutage';
@@ -27,6 +28,17 @@ const strings = locale.list;
 export const SEARCH_DEBOUNCE_MS = 300;
 
 const initialFilters = { type: '', status: STATUS_ALL, sort: SORT_NEWEST };
+
+/**
+ * What to tell the admin about a failed action.
+ *
+ * A refusal the backend names ("This applicant is already a member.") reaches us as a plain `{ message }` the
+ * shared axios interceptor has passed through, and that message is what the admin needs to read. Anything else
+ * rejects as a raw axios Error, whose message names a status code and nothing an admin can act on, so a
+ * fallback stands in its place. A rejection that carries nothing at all still has to say something.
+ */
+export const messageOf = (failure, fallback = strings.errorDialog.unknown) =>
+    (!!failure && typeof failure === 'object' && !(failure instanceof Error) && failure.message) || fallback;
 
 export const typeTitlesFrom = (accountTypes = []) =>
     accountTypes.reduce((titles, type) => ({ ...titles, [type.value]: type.title }), {});
@@ -54,6 +66,11 @@ export const MembershipList = ({
     // What is in the search box, and the value the query actually runs on once typing settles.
     const [searchInput, setSearchInput] = useState('');
     const [name, setName] = useState('');
+    // What each card is waiting on, and the record that came back for it. This is not the store's to hold: a
+    // confirm answers with one record, and the page it came from is not that record's to rewrite. It clears
+    // whenever a fresh page is fetched, so server truth always wins in the end.
+    const [rows, setRows] = useState({});
+    const [error, setError] = useState(null);
 
     const accountTypes = useMemo(() => membershipFormData?.account_types ?? [], [membershipFormData]);
     const typeTitles = useMemo(() => typeTitlesFrom(accountTypes), [accountTypes]);
@@ -90,10 +107,29 @@ export const MembershipList = ({
         return () => clearTimeout(timer);
     }, [searchInput]);
 
-    // One page of the queue is fetched whenever the query changes - which includes the first render.
+    // One page of the queue is fetched whenever the query changes - which includes the first render. A fresh
+    // page is the moment any card-level overrides stop applying, so they are dropped here and the triage
+    // counts that arrive with the page speak for the queue again.
     useEffect(() => {
+        setRows({});
         actions.loadMemberships(query);
     }, [query, actions]);
+
+    const setRow = (id, patch) => setRows(current => ({ ...current, [id]: { ...current[id], ...patch } }));
+
+    // A card shows what its last confirm returned, if it has had one, and the server's record otherwise.
+    const displayed = (memberships ?? []).map(membership => rows[membership.id]?.record ?? membership);
+
+    const onConfirm = async membership => {
+        setRow(membership.id, { busy: 'confirming' });
+        try {
+            const confirmed = await actions.confirmMembership(membership);
+            setRow(membership.id, { busy: null, record: confirmed });
+        } catch (failure) {
+            setRow(membership.id, { busy: null });
+            setError(messageOf(failure));
+        }
+    };
 
     const onStatus = useCallback(status => {
         setFilters(current => ({ ...current, status }));
@@ -205,11 +241,13 @@ export const MembershipList = ({
                                 padding: 0,
                             }}
                         >
-                            {memberships.map(membership => (
+                            {displayed.map(membership => (
                                 <MembershipApplicationCard
                                     key={membership.id}
                                     membership={membership}
                                     typeTitles={typeTitles}
+                                    busy={rows[membership.id]?.busy}
+                                    onConfirm={onConfirm}
                                 />
                             ))}
                         </Box>
@@ -229,6 +267,21 @@ export const MembershipList = ({
                     </>
                 )}
             </StandardCard>
+
+            {/* One dialog for whatever an action failed with. It carries no cancel: there is nothing to undo,
+                only a message to read and dismiss. */}
+            <ConfirmationBox
+                confirmationBoxId={strings.errorDialog.confirmationBoxId}
+                isOpen={!!error}
+                hideCancelButton
+                locale={{
+                    confirmationTitle: strings.errorDialog.confirmationTitle,
+                    confirmationMessage: `${strings.errorDialog.confirmationMessage} ${error ?? ''}`,
+                    confirmButtonLabel: strings.errorDialog.confirmButtonLabel,
+                }}
+                onAction={() => setError(null)}
+                onClose={() => setError(null)}
+            />
         </StandardPage>
     );
 };

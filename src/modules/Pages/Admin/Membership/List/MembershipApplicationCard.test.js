@@ -1,25 +1,34 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { mui1theme } from 'config';
 
 import MembershipApplicationCard, {
+    confirmButtonText,
     formatDate,
     formatDateTime,
     fullName,
     initialsOf,
+    isConfirmationInProgress,
+    isIssued,
     statusColour,
     statusText,
 } from './MembershipApplicationCard';
 
 const typeTitles = { community: 'Community', alumni: 'Alumni', hospital: 'Hospital' };
 
-const setup = membership =>
+const setup = (membership, props = {}) =>
     render(
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={mui1theme}>
                 <ul>
-                    <MembershipApplicationCard membership={membership} typeTitles={typeTitles} />
+                    <MembershipApplicationCard
+                        membership={membership}
+                        typeTitles={typeTitles}
+                        onConfirm={jest.fn()}
+                        {...props}
+                    />
                 </ul>
             </ThemeProvider>
         </StyledEngineProvider>,
@@ -93,6 +102,7 @@ describe('MembershipApplicationCard', () => {
                                 date_of_birth: '04-05-1990',
                             }}
                             typeTitles={typeTitles}
+                            onConfirm={jest.fn()}
                         />
                     </ul>
                 </ThemeProvider>
@@ -111,7 +121,76 @@ describe('MembershipApplicationCard', () => {
         expect(screen.getByTestId('membership-meta-108')).not.toHaveTextContent('Submitted');
     });
 
+    describe('confirm controls', () => {
+        const unconfirmed = { id: '101', type: 'community', status: 'unconfirmed', first_name: 'Newly', sn: 'Applied' };
+
+        it('offers Confirm on an application waiting on a decision, and reports it when pressed', async () => {
+            const onConfirm = jest.fn();
+            setup(unconfirmed, { onConfirm });
+
+            const button = screen.getByTestId('membership-confirm-101');
+            expect(button).toHaveTextContent('Confirm');
+            expect(button).toHaveAccessibleName('Confirm the application for Newly Applied');
+
+            await userEvent.click(button);
+            expect(onConfirm).toHaveBeenCalledWith(unconfirmed);
+        });
+
+        it('offers Re-confirm on a renewing application that has been confirmed before', () => {
+            setup({
+                id: '103',
+                type: 'community',
+                status: 'renewing',
+                first_name: 'Renewing',
+                sn: 'Member',
+                confirmed_on: '21-05-2025',
+            });
+
+            expect(screen.getByTestId('membership-confirm-103')).toHaveTextContent('Re-confirm');
+        });
+
+        it('offers no confirm on an application that is already a confirmed account', () => {
+            setup({ id: '102', type: 'alumni', status: 'confirmed', first_name: 'Already', sn: 'Confirmed' });
+
+            expect(screen.queryByTestId('membership-confirm-102')).not.toBeInTheDocument();
+        });
+
+        it('guards a confirmation in progress: an in-progress chip in place of the confirm button', () => {
+            setup({ ...unconfirmed, id: '104', confirm_step: 1 });
+
+            expect(screen.getByTestId('membership-inprogress-104')).toHaveTextContent('In progress');
+            expect(screen.queryByTestId('membership-confirm-104')).not.toBeInTheDocument();
+        });
+
+        it('shows the confirming state and disables the button while a confirm is in flight', () => {
+            setup(unconfirmed, { busy: 'confirming' });
+
+            const button = screen.getByTestId('membership-confirm-101');
+            expect(button).toHaveTextContent('Confirming');
+            expect(button).toBeDisabled();
+        });
+    });
+
     describe('helpers', () => {
+        it('isIssued is true only for a confirmed or renewing account', () => {
+            expect(isIssued({ status: 'confirmed' })).toBe(true);
+            expect(isIssued({ status: 'renewing' })).toBe(true);
+            expect(isIssued({ status: 'unconfirmed' })).toBe(false);
+            expect(isIssued(undefined)).toBe(false);
+        });
+
+        it('isConfirmationInProgress reads the step the backend reports, as a number or a string', () => {
+            expect(isConfirmationInProgress({ confirm_step: 1 })).toBe(true);
+            expect(isConfirmationInProgress({ confirm_step: '2' })).toBe(true);
+            expect(isConfirmationInProgress({ confirm_step: 0 })).toBe(false);
+            expect(isConfirmationInProgress({})).toBe(false);
+        });
+
+        it('confirmButtonText reads Re-confirm once an applicant has been confirmed before', () => {
+            expect(confirmButtonText({ confirmed_on: '21-05-2025' })).toBe('Re-confirm');
+            expect(confirmButtonText({})).toBe('Confirm');
+        });
+
         it('fullName joins the parts that are present', () => {
             expect(fullName({ title: 'Mr', first_name: 'A', sn: 'B' })).toBe('Mr A B');
             expect(fullName({ first_name: 'A', sn: 'B' })).toBe('A B');

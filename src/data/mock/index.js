@@ -416,6 +416,20 @@ mock.onPost(new RegExp('^membership/[^/]+/[^/]+/renew$')).reply(
 // Uploading a supporting document answers with the stored attachment.
 mock.onPost(routes.MEMBERSHIP_FILE_UPLOAD_API().apiUrl).reply(withDelay([200, [membershipAttachment]]));
 
+// Confirming an application. The real endpoint posts to Alma and Prism to issue the account. Success answers
+// 200 with the confirmed record; a refusal the backend can name - here, an applicant who is already a member
+// (id 104) - answers with a 4xx carrying that reason as a message, so the admin is told what actually failed
+// rather than having a 200 unpacked to discover it did. The message travels as the API frames it, a
+// single-element array.
+mock.onPost(new RegExp('^membership/[^/]+/confirm$')).reply(config => {
+    const id = config.url.split('/')[1];
+    const membership = membershipList.find(item => item.id === id);
+    if (id.endsWith('104')) {
+        return withDelay([422, ['This applicant is already a member.']])();
+    }
+    return withDelay([200, { ...membership, status: 'confirmed', confirmed_on: '17-07-2026' }])();
+});
+
 // The admin back-office at /admin/membership. The real queue is ~9,500 applications, so this endpoint answers
 // with one searched, filtered, ordered page at a time inside an envelope - `{ data, pagination, counts }`. The
 // filtering, paging and counting are all modelled here so the frontend is built against the intended contract.

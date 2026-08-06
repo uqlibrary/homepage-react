@@ -5,6 +5,7 @@ import {
     MEMBERSHIP_BY_CODE_API,
     MEMBERSHIP_BY_ID_API,
     MEMBERSHIP_CHECK_RENEWING_API,
+    MEMBERSHIP_CONFIRM_API,
     MEMBERSHIP_CREATE_API,
     MEMBERSHIP_FILE_UPLOAD_API,
     MEMBERSHIP_FORM_DATA_API,
@@ -187,6 +188,30 @@ export function uploadMembershipFile(file) {
  */
 export function clearMembership() {
     return dispatch => dispatch({ type: actions.MEMBERSHIP_CLEAR });
+}
+
+/**
+ * Confirm an application, issuing the library account behind it.
+ *
+ * Answers with the confirmed record on success, and rejects on failure with a status the admin can be told
+ * something about: a refusal the backend can name - an applicant who is already a member, a barcode already in
+ * use - comes back as a message the shared axios interceptor passes through, so the caller can put the real
+ * reason in front of the admin rather than a generic one. The confirmed record's flat attachment fields are
+ * turned into a list, the same as a single record read.
+ */
+export function confirmMembership(membership) {
+    return async dispatch => {
+        dispatch({ type: actions.MEMBERSHIP_SAVING });
+
+        try {
+            const saved = convertAttachments(await post(MEMBERSHIP_CONFIRM_API({ id: membership.id }), membership));
+            dispatch({ type: actions.MEMBERSHIP_SAVED, payload: saved });
+            return saved;
+        } catch (error) {
+            dispatch({ type: actions.MEMBERSHIP_SAVE_FAILED, payload: error });
+            throw error;
+        }
+    };
 }
 
 /**

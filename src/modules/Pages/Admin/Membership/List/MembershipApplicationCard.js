@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
@@ -23,6 +24,19 @@ const strings = locale.list.row;
  */
 export const fullName = membership =>
     [membership?.title, membership?.first_name, membership?.sn].filter(Boolean).join(' ');
+
+// The two statuses that mean the application already exists as a library account.
+export const ISSUED_STATUSES = ['confirmed', 'renewing'];
+
+// The backend reports a confirmation it has begun but not finished as step 1 or 2. Acting on the application
+// again is unsafe until that settles.
+export const IN_PROGRESS_STEPS = [1, 2, '1', '2'];
+
+export const isIssued = membership => ISSUED_STATUSES.includes(membership?.status);
+export const isConfirmationInProgress = membership => IN_PROGRESS_STEPS.includes(membership?.confirm_step);
+
+// Confirming an applicant who has been confirmed before is a re-confirmation, and reads as one.
+export const confirmButtonText = membership => (membership?.confirmed_on ? strings.reconfirm : strings.confirm);
 
 export const statusText = status => (!status ? '' : status.charAt(0).toUpperCase() + status.slice(1));
 
@@ -132,9 +146,13 @@ MetaLine.propTypes = { children: PropTypes.node };
  * The heading matters beyond looks: it lets a screen reader user jump between applications instead of walking
  * every cell of a grid.
  */
-export const MembershipApplicationCard = ({ membership, typeTitles }) => {
+export const MembershipApplicationCard = ({ membership, typeTitles, busy, onConfirm }) => {
     const name = fullName(membership);
     const headingId = `membership-name-${membership.id}`;
+    const inProgress = isConfirmationInProgress(membership);
+    // A confirmed account has no confirm to offer; a renewing one can be re-confirmed, and one still waiting on
+    // a decision can be confirmed. Nothing is actionable while a confirmation is already in flight.
+    const canConfirm = !inProgress && (membership.status === 'renewing' || !isIssued(membership));
 
     return (
         <Box component="li" sx={{ listStyle: 'none' }}>
@@ -246,6 +264,43 @@ export const MembershipApplicationCard = ({ membership, typeTitles }) => {
                                 `${strings.birthdate} ${formatDate(membership.date_of_birth)}`}
                             {!!membership.alumni_num && membership.alumni_num}
                         </MetaLine>
+
+                        {/* The decision on the application, kept in the same corner of every card so an admin
+                            always knows where to reach for it. A confirmation already under way replaces the
+                            button with a chip saying so, rather than a control that is unsafe to press. */}
+                        {(canConfirm || inProgress) && (
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    gap: 0.5,
+                                    marginTop: 1,
+                                }}
+                            >
+                                {!!inProgress && (
+                                    <Chip
+                                        size="small"
+                                        variant="outlined"
+                                        label={strings.inProgress}
+                                        data-testid={`membership-inprogress-${membership.id}`}
+                                    />
+                                )}
+                                {!!canConfirm && (
+                                    <Button
+                                        size="small"
+                                        variant="contained"
+                                        disableElevation
+                                        data-testid={`membership-confirm-${membership.id}`}
+                                        aria-label={strings.confirmLabel(confirmButtonText(membership), name)}
+                                        disabled={busy === 'confirming'}
+                                        onClick={() => onConfirm(membership)}
+                                    >
+                                        {busy === 'confirming' ? strings.confirming : confirmButtonText(membership)}
+                                    </Button>
+                                )}
+                            </Box>
+                        )}
                     </Box>
                 </CardContent>
             </Card>
@@ -256,6 +311,9 @@ export const MembershipApplicationCard = ({ membership, typeTitles }) => {
 MembershipApplicationCard.propTypes = {
     membership: PropTypes.object.isRequired,
     typeTitles: PropTypes.object.isRequired,
+    // What this card is waiting on, if anything: 'confirming'.
+    busy: PropTypes.string,
+    onConfirm: PropTypes.func.isRequired,
 };
 
 export default MembershipApplicationCard;

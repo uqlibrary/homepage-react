@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { mui1theme } from 'config';
 
-import MembershipList, { typeTitlesFrom } from './MembershipList';
+import MembershipList, { messageOf, typeTitlesFrom } from './MembershipList';
 
 jest.mock('modules/Pages/Membership/membershipOutage', () => ({ isFrozen: jest.fn(() => false) }));
 const { isFrozen } = require('modules/Pages/Membership/membershipOutage');
@@ -188,6 +188,44 @@ describe('MembershipList', () => {
 
         expect(screen.getByTestId('membership-admin-frozen')).toBeInTheDocument();
         expect(screen.queryByTestId('membership-toolbar')).not.toBeInTheDocument();
+    });
+
+    it('confirms an application and reflects the issued account on its card', async () => {
+        const confirmMembership = jest.fn().mockResolvedValue({ ...page[0], status: 'confirmed' });
+        const actions = setup({ actions: { confirmMembership } });
+
+        await userEvent.click(screen.getByTestId('membership-confirm-101'));
+
+        expect(confirmMembership).toHaveBeenCalledWith(page[0]);
+        // The card takes on the confirmed record: its status reads Confirmed and the confirm button is gone.
+        await waitFor(() => expect(screen.getByTestId('membership-status-101')).toHaveTextContent('Confirmed'));
+        expect(screen.queryByTestId('membership-confirm-101')).not.toBeInTheDocument();
+    });
+
+    it('surfaces the reason in a dialog when a confirmation is refused, and dismisses it', async () => {
+        const confirmMembership = jest.fn().mockRejectedValue({ message: 'This applicant is already a member.' });
+        setup({ actions: { confirmMembership } });
+
+        await userEvent.click(screen.getByTestId('membership-confirm-101'));
+
+        await waitFor(() =>
+            expect(screen.getByTestId('message-content')).toHaveTextContent('This applicant is already a member.'),
+        );
+        // The card is left as it was - still unconfirmed, still offering Confirm.
+        expect(screen.getByTestId('membership-confirm-101')).toBeInTheDocument();
+
+        await userEvent.click(screen.getByTestId('confirm-membership-error'));
+        await waitFor(() => expect(screen.queryByTestId('dialogbox-membership-error')).not.toBeInTheDocument());
+    });
+
+    it('messageOf reads the API message from a plain rejection and falls back otherwise', () => {
+        expect(messageOf({ message: 'Already a member.' })).toBe('Already a member.');
+        // A raw axios Error carries nothing an admin can act on, so the fallback stands in.
+        expect(messageOf(new Error('Request failed with status code 500'))).toBe(
+            'Please try again, or contact support if the problem continues.',
+        );
+        expect(messageOf(null)).toBe('Please try again, or contact support if the problem continues.');
+        expect(messageOf({}, 'custom fallback')).toBe('custom fallback');
     });
 
     it('typeTitlesFrom maps types to titles and defaults to an empty map', () => {

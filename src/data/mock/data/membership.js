@@ -248,6 +248,8 @@ const namedApplications = [
         mail: 'halfway.through@example.org',
         hospital_service: 'Royal Brisbane and Women\'s Hospital',
         submitted_on: '12-07-2026 15:00:00',
+        // A confirmation the backend has begun but not finished, so the card guards it: no confirm, no delete.
+        confirm_step: 1,
     },
     {
         id: '00000000-0000-0000-0000-000000000105',
