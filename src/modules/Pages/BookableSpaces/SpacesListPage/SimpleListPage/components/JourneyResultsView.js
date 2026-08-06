@@ -12,8 +12,6 @@ import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPaginati
 import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import SpaceOpenStatusChip from 'modules/Pages/BookableSpaces/Shared/SpaceOpenStatusChip';
 
-import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
-
 import {
     StyledJourneyPanelSection,
     StyledResultsSidebarPanelDiv,
@@ -97,7 +95,6 @@ export const JourneyResultsView = ({
                         <Stack spacing={4} sx={{ mt: 1.5 }}>
                             {visibleSpaces.map(space => {
                                 const detailId = String(space?.space_uuid || space?.space_id || '');
-                                const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
                                 const detailUrl = serialiseJourneyUrl({
                                     view: 'details',
                                     spaceId: space?.space_uuid || space?.space_id || null,

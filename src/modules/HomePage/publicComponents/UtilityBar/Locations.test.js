@@ -1,7 +1,6 @@
 import React from 'react';
 import Locations from './Locations';
 import { rtlRender, WithRouter } from 'test-utils';
-import { getByTestId } from '@testing-library/dom';
 import { fireEvent } from '@testing-library/react';
 
 function setup(testProps = {}, renderer = rtlRender) {

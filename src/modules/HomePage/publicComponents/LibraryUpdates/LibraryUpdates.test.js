@@ -1,8 +1,6 @@
 import React from 'react';
 import LibraryUpdates from './LibraryUpdates';
 import { rtlRender, WithRouter } from 'test-utils';
-import { getByTestId } from '@testing-library/dom';
-import { fireEvent } from '@testing-library/react';
 
 function setup(testProps = {}, renderer = rtlRender) {
     return renderer(

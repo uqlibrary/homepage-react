@@ -280,7 +280,6 @@ export const DlorForm = ({
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
-    const keywordMinimumLength = 4;
     const characterCount = (numCharsCurrent, numCharsMin, fieldName) => {
         const missingCharCount = numCharsMin - numCharsCurrent;
         return (
@@ -1837,7 +1836,7 @@ export const DlorForm = ({
         scrollToTopOfPage();
     };
 
-    const navigateToListPage = isAdmin => {
+    const navigateToListPage = () => {
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = dlorAdminLink(undefined, account);

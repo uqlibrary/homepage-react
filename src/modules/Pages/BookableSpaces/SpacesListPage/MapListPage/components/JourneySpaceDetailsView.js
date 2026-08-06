@@ -392,7 +392,7 @@ JourneySpaceDetailsView.propTypes = {
     backLabel: PropTypes.string,
     onBack: PropTypes.func,
     isSelectedSpaceFavourite: PropTypes.bool,
-    isFavouriteActionInProgress: PropTypes.bool,
+    isFavouriteActionInProgress: PropTypes.any,
     onFavouriteToggle: PropTypes.func,
     showMap: PropTypes.bool,
 };

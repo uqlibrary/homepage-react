@@ -18,7 +18,7 @@ const CENTRAL_PANEL_ONE = 'space-13';
 const CENTRAL_PANEL_TWO = 'space-14';
 
 const NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST = 2; // 1 for skip button, 1 for acccessible heading
-const VISIBLE_SPACES_ALL_CAMPUSES = 15;
+const VISIBLE_SPACES_ALL_CAMPUSES = 16;
 const VISIBLE_SPACES_ST_LUCIA_ALL = 10;
 
 // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
@@ -603,9 +603,9 @@ test.describe('Spaces', () => {
             await bookableCheckbox.locator('span input').check();
 
             // panels shown changes
-            await expect(page.getByTestId('space-space-count')).toContainText('8');
+            await expect(page.getByTestId('space-space-count')).toContainText('9');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                9 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
@@ -804,9 +804,9 @@ test.describe('Spaces', () => {
             await avEquipmentUnsetCartouche.click();
 
             // spaces visible changes
-            await expect(page.getByTestId('space-space-count')).toContainText('8');
+            await expect(page.getByTestId('space-space-count')).toContainText('9');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                9 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).not.toBeVisible();
@@ -932,9 +932,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('4');
+            await expect(spacesCount).toContainText('5');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // update maximum to "no more than 20 people"
@@ -948,9 +948,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('2');
+            await expect(spacesCount).toContainText('3');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                2 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                3 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // clear the capacity filters by unchecking "is bookable"
@@ -1009,9 +1009,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('4');
+            await expect(spacesCount).toContainText('5');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // update maximum to "no more than 20 people"
@@ -1025,9 +1025,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('2');
+            await expect(spacesCount).toContainText('3');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                2 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                3 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // clear the capacity filters

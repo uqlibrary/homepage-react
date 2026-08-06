@@ -185,6 +185,9 @@ DLOEdit.propTypes = {
     dlorAdminNotesLoaded: PropTypes.bool,
     dlorAdminNotesLoadError: PropTypes.any,
     dlorAdminNotes: PropTypes.array,
+    dlorKeywords: PropTypes.any,
+    dlorKeywordsLoading: PropTypes.any,
+    dlorKeywordsError: PropTypes.any,
 };
 
 export default DLOEdit;

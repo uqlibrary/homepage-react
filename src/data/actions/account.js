@@ -84,6 +84,7 @@ function extendAccountDetails(accountResponse) {
                           // current classes can have a repeating ACAD_CAREER value,
                           // eg NAWD, PGCW and UGRD - but all are for the same course when other details match!
                           .reduce((acc, current) => {
+                              // eslint-disable-next-line no-unused-vars
                               const { ACAD_CAREER, ...rest } = current;
                               const key = JSON.stringify(rest);
                               acc[key] = rest;

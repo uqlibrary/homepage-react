@@ -28,7 +28,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import DoneIcon from '@mui/icons-material/Done';
 
-import { addClass, removeClass, standardText } from 'helpers/general';
+import { standardText } from 'helpers/general';
 
 import {
     addBreadcrumbsToSiteHeader,
@@ -86,10 +86,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const CAMPUS_ID_UNSELECTED = '';
-const LIBRARY_ID_UNSELECTED = '';
-const FLOOR_ID_UNSELECTED = '';
-
 export const BookableSpacesManageSpaceTypes = ({
     actions,
     bookableSpacesRoomList,
@@ -114,19 +110,22 @@ export const BookableSpacesManageSpaceTypes = ({
     console.log('TOP weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
     console.log('TOP facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
 
-    const [displayedRows, setDisplayedRows2] = useState([]);
-    const setDisplayedRows = rows => {
-        console.log('setDisplayedRows', rows);
-        setDisplayedRows2(rows);
-    };
+    // const [displayedRows, setDisplayedRows2] = useState([]);
+    // const setDisplayedRows = rows => {
+    //     console.log('setDisplayedRows', rows);
+    //     setDisplayedRows2(rows);
+    // };
 
+    // eslint-disable-next-line no-unused-vars
     const [cookies, setCookie] = useCookies();
 
     const paginatorCookieName = 'spaces-list-paginator';
-    const [rowsPerPage, setRowsPerPage] = React.useState(
-        !!cookies[paginatorCookieName] ? parseInt(cookies[paginatorCookieName], 10) : 5,
-    );
-    const [pageNum, setPageNum] = React.useState(0);
+    // const [rowsPerPage, setRowsPerPage] = React.useState(
+    //     !!cookies[paginatorCookieName] ? parseInt(cookies[paginatorCookieName], 10) : 5,
+    // );
+    const rowsPerPage = !!cookies[paginatorCookieName] ? parseInt(cookies[paginatorCookieName], 10) : 5;
+    // const [pageNum, setPageNum] = React.useState(0);
+    const pageNum = 0;
     const [editingSpaceTypeId, setEditingSpaceTypeId] = useState(null);
     const [editingDraft, setEditingDraft] = useState({
         spaceTypeName: '',
@@ -200,7 +199,7 @@ export const BookableSpacesManageSpaceTypes = ({
                     showSpace: showSpaceByPagination(index, pageNum, rowsPerPage),
                 });
             });
-            setDisplayedRows(usableRows);
+            // setDisplayedRows(usableRows);
         }
     }, [
         bookableSpacesRoomListError,

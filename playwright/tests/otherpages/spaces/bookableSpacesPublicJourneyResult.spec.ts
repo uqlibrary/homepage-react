@@ -1,4 +1,4 @@
-import { expect, Page, test } from '@uq/pw/test';
+import { expect, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
@@ -20,7 +20,7 @@ const FILTER_GROUP_SPACE = '3';
 // };
 
 test.describe('Spaces Journey Result page', () => {
-    test.beforeEach(async ({ page, context }) => {
+    test.beforeEach(async ({ context }) => {
         // await disableMazeMapAssets(page);
         await context.clearCookies();
     });
@@ -94,7 +94,7 @@ test.describe('Spaces Journey Result page', () => {
 
         await expect(page.getByTestId('sidebarCheckboxes')).toBeVisible();
         await expect(page.getByRole('heading', { level: 1, name: 'Search results' })).toBeVisible();
-        await expect(page.getByTestId('spaces-results-summary')).toContainText('15 of 15 spaces'); // all spaces are showing
+        await expect(page.getByTestId('spaces-results-summary')).toContainText('16 of 16 spaces'); // all spaces are showing
         await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(NUMBER_SPACES_DEFAULT); // a page load of spaces are present
 
         // show the first panel has the correct contents

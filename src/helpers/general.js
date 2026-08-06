@@ -1,7 +1,6 @@
 import global from 'locale/global';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import { fullPath } from '../config/routes';
 
 /* istanbul ignore next */
 const silentTryCatch = (callback, _default = undefined) => {

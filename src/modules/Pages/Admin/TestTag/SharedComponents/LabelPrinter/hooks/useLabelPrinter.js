@@ -39,6 +39,7 @@ const useLabelPrinter = ({
         const isTestEnvironment = isTest();
         const shouldUsePrinterEmulator = shouldOverridePrinterDevEnv && (isLocalEnvironment || isTestEnvironment);
 
+        // eslint-disable-next-line no-nested-ternary
         return printingEnabled
             ? !shouldUsePrinterEmulator
                 ? printerRegistry[printerCode]?.()

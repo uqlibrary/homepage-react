@@ -101,10 +101,10 @@ export const DLOVocabularyManage = ({ actions, dlorKeywords, dlorKeywordsLoading
         });
     };
 
-    const handleEditSynonym = (synonym, keyword_id) => {
+    const handleEditSynonym = (synonym, keywordId) => {
         setInputValue(synonym);
         setFormValue(synonym);
-        setKeywordId(keyword_id);
+        setKeywordId(keywordId);
         setFormMode('edit');
         setFormType('synonym');
         setEditBoxOpened(true);

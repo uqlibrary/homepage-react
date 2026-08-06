@@ -35,6 +35,7 @@ export const _courseLink = (
         let params = '';
         const tempUrl = new URL(homepageLink);
         params = tempUrl.search;
+        // eslint-disable-next-line no-param-reassign
         homepageLink = homepageLink.replace(params, '');
         _url = _url.replace('https://www.library.uq.edu.au/', homepageLink) + params;
     }

@@ -427,46 +427,7 @@ export const BookableSpacesManageSpaces = ({
         return deletedValue === true || deletedValue === 1 || deletedValue === '1' || deletedValue === 'true';
     };
 
-    React.useEffect(() => {
-        if (
-            bookableSpacesRoomListError === false &&
-            bookableSpacesRoomListLoading === false &&
-            !!bookableSpacesRoomList
-        ) {
-            // because we don't want campusList available before bookableSpacesRoomList (race condition)
-            if (campusListError === null && campusListLoading === null && campusList === null) {
-                actions.loadBookableSpaceCampusChildren();
-            }
-            // Apply active filters before pagination so a soft-deleted row does not reappear post-refresh.
-            const usableRows = [];
-            let filteredIndex = 0;
-            getSortedSpaces(bookableSpacesRoomList?.data?.locations, sortType, sortDirection)?.forEach(space => {
-                const showByFilter = doesSpaceShow(space, selectedFilters);
-                usableRows?.push({
-                    spaceId: space?.space_id,
-                    showSpace: showByFilter && showSpaceByPagination(filteredIndex, pageNum, rowsPerPage),
-                });
-
-                if (showByFilter) {
-                    filteredIndex++;
-                }
-            });
-            setDisplayedRows(usableRows);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        bookableSpacesRoomListError,
-        bookableSpacesRoomListLoading,
-        bookableSpacesRoomList,
-        campusListError,
-        campusListLoading,
-        campusList,
-        selectedFilters,
-        sortType,
-        sortDirection,
-    ]);
-
-    const [selectedFilters, setSelectedFilters2] = useState([
+    const [selectedFilters, setSelectedFilters] = useState([
         { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
         { filterType: 'library', filterValue: LIBRARY_ID_UNSELECTED },
         { filterType: 'floor', filterValue: FLOOR_ID_UNSELECTED },
@@ -474,10 +435,6 @@ export const BookableSpacesManageSpaces = ({
         { filterType: 'draftOnly', filterValue: false },
         { filterType: 'showDeleted', filterValue: false },
     ]);
-    const setSelectedFilters = newFilter => {
-        console.log('setSelectedFilters', newFilter);
-        setSelectedFilters2(newFilter);
-    };
 
     const doesSpaceShow = (space, currentLocationFilters) => {
         let showSpaceByFilter = true;
@@ -518,6 +475,45 @@ export const BookableSpacesManageSpaces = ({
         });
         return showSpaceByFilter;
     };
+
+    React.useEffect(() => {
+        if (
+            bookableSpacesRoomListError === false &&
+            bookableSpacesRoomListLoading === false &&
+            !!bookableSpacesRoomList
+        ) {
+            // because we don't want campusList available before bookableSpacesRoomList (race condition)
+            if (campusListError === null && campusListLoading === null && campusList === null) {
+                actions.loadBookableSpaceCampusChildren();
+            }
+            // Apply active filters before pagination so a soft-deleted row does not reappear post-refresh.
+            const usableRows = [];
+            let filteredIndex = 0;
+            getSortedSpaces(bookableSpacesRoomList?.data?.locations, sortType, sortDirection)?.forEach(space => {
+                const showByFilter = doesSpaceShow(space, selectedFilters);
+                usableRows?.push({
+                    spaceId: space?.space_id,
+                    showSpace: showByFilter && showSpaceByPagination(filteredIndex, pageNum, rowsPerPage),
+                });
+
+                if (showByFilter) {
+                    filteredIndex++;
+                }
+            });
+            setDisplayedRows(usableRows);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+        bookableSpacesRoomListError,
+        bookableSpacesRoomListLoading,
+        bookableSpacesRoomList,
+        campusListError,
+        campusListLoading,
+        campusList,
+        selectedFilters,
+        sortType,
+        sortDirection,
+    ]);
 
     const resetDisplayedRows = latestUpdate => {
         console.log('resetDisplayedRows latestUpdate=', latestUpdate);

@@ -89,7 +89,7 @@ function getTitleBlock(detailTitle = 'Analytics dashboard') {
     );
 }
 
-export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, dlorDashboardError, actions, account }) {
+export default function Dashboard({ dlorDashboardData, dlorDashboardLoading, actions, account }) {
     useEffect(() => {
         actions.loadDLORDashboard();
     }, [actions]);

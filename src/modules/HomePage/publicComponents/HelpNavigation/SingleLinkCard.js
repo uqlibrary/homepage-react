@@ -40,7 +40,7 @@ const StyledGridItem = styled(Grid, {
 }));
 const StyledLink = styled(Link, {
     shouldForwardProp: prop => prop !== 'fillContainer',
-})(({ theme, fillContainer }) => ({
+})(({ theme }) => ({
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: theme.palette.designSystem.borderRadius,
     background: '#FFFFFF',

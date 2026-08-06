@@ -791,7 +791,7 @@ export const BookableSpacesManageFacilities = ({
         if (!!failureMessage) {
             showErrorMessageinPopup(failureMessage);
 
-            return false;
+            return;
         }
 
         const valuesToSend = {

@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material';
 
 import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceNewWindowButton';
 import MapSpaceDetails from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/MapSpaceDetails';
@@ -45,22 +43,14 @@ const SidebarSpacesList = ({
     weeklyHoursLoading,
     weeklyHoursError,
     StyledStandardCard,
-    showAllData = false,
     suppliedClassName = null,
     spacesFavouritesList = null,
-    isLoggedIn = false,
     onFavouriteToggle = null,
     isFavouriteActionInProgress = false,
     onSpaceSelect = null,
     onSpaceToggle = null,
     expandedSpaceId = null,
 }) => {
-    const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
-    const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
-    const isTabletView = isMobileView ? false : _isTabletViewJust;
-    const isDesktopView = !isTabletView && !isMobileView;
-
     // const markerRefs = React.useRef({});
     //
     // const handleMapOpenButtonClick = id => {
@@ -119,6 +109,7 @@ const SidebarSpacesList = ({
                                         />
                                         <span
                                             onClick={() => onSpaceSelect?.(bookableSpace)}
+                                            onKeyDown={() => onSpaceSelect?.(bookableSpace)}
                                             style={onSpaceSelect ? { cursor: 'pointer' } : undefined}
                                             title="Show on map"
                                             data-testid={`space-${bookableSpace.space_id}-name`}
@@ -143,7 +134,6 @@ const SidebarSpacesList = ({
                                     weeklyHoursError={weeklyHoursError}
                                     bookableSpace={bookableSpace}
                                     collapsed
-                                    showAllData
                                     isExpanded={isExpanded}
                                     onToggle={onSpaceToggle}
                                     isFavouriteActionInProgress={isFavouriteActionInProgress}
@@ -167,12 +157,10 @@ SidebarSpacesList.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     StyledStandardCard: PropTypes.any,
-    showAllData: PropTypes.bool,
     suppliedClassName: PropTypes.string,
     spacesFavouritesList: PropTypes.any,
-    isLoggedIn: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
-    isFavouriteActionInProgress: PropTypes.bool,
+    isFavouriteActionInProgress: PropTypes.any,
     onSpaceSelect: PropTypes.func,
     onSpaceToggle: PropTypes.func,
     expandedSpaceId: PropTypes.number,

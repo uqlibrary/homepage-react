@@ -249,7 +249,6 @@ export const DLOView = ({
     dlorItemLoading,
     dlorItemError,
     accountLoading,
-    accountError,
     // sending demographics and/or subscribe request
     dlorUpdatedItem,
     dlorItemUpdating,
@@ -1439,6 +1438,7 @@ export const DLOView = ({
 
 DLOView.propTypes = {
     actions: PropTypes.any,
+    accountLoading: PropTypes.bool,
     dlorItem: PropTypes.any,
     dlorItemLoading: PropTypes.bool,
     dlorItemError: PropTypes.any,

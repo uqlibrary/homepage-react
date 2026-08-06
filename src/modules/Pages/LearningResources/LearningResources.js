@@ -93,6 +93,7 @@ export const getQueryParams = qs => {
 
     let tokens;
 
+    // eslint-disable-next-line no-cond-assign
     while ((tokens = re.exec(qs1))) {
         params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
     }

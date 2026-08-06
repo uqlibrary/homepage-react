@@ -278,7 +278,7 @@ MapSpaceDetails.propTypes = {
     isExpanded: PropTypes.bool,
     onToggle: PropTypes.func,
     showToggle: PropTypes.bool,
-    isFavouriteActionInProgress: PropTypes.bool,
+    isFavouriteActionInProgress: PropTypes.any,
     isSelectedSpaceFavourite: PropTypes.bool,
 };
 

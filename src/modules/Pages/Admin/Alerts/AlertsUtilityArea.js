@@ -38,7 +38,7 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
     },
 }));
 
-const StyledActionButtonPlacer = styled('div')(({ theme }) => ({
+const StyledActionButtonPlacer = styled('div')(() => ({
     float: 'right',
     marginTop: 16,
     marginRight: 16,

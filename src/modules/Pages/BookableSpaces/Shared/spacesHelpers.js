@@ -91,7 +91,6 @@ export const getFlatFacilityTypeList = facilityTypes => {
 };
 
 function filterNext7Days(departmentData) {
-    console.log('### filterNext7Days load ', JSON.parse(JSON.stringify(departmentData)));
     // Get today's date (start of day)
     const today = new Date();
     today?.setHours(0, 0, 0, 0);
@@ -130,7 +129,6 @@ function filterNext7Days(departmentData) {
 
 // rewrite the hours-by-week into one long list of days
 function convertWeeksToDays(department) {
-    console.log('### convertWeeksToDays department=', department);
     if (!department) {
         return [];
     }
@@ -164,7 +162,6 @@ function convertWeeksToDays(department) {
         result = filterNext7Days(department);
     }
 
-    console.log('### convertWeeksToDays return =', result);
     return result;
 }
 
@@ -172,21 +169,17 @@ export const spaceOpeningHours = (bookableSpace, weeklyHours) => {
     const details = weeklyHours?.locations?.filter(lib =>
         lib?.departments.find(departments => departments?.lid === bookableSpace?.space_opening_hours_id),
     );
-    console.log('### spaceOpeningHours details=', details?.at(0));
-    if (!!details) {
-        const theLibrary = details?.at(0);
-        console.log('### spaceOpeningHours theLibrary=', theLibrary);
-        console.log('### spaceOpeningHours theLibrary?.departments=', theLibrary?.departments);
-        const department = theLibrary?.departments.filter(
-            departments => departments?.lid === bookableSpace?.space_opening_hours_id,
-        );
-        console.log('### spaceOpeningHours department=', department);
-
-        const openingDetails = convertWeeksToDays(department.at(0));
-        console.log('### spaceOpeningHours openingDetails=', openingDetails);
-        return openingDetails?.next7days;
+    if (!details) {
+        return [];
     }
-    return [];
+    const theLibrary = details?.at(0);
+    const department = theLibrary?.departments.filter(
+        departments => departments?.lid === bookableSpace?.space_opening_hours_id,
+    );
+
+    const relevantDepartment = department?.at(0);
+    const openingDetails = convertWeeksToDays(relevantDepartment);
+    return openingDetails?.next7days || [];
 };
 
 export const isBookable = space => {

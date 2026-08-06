@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import React, { useImperativeHandle, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { createRoot } from 'react-dom/client';
@@ -57,14 +58,6 @@ const StyledPopupContent = styled('div')(() => ({
     padding: '2px 4px',
     fontSize: '0.85rem',
     lineHeight: 1.4,
-}));
-
-const StyledPopupOutageNotice = styled('div')(() => ({
-    marginTop: '0.5rem',
-    '& p': {
-        marginTop: '0.5rem',
-        marginBottom: 0,
-    },
 }));
 
 const StyledFavouriteNote = styled('em')(() => ({

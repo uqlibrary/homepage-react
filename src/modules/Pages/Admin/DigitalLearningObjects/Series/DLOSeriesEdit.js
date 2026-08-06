@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams, Link as RouterLink, useNavigate } from 'react-router';
@@ -36,7 +37,7 @@ import { breadcrumbs } from 'config/routes';
 import { RichTextEditor } from 'modules/SharedComponents/RichTextEditor';
 import { useAccountContext } from 'context';
 
-const StyledDraggableListItem = styled('li')(({ theme }) => ({
+const StyledDraggableListItem = styled('li')(() => ({
     display: 'flex',
     justifyContent: 'space-between',
     // Remove margin and padding
@@ -66,7 +67,7 @@ const StyledErrorMessageBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, handleDelete }) => {
+const DraggableListItem = React.memo(({ item, index, moveItem, handleDelete }) => {
     const ref = React.useRef(null);
     const [, drop] = useDrop({
         accept: 'LIST_ITEM',
@@ -141,6 +142,12 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
         </li>
     );
 });
+DraggableListItem.proptypes = {
+    item: PropTypes.any,
+    index: PropTypes.any,
+    moveItem: PropTypes.any,
+    handleDelete: PropTypes.any,
+};
 
 export const DLOSeriesEdit = ({
     actions,
@@ -155,10 +162,6 @@ export const DLOSeriesEdit = ({
 }) => {
     const { account } = useAccountContext();
     const navigate = useNavigate();
-    const handleEditorChange = (fieldname, newContent) => {
-        const newValues = { ...formValues, [fieldname]: newContent };
-        setFormValues(newValues);
-    };
 
     const { dlorSeriesId } = useParams();
     const [cookies, setCookie] = useCookies();
@@ -174,6 +177,11 @@ export const DLOSeriesEdit = ({
         object_list_linked: [],
         object_list_unassigned: [],
     });
+
+    const handleEditorChange = (fieldname, newContent) => {
+        const newValues = { ...formValues, [fieldname]: newContent };
+        setFormValues(newValues);
+    };
 
     const moveItem = (fromIndex, toIndex) => {
         const updatedList = [...formValues.object_list_linked];
@@ -283,7 +291,6 @@ export const DLOSeriesEdit = ({
     };
 
     const handleDelete = (index, uuid) => {
-        let newValues;
         let linked = formValues.object_list_linked;
         const unassigned = formValues.object_list_unassigned;
         const indexToRemove = linked.findIndex(d => d.object_public_uuid === uuid);
@@ -296,7 +303,7 @@ export const DLOSeriesEdit = ({
         unassigned.push(thisdlor);
         linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
         unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
-        newValues = {
+        const newValues = {
             series_name: formValues.series_name,
             series_description: formValues.series_description,
             object_list_linked: linked,
@@ -306,7 +313,6 @@ export const DLOSeriesEdit = ({
     };
 
     const handleAdd = uuid => {
-        let newValues;
         let linked = formValues.object_list_linked;
         const unassigned = formValues.object_list_unassigned;
         const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);
@@ -319,7 +325,7 @@ export const DLOSeriesEdit = ({
         linked.push(thisdlor);
         linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
         unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
-        newValues = {
+        const newValues = {
             series_name: formValues.series_name,
             series_description: formValues.series_description,
             object_list_linked: linked,
@@ -330,8 +336,7 @@ export const DLOSeriesEdit = ({
 
     const handleChange = prop => e => {
         const theNewValue = e.target.value;
-        let newValues;
-        newValues = { ...formValues, [prop]: theNewValue };
+        const newValues = { ...formValues, [prop]: theNewValue };
         setFormValues(newValues);
     };
 
@@ -585,6 +590,7 @@ DLOSeriesEdit.propTypes = {
     dlorList: PropTypes.array,
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
+    dlorSeries: PropTypes.any,
     mode: PropTypes.string,
 };
 

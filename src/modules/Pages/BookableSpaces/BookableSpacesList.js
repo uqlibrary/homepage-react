@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 

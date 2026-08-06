@@ -188,7 +188,7 @@ export const DLOTeamList = ({
                     if (!!dlorTeamListLoading || !!dlorTeamDeleting) {
                         return (
                             <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
-                                <div sx={{ minHeight: '600px' }}>
+                                <div style={{ minHeight: '600px' }}>
                                     <InlineLoader message="Loading" />
                                 </div>
                             </Grid>

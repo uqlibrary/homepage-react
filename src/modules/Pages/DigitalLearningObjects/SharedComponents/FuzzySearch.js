@@ -113,7 +113,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
         );
     };
 
-    const filterOptions = (options, { inputValue }) => options;
+    const filterOptions = options => options;
 
     return (
         <>
@@ -135,7 +135,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
                         data-testid="fuzzy-search-input"
                     />
                 )}
-                renderOption={(props, option, index) => (
+                renderOption={(props, option) => (
                     <li {...props} id={`fuzzy-search-option-${option.keyword_vocabulary_id}`}>
                         {getOptionLabel(option)}
                     </li>
@@ -193,6 +193,7 @@ FuzzySearch.propTypes = {
     fuseOptions: PropTypes.object,
     delay: PropTypes.number,
     onSelectedItemsChange: PropTypes.func.isRequired, // Add the new prop
+    existingItems: PropTypes.any,
 };
 
 export default FuzzySearch;

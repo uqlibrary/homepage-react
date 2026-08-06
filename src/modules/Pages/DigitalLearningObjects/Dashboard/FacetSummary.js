@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Grid, Paper, Divider, Link } from '@mui/material';
@@ -34,7 +35,6 @@ export default function FacetSummary({ objectsByFacet }) {
         objects_by_audience = [],
         objects_by_type = [],
         objects_by_format = [],
-        objects_with_cultural_advice = 0,
     } = objectsByFacet || {};
 
     const topTopics = getTopEntries(objects_by_topic);

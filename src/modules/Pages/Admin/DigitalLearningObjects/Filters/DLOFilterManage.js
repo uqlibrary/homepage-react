@@ -47,6 +47,18 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
         setFacetHelp(event.target.value || /* istanbul ignore next */ '');
     };
 
+    const handleClose = () => {
+        setEditBoxOpened(false);
+        setFormMode('edit');
+        setInputValue('');
+        setFacetOrder(0);
+        setFacetHelp('');
+        setFacetName('');
+        setFacetTypeId(null);
+        setFacet(null);
+        setFacetShowHelp(false);
+    };
+
     const updateFacet = id => {
         const payload = {
             facet_name: inputValue,
@@ -71,18 +83,6 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
 
     const handleDeleteFacet = id => {
         actions.deleteFacet(id).then(setConfirmDeleteModal(false));
-    };
-
-    const handleClose = () => {
-        setEditBoxOpened(false);
-        setFormMode('edit');
-        setInputValue('');
-        setFacetOrder(0);
-        setFacetHelp('');
-        setFacetName('');
-        setFacetTypeId(null);
-        setFacet(null);
-        setFacetShowHelp(false);
     };
 
     const handleEditFacet = facet => {

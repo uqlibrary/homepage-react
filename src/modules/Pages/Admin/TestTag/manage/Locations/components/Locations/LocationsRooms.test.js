@@ -139,7 +139,7 @@ describe('Locations', () => {
 
         it('handles add action as expected', async () => {
             const addLocationFn = jest.fn(() => Promise.resolve());
-            const { getByText, getByTestId, findByTestId, queryByTestId, getByRole } = setup({
+            const { getByText, getByTestId, findByTestId, getByRole } = setup({
                 isOpen: true,
                 actions: {
                     loadSites: jest.fn(),
@@ -244,7 +244,7 @@ describe('Locations', () => {
 
         it('handles update action as expected where parent is not excluded', async () => {
             const updateLocationFn = jest.fn(() => Promise.resolve());
-            const { getByText, getByTestId, findByTestId, queryByTestId, getByRole } = setup({
+            const { getByText, getByTestId, findByTestId, getByRole } = setup({
                 isOpen: true,
                 actions: {
                     loadSites: jest.fn(),
@@ -344,7 +344,7 @@ describe('Locations', () => {
 
         it('handles update action as expected where parent is excluded', async () => {
             const updateLocationFn = jest.fn(() => Promise.resolve());
-            const { getByText, getByTestId, findByTestId, queryByTestId, getByRole } = setup({
+            const { getByText, getByTestId, findByTestId, getByRole } = setup({
                 isOpen: true,
                 actions: {
                     loadSites: jest.fn(),
