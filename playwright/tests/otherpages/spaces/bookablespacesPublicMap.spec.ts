@@ -719,9 +719,9 @@ test.describe('Spaces', () => {
             await expect(byodStationCheckbox.locator('label:first-of-type')).toContainText('BYOD station');
             await byodStationCheckbox.locator('span input').check();
 
-            await expect(page.getByTestId('space-space-count')).toContainText('7');
+            await expect(page.getByTestId('space-space-count')).toContainText('8');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                7 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).toBeVisible();
@@ -848,9 +848,9 @@ test.describe('Spaces', () => {
             // correct number of cartouches showing
             await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(2);
             // correct number of panels showing
-            await expect(page.getByTestId('space-space-count')).toContainText('7');
+            await expect(page.getByTestId('space-space-count')).toContainText('8');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                7 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // click deselect-all-cartouches

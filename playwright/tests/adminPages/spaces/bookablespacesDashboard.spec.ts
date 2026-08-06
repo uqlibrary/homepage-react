@@ -1132,7 +1132,7 @@ test.describe('Spaces Admin - manage locations', () => {
                 { checked: false, space_id: '11' },
                 { checked: true, space_id: '13' },
                 { checked: true, space_id: '14' },
-                { checked: true, space_id: '176' },
+                { checked: false, space_id: '176' },
                 { checked: false, space_id: '43534' },
                 { checked: false, space_id: '123456' },
                 { checked: false, space_id: '999999' },
