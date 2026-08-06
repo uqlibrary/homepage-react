@@ -6,6 +6,7 @@ import {
     clearMemberships,
     confirmMembership,
     convertAttachments,
+    deleteMembership,
     flattenAttachments,
     loadMembership,
     loadMembershipByCode,
@@ -144,6 +145,32 @@ describe('Membership actions', () => {
             mockApi.onPost(repositories.routes.MEMBERSHIP_CONFIRM_API({ id: 'abc-123' }).apiUrl).networkError();
 
             await expect(mockActionsStore.dispatch(confirmMembership({ id: 'abc-123' }))).rejects.toBeDefined();
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_SAVING,
+                actions.MEMBERSHIP_SAVE_FAILED,
+            ]);
+        });
+    });
+
+    describe('deleteMembership', () => {
+        it('dispatches saving then deleted, and resolves', async () => {
+            mockApi
+                .onDelete(repositories.routes.MEMBERSHIP_DELETE_API({ id: 'abc-123' }).apiUrl)
+                .reply(200, { status: 'ok' });
+
+            await mockActionsStore.dispatch(deleteMembership('abc-123'));
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_SAVING,
+                actions.MEMBERSHIP_DELETED,
+            ]);
+        });
+
+        it('dispatches save failed and rejects when the delete fails', async () => {
+            mockApi.onDelete(repositories.routes.MEMBERSHIP_DELETE_API({ id: 'abc-123' }).apiUrl).reply(422);
+
+            await expect(mockActionsStore.dispatch(deleteMembership('abc-123'))).rejects.toBeDefined();
 
             expect(mockActionsStore.getActions()).toHaveDispatchedActions([
                 actions.MEMBERSHIP_SAVING,

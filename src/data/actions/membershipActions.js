@@ -1,5 +1,5 @@
 import * as actions from './actionTypes';
-import { get, post } from 'repositories/generic';
+import { destroy, get, post } from 'repositories/generic';
 import {
     MEMBERSHIPS_LIST_API,
     MEMBERSHIP_BY_CODE_API,
@@ -7,6 +7,7 @@ import {
     MEMBERSHIP_CHECK_RENEWING_API,
     MEMBERSHIP_CONFIRM_API,
     MEMBERSHIP_CREATE_API,
+    MEMBERSHIP_DELETE_API,
     MEMBERSHIP_FILE_UPLOAD_API,
     MEMBERSHIP_FORM_DATA_API,
     MEMBERSHIP_PAYMENT_API,
@@ -207,6 +208,25 @@ export function confirmMembership(membership) {
             const saved = convertAttachments(await post(MEMBERSHIP_CONFIRM_API({ id: membership.id }), membership));
             dispatch({ type: actions.MEMBERSHIP_SAVED, payload: saved });
             return saved;
+        } catch (error) {
+            dispatch({ type: actions.MEMBERSHIP_SAVE_FAILED, payload: error });
+            throw error;
+        }
+    };
+}
+
+/**
+ * Delete an application, clearing an invalid, spam or duplicate request from the queue. Resolves once the
+ * record is gone; the caller reflects the deleted state on its card.
+ */
+export function deleteMembership(id) {
+    return async dispatch => {
+        dispatch({ type: actions.MEMBERSHIP_SAVING });
+
+        try {
+            const response = await destroy(MEMBERSHIP_DELETE_API({ id }));
+            dispatch({ type: actions.MEMBERSHIP_DELETED, payload: id });
+            return response;
         } catch (error) {
             dispatch({ type: actions.MEMBERSHIP_SAVE_FAILED, payload: error });
             throw error;

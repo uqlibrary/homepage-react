@@ -354,6 +354,10 @@ export const MEMBERSHIP_FILE_UPLOAD_API = () => ({ apiUrl: 'file/membership' });
 // reports a rejection in a 200 body rather than as an error status.
 export const MEMBERSHIP_CONFIRM_API = ({ id }) => ({ apiUrl: `membership/${id}/confirm` });
 
+// Delete an application - the same address as reading one by id, reached with the DELETE method. Used to clear
+// invalid, spam or duplicate requests from the queue.
+export const MEMBERSHIP_DELETE_API = ({ id }) => ({ apiUrl: `membership/${id}` });
+
 // The admin listing of applications - a searched, filtered, ordered page at a time, since the queue holds
 // thousands. Name and type search as `filter[name]` / `filter[type]`; `status` filters to one bucket unless it
 // is `all`; the sort maps to the submitted date; page and per_page ask for one page. The response is an

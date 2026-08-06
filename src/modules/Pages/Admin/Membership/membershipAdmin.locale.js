@@ -62,6 +62,23 @@ export default {
             // A confirmation the backend has started but not finished. Neither confirming again nor deleting is
             // safe until it settles, so the card shows this in place of those actions.
             inProgress: 'In progress',
+            // Removing an invalid, spam or duplicate application from the queue. Its accessible name names the
+            // applicant, since the button sits among identical ones down the page.
+            delete: 'Delete',
+            deleteLabel: name => `Delete the application for ${name}`,
+            deleting: 'Deleting',
+            // Shown on the card once the delete has taken, in place of the buttons.
+            deleted: 'Deleted',
+        },
+        // The prompt before a delete: it cannot be undone, so it is asked for rather than assumed.
+        deleteDialog: {
+            confirmationBoxId: 'membership-delete',
+            confirmationTitle: 'Confirm deletion',
+            confirmationMessage: name =>
+                `You are about to delete the membership application for ${name}. ` +
+                'Please note this action cannot be undone.',
+            confirmButtonLabel: 'Yes, delete',
+            cancelButtonLabel: 'Cancel',
         },
         // What an admin action failed with. The lead-in is fixed and names no particular action, since it
         // fronts whatever the admin tried; the backend's own reason, where there is one, is appended to it.

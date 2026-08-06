@@ -430,6 +430,10 @@ mock.onPost(new RegExp('^membership/[^/]+/confirm$')).reply(config => {
     return withDelay([200, { ...membership, status: 'confirmed', confirmed_on: '17-07-2026' }])();
 });
 
+// Deleting an application - reached at the same address as reading one by id, with the DELETE method, so it
+// does not collide with the GET above.
+mock.onDelete(new RegExp('^membership/[0-9a-f-]{36}$')).reply(withDelay([200, { status: 'ok' }]));
+
 // The admin back-office at /admin/membership. The real queue is ~9,500 applications, so this endpoint answers
 // with one searched, filtered, ordered page at a time inside an envelope - `{ data, pagination, counts }`. The
 // filtering, paging and counting are all modelled here so the frontend is built against the intended contract.

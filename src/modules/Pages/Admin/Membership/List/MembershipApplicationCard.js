@@ -146,13 +146,17 @@ MetaLine.propTypes = { children: PropTypes.node };
  * The heading matters beyond looks: it lets a screen reader user jump between applications instead of walking
  * every cell of a grid.
  */
-export const MembershipApplicationCard = ({ membership, typeTitles, busy, onConfirm }) => {
+export const MembershipApplicationCard = ({ membership, typeTitles, busy, deleted, onConfirm, onDelete }) => {
     const name = fullName(membership);
     const headingId = `membership-name-${membership.id}`;
     const inProgress = isConfirmationInProgress(membership);
     // A confirmed account has no confirm to offer; a renewing one can be re-confirmed, and one still waiting on
-    // a decision can be confirmed. Nothing is actionable while a confirmation is already in flight.
-    const canConfirm = !inProgress && (membership.status === 'renewing' || !isIssued(membership));
+    // a decision can be confirmed. Nothing is actionable while a confirmation is already in flight, or once the
+    // application has been deleted.
+    const canConfirm = !deleted && !inProgress && (membership.status === 'renewing' || !isIssued(membership));
+    // Only an application still waiting on a decision is deleted from here - an issued account is not thrown
+    // away from the queue, and a confirmation in flight must settle first.
+    const canDelete = !deleted && !inProgress && !isIssued(membership);
 
     return (
         <Box component="li" sx={{ listStyle: 'none' }}>
@@ -170,6 +174,9 @@ export const MembershipApplicationCard = ({ membership, typeTitles, busy, onConf
                         borderColor: theme => alpha(theme.palette.primary.main, 0.4),
                         boxShadow: theme => `0 1px 8px ${alpha(theme.palette.primary.main, 0.08)}`,
                     },
+                    // A deleted application stays on the page so the admin sees the delete took, but reads as
+                    // spent rather than live.
+                    ...(deleted ? { opacity: 0.6 } : {}),
                 }}
             >
                 <CardContent
@@ -266,9 +273,10 @@ export const MembershipApplicationCard = ({ membership, typeTitles, busy, onConf
                         </MetaLine>
 
                         {/* The decision on the application, kept in the same corner of every card so an admin
-                            always knows where to reach for it. A confirmation already under way replaces the
-                            button with a chip saying so, rather than a control that is unsafe to press. */}
-                        {(canConfirm || inProgress) && (
+                            always knows where to reach for it. A confirmation already under way, or an
+                            application already deleted, replaces the buttons with a chip saying so, rather than
+                            a control that is unsafe or pointless to press. */}
+                        {(canConfirm || canDelete || inProgress || deleted) && (
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -285,6 +293,27 @@ export const MembershipApplicationCard = ({ membership, typeTitles, busy, onConf
                                         label={strings.inProgress}
                                         data-testid={`membership-inprogress-${membership.id}`}
                                     />
+                                )}
+                                {!!deleted && (
+                                    <Chip
+                                        size="small"
+                                        variant="outlined"
+                                        label={strings.deleted}
+                                        data-testid={`membership-deleted-${membership.id}`}
+                                    />
+                                )}
+                                {!!canDelete && (
+                                    <Button
+                                        size="small"
+                                        variant="text"
+                                        color="error"
+                                        data-testid={`membership-delete-${membership.id}`}
+                                        aria-label={strings.deleteLabel(name)}
+                                        disabled={busy === 'deleting'}
+                                        onClick={() => onDelete(membership)}
+                                    >
+                                        {busy === 'deleting' ? strings.deleting : strings.delete}
+                                    </Button>
                                 )}
                                 {!!canConfirm && (
                                     <Button
@@ -311,9 +340,11 @@ export const MembershipApplicationCard = ({ membership, typeTitles, busy, onConf
 MembershipApplicationCard.propTypes = {
     membership: PropTypes.object.isRequired,
     typeTitles: PropTypes.object.isRequired,
-    // What this card is waiting on, if anything: 'confirming'.
+    // What this card is waiting on, if anything: 'confirming' | 'deleting'.
     busy: PropTypes.string,
+    deleted: PropTypes.bool,
     onConfirm: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
 };
 
 export default MembershipApplicationCard;

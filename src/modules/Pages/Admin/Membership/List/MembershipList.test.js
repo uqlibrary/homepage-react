@@ -218,6 +218,50 @@ describe('MembershipList', () => {
         await waitFor(() => expect(screen.queryByTestId('dialogbox-membership-error')).not.toBeInTheDocument());
     });
 
+    it('deletes an application once the prompt is confirmed, and marks its card', async () => {
+        const deleteMembership = jest.fn().mockResolvedValue({ status: 'ok' });
+        setup({ actions: { deleteMembership } });
+
+        await userEvent.click(screen.getByTestId('membership-delete-101'));
+        // The prompt names the applicant and warns the delete is final.
+        expect(screen.getByTestId('message-content')).toHaveTextContent(
+            'You are about to delete the membership application for Newly Applied',
+        );
+
+        await userEvent.click(screen.getByTestId('confirm-membership-delete'));
+
+        expect(deleteMembership).toHaveBeenCalledWith('101');
+        await waitFor(() => expect(screen.getByTestId('membership-deleted-101')).toBeInTheDocument());
+        expect(screen.queryByTestId('membership-delete-101')).not.toBeInTheDocument();
+    });
+
+    it('does not delete when the prompt is dismissed', async () => {
+        const deleteMembership = jest.fn();
+        setup({ actions: { deleteMembership } });
+
+        await userEvent.click(screen.getByTestId('membership-delete-101'));
+        await userEvent.click(screen.getByTestId('cancel-membership-delete'));
+
+        expect(deleteMembership).not.toHaveBeenCalled();
+        await waitFor(() => expect(screen.queryByTestId('dialogbox-membership-delete')).not.toBeInTheDocument());
+    });
+
+    it('surfaces the reason in a dialog when a delete fails', async () => {
+        const deleteMembership = jest.fn().mockRejectedValue(new Error('nope'));
+        setup({ actions: { deleteMembership } });
+
+        await userEvent.click(screen.getByTestId('membership-delete-101'));
+        await userEvent.click(screen.getByTestId('confirm-membership-delete'));
+
+        await waitFor(() =>
+            expect(screen.getByTestId('message-content')).toHaveTextContent(
+                'Please try again, or contact support if the problem continues.',
+            ),
+        );
+        // The card is left as it was - still there, still offering Delete.
+        expect(screen.getByTestId('membership-delete-101')).toBeInTheDocument();
+    });
+
     it('messageOf reads the API message from a plain rejection and falls back otherwise', () => {
         expect(messageOf({ message: 'Already a member.' })).toBe('Already a member.');
         // A raw axios Error carries nothing an admin can act on, so the fallback stands in.

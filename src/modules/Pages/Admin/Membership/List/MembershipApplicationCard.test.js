@@ -27,6 +27,7 @@ const setup = (membership, props = {}) =>
                         membership={membership}
                         typeTitles={typeTitles}
                         onConfirm={jest.fn()}
+                        onDelete={jest.fn()}
                         {...props}
                     />
                 </ul>
@@ -103,6 +104,7 @@ describe('MembershipApplicationCard', () => {
                             }}
                             typeTitles={typeTitles}
                             onConfirm={jest.fn()}
+                            onDelete={jest.fn()}
                         />
                     </ul>
                 </ThemeProvider>
@@ -167,6 +169,50 @@ describe('MembershipApplicationCard', () => {
 
             const button = screen.getByTestId('membership-confirm-101');
             expect(button).toHaveTextContent('Confirming');
+            expect(button).toBeDisabled();
+        });
+    });
+
+    describe('delete controls', () => {
+        const unconfirmed = { id: '101', type: 'community', status: 'unconfirmed', first_name: 'Newly', sn: 'Applied' };
+
+        it('offers Delete on an application waiting on a decision, and asks to remove it when pressed', async () => {
+            const onDelete = jest.fn();
+            setup(unconfirmed, { onDelete });
+
+            const button = screen.getByTestId('membership-delete-101');
+            expect(button).toHaveTextContent('Delete');
+            expect(button).toHaveAccessibleName('Delete the application for Newly Applied');
+
+            await userEvent.click(button);
+            expect(onDelete).toHaveBeenCalledWith(unconfirmed);
+        });
+
+        it('offers no delete on an issued account', () => {
+            setup({ id: '102', type: 'alumni', status: 'confirmed', first_name: 'Already', sn: 'Confirmed' });
+
+            expect(screen.queryByTestId('membership-delete-102')).not.toBeInTheDocument();
+        });
+
+        it('offers no delete while a confirmation is in progress', () => {
+            setup({ ...unconfirmed, id: '104', confirm_step: 1 });
+
+            expect(screen.queryByTestId('membership-delete-104')).not.toBeInTheDocument();
+        });
+
+        it('marks a deleted application and drops both of its actions', () => {
+            setup(unconfirmed, { deleted: true });
+
+            expect(screen.getByTestId('membership-deleted-101')).toHaveTextContent('Deleted');
+            expect(screen.queryByTestId('membership-delete-101')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('membership-confirm-101')).not.toBeInTheDocument();
+        });
+
+        it('shows the deleting state and disables the button while a delete is in flight', () => {
+            setup(unconfirmed, { busy: 'deleting' });
+
+            const button = screen.getByTestId('membership-delete-101');
+            expect(button).toHaveTextContent('Deleting');
             expect(button).toBeDisabled();
         });
     });

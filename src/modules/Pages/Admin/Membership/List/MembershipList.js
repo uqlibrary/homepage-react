@@ -16,7 +16,7 @@ import { breadcrumbs } from 'config/routes';
 
 import { isFrozen } from 'modules/Pages/Membership/membershipOutage';
 import { DEFAULT_PER_PAGE, SORT_NEWEST, STATUS_ALL } from '../membershipAdmin';
-import MembershipApplicationCard from './MembershipApplicationCard';
+import MembershipApplicationCard, { fullName } from './MembershipApplicationCard';
 import MembershipStatusTiles from './MembershipStatusTiles';
 import MembershipToolbar from './MembershipToolbar';
 import { default as locale } from '../membershipAdmin.locale';
@@ -71,6 +71,9 @@ export const MembershipList = ({
     // whenever a fresh page is fetched, so server truth always wins in the end.
     const [rows, setRows] = useState({});
     const [error, setError] = useState(null);
+    // The application awaiting the delete prompt, if any. Delete cannot be undone, so it is asked for before it
+    // is done rather than fired straight from the card.
+    const [pendingDelete, setPendingDelete] = useState(null);
 
     const accountTypes = useMemo(() => membershipFormData?.account_types ?? [], [membershipFormData]);
     const typeTitles = useMemo(() => typeTitlesFrom(accountTypes), [accountTypes]);
@@ -125,6 +128,17 @@ export const MembershipList = ({
         try {
             const confirmed = await actions.confirmMembership(membership);
             setRow(membership.id, { busy: null, record: confirmed });
+        } catch (failure) {
+            setRow(membership.id, { busy: null });
+            setError(messageOf(failure));
+        }
+    };
+
+    const onDelete = async membership => {
+        setRow(membership.id, { busy: 'deleting' });
+        try {
+            await actions.deleteMembership(membership.id);
+            setRow(membership.id, { busy: null, deleted: true });
         } catch (failure) {
             setRow(membership.id, { busy: null });
             setError(messageOf(failure));
@@ -247,7 +261,9 @@ export const MembershipList = ({
                                     membership={membership}
                                     typeTitles={typeTitles}
                                     busy={rows[membership.id]?.busy}
+                                    deleted={!!rows[membership.id]?.deleted}
                                     onConfirm={onConfirm}
+                                    onDelete={setPendingDelete}
                                 />
                             ))}
                         </Box>
@@ -267,6 +283,24 @@ export const MembershipList = ({
                     </>
                 )}
             </StandardCard>
+
+            {/* The delete prompt. It only ever acts on the application the admin asked to delete, and closing
+                it - by any route - clears that intent. */}
+            <ConfirmationBox
+                confirmationBoxId={strings.deleteDialog.confirmationBoxId}
+                isOpen={!!pendingDelete}
+                locale={{
+                    confirmationTitle: strings.deleteDialog.confirmationTitle,
+                    confirmationMessage: pendingDelete
+                        ? strings.deleteDialog.confirmationMessage(fullName(pendingDelete))
+                        : '',
+                    confirmButtonLabel: strings.deleteDialog.confirmButtonLabel,
+                    cancelButtonLabel: strings.deleteDialog.cancelButtonLabel,
+                }}
+                onAction={() => onDelete(pendingDelete)}
+                onCancelAction={() => setPendingDelete(null)}
+                onClose={() => setPendingDelete(null)}
+            />
 
             {/* One dialog for whatever an action failed with. It carries no cancel: there is nothing to undo,
                 only a message to read and dismiss. */}
