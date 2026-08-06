@@ -91,6 +91,7 @@ export const getFlatFacilityTypeList = facilityTypes => {
 };
 
 function filterNext7Days(departmentData) {
+    console.log('### filterNext7Days load ', JSON.parse(JSON.stringify(departmentData)));
     // Get today's date (start of day)
     const today = new Date();
     today?.setHours(0, 0, 0, 0);
@@ -128,29 +129,19 @@ function filterNext7Days(departmentData) {
 }
 
 // rewrite the hours-by-week into one long list of days
-function convertWeeksToDays(data) {
-    if (!data) {
+function convertWeeksToDays(department) {
+    console.log('### convertWeeksToDays department=', department);
+    if (!department) {
         return [];
     }
-
-    // Create a deep copy to avoid mutating the original data
-    const location = JSON.parse(JSON.stringify(data));
 
     // Define the order of days for consistent sorting
     const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    // only one of these should appear in the data - should match api HoursResource list
-    const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
-    const filteredData = {
-        ...location,
-        department: location?.departments?.find(dept => displayedDepartments?.includes(dept?.name)),
-    };
-    delete filteredData.departments;
-
-    if (filteredData?.department?.weeks && Array.isArray(filteredData?.department?.weeks)) {
+    if (department?.weeks && Array.isArray(department?.weeks)) {
         const allDays = [];
 
-        filteredData?.department?.weeks?.forEach(week => {
+        department?.weeks?.forEach(week => {
             dayOrder?.forEach(dayName => {
                 if (week[dayName]) {
                     // Add day name as a property for easier identification
@@ -163,23 +154,37 @@ function convertWeeksToDays(data) {
             });
         });
 
-        delete filteredData?.department?.weeks;
+        delete department?.weeks;
         allDays?.sort((a, b) => new Date(a?.date) - new Date(b?.date));
-        filteredData.department.days = allDays;
+        department.days = allDays;
     }
 
-    !!filteredData?.department?.days && (filteredData.department = filterNext7Days(filteredData?.department));
+    let result = department;
+    if (!!department?.days) {
+        result = filterNext7Days(department);
+    }
 
-    return filteredData;
+    console.log('### convertWeeksToDays return =', result);
+    return result;
 }
 
 export const spaceOpeningHours = (bookableSpace, weeklyHours) => {
     const details = weeklyHours?.locations?.filter(lib =>
-        lib?.departments.find(spaceOpeningHours => spaceOpeningHours?.lid === bookableSpace?.space_opening_hours_id),
+        lib?.departments.find(departments => departments?.lid === bookableSpace?.space_opening_hours_id),
     );
+    console.log('### spaceOpeningHours details=', details?.at(0));
     if (!!details) {
-        const openingDetails = convertWeeksToDays(details?.at(0));
-        return openingDetails?.department?.next7days;
+        const theLibrary = details?.at(0);
+        console.log('### spaceOpeningHours theLibrary=', theLibrary);
+        console.log('### spaceOpeningHours theLibrary?.departments=', theLibrary?.departments);
+        const department = theLibrary?.departments.filter(
+            departments => departments?.lid === bookableSpace?.space_opening_hours_id,
+        );
+        console.log('### spaceOpeningHours department=', department);
+
+        const openingDetails = convertWeeksToDays(department.at(0));
+        console.log('### spaceOpeningHours openingDetails=', openingDetails);
+        return openingDetails?.next7days;
     }
     return [];
 };

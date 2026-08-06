@@ -149,6 +149,110 @@ export default {
                 }
             ],
         }, {
+            "space_id": 176,
+            "space_uuid": "a234aa64-701d-42ec-8ba9-b9851ee422dc",
+            "space_name": "621",
+            "space_draftmode": false,
+            "space_highlighted": null,
+            "space_precise": null,
+            "space_description": null,
+            "space_photo_url": "https:\/\/app-testing.library.uq.edu.au\/file\/public\/263b90c0-7b3f-11f1-b964-6b2c7132b6c8.jpg",
+            "space_capacity": 15,
+            "space_photo_description": "Two rows of desks with computers, keyboard, mouse and office chairs. There is a wall-mounted whiteboard at the back of the room.",
+            "space_opening_hours_id": 3840,
+            "space_services_page": null,
+            "space_external_book_url": "https:\/\/uqbookit.uq.edu.au\/app\/booking-types\/77b52dde-d704-4b6d-917e-e820f7df07cb\/resources\/4facf529-093f-4271-bcbf-b0da38037bee?",
+            "created_at": "2026-07-08T00:33:27.000000Z",
+            "updated_at": "2026-08-05T03:50:58.000000Z",
+            "space_latitude": "-27.448689564873945",
+            "space_longitude": "153.027898379818",
+            "space_zlevel": 6,
+            "space_type": null,
+            "space_type_id": 2,
+            "archibus_room_id": 289,
+            "space_floor_id": 7,
+            "space_floor_name": "6",
+            "space_is_ground_floor": false,
+            "space_library_id": 4,
+            "space_library_name": "Herston Health Sciences Library",
+            "space_building_number": "910",
+            "space_building_name": "Block 6, Royal Brisbane and Women's Hospital",
+            "space_building_ground_floor_id": null,
+            "space_library_about_page_default": "https:\/\/web.library.uq.edu.au\/visit\/herston-health-sciences-library",
+            "space_library_springshare_id": 10726,
+            "space_campus_id": 4,
+            "space_campus_name": "Herston",
+            "space_campus_number": "71",
+            "facility_types": [
+                {
+                    "facility_type_id": 23,
+                    "facility_type_name": "Toilets, female"
+                },
+                {
+                    "facility_type_id": 22,
+                    "facility_type_name": "Toilets, male"
+                },
+                {
+                    "facility_type_id": 29,
+                    "facility_type_name": "Recharge Station"
+                },
+                {
+                    "facility_type_id": 31,
+                    "facility_type_name": "Self-printing & scanning"
+                },
+                {
+                    "facility_type_id": 5,
+                    "facility_type_name": "Computer"
+                },
+                {
+                    "facility_type_id": 32,
+                    "facility_type_name": "BYOD station"
+                },
+                {
+                    "facility_type_id": 33,
+                    "facility_type_name": "Client accessible power point"
+                },
+                {
+                    "facility_type_id": 34,
+                    "facility_type_name": "on-desk USB-A"
+                },
+                {
+                    "facility_type_id": 35,
+                    "facility_type_name": "Qi chargers"
+                },
+                {
+                    "facility_type_id": 36,
+                    "facility_type_name": "On-desk USB-C, Low Power "
+                },
+                {
+                    "facility_type_id": 42,
+                    "facility_type_name": "General Collections"
+                },
+                {
+                    "facility_type_id": 44,
+                    "facility_type_name": "Requested items"
+                },
+                {
+                    "facility_type_id": 45,
+                    "facility_type_name": "Lending"
+                },
+                {
+                    "facility_type_id": 46,
+                    "facility_type_name": "Return station"
+                },
+                {
+                    "facility_type_id": 10,
+                    "facility_type_name": "High noise level "
+                }
+            ],
+            "space_type_details": {
+                "space_type_id": 2,
+                "space_type_name": "Training room",
+                "space_type_description": "Room with tables and chairs for study. Available when not in use for training."
+            },
+            "space_outages": []
+        },
+            {
             space_id: 1234544,
             space_uuid: "df40_2jsf_zdk5",
             space_name: "6078",
