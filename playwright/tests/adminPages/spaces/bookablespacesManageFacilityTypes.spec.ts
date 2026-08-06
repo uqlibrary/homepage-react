@@ -453,7 +453,9 @@ test.describe('Spaces Admin - edit group dialog', () => {
         const unusedGroupEditButton = page.getByTestId('edit-group-9-button');
         await unusedGroupEditButton.click();
         await expect(dialogMessage).toBeVisible();
-        await expect(dialogMessage).not.toContainText(/This facility group's child types will be removed from \d+ Spaces?/);
+        await expect(dialogMessage).not.toContainText(
+            /This facility group's child types will be removed from \d+ Spaces?/,
+        );
         const warningUnused =
             'This facility group can be deleted - none of its child types are currently showing for any Spaces.';
         await expect(dialogMessage).toContainText(warningUnused);

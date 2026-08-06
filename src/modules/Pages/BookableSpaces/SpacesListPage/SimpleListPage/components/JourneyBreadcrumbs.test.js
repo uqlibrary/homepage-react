@@ -51,5 +51,4 @@ describe('JourneyBreadcrumbs', () => {
         expect(setSelectedSpace).toHaveBeenCalledWith(null);
         expect(navigateToView).toHaveBeenCalledWith('results', { intentId: 'quiet', spaceId: null });
     });
-
 });
