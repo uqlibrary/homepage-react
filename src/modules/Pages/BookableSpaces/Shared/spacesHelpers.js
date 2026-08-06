@@ -615,16 +615,13 @@ const getJourneyPathname = url => {
     return pathValue.replace(/\/+$/, '') || '/spaces';
 };
 
-export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
+export const serialiseJourneyUrl = ({ view, spaceId }) => {
     const url = new URL(window.location.href);
     const hashValue = url.hash || '';
     const isHashRouting = hashValue.startsWith('#/');
 
-    const buildPath = ({ nextView, nextIntentId, nextSpaceId }) => {
+    const buildPath = ({ nextView, nextSpaceId }) => {
         if (nextView === 'results') {
-            if (nextIntentId) {
-                return `/spaces/results/filters=${encodeURIComponent(String(nextIntentId))}`;
-            }
             return '/spaces/results';
         }
 
@@ -635,7 +632,7 @@ export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
         return '/spaces';
     };
 
-    const nextPath = buildPath({ nextView: view, nextIntentId: intentId, nextSpaceId: spaceId });
+    const nextPath = buildPath({ nextView: view, nextSpaceId: spaceId });
 
     if (isHashRouting) {
         const branchPrefix = url.pathname && url.pathname !== '/' ? url.pathname.replace(/\/+$/, '') : '';

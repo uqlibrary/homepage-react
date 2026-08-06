@@ -166,11 +166,28 @@ const SingleLinkCard = ({
     fillContainer,
     testId,
     onClick,
+    onNavigate,
     showH3 = null,
     followingElement,
     ariaLabel,
 }) => {
     const _showH3 = showH3 === null ? loggedIn : showH3;
+    const handleClick = e => {
+        const hasCustomHandler = typeof onNavigate === 'function' || typeof onClick === 'function';
+
+        if (hasCustomHandler) {
+            e.preventDefault();
+        }
+
+        if (typeof onNavigate === 'function') {
+            onNavigate(e);
+        }
+
+        if (typeof onClick === 'function') {
+            onClick(e);
+        }
+    };
+
     return (
         <StyledGridItem item component={'li'} xs={12} uqDsTablet={6} uqDsDesktop={4} fillContainer={fillContainer}>
             <div>
@@ -180,12 +197,7 @@ const SingleLinkCard = ({
                     to={landingUrl}
                     fillContainer={fillContainer}
                     data-testid={testId}
-                    onClick={e => {
-                        if (typeof onClick === 'function') {
-                            e.preventDefault();
-                            onClick(e);
-                        }
-                    }}
+                    onClick={handleClick}
                     aria-label={ariaLabel}
                 >
                     <div className={'panelBodyWrapper'}>
@@ -216,6 +228,7 @@ SingleLinkCard.propTypes = {
     fillContainer: PropTypes.bool,
     testId: PropTypes.string,
     onClick: PropTypes.func,
+    onNavigate: PropTypes.func,
     showH3: PropTypes.any,
     followingElement: PropTypes.any,
     ariaLabel: PropTypes.string,

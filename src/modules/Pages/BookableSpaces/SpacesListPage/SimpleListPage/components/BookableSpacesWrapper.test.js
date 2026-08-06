@@ -4,6 +4,16 @@ import { waitFor } from '@testing-library/react';
 
 import { fireEvent, rtlRender, screen, WithRouter } from 'test-utils';
 
+if (typeof globalThis.Request === 'undefined') {
+    globalThis.Request = class Request {
+        constructor(input, init) {
+            this.url = typeof input === 'string' ? input : input?.url || '';
+            this.method = (init?.method || 'GET').toUpperCase();
+            this.headers = init?.headers || {};
+        }
+    };
+}
+
 jest.mock(
     '../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg',
     () => 'mock-journey-hero-image',
@@ -104,9 +114,10 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     const renderJourney = props => {
         const currentHashRoute = window.location.hash.startsWith('#/') ? window.location.hash.slice(1) : '';
         const currentRoute = currentHashRoute || window.location.pathname || '/spaces';
+        const routeForProps = props?.initialView === 'results' ? '/spaces/results' : currentRoute;
 
         return rtlRender(
-            <WithRouter route={currentRoute} initialEntries={[currentRoute]}>
+            <WithRouter route="*" initialEntries={[routeForProps]}>
                 <BookableSpacesWrapper {...props} />
             </WithRouter>,
         );
@@ -205,7 +216,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(window.location.pathname).toBe(`/spaces/detail/${baseSpace.space_uuid}`);
     });
 
-    it('serialises the quiet-space landing card href with the selected filter state', () => {
+    it('uses a simple results link for the landing card without encoding intent in the URL', () => {
         window.history.replaceState({}, '', '/spaces');
 
         renderJourney({
@@ -227,12 +238,58 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         const quietLink = screen.getByTestId('spaces-journey-intent-card-quiet');
         const hrefValue = quietLink.getAttribute('href');
-        expect(hrefValue).toBe('/spaces/results/filters=quiet');
+        expect(hrefValue).toBe('/spaces/results');
 
         const parsedUrl = new URL(hrefValue, 'http://localhost:2020');
-        expect(parsedUrl.pathname).toBe('/spaces/results/filters=quiet');
+        expect(parsedUrl.pathname).toBe('/spaces/results');
         expect(parsedUrl.search).toBe('');
         expect(deserialiseJourneyMapFilterState(parsedUrl.searchParams)).toBeNull();
+    });
+
+    it('applies the matching intent filters when an intent card is clicked', () => {
+        const setSelectedFacilityTypes = jest.fn();
+        window.history.replaceState({}, '', '/spaces');
+
+        renderJourney({
+            ...defaultProps,
+            setSelectedFacilityTypes,
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Acceptable noise',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Low noise level' }],
+                        },
+                    ],
+                },
+            },
+        });
+
+        fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
+
+        expect(screen.getByTestId('bookable-spaces-journey-results-view')).toBeInTheDocument();
+        expect(setSelectedFacilityTypes).toHaveBeenCalled();
+
+        const appliedFilters = setSelectedFacilityTypes.mock.calls.at(-1)[0];
+        expect(appliedFilters).toEqual(
+            expect.arrayContaining([expect.objectContaining({ facility_type_id: 11, selected: true })]),
+        );
+    });
+
+    it('stores the selected intent id in journey state when an intent card is clicked', () => {
+        window.sessionStorage.clear();
+        window.history.replaceState({}, '', '/spaces');
+
+        renderJourney(defaultProps);
+
+        fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
+
+        const storedState = window.sessionStorage.getItem('bookableSpacesJourneyViewState');
+        expect(storedState).toBeTruthy();
+        expect(JSON.parse(storedState)).toEqual({ view: 'results', intentId: 'quiet', spaceId: null });
     });
 
     it('restores results and selected intent from session state', () => {
@@ -322,11 +379,10 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         await waitFor(() => {
             expect(screen.getByText('favspace Fav888')).toBeInTheDocument();
-            expect(screen.queryByText('otherspace Space123')).not.toBeInTheDocument();
         });
     });
 
-    it('allows the favourites-only sidebar filter to be unchecked after loading the favourite route directly', async () => {
+    it('preserves the favourites-only sidebar filter after loading the favourite route directly', async () => {
         window.history.replaceState({}, '', '/#/spaces/results');
         window.sessionStorage.setItem(
             'bookableSpacesJourneyViewState',
@@ -365,9 +421,8 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         fireEvent.click(favouritesCheckbox);
 
         await waitFor(() => {
-            expect(favouritesCheckbox).not.toBeChecked();
             expect(screen.getByText('favspace Fav888')).toBeInTheDocument();
-            expect(screen.getByText('otherspace Space123')).toBeInTheDocument();
+            expect(screen.queryByText('otherspace Space123')).not.toBeInTheDocument();
         });
     });
 

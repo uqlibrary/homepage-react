@@ -595,8 +595,6 @@ export const BookableSpacesList = ({
         setSelectedFacilityTypes(resetFacilityTypes);
         setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
         setShowFavouriteSpacesOnly(false);
-        setSelectedLibrary(ALL_LIBRARIES_ID);
-        setSelectedCampus(ALL_CAMPUSES_ID);
 
         if (typeof window !== 'undefined') {
             window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);

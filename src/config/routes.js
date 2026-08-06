@@ -173,12 +173,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: 'Library spaces',
         },
         {
-            path: '/spaces/results/:intentToken',
-            element: <components.BookableSpacesSimpleListPage />,
-            exact: true,
-            pageTitle: 'Library spaces',
-        },
-        {
             path: '/spaces/detail/:spaceId',
             element: <components.BookableSpacesDetailPage />,
             exact: true,

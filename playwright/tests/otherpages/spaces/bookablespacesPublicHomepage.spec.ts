@@ -130,16 +130,14 @@ test.describe('Spaces Homepage', () => {
         await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(10); // first page of spaces is present
     });
 
-    test('intent click preselects filters and copied URL keeps preselection in another browser', async ({
-        page,
-        browser,
-    }) => {
+    test('intent click preselects filters in the current session but not via copied URL', async ({ page, browser }) => {
         await page.goto('/spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
         await page.getByTestId('spaces-journey-intent-card-postgrad').click();
-        await expect(page).toHaveURL(/\/spaces\/results\/filters=postgrad$/);
+        await expect(page).toHaveURL(/\/spaces\/results$/);
         await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
+
         const showRoomFeaturesOnFirstPage = page.getByRole('button', { name: /Show Room features filter options/i });
         if (await showRoomFeaturesOnFirstPage.count()) {
             await showRoomFeaturesOnFirstPage.click();
@@ -152,22 +150,26 @@ test.describe('Spaces Homepage', () => {
 
         await secondPage.goto(copiedUrl);
         await secondPage.setViewportSize({ width: 1300, height: 1000 });
-        await expect(secondPage).toHaveURL(/\/spaces\/results\/filters=postgrad$/);
+        await expect(secondPage).toHaveURL(/\/spaces\/results$/);
         await expect(secondPage.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
+
         const showRoomFeaturesOnSecondPage = secondPage.getByRole('button', {
             name: /Show Room features filter options/i,
         });
         if (await showRoomFeaturesOnSecondPage.count()) {
             await showRoomFeaturesOnSecondPage.click();
         }
-        await expect(secondPage.getByRole('checkbox', { name: 'Postgraduate only space' })).toBeChecked();
+        await expect(secondPage.getByRole('checkbox', { name: 'Postgraduate only space' })).not.toBeChecked();
 
         await secondContext.close();
     });
 
-    test('intent filter from URL can be deselected after refresh', async ({ page }) => {
-        await page.goto('/spaces/results/filters=postgrad');
+    test('intent selection persists across refresh in the same session and can be deselected', async ({ page }) => {
+        await page.goto('/spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
+
+        await page.getByTestId('spaces-journey-intent-card-postgrad').click();
+        await expect(page).toHaveURL(/\/spaces\/results$/);
         await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
 
         const showRoomFeaturesBeforeReload = page.getByRole('button', { name: /Show Room features filter options/i });
@@ -178,7 +180,7 @@ test.describe('Spaces Homepage', () => {
         await expect(postgradCheckbox).toBeChecked();
 
         await page.reload();
-        await expect(page).toHaveURL(/\/spaces\/results\/filters=postgrad$/);
+        await expect(page).toHaveURL(/\/spaces\/results$/);
         await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
 
         const showRoomFeaturesAfterReload = page.getByRole('button', { name: /Show Room features filter options/i });
