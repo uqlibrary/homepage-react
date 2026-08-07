@@ -19,13 +19,7 @@ export const buildJourneyBreadcrumbHtml = items =>
         return `<li class="uq-breadcrumb__item" data-journey-breadcrumb="true"><span class="uq-breadcrumb__link">${item.label}</span></li>`;
     });
 
-export const buildJourneyBreadcrumbItems = ({
-    view,
-    selectedIntent,
-    selectedIntentId,
-    navigateToView,
-    setSelectedSpace,
-}) => {
+export const buildJourneyBreadcrumbItems = ({ view, selectedIntentId, navigateToView, setSelectedSpace }) => {
     const buildEntry = (label, nextView, intentId, spaceId, onClick) => ({
         label,
         href: serialiseJourneyUrl({ view: nextView, intentId, spaceId }),
@@ -50,13 +44,13 @@ export const buildJourneyBreadcrumbItems = ({
     // );
 
     if (view === 'results') {
-        items.push({ label: selectedIntent?.label || 'Results' });
+        items.push({ label: 'Results' });
         return items;
     }
 
     if (view === 'details') {
         items.push(
-            buildEntry(selectedIntent?.label || 'Results', 'results', selectedIntentId, null, () => {
+            buildEntry('Results', 'results', selectedIntentId, null, () => {
                 setSelectedSpace(null);
                 navigateToView('results', { intentId: selectedIntentId, spaceId: null });
             }),

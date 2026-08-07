@@ -932,9 +932,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('Available Spaces (8)');
+            await expect(spacesCount).toContainText('Available Spaces (4)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // update maximum to "no more than 20 people"
@@ -948,9 +948,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('Available Spaces (8)');
+            await expect(spacesCount).toContainText('Available Spaces (2)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                2 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // clear the capacity filters by unchecking "is bookable"
@@ -1009,9 +1009,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('Available Spaces (8)');
+            await expect(spacesCount).toContainText('Available Spaces (4)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // update maximum to "no more than 20 people"
@@ -1025,9 +1025,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('Available Spaces (8)');
+            await expect(spacesCount).toContainText('Available Spaces (2)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                2 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // clear the capacity filters
@@ -1639,14 +1639,14 @@ test.describe('Spaces', () => {
 
             await expect(panelLabel(PACE)).toContainText('Dutton Park Health Sciences');
             await expect(spacePanelWrapper).toHaveCount(1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
-            await expect(librarySelector).not.toBeVisible();
+            await expect(librarySelector).toContainText('All libraries');
 
             // CHANGE CAMPUS TO GATTON
             await changeCampusButton.click(); // open drop down
             await campusChooser(CAMPUS_ID_GATTON).click(); // choose gatton
             await expect(panelLabel(GATTON_PANEL_ONE)).toContainText('J.K. Murray Library');
             await expect(spacePanelWrapper).toHaveCount(4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
-            await expect(librarySelector).not.toBeVisible();
+            await expect(librarySelector).toContainText('All libraries');
 
             // CHANGE CAMPUS TO ST LUCIA
             await changeCampusButton.click(); // open drop down
@@ -1664,14 +1664,14 @@ test.describe('Spaces', () => {
             await campusChooser(CAMPUS_ID_DUTTON_PARK).click(); // choose dutton park
             await expect(panelLabel(PACE)).toContainText('Dutton Park Health Sciences');
             await expect(spacePanelWrapper).toHaveCount(1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
-            await expect(librarySelector).not.toBeVisible();
+            await expect(librarySelector).toContainText('All libraries');
 
             // CHANGE CAMPUS TO GATTON
             await changeCampusButton.click(); // open drop down
             await campusChooser(CAMPUS_ID_GATTON).click(); // choose gatton
             await expect(panelLabel(GATTON_PANEL_ONE)).toContainText('J.K. Murray Library');
             await expect(spacePanelWrapper).toHaveCount(4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
-            await expect(librarySelector).not.toBeVisible();
+            await expect(librarySelector).toContainText('All libraries');
         });
     });
     test.describe('Spaces favourites', () => {

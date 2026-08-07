@@ -37,6 +37,7 @@ import {
     FILTER_DISPLAY_ON_BOTH,
     FILTER_DISPLAY_ON_SIMPLE,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
+    getActiveSelectedFacilityTypes,
     getFlatFacilityTypeList,
     isBookable,
     JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
@@ -186,9 +187,7 @@ export const buildJourneyNavigationUrl = ({
     const hashValue = url.hash || '';
     const isHashRouting = hashValue.startsWith('#/');
 
-    const hasSelectedFacilityFilters = (selectedFacilityTypes || []).some(
-        filter => filter?.selected || filter?.unselected,
-    );
+    const hasSelectedFacilityFilters = (selectedFacilityTypes || []).some(filter => filter?.selected);
     const normalizedSelectedCampus = Number(selectedCampus);
     const normalizedSelectedLibrary = Number(selectedLibrary);
     const hasActiveCampusSelection = Number.isFinite(normalizedSelectedCampus) && normalizedSelectedCampus > 1;
@@ -1000,6 +999,22 @@ export const BookableSpacesList = ({
     const hasSkippedInitialLiveFilterPersistRef = React.useRef(false);
     const shouldSkipInitialFilterBootstrapRef = React.useRef(false);
 
+    const getAppliedFacilityFilters = React.useCallback(() => {
+        return (selectedFacilityTypes || []).reduce((acc, filter) => {
+            if (!filter?.selected) {
+                return acc;
+            }
+
+            acc.push({
+                facility_type_group_id: filter?.facility_type_group_id,
+                facility_type_id: filter?.facility_type_id,
+                selected: true,
+                facility_special_action: filter?.facility_special_action,
+            });
+            return acc;
+        }, []);
+    }, [selectedFacilityTypes]);
+
     React.useEffect(() => {
         if (hasHydratedMapFilterStateRef.current || typeof window === 'undefined') {
             return;
@@ -1018,8 +1033,12 @@ export const BookableSpacesList = ({
 
         try {
             const parsedState = JSON.parse(rawState);
-            if (Array.isArray(parsedState?.selectedFacilityTypes)) {
-                setSelectedFacilityTypes(parsedState.selectedFacilityTypes);
+            const appliedFacilityFilters = Array.isArray(parsedState?.selectedFacilityTypes)
+                ? parsedState.selectedFacilityTypes.filter(filter => filter?.selected)
+                : [];
+
+            if (appliedFacilityFilters.length > 0) {
+                setSelectedFacilityTypes(appliedFacilityFilters);
             }
             if (parsedState?.selectedCampus !== null && parsedState?.selectedCampus !== undefined) {
                 setSelectedCampus(Number(parsedState.selectedCampus));
@@ -1072,8 +1091,12 @@ export const BookableSpacesList = ({
             const parsedState = JSON.parse(rawState);
             shouldSkipInitialFilterBootstrapRef.current = true;
 
-            if (Array.isArray(parsedState?.selectedFacilityTypes)) {
-                setSelectedFacilityTypes(parsedState.selectedFacilityTypes);
+            const appliedFacilityFilters = Array.isArray(parsedState?.selectedFacilityTypes)
+                ? parsedState.selectedFacilityTypes.filter(filter => filter?.selected)
+                : [];
+
+            if (appliedFacilityFilters.length > 0) {
+                setSelectedFacilityTypes(appliedFacilityFilters);
             }
             if (parsedState?.selectedCampus !== null && parsedState?.selectedCampus !== undefined) {
                 setSelectedCampus(Number(parsedState.selectedCampus));
@@ -1142,16 +1165,46 @@ export const BookableSpacesList = ({
             return;
         }
 
+        const appliedFacilityFilters = getAppliedFacilityFilters();
+        const normalizedCampusId = Number(selectedCampus);
+        const normalizedLibraryId = Number(selectedLibrary);
+        const hasAppliedCampusFilter = Number.isFinite(normalizedCampusId) && normalizedCampusId !== ALL_CAMPUSES_ID;
+        const hasAppliedLibraryFilter =
+            Number.isFinite(normalizedLibraryId) && normalizedLibraryId !== ALL_LIBRARIES_ID;
+
+        const hasCapacityRange = Array.isArray(capacityFilterValue) && capacityFilterValue.length >= 2;
+        const hasAppliedCapacityFilter =
+            hasCapacityRange &&
+            (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
+                Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
+
+        const hasAppliedFavouriteFilter = Boolean(showFavouriteSpacesOnly);
+
         const statePayload = {
-            selectedFacilityTypes: selectedFacilityTypes || [],
-            selectedCampus,
-            selectedLibrary,
-            capacityFilterValue: Array.isArray(capacityFilterValue) ? capacityFilterValue : [],
-            showFavouriteSpacesOnly: Boolean(showFavouriteSpacesOnly),
+            ...(appliedFacilityFilters.length > 0 ? { selectedFacilityTypes: appliedFacilityFilters } : {}),
+            ...(hasAppliedCampusFilter ? { selectedCampus: normalizedCampusId } : {}),
+            ...(hasAppliedLibraryFilter ? { selectedLibrary: normalizedLibraryId } : {}),
+            ...(hasAppliedCapacityFilter ? { capacityFilterValue } : {}),
+            ...(hasAppliedFavouriteFilter ? { showFavouriteSpacesOnly: true } : {}),
         };
 
+        if (Object.keys(statePayload).length === 0) {
+            window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            return;
+        }
+
         window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(statePayload));
-    }, [capacityFilterValue, selectedCampus, selectedFacilityTypes, selectedLibrary, showFavouriteSpacesOnly]);
+    }, [
+        ALL_CAMPUSES_ID,
+        ALL_LIBRARIES_ID,
+        capacityFilterValue,
+        getAppliedFacilityFilters,
+        maximumSpaceCapacity,
+        minimumSpaceCapacity,
+        selectedCampus,
+        selectedLibrary,
+        showFavouriteSpacesOnly,
+    ]);
 
     const toggleFilterPopupVisibility = () => {
         setShowFilterSelectorPopup(!showFilterSelectorPopup);
@@ -1282,8 +1335,7 @@ export const BookableSpacesList = ({
     };
 
     const activeFilterCount =
-        (selectedFacilityTypes?.filter(ft => !!ft?.selected || !!ft?.unselected)?.length || 0) +
-        (showFavouriteSpacesOnly ? 1 : 0);
+        (getActiveSelectedFacilityTypes(selectedFacilityTypes)?.length || 0) + (showFavouriteSpacesOnly ? 1 : 0);
     const hasActiveFilters = (activeFilterCount || 0) > 0;
     const mapViewToggleLabel = hasActiveFilters ? 'Hide map' : 'Help me find a space';
     const highlightedSpace = React.useMemo(() => {

@@ -546,13 +546,6 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             {
                 facility_type_id: 11,
                 selected: true,
-                unselected: false,
-                facility_special_action: null,
-            },
-            {
-                facility_type_id: 12,
-                selected: false,
-                unselected: true,
                 facility_special_action: null,
             },
         ]);

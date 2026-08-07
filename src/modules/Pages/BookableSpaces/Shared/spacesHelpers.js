@@ -193,6 +193,19 @@ export const isBookable = space => {
     return space?.space_external_book_url?.startsWith('http');
 };
 
+export const getActiveSelectedFacilityTypes = selectedFacilityTypes => {
+    const selectedFilters = (selectedFacilityTypes || []).filter(ft => ft?.selected);
+    const hasBookableFilter = selectedFilters.some(ft => Number(ft?.facility_type_id) === FILTER_BOOKABLE_TYPE_ID);
+
+    return selectedFilters.filter(filter => {
+        const facilityTypeId = Number(filter?.facility_type_id);
+        if (facilityTypeId === FILTER_CAPACITY_TYPE_ID && hasBookableFilter) {
+            return false;
+        }
+        return true;
+    });
+};
+
 export const getSpaceHoursStatus = (space, weeklyHours) => {
     const days = spaceOpeningHours(space, weeklyHours);
     if (!days || days.length === 0) return null;
@@ -475,19 +488,8 @@ export const serialiseJourneyMapFilterState = ({
         return acc;
     }, []);
 
-    const unselectedFacilityIds = (selectedFacilityTypes || []).reduce((acc, filter) => {
-        const facilityTypeId = filter?.facility_type_id;
-        if (!facilityTypeId || !filter?.unselected) {
-            return acc;
-        }
-
-        acc.push(Number(facilityTypeId));
-        return acc;
-    }, []);
-
     const serialised = {
-        selectedFacilityTypes: [...new Set([...selectedFacilityIds, ...unselectedFacilityIds])],
-        ...(unselectedFacilityIds.length > 0 ? { unselectedFacilityTypes: unselectedFacilityIds } : {}),
+        selectedFacilityTypes: [...new Set(selectedFacilityIds)],
         ...(selectedCampus !== null && selectedCampus !== undefined ? { selectedCampus } : {}),
         ...(selectedLibrary !== null && selectedLibrary !== undefined ? { selectedLibrary } : {}),
         ...(Array.isArray(capacityFilterValue) && capacityFilterValue.length > 0 ? { capacityFilterValue } : {}),
@@ -555,7 +557,7 @@ export const deserialiseJourneyMapFilterState = searchParams => {
                 }
 
                 const facilityTypeId = filter?.facility_type_id;
-                if (!facilityTypeId) {
+                if (!facilityTypeId || filter?.selected === false) {
                     return acc;
                 }
 
@@ -583,14 +585,18 @@ export const deserialiseJourneyMapFilterState = searchParams => {
             }, []),
         );
 
-        const parsedFacilityTypes = Array.from(new Set([...selectedFacilityIds, ...unselectedFacilityIds])).map(
-            facilityTypeId => ({
+        const parsedFacilityTypes = Array.from(new Set([...selectedFacilityIds])).reduce((acc, facilityTypeId) => {
+            if (unselectedFacilityIds.has(facilityTypeId)) {
+                return acc;
+            }
+
+            acc.push({
                 facility_type_id: facilityTypeId,
-                selected: selectedFacilityIds.has(facilityTypeId) && !unselectedFacilityIds.has(facilityTypeId),
-                unselected: unselectedFacilityIds.has(facilityTypeId),
+                selected: true,
                 facility_special_action: null,
-            }),
-        );
+            });
+            return acc;
+        }, []);
 
         return {
             selectedFacilityTypes: parsedFacilityTypes,
