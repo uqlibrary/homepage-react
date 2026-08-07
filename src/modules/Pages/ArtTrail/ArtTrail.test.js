@@ -1,18 +1,18 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import ArtTrailLanding from './ArtTrailLanding';
+import ArtTrail from './ArtTrail';
 
-describe('ArtTrailLanding', () => {
+describe('ArtTrail', () => {
     it('renders the blank standalone page', () => {
-        render(<ArtTrailLanding />);
+        render(<ArtTrail />);
 
         expect(screen.getByTestId('art-trail-page')).toBeInTheDocument();
         expect(screen.getByRole('heading', { name: 'Art Trail' })).toBeInTheDocument();
     });
 
     it('sets the document title, since it carries no shared chrome to do so', () => {
-        render(<ArtTrailLanding />);
+        render(<ArtTrail />);
 
         expect(document.title).toBe('Art Trail');
     });

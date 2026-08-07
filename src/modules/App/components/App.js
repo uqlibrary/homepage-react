@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Routes, useLocation } from 'react-router';
 import { routes } from 'config';
-import { pathConfig } from 'config/pathConfig';
 import browserUpdate from 'browser-update';
 import { AccountContext } from 'context';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -30,11 +29,9 @@ const isAdminPage = () => {
     return window.location.pathname.startsWith('/admin/');
 };
 
-// Sections that carry their own look and feel and render without the shared Library chrome (header, footer,
-// alerts). They opt in here by path prefix; add a prefix to bring a whole new standalone section in.
-export const STANDALONE_ROUTE_PREFIXES = [pathConfig.artTrail];
-
-export const isStandaloneRoute = pathname => STANDALONE_ROUTE_PREFIXES.some(prefix => pathname.startsWith(prefix));
+const isStandaloneRoute = (pathname, routesConfig = []) => {
+    return routesConfig.some(route => route.standalone && pathname.includes(route.path));
+};
 
 export const App = ({ account, actions }) => {
     const location = useLocation();
@@ -70,7 +67,7 @@ export const App = ({ account, actions }) => {
     );
 
     // A standalone section brings its own look and feel, so it is rendered without the shared chrome.
-    if (isStandaloneRoute(location.pathname)) {
+    if (isStandaloneRoute(location.pathname, routesConfig)) {
         return <div data-testid="standalone-layout">{routedContent}</div>;
     }
 
