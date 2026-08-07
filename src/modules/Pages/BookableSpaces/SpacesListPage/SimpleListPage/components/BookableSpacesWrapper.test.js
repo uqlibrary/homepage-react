@@ -210,7 +210,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         renderJourney(defaultProps);
 
         fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
-        expect(window.location.pathname).toBe('/spaces/results/filters=quiet');
+        expect(window.location.pathname).toBe('/spaces/results/');
 
         fireEvent.click(screen.getByTestId('spaces-result-list-item-101'));
         expect(window.location.pathname).toBe(`/spaces/detail/${baseSpace.space_uuid}`);
@@ -331,22 +331,6 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             expect(screen.getByText(/space details/i)).toBeInTheDocument();
             expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
         });
-    });
-
-    it('restores results from a path-based hash URL when running under hash routing', () => {
-        window.history.replaceState({}, '', '/#/spaces/results/filters=quiet');
-
-        const parsedState = parseJourneyStateFromUrl([{ id: 'quiet' }]);
-
-        expect(parsedState).toEqual({ view: 'results', intentId: 'quiet', spaceId: null });
-    });
-
-    it('treats the favourite intent as a valid journey intent when parsing direct URLs', () => {
-        window.history.replaceState({}, '', '/#/spaces/results/filters=favourite');
-
-        const parsedState = parseJourneyStateFromUrl([]);
-
-        expect(parsedState).toEqual({ view: 'results', intentId: 'favourite', spaceId: null });
     });
 
     it('restores the favourites-only filter when loading the favourite route directly', async () => {

@@ -583,6 +583,7 @@ export const BookableSpacesList = ({
     const minimumSpaceCapacity = 1;
     const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
     const [maximumSpaceCapacity, setMaximumSpaceCapacity] = React.useState(50);
+    const JOURNEY_VIEW_STATE_STORAGE_KEY = 'bookableSpacesJourneyViewState';
 
     const resetAllSpaceFilters = useCallback(() => {
         const resetFacilityTypes = (selectedFacilityTypes || []).map(filter => ({
@@ -597,6 +598,10 @@ export const BookableSpacesList = ({
 
         if (typeof window !== 'undefined') {
             window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            window.sessionStorage.setItem(
+                JOURNEY_VIEW_STATE_STORAGE_KEY,
+                JSON.stringify({ view: 'results', intentId: null, spaceId: null }),
+            );
         }
     }, [maximumSpaceCapacity, minimumSpaceCapacity, selectedFacilityTypes, setSelectedFacilityTypes]);
 
@@ -994,10 +999,7 @@ export const BookableSpacesList = ({
         [bookableSpacesRoomList, facilityTypeList, getFilteredFacilityTypeList],
     );
 
-    const hasHydratedMapFilterStateRef = React.useRef(false);
-    const hasHydratedLiveFilterStateRef = React.useRef(false);
-    const hasSkippedInitialLiveFilterPersistRef = React.useRef(false);
-    const shouldSkipInitialFilterBootstrapRef = React.useRef(false);
+    const hasHydratedFilterStateRef = React.useRef(false);
 
     const getAppliedFacilityFilters = React.useCallback(() => {
         return (selectedFacilityTypes || []).reduce((acc, filter) => {
@@ -1015,14 +1017,76 @@ export const BookableSpacesList = ({
         }, []);
     }, [selectedFacilityTypes]);
 
+    const persistLiveFilterState = React.useCallback(
+        (nextSelectedFacilityTypes, nextSelectedCampus = selectedCampus, nextSelectedLibrary = selectedLibrary) => {
+            if (typeof window === 'undefined' || !window.sessionStorage) {
+                return;
+            }
+
+            const appliedFacilityFilters = (nextSelectedFacilityTypes || []).reduce((acc, filter) => {
+                if (!filter?.selected) {
+                    return acc;
+                }
+
+                acc.push({
+                    facility_type_group_id: filter?.facility_type_group_id,
+                    facility_type_id: filter?.facility_type_id,
+                    selected: true,
+                    facility_special_action: filter?.facility_special_action,
+                });
+                return acc;
+            }, []);
+
+            const normalizedCampusId = Number(nextSelectedCampus);
+            const normalizedLibraryId = Number(nextSelectedLibrary);
+            const hasAppliedCampusFilter =
+                Number.isFinite(normalizedCampusId) && normalizedCampusId !== ALL_CAMPUSES_ID;
+            const hasAppliedLibraryFilter =
+                Number.isFinite(normalizedLibraryId) && normalizedLibraryId !== ALL_LIBRARIES_ID;
+
+            const hasCapacityRange = Array.isArray(capacityFilterValue) && capacityFilterValue.length >= 2;
+            const hasAppliedCapacityFilter =
+                hasCapacityRange &&
+                (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
+                    Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
+
+            const hasAppliedFavouriteFilter = Boolean(showFavouriteSpacesOnly);
+
+            const statePayload = {
+                ...(appliedFacilityFilters.length > 0 ? { selectedFacilityTypes: appliedFacilityFilters } : {}),
+                ...(hasAppliedCampusFilter ? { selectedCampus: normalizedCampusId } : {}),
+                ...(hasAppliedLibraryFilter ? { selectedLibrary: normalizedLibraryId } : {}),
+                ...(hasAppliedCapacityFilter ? { capacityFilterValue } : {}),
+                ...(hasAppliedFavouriteFilter ? { showFavouriteSpacesOnly: true } : {}),
+            };
+
+            if (Object.keys(statePayload).length === 0) {
+                window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+                return;
+            }
+
+            window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(statePayload));
+        },
+        [
+            ALL_CAMPUSES_ID,
+            ALL_LIBRARIES_ID,
+            capacityFilterValue,
+            maximumSpaceCapacity,
+            minimumSpaceCapacity,
+            selectedCampus,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
+
     React.useEffect(() => {
-        if (hasHydratedMapFilterStateRef.current || typeof window === 'undefined') {
+        if (hasHydratedFilterStateRef.current || typeof window === 'undefined' || !window.sessionStorage) {
             return;
         }
 
         const rawState = window.sessionStorage?.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
         if (!rawState) {
-            hasHydratedMapFilterStateRef.current = true;
+            hasHydratedFilterStateRef.current = true;
             return;
         }
 
@@ -1033,6 +1097,7 @@ export const BookableSpacesList = ({
 
         try {
             const parsedState = JSON.parse(rawState);
+
             const appliedFacilityFilters = Array.isArray(parsedState?.selectedFacilityTypes)
                 ? parsedState.selectedFacilityTypes.filter(filter => filter?.selected)
                 : [];
@@ -1053,7 +1118,7 @@ export const BookableSpacesList = ({
         } catch (error) {
             // Ignore malformed state and continue with defaults.
         } finally {
-            hasHydratedMapFilterStateRef.current = true;
+            hasHydratedFilterStateRef.current = true;
         }
     }, [
         filteredFacilityTypeList,
@@ -1065,142 +1130,15 @@ export const BookableSpacesList = ({
     ]);
 
     React.useEffect(() => {
-        if (hasHydratedLiveFilterStateRef.current || typeof window === 'undefined' || !window.sessionStorage) {
+        if (!hasHydratedFilterStateRef.current || typeof window === 'undefined' || !window.sessionStorage) {
             return;
         }
 
-        const currentRoutePath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-        const isResultsRoute =
-            currentRoutePath.includes('/spaces/results') ||
-            currentRoutePath.includes('#/spaces/results') ||
-            currentRoutePath.includes('/spaces/mapresults') ||
-            currentRoutePath.includes('#/spaces/mapresults');
-
-        if (!isResultsRoute) {
-            hasHydratedLiveFilterStateRef.current = true;
-            return;
-        }
-
-        const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
-        if (!rawState) {
-            hasHydratedLiveFilterStateRef.current = true;
-            return;
-        }
-
-        try {
-            const parsedState = JSON.parse(rawState);
-            shouldSkipInitialFilterBootstrapRef.current = true;
-
-            const appliedFacilityFilters = Array.isArray(parsedState?.selectedFacilityTypes)
-                ? parsedState.selectedFacilityTypes.filter(filter => filter?.selected)
-                : [];
-
-            if (appliedFacilityFilters.length > 0) {
-                setSelectedFacilityTypes(appliedFacilityFilters);
-            }
-            if (parsedState?.selectedCampus !== null && parsedState?.selectedCampus !== undefined) {
-                setSelectedCampus(Number(parsedState.selectedCampus));
-            }
-            if (parsedState?.selectedLibrary !== null && parsedState?.selectedLibrary !== undefined) {
-                setSelectedLibrary(Number(parsedState.selectedLibrary));
-            }
-            if (Array.isArray(parsedState?.capacityFilterValue) && parsedState.capacityFilterValue.length > 0) {
-                setCapacityFilterValue(parsedState.capacityFilterValue);
-            }
-            setShowFavouriteSpacesOnly(parsedState?.showFavouriteSpacesOnly === true);
-        } catch (error) {
-            // Ignore malformed state and continue with defaults.
-        } finally {
-            hasHydratedLiveFilterStateRef.current = true;
-        }
+        persistLiveFilterState(getAppliedFacilityFilters(), selectedCampus, selectedLibrary);
     }, [
-        setCapacityFilterValue,
-        setSelectedCampus,
-        setSelectedFacilityTypes,
-        setSelectedLibrary,
-        setShowFavouriteSpacesOnly,
-    ]);
-
-    React.useEffect(() => {
-        if (shouldSkipInitialFilterBootstrapRef.current) {
-            return;
-        }
-
-        if (typeof window !== 'undefined' && window.sessionStorage?.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)) {
-            return;
-        }
-
-        if (!!selectedFacilityTypes?.length || !filteredFacilityTypeList?.data?.facility_type_groups?.length) {
-            return;
-        }
-        const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
-        const newFilters = flatFacilityTypeList?.map(facilityType => ({
-            facility_type_group_id: facilityType?.facility_type_group_id,
-            facility_type_id: facilityType?.facility_type_id,
-            selected: false,
-            unselected: false,
-            facility_special_action: facilityType?.facility_special_action,
-        }));
-        setSelectedFacilityTypes(newFilters);
-    }, [filteredFacilityTypeList, selectedFacilityTypes, setSelectedFacilityTypes]);
-
-    React.useEffect(() => {
-        if (typeof window === 'undefined' || !window.sessionStorage) {
-            return;
-        }
-
-        const currentRoutePath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-        const isResultsRoute =
-            currentRoutePath.includes('/spaces/results') ||
-            currentRoutePath.includes('#/spaces/results') ||
-            currentRoutePath.includes('/spaces/mapresults') ||
-            currentRoutePath.includes('#/spaces/mapresults');
-
-        if (!isResultsRoute) {
-            return;
-        }
-
-        if (!hasSkippedInitialLiveFilterPersistRef.current) {
-            hasSkippedInitialLiveFilterPersistRef.current = true;
-            return;
-        }
-
-        const appliedFacilityFilters = getAppliedFacilityFilters();
-        const normalizedCampusId = Number(selectedCampus);
-        const normalizedLibraryId = Number(selectedLibrary);
-        const hasAppliedCampusFilter = Number.isFinite(normalizedCampusId) && normalizedCampusId !== ALL_CAMPUSES_ID;
-        const hasAppliedLibraryFilter =
-            Number.isFinite(normalizedLibraryId) && normalizedLibraryId !== ALL_LIBRARIES_ID;
-
-        const hasCapacityRange = Array.isArray(capacityFilterValue) && capacityFilterValue.length >= 2;
-        const hasAppliedCapacityFilter =
-            hasCapacityRange &&
-            (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
-                Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
-
-        const hasAppliedFavouriteFilter = Boolean(showFavouriteSpacesOnly);
-
-        const statePayload = {
-            ...(appliedFacilityFilters.length > 0 ? { selectedFacilityTypes: appliedFacilityFilters } : {}),
-            ...(hasAppliedCampusFilter ? { selectedCampus: normalizedCampusId } : {}),
-            ...(hasAppliedLibraryFilter ? { selectedLibrary: normalizedLibraryId } : {}),
-            ...(hasAppliedCapacityFilter ? { capacityFilterValue } : {}),
-            ...(hasAppliedFavouriteFilter ? { showFavouriteSpacesOnly: true } : {}),
-        };
-
-        if (Object.keys(statePayload).length === 0) {
-            window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
-            return;
-        }
-
-        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(statePayload));
-    }, [
-        ALL_CAMPUSES_ID,
-        ALL_LIBRARIES_ID,
         capacityFilterValue,
         getAppliedFacilityFilters,
-        maximumSpaceCapacity,
-        minimumSpaceCapacity,
+        persistLiveFilterState,
         selectedCampus,
         selectedLibrary,
         showFavouriteSpacesOnly,
