@@ -492,6 +492,13 @@ const BookableSpacesWrapper = ({
     );
 
     const goToLegacyBrowse = () => {
+        if (typeof window !== 'undefined' && window.sessionStorage) {
+            window.sessionStorage.setItem(
+                JOURNEY_VIEW_STATE_STORAGE_KEY,
+                JSON.stringify({ view: 'results', intentId: null, spaceId: null }),
+            );
+        }
+
         const nextUrl = buildLegacyBrowseNavigationUrl({
             currentUrl: window.location.href,
             selectedFacilityTypes,
