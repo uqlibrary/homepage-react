@@ -517,7 +517,28 @@ export const SidebarFilters = ({
         !!topOfSidebar && topOfSidebar?.focus();
     };
 
+    const clearJourneyIntentId = () => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return;
+        }
+
+        try {
+            const rawJourneyState = window.sessionStorage.getItem('bookableSpacesJourneyViewState');
+            const parsedJourneyState = rawJourneyState ? JSON.parse(rawJourneyState) : {};
+            window.sessionStorage.setItem(
+                'bookableSpacesJourneyViewState',
+                JSON.stringify({
+                    ...parsedJourneyState,
+                    intentId: null,
+                }),
+            );
+        } catch {
+            // Ignore malformed session state.
+        }
+    };
+
     const clearSpecialFilter = (facilityTypeId, facilitySpecialAction) => {
+        clearJourneyIntentId();
         showHideActiveFilterListItems(facilityTypeId, false);
 
         setFilters(facilityTypeId, false, false, facilitySpecialAction);
@@ -526,6 +547,7 @@ export const SidebarFilters = ({
     };
 
     const handleFilterSelection = (isChecked, facilityType) => {
+        clearJourneyIntentId();
         const facilityTypeId = facilityType?.facility_type_id;
         const facilitySpecialAction = facilityType?.facility_special_action;
         if (!isChecked && isSameFacilityTypeId(facilityType?.facility_type_id, FILTER_BOOKABLE_TYPE_ID)) {
@@ -559,6 +581,7 @@ export const SidebarFilters = ({
     };
 
     const handleCapacityFilterChange = (e, newValue, id = null) => {
+        clearJourneyIntentId();
         setCapacityFilterValue(newValue);
 
         // we have to pass the id directly on the Slider, but we can get it from the field for the 2 Text fields
@@ -603,12 +626,14 @@ export const SidebarFilters = ({
     };
 
     const toggleFilterGroup = filterGroupId => {
+        clearJourneyIntentId();
         const filterGroupPanelVisible = document.getElementById(`filter-group-list-${filterGroupId}`);
         // reverse the panel show/ hide
         updateFacilityGroupOpenState(filterGroupId, !filterGroupPanelVisible);
     };
 
     const deSelectSelected = e => {
+        clearJourneyIntentId();
         const button = e?.target?.closest('button');
         const facilityTypeId = parseInt(button?.id?.replace('button-deselect-selected-', ''), 10);
 
@@ -646,6 +671,7 @@ export const SidebarFilters = ({
         });
     };
     const deSelectAll = () => {
+        clearJourneyIntentId();
         if (typeof onResetAllFilters === 'function') {
             onResetAllFilters();
             return;
