@@ -477,6 +477,7 @@ export const DLOView = ({
         formValues?.notify,
         navigateToObjectLink,
         formValues?.sendDemographics,
+        formValues?.sendNotify,
     ]);
 
     const deslugify = slug => {
