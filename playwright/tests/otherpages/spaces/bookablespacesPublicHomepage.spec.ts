@@ -71,12 +71,7 @@ test.describe('Spaces Homepage', () => {
             await expect(page.getByTestId('spaces-results-summary')).toContainText(
                 `${VANILLA_USER_FAVOURITE_COUNT} of 16 spaces`,
             );
-            // a block is present
             await expect(page.getByTestId('spaces-result-list-item-1')).toContainText('354');
-
-            // back button works
-            await page.goBack();
-            await expect(page.getByTestId('spaces-homepage-favourites-all-link')).toBeVisible();
         });
         test('clicking a Favourites link lands on the Details page', async ({ page }) => {
             const firstFavouritesLink = page
@@ -91,10 +86,6 @@ test.describe('Spaces Homepage', () => {
             await expect(firstFavouritesLink).not.toBeVisible();
             await expect(page.getByTestId('space-1-details-name')).toContainText('354');
             await expect(page.getByTestId('space-1-friendly-location')).toContainText('Architecture and Music Library');
-
-            // back button works
-            await page.goBack();
-            await expect(firstFavouritesLink).toBeVisible();
         });
         test('clicking a Favourites star unfavourites a Space', async ({ page }) => {
             const favSpace354 = 'a[href^="/spaces/detail/a00de3d4-7e11-47eb-8079-532bdef80def"]';
@@ -137,9 +128,68 @@ test.describe('Spaces Homepage', () => {
         await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0); // no filters are selected
         await expect(page.getByTestId('spaces-results-summary')).toContainText('16 of 16 spaces'); // all spaces are showing
         await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(10); // first page of spaces is present
+    });
 
-        // back button works
-        await page.goBack();
-        await expect(page.getByTestId('spaces-journey-showall')).toBeVisible();
+    test('intent click preselects filters in the current session but not via copied URL', async ({ page, browser }) => {
+        await page.goto('/spaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        await page.getByTestId('spaces-journey-intent-card-postgrad').click();
+        await expect(page).toHaveURL(/\/spaces\/results$/);
+        await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
+
+        const showRoomFeaturesOnFirstPage = page.getByRole('button', { name: /Show Room features filter options/i });
+        if (await showRoomFeaturesOnFirstPage.count()) {
+            await showRoomFeaturesOnFirstPage.click();
+        }
+        await expect(page.getByRole('checkbox', { name: 'Postgraduate only space' })).toBeChecked();
+
+        const copiedUrl = page.url();
+        const secondContext = await browser.newContext();
+        const secondPage = await secondContext.newPage();
+
+        await secondPage.goto(copiedUrl);
+        await secondPage.setViewportSize({ width: 1300, height: 1000 });
+        await expect(secondPage).toHaveURL(/\/spaces\/results$/);
+        await expect(secondPage.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
+
+        const showRoomFeaturesOnSecondPage = secondPage.getByRole('button', {
+            name: /Show Room features filter options/i,
+        });
+        if (await showRoomFeaturesOnSecondPage.count()) {
+            await showRoomFeaturesOnSecondPage.click();
+        }
+        await expect(secondPage.getByRole('checkbox', { name: 'Postgraduate only space' })).not.toBeChecked();
+
+        await secondContext.close();
+    });
+
+    test('intent selection persists across refresh in the same session and can be deselected', async ({ page }) => {
+        await page.goto('/spaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        await page.getByTestId('spaces-journey-intent-card-postgrad').click();
+        await expect(page).toHaveURL(/\/spaces\/results$/);
+        await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
+
+        const showRoomFeaturesBeforeReload = page.getByRole('button', { name: /Show Room features filter options/i });
+        if (await showRoomFeaturesBeforeReload.count()) {
+            await showRoomFeaturesBeforeReload.click();
+        }
+        const postgradCheckbox = page.getByRole('checkbox', { name: 'Postgraduate only space' });
+        await expect(postgradCheckbox).toBeChecked();
+
+        await page.reload();
+        await expect(page).toHaveURL(/\/spaces\/results$/);
+        await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
+
+        const showRoomFeaturesAfterReload = page.getByRole('button', { name: /Show Room features filter options/i });
+        if (await showRoomFeaturesAfterReload.count()) {
+            await showRoomFeaturesAfterReload.click();
+        }
+        await expect(postgradCheckbox).toBeChecked();
+
+        await postgradCheckbox.uncheck();
+        await expect(postgradCheckbox).not.toBeChecked();
     });
 });

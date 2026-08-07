@@ -1,7 +1,10 @@
 import {
+    FILTER_BOOKABLE_TYPE_ID,
+    FILTER_CAPACITY_TYPE_ID,
     FILTER_DISPLAY_ON_BOTH,
     FILTER_DISPLAY_ON_MAP,
     FILTER_DISPLAY_ON_SIMPLE,
+    getActiveSelectedFacilityTypes,
     getFriendlyFloorName,
     getOrdinalSuffixFor,
     isInt,
@@ -167,5 +170,25 @@ describe('spaces helpers', () => {
         expect(normalizeFilterDisplayOn('invalid')).toEqual(FILTER_DISPLAY_ON_BOTH);
         expect(normalizeFilterDisplayOn('Simple')).toEqual(FILTER_DISPLAY_ON_BOTH); // case sensitive
         expect(normalizeFilterDisplayOn('ADVANCED')).toEqual(FILTER_DISPLAY_ON_BOTH); // case sensitive
+    });
+
+    it('collapses the capacity filter into the bookable selection for active counts', () => {
+        const selectedFacilityTypes = [
+            {
+                facility_type_id: FILTER_BOOKABLE_TYPE_ID,
+                selected: true,
+            },
+            {
+                facility_type_id: FILTER_CAPACITY_TYPE_ID,
+                selected: true,
+            },
+        ];
+
+        expect(getActiveSelectedFacilityTypes(selectedFacilityTypes)).toEqual([
+            {
+                facility_type_id: FILTER_BOOKABLE_TYPE_ID,
+                selected: true,
+            },
+        ]);
     });
 });

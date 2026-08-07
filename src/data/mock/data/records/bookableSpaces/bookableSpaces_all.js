@@ -144,6 +144,18 @@ export default {
                     "facility_type_name": "Undergrad spaces"
                 },
                 {
+                    "facility_type_id": 3,
+                    "facility_type_name": "Kitchen"
+                },
+                {
+                    "facility_type_id": 49,
+                    "facility_type_name": "Low Light"
+                },
+                {
+                    "facility_type_id": 60,
+                    "facility_type_name": "Group study"
+                },
+                {
                     "facility_type_id": 57,
                     "facility_type_name": "Contains Artwork"
                 }
@@ -849,6 +861,10 @@ export default {
                     {
                         "facility_type_id": 33,
                         "facility_type_name": "Client accessible power point"
+                    },
+                    {
+                        "facility_type_id": 60,
+                        "facility_type_name": "Group study"
                     }
                 ]
             },

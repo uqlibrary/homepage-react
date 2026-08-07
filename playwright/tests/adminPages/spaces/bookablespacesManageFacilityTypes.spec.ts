@@ -71,8 +71,8 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(floorGroup.getByTestId('facilitytype-name-21')).toBeVisible();
         await expect(floorGroup.getByTestId('facilitytype-name-21')).toContainText('Hot/ Cold Water');
 
-        await expect(floorGroup.getByTestId('facilitytype-name-3')).toBeVisible();
-        await expect(floorGroup.getByTestId('facilitytype-name-3')).toContainText('Kitchen');
+        await expect(floorGroup.getByTestId('facilitytype-name-3')).toBeHidden();
+        await expect(floorGroup.getByTestId('facilitytype-name-3')).not.toBeVisible();
 
         await expect(floorGroup.getByTestId('facilitytype-name-4')).toBeVisible();
         await expect(floorGroup.getByTestId('facilitytype-name-4')).toContainText('Microwave');
@@ -170,8 +170,9 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(lightingGroup.getByTestId('facilitytype-name-48')).toBeVisible();
         await expect(lightingGroup.getByTestId('facilitytype-name-48')).toContainText('Dimmable');
 
-        await expect(lightingGroup.getByTestId('facilitytype-name-49')).toBeVisible();
-        await expect(lightingGroup.getByTestId('facilitytype-name-49')).toContainText('Low Light');
+        await expect(lightingGroup.getByTestId('facilitytype-name-49')).not.toBeVisible();
+        await expect(featuresGroup.getByTestId('facilitytype-name-49')).toBeVisible();
+        await expect(featuresGroup.getByTestId('facilitytype-name-49')).toContainText('Low Light');
 
         await expect(lightingGroup.getByTestId('facilitytype-name-50')).toBeVisible();
         await expect(lightingGroup.getByTestId('facilitytype-name-50')).toContainText('Natural');

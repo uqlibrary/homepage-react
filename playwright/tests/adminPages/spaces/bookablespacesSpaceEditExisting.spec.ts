@@ -149,7 +149,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 51;
+        const numberFacilityTypesInMockFacilityTypes = 52;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -237,7 +237,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 51;
+        const numberFacilityTypesInMockFacilityTypes = 52;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -314,7 +314,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 51;
+        const numberFacilityTypesInMockFacilityTypes = 52;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -510,7 +510,7 @@ test.describe('Spaces Admin - edit space', () => {
             // acts as check of what we sent to api
             const expectedValues = {
                 ...originalMockData('f98g_fwas_5g33'),
-                facility_types: [],
+                facility_types: [3, 49, 60],
                 space_precise: '',
                 space_description: '',
                 space_external_book_url: null,
@@ -563,6 +563,9 @@ test.describe('Spaces Admin - edit space', () => {
                     AV_EQUIPMENT,
                     POSTGRAD,
                     UNDERGRAD,
+                    3,
+                    49,
+                    60,
                     CONTAINS_ARTWORK,
                 ],
                 space_capacity: 7,
@@ -853,6 +856,9 @@ test.describe('Spaces Admin - edit space', () => {
             AV_EQUIPMENT,
             POSTGRAD,
             UNDERGRAD,
+            3,
+            49,
+            60,
             CONTAINS_ARTWORK,
             // SINGLE_OCCUPANCY,
         ];
@@ -1018,7 +1024,7 @@ test.describe('Spaces Admin - edit space', () => {
 
         await expect(page.getByTestId('space-123456-facility').locator('h3')).toBeVisible();
         await expect(page.getByTestId('space-123456-facility').locator('h3')).toContainText('Facilities');
-        await expect(page.getByTestId('space-123456-facility').locator('div').locator(':scope > div')).toHaveCount(13);
+        await expect(page.getByTestId('space-123456-facility').locator('div').locator(':scope > div')).toHaveCount(16);
 
         await expect(page.getByTestId('space-123456-openingHours-0')).toBeVisible();
         await expect(page.getByTestId('space-123456-openingHours-0')).toContainText('Today');

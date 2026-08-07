@@ -25,7 +25,9 @@ import { addClass, removeClass, StyledSkipLinkAnchor, standardText, StyledPrimar
 import {
     FILTER_BOOKABLE_TYPE_ID,
     FILTER_CAPACITY_TYPE_ID,
+    JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
+    getActiveSelectedFacilityTypes,
     getFlatFacilityTypeList,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
@@ -285,6 +287,7 @@ export const SidebarFilters = ({
     selectedLibrary,
     handleLibrarySelection,
     onApplyAllFilters,
+    onResetAllFilters,
     showBottomActionButtons = false,
     hasJourneyMapFilterState = false,
     showFavouriteSpacesOnly = false,
@@ -350,12 +353,20 @@ export const SidebarFilters = ({
     ]);
 
     React.useEffect(() => {
+        const hasLiveJourneyFilterState =
+            typeof window !== 'undefined' &&
+            !!window.sessionStorage &&
+            !!window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        if (hasLiveJourneyFilterState) {
+            return;
+        }
+
         if (
             !hasJourneyMapFilterState &&
             facilityTypeListError === false &&
             facilityTypeListLoading === false &&
             facilityTypeList?.data?.facility_type_groups?.length > 0 &&
-            selectedFacilityTypes?.filter(ft => ft.select === true)?.length === 0
+            selectedFacilityTypes?.filter(ft => ft.selected === true)?.length === 0
         ) {
             const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
             const newFilters = flatFacilityTypeList?.map(facilityType => {
@@ -444,25 +455,42 @@ export const SidebarFilters = ({
         setFacilityGroupOpenState(newExpandedness);
     };
 
+    const isSameFacilityTypeId = React.useCallback((leftId, rightId) => {
+        const leftNumber = Number(leftId);
+        const rightNumber = Number(rightId);
+        if (Number.isFinite(leftNumber) && Number.isFinite(rightNumber)) {
+            return leftNumber === rightNumber;
+        }
+
+        return String(leftId) === String(rightId);
+    }, []);
+
     // TODO remove isUnselected, remove unselected
     const setFilters = (facilityTypeId, isSelected, isUnselected, facilitySpecialAction) => {
-        // Look up from selectedFacilityTypes first; fall back to filteredFacilityTypeList for types
-        // that were added to the UI after the initial state was set (e.g. after campus change)
-        const resetFilter =
-            selectedFacilityTypes?.find(ftf => ftf?.facility_type_id === facilityTypeId) ||
-            getFlatFacilityTypeList(filteredFacilityTypeList)?.find(f => f?.facility_type_id === facilityTypeId);
-        const newFilters = selectedFacilityTypes?.filter(ftf => {
-            return ftf?.facility_type_id !== facilityTypeId;
-        });
-        !!resetFilter &&
-            newFilters?.push({
-                facility_type_group_id: resetFilter?.facility_type_group_id,
-                facility_type_id: facilityTypeId,
-                selected: isSelected,
-                unselected: isUnselected,
-                facility_special_action: facilitySpecialAction,
+        setSelectedFacilityTypes(prevSelectedFacilityTypes => {
+            const existingFilters = prevSelectedFacilityTypes || [];
+
+            // Look up from the current selection first; fall back to filteredFacilityTypeList for types
+            // that were added to the UI after the initial state was set (e.g. after campus change)
+            const resetFilter =
+                existingFilters.find(ftf => isSameFacilityTypeId(ftf?.facility_type_id, facilityTypeId)) ||
+                getFlatFacilityTypeList(filteredFacilityTypeList)?.find(f =>
+                    isSameFacilityTypeId(f?.facility_type_id, facilityTypeId),
+                );
+            const newFilters = existingFilters.filter(ftf => {
+                return !isSameFacilityTypeId(ftf?.facility_type_id, facilityTypeId);
             });
-        !!newFilters && setSelectedFacilityTypes(newFilters);
+            if (!!resetFilter) {
+                newFilters.push({
+                    facility_type_group_id: resetFilter?.facility_type_group_id,
+                    facility_type_id: facilityTypeId,
+                    selected: isSelected,
+                    unselected: isUnselected,
+                    facility_special_action: facilitySpecialAction,
+                });
+            }
+            return newFilters;
+        });
     };
 
     // hide listitems that are checked
@@ -500,36 +528,27 @@ export const SidebarFilters = ({
     const handleFilterSelection = (isChecked, facilityType) => {
         const facilityTypeId = facilityType?.facility_type_id;
         const facilitySpecialAction = facilityType?.facility_special_action;
-        if (!isChecked && facilityType.facility_type_id === FILTER_BOOKABLE_TYPE_ID) {
-            // when they uncheck the Bookable checkbox, clear the capacity slider
-            showHideActiveFilterListItems(FILTER_CAPACITY_TYPE_ID, isChecked);
+        if (!isChecked && isSameFacilityTypeId(facilityType?.facility_type_id, FILTER_BOOKABLE_TYPE_ID)) {
+            // when they uncheck the Bookable checkbox, clear the capacity slider and sibling filter state
+            showHideActiveFilterListItems(FILTER_CAPACITY_TYPE_ID, false);
+            showHideActiveFilterListItems(facilityTypeId, false);
 
-            // setFilters(FILTER_CAPACITY_TYPE_ID, false, false, FILTER_SPACE_CAPACITY_ACTION_NAME);
-
-            // duplicate setFilters function, but for multiple filters
-            const resetFilters = selectedFacilityTypes?.filter(ftf => {
-                return (
-                    ftf?.facility_type_id === FILTER_BOOKABLE_TYPE_ID ||
-                    ftf?.facility_type_id === FILTER_CAPACITY_TYPE_ID
-                );
-            });
-            const newFilters = selectedFacilityTypes?.filter(ftf => {
-                return (
-                    ftf?.facility_type_id !== FILTER_BOOKABLE_TYPE_ID &&
-                    ftf?.facility_type_id !== FILTER_CAPACITY_TYPE_ID
-                );
-            });
-            resetFilters?.length > 0 &&
-                resetFilters.forEach(f => {
-                    newFilters?.push({
-                        facility_type_group_id: f?.facility_type_group_id,
-                        facility_type_id: facilityTypeId,
+            setSelectedFacilityTypes(prevSelectedFacilityTypes => {
+                const existingFilters = prevSelectedFacilityTypes || [];
+                return existingFilters.map(ftf => {
+                    const isBookableOrCapacityFilter =
+                        isSameFacilityTypeId(ftf?.facility_type_id, FILTER_BOOKABLE_TYPE_ID) ||
+                        isSameFacilityTypeId(ftf?.facility_type_id, FILTER_CAPACITY_TYPE_ID);
+                    if (!isBookableOrCapacityFilter) {
+                        return ftf;
+                    }
+                    return {
+                        ...ftf,
                         selected: false,
                         unselected: false,
-                        facility_special_action: facilitySpecialAction,
-                    });
+                    };
                 });
-            !!newFilters && setSelectedFacilityTypes(newFilters);
+            });
             setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
         } else {
             showHideActiveFilterListItems(facilityTypeId, isChecked);
@@ -548,7 +567,9 @@ export const SidebarFilters = ({
         const facilityTypeId =
             !!parts && parts.length === 3 ? parseInt(parts.pop(), 10) : /* istanbul ignore next */ -999;
 
-        const capacityFilterType = selectedFacilityTypes?.find(ft => ft.facility_type_id === facilityTypeId);
+        const capacityFilterType = selectedFacilityTypes?.find(ft =>
+            isSameFacilityTypeId(ft?.facility_type_id, facilityTypeId),
+        );
         const isCapacityDefaultValues = newValue[0] === minimumSpaceCapacity && newValue[1] === maximumSpaceCapacity;
         if (isCapacityDefaultValues) {
             clearSpecialFilter(facilityTypeId, capacityFilterType?.facility_special_action);
@@ -591,15 +612,45 @@ export const SidebarFilters = ({
         const button = e?.target?.closest('button');
         const facilityTypeId = parseInt(button?.id?.replace('button-deselect-selected-', ''), 10);
 
-        const selectedFacilityType = selectedFacilityTypes.find(ft => ft.facility_type_id === facilityTypeId);
-        if (selectedFacilityType?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME) {
+        const selectedFacilityType = selectedFacilityTypes?.find(ft =>
+            isSameFacilityTypeId(ft?.facility_type_id, facilityTypeId),
+        );
+        const shouldClearCapacityFilter =
+            selectedFacilityType?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME ||
+            isSameFacilityTypeId(facilityTypeId, FILTER_BOOKABLE_TYPE_ID);
+        if (shouldClearCapacityFilter) {
             setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
         }
-        showHideActiveFilterListItems(facilityTypeId, e?.target?.checked);
+        showHideActiveFilterListItems(facilityTypeId, false);
+        if (shouldClearCapacityFilter) {
+            showHideActiveFilterListItems(FILTER_CAPACITY_TYPE_ID, false);
+        }
 
-        setFilters(facilityTypeId, false, false);
+        setSelectedFacilityTypes(prevSelectedFacilityTypes => {
+            const existingFilters = prevSelectedFacilityTypes || [];
+            return existingFilters.map(ft => {
+                const isMatchingFilter = isSameFacilityTypeId(ft?.facility_type_id, facilityTypeId);
+                const isSiblingFilter =
+                    shouldClearCapacityFilter &&
+                    (isSameFacilityTypeId(ft?.facility_type_id, FILTER_BOOKABLE_TYPE_ID) ||
+                        isSameFacilityTypeId(ft?.facility_type_id, FILTER_CAPACITY_TYPE_ID));
+                if (!isMatchingFilter && !isSiblingFilter) {
+                    return ft;
+                }
+                return {
+                    ...ft,
+                    selected: false,
+                    unselected: false,
+                };
+            });
+        });
     };
     const deSelectAll = () => {
+        if (typeof onResetAllFilters === 'function') {
+            onResetAllFilters();
+            return;
+        }
+
         // reset the facility types to all false - the render will clear the buttons and checkboxes for us!
         const newFacilityTypes = selectedFacilityTypes?.map(ft => {
             return {
@@ -613,6 +664,11 @@ export const SidebarFilters = ({
         setSelectedFacilityTypes(newFacilityTypes);
 
         setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
+        setShowFavouriteSpacesOnly(false);
+
+        // Fall back to existing handlers when no explicit reset callback is provided.
+        handleLibrarySelection?.({ target: { value: 0 } });
+        handleCampusSelection?.({ target: { value: 0 } });
     };
     const ValueLabelComponent = ({ children, value }) => {
         return (
@@ -627,7 +683,10 @@ export const SidebarFilters = ({
         value: PropTypes.node,
     };
     const writeCapacitySlider = facilityType => {
-        if (!selectedFacilityTypes?.find(f1 => f1?.facility_type_id === FILTER_BOOKABLE_TYPE_ID)?.selected) {
+        if (
+            !selectedFacilityTypes?.find(f1 => isSameFacilityTypeId(f1?.facility_type_id, FILTER_BOOKABLE_TYPE_ID))
+                ?.selected
+        ) {
             return null;
         }
         return (
@@ -699,6 +758,17 @@ export const SidebarFilters = ({
             </>
         );
     };
+
+    const isFacilityTypeSelected = React.useCallback(
+        facilityTypeId => {
+            return (
+                selectedFacilityTypes?.find(f1 => isSameFacilityTypeId(f1?.facility_type_id, facilityTypeId))
+                    ?.selected || false
+            );
+        },
+        [isSameFacilityTypeId, selectedFacilityTypes],
+    );
+
     const getStyledInputListItem = facilityType => {
         const isCapacityFilter = facilityType?.facility_type_id === FILTER_CAPACITY_TYPE_ID;
         return (
@@ -721,11 +791,7 @@ export const SidebarFilters = ({
                                 data-testid={`filtertype-${facilityType?.facility_type_id}`}
                                 id={`filtertype-${facilityType?.facility_type_id}`}
                                 className="selectedFilterType"
-                                checked={
-                                    selectedFacilityTypes?.find(
-                                        f1 => f1?.facility_type_id === facilityType?.facility_type_id,
-                                    )?.selected || false
-                                }
+                                checked={isFacilityTypeSelected(facilityType?.facility_type_id)}
                             />
                             <span>{facilityType?.facility_type_name}</span>
                         </InputLabel>
@@ -786,43 +852,53 @@ export const SidebarFilters = ({
         );
     };
     const showCartoucheList = flatFacilityTypeList => {
+        const activeSelectedFacilityTypes = getActiveSelectedFacilityTypes(selectedFacilityTypes);
         return (
             <>
-                {selectedFacilityTypes?.map(f => {
-                    if (!!f?.selected) {
-                        const facilityTypeRecord = flatFacilityTypeList?.find(
-                            flat => flat?.facility_type_id === f?.facility_type_id,
-                        );
-                        return (
-                            <li key={`cartouche-select-${f?.facility_type_id}`}>
-                                <Button
-                                    id={`button-deselect-selected-${f?.facility_type_id}`}
-                                    data-testid={`button-deselect-selected-${f?.facility_type_id}`}
-                                    onClick={deSelectSelected}
-                                    className="selectedFilter"
-                                    title={`${facilityTypeRecord?.facility_type_name} selected - click to deselect`}
-                                >
-                                    <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
-                                </Button>
-                            </li>
-                        );
-                    }
-                    // Legacy unselected-filter handling remains intentionally commented out.
-                    return null;
+                {activeSelectedFacilityTypes?.map(f => {
+                    const facilityTypeRecord = flatFacilityTypeList?.find(
+                        flat => flat?.facility_type_id === f?.facility_type_id,
+                    );
+                    return (
+                        <li key={`cartouche-select-${f?.facility_type_id}`}>
+                            <Button
+                                id={`button-deselect-selected-${f?.facility_type_id}`}
+                                data-testid={`button-deselect-selected-${f?.facility_type_id}`}
+                                onClick={deSelectSelected}
+                                className="selectedFilter"
+                                title={`${facilityTypeRecord?.facility_type_name} selected - click to deselect`}
+                            >
+                                <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
+                            </Button>
+                        </li>
+                    );
                 })}
             </>
         );
     };
 
     const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
-    const checkFiltersList = selectedFacilityTypes?.filter(f => !!f?.selected || !!f?.unselected);
-    const hasActiveFilters = selectedFacilityTypes?.some(f => !!f?.selected || !!f?.unselected);
+    const checkFiltersList = getActiveSelectedFacilityTypes(selectedFacilityTypes);
+    const hasSelectedFacilityFilters = checkFiltersList?.length > 0;
+    const hasActiveCapacityFilter =
+        Array.isArray(capacityFilterValue) &&
+        capacityFilterValue.length === 2 &&
+        (capacityFilterValue[0] !== minimumSpaceCapacity || capacityFilterValue[1] !== maximumSpaceCapacity);
+    const hasActiveCampusFilter = Number(selectedCampus) !== 0;
+    const hasActiveLibraryFilter = Number(selectedLibrary) !== 0;
+    const hasActiveFavouriteFilter = Boolean(showFavouriteSpacesOnly);
+    const hasActiveFilters =
+        hasSelectedFacilityFilters ||
+        hasActiveCapacityFilter ||
+        hasActiveCampusFilter ||
+        hasActiveLibraryFilter ||
+        hasActiveFavouriteFilter;
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
     const renderFilterActionButtons = ({ isBottom = false } = {}) => {
         if (isBottom && !showBottomActionButtons) return null;
-        if (!checkFiltersList?.length) return null;
+        if (!hasActiveFilters) return null;
         if (suppliedClassName?.includes('journey') && !isMobileView) return null;
 
         const wrapperStyles = isBottom
@@ -918,9 +994,11 @@ export const SidebarFilters = ({
                         <Typography component={'h3'} variant={'h6'} data-testid="space-filter-count">
                             Active filters <span>{activeFilterCount}</span>
                         </Typography>
-                        <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
-                            {showCartoucheList(flatFacilityTypeList)}
-                        </StyledCartoucheList>
+                        {!!checkFiltersList?.length && (
+                            <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
+                                {showCartoucheList(flatFacilityTypeList)}
+                            </StyledCartoucheList>
+                        )}
                         {renderFilterActionButtons()}
                     </>
                 )}
@@ -957,8 +1035,8 @@ export const SidebarFilters = ({
                                     </MenuItem>
                                 ))}
                         </Select>
-                        {librariesForCampus?.length > 2 && (
-                            // we only show a selector when there is more than 1 libary + the 'all libraries' selector
+                        {librariesForCampus?.length > 1 && (
+                            // show the selector whenever there is more than one library option available
                             <>
                                 <h3 id="filter-by-library-label" htmlFor="filter-by-library-input">
                                     Choose library
@@ -1016,12 +1094,11 @@ export const SidebarFilters = ({
                     const filterGroupId = group?.facility_type_group_id;
                     const isGroupExpanded = !!facilityGroupOpenState?.find(o => o?.groupId === filterGroupId)
                         ?.isGroupExpanded;
-                    const groupLength = selectedFacilityTypes?.filter(
+                    const activeSelectedFiltersForGroup = getActiveSelectedFacilityTypes(selectedFacilityTypes)?.filter(
                         ftf => ftf?.facility_type_group_id === filterGroupId,
-                    )?.length;
-                    const numberChecked = selectedFacilityTypes?.filter(
-                        ftf => ftf?.facility_type_group_id === filterGroupId && (ftf?.selected || ftf?.unselected),
-                    ).length;
+                    );
+                    const groupLength = activeSelectedFiltersForGroup?.length || 0;
+                    const numberChecked = groupLength;
                     return (
                         <StyledFacilityGroup
                             key={`facility-group-${filterGroupId}`}
@@ -1099,6 +1176,7 @@ SidebarFilters.propTypes = {
     selectedLibrary: PropTypes.any,
     handleLibrarySelection: PropTypes.func,
     onApplyAllFilters: PropTypes.func,
+    onResetAllFilters: PropTypes.func,
     showBottomActionButtons: PropTypes.bool,
     showFavouriteSpacesOnly: PropTypes.bool,
     setShowFavouriteSpacesOnly: PropTypes.func,

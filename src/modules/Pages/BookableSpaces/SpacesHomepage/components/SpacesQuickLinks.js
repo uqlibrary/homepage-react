@@ -82,8 +82,9 @@ export const SpacesQuickLinks = ({
     navigateToView,
     availableIntentDefinitionsForLanding,
     favouriteIntentDefinition,
-    handleIntentSelect,
     getIntentLandingUrl,
+    onIntentLinkNavigate,
+    onSeeAllSpaces,
 }) => {
     return (
         <Box className="spaces-list" sx={{ mb: 3 }}>
@@ -95,6 +96,9 @@ export const SpacesQuickLinks = ({
                     to={serialiseJourneyUrl({ view: 'results' })}
                     onClick={e => {
                         e.preventDefault();
+                        if (typeof onSeeAllSpaces === 'function') {
+                            onSeeAllSpaces();
+                        }
                         navigateToView('results');
                     }}
                     data-testid="spaces-journey-showall"
@@ -127,8 +131,12 @@ export const SpacesQuickLinks = ({
                                 shortParagraph={intent.description || ''}
                                 fillContainer
                                 sx={{ pr: { xs: '10px' }, pl: { xs: 0 } }}
-                                onClick={() => handleIntentSelect(intent)}
                                 showH3
+                                onNavigate={
+                                    typeof onIntentLinkNavigate === 'function'
+                                        ? () => onIntentLinkNavigate(intent)
+                                        : undefined
+                                }
                             />
                         );
                     });
@@ -152,8 +160,9 @@ SpacesQuickLinks.propTypes = {
     navigateToView: PropTypes.any,
     availableIntentDefinitionsForLanding: PropTypes.any,
     favouriteIntentDefinition: PropTypes.any,
-    handleIntentSelect: PropTypes.any,
     getIntentLandingUrl: PropTypes.func.isRequired,
+    onIntentLinkNavigate: PropTypes.func,
+    onSeeAllSpaces: PropTypes.func,
 };
 
 export default SpacesQuickLinks;

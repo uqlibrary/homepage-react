@@ -186,6 +186,147 @@ export const isBookable = space => {
     return space?.space_external_book_url?.startsWith('http');
 };
 
+export const getActiveSelectedFacilityTypes = selectedFacilityTypes => {
+    const selectedFilters = (selectedFacilityTypes || []).filter(ft => ft?.selected);
+    const hasBookableFilter = selectedFilters.some(ft => Number(ft?.facility_type_id) === FILTER_BOOKABLE_TYPE_ID);
+
+    return selectedFilters.filter(filter => {
+        const facilityTypeId = Number(filter?.facility_type_id);
+        if (facilityTypeId === FILTER_CAPACITY_TYPE_ID && hasBookableFilter) {
+            return false;
+        }
+        return true;
+    });
+};
+
+export const getSpaceHoursStatus = (space, weeklyHours) => {
+    const days = spaceOpeningHours(space, weeklyHours);
+    if (!days || days.length === 0) return null;
+    const today = days[0];
+    if (!today) return null;
+
+    const status = today?.times?.status;
+    if (status === 'closed') return 'closed';
+    if (status === '24hours') return 'open';
+
+    const openStr = today?.open; // e.g. "07:30:00"
+    const closeStr = today?.close; // e.g. "19:30:00"
+
+    if (!openStr || !closeStr) return null;
+
+    const now = new Date();
+    const [oh, om] = openStr.split(':').map(Number);
+    const [ch, cm] = closeStr.split(':').map(Number);
+
+    const openTime = new Date();
+    openTime.setHours(oh, om, 0, 0);
+    const closeTime = new Date();
+    closeTime.setHours(ch, cm, 0, 0);
+
+    if (now < openTime || now >= closeTime) return 'closed';
+
+    const minsUntilClose = (closeTime - now) / 60000;
+    if (minsUntilClose <= 60) return 'closing-soon';
+    return 'open';
+};
+
+export const defaultChipStyles = theme => {
+    return {
+        borderColor: theme.palette.designSystem.bodyCopy,
+        border: '1px solid',
+        color: theme.palette.designSystem.bodyCopy,
+        fontWeight: 600,
+        fontSize: '1rem',
+    };
+};
+
+export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHoursError, chipStyles }) => {
+    const openingHoursStatusConfig = (status, theme) => {
+        if (status === 'open') {
+            return {
+                label: 'Open now',
+                sx: {
+                    ...defaultChipStyles(theme),
+                    backgroundColor: theme.palette.designSystem.alert.info,
+                },
+            };
+        }
+        if (status === 'closing-soon') {
+            return {
+                label: 'Closing soon',
+                sx: {
+                    ...defaultChipStyles(theme),
+                    backgroundColor: theme.palette.designSystem.alert.warning,
+                },
+            };
+        }
+        if (status === 'closed') {
+            return {
+                label: 'Currently closed',
+                sx: {
+                    ...defaultChipStyles(theme),
+                    backgroundColor: theme.palette.designSystem.alert.error,
+                },
+            };
+        }
+        return null;
+    };
+
+    const chipTestId = `spaces-${space?.space_id}-details-outage-chip`;
+    const theme = useTheme();
+    const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
+    if (visibleOutage?.status === 'Current') {
+        const closedConfig = openingHoursStatusConfig('closed', theme);
+        return (
+            <Chip
+                data-testid={chipTestId}
+                label={closedConfig.label}
+                size="small"
+                sx={{
+                    ...chipStyles,
+                    ...closedConfig?.sx,
+                }}
+            />
+        );
+    }
+
+    if (weeklyHoursLoading || weeklyHoursError || !weeklyHours) {
+        return null;
+    }
+
+    const status = getSpaceHoursStatus(space, weeklyHours);
+    if (!status) {
+        return null;
+    }
+
+    const config = openingHoursStatusConfig(status, theme);
+    if (!config) {
+        return null;
+    }
+    return (
+        <Chip
+            data-testid={'spaces-journey-open-status-chip-' + status}
+            label={config.label}
+            size="small"
+            sx={{
+                ...chipStyles,
+                fontWeight: 700,
+                fontSize: '1rem',
+                letterSpacing: '0.01em',
+                ...config.sx,
+            }}
+        />
+    );
+};
+
+SpaceOpenStatusChip.propTypes = {
+    space: PropTypes.object,
+    weeklyHours: PropTypes.object,
+    weeklyHoursLoading: PropTypes.bool,
+    weeklyHoursError: PropTypes.bool,
+    chipStyles: PropTypes.any,
+};
+
 export const findSpaceById = (spaces, targetSpaceId) => {
     if (!targetSpaceId) return null;
     return (
@@ -202,6 +343,8 @@ export const JOURNEY_VIEWS = ['landing', 'intent', 'results', 'details'];
 export const JOURNEY_QUERY_PARAM_STEP = 'journeyStep';
 export const JOURNEY_QUERY_PARAM_INTENT = 'journeyIntent';
 export const JOURNEY_QUERY_PARAM_SPACE = 'journeySpace';
+export const JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY = 'bookableSpacesJourneyReturnFilterState';
+export const JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY = 'bookableSpacesJourneyLiveFilterState';
 const MAP_FILTERS_BASE64_PREFIX = 'b64.';
 
 const encodeBase64 = value => {
@@ -338,19 +481,8 @@ export const serialiseJourneyMapFilterState = ({
         return acc;
     }, []);
 
-    const unselectedFacilityIds = (selectedFacilityTypes || []).reduce((acc, filter) => {
-        const facilityTypeId = filter?.facility_type_id;
-        if (!facilityTypeId || !filter?.unselected) {
-            return acc;
-        }
-
-        acc.push(Number(facilityTypeId));
-        return acc;
-    }, []);
-
     const serialised = {
-        selectedFacilityTypes: [...new Set([...selectedFacilityIds, ...unselectedFacilityIds])],
-        ...(unselectedFacilityIds.length > 0 ? { unselectedFacilityTypes: unselectedFacilityIds } : {}),
+        selectedFacilityTypes: [...new Set(selectedFacilityIds)],
         ...(selectedCampus !== null && selectedCampus !== undefined ? { selectedCampus } : {}),
         ...(selectedLibrary !== null && selectedLibrary !== undefined ? { selectedLibrary } : {}),
         ...(Array.isArray(capacityFilterValue) && capacityFilterValue.length > 0 ? { capacityFilterValue } : {}),
@@ -418,7 +550,7 @@ export const deserialiseJourneyMapFilterState = searchParams => {
                 }
 
                 const facilityTypeId = filter?.facility_type_id;
-                if (!facilityTypeId) {
+                if (!facilityTypeId || filter?.selected === false) {
                     return acc;
                 }
 
@@ -446,14 +578,18 @@ export const deserialiseJourneyMapFilterState = searchParams => {
             }, []),
         );
 
-        const parsedFacilityTypes = Array.from(new Set([...selectedFacilityIds, ...unselectedFacilityIds])).map(
-            facilityTypeId => ({
+        const parsedFacilityTypes = Array.from(new Set([...selectedFacilityIds])).reduce((acc, facilityTypeId) => {
+            if (unselectedFacilityIds.has(facilityTypeId)) {
+                return acc;
+            }
+
+            acc.push({
                 facility_type_id: facilityTypeId,
-                selected: selectedFacilityIds.has(facilityTypeId) && !unselectedFacilityIds.has(facilityTypeId),
-                unselected: unselectedFacilityIds.has(facilityTypeId),
+                selected: true,
                 facility_special_action: null,
-            }),
-        );
+            });
+            return acc;
+        }, []);
 
         return {
             selectedFacilityTypes: parsedFacilityTypes,
@@ -478,39 +614,13 @@ const getJourneyPathname = url => {
     return pathValue.replace(/\/+$/, '') || '/spaces';
 };
 
-export const serialiseJourneyUrl = ({ view, intentId, spaceId, mapFilterState }) => {
+export const serialiseJourneyUrl = ({ view, spaceId }) => {
     const url = new URL(window.location.href);
     const hashValue = url.hash || '';
     const isHashRouting = hashValue.startsWith('#/');
 
-    const getPreservedQueryParams = () => {
-        const hashQuery = hashValue.includes('?') ? hashValue.split('?')[1] : '';
-        const params = new URLSearchParams(hashQuery || url.search || '');
-        const nextParams = new URLSearchParams();
-
-        ['mapFilters', 'autoSelectFirstSpace', 'user'].forEach(key => {
-            const value = params.get(key);
-            if (value !== null) {
-                nextParams.set(key, value);
-            }
-        });
-
-        if (mapFilterState !== undefined) {
-            if (mapFilterState === null) {
-                nextParams.delete('mapFilters');
-            } else {
-                nextParams.set('mapFilters', serialiseJourneyMapFilterState(mapFilterState));
-            }
-        }
-
-        return nextParams.toString();
-    };
-
-    const buildPath = ({ nextView, nextIntentId, nextSpaceId }) => {
+    const buildPath = ({ nextView, nextSpaceId }) => {
         if (nextView === 'results') {
-            if (nextIntentId) {
-                return `/spaces/results/filters=${encodeURIComponent(String(nextIntentId))}`;
-            }
             return '/spaces/results';
         }
 
@@ -521,17 +631,15 @@ export const serialiseJourneyUrl = ({ view, intentId, spaceId, mapFilterState })
         return '/spaces';
     };
 
-    const nextPath = buildPath({ nextView: view, nextIntentId: intentId, nextSpaceId: spaceId });
-    const preservedQueryParams = getPreservedQueryParams();
-    const querySuffix = preservedQueryParams ? `?${preservedQueryParams}` : '';
+    const nextPath = buildPath({ nextView: view, nextSpaceId: spaceId });
 
     if (isHashRouting) {
         const branchPrefix = url.pathname && url.pathname !== '/' ? url.pathname.replace(/\/+$/, '') : '';
         const branchPrefixPath = branchPrefix ? `${branchPrefix}/` : '';
-        return `${branchPrefixPath}#${nextPath}${querySuffix}`;
+        return `${branchPrefixPath}#${nextPath}`;
     }
 
-    return `${nextPath}${querySuffix}`;
+    return `${nextPath}`;
 };
 
 export const parseJourneyStateFromUrl = availableIntentDefinitions => {

@@ -24,6 +24,7 @@ export const JourneyResultsView = ({
     intentSpaceLocations,
     totalSpaceCount,
     handleClearJourneyFilters,
+    onResetAllFilters,
     goToLegacyBrowse,
     selectedFacilityTypes,
     setSelectedFacilityTypes,
@@ -58,7 +59,10 @@ export const JourneyResultsView = ({
 }) => {
     const theme = useTheme();
 
-    const spaces = Array.isArray(intentSpaceLocations) ? intentSpaceLocations : [];
+    const spaces = React.useMemo(
+        () => (Array.isArray(intentSpaceLocations) ? intentSpaceLocations : []),
+        [intentSpaceLocations],
+    );
     const [page, setPage] = React.useState(1);
     const itemsPerPage = 10;
     const totalPages = Math.max(1, Math.ceil(spaces.length / itemsPerPage));
@@ -238,6 +242,7 @@ export const JourneyResultsView = ({
                                 setShowAdvancedFilters(false);
                             }
                         }}
+                        onResetAllFilters={onResetAllFilters}
                         showBottomActionButtons
                         showFavouriteSpacesOnly={showFavouriteSpacesOnly}
                         setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
@@ -255,6 +260,7 @@ JourneyResultsView.propTypes = {
     intentSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
     handleClearJourneyFilters: PropTypes.func,
+    onResetAllFilters: PropTypes.func,
     goToLegacyBrowse: PropTypes.func,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,

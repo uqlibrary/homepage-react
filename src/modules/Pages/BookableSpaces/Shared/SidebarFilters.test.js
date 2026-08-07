@@ -86,6 +86,60 @@ describe('SidebarFilters campus selector', () => {
         expect(await screen.findByRole('option', { name: 'All campuses' })).toBeInTheDocument();
     });
 
+    it('shows the library selector when there is more than one library option', () => {
+        renderWithTheme({
+            ...baseProps,
+            librariesForCampus: [
+                { library_id: 0, library_name: 'All libraries' },
+                { library_id: 1, library_name: 'Central Library' },
+                { library_id: 2, library_name: 'Law Library' },
+            ],
+        });
+
+        expect(screen.getByTestId('filter-by-library')).toBeInTheDocument();
+        expect(screen.getByText('Choose library')).toBeInTheDocument();
+    });
+
+    it('deselects the special bookable and capacity filters together from a cartouche', () => {
+        let latestState = [
+            { facility_type_group_id: 1, facility_type_id: 9002, selected: true, unselected: false },
+            { facility_type_group_id: 1, facility_type_id: 9003, selected: true, unselected: false },
+            { facility_type_group_id: 1, facility_type_id: 57, selected: true, unselected: false },
+        ];
+        const setSelectedFacilityTypes = jest.fn(updater => {
+            latestState = typeof updater === 'function' ? updater(latestState) : updater;
+            return latestState;
+        });
+        const props = {
+            ...baseProps,
+            setSelectedFacilityTypes,
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_children: [
+                                { facility_type_id: 57, facility_type_name: 'Natural light' },
+                                { facility_type_id: 9002, facility_type_name: 'Bookable' },
+                                { facility_type_id: 9003, facility_type_name: 'Space capacity' },
+                            ],
+                        },
+                    ],
+                },
+            },
+            selectedFacilityTypes: latestState,
+        };
+
+        renderWithTheme(props);
+
+        fireEvent.click(screen.getByTestId('button-deselect-selected-9002'));
+
+        expect(latestState).toHaveLength(3);
+        expect(latestState.find(f => f.facility_type_id === 9002)).toMatchObject({ selected: false });
+        expect(latestState.find(f => f.facility_type_id === 9003)).toMatchObject({ selected: false });
+        expect(latestState.find(f => f.facility_type_id === 57)).toMatchObject({ selected: true });
+    });
+
     it('opens the parent group for journey intent preselected filters', async () => {
         renderWithTheme({
             ...baseProps,

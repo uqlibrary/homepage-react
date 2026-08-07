@@ -927,12 +927,12 @@ test.describe('Spaces', () => {
             await minimumCapacityField.fill('8');
 
             // filter controls update
-            await expect(filterCount).toContainText('2');
-            await expect(cartoucheList.locator(':scope > *')).toHaveCount(2);
+            await expect(filterCount).toContainText('1');
+            await expect(cartoucheList.locator(':scope > *')).toHaveCount(1);
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('5');
+            await expect(spacesCount).toContainText('Available Spaces (4)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
                 5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
@@ -943,12 +943,12 @@ test.describe('Spaces', () => {
             await maximumCapacityField.fill('20');
 
             // filter controls update
-            await expect(filterCount).toContainText('2');
-            await expect(cartoucheList.locator(':scope > *')).toHaveCount(2);
+            await expect(filterCount).toContainText('1');
+            await expect(cartoucheList.locator(':scope > *')).toHaveCount(1);
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('3');
+            await expect(spacesCount).toContainText('Available Spaces (2)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
                 3 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
@@ -1004,12 +1004,12 @@ test.describe('Spaces', () => {
             await minimumCapacityField.fill('8');
 
             // filter controls update
-            await expect(filterCount).toContainText('2');
-            await expect(cartoucheList.locator(':scope > *')).toHaveCount(2);
+            await expect(filterCount).toContainText('1');
+            await expect(cartoucheList.locator(':scope > *')).toHaveCount(1);
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('5');
+            await expect(spacesCount).toContainText('Available Spaces (4)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
                 5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
@@ -1020,12 +1020,12 @@ test.describe('Spaces', () => {
             await maximumCapacityField.fill('20');
 
             // filter controls update
-            await expect(filterCount).toContainText('2');
-            await expect(cartoucheList.locator(':scope > *')).toHaveCount(2);
+            await expect(filterCount).toContainText('1');
+            await expect(cartoucheList.locator(':scope > *')).toHaveCount(1);
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('3');
+            await expect(spacesCount).toContainText('Available Spaces (2)');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
                 3 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
@@ -1209,7 +1209,7 @@ test.describe('Spaces', () => {
                 'Hide On this floor filter options',
             );
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul').locator(':scope > *')).toHaveCount(
-                6,
+                5,
             );
 
             // the group we opened has completely changed - visibility flips
@@ -1319,7 +1319,7 @@ test.describe('Spaces', () => {
 
             // NOW a count shows on that single collapsed group
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toBeVisible();
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toHaveText('(1 of 6)');
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toHaveText('(1 of 1)');
 
             // collapse a few more, to be sure
             await filterGroupButton(FILTER_GROUP_LIGHTING, page).click();
@@ -1366,8 +1366,8 @@ test.describe('Spaces', () => {
             await filterGroupButton(FILTER_GROUP_AVAILABILITY_TYPE, page).click();
 
             // now the collapsed group shows the selected-count summary
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_AVAILABILITY_TYPE))).toBeVisible();
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_AVAILABILITY_TYPE))).toHaveText('(1 of 3)');
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_BOOKABLE_TYPE))).toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_BOOKABLE_TYPE))).toHaveText('(1 of 1)');
 
             // re-open it and the collapsed-count disappears again
             await filterGroupButton(FILTER_GROUP_AVAILABILITY_TYPE, page).click();
@@ -1449,10 +1449,10 @@ test.describe('Spaces', () => {
                 { name: 'UQLspacesPreferredLibrary', value: '999', domain: 'localhost', path: '/' },
             ]);
 
-            // reload the page - now the library cookie has an invalid value, it ignores the cookie value and uses the default
+            // reload the page - now the library cookie has an invalid value, it ignores the cookie value and uses the first library for the default campus
             await page.goto('spaces/mapresults');
             await expect(selectedCampusNameElement).toContainText('All campuses');
-            await expect(selectLibraryNameElement).toContainText('All libraries');
+            await expect(selectLibraryNameElement).toContainText('Architecture and Music Library');
         });
     });
     test.describe('Can change campuses', () => {
@@ -1639,14 +1639,14 @@ test.describe('Spaces', () => {
 
             await expect(panelLabel(PACE)).toContainText('Dutton Park Health Sciences');
             await expect(spacePanelWrapper).toHaveCount(1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
-            await expect(librarySelector).not.toBeVisible();
+            await expect(librarySelector).toContainText('All libraries');
 
             // CHANGE CAMPUS TO GATTON
             await changeCampusButton.click(); // open drop down
             await campusChooser(CAMPUS_ID_GATTON).click(); // choose gatton
             await expect(panelLabel(GATTON_PANEL_ONE)).toContainText('J.K. Murray Library');
             await expect(spacePanelWrapper).toHaveCount(4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
-            await expect(librarySelector).not.toBeVisible();
+            await expect(librarySelector).toContainText('All libraries');
 
             // CHANGE CAMPUS TO ST LUCIA
             await changeCampusButton.click(); // open drop down
@@ -1664,14 +1664,14 @@ test.describe('Spaces', () => {
             await campusChooser(CAMPUS_ID_DUTTON_PARK).click(); // choose dutton park
             await expect(panelLabel(PACE)).toContainText('Dutton Park Health Sciences');
             await expect(spacePanelWrapper).toHaveCount(1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
-            await expect(librarySelector).not.toBeVisible();
+            await expect(librarySelector).toContainText('All libraries');
 
             // CHANGE CAMPUS TO GATTON
             await changeCampusButton.click(); // open drop down
             await campusChooser(CAMPUS_ID_GATTON).click(); // choose gatton
             await expect(panelLabel(GATTON_PANEL_ONE)).toContainText('J.K. Murray Library');
             await expect(spacePanelWrapper).toHaveCount(4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
-            await expect(librarySelector).not.toBeVisible();
+            await expect(librarySelector).toContainText('All libraries');
         });
     });
     test.describe('Spaces favourites', () => {
