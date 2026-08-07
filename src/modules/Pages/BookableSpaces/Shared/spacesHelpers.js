@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const FILTER_BOOKABLE_TYPE_ID = 9002;
 export const FILTER_CAPACITY_TYPE_ID = 9003;
