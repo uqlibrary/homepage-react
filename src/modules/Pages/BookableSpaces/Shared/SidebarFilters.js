@@ -1094,11 +1094,16 @@ export const SidebarFilters = ({
                     const filterGroupId = group?.facility_type_group_id;
                     const isGroupExpanded = !!facilityGroupOpenState?.find(o => o?.groupId === filterGroupId)
                         ?.isGroupExpanded;
-                    const activeSelectedFiltersForGroup = getActiveSelectedFacilityTypes(selectedFacilityTypes)?.filter(
-                        ftf => ftf?.facility_type_group_id === filterGroupId,
-                    );
-                    const groupLength = activeSelectedFiltersForGroup?.length || 0;
-                    const numberChecked = groupLength;
+                    const groupLength =
+                        group?.facility_type_children?.filter(
+                            child => child?.facility_type_id !== FILTER_CAPACITY_TYPE_ID,
+                        )?.length || 0;
+                    const numberChecked = (selectedFacilityTypes || []).filter(
+                        ftf =>
+                            ftf?.facility_type_group_id === filterGroupId &&
+                            (ftf?.selected || ftf?.unselected) &&
+                            Number(ftf?.facility_type_id) !== FILTER_CAPACITY_TYPE_ID,
+                    ).length;
                     return (
                         <StyledFacilityGroup
                             key={`facility-group-${filterGroupId}`}
