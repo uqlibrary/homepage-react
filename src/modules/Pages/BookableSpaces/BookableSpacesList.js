@@ -1034,6 +1034,7 @@ export const BookableSpacesList = ({
                 hasCapacityRange &&
                 (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
                     Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
+            const persistedCapacityFilterValue = hasAppliedCapacityFilter ? [...capacityFilterValue] : null;
 
             const hasAppliedFavouriteFilter = Boolean(showFavouriteSpacesOnly);
 
@@ -1041,7 +1042,7 @@ export const BookableSpacesList = ({
                 ...(appliedFacilityFilters.length > 0 ? { selectedFacilityTypes: appliedFacilityFilters } : {}),
                 ...(hasAppliedCampusFilter ? { selectedCampus: normalizedCampusId } : {}),
                 ...(hasAppliedLibraryFilter ? { selectedLibrary: normalizedLibraryId } : {}),
-                ...(hasAppliedCapacityFilter ? { capacityFilterValue } : {}),
+                ...(persistedCapacityFilterValue ? { capacityFilterValue: persistedCapacityFilterValue } : {}),
                 ...(hasAppliedFavouriteFilter ? { showFavouriteSpacesOnly: true } : {}),
             };
 
@@ -1257,8 +1258,15 @@ export const BookableSpacesList = ({
         setExpandedSpaceId(space?.space_id ?? null);
     };
 
+    const hasActiveCapacityFilter =
+        Array.isArray(capacityFilterValue) &&
+        capacityFilterValue.length === 2 &&
+        (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
+            Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
     const activeFilterCount =
-        (getActiveSelectedFacilityTypes(selectedFacilityTypes)?.length || 0) + (showFavouriteSpacesOnly ? 1 : 0);
+        (getActiveSelectedFacilityTypes(selectedFacilityTypes)?.length || 0) +
+        (showFavouriteSpacesOnly ? 1 : 0) +
+        (hasActiveCapacityFilter ? 1 : 0);
     const hasActiveFilters = (activeFilterCount || 0) > 0;
     const mapViewToggleLabel = hasActiveFilters ? 'Hide map' : 'Help me find a space';
     const highlightedSpace = React.useMemo(() => {
