@@ -155,7 +155,7 @@ const paneIcon = paneBackgroundImage => {
 
 const SingleLinkCard = ({ cardHeading, landingUrl, iconBackgroundImage, shortParagraph, loggedIn }) => {
     return (
-        <StyledGridItem item component={'li'} size={{ xs: 12 }} uqDsTablet={6} uqDsDesktop={4}>
+        <StyledGridItem component={'li'} size={{ xs: 12, uqDsDesktop: 4, uqDsTablet: 6 }}>
             <div>
                 <StyledLink border={1} p={1} to={landingUrl}>
                     <div className={'panelBodyWrapper'}>

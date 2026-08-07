@@ -251,8 +251,7 @@ export const HomePage = ({
                                 {!!verySimplelayout ? (
                                     <>
                                         <StyledGridItemLoggedInLeftMost
-                                            size={{ xs: 12 }}
-                                            uqDsDesktop={4}
+                                            size={{ xs: 12, uqDsDesktop: 4 }}
                                             data-testid="account-panel"
                                             style={{ paddingTop: 0 }}
                                         >
@@ -267,8 +266,7 @@ export const HomePage = ({
                                         </StyledGridItemLoggedInLeftMost>
                                         {canSeeTrainingPanel(account) && (
                                             <StyledGridItemLoggedInLeftMost
-                                                size={{ xs: 12 }}
-                                                uqDsDesktop={4}
+                                                size={{ xs: 12, uqDsDesktop: 4 }}
                                                 data-testid="training-panel"
                                                 style={{ paddingTop: 0 }}
                                             >
@@ -280,8 +278,7 @@ export const HomePage = ({
                                             </StyledGridItemLoggedInLeftMost>
                                         )}
                                         <StyledGridItemLoggedInLeftMost
-                                            size={{ xs: 12 }}
-                                            uqDsDesktop={4}
+                                            size={{ xs: 12, uqDsDesktop: 4 }}
                                             data-testid="referencing-panel"
                                             style={{ paddingTop: 0 }}
                                         >
@@ -290,7 +287,7 @@ export const HomePage = ({
                                     </>
                                 ) : (
                                     <>
-                                        <Grid uqDsDesktop={4} size={{ xs: 12 }}>
+                                        <Grid size={{ xs: 12, uqDsDesktop: 4 }}>
                                             <Grid container>
                                                 <StyledGridItemLoggedInLeftMost
                                                     size={{ xs: 12 }}
@@ -330,7 +327,7 @@ export const HomePage = ({
                                                 </StyledGridItemLoggedInLeftMost> */}
                                             </Grid>
                                         </Grid>
-                                        <Grid uqDsDesktop={8} size={{ xs: 12 }}>
+                                        <Grid size={{ xs: 12, uqDsDesktop: 8 }}>
                                             <Grid container>
                                                 {canSeeLearningResourcesPanel(account) && (
                                                     <StyledGridItemLoggedIn
@@ -341,7 +338,7 @@ export const HomePage = ({
                                                     </StyledGridItemLoggedIn>
                                                 )}
 
-                                                <Grid uqDsDesktop={6} size={{ xs: 12 }}>
+                                                <Grid size={{ xs: 12, uqDsDesktop: 6 }}>
                                                     <Grid container>
                                                         <StyledGridItemLoggedIn
                                                             size={{ xs: 12 }}
@@ -370,7 +367,7 @@ export const HomePage = ({
                                                         </StyledGridItemLoggedIn>
                                                     </Grid>
                                                 </Grid>
-                                                <Grid uqDsDesktop={6} size={{ xs: 12 }}>
+                                                <Grid size={{ xs: 12, uqDsDesktop: 6 }}>
                                                     <Grid container>
                                                         {isEspaceAuthor(account, author) && (
                                                             <StyledGridItemLoggedIn
