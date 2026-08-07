@@ -104,8 +104,6 @@ test.describe('Spaces Journey Result page', () => {
         await expect(firstSpacePane).toContainText('Designed for individual study');
         await expect(firstSpacePane).toContainText('Space desciption field being used to report the mock data');
 
-        await expect(firstSpacePane).toContainText(/Open now|Closing soon|Currently closed/i);
-
         await expect(page.getByTestId('space-1-detail-unfavourite')).toBeVisible();
     });
     test('results page can book a room', async ({ page }) => {

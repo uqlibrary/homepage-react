@@ -642,7 +642,7 @@ export const SidebarFilters = ({
         );
         const shouldClearCapacityFilter =
             selectedFacilityType?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME ||
-            isSameFacilityTypeId(facilityTypeId, FILTER_BOOKABLE_TYPE_ID);
+            isSameFacilityTypeId(facilityTypeId, FILTER_CAPACITY_TYPE_ID);
         if (shouldClearCapacityFilter) {
             setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
         }
@@ -656,9 +656,7 @@ export const SidebarFilters = ({
             return existingFilters.map(ft => {
                 const isMatchingFilter = isSameFacilityTypeId(ft?.facility_type_id, facilityTypeId);
                 const isSiblingFilter =
-                    shouldClearCapacityFilter &&
-                    (isSameFacilityTypeId(ft?.facility_type_id, FILTER_BOOKABLE_TYPE_ID) ||
-                        isSameFacilityTypeId(ft?.facility_type_id, FILTER_CAPACITY_TYPE_ID));
+                    shouldClearCapacityFilter && isSameFacilityTypeId(ft?.facility_type_id, FILTER_CAPACITY_TYPE_ID);
                 if (!isMatchingFilter && !isSiblingFilter) {
                     return ft;
                 }
@@ -879,28 +877,48 @@ export const SidebarFilters = ({
     };
     const showCartoucheList = flatFacilityTypeList => {
         const activeSelectedFacilityTypes = getActiveSelectedFacilityTypes(selectedFacilityTypes);
-        return (
-            <>
-                {activeSelectedFacilityTypes?.map(f => {
-                    const facilityTypeRecord = flatFacilityTypeList?.find(
-                        flat => flat?.facility_type_id === f?.facility_type_id,
-                    );
-                    return (
-                        <li key={`cartouche-select-${f?.facility_type_id}`}>
-                            <Button
-                                id={`button-deselect-selected-${f?.facility_type_id}`}
-                                data-testid={`button-deselect-selected-${f?.facility_type_id}`}
-                                onClick={deSelectSelected}
-                                className="selectedFilter"
-                                title={`${facilityTypeRecord?.facility_type_name} selected - click to deselect`}
-                            >
-                                <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
-                            </Button>
-                        </li>
-                    );
-                })}
-            </>
-        );
+        const activeCapacityFilter =
+            Array.isArray(capacityFilterValue) &&
+            capacityFilterValue.length === 2 &&
+            (capacityFilterValue[0] !== minimumSpaceCapacity || capacityFilterValue[1] !== maximumSpaceCapacity);
+        const cartouches = [];
+
+        activeSelectedFacilityTypes?.forEach(f => {
+            const facilityTypeRecord = flatFacilityTypeList?.find(
+                flat => flat?.facility_type_id === f?.facility_type_id,
+            );
+            cartouches.push(
+                <li key={`cartouche-select-${f?.facility_type_id}`}>
+                    <Button
+                        id={`button-deselect-selected-${f?.facility_type_id}`}
+                        data-testid={`button-deselect-selected-${f?.facility_type_id}`}
+                        onClick={deSelectSelected}
+                        className="selectedFilter"
+                        title={`${facilityTypeRecord?.facility_type_name} selected - click to deselect`}
+                    >
+                        <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
+                    </Button>
+                </li>,
+            );
+        });
+
+        if (activeCapacityFilter) {
+            cartouches.push(
+                <li key="cartouche-select-capacity">
+                    <Button
+                        id="button-deselect-selected-9003"
+                        data-testid="button-deselect-selected-capacity"
+                        onClick={deSelectSelected}
+                        className="selectedFilter"
+                        title="Space capacity selected - click to deselect"
+                    >
+                        <span>Space capacity</span> <CloseIcon />
+                    </Button>
+                </li>,
+            );
+        }
+
+        return <>{cartouches}</>;
     };
 
     const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
@@ -1020,7 +1038,7 @@ export const SidebarFilters = ({
                         <Typography component={'h3'} variant={'h6'} data-testid="space-filter-count">
                             Active filters <span>{activeFilterCount}</span>
                         </Typography>
-                        {!!checkFiltersList?.length && (
+                        {!!(checkFiltersList?.length || hasActiveCapacityFilter) && (
                             <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
                                 {showCartoucheList(flatFacilityTypeList)}
                             </StyledCartoucheList>
@@ -1061,8 +1079,8 @@ export const SidebarFilters = ({
                                     </MenuItem>
                                 ))}
                         </Select>
-                        {librariesForCampus?.length > 1 && (
-                            // show the selector whenever there is more than one library option available
+                        {librariesForCampus?.length > 2 && (
+                            // show the selector whenever there is more than two library options available
                             <>
                                 <h3 id="filter-by-library-label" htmlFor="filter-by-library-input">
                                     Choose library

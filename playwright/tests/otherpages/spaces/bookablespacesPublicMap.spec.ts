@@ -1209,7 +1209,7 @@ test.describe('Spaces', () => {
                 'Hide On this floor filter options',
             );
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul').locator(':scope > *')).toHaveCount(
-                6,
+                5,
             );
 
             // the group we opened has completely changed - visibility flips
@@ -1319,7 +1319,7 @@ test.describe('Spaces', () => {
 
             // NOW a count shows on that single collapsed group
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toBeVisible();
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toHaveText('(1 of 6)');
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toHaveText('(1 of 5)');
 
             // collapse a few more, to be sure
             await filterGroupButton(FILTER_GROUP_LIGHTING, page).click();
@@ -1367,7 +1367,7 @@ test.describe('Spaces', () => {
 
             // now the collapsed group shows the selected-count summary
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_AVAILABILITY_TYPE))).toBeVisible();
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_AVAILABILITY_TYPE))).toHaveText('(1 of 3)');
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_AVAILABILITY_TYPE))).toHaveText('(1 of 2)');
 
             // re-open it and the collapsed-count disappears again
             await filterGroupButton(FILTER_GROUP_AVAILABILITY_TYPE, page).click();

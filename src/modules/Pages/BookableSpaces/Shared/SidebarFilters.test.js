@@ -100,7 +100,7 @@ describe('SidebarFilters campus selector', () => {
         expect(screen.getByText('Choose library')).toBeInTheDocument();
     });
 
-    it('deselects the special bookable and capacity filters together from a cartouche', () => {
+    it('only clears the capacity filter state when the capacity cartouche is dismissed', () => {
         let latestState = [
             { facility_type_group_id: 1, facility_type_id: 9002, selected: true, unselected: false },
             { facility_type_group_id: 1, facility_type_id: 9003, selected: true, unselected: false },
@@ -110,9 +110,12 @@ describe('SidebarFilters campus selector', () => {
             latestState = typeof updater === 'function' ? updater(latestState) : updater;
             return latestState;
         });
+        const setCapacityFilterValue = jest.fn();
         const props = {
             ...baseProps,
+            capacityFilterValue: [4, 8],
             setSelectedFacilityTypes,
+            setCapacityFilterValue,
             filteredFacilityTypeList: {
                 data: {
                     facility_type_groups: [
@@ -132,12 +135,13 @@ describe('SidebarFilters campus selector', () => {
 
         renderWithTheme(props);
 
-        fireEvent.click(screen.getByTestId('button-deselect-selected-9002'));
+        fireEvent.click(screen.getByTestId('button-deselect-selected-capacity'));
 
         expect(latestState).toHaveLength(3);
-        expect(latestState.find(f => f.facility_type_id === 9002)).toMatchObject({ selected: false });
+        expect(latestState.find(f => f.facility_type_id === 9002)).toMatchObject({ selected: true });
         expect(latestState.find(f => f.facility_type_id === 9003)).toMatchObject({ selected: false });
         expect(latestState.find(f => f.facility_type_id === 57)).toMatchObject({ selected: true });
+        expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
     });
 
     it('opens the parent group for journey intent preselected filters', async () => {

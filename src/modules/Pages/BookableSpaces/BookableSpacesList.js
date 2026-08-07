@@ -317,7 +317,6 @@ export const BookableSpacesList = ({
     );
 
     const [cookies, setCookie, removeCookie] = useCookies();
-    const ALL_CAMPUSES_SELECTION_STORAGE_KEY = 'bookableSpacesAllCampusesSelected';
 
     const getCampusCookieValue = React.useCallback(() => {
         const spacesPreferredCampus = cookies?.UQLspacesPreferredCampus;
@@ -341,12 +340,6 @@ export const BookableSpacesList = ({
         const cookieValue = campusCookie.split('=').slice(1).join('=');
         return cookieValue ? decodeURIComponent(cookieValue) : null;
     }, [cookies?.UQLspacesPreferredCampus]);
-    const getPersistedAllCampusesSelection = React.useCallback(() => {
-        if (typeof window === 'undefined' || !window.sessionStorage) {
-            return false;
-        }
-        return window.sessionStorage.getItem(ALL_CAMPUSES_SELECTION_STORAGE_KEY) === 'true';
-    }, []);
 
     const correctedCampusId = useCallback(
         campusId => {
@@ -365,10 +358,6 @@ export const BookableSpacesList = ({
         [campusList],
     );
     const getCampusInitialState = React.useCallback(() => {
-        if (getPersistedAllCampusesSelection()) {
-            return ALL_CAMPUSES_ID;
-        }
-
         const spacesPreferredCampus = getCampusCookieValue();
         if (typeof spacesPreferredCampus === 'string' && spacesPreferredCampus.trim() !== '') {
             const parsedCampusId = Number.parseInt(spacesPreferredCampus, 10);
@@ -378,7 +367,7 @@ export const BookableSpacesList = ({
             return parsedCampusId;
         }
         return ALL_CAMPUSES_ID;
-    }, [getCampusCookieValue, getPersistedAllCampusesSelection]);
+    }, [getCampusCookieValue]);
     const [selectedCampus, setSelectedCampus] = React.useState(() => getCampusInitialState());
     const hasInitialisedCampusFromCookie = React.useRef(false);
 
@@ -514,14 +503,7 @@ export const BookableSpacesList = ({
 
             if (normalizedCampusSelection === ALL_CAMPUSES_ID) {
                 removeCookie('UQLspacesPreferredCampus', { path: '/' });
-                if (typeof window !== 'undefined' && window.sessionStorage) {
-                    window.sessionStorage.setItem(ALL_CAMPUSES_SELECTION_STORAGE_KEY, 'true');
-                }
                 return;
-            }
-
-            if (typeof window !== 'undefined' && window.sessionStorage) {
-                window.sessionStorage.removeItem(ALL_CAMPUSES_SELECTION_STORAGE_KEY);
             }
 
             const current = new Date();
@@ -1106,12 +1088,6 @@ export const BookableSpacesList = ({
 
             if (appliedFacilityFilters.length > 0) {
                 setSelectedFacilityTypes(appliedFacilityFilters);
-            }
-            if (parsedState?.selectedCampus !== null && parsedState?.selectedCampus !== undefined) {
-                setSelectedCampus(Number(parsedState.selectedCampus));
-            }
-            if (parsedState?.selectedLibrary !== null && parsedState?.selectedLibrary !== undefined) {
-                setSelectedLibrary(Number(parsedState.selectedLibrary));
             }
             if (Array.isArray(parsedState?.capacityFilterValue) && parsedState.capacityFilterValue.length > 0) {
                 setCapacityFilterValue(parsedState.capacityFilterValue);
