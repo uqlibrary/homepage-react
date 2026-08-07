@@ -379,7 +379,7 @@ test.describe('Locations Panel', () => {
             // the dialog is closed initially
             await expect(page.getByTestId('hours-accordion-open')).toHaveAttribute('aria-expanded', 'false');
             await expect(page.getByTestId('locations-wrapper')).toHaveAttribute('aria-live', 'off');
-            await expect(page.getByTestId('locations-wrapper')).toHaveAttribute('inert', 'true');
+            await expect(page.getByTestId('locations-wrapper')).toHaveJSProperty('inert', true);
 
             // open the dialog
             await page.getByTestId('hours-accordion-open').click();
