@@ -7,23 +7,24 @@ import Paper from '@mui/material/Paper';
 
 import wholeArtworkImage from './assets/images/UQRAP_Whole-Artwork-RGB.jpg';
 
-const StyledHeading = styled('h1')(() => ({
+const StyledHeading = styled('h1')(({ theme }) => ({
     marginTop: 0,
     marginBottom: 0,
     paddingTop: 0,
     paddingBottom: 0,
     fontSize: '40px',
     fontStyle: 'normal',
-    fontWeight: 500,
+    fontWeight: theme.typography.fontWeightHeavy,
     lineHeight: '120%',
     letterSpacing: '0.4px',
     color: '#fff',
-    fontFamily: 'Montserrat, Helvetica, Arial, sans-serif',
+    fontFamily: theme.typography.headingFontFamily,
 }));
 
-const StyledSubheading = styled('h2')(() => ({
+const StyledSubheading = styled('h2')(({ theme }) => ({
     fontSize: '1.125rem',
-    fontWeight: 400,
+    fontWeight: theme.typography.fontWeightMedium,
+    fontFamily: 'var(--art-trail-font-family)',
     lineHeight: '1.6',
     marginTop: '1rem',
 }));

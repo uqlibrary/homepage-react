@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import Cookies from 'js-cookie';
 
 import { mui1theme } from 'config';
 
@@ -24,10 +25,13 @@ import Paper from '@mui/material/Paper';
 import Toolbar from '@mui/material/Toolbar';
 
 import uqHeaderLogo from './assets/images/uq-logo--reversed.svg';
+import CulturalDisclaimer from './CulturalDisclaimer';
 import FeedbackTabContent from './FeedbackTabContent';
 import MapTabContent from './MapTabContent';
 import { trailPages } from './pages';
 import TrailTabContent from './TrailTabContent';
+
+const CULTURAL_DISCLAIMER_COOKIE = 'ART_TRAIL_CULTURAL_DISCLAIMER_SEEN';
 
 const tabs = [
     {
@@ -115,6 +119,9 @@ const ArtTrailApp = () => {
     const [activeTab, setActiveTab] = useState('trail');
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [tabState, setTabState] = useState(buildInitialTabState);
+    const [showCulturalDisclaimer, setShowCulturalDisclaimer] = useState(
+        () => Cookies.get(CULTURAL_DISCLAIMER_COOKIE) !== 'true',
+    );
 
     useEffect(() => {
         document.title = 'Art Trail App';
@@ -133,6 +140,11 @@ const ArtTrailApp = () => {
     const footerHeight = showStepper ? '112px' : '64px';
 
     const handleMenuClose = () => setMenuAnchor(null);
+
+    const handleDisclaimerClose = () => {
+        Cookies.set(CULTURAL_DISCLAIMER_COOKIE, 'true', { path: '/' });
+        setShowCulturalDisclaimer(false);
+    };
 
     const updateTabState = (tabId, updater) => {
         setTabState(currentState => ({
@@ -163,7 +175,9 @@ const ArtTrailApp = () => {
             sx={{
                 '--art-trail-header-height': '64px',
                 '--art-trail-footer-height': footerHeight,
-                '--art-trail-font-size': '16px',
+                '--art-trail-font-size': mui1theme.typography.fontSize,
+                '--art-trail-font-family': mui1theme.typography.bodyFontFamily,
+                '--art-trail-spacing': mui1theme.typography.fontSize,
                 minHeight: '100vh',
                 height: '100dvh',
                 bgcolor: '#fff',
@@ -188,6 +202,7 @@ const ArtTrailApp = () => {
                                 color="inherit"
                                 edge="start"
                                 aria-label="open navigation menu"
+                                sx={{ fontSize: '1.5rem' }}
                                 onClick={event => setMenuAnchor(event.currentTarget)}
                             >
                                 <MenuIcon />
@@ -233,6 +248,11 @@ const ArtTrailApp = () => {
                 >
                     <Grid sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
                         <Grid container direction="column" rowSpacing={2.5}>
+                            {showCulturalDisclaimer && (
+                                <Grid>
+                                    <CulturalDisclaimer onClose={handleDisclaimerClose} />
+                                </Grid>
+                            )}
                             <Grid>
                                 <Grid container direction="column" rowSpacing={2.5}>
                                     {tabs.map(tab => (
