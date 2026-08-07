@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
@@ -854,6 +853,22 @@ export const BookableSpacesList = ({
             return true;
         }
 
+        const hasActiveCapacityRange =
+            Array.isArray(capacityFilterValue) &&
+            capacityFilterValue.length >= 2 &&
+            (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
+                Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
+        const hasBookableFilterSelected = (selectedFacilityTypes || []).some(filter => {
+            if (!filter?.selected) {
+                return false;
+            }
+
+            return (
+                Number(filter?.facility_type_id) === FILTER_BOOKABLE_TYPE_ID ||
+                filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME
+            );
+        });
+
         // AND between groups
         for (const groupId in selectedFiltersByGroup) {
             if (Object.hasOwn(selectedFiltersByGroup, groupId)) {
@@ -865,14 +880,15 @@ export const BookableSpacesList = ({
                     if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
                         return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
                     } else if (
-                        filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME &&
-                        selectedFiltersInGroup.includes(FILTER_BOOKABLE_TYPE_ID)
+                        (filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME ||
+                            (hasActiveCapacityRange && hasBookableFilterSelected)) &&
+                        (selectedFiltersInGroup.includes(FILTER_BOOKABLE_TYPE_ID) || hasBookableFilterSelected)
                     ) {
                         return (
                             isBookable(space) &&
                             !!space?.space_capacity &&
-                            space?.space_capacity >= capacityFilterValue[0] &&
-                            space?.space_capacity <= capacityFilterValue[1]
+                            space?.space_capacity >= Number(capacityFilterValue?.[0] ?? minimumSpaceCapacity) &&
+                            space?.space_capacity <= Number(capacityFilterValue?.[1] ?? maximumSpaceCapacity)
                         );
                     } else if (
                         filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME &&
