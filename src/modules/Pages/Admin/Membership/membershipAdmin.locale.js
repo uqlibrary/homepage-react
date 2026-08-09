@@ -69,6 +69,10 @@ export default {
             deleting: 'Deleting',
             // Shown on the card once the delete has taken, in place of the buttons.
             deleted: 'Deleted',
+            // Sending a renewing member their renewal link again, for one who lost or never received it. Its
+            // accessible name names the applicant, since the button sits among identical ones down the page.
+            resend: 'Resend email',
+            resendLabel: name => `Resend the renewal email for ${name}`,
             // Stands in for an account field an issued account has not been given yet, so the row reads as
             // empty-but-present rather than blank.
             notSet: 'Not set',
@@ -106,6 +110,14 @@ export default {
                 'Please note this action cannot be undone.',
             confirmButtonLabel: 'Yes, delete',
             cancelButtonLabel: 'Cancel',
+        },
+        // Feedback after a resend: the endpoint says whether it sent, so the admin is told either way. The
+        // applicant's name is prefixed by the caller, since the same dialog fronts a resend for any row.
+        resendDialog: {
+            confirmationBoxId: 'membership-resend',
+            sent: 'Renewal email sent successfully.',
+            notSent: 'Unfortunately, the renewal email could not be sent. Please try again later.',
+            confirmButtonLabel: 'Close',
         },
         // What an admin action failed with. The lead-in is fixed and names no particular action, since it
         // fronts whatever the admin tried; the backend's own reason, where there is one, is appended to it.

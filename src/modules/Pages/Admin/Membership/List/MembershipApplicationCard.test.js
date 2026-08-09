@@ -29,6 +29,7 @@ const setup = (membership, props = {}) =>
                         onConfirm={jest.fn()}
                         onDelete={jest.fn()}
                         onUpdate={jest.fn()}
+                        onResend={jest.fn()}
                         {...props}
                     />
                 </ul>
@@ -107,6 +108,7 @@ describe('MembershipApplicationCard', () => {
                             onConfirm={jest.fn()}
                             onDelete={jest.fn()}
                             onUpdate={jest.fn()}
+                            onResend={jest.fn()}
                         />
                     </ul>
                 </ThemeProvider>
@@ -284,6 +286,47 @@ describe('MembershipApplicationCard', () => {
 
             await userEvent.click(screen.getByTestId('expiry-102-edit-button'));
             expect(screen.getByTestId('expiry-102-save-button')).toBeDisabled();
+        });
+    });
+
+    describe('resend controls', () => {
+        const renewing = {
+            id: '103',
+            type: 'community',
+            status: 'renewing',
+            first_name: 'Renewing',
+            sn: 'Member',
+            confirmed_on: '21-05-2025',
+        };
+
+        it('offers Resend on a renewing application, and reports it when pressed', async () => {
+            const onResend = jest.fn();
+            setup(renewing, { onResend });
+
+            const button = screen.getByTestId('membership-resend-103');
+            expect(button).toHaveTextContent('Resend email');
+            expect(button).toHaveAccessibleName('Resend the renewal email for Renewing Member');
+
+            await userEvent.click(button);
+            expect(onResend).toHaveBeenCalledWith(renewing);
+        });
+
+        it('offers no resend on an application that is not renewing', () => {
+            setup({ id: '102', type: 'alumni', status: 'confirmed', first_name: 'Already', sn: 'Confirmed' });
+
+            expect(screen.queryByTestId('membership-resend-102')).not.toBeInTheDocument();
+        });
+
+        it('offers no resend once the application is deleted', () => {
+            setup(renewing, { deleted: true });
+
+            expect(screen.queryByTestId('membership-resend-103')).not.toBeInTheDocument();
+        });
+
+        it('offers no resend while a confirmation is in progress', () => {
+            setup({ ...renewing, confirm_step: 1 });
+
+            expect(screen.queryByTestId('membership-resend-103')).not.toBeInTheDocument();
         });
     });
 

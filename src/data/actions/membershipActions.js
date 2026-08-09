@@ -12,6 +12,7 @@ import {
     MEMBERSHIP_FORM_DATA_API,
     MEMBERSHIP_PAYMENT_API,
     MEMBERSHIP_RENEW_API,
+    MEMBERSHIP_RESEND_EMAIL_API,
     MEMBERSHIP_UPDATE_API,
 } from 'repositories/routes';
 
@@ -268,6 +269,24 @@ export function deleteMembership(id) {
             const response = await destroy(MEMBERSHIP_DELETE_API({ id }));
             dispatch({ type: actions.MEMBERSHIP_DELETED, payload: id });
             return response;
+        } catch (error) {
+            dispatch({ type: actions.MEMBERSHIP_SAVE_FAILED, payload: error });
+            throw error;
+        }
+    };
+}
+
+/**
+ * Resend the renewal email for a renewing application, for a member who lost or never received their link.
+ *
+ * The endpoint reports whether it sent by the body it answers with - truthy for sent, falsy for not - rather
+ * than by an error status, so this resolves with that answer and lets the caller tell the admin either way. A
+ * request that cannot be reached at all still rejects.
+ */
+export function resendRenewalEmail(id) {
+    return async dispatch => {
+        try {
+            return await get(MEMBERSHIP_RESEND_EMAIL_API({ id }));
         } catch (error) {
             dispatch({ type: actions.MEMBERSHIP_SAVE_FAILED, payload: error });
             throw error;

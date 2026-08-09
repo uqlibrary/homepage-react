@@ -320,6 +320,47 @@ describe('MembershipList', () => {
         );
     });
 
+    const renewingPage = [{ id: '103', type: 'community', status: 'renewing', first_name: 'Renewing', sn: 'Member' }];
+
+    it('reports a sent renewal email in a dialog naming the applicant', async () => {
+        const resendRenewalEmail = jest.fn().mockResolvedValue(true);
+        setup({ memberships: renewingPage, actions: { resendRenewalEmail } });
+
+        await userEvent.click(screen.getByTestId('membership-resend-103'));
+
+        expect(resendRenewalEmail).toHaveBeenCalledWith('103');
+        await waitFor(() =>
+            expect(screen.getByTestId('message-content')).toHaveTextContent(
+                'Renewing Member: Renewal email sent successfully.',
+            ),
+        );
+
+        await userEvent.click(screen.getByTestId('confirm-membership-resend'));
+        await waitFor(() => expect(screen.queryByTestId('dialogbox-membership-resend')).not.toBeInTheDocument());
+    });
+
+    it('reports a renewal email the endpoint declined to send', async () => {
+        const resendRenewalEmail = jest.fn().mockResolvedValue(false);
+        setup({ memberships: renewingPage, actions: { resendRenewalEmail } });
+
+        await userEvent.click(screen.getByTestId('membership-resend-103'));
+
+        await waitFor(() =>
+            expect(screen.getByTestId('message-content')).toHaveTextContent(
+                'Renewing Member: Unfortunately, the renewal email could not be sent. Please try again later.',
+            ),
+        );
+    });
+
+    it('reports a resend that could not be reached as not sent', async () => {
+        const resendRenewalEmail = jest.fn().mockRejectedValue(new Error('nope'));
+        setup({ memberships: renewingPage, actions: { resendRenewalEmail } });
+
+        await userEvent.click(screen.getByTestId('membership-resend-103'));
+
+        await waitFor(() => expect(screen.getByTestId('message-content')).toHaveTextContent('could not be sent'));
+    });
+
     it('messageOf reads the API message from a plain rejection and falls back otherwise', () => {
         expect(messageOf({ message: 'Already a member.' })).toBe('Already a member.');
         // A raw axios Error carries nothing an admin can act on, so the fallback stands in.

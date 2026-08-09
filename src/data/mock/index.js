@@ -461,6 +461,10 @@ mock.onPost(new RegExp('^membership/[0-9a-f-]{36}$')).reply(config => {
     return withDelay([200, membership])();
 });
 
+// Resending a renewal email. The endpoint reports whether it sent by its body - here always true - rather
+// than by an error status, so a member who lost their link can be sent it again.
+mock.onGet(new RegExp('^membership/[^/]+/mail$')).reply(withDelay([200, true]));
+
 // Deleting an application - reached at the same address as reading one by id, with the DELETE method, so it
 // does not collide with the GET above.
 mock.onDelete(new RegExp('^membership/[0-9a-f-]{36}$')).reply(withDelay([200, { status: 'ok' }]));

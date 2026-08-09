@@ -13,6 +13,7 @@ import {
     loadMembershipFormData,
     loadMemberships,
     renewMembership,
+    resendRenewalEmail,
     saveMembershipPayment,
     stripDisallowedFields,
     submitMembership,
@@ -178,6 +179,28 @@ describe('Membership actions', () => {
                 actions.MEMBERSHIP_SAVING,
                 actions.MEMBERSHIP_SAVE_FAILED,
             ]);
+        });
+    });
+
+    describe('resendRenewalEmail', () => {
+        it('resolves with a truthy result when the email is sent', async () => {
+            mockApi.onGet(repositories.routes.MEMBERSHIP_RESEND_EMAIL_API({ id: 'abc-123' }).apiUrl).reply(200, true);
+
+            await expect(mockActionsStore.dispatch(resendRenewalEmail('abc-123'))).resolves.toBe(true);
+        });
+
+        it('resolves with a falsy result when the endpoint reports it did not send', async () => {
+            mockApi.onGet(repositories.routes.MEMBERSHIP_RESEND_EMAIL_API({ id: 'abc-123' }).apiUrl).reply(200, false);
+
+            await expect(mockActionsStore.dispatch(resendRenewalEmail('abc-123'))).resolves.toBe(false);
+        });
+
+        it('dispatches save failed and rejects when the request cannot be reached', async () => {
+            mockApi.onGet(repositories.routes.MEMBERSHIP_RESEND_EMAIL_API({ id: 'abc-123' }).apiUrl).networkError();
+
+            await expect(mockActionsStore.dispatch(resendRenewalEmail('abc-123'))).rejects.toBeDefined();
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([actions.MEMBERSHIP_SAVE_FAILED]);
         });
     });
 

@@ -71,6 +71,9 @@ export const MembershipList = ({
     // whenever a fresh page is fetched, so server truth always wins in the end.
     const [rows, setRows] = useState({});
     const [error, setError] = useState(null);
+    // A one-off note to show the admin - here, whether a renewal email went out. Distinct from `error`: this
+    // reports the outcome of an action that completed, not a failure.
+    const [message, setMessage] = useState(null);
     // The application awaiting the delete prompt, if any. Delete cannot be undone, so it is asked for before it
     // is done rather than fired straight from the card.
     const [pendingDelete, setPendingDelete] = useState(null);
@@ -156,6 +159,17 @@ export const MembershipList = ({
             // backend's own text cannot go on screen.
             setRow(membership.id, { busy: null });
             setError(messageOf(failure, attribute === 'barcode' ? strings.errorDialog.barcodeRejected : undefined));
+        }
+    };
+
+    const onResend = async membership => {
+        // The endpoint reports whether it sent by its answer rather than by an error, so a truthy result is a
+        // send and a falsy one is not; a request that could not be reached at all is reported as not sent too.
+        try {
+            const sent = await actions.resendRenewalEmail(membership.id);
+            setMessage(`${fullName(membership)}: ${sent ? strings.resendDialog.sent : strings.resendDialog.notSent}`);
+        } catch (failure) {
+            setMessage(`${fullName(membership)}: ${strings.resendDialog.notSent}`);
         }
     };
 
@@ -279,6 +293,7 @@ export const MembershipList = ({
                                     onConfirm={onConfirm}
                                     onDelete={setPendingDelete}
                                     onUpdate={onUpdate}
+                                    onResend={onResend}
                                 />
                             ))}
                         </Box>
@@ -315,6 +330,21 @@ export const MembershipList = ({
                 onAction={() => onDelete(pendingDelete)}
                 onCancelAction={() => setPendingDelete(null)}
                 onClose={() => setPendingDelete(null)}
+            />
+
+            {/* The outcome of a resend, reported whether it sent or not. No cancel - there is only a result to
+                read and dismiss. */}
+            <ConfirmationBox
+                confirmationBoxId={strings.resendDialog.confirmationBoxId}
+                isOpen={!!message}
+                hideCancelButton
+                locale={{
+                    confirmationTitle: strings.row.resend,
+                    confirmationMessage: message ?? '',
+                    confirmButtonLabel: strings.resendDialog.confirmButtonLabel,
+                }}
+                onAction={() => setMessage(null)}
+                onClose={() => setMessage(null)}
             />
 
             {/* One dialog for whatever an action failed with. It carries no cancel: there is nothing to undo,

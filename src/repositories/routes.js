@@ -362,6 +362,10 @@ export const MEMBERSHIP_DELETE_API = ({ id }) => ({ apiUrl: `membership/${id}` }
 // account's expiry and barcode from the admin queue.
 export const MEMBERSHIP_UPDATE_API = ({ id }) => ({ apiUrl: `membership/${id}` });
 
+// Resend the renewal email for a renewing application. The endpoint answers with whether it sent, rather than
+// with an error, so a member who lost their emailed link can be sent it again.
+export const MEMBERSHIP_RESEND_EMAIL_API = ({ id }) => ({ apiUrl: `membership/${id}/mail` });
+
 // The admin listing of applications - a searched, filtered, ordered page at a time, since the queue holds
 // thousands. Name and type search as `filter[name]` / `filter[type]`; `status` filters to one bucket unless it
 // is `all`; the sort maps to the submitted date; page and per_page ask for one page. The response is an

@@ -169,7 +169,16 @@ AccountField.propTypes = { label: PropTypes.string, children: PropTypes.node };
  * The heading matters beyond looks: it lets a screen reader user jump between applications instead of walking
  * every cell of a grid.
  */
-export const MembershipApplicationCard = ({ membership, typeTitles, busy, deleted, onConfirm, onDelete, onUpdate }) => {
+export const MembershipApplicationCard = ({
+    membership,
+    typeTitles,
+    busy,
+    deleted,
+    onConfirm,
+    onDelete,
+    onUpdate,
+    onResend,
+}) => {
     const name = fullName(membership);
     const headingId = `membership-name-${membership.id}`;
     const inProgress = isConfirmationInProgress(membership);
@@ -185,6 +194,9 @@ export const MembershipApplicationCard = ({ membership, typeTitles, busy, delete
     // Only an application still waiting on a decision is deleted from here - an issued account is not thrown
     // away from the queue, and a confirmation in flight must settle first.
     const canDelete = !deleted && !inProgress && !isIssued(membership);
+    // A renewing member can be sent their renewal link again, for one who lost or never received it. Held back
+    // while a confirmation is in flight or once the application is deleted, the same as the other actions.
+    const canResend = membership.status === 'renewing' && !deleted && !inProgress;
 
     return (
         <Box component="li" sx={{ listStyle: 'none' }}>
@@ -356,7 +368,7 @@ export const MembershipApplicationCard = ({ membership, typeTitles, busy, delete
                             always knows where to reach for it. A confirmation already under way, or an
                             application already deleted, replaces the buttons with a chip saying so, rather than
                             a control that is unsafe or pointless to press. */}
-                        {(canConfirm || canDelete || inProgress || deleted) && (
+                        {(canConfirm || canDelete || canResend || inProgress || deleted) && (
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -395,6 +407,17 @@ export const MembershipApplicationCard = ({ membership, typeTitles, busy, delete
                                         {busy === 'deleting' ? strings.deleting : strings.delete}
                                     </Button>
                                 )}
+                                {!!canResend && (
+                                    <Button
+                                        size="small"
+                                        variant="text"
+                                        data-testid={`membership-resend-${membership.id}`}
+                                        aria-label={strings.resendLabel(name)}
+                                        onClick={() => onResend(membership)}
+                                    >
+                                        {strings.resend}
+                                    </Button>
+                                )}
                                 {!!canConfirm && (
                                     <Button
                                         size="small"
@@ -426,6 +449,7 @@ MembershipApplicationCard.propTypes = {
     onConfirm: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
+    onResend: PropTypes.func.isRequired,
 };
 
 export default MembershipApplicationCard;
