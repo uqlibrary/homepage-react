@@ -22,11 +22,11 @@ export const StyledHeaderWithLinkToAllGridItem = styled(Grid)(({ theme }) => ({
         display: 'inline-block',
         textDecoration: 'underline',
         transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
-        color: theme.palette.primary.main,
+        color: `${theme.palette.primary.main} !important`,
         zIndex: 1,
         pointerEvents: 'auto',
         '&:hover': {
-            color: '#fff',
+            color: '#fff !important',
             backgroundColor: theme.palette.primary.main,
             textDecoration: 'underline',
         },

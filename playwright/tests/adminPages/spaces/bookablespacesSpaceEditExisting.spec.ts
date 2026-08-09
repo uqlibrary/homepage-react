@@ -149,7 +149,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 51;
+        const numberFacilityTypesInMockFacilityTypes = 52;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -237,7 +237,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 51;
+        const numberFacilityTypesInMockFacilityTypes = 52;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -314,7 +314,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await page.getByTestId(TAB_FACILITY_TYPES).click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 51;
+        const numberFacilityTypesInMockFacilityTypes = 52;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
@@ -416,111 +416,177 @@ test.describe('Spaces Admin - edit space', () => {
     const UNDERGRAD = 14;
     // const SINGLE_OCCUPANCY = 51;
 
-    // to test the required fields are the only required fields, we have to clear all the other fields!!! Not a realistic thing a user would do, but it meets the mentioned need
-    test('can save with only required fields', async ({ page, context }) => {
-        await setTestDataCookie(context, page);
+    test.describe('can save', () => {
+        // to test the required fields are the only required fields, we have to clear all the other fields!!! Not a realistic thing a user would do, but it meets the mentioned need
+        test('can save with only required fields', async ({ page, context }) => {
+            await setTestDataCookie(context, page);
 
-        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
+            await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+            await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
 
-        await ensureSpaceTypeSelected(page);
+            await ensureSpaceTypeSelected(page);
 
-        // clear as many of the non-required fields as is possible and confirm will submit
+            // clear as many of the non-required fields as is possible and confirm will submit
 
-        // clear description field manually
-        await expect(page.locator('.ProseMirror')).toBeVisible({ timeout: 30_000 });
-        await typeRichTextEditor(page, '');
+            // clear description field manually
+            await expect(page.locator('.ProseMirror')).toBeVisible({ timeout: 30_000 });
+            await typeRichTextEditor(page, '');
 
-        await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
-        await page.getByTestId('space-can-book').locator('input').click();
+            await expect(page.getByTestId('space-can-book').locator('input')).toBeChecked();
+            await page.getByTestId('space-can-book').locator('input').click();
 
-        // change to facility type tab
-        await page.getByTestId(TAB_FACILITY_TYPES).click();
+            // change to facility type tab
+            await page.getByTestId(TAB_FACILITY_TYPES).click();
 
-        // clear facility types
-        for (const facilityTypeId of [
-            CONTAINS_ARTWORK,
-            RECHARGE_STATION,
-            SELF_PRINTING,
-            FEMALE_TOILETS,
-            MALE_TOILETS,
-            ADJUSTABLE_DESKS,
-            AV_EQUIPMENT,
-            POWER_POINT,
-            COMPUTER,
-            WHITEBOARD,
-            LOW_NOISE_LEVEL,
-            POSTGRAD,
-            UNDERGRAD,
-            // SINGLE_OCCUPANCY,
-        ]) {
-            await expect(page.getByTestId(`filtertype-${facilityTypeId}`).locator('input')).toBeChecked();
-            await page.getByTestId(`filtertype-${facilityTypeId}`).locator('input').click();
-        }
+            // clear facility types
+            for (const facilityTypeId of [
+                CONTAINS_ARTWORK,
+                RECHARGE_STATION,
+                SELF_PRINTING,
+                FEMALE_TOILETS,
+                MALE_TOILETS,
+                ADJUSTABLE_DESKS,
+                AV_EQUIPMENT,
+                POWER_POINT,
+                COMPUTER,
+                WHITEBOARD,
+                LOW_NOISE_LEVEL,
+                POSTGRAD,
+                UNDERGRAD,
+                // SINGLE_OCCUPANCY,
+            ]) {
+                await expect(page.getByTestId(`filtertype-${facilityTypeId}`).locator('input')).toBeChecked();
+                await page.getByTestId(`filtertype-${facilityTypeId}`).locator('input').click();
+            }
 
-        // change to Location tab
-        await page.getByTestId(TABS_LOCATION_HOURS).click();
+            // change to Location tab
+            await page.getByTestId(TABS_LOCATION_HOURS).click();
 
-        // locations are inherently unclearable
+            // locations are inherently unclearable
 
-        await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
-        await page.getByTestId('add-space-precise-location').locator('input').fill('');
+            await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
+            await page.getByTestId('add-space-precise-location').locator('input').fill('');
 
-        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
-        await page.getByTestId('add-space-springshare-id').click();
-        await page.locator('ul[aria-labelledby="add-space-springshare-id-label"] li:first-of-type').click();
-        await expect(page.getByTestId('add-space-springshare-id')).toContainText(
-            'No Springshare opening hours will display',
-        );
+            await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
+            await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
+            await page.getByTestId('add-space-springshare-id').click();
+            await page.locator('ul[aria-labelledby="add-space-springshare-id-label"] li:first-of-type').click();
+            await expect(page.getByTestId('add-space-springshare-id')).toContainText(
+                'No Springshare opening hours will display',
+            );
 
-        await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space_services_page').locator('input')).toHaveValue(
-            'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
-        );
-        await page.getByTestId('space_services_page').locator('input').fill('');
+            await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
+            await expect(page.getByTestId('space_services_page').locator('input')).toHaveValue(
+                'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
+            );
+            await page.getByTestId('space_services_page').locator('input').fill('');
 
-        // change to Imagery tab
-        await page.getByTestId(TAB_IMAGERY).click();
+            // change to Imagery tab
+            await page.getByTestId(TAB_IMAGERY).click();
 
-        // clear the image
-        await expect(page.getByTestId('dropzone-preview').locator('img')).toBeVisible();
-        await expect(page.getByTestId('dropzone-preview').locator('img')).toHaveAttribute(
-            'src',
-            'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
-        );
-        await expect(page.getByTestId('spaces-form-remove-image')).toBeVisible();
-        await page.getByTestId('spaces-form-remove-image').click();
+            // clear the image
+            await expect(page.getByTestId('dropzone-preview').locator('img')).toBeVisible();
+            await expect(page.getByTestId('dropzone-preview').locator('img')).toHaveAttribute(
+                'src',
+                'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
+            );
+            await expect(page.getByTestId('spaces-form-remove-image')).toBeVisible();
+            await page.getByTestId('spaces-form-remove-image').click();
 
-        await expect(page.getByTestId('dropzone-preview').locator('img')).not.toBeVisible();
+            await expect(page.getByTestId('dropzone-preview').locator('img')).not.toBeVisible();
 
-        // clear the img alt text
-        await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
-        await page.getByTestId('add-space-photo-description').fill('');
+            // clear the img alt text
+            await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
+            await page.getByTestId('add-space-photo-description').fill('');
 
-        // click save button
-        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        await page.getByTestId('admin-spaces-save-button-submit').click();
+            // click save button
+            await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+            await page.getByTestId('admin-spaces-save-button-submit').click();
 
-        await expect(page.getByTestId('message-title')).toBeVisible();
-        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+            await expect(page.getByTestId('message-title')).toBeVisible();
+            await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
 
-        // check the data we pretended to send to the server matches what we expect
-        // acts as check of what we sent to api
-        const expectedValues = {
-            ...originalMockData('f98g_fwas_5g33'),
-            facility_types: [],
-            space_precise: '',
-            space_description: '',
-            space_external_book_url: null,
-            space_photo_url: '',
-            space_photo_description: '',
-            space_opening_hours_id: -1,
-            space_services_page: '',
-            uploadedFile: [],
-            archibus_room_id: null,
-        };
-        await assertExpectedDataSentToServer(page, expectedValues);
+            // check the data we pretended to send to the server matches what we expect
+            // acts as check of what we sent to api
+            const expectedValues = {
+                ...originalMockData('f98g_fwas_5g33'),
+                facility_types: [3, 49, 60],
+                space_precise: '',
+                space_description: '',
+                space_external_book_url: null,
+                space_photo_url: '',
+                space_photo_description: '',
+                space_opening_hours_id: -1,
+                space_services_page: '',
+                uploadedFile: [],
+                archibus_room_id: null,
+            };
+            await assertExpectedDataSentToServer(page, expectedValues);
+        });
+        test('edit space - saves correctly', async ({ page, context }) => {
+            const cookie = await context.cookies().then(cookies => cookies.find(c => c.name === 'CYPRESS_TEST_DATA'));
+            expect(cookie).toBeDefined();
+            expect(cookie?.value).toBe('active');
+
+            await openEditSpacePage(page, 'f98g_fwas_5g33', '?user=libSpaces');
+
+            // TODO : ADD SOME MORE CHANGES HERE!!! WE ARE ONLY TESTING SPACE_TYPE ATM!!!
+
+            // open the space type selector
+            await expect(page.getByTestId('space-type')).toBeVisible();
+            await expect(page.getByTestId('space-type')).toContainText('Communal space');
+            await page.getByTestId('space-type').click();
+
+            const newSpaceTypeMeeetingRoom = 3;
+            await expect(page.locator(`li[data-value="${newSpaceTypeMeeetingRoom}"]`)).toBeVisible();
+            await page.locator(`li[data-value="${newSpaceTypeMeeetingRoom}"]`).click();
+
+            await expect(page.getByTestId('space-type')).toBeVisible();
+            await expect(page.getByTestId('space-type')).toContainText('Meeting room');
+
+            await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+            await expect(page.getByTestId('admin-spaces-save-button-submit')).toContainText('Save');
+            await page.getByTestId('admin-spaces-save-button-submit').click();
+
+            assertExpectedDataSentToServer(page, {
+                archibus_room_id: null,
+                facility_types: [
+                    FEMALE_TOILETS,
+                    MALE_TOILETS,
+                    RECHARGE_STATION,
+                    SELF_PRINTING,
+                    LOW_NOISE_LEVEL,
+                    COMPUTER,
+                    POWER_POINT,
+                    WHITEBOARD,
+                    ADJUSTABLE_DESKS,
+                    AV_EQUIPMENT,
+                    POSTGRAD,
+                    UNDERGRAD,
+                    3,
+                    49,
+                    60,
+                    CONTAINS_ARTWORK,
+                ],
+                space_capacity: 7,
+                space_description:
+                    '<p>A space in the Law library. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p> <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
+                space_draftmode: true,
+                space_external_book_url: 'https://uqbookit.uq.edu.au/#/app/booking-types/111',
+                space_floor_id: 1,
+                space_id: 123456,
+                space_latitude: '-27.49718',
+                space_longitude: '153.01214',
+                space_name: '01-W431',
+                space_opening_hours_id: 4801,
+                space_photo_description: 'a large room with 6 large round tables, each wih multiple chairs',
+                space_photo_url: 'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
+                space_precise: 'Westernmost corner',
+                space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
+                space_type_id: newSpaceTypeMeeetingRoom,
+                space_zlevel: 1,
+            });
+        });
     });
     test('tabs work as expected', async ({ page }) => {
         const cancelButton = page.getByTestId('admin-spaces-form-button-cancel');
@@ -790,6 +856,9 @@ test.describe('Spaces Admin - edit space', () => {
             AV_EQUIPMENT,
             POSTGRAD,
             UNDERGRAD,
+            3,
+            49,
+            60,
             CONTAINS_ARTWORK,
             // SINGLE_OCCUPANCY,
         ];
@@ -879,6 +948,92 @@ test.describe('Spaces Admin - edit space', () => {
             archibus_room_id: null,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
+    });
+
+    test('preview button works', async ({ page }) => {
+        // open the preview dialog
+        await expect(page.getByTestId('spaces-preview-dialog-title')).not.toBeVisible();
+        await expect(page.getByTestId('admin-spaces-preview-button')).toBeVisible();
+        await page.getByTestId('admin-spaces-preview-button').click();
+        await expect(page.getByTestId('spaces-preview-dialog-title')).toBeVisible();
+        await expect(page.getByTestId('spaces-preview-dialog-title')).toContainText('Space preview');
+
+        await expect(page.getByTestId('space-123456-details-image').locator('img')).toBeVisible();
+        await expect(page.getByTestId('space-123456-details-image').locator('img')).toHaveAttribute(
+            'src',
+            'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
+        );
+        await expect(page.getByTestId('space-123456-details-name')).toBeVisible();
+        await expect(page.getByTestId('space-123456-details-name')).toContainText('Communal space 01-W431');
+
+        await expect(page.getByTestId('space-123456-friendly-location').locator('.location-campus')).toBeVisible();
+        await expect(page.getByTestId('space-123456-friendly-location').locator('.location-campus')).toContainText(
+            'St Lucia',
+        );
+        await expect(page.getByTestId('space-123456-friendly-location').locator('.location-building')).toBeVisible();
+        await expect(page.getByTestId('space-123456-friendly-location').locator('.location-building')).toContainText(
+            'Forgan Smith Building (0001)',
+        );
+        await expect(page.getByTestId('space-123456-friendly-location').locator('.location-library')).toBeVisible();
+        await expect(page.getByTestId('space-123456-friendly-location').locator('.location-library')).toContainText(
+            'Walter Harrison Law Library',
+        );
+        await expect(page.getByTestId('space-123456-friendly-location').locator('.location-floor')).toBeVisible();
+        await expect(page.getByTestId('space-123456-friendly-location').locator('.location-floor')).toContainText(
+            'Level 2',
+        );
+        await expect(page.getByTestId('space-123456-friendly-location').locator('.location-precise')).toBeVisible();
+        await expect(page.getByTestId('space-123456-friendly-location').locator('.location-precise')).toContainText(
+            'Westernmost corner',
+        );
+
+        // as this is a "closing soon" Space, none of the chips display
+        await expect(page.getByTestId('spaces-journey-open-status-chip-open')).not.toBeVisible();
+        await expect(page.getByTestId('spaces-journey-open-status-chip-closing-soon')).not.toBeVisible();
+        await expect(page.getByTestId('spaces-journey-open-status-chip-closed')).not.toBeVisible();
+
+        await expect(page.getByTestId('space-123456-outage').locator('h4')).toBeVisible();
+        await expect(page.getByTestId('space-123456-outage').locator('h4')).toContainText('Upcoming closure');
+        await expect(page.getByTestId('space-123456-outage-message')).toBeVisible();
+        await expect(page.getByTestId('space-123456-outage-message')).toContainText('Closed'); // time and date varies
+        await expect(page.getByTestId('space-123456-outage-reason')).toBeVisible();
+        await expect(page.getByTestId('space-123456-outage-reason')).toContainText('Reason: Deep cleaning');
+
+        await expect(page.getByTestId('spaces-123456-details-space-type-description')).toBeVisible();
+        await expect(page.getByTestId('spaces-123456-details-space-type-description')).toContainText(
+            'Designed for communal activities',
+        );
+
+        await expect(page.getByTestId('space-123456-details-description')).toBeVisible();
+        await expect(page.getByTestId('space-123456-details-description')).toContainText(
+            'A space in the Law library. Lorem ipsum dolor sit amet',
+        );
+
+        await expect(page.getByTestId('space-123456-booking-link').locator('a')).toBeVisible();
+        await expect(page.getByTestId('space-123456-booking-link').locator('a')).toContainText('Book this space');
+        await expect(page.getByTestId('space-123456-booking-link').locator('a')).toHaveAttribute(
+            'href',
+            'https://uqbookit.uq.edu.au/#/app/booking-types/111',
+        );
+
+        await page.getByTestId('space-123456-facility').scrollIntoViewIfNeeded();
+
+        await expect(page.getByTestId('space-123456-capacity')).toBeVisible();
+        await expect(page.getByTestId('space-123456-capacity').locator('h3')).toContainText('Capacity');
+        await expect(page.getByTestId('space-123456-capacity').locator('p')).toContainText('7 people');
+
+        await expect(page.getByTestId('space-123456-facility').locator('h3')).toBeVisible();
+        await expect(page.getByTestId('space-123456-facility').locator('h3')).toContainText('Facilities');
+        await expect(page.getByTestId('space-123456-facility').locator('div').locator(':scope > div')).toHaveCount(16);
+
+        await expect(page.getByTestId('space-123456-openingHours-0')).toBeVisible();
+        await expect(page.getByTestId('space-123456-openingHours-0')).toContainText('Today');
+
+        // can close dialog with button
+        await expect(page.getByTestId('spaces-preview-dialog-close-button')).toBeVisible();
+        await page.getByTestId('spaces-preview-dialog-close-button').click();
+        await expect(page.getByTestId('spaces-preview-dialog-close-button')).not.toBeVisible();
+        await expect(page.getByTestId('spaces-preview-dialog-title')).not.toBeVisible();
     });
 
     test('edit spaces page save dialog is accessible', async ({ page }) => {

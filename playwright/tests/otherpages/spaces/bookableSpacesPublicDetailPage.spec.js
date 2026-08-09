@@ -1,5 +1,5 @@
 import { expect, test } from '@uq/pw/test';
-import { COLOR_UQPURPLE, COLOUR_UQ_WARNING_50, COLOR_UQ_ERROR_50 } from '@uq/pw/lib/constants';
+import { COLOUR_UQ_WARNING_50, COLOR_UQ_ERROR_50 } from '@uq/pw/lib/constants';
 
 test.describe('Spaces Detail page', () => {
     test.beforeEach(async ({ context }) => {

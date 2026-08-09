@@ -57,7 +57,7 @@ import {
     getFlatFacilityTypeList,
     getFriendlyLocationDescription,
     isBookable,
-} from 'modules/Pages/BookableSpaces/spacesHelpers';
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { getSpaceOutageStatus } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import {
     addBreadcrumbsToSiteHeader,
@@ -95,9 +95,10 @@ const StyledTablePagination = styled(TablePagination)(() => ({
     '& .MuiTablePagination-spacer': {
         display: 'none',
     },
-    '& .MuiTablePagination-selectLabel, .MuiTablePagination-input, .MuiTablePagination-displayedRows, .MuiTablePagination-actions ': {
-        flexShrink: 0,
-    },
+    '& .MuiTablePagination-selectLabel, .MuiTablePagination-input, .MuiTablePagination-displayedRows, .MuiTablePagination-actions ':
+        {
+            flexShrink: 0,
+        },
     '& .MuiTablePagination-input': {
         marginLeft: 0,
         '& select': {
@@ -426,6 +427,55 @@ export const BookableSpacesManageSpaces = ({
         return deletedValue === true || deletedValue === 1 || deletedValue === '1' || deletedValue === 'true';
     };
 
+    const [selectedFilters, setSelectedFilters] = useState([
+        { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
+        { filterType: 'library', filterValue: LIBRARY_ID_UNSELECTED },
+        { filterType: 'floor', filterValue: FLOOR_ID_UNSELECTED },
+        { filterType: 'spaceType', filterValue: SPACE_TYPE_ID_UNSELECTED },
+        { filterType: 'draftOnly', filterValue: false },
+        { filterType: 'showDeleted', filterValue: false },
+    ]);
+
+    const doesSpaceShow = (space, currentLocationFilters) => {
+        let showSpaceByFilter = true;
+        currentLocationFilters?.forEach(f => {
+            if (f?.filterType === 'campus') {
+                if (f?.filterValue !== CAMPUS_ID_UNSELECTED && space?.space_campus_id !== f?.filterValue) {
+                    showSpaceByFilter = false;
+                }
+            } else if (f?.filterType === 'library') {
+                if (f?.filterValue !== LIBRARY_ID_UNSELECTED && space?.space_library_id !== f?.filterValue) {
+                    showSpaceByFilter = false;
+                }
+            } else if (f?.filterType === 'floor') {
+                if (f?.filterValue !== FLOOR_ID_UNSELECTED && space?.space_floor_id !== f?.filterValue) {
+                    showSpaceByFilter = false;
+                }
+            } else if (f?.filterType === 'spaceType') {
+                if (f?.filterValue !== SPACE_TYPE_ID_UNSELECTED) {
+                    const spaceTypeId = space?.space_type_id;
+                    if (!!spaceTypeId) {
+                        if (String(spaceTypeId) !== String(f?.filterValue)) {
+                            showSpaceByFilter = false;
+                        }
+                    } else if (String(space?.space_type_details?.space_type_name || '') !== String(f?.filterValue)) {
+                        showSpaceByFilter = false;
+                    }
+                }
+            } else if (f?.filterType === 'draftOnly' && f?.filterValue === true) {
+                if (!space?.space_draftmode) {
+                    showSpaceByFilter = false;
+                }
+            } else if (f?.filterType === 'showDeleted' && f?.filterValue === false) {
+                // Hide deleted spaces unless showDeleted filter is true
+                if (isSpaceDeleted(space)) {
+                    showSpaceByFilter = false;
+                }
+            }
+        });
+        return showSpaceByFilter;
+    };
+
     React.useEffect(() => {
         if (
             bookableSpacesRoomListError === false &&
@@ -464,59 +514,6 @@ export const BookableSpacesManageSpaces = ({
         sortType,
         sortDirection,
     ]);
-
-    const [selectedFilters, setSelectedFilters2] = useState([
-        { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
-        { filterType: 'library', filterValue: LIBRARY_ID_UNSELECTED },
-        { filterType: 'floor', filterValue: FLOOR_ID_UNSELECTED },
-        { filterType: 'spaceType', filterValue: SPACE_TYPE_ID_UNSELECTED },
-        { filterType: 'draftOnly', filterValue: false },
-        { filterType: 'showDeleted', filterValue: false },
-    ]);
-    const setSelectedFilters = newFilter => {
-        console.log('setSelectedFilters', newFilter);
-        setSelectedFilters2(newFilter);
-    };
-
-    const doesSpaceShow = (space, currentLocationFilters) => {
-        let showSpaceByFilter = true;
-        currentLocationFilters?.forEach(f => {
-            if (f?.filterType === 'campus') {
-                if (f?.filterValue !== CAMPUS_ID_UNSELECTED && space?.space_campus_id !== f?.filterValue) {
-                    showSpaceByFilter = false;
-                }
-            } else if (f?.filterType === 'library') {
-                if (f?.filterValue !== LIBRARY_ID_UNSELECTED && space?.space_library_id !== f?.filterValue) {
-                    showSpaceByFilter = false;
-                }
-            } else if (f?.filterType === 'floor') {
-                if (f?.filterValue !== FLOOR_ID_UNSELECTED && space?.space_floor_id !== f?.filterValue) {
-                    showSpaceByFilter = false;
-                }
-            } else if (f?.filterType === 'spaceType') {
-                if (f?.filterValue !== SPACE_TYPE_ID_UNSELECTED) {
-                    const spaceTypeId = space?.space_type_id;
-                    if (!!spaceTypeId) {
-                        if (String(spaceTypeId) !== String(f?.filterValue)) {
-                            showSpaceByFilter = false;
-                        }
-                    } else if (String(space?.space_type || '') !== String(f?.filterValue)) {
-                        showSpaceByFilter = false;
-                    }
-                }
-            } else if (f?.filterType === 'draftOnly' && f?.filterValue === true) {
-                if (!space?.space_draftmode) {
-                    showSpaceByFilter = false;
-                }
-            } else if (f?.filterType === 'showDeleted' && f?.filterValue === false) {
-                // Hide deleted spaces unless showDeleted filter is true
-                if (isSpaceDeleted(space)) {
-                    showSpaceByFilter = false;
-                }
-            }
-        });
-        return showSpaceByFilter;
-    };
 
     const resetDisplayedRows = latestUpdate => {
         console.log('resetDisplayedRows latestUpdate=', latestUpdate);
@@ -800,9 +797,9 @@ export const BookableSpacesManageSpaces = ({
             !!selectedCampus && selectedCampus?.libraries?.find(library => library?.library_id === selectedLibraryId);
         const selectedCampusFloors = selectedCampus?.libraries?.flatMap(library => library?.floors || []) || [];
         const availableFloors = selectedLibrary?.floors || selectedCampusFloors;
-        const floorFilterTypes = [
-            ...new Map(availableFloors?.map(floor => [floor?.floor_id, floor])).values(),
-        ]?.sort((a, b) => a?.floor_name?.localeCompare(b?.floor_name));
+        const floorFilterTypes = [...new Map(availableFloors?.map(floor => [floor?.floor_id, floor])).values()]?.sort(
+            (a, b) => a?.floor_name?.localeCompare(b?.floor_name),
+        );
         const selectedSpaceType = selectedFilters?.find(f => f?.filterType === 'spaceType')?.filterValue;
         const knownSpaceTypes =
             bookableSpacesRoomList?.data?.known_space_types
@@ -817,8 +814,8 @@ export const BookableSpacesManageSpaces = ({
                     ?.map(space => {
                         const id = !!space?.space_type_id
                             ? String(space?.space_type_id)
-                            : String(space?.space_type || '');
-                        const label = space?.space_type || id;
+                            : String(space?.space_type_details?.space_type_name || '');
+                        const label = space?.space_type_details?.space_type_name || id;
                         return [id, { id, label }];
                     })
                     ?.filter(([id, spaceType]) => !!id && !!spaceType?.label),
@@ -1450,7 +1447,7 @@ export const BookableSpacesManageSpaces = ({
                                                             </IconButton>
                                                         </div>
                                                         <div className="spaceDescription">
-                                                            {bookableSpace?.space_type}
+                                                            {bookableSpace?.space_type_details?.space_type_name}
                                                             <IconButton
                                                                 id={expandButtonElementId(bookableSpace?.space_id)}
                                                                 data-testid={`space-${bookableSpace?.space_id}-expand-button`}

@@ -60,7 +60,6 @@ import {
     spacesAdminLink,
     validLibraryList,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
-import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { ImageUploadDropzone } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/ImageUploadDropzone';
 import SpaceOutagePanel from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceOutagePanel';
 import {
@@ -70,7 +69,12 @@ import {
 import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceLocationMap';
 import { orderFacilityTypeGroups } from 'modules/Pages/Admin/BookableSpaces/Facilities/facilityGroupOrderHelpers';
-import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/JourneySpaceDetailsView';
+
+import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/JourneySpaceDetailsView';
+import {
+    getFlatFacilityTypeList,
+    getFriendlyLocationDescription,
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
@@ -1008,7 +1012,7 @@ export const EditSpaceForm = ({
             space_zlevel: formValues?.space_zlevel,
             space_external_book_url: formValues?.space_external_book_url || null,
             space_type_id: formValues?.space_type_id || selectedSpaceType?.space_type_id || null,
-            space_type: formValues?.space_type || selectedSpaceType?.space_type_name || '',
+            space_type: formValues?.space_type || selectedSpaceType?.space_type_details?.space_type_name || '',
             space_type_details: {
                 space_type_id: formValues?.space_type_id || selectedSpaceType?.space_type_id || null,
                 space_type_name: formValues?.space_type || selectedSpaceType?.space_type_name || '',
@@ -2237,6 +2241,7 @@ export const EditSpaceForm = ({
                         weeklyHoursError={weeklyHoursError}
                         showBackButton={false}
                         showMap
+                        verticalView
                     />
                 </DialogContent>
                 <DialogActions>

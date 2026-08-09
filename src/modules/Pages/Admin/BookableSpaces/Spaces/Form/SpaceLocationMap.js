@@ -163,7 +163,9 @@ const SpaceLocationMap = ({
     }, [isMazeMapScriptReady, mapContainer]);
 
     React.useEffect(() => {
-        if (!isMazeMapReady || !mazeMapInstanceRef.current) return;
+        if (!isMazeMapReady || !mazeMapInstanceRef.current) {
+            return;
+        }
 
         const { lng, lat } = getInitialLngLat();
 
@@ -217,7 +219,7 @@ const SpaceLocationMap = ({
                     .addTo(mazeMapInstanceRef.current);
 
                 const popup = new window.Mazemap.Popup({ closeButton: false, offset: [0, -8] }).setText(
-                    `${mapPoint.space_name} - ${mapPoint.space_type}`,
+                    `${mapPoint.space_name} - ${mapPoint?.space_type_details?.space_type_name}`,
                 );
 
                 otherEl.addEventListener('mouseenter', () => {

@@ -18,7 +18,6 @@ import { breadcrumbs } from 'config/routes';
 
 export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpdating, dlorUpdatedItemError }) => {
     const { confirmationId } = useParams();
-    // console.log('confirmationId=', confirmationId);
 
     const [checkBoxChecked, setCheckBoxChecked] = React.useState(false);
 
@@ -41,7 +40,6 @@ export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpd
     };
 
     const sendRequest = () => {
-        // console.log('sendRequest', e);
         actions.loadDlorUnsubscribe(confirmationId);
     };
 

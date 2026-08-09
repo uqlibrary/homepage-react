@@ -233,7 +233,7 @@ describe('Alert', () => {
 
     it('should fire an action when the kind of type does not exist, as an error', () => {
         const actionFn = jest.fn();
-        const { container, getByText, getByTestId } = setup({
+        const { getByText, getByTestId } = setup({
             message: 'Click me',
             action: actionFn,
             type: 'this_doesnt_exist',

@@ -106,15 +106,14 @@ const SpacesPagination = ({ page, count, onPageChange, totalItems, itemsPerPage 
         onPageChange?.(nextPage);
     };
 
+    const startCount = Math.min((page - 1) * itemsPerPage + 1, totalItems);
+    const endCount = Math.min(page * itemsPerPage, totalItems);
     return (
         <Stack spacing={1.5} sx={{ mt: 2.5, mb: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <StyledPaginationRow aria-label="Spaces results pagination">
                     {page > 1 && (
-                        <StyledArrowButton
-                            onClick={() => handlePageSelect(page - 1)}
-                            aria-label="Previous page"
-                        >
+                        <StyledArrowButton onClick={() => handlePageSelect(page - 1)} aria-label="Previous page">
                             <KeyboardArrowLeftIcon />
                         </StyledArrowButton>
                     )}
@@ -147,10 +146,7 @@ const SpacesPagination = ({ page, count, onPageChange, totalItems, itemsPerPage 
                     })}
 
                     {page < count && (
-                        <StyledArrowButton
-                            onClick={() => handlePageSelect(page + 1)}
-                            aria-label="Next page"
-                        >
+                        <StyledArrowButton onClick={() => handlePageSelect(page + 1)} aria-label="Next page">
                             <KeyboardArrowRightIcon />
                         </StyledArrowButton>
                     )}
@@ -158,7 +154,7 @@ const SpacesPagination = ({ page, count, onPageChange, totalItems, itemsPerPage 
             </Box>
             {!!totalItems && (
                 <Typography variant="body2" sx={{ textAlign: 'center', color: '#666' }}>
-                    Showing {Math.min((page - 1) * itemsPerPage + 1, totalItems)}-{Math.min(page * itemsPerPage, totalItems)} of {totalItems} spaces
+                    Showing {startCount}-{endCount} of {totalItems} spaces
                 </Typography>
             )}
         </Stack>

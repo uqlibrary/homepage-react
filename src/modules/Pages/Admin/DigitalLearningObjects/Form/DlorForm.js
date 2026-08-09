@@ -186,7 +186,6 @@ export const DlorForm = ({
         actions.requestNewKeyword(requestedKeywordValues).then(() => {
             setRequestedKeywordValues({});
             setIsRequestKeywordOpened(false);
-            console.log('Keyword request sent successfully');
         });
     };
 
@@ -281,7 +280,6 @@ export const DlorForm = ({
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
-    const keywordMinimumLength = 4;
     const characterCount = (numCharsCurrent, numCharsMin, fieldName) => {
         const missingCharCount = numCharsMin - numCharsCurrent;
         return (
@@ -383,7 +381,6 @@ export const DlorForm = ({
     function validatePanelFiltering(currentValues) {
         let fourthPanelErrorCount = 0;
         // ensure there is at least one keyword selected.
-        console.log('currentValues', currentValues);
         currentValues?.object_keywords?.length < 1 && fourthPanelErrorCount++;
 
         function isDeepStructure(variable) {
@@ -436,7 +433,6 @@ export const DlorForm = ({
     };
 
     const handleDateChange = newValue => {
-        console.log('Date Changed here');
         const formattedDate = moment(newValue).format('YYYY-MM-DD');
         const newValues = { ...formValues, object_review_date_next: formattedDate };
         setFormValues(newValues);
@@ -1459,7 +1455,6 @@ export const DlorForm = ({
                                         requested_keyword: e.target.value,
                                         requested_object_uuid: dlorItem?.object_public_uuid,
                                     });
-                                    // console.log('requestedKeywordValues', requestedKeywordValues);
                                 }}
                                 error={
                                     !!requestedKeywordValues?.requested_keyword &&
@@ -1726,7 +1721,6 @@ export const DlorForm = ({
 
     const saveDlor = () => {
         const valuesToSend = { ...formValues };
-        console.log(valuesToSend);
         // somehow in localhost this is already an array of ids, but on feature branch its the original facets
         if (valuesToSend.facets.length > 0 && valuesToSend.facets[0].hasOwnProperty('filter_key')) {
             valuesToSend.facets = flatMapFacets(formValues?.facets);
@@ -1842,7 +1836,7 @@ export const DlorForm = ({
         scrollToTopOfPage();
     };
 
-    const navigateToListPage = isAdmin => {
+    const navigateToListPage = () => {
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = dlorAdminLink(undefined, account);

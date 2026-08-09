@@ -52,7 +52,6 @@ export const DLOEdit = ({
     React.useEffect(() => {
         /* istanbul ignore next */
         if (!dlorKeywordsLoading && !dlorKeywordsError && (!dlorKeywords || dlorKeywords.length === 0)) {
-            console.log('LOAD KEYWORDS');
             actions.loadDlorKeywords();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -186,6 +185,9 @@ DLOEdit.propTypes = {
     dlorAdminNotesLoaded: PropTypes.bool,
     dlorAdminNotesLoadError: PropTypes.any,
     dlorAdminNotes: PropTypes.array,
+    dlorKeywords: PropTypes.any,
+    dlorKeywordsLoading: PropTypes.any,
+    dlorKeywordsError: PropTypes.any,
 };
 
 export default DLOEdit;

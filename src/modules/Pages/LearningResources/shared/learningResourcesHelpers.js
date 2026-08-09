@@ -21,7 +21,6 @@ export function getHomepageLink(hostname = null, protocol = null, port = null, p
         const linkParameters = !!userParam ? `?user=${userParam}` : '';
         homepagelink = `${_protocol}//${_hostname}:${_port}/${linkParameters}`;
     }
-    // console.log('getHomepageLink:: homepagelink=', homepagelink);
     return homepagelink;
 }
 
@@ -36,6 +35,7 @@ export const _courseLink = (
         let params = '';
         const tempUrl = new URL(homepageLink);
         params = tempUrl.search;
+        // eslint-disable-next-line no-param-reassign
         homepageLink = homepageLink.replace(params, '');
         _url = _url.replace('https://www.library.uq.edu.au/', homepageLink) + params;
     }

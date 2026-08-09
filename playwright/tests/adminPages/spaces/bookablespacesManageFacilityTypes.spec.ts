@@ -1,5 +1,4 @@
 import { expect, test } from '@uq/pw/test';
-import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 import { assertErrorPopupAppears, assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
@@ -37,7 +36,6 @@ test.describe('Spaces Admin - manage facility types page', () => {
 
         const servicesGroup = page.getByTestId('facilitygroup-services');
         const ediaGroup = page.getByTestId('facilitygroup-edia-filters');
-        const spaceTypeGroup = page.getByTestId('facilitygroup-spaceroom-type');
         const floorGroup = page.getByTestId('facilitygroup-on-this-floor');
         const featuresGroup = page.getByTestId('facilitygroup-space-features');
         const lightingGroup = page.getByTestId('facilitygroup-lighting');
@@ -73,8 +71,8 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(floorGroup.getByTestId('facilitytype-name-21')).toBeVisible();
         await expect(floorGroup.getByTestId('facilitytype-name-21')).toContainText('Hot/ Cold Water');
 
-        await expect(floorGroup.getByTestId('facilitytype-name-3')).toBeVisible();
-        await expect(floorGroup.getByTestId('facilitytype-name-3')).toContainText('Kitchen');
+        await expect(floorGroup.getByTestId('facilitytype-name-3')).toBeHidden();
+        await expect(floorGroup.getByTestId('facilitytype-name-3')).not.toBeVisible();
 
         await expect(floorGroup.getByTestId('facilitytype-name-4')).toBeVisible();
         await expect(floorGroup.getByTestId('facilitytype-name-4')).toContainText('Microwave');
@@ -172,8 +170,9 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(lightingGroup.getByTestId('facilitytype-name-48')).toBeVisible();
         await expect(lightingGroup.getByTestId('facilitytype-name-48')).toContainText('Dimmable');
 
-        await expect(lightingGroup.getByTestId('facilitytype-name-49')).toBeVisible();
-        await expect(lightingGroup.getByTestId('facilitytype-name-49')).toContainText('Low Light');
+        await expect(lightingGroup.getByTestId('facilitytype-name-49')).not.toBeVisible();
+        await expect(featuresGroup.getByTestId('facilitytype-name-49')).toBeVisible();
+        await expect(featuresGroup.getByTestId('facilitytype-name-49')).toContainText('Low Light');
 
         await expect(lightingGroup.getByTestId('facilitytype-name-50')).toBeVisible();
         await expect(lightingGroup.getByTestId('facilitytype-name-50')).toContainText('Natural');
@@ -191,7 +190,7 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-52')).toContainText('Exam Friendly');
 
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-13')).toBeVisible();
-        await expect(roomFeatureGroup.getByTestId('facilitytype-name-13')).toContainText('Postgraduate spaces');
+        await expect(roomFeatureGroup.getByTestId('facilitytype-name-13')).toContainText('Postgraduate only space');
 
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-12')).toBeVisible();
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-12')).toContainText('Power outlets');
@@ -452,7 +451,9 @@ test.describe('Spaces Admin - edit group dialog', () => {
         const unusedGroupEditButton = page.getByTestId('edit-group-9-button');
         await unusedGroupEditButton.click();
         await expect(dialogMessage).toBeVisible();
-        await expect(dialogMessage).not.toContainText(/This facility group's child types will be removed from \d+ Spaces?/);
+        await expect(dialogMessage).not.toContainText(
+            /This facility group's child types will be removed from \d+ Spaces?/,
+        );
         const warningUnused =
             'This facility group can be deleted - none of its child types are currently showing for any Spaces.';
         await expect(dialogMessage).toContainText(warningUnused);

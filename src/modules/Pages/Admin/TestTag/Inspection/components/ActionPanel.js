@@ -90,7 +90,6 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, isMobileView, di
                 indicatorColor="primary"
                 textColor="primary"
                 onChange={(e, value) => {
-                    // console.log('test', value);
                     return setSelectedTabValue(value);
                 }}
                 variant={isMobileView ? 'fullWidth' : 'standard'}

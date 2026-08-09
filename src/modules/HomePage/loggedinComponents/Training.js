@@ -192,7 +192,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             !!closeButton && closeButton.focus();
         }, 300);
     };
-    const closeEvent = entityId => {
+    const closeEvent = () => {
         setEventDetail(null);
     };
     moment.tz.setDefault('Australia/Brisbane');

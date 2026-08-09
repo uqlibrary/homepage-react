@@ -1,6 +1,6 @@
 import React from 'react';
 import Masquerade from './Masquerade';
-import { render, WithReduxStore, fireEvent } from 'test-utils';
+import { render, WithReduxStore } from 'test-utils';
 
 function setup(testProps = {}) {
     const props = {

@@ -25,7 +25,7 @@ import {
 
 import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import CampusLocationMap from 'modules/Pages/Admin/BookableSpaces/Locations/CampusLocationMap';
-import { getPrefixedFloorName } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { getPrefixedFloorName } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -416,8 +416,9 @@ export const BookableSpacesManageLocations = ({
         return `<input name="locationType" type="hidden" value="floor" />
         <div class="dialogRow" data-testid="floor-name">
             <label for="displayedFloorId">${floorNameFieldLabel}</label>
-            <input id="displayedFloorId" name="floor_name" type="text" required value="${floorDetails?.floor_name ??
-                ''}"  maxlength="10" />
+            <input id="displayedFloorId" name="floor_name" type="text" required value="${
+                floorDetails?.floor_name ?? ''
+            }"  maxlength="10" />
         </div>
         <ul>
             <li>Just the number - avoid prefixing with 'Level'</li>
@@ -638,18 +639,21 @@ export const BookableSpacesManageLocations = ({
         return `<input name="locationType" type="hidden" value="library" />
             <div class="dialogRow" data-testid="library-name">
                 <label for="libraryName">${libraryNameFieldLabel} *</label>
-                <input id="libraryName" name="library_name" type="text" value="${libraryDetails?.library_name ||
-                    ''}" required  maxlength="255" />
+                <input id="libraryName" name="library_name" type="text" value="${
+                    libraryDetails?.library_name || ''
+                }" required  maxlength="255" />
             </div>
             <div class="dialogRow" data-testid="building-name">
                 <label for="buildingName">Building name *</label>
-                <input id="buildingName" name="building_name" type="text" value="${libraryDetails?.building_name ||
-                    ''}" required  maxlength="255" />
+                <input id="buildingName" name="building_name" type="text" value="${
+                    libraryDetails?.building_name || ''
+                }" required  maxlength="255" />
             </div>
             <div class="dialogRow" data-testid="building-number">
                 <label for="buildingNumber">Building number *</label>
-                <input id="buildingNumber" name="building_number" type="text" value="${libraryDetails?.building_number ||
-                    ''}" required  maxlength="10" />
+                <input id="buildingNumber" name="building_number" type="text" value="${
+                    libraryDetails?.building_number || ''
+                }" required  maxlength="10" />
             </div>
             <div class="dialogRow" data-testid="library_springshare_id">
                 <h3>Choose the Springshare Opening hours to associate with this Library</h3>
@@ -658,27 +662,30 @@ export const BookableSpacesManageLocations = ({
                         <input type="radio" name="library_springshare_id" id="library_springshare_id-0" value="0" checked />
                         <label for="library_springshare_id-0">None</label>
                      </li>
-                        ${(!!springshareList &&
-                            springshareList?.length > 0 &&
-                            springshareList
-                                ?.map(springshareItem => {
-                                    const checked =
-                                        libraryDetails?.library_springshare_id === springshareItem?.id
-                                            ? ' checked'
-                                            : '';
-                                    return `<li style="padding-block: 0.25rem">
+                        ${
+                            (!!springshareList &&
+                                springshareList?.length > 0 &&
+                                springshareList
+                                    ?.map(springshareItem => {
+                                        const checked =
+                                            libraryDetails?.library_springshare_id === springshareItem?.id
+                                                ? ' checked'
+                                                : '';
+                                        return `<li style="padding-block: 0.25rem">
                                     <input type="radio" name="library_springshare_id" id="library_springshare_id-${springshareItem?.id}" data-testid="library_springshare_id-${springshareItem?.id}" value="${springshareItem?.id}"${checked} />
                                     <label for="library_springshare_id-${springshareItem?.id}">${springshareItem?.display_name}</label>
                                  </li>`;
-                                })
-                                ?.join('')) ||
-                            ''}
+                                    })
+                                    ?.join('')) ||
+                            ''
+                        }
                 </ul>
             </div>
             <div class="dialogRow" data-testid="library_about_page_default">
                 <label for="library_about_page_default">The "About" page for this library (usually the Drupal library page)</label>
-                <input id="library_about_page_default" name="library_about_page_default" type="text" value="${libraryDetails?.library_about_page_default ||
-                    ''}"  maxlength="255" />
+                <input id="library_about_page_default" name="library_about_page_default" type="text" value="${
+                    libraryDetails?.library_about_page_default || ''
+                }"  maxlength="255" />
             </div>
             `;
     }
@@ -740,8 +747,9 @@ export const BookableSpacesManageLocations = ({
     function showAddLibraryForm(e, campusDetails) {
         const formBody = `<h2>Add a library to ${campusDetails?.campus_name || 'unknown'} campus</h2>
             ${libraryCoreForm()}
-            <input id="libraryCampusId" name="library_campus_id" type="hidden" value="${campusDetails?.campus_id ||
-                ''}" required  maxlength="10" />
+            <input id="libraryCampusId" name="library_campus_id" type="hidden" value="${
+                campusDetails?.campus_id || ''
+            }" required  maxlength="10" />
             `;
         if (!formBody) {
             return;
@@ -794,8 +802,9 @@ export const BookableSpacesManageLocations = ({
 
         const formBody = `<h2>Edit Library details</h2>
             <input name="libraryId" type="hidden" value="${libraryDetails?.library_id}" />
-            <input name="ground_floor_id_old" type="hidden" value="${libraryDetails?.ground_floor_id ??
-                ''}" />${libraryCoreForm(libraryDetails)}<div class="dialogRow" data-testid="library-floor-list">
+            <input name="ground_floor_id_old" type="hidden" value="${
+                libraryDetails?.ground_floor_id ?? ''
+            }" />${libraryCoreForm(libraryDetails)}<div class="dialogRow" data-testid="library-floor-list">
                 <h3>Levels - Choose ground floor:</h3>
                 ${
                     libraryDetails?.floors?.length > 0
@@ -808,8 +817,8 @@ export const BookableSpacesManageLocations = ({
                                                 floor?.floor_id
                                             }" name="ground_floor_id" ${checked} value="${floor?.floor_id}" />
                                             <label for="groundFloor-${floor?.floor_id}">${getPrefixedFloorName(
-                                      floor?.floor_name,
-                                  )}</label> 
+                                                floor?.floor_name,
+                                            )}</label> 
                                         </li>`;
                               })
                               ?.join('') +
@@ -1008,8 +1017,8 @@ export const BookableSpacesManageLocations = ({
 
         const formBody = `<h2 data-testid="edit-campus-dialog-heading">Edit campus details</h2>
             <input  name="campusId" type="hidden" value="${campusDetails?.campus_id}" />${campusCoreForm(
-            campusDetails,
-        )}<div class="dialogRow">
+                campusDetails,
+            )}<div class="dialogRow">
                 <h3>Libraries on this Campus</h3>
                 ${
                     campusDetails?.libraries?.length > 0

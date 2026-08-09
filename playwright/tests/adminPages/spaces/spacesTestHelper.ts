@@ -1,4 +1,4 @@
-import { expect, Page, test } from '@uq/pw/test';
+import { expect, Page } from '@uq/pw/test';
 
 export async function assertToastHasMessage(page: Page, msg: string) {
     await expect(page.getByTestId('toast-message')).toBeVisible();

@@ -2,11 +2,20 @@ import React from 'react';
 
 import { fireEvent, rtlRender, screen } from 'test-utils';
 
-import SpacesPagination from './SpacesPagination';
+import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPagination';
 
 describe('SpacesPagination', () => {
     const renderPagination = props =>
-        rtlRender(<SpacesPagination page={1} count={1} totalItems={10} itemsPerPage={10} onPageChange={jest.fn()} {...props} />);
+        rtlRender(
+            <SpacesPagination
+                page={1}
+                count={1}
+                totalItems={10}
+                itemsPerPage={10}
+                onPageChange={jest.fn()}
+                {...props}
+            />,
+        );
 
     it('shows all page buttons when there are 5 or fewer pages', () => {
         renderPagination({ page: 3, count: 5, totalItems: 50 });

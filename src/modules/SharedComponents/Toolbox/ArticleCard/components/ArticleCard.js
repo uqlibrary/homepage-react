@@ -31,10 +31,10 @@ const StyledArticleCardRoot = styled('div', {
         fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
         fontWeight: 500,
         letterSpacing: '0.16px',
-        marginBottom: (enableFeaturedLayout && articleindex === 0) ? '.25rem' : '0',
+        marginBottom: enableFeaturedLayout && articleindex === 0 ? '.25rem' : '0',
         textDecoration: 'none !important',
         [theme.breakpoints.up('xs')]: {
-            paddingTop: (enableFeaturedLayout && articleindex === 0) ? '24px !important' : 'none',
+            paddingTop: enableFeaturedLayout && articleindex === 0 ? '24px !important' : 'none',
         },
         [theme.breakpoints.up('sm')]: {
             paddingTop: '0px !important',
@@ -45,22 +45,22 @@ const StyledArticleCardRoot = styled('div', {
         flexDirection: 'column',
         alignItems: 'left',
         height: '100%',
-        justifyContent: (enableFeaturedLayout && articleindex === 0) ? 'center' : 'top',
+        justifyContent: enableFeaturedLayout && articleindex === 0 ? 'center' : 'top',
         paddingTop: '0px !important',
         [theme.breakpoints.up('xs')]: {
-            paddingLeft: (enableFeaturedLayout && articleindex === 0) ? 24 : 0,
-            paddingRight: (enableFeaturedLayout && articleindex === 0) ? 24 : 0,
+            paddingLeft: enableFeaturedLayout && articleindex === 0 ? 24 : 0,
+            paddingRight: enableFeaturedLayout && articleindex === 0 ? 24 : 0,
             paddingBottom: '24px',
         },
         [theme.breakpoints.up('sm')]: {
             paddingLeft: 24,
             paddingRight: 24,
-            paddingBottom: (enableFeaturedLayout && articleindex === 0) ? 24 : 0,
+            paddingBottom: enableFeaturedLayout && articleindex === 0 ? 24 : 0,
         },
         [theme.breakpoints.up('md')]: {
             paddingLeft: 24,
             paddingRight: 24,
-            paddingBottom: (enableFeaturedLayout && articleindex === 0) ? 24 : 0,
+            paddingBottom: enableFeaturedLayout && articleindex === 0 ? 24 : 0,
         },
     },
     '.ArticleTitle': {
@@ -139,10 +139,7 @@ const ArticleCard = ({
     if (!enableFeaturedLayout) {
         const linkContent = (
             <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <StyledImageFrame
-                    style={{ paddingBottom: '66.667%' }}
-                    data-testid={imageTestId}
-                >
+                <StyledImageFrame style={{ paddingBottom: '66.667%' }} data-testid={imageTestId}>
                     <StyledImage
                         src={imageSrc}
                         alt={title}
@@ -218,6 +215,13 @@ const ArticleCard = ({
             </Box>
         );
 
+        const styles = {
+            textDecoration: 'none',
+            color: 'inherit',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+        };
         return (
             <StyledArticleCardRoot articleindex={articleindex} enableFeaturedLayout={enableFeaturedLayout}>
                 <StandardCard
@@ -234,14 +238,15 @@ const ArticleCard = ({
                     data-testid={cardTestId}
                 >
                     {useRouterLink && !!canonicalUrl ? (
-                        <Link to={canonicalUrl} data-testid={linkTestId} data-analyticsid={analyticsId}
-                            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
-                        >
+                        <Link to={canonicalUrl} data-testid={linkTestId} data-analyticsid={analyticsId} style={styles}>
                             {linkContent}
                         </Link>
                     ) : (
-                        <a href={canonicalUrl || undefined} data-testid={linkTestId} data-analyticsid={analyticsId}
-                            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
+                        <a
+                            href={canonicalUrl || undefined}
+                            data-testid={linkTestId}
+                            data-analyticsid={analyticsId}
+                            style={styles}
                         >
                             {linkContent}
                         </a>
@@ -377,6 +382,13 @@ const ArticleCard = ({
         </Grid>
     );
 
+    const styles = {
+        textDecoration: 'none',
+        color: 'inherit',
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100%',
+    };
     return (
         <StyledArticleCardRoot articleindex={articleindex} enableFeaturedLayout={enableFeaturedLayout}>
             <StandardCard
@@ -388,12 +400,7 @@ const ArticleCard = ({
                 data-testid={cardTestId}
             >
                 {useRouterLink && !!canonicalUrl ? (
-                    <Link
-                        to={canonicalUrl}
-                        data-testid={linkTestId}
-                        data-analyticsid={analyticsId}
-                        style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', minHeight: '100%' }}
-                    >
+                    <Link to={canonicalUrl} data-testid={linkTestId} data-analyticsid={analyticsId} style={styles}>
                         {linkContent}
                     </Link>
                 ) : (
@@ -401,7 +408,7 @@ const ArticleCard = ({
                         href={canonicalUrl || undefined}
                         data-testid={linkTestId}
                         data-analyticsid={analyticsId}
-                        style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', minHeight: '100%' }}
+                        style={styles}
                     >
                         {linkContent}
                     </a>

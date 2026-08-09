@@ -18,6 +18,7 @@ const CENTRAL_PANEL_ONE = 'space-13';
 const CENTRAL_PANEL_TWO = 'space-14';
 
 const NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST = 2; // 1 for skip button, 1 for acccessible heading
+const VISIBLE_SPACES_ALL_CAMPUSES = 16;
 const VISIBLE_SPACES_ST_LUCIA_ALL = 10;
 
 // Abort MazeMaps assets so the script never fires setIsMazeMapScriptReady(true) mid-test,
@@ -46,7 +47,7 @@ test.describe('Spaces', () => {
             // all space panels load visible (using filters changes which appear)
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
         });
 
@@ -110,9 +111,7 @@ test.describe('Spaces', () => {
             await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
 
             // the panel has expanded
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-details-name`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-details-name`)).toContainText('339');
-
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-details-name`)).not.toBeVisible();
             // the booking link appears
             // await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toBeVisible();
             await expect(page.locator(`a[data-testid="${ARCH_BOOKABLE}-booking-link"]`)).toBeVisible();
@@ -134,12 +133,14 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-booking-icon`)).not.toBeVisible();
 
             // expand the panel
+            await expect(page.getByTestId(`${LIV}-friendly-location`)).not.toBeVisible();
             await expect(page.getByTestId(`${LIV}-toggle-panel-button`)).toBeVisible();
             await page.getByTestId(`${LIV}-toggle-panel-button`).click();
 
             // the panel has expanded
-            await expect(page.getByTestId(`${LIV}-details-name`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-details-name`)).toContainText('46-342/343');
+            await expect(page.getByTestId(`${LIV}-details-name`)).not.toBeVisible();
+
+            await expect(page.getByTestId(`${LIV}-friendly-location`)).toBeVisible();
 
             // "no booking required" prompt appears
             await expect(page.getByTestId(`${LIV}-booking-link`)).not.toBeVisible();
@@ -174,7 +175,7 @@ test.describe('Spaces', () => {
         test('outages shown collapsed and expanded', async ({ page }) => {
             await expect(page.getByTestId(`${ARCH_REFERENCE}-outage`)).not.toBeVisible();
             await expect(page.getByTestId(`${LIV}-outage`)).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-outage`)).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}-outage`)).toBeVisible();
 
             // test red current closure
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage`)).toBeVisible();
@@ -364,7 +365,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-38`)).toContainText('Whiteboard');
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-39`)).toContainText('Adjustable desks');
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-8`)).toContainText('AV equipment');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-13`)).toContainText('Postgraduate spaces');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-13`)).toContainText('Postgraduate only space');
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-14`)).toContainText('Undergrad spaces');
 
             // close first panel
@@ -382,7 +383,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-facility-33`)).toContainText('Client accessible power point');
             await expect(page.getByTestId(`${LIV}-facility-8`)).toContainText('AV equipment');
             await expect(page.getByTestId(`${LIV}-facility-50`)).toContainText('Natural');
-            await expect(page.getByTestId(`${LIV}-facility-13`)).toContainText('Postgraduate spaces');
+            await expect(page.getByTestId(`${LIV}-facility-13`)).toContainText('Postgraduate only space');
             await expect(page.getByTestId(`${LIV}-facility-14`)).toContainText('Undergrad spaces');
 
             // close third panel
@@ -588,7 +589,7 @@ test.describe('Spaces', () => {
             // initially all Spaces are visible on the page
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
@@ -602,9 +603,9 @@ test.describe('Spaces', () => {
             await bookableCheckbox.locator('span input').check();
 
             // panels shown changes
-            await expect(page.getByTestId('space-space-count')).toContainText('5');
+            await expect(page.getByTestId('space-space-count')).toContainText('9');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                9 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
@@ -665,7 +666,7 @@ test.describe('Spaces', () => {
 
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureBookableSpace).toBeVisible();
@@ -686,7 +687,7 @@ test.describe('Spaces', () => {
             // initially all Spaces are visible on the page
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).toBeVisible();
@@ -718,9 +719,9 @@ test.describe('Spaces', () => {
             await expect(byodStationCheckbox.locator('label:first-of-type')).toContainText('BYOD station');
             await byodStationCheckbox.locator('span input').check();
 
-            await expect(page.getByTestId('space-space-count')).toContainText('6');
+            await expect(page.getByTestId('space-space-count')).toContainText('8');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                6 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).toBeVisible();
@@ -748,7 +749,7 @@ test.describe('Spaces', () => {
             // there are initially all Spaces visible on the page
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).toBeVisible();
@@ -803,9 +804,9 @@ test.describe('Spaces', () => {
             await avEquipmentUnsetCartouche.click();
 
             // spaces visible changes
-            await expect(page.getByTestId('space-space-count')).toContainText('5');
+            await expect(page.getByTestId('space-space-count')).toContainText('9');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                9 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).not.toBeVisible();
@@ -825,7 +826,7 @@ test.describe('Spaces', () => {
             // back to all Spaces visible on the page
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
             await expect(architectureReferenceSpace).toBeVisible();
@@ -847,9 +848,9 @@ test.describe('Spaces', () => {
             // correct number of cartouches showing
             await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(2);
             // correct number of panels showing
-            await expect(page.getByTestId('space-space-count')).toContainText('6');
+            await expect(page.getByTestId('space-space-count')).toContainText('8');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                6 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // click deselect-all-cartouches
@@ -859,7 +860,7 @@ test.describe('Spaces', () => {
             // all panels visible
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             // all cartouches removed
             await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0);
@@ -881,7 +882,7 @@ test.describe('Spaces', () => {
             // initially all Spaces are visible on the page
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // show only 'currently open' spaces
@@ -904,7 +905,7 @@ test.describe('Spaces', () => {
 
             // there are initially all Spaces visible on the page
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible(); // 'no spaces' warning not present
             await expect(filterCount).not.toBeVisible();
@@ -931,9 +932,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('3');
+            await expect(spacesCount).toContainText('5');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                3 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // update maximum to "no more than 20 people"
@@ -947,9 +948,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('2');
+            await expect(spacesCount).toContainText('3');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                2 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                3 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // clear the capacity filters by unchecking "is bookable"
@@ -957,7 +958,7 @@ test.describe('Spaces', () => {
 
             // the page is reset
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(filterCount).not.toBeVisible();
             await expect(spacesCount).not.toBeVisible();
@@ -981,7 +982,7 @@ test.describe('Spaces', () => {
 
             // there are initially all Spaces visible on the page
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible(); // 'no spaces' warning not present
             await expect(filterCount).not.toBeVisible();
@@ -1008,9 +1009,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('3');
+            await expect(spacesCount).toContainText('5');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                3 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                5 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // update maximum to "no more than 20 people"
@@ -1024,9 +1025,9 @@ test.describe('Spaces', () => {
             await expect(deselectAllFiltersButton).toBeVisible();
 
             // spaces displayed changes
-            await expect(spacesCount).toContainText('2');
+            await expect(spacesCount).toContainText('3');
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                2 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                3 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // clear the capacity filters
@@ -1034,7 +1035,7 @@ test.describe('Spaces', () => {
 
             // the page is reset
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(filterCount).not.toBeVisible();
             await expect(spacesCount).not.toBeVisible();
@@ -1208,7 +1209,7 @@ test.describe('Spaces', () => {
                 'Hide On this floor filter options',
             );
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul').locator(':scope > *')).toHaveCount(
-                4,
+                5,
             );
 
             // the group we opened has completely changed - visibility flips
@@ -1318,7 +1319,7 @@ test.describe('Spaces', () => {
 
             // NOW a count shows on that single collapsed group
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toBeVisible();
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toHaveText('(1 of 4)');
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toHaveText('(1 of 5)');
 
             // collapse a few more, to be sure
             await filterGroupButton(FILTER_GROUP_LIGHTING, page).click();
@@ -1361,16 +1362,16 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
 
             // collapse the single-entry public group
-            const FILTER_GROUP_BOOKABLE_TYPE = 10;
-            await filterGroupButton(FILTER_GROUP_BOOKABLE_TYPE, page).click();
+            const FILTER_GROUP_AVAILABILITY_TYPE = 9;
+            await filterGroupButton(FILTER_GROUP_AVAILABILITY_TYPE, page).click();
 
             // now the collapsed group shows the selected-count summary
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_BOOKABLE_TYPE))).toBeVisible();
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_BOOKABLE_TYPE))).toHaveText('(1 of 2)');
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_AVAILABILITY_TYPE))).toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_AVAILABILITY_TYPE))).toHaveText('(1 of 2)');
 
             // re-open it and the collapsed-count disappears again
-            await filterGroupButton(FILTER_GROUP_BOOKABLE_TYPE, page).click();
-            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_BOOKABLE_TYPE))).not.toBeVisible();
+            await filterGroupButton(FILTER_GROUP_AVAILABILITY_TYPE, page).click();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_AVAILABILITY_TYPE))).not.toBeVisible();
 
             // collapse a few more, to be sure
             await filterGroupButton(FILTER_GROUP_NOISE_LEVEL, page).click();
@@ -1390,7 +1391,7 @@ test.describe('Spaces', () => {
             const selectedLibraryButtonLabel = page.getByTestId('filter-by-library').locator('[tabindex="0"]');
             const libraryChooserButton = (buttonId: string) => page.getByTestId(`library-${buttonId}`);
             const spacePanelWrapper = page.getByTestId('space-wrapper').locator(':scope > *');
-            const all = VISIBLE_SPACES_ST_LUCIA_ALL;
+            const all = VISIBLE_SPACES_ALL_CAMPUSES;
             const ALL_LIBRARIES_BUTTON_ID = '0';
             const ARMUS_BUTTON_ID = '3';
 
@@ -1401,7 +1402,7 @@ test.describe('Spaces', () => {
 
             // all space panels load visible (using filters changes which appear)
             await expect(spacePanelWrapper).toHaveCount(all + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
-            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('St Lucia');
+            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('All campuses');
 
             // change library
             await librarySelectorButton.click(); // open drop down
@@ -1433,7 +1434,7 @@ test.describe('Spaces', () => {
 
             // on inital load, it honours the non-default campus cookie
             await page.goto('spaces/mapresults');
-            await expect(selectedCampusNameElement).toContainText('St Lucia');
+            await expect(selectedCampusNameElement).toContainText('All campuses');
             await expect(selectLibraryNameElement).toContainText('All libraries');
 
             // change library
@@ -1450,7 +1451,7 @@ test.describe('Spaces', () => {
 
             // reload the page - now the library cookie has an invalid value, it ignores the cookie value and uses the default
             await page.goto('spaces/mapresults');
-            await expect(selectedCampusNameElement).toContainText('St Lucia');
+            await expect(selectedCampusNameElement).toContainText('All campuses');
             await expect(selectLibraryNameElement).toContainText('All libraries');
         });
     });
@@ -1467,7 +1468,7 @@ test.describe('Spaces', () => {
             // all space panels load visible (using filters changes which appear)
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
-                VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+                VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
             // change campus
@@ -1617,7 +1618,7 @@ test.describe('Spaces', () => {
 
             // after resetting the cookie invalidly, it ignores campus cookie and uses the default
             await page.goto('spaces/mapresults'); // reload page after campus change in before
-            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('St Lucia');
+            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('All campuses');
         });
 
         test('each campus loads correctly', async ({ page }) => {

@@ -41,12 +41,12 @@ import {
     showGenericConfirmAndDeleteDialog,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import {
-    FILTER_DISPLAY_ON_ADVANCED,
+    FILTER_DISPLAY_ON_MAP,
     FILTER_DISPLAY_ON_BOTH,
     FILTER_DISPLAY_ON_SIMPLE,
     getFlatFacilityTypeList,
     normalizeFilterDisplayOn,
-} from 'modules/Pages/BookableSpaces/spacesHelpers';
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { a11yProps, reverseA11yProps } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { TabPanel } from 'modules/Pages/LearningResources/shared/TabPanel';
 import { buildFacilityGroupOrderPayload, orderFacilityTypeGroups } from './facilityGroupOrderHelpers';
@@ -268,7 +268,7 @@ export const BookableSpacesManageFacilities = ({
                 label: 'Simple',
             },
             {
-                value: FILTER_DISPLAY_ON_ADVANCED,
+                value: FILTER_DISPLAY_ON_MAP,
                 label: 'Advanced',
             },
             {
@@ -791,7 +791,7 @@ export const BookableSpacesManageFacilities = ({
         if (!!failureMessage) {
             showErrorMessageinPopup(failureMessage);
 
-            return false;
+            return;
         }
 
         const valuesToSend = {

@@ -34,7 +34,6 @@ export const DLOAdd = ({
     dlorKeywordsError,
 }) => {
     const { account } = useAccountContext();
-    console.log('ACCOUNT', account);
 
     // function getTodayPlusOneYear(baseDate = null) {
     //     const today = baseDate || moment();
@@ -47,7 +46,6 @@ export const DLOAdd = ({
     React.useEffect(() => {
         /* istanbul ignore next */
         if (!dlorKeywordsLoading && !dlorKeywordsError && (!dlorKeywords || dlorKeywords.length === 0)) {
-            console.log('LOAD KEYWORDS');
             actions.loadDlorKeywords();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,8 +76,6 @@ export const DLOAdd = ({
         object_cultural_advice: 0,
         notificationText: '',
     };
-
-    console.log('Form Defaults', formDefaults);
 
     return (
         <Fragment>
@@ -154,6 +150,9 @@ DLOAdd.propTypes = {
     dlorAdminNotesLoaded: PropTypes.bool,
     dlorAdminNotesLoadError: PropTypes.any,
     dlorAdminNotes: PropTypes.array,
+    dlorKeywords: PropTypes.any,
+    dlorKeywordsLoading: PropTypes.any,
+    dlorKeywordsError: PropTypes.any,
 };
 
 export default DLOAdd;

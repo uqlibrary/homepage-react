@@ -1,5 +1,4 @@
 export const zeroPaddedYear = value => (value ? ('0000' + value).slice(-4) : '*');
-import { API_URL } from '../config';
 
 const getMillisecondCacheBuster = () => {
     return `${new Date().getTime()}`;
