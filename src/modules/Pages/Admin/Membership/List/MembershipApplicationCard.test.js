@@ -28,6 +28,7 @@ const setup = (membership, props = {}) =>
                         typeTitles={typeTitles}
                         onConfirm={jest.fn()}
                         onDelete={jest.fn()}
+                        onUpdate={jest.fn()}
                         {...props}
                     />
                 </ul>
@@ -105,6 +106,7 @@ describe('MembershipApplicationCard', () => {
                             typeTitles={typeTitles}
                             onConfirm={jest.fn()}
                             onDelete={jest.fn()}
+                            onUpdate={jest.fn()}
                         />
                     </ul>
                 </ThemeProvider>
@@ -214,6 +216,74 @@ describe('MembershipApplicationCard', () => {
             const button = screen.getByTestId('membership-delete-101');
             expect(button).toHaveTextContent('Deleting');
             expect(button).toBeDisabled();
+        });
+    });
+
+    describe('account fields', () => {
+        const confirmed = {
+            id: '102',
+            type: 'alumni',
+            status: 'confirmed',
+            first_name: 'Already',
+            sn: 'Confirmed',
+            expires_on: '31-12-2026',
+            barcode: '2406700012345',
+        };
+        const renewing = {
+            id: '103',
+            type: 'community',
+            status: 'renewing',
+            first_name: 'Renewing',
+            sn: 'Member',
+            confirmed_on: '21-05-2025',
+            expires_on: '30-06-2026',
+            barcode: '2406700067890',
+        };
+        const unconfirmed = { id: '101', type: 'community', status: 'unconfirmed', first_name: 'Newly', sn: 'Applied' };
+
+        it('shows the expiry and barcode of a confirmed account, each editable in place', () => {
+            setup(confirmed);
+
+            expect(screen.getByTestId('membership-account-102')).toBeInTheDocument();
+            expect(screen.getByTestId('expiry-102-value')).toHaveTextContent('31-12-2026');
+            expect(screen.getByTestId('barcode-102-value')).toHaveTextContent('2406700012345');
+            expect(screen.getByTestId('expiry-102-edit-button')).toBeInTheDocument();
+            expect(screen.getByTestId('barcode-102-edit-button')).toBeInTheDocument();
+        });
+
+        it('shows a renewing account read-only, with no edit affordance', () => {
+            setup(renewing);
+
+            expect(screen.getByTestId('membership-account-103')).toBeInTheDocument();
+            expect(screen.getByTestId('barcode-103-value')).toHaveTextContent('2406700067890');
+            expect(screen.queryByTestId('expiry-103-edit-button')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('barcode-103-edit-button')).not.toBeInTheDocument();
+        });
+
+        it('shows no account panel on an application still waiting on a decision', () => {
+            setup(unconfirmed);
+
+            expect(screen.queryByTestId('membership-account-101')).not.toBeInTheDocument();
+        });
+
+        it('reports an edited barcode with the field it changed when saved', async () => {
+            const onUpdate = jest.fn();
+            setup(confirmed, { onUpdate });
+
+            await userEvent.click(screen.getByTestId('barcode-102-edit-button'));
+            const input = screen.getByTestId('barcode-102-input');
+            await userEvent.clear(input);
+            await userEvent.type(input, '2406700099999');
+            await userEvent.click(screen.getByTestId('barcode-102-save-button'));
+
+            expect(onUpdate).toHaveBeenCalledWith(confirmed, 'barcode', '2406700099999');
+        });
+
+        it('disables the save while an update is in flight', async () => {
+            setup(confirmed, { busy: 'updating' });
+
+            await userEvent.click(screen.getByTestId('expiry-102-edit-button'));
+            expect(screen.getByTestId('expiry-102-save-button')).toBeDisabled();
         });
     });
 

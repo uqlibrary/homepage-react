@@ -226,6 +226,9 @@ const namedApplications = [
         alumni_num: 's1234567',
         submitted_on: '14-07-2026 11:00:00',
         confirmed_on: '03-06-2026',
+        // An issued account, so it carries the expiry and barcode an admin corrects in place.
+        expires_on: '31-12-2026',
+        barcode: '2406700012345',
     },
     {
         id: '00000000-0000-0000-0000-000000000103',
@@ -237,6 +240,10 @@ const namedApplications = [
         mail: 'renewing.member@example.org',
         submitted_on: '13-07-2026 14:30:00',
         confirmed_on: '21-05-2025',
+        // A renewing account already has an expiry and barcode; they show on the card but are corrected only
+        // once the renewal is confirmed.
+        expires_on: '30-06-2026',
+        barcode: '2406700067890',
     },
     {
         id: '00000000-0000-0000-0000-000000000104',

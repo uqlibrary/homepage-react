@@ -69,6 +69,33 @@ export default {
             deleting: 'Deleting',
             // Shown on the card once the delete has taken, in place of the buttons.
             deleted: 'Deleted',
+            // Stands in for an account field an issued account has not been given yet, so the row reads as
+            // empty-but-present rather than blank.
+            notSet: 'Not set',
+        },
+        // Correcting an issued account's expiry and barcode where they sit on the card. The value is
+        // pattern-checked here because the format is knowable without asking the API, and a bad barcode is
+        // otherwise only refused after a round trip.
+        inlineEdit: {
+            // The icon-only controls name the field and the applicant they act on, since "Edit" repeated down
+            // the page names nothing on its own.
+            edit: (field, name) => `Edit the ${field} for ${name}`,
+            add: (field, name) => `Add a ${field} for ${name}`,
+            save: 'Save',
+            saving: 'Saving..',
+            cancel: 'Cancel',
+            cancelLabel: (field, name) => `Stop editing the ${field} for ${name}`,
+            expiry: {
+                field: 'expiry',
+                label: 'Expiry',
+                placeholder: 'DD-MM-YYYY',
+                invalid: 'Enter the expiry as DD-MM-YYYY',
+            },
+            barcode: {
+                field: 'barcode',
+                label: 'Barcode',
+                invalid: 'A barcode starts with 24067 and is 13 or 14 digits long',
+            },
         },
         // The prompt before a delete: it cannot be undone, so it is asked for rather than assumed.
         deleteDialog: {
@@ -90,6 +117,12 @@ export default {
             // Stands in when the backend gives no reason we can show. Reads as the tail of the lead-in above,
             // so it must not repeat it.
             unknown: 'Please try again, or contact support if the problem continues.',
+            // The backend refuses a duplicate barcode with a status carrying internal debug text - the barcode
+            // and a record id - which cannot go on screen, so this stands in its place. The barcode is
+            // pattern-checked before it is sent, so a refusal here means it is well formed but already taken.
+            barcodeRejected:
+                'That barcode could not be saved. It may already be in use by another member. ' +
+                'Check the barcode and try again.',
         },
     },
 };

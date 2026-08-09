@@ -12,11 +12,23 @@ import {
     MEMBERSHIP_FORM_DATA_API,
     MEMBERSHIP_PAYMENT_API,
     MEMBERSHIP_RENEW_API,
+    MEMBERSHIP_UPDATE_API,
 } from 'repositories/routes';
 
 // The API stores attachments as a flat attachment_0..attachment_n set of JSON strings rather than a list, and
 // only ever reads this many back.
 export const MAX_ATTACHMENTS = 4;
+
+// The API writes these itself and rejects an update that echoes them back at it, so they are dropped before a
+// record is sent back for saving.
+export const DISALLOWED_SUBMIT_FIELDS = ['submitted_on', 'confirmed_on'];
+
+/**
+ * Drop the fields the API sets itself from a record about to be saved, so an update carrying a whole record
+ * back does not send them.
+ */
+export const stripDisallowedFields = membership =>
+    Object.fromEntries(Object.entries(membership ?? {}).filter(([key]) => !DISALLOWED_SUBMIT_FIELDS.includes(key)));
 
 /**
  * Turn the API's attachment_0..attachment_n fields into an `attachments` list. A record with no attachments is
@@ -206,6 +218,35 @@ export function confirmMembership(membership) {
 
         try {
             const saved = convertAttachments(await post(MEMBERSHIP_CONFIRM_API({ id: membership.id }), membership));
+            dispatch({ type: actions.MEMBERSHIP_SAVED, payload: saved });
+            return saved;
+        } catch (error) {
+            dispatch({ type: actions.MEMBERSHIP_SAVE_FAILED, payload: error });
+            throw error;
+        }
+    };
+}
+
+/**
+ * Save a correction to an issued account - its expiry or barcode - from the admin queue. The whole record is
+ * sent back with the one field changed; the fields the API writes itself are dropped first, and its answer is
+ * the stored record.
+ *
+ * Resolves with that record so the card can show what was saved, and rejects on failure so the caller can put
+ * the reason - a barcode already in use, an expiry the backend would not take - in front of the admin. The
+ * saved record's flat attachment fields are turned into a list, the same as a single record read.
+ */
+export function updateMembership(membership) {
+    return async dispatch => {
+        dispatch({ type: actions.MEMBERSHIP_SAVING });
+
+        try {
+            const saved = convertAttachments(
+                await post(
+                    MEMBERSHIP_UPDATE_API({ id: membership.id }),
+                    stripDisallowedFields(flattenAttachments(membership)),
+                ),
+            );
             dispatch({ type: actions.MEMBERSHIP_SAVED, payload: saved });
             return saved;
         } catch (error) {

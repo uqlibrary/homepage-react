@@ -145,6 +145,20 @@ export const MembershipList = ({
         }
     };
 
+    const onUpdate = async (membership, attribute, value) => {
+        setRow(membership.id, { busy: 'updating' });
+        try {
+            const saved = await actions.updateMembership({ ...membership, [attribute]: value });
+            setRow(membership.id, { busy: null, record: saved });
+        } catch (failure) {
+            // The save did not take, so the card is left showing what it showed before - the value still held
+            // on the server - rather than the rejected edit. A barcode-specific reason stands in where the
+            // backend's own text cannot go on screen.
+            setRow(membership.id, { busy: null });
+            setError(messageOf(failure, attribute === 'barcode' ? strings.errorDialog.barcodeRejected : undefined));
+        }
+    };
+
     const onStatus = useCallback(status => {
         setFilters(current => ({ ...current, status }));
         setPage(1);
@@ -264,6 +278,7 @@ export const MembershipList = ({
                                     deleted={!!rows[membership.id]?.deleted}
                                     onConfirm={onConfirm}
                                     onDelete={setPendingDelete}
+                                    onUpdate={onUpdate}
                                 />
                             ))}
                         </Box>

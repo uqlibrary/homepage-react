@@ -358,6 +358,10 @@ export const MEMBERSHIP_CONFIRM_API = ({ id }) => ({ apiUrl: `membership/${id}/c
 // invalid, spam or duplicate requests from the queue.
 export const MEMBERSHIP_DELETE_API = ({ id }) => ({ apiUrl: `membership/${id}` });
 
+// Update an application - the same address as reading one by id, reached with POST. Used to correct an issued
+// account's expiry and barcode from the admin queue.
+export const MEMBERSHIP_UPDATE_API = ({ id }) => ({ apiUrl: `membership/${id}` });
+
 // The admin listing of applications - a searched, filtered, ordered page at a time, since the queue holds
 // thousands. Name and type search as `filter[name]` / `filter[type]`; `status` filters to one bucket unless it
 // is `all`; the sort maps to the submitted date; page and per_page ask for one page. The response is an

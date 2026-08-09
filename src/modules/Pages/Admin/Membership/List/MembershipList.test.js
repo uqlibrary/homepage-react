@@ -19,7 +19,15 @@ const membershipFormData = {
 
 const page = [
     { id: '101', type: 'community', status: 'unconfirmed', first_name: 'Newly', sn: 'Applied' },
-    { id: '102', type: 'hospital', status: 'confirmed', first_name: 'Already', sn: 'Confirmed' },
+    {
+        id: '102',
+        type: 'hospital',
+        status: 'confirmed',
+        first_name: 'Already',
+        sn: 'Confirmed',
+        expires_on: '31-12-2026',
+        barcode: '2406700012345',
+    },
 ];
 
 const pagination = { total: 42, page: 1, per_page: 20, pages: 3 };
@@ -260,6 +268,56 @@ describe('MembershipList', () => {
         );
         // The card is left as it was - still there, still offering Delete.
         expect(screen.getByTestId('membership-delete-101')).toBeInTheDocument();
+    });
+
+    it('saves an inline-edited barcode and shows the stored value on its card', async () => {
+        const updateMembership = jest.fn().mockResolvedValue({ ...page[1], barcode: '2406700054321' });
+        const actions = setup({ actions: { updateMembership } });
+
+        await userEvent.click(screen.getByTestId('barcode-102-edit-button'));
+        const input = screen.getByTestId('barcode-102-input');
+        await userEvent.clear(input);
+        await userEvent.type(input, '2406700054321');
+        await userEvent.click(screen.getByTestId('barcode-102-save-button'));
+
+        expect(updateMembership).toHaveBeenCalledWith({ ...page[1], barcode: '2406700054321' });
+        await waitFor(() => expect(screen.getByTestId('barcode-102-value')).toHaveTextContent('2406700054321'));
+        // The listing itself is not the card's to rewrite - server truth returns on the next query.
+        expect(actions.loadMemberships).toHaveBeenCalled();
+    });
+
+    it('explains a refused barcode and leaves the stored value on the card', async () => {
+        const updateMembership = jest.fn().mockRejectedValue(new Error('Request failed with status code 400'));
+        setup({ actions: { updateMembership } });
+
+        await userEvent.click(screen.getByTestId('barcode-102-edit-button'));
+        const input = screen.getByTestId('barcode-102-input');
+        await userEvent.clear(input);
+        await userEvent.type(input, '2406700010000');
+        await userEvent.click(screen.getByTestId('barcode-102-save-button'));
+
+        await waitFor(() =>
+            expect(screen.getByTestId('message-content')).toHaveTextContent(
+                'That barcode could not be saved. It may already be in use by another member.',
+            ),
+        );
+        // The save did not take, so the card keeps the barcode the server still holds rather than the edit.
+        expect(screen.getByTestId('barcode-102-value')).toHaveTextContent('2406700012345');
+    });
+
+    it('surfaces the backend reason when an edited expiry is refused', async () => {
+        const updateMembership = jest.fn().mockRejectedValue({ message: 'The expiry date was invalid.' });
+        setup({ actions: { updateMembership } });
+
+        await userEvent.click(screen.getByTestId('expiry-102-edit-button'));
+        const input = screen.getByTestId('expiry-102-input');
+        await userEvent.clear(input);
+        await userEvent.type(input, '31-13-2026');
+        await userEvent.click(screen.getByTestId('expiry-102-save-button'));
+
+        await waitFor(() =>
+            expect(screen.getByTestId('message-content')).toHaveTextContent('The expiry date was invalid.'),
+        );
     });
 
     it('messageOf reads the API message from a plain rejection and falls back otherwise', () => {

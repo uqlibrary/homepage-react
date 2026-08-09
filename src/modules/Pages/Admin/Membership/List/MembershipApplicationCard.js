@@ -15,9 +15,15 @@ import { alpha } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import moment from 'moment';
 
+import MembershipInlineEdit from './MembershipInlineEdit';
 import { default as locale } from '../membershipAdmin.locale';
 
 const strings = locale.list.row;
+
+// An expiry is written day-first, and a barcode starts with the library's 24067 prefix and runs to 13 or 14
+// digits. Both are checked before a save is offered, so a malformed value is caught without a round trip.
+export const EXPIRY_PATTERN = /^[0-9]{1,2}-[0-9]{1,2}-[0-9]{4}$/;
+export const BARCODE_PATTERN = /^24067[0-9]{8,9}$/;
 
 /**
  * The applicant's full name, in the order it is written on a card and in an aria-label.
@@ -137,6 +143,23 @@ export const MetaLine = ({ children, ...props }) => {
 MetaLine.propTypes = { children: PropTypes.node };
 
 /**
+ * One labelled value in the issued-account panel, drawn as a term-and-definition pair so a screen reader reads
+ * "Expiry, 31 Dec 2026" rather than two loose strings.
+ */
+export const AccountField = ({ label, children }) => (
+    <>
+        <Box component="dt" sx={{ typography: 'caption', color: 'text.secondary', alignSelf: 'center' }}>
+            {label}
+        </Box>
+        <Box component="dd" sx={{ margin: 0 }}>
+            {children}
+        </Box>
+    </>
+);
+
+AccountField.propTypes = { label: PropTypes.string, children: PropTypes.node };
+
+/**
  * One application in the admin queue.
  *
  * A card rather than a table row. An admin here works one application at a time rather than comparing a column
@@ -146,10 +169,15 @@ MetaLine.propTypes = { children: PropTypes.node };
  * The heading matters beyond looks: it lets a screen reader user jump between applications instead of walking
  * every cell of a grid.
  */
-export const MembershipApplicationCard = ({ membership, typeTitles, busy, deleted, onConfirm, onDelete }) => {
+export const MembershipApplicationCard = ({ membership, typeTitles, busy, deleted, onConfirm, onDelete, onUpdate }) => {
     const name = fullName(membership);
     const headingId = `membership-name-${membership.id}`;
     const inProgress = isConfirmationInProgress(membership);
+    // An issued account has an expiry and a barcode to show. Only a confirmed one is corrected here: a renewing
+    // account's details belong to the membership being renewed and are settled by confirming the renewal, not
+    // edited mid-flight.
+    const issued = isIssued(membership);
+    const editable = membership.status === 'confirmed';
     // A confirmed account has no confirm to offer; a renewing one can be re-confirmed, and one still waiting on
     // a decision can be confirmed. Nothing is actionable while a confirmation is already in flight, or once the
     // application has been deleted.
@@ -272,6 +300,58 @@ export const MembershipApplicationCard = ({ membership, typeTitles, busy, delete
                             {!!membership.alumni_num && membership.alumni_num}
                         </MetaLine>
 
+                        {/* An issued account's expiry and barcode, correctable in place where the account is
+                            confirmed. A renewing account shows them read-only. */}
+                        {!!issued && (
+                            <Box
+                                component="dl"
+                                data-testid={`membership-account-${membership.id}`}
+                                sx={{
+                                    display: 'inline-grid',
+                                    gridTemplateColumns: 'auto auto',
+                                    columnGap: 1.5,
+                                    rowGap: 0.25,
+                                    alignItems: 'center',
+                                    margin: 0,
+                                    marginTop: 1,
+                                    paddingX: 1.25,
+                                    paddingY: 0.75,
+                                    borderRadius: 1.5,
+                                    backgroundColor: theme => alpha(theme.palette.primary.main, 0.04),
+                                }}
+                            >
+                                <AccountField label={locale.list.inlineEdit.expiry.label}>
+                                    <MembershipInlineEdit
+                                        fieldId={`expiry-${membership.id}`}
+                                        field={locale.list.inlineEdit.expiry.field}
+                                        label={locale.list.inlineEdit.expiry.label}
+                                        placeholder={locale.list.inlineEdit.expiry.placeholder}
+                                        pattern={EXPIRY_PATTERN}
+                                        invalidMessage={locale.list.inlineEdit.expiry.invalid}
+                                        value={membership.expires_on}
+                                        name={name}
+                                        editable={editable}
+                                        saving={busy === 'updating'}
+                                        onSave={value => onUpdate(membership, 'expires_on', value)}
+                                    />
+                                </AccountField>
+                                <AccountField label={locale.list.inlineEdit.barcode.label}>
+                                    <MembershipInlineEdit
+                                        fieldId={`barcode-${membership.id}`}
+                                        field={locale.list.inlineEdit.barcode.field}
+                                        label={locale.list.inlineEdit.barcode.label}
+                                        pattern={BARCODE_PATTERN}
+                                        invalidMessage={locale.list.inlineEdit.barcode.invalid}
+                                        value={membership.barcode}
+                                        name={name}
+                                        editable={editable}
+                                        saving={busy === 'updating'}
+                                        onSave={value => onUpdate(membership, 'barcode', value)}
+                                    />
+                                </AccountField>
+                            </Box>
+                        )}
+
                         {/* The decision on the application, kept in the same corner of every card so an admin
                             always knows where to reach for it. A confirmation already under way, or an
                             application already deleted, replaces the buttons with a chip saying so, rather than
@@ -340,11 +420,12 @@ export const MembershipApplicationCard = ({ membership, typeTitles, busy, delete
 MembershipApplicationCard.propTypes = {
     membership: PropTypes.object.isRequired,
     typeTitles: PropTypes.object.isRequired,
-    // What this card is waiting on, if anything: 'confirming' | 'deleting'.
+    // What this card is waiting on, if anything: 'confirming' | 'deleting' | 'updating'.
     busy: PropTypes.string,
     deleted: PropTypes.bool,
     onConfirm: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
+    onUpdate: PropTypes.func.isRequired,
 };
 
 export default MembershipApplicationCard;

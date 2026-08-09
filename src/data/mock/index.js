@@ -430,6 +430,37 @@ mock.onPost(new RegExp('^membership/[^/]+/confirm$')).reply(config => {
     return withDelay([200, { ...membership, status: 'confirmed', confirmed_on: '17-07-2026' }])();
 });
 
+// Saving an edited expiry or barcode. The admin sends the whole record back with the one field changed, and
+// the API answers with what it stored. Reached at the same address as reading one by id, with POST.
+//
+// The two ways this fails are not alike, and both are copied from the API rather than invented:
+//
+//   a taken barcode  -> 400, body is internal text naming the barcode and a record id
+//   a bad expiry     -> 422, body is a message written to be read
+//
+// locale.global.errorMessages has no 400, so the first arrives at the page as a bare axios Error and the page
+// supplies wording of its own; the second is merged over the 422 wording by the interceptor and shown as-is.
+mock.onPost(new RegExp('^membership/[0-9a-f-]{36}$')).reply(config => {
+    const membership = JSON.parse(config.data);
+    if (String(membership.barcode).endsWith('0000')) {
+        return withDelay([
+            400,
+            `Membership: Barcode is already in use [barcode: ${membership.barcode}] (when checking for id = ${membership.id})`,
+        ])();
+    }
+    if (!/^([0-2]?[0-9]|3[01])-([0]?[1-9]|1[0-2])-[0-9]{4}$/.test(String(membership.expires_on ?? ''))) {
+        return withDelay([
+            422,
+            {
+                message:
+                    'The expiry date was invalid. Either it was not in the correct format of "d-m-Y" or that' +
+                    " date doesn't exist (eg 31-09-2023).",
+            },
+        ])();
+    }
+    return withDelay([200, membership])();
+});
+
 // Deleting an application - reached at the same address as reading one by id, with the DELETE method, so it
 // does not collide with the GET above.
 mock.onDelete(new RegExp('^membership/[0-9a-f-]{36}$')).reply(withDelay([200, { status: 'ok' }]));
