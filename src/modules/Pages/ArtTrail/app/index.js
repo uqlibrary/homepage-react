@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
 import { useTheme } from '@mui/material/styles';
 
+import { mui1theme } from 'config';
+
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -15,6 +17,7 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -31,6 +34,7 @@ import { trailPages } from './pages';
 import TrailTabContent from './TrailTabContent';
 
 const CULTURAL_DISCLAIMER_COOKIE = 'ART_TRAIL_CULTURAL_DISCLAIMER_SEEN';
+const FOOTER_TABS_HEIGHT = '56px';
 
 const tabs = [
     {
@@ -73,15 +77,15 @@ const buildInitialTabState = () =>
 
 const HeaderLogo = () => {
     return (
-        <Box className="uq-header__logo">
-            <Box
-                component="a"
-                href="https://www.uq.edu.au"
-                className="logo--large"
-                sx={{ display: 'grid', padding: '1rem' }}
-            >
-                <Box component="img" src={uqHeaderLogo} alt="The University of Queensland" sx={{ height: '40px' }} />
-            </Box>
+        <Box
+            component="a"
+            href="https://www.uq.edu.au"
+            className="logo--large"
+            sx={{ display: 'grid', padding: '1rem' }}
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            <Box component="img" src={uqHeaderLogo} alt="The University of Queensland" sx={{ height: '40px' }} />
         </Box>
     );
 };
@@ -113,9 +117,11 @@ TabPanel.propTypes = {
 
 const ArtTrailApp = () => {
     const theme = useTheme();
+    const appTheme = theme?.palette?.designSystem ? theme : mui1theme;
     const [activeTab, setActiveTab] = useState('trail');
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [tabState, setTabState] = useState(buildInitialTabState);
+    const [drawerContent, setDrawerContent] = useState(null);
     const [showCulturalDisclaimer, setShowCulturalDisclaimer] = useState(
         () => Cookies.get(CULTURAL_DISCLAIMER_COOKIE) !== 'true',
     );
@@ -138,6 +144,12 @@ const ArtTrailApp = () => {
 
     const handleMenuClose = () => setMenuAnchor(null);
 
+    const handleDrawerClose = () => setDrawerContent(null);
+
+    const handleOpenDrawer = DrawerContentComponent => {
+        setDrawerContent(() => DrawerContentComponent);
+    };
+
     const handleDisclaimerClose = () => {
         Cookies.set(CULTURAL_DISCLAIMER_COOKIE, 'true', { path: '/' });
         setShowCulturalDisclaimer(false);
@@ -151,6 +163,7 @@ const ArtTrailApp = () => {
     };
 
     const handleStepChange = direction => {
+        handleDrawerClose();
         updateTabState(activeTabConfig.id, currentTabState => ({
             ...currentTabState,
             stepIndex: Math.min(Math.max(currentTabState.stepIndex + direction, 0), stepCount - 1),
@@ -163,8 +176,10 @@ const ArtTrailApp = () => {
         const panelPage = panelPages[panelState.stepIndex] ?? panelPages[0];
         const TabContentComponent = tabContentComponents[tab.id];
 
-        return <TabContentComponent tab={tab} page={panelPage} />;
+        return <TabContentComponent tab={tab} page={panelPage} openDrawer={handleOpenDrawer} />;
     };
+
+    const DrawerContentComponent = drawerContent;
 
     return (
         <Box
@@ -172,13 +187,14 @@ const ArtTrailApp = () => {
             sx={{
                 '--art-trail-header-height': '64px',
                 '--art-trail-footer-height': footerHeight,
-                '--art-trail-font-size': theme.typography.fontSize,
-                '--art-trail-font-family': theme.typography.bodyFontFamily,
-                '--art-trail-spacing': theme.typography.fontSize,
+                '--art-trail-footer-tabs-height': FOOTER_TABS_HEIGHT,
+                '--art-trail-font-size': appTheme.typography.fontSize,
+                '--art-trail-font-family': appTheme.typography.bodyFontFamily,
+                '--art-trail-spacing': appTheme.typography.fontSize,
                 minHeight: '100vh',
                 height: '100dvh',
                 bgcolor: '#fff',
-                color: theme.palette.designSystem.bodyCopy,
+                color: appTheme.palette.designSystem.bodyCopy,
                 overflow: 'hidden',
                 fontSize: 'var(--art-trail-font-size)',
             }}
@@ -346,7 +362,11 @@ const ArtTrailApp = () => {
                         <BottomNavigation
                             showLabels
                             value={activeTab}
-                            onChange={(event, nextTab) => setActiveTab(nextTab)}
+                            onChange={(event, nextTab) => {
+                                handleDrawerClose();
+                                setActiveTab(nextTab);
+                            }}
+                            sx={{ height: 'var(--art-trail-footer-tabs-height)' }}
                         >
                             {tabs.map(tab => (
                                 <BottomNavigationAction
@@ -363,6 +383,21 @@ const ArtTrailApp = () => {
                     </Grid>
                 </Grid>
             </Paper>
+
+            <SwipeableDrawer
+                anchor="bottom"
+                open={Boolean(DrawerContentComponent)}
+                onClose={handleDrawerClose}
+                ModalProps={{ keepMounted: true }}
+            >
+                <Box sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
+                    <Grid container direction="column" wrap="nowrap" sx={{ maxHeight: '50vh' }}>
+                        <Grid sx={{ px: { xs: 2, sm: 2.5 }, py: 2, overflowY: 'auto' }}>
+                            {DrawerContentComponent ? <DrawerContentComponent /> : null}
+                        </Grid>
+                    </Grid>
+                </Box>
+            </SwipeableDrawer>
         </Box>
     );
 };

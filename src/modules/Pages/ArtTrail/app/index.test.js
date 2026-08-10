@@ -48,7 +48,7 @@ describe('ArtTrailApp', () => {
         expect(screen.getByRole('button', { name: 'Next page' })).toBeEnabled();
         expect(screen.queryByText('Page 1 of 3')).not.toBeInTheDocument();
         expect(screen.getByText('1 / 3')).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'Featured artwork' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'About the artwork' })).toBeInTheDocument();
 
         await user.click(screen.getByRole('button', { name: 'Map' }));
         expect(screen.queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
@@ -66,7 +66,24 @@ describe('ArtTrailApp', () => {
         expect(screen.getByRole('button', { name: 'Previous page' })).toBeEnabled();
         expect(screen.queryByText('Page 1 of 3')).not.toBeInTheDocument();
         expect(screen.getByText('1 / 3')).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'Featured artwork' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'About the artwork' })).toBeInTheDocument();
+    });
+
+    it('opens and closes the page drawer from a Trail page', async () => {
+        const user = userEvent.setup();
+
+        render(<ArtTrailApp />);
+
+        await user.click(screen.getByRole('button', { name: 'Open page drawer' }));
+
+        expect(screen.getByRole('heading', { name: 'More information' })).toBeInTheDocument();
+        expect(
+            screen.getByText(/This introduction explains how the trail works and what visitors should expect/i),
+        ).toBeInTheDocument();
+
+        await user.click(screen.getByRole('button', { name: 'Close page drawer' }));
+
+        expect(screen.queryByRole('heading', { name: 'More information' })).not.toBeInTheDocument();
     });
 
     it('dismisses the cultural disclaimer across tabs and persists dismissal in a cookie', async () => {

@@ -12,7 +12,7 @@ const StyledHeading = styled('h1')(({ theme }) => ({
     marginBottom: 0,
     paddingTop: 0,
     paddingBottom: 0,
-    fontSize: '40px',
+    fontSize: '1.875rem',
     fontStyle: 'normal',
     fontWeight: theme.typography.fontWeightHeavy,
     lineHeight: '120%',
