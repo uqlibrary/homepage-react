@@ -33,6 +33,7 @@ import {
     membershipRenewal,
     membershipRenewing,
     membershipSubmitted,
+    membershipTypes,
 } from './data/membership';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_PHYS1001 from './data/records/learningResources/examSearch_PHYS1001';
@@ -371,6 +372,34 @@ mock.onGet(/alert\/.*/).reply(config => {
 // The data the form and landing chooser are built from, and whether the signed-in user has a renewal waiting.
 // Grown as the membership app is migrated across.
 mock.onGet(routes.MEMBERSHIP_FORM_DATA_API().apiUrl).reply(withDelay([200, membershipFormData]));
+
+// The membership types and their expiry dates, for the admin settings screen. The save mirrors the API: a date
+// equal to the computed one, or a blank one, drops the override and returns the type to its computed date; any
+// other date is stored as an override. The in-memory copy is updated so a change persists across a reload the
+// way the real store would hold it. Ordered before the single-record GET so `membership_types` is not read as a
+// record id.
+mock.onGet(routes.MEMBERSHIP_TYPES_API().apiUrl).reply(withDelay([200, membershipTypes]));
+
+// A well-formed but impossible date - a month past 12 or a day past 31 - models the backend refusing the value.
+const isImpossibleDate = value => {
+    const [day, month] = String(value).split('-').map(Number);
+    return day > 31 || month > 12;
+};
+
+mock.onPost(new RegExp('^membership_type/[^/]+$')).reply(config => {
+    const name = config.url.split('/')[1];
+    const posted = JSON.parse(config.data);
+    if (posted.expiry && isImpossibleDate(posted.expiry)) {
+        return withDelay([500, { message: 'The expiry date could not be saved.' }])();
+    }
+    const type = membershipTypes.find(item => item.name === name);
+    if (type) {
+        // Blank, or equal to the computed date, means "use the computed date"; anything else is an override.
+        const reverts = !posted.expiry || posted.expiry === type.computed_expiry;
+        type.expiry = reverts ? type.computed_expiry : posted.expiry;
+    }
+    return withDelay([200, type ?? posted])();
+});
 // The real API answers `renewing: true` only for a member who actually has a renewal due. The mock mirrors that
 // so all three landing states are reachable locally: `?user=emcommunity` is due for renewal (renewal prompt);
 // any other signed-in user sees the "become a member" welcome; a signed-out visitor sees the returning-member

@@ -36,6 +36,7 @@ export const pathConfig = {
         testntagmanageprintertemplates: '/admin/testntag/manage/printertemplates',
         dlorScheduler: '/admin/dlor/schedule',
         membership: '/admin/membership',
+        membershipsettings: '/admin/membership/settings',
     },
     bookExamBooth: '/book-exam-booth',
     membership: '/membership',

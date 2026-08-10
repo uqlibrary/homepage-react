@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -11,7 +12,9 @@ import ClearIcon from '@mui/icons-material/Clear';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from '@mui/icons-material/Search';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
+import { pathConfig } from 'config/pathConfig';
 import { pageRange, pluralApplications, SORT_NEWEST, SORT_OLDEST } from '../membershipAdmin';
 import { default as locale } from '../membershipAdmin.locale';
 
@@ -41,6 +44,7 @@ export const MembershipToolbar = ({
     pagination,
 }) => {
     const range = pageRange(pagination);
+    const navigate = useNavigate();
 
     return (
         <Box data-testid="membership-toolbar">
@@ -133,6 +137,19 @@ export const MembershipToolbar = ({
                     sx={{ marginBottom: 0.25, whiteSpace: 'nowrap' }}
                 >
                     {exporting ? exportStrings.inProgress : exportStrings.label}
+                </Button>
+
+                {/* Navigates rather than links, so it stays a plain button - the same control the Export button
+                    is - rather than an anchor the app's global styles would underline and resize. */}
+                <Button
+                    variant="outlined"
+                    startIcon={<SettingsOutlinedIcon />}
+                    onClick={() => navigate(pathConfig.admin.membershipsettings)}
+                    aria-label={strings.settingsLabel}
+                    data-testid="membership-settings-link"
+                    sx={{ marginBottom: 0.25, whiteSpace: 'nowrap' }}
+                >
+                    {strings.settings}
                 </Button>
             </Box>
 

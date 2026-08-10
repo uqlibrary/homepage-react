@@ -55,3 +55,4 @@ export { default as membershipFormDataReducer } from './membershipFormDataReduce
 export { default as membershipRenewingReducer } from './membershipRenewingReducer';
 export { default as membershipReducer } from './membershipReducer';
 export { default as membershipListReducer } from './membershipListReducer';
+export { default as membershipTypesReducer } from './membershipTypesReducer';

@@ -402,3 +402,12 @@ export const MEMBERSHIP_CHECK_RENEWING_API = () => ({
     apiUrl: 'membership/check/renewing',
     options: { params: { ts: getMillisecondCacheBuster() } },
 });
+
+// The membership types and their default expiry, read and written by the admin settings screen. Each type is
+// saved on its own, addressed by its value.
+export const MEMBERSHIP_TYPES_API = () => ({
+    apiUrl: 'membership_types',
+    options: { params: { ts: getMillisecondCacheBuster() } },
+});
+
+export const MEMBERSHIP_TYPE_UPDATE_API = ({ name }) => ({ apiUrl: `membership_type/${name}` });

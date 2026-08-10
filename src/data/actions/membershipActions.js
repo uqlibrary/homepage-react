@@ -13,6 +13,8 @@ import {
     MEMBERSHIP_PAYMENT_API,
     MEMBERSHIP_RENEW_API,
     MEMBERSHIP_RESEND_EMAIL_API,
+    MEMBERSHIP_TYPES_API,
+    MEMBERSHIP_TYPE_UPDATE_API,
     MEMBERSHIP_UPDATE_API,
 } from 'repositories/routes';
 
@@ -343,6 +345,28 @@ export function fetchAllMemberships(query) {
         } while (page <= pages);
         return all;
     };
+}
+
+/**
+ * Load the membership types and their default expiry, for the admin settings screen.
+ */
+export function loadMembershipTypes() {
+    return dispatch => {
+        dispatch({ type: actions.MEMBERSHIP_TYPES_LOADING });
+        return get(MEMBERSHIP_TYPES_API())
+            .then(response => dispatch({ type: actions.MEMBERSHIP_TYPES_LOADED, payload: response }))
+            .catch(error => dispatch({ type: actions.MEMBERSHIP_TYPES_FAILED, payload: error.message }));
+    };
+}
+
+/**
+ * Save one membership type's default expiry. Each type is saved on its own, addressed by its value, so a change
+ * to one is not held up by the others. Resolves with the stored type, and rejects on failure so the caller can
+ * report which one did not save - reported against the row itself rather than dispatched, so a failed save does
+ * not read as the whole screen having failed to load.
+ */
+export function updateMembershipType(type) {
+    return async () => await post(MEMBERSHIP_TYPE_UPDATE_API({ name: type.name }), { expiry: type.expiry });
 }
 
 /**

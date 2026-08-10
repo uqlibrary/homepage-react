@@ -23,6 +23,9 @@ export default {
             search: { label: 'Search', placeholder: 'Search by name or email', clear: 'Clear search' },
             type: { label: 'Membership type', any: 'All types' },
             sort: { label: 'Sort', newest: 'Newest first', oldest: 'Oldest first' },
+            // Leaves the queue for the per-type expiry settings screen.
+            settings: 'Settings',
+            settingsLabel: 'Membership expiry settings',
         },
         results: {
             // Announced as the query changes, because the list updates below where focus is. The noun is
@@ -188,6 +191,54 @@ export default {
             barcodeRejected:
                 'That barcode could not be saved. It may already be in use by another member. ' +
                 'Check the barcode and try again.',
+        },
+    },
+    // The per-type expiry settings screen. Each membership type has a date the accounts of that type expire on.
+    // That date is recomputed every day from the type's own rule - unless an admin pins an override here. An
+    // override is any date other than the computed one; setting the date back to the computed one, or clearing
+    // it, drops the override and returns the type to the daily-computed date ("set it and forget it").
+    settings: {
+        title: 'Expiry Dates By Type',
+        pageTitle: 'Membership expiry settings',
+        intro: [
+            'The dates below will update automatically to calculated values every day according to the type, ' +
+                'unless overridden.',
+            'To activate the use of calculated dates, update the date to the calculated date for the type ' +
+                '("set it and forget it").',
+            'To override the calculated date, update the date to any other date than the calculated date. ' +
+                'You can also just clear the field and click the update button.',
+        ],
+        loading: 'Loading membership types',
+        loadFailed: 'The membership types could not be loaded. Please try again.',
+        retry: 'Try again',
+        // Names the list of types for a screen reader, since there are no column headers to say what it holds.
+        caption: 'Membership types and their expiry dates',
+        // Leads back to the applications queue.
+        back: 'Back to applications',
+        row: {
+            expiryLabel: 'Expiry date',
+            // The input sits among identical ones down the page, so its accessible name names the type it sets.
+            expiryFor: title => `Expiry date for ${title}`,
+            expiryPlaceholder: 'DD-MM-YYYY',
+            invalid: 'Enter the date as DD-MM-YYYY',
+            // The computed date is always shown, so an admin can see what to type to return a type to it.
+            calculatedDefault: date => `Calculated expiry date (default): ${date}.`,
+            // The date in the field is the computed one, so the type will keep updating on its own.
+            usingCalculated: 'Using calculated expiry date',
+            // The date in the field is something other than the computed one, so the type will not update.
+            overrideActive: 'Override active',
+            // Appended while the field has been edited but not yet saved, so the status reads as what the update
+            // will make it rather than what it is now.
+            onUpdate: ' on update',
+            // Stands in for the status where a type has no computed rule to fall back to.
+            automationUnavailable: 'Automation unavailable.',
+            update: 'Update',
+            updating: 'Updating..',
+            // The button sits among identical ones down the page, so its accessible name names the type.
+            updateLabel: title => `Update the expiry date for ${title}`,
+            // Shown once an update has taken, so the admin sees it landed.
+            saved: 'Saved',
+            saveFailed: 'That date could not be saved. Please try again.',
         },
     },
 };

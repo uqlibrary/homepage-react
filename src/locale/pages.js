@@ -41,6 +41,9 @@ export default {
             membership: {
                 title: 'Membership administration',
             },
+            membershipsettings: {
+                title: 'Membership expiry settings',
+            },
             alerts: {
                 title: 'Alerts administration',
                 form: {

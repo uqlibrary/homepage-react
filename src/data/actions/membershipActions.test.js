@@ -13,12 +13,14 @@ import {
     loadMembershipByCode,
     loadMembershipFormData,
     loadMemberships,
+    loadMembershipTypes,
     renewMembership,
     resendRenewalEmail,
     saveMembershipPayment,
     stripDisallowedFields,
     submitMembership,
     updateMembership,
+    updateMembershipType,
     uploadMembershipFile,
 } from './membershipActions';
 
@@ -514,6 +516,55 @@ describe('Membership actions', () => {
             mockApi.onGet(new RegExp('memberships')).reply(500);
 
             await expect(mockActionsStore.dispatch(fetchAllMemberships({}))).rejects.toBeTruthy();
+        });
+    });
+
+    describe('loadMembershipTypes', () => {
+        it('dispatches loading then loaded with the types', async () => {
+            const membershipTypes = [{ value: 'community', title: 'Community', expiry: 365 }];
+            mockApi.onGet(repositories.routes.MEMBERSHIP_TYPES_API().apiUrl).reply(200, membershipTypes);
+
+            await mockActionsStore.dispatch(loadMembershipTypes());
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_TYPES_LOADING,
+                actions.MEMBERSHIP_TYPES_LOADED,
+            ]);
+        });
+
+        it('dispatches loading then failed when the types cannot be read', async () => {
+            mockApi.onGet(repositories.routes.MEMBERSHIP_TYPES_API().apiUrl).reply(404);
+
+            await mockActionsStore.dispatch(loadMembershipTypes());
+
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions([
+                actions.MEMBERSHIP_TYPES_LOADING,
+                actions.MEMBERSHIP_TYPES_FAILED,
+            ]);
+        });
+    });
+
+    describe('updateMembershipType', () => {
+        const type = { name: 'community', expiry: '02-08-2027', computed_expiry: '02-08-2027' };
+
+        it('posts the expiry to the type address and resolves with the stored type', async () => {
+            let posted;
+            mockApi
+                .onPost(repositories.routes.MEMBERSHIP_TYPE_UPDATE_API({ name: 'community' }).apiUrl)
+                .reply(config => {
+                    posted = JSON.parse(config.data);
+                    return [200, type];
+                });
+
+            await expect(mockActionsStore.dispatch(updateMembershipType(type))).resolves.toEqual(type);
+            // Only the expiry is sent; the API keys the type off the address.
+            expect(posted).toEqual({ expiry: '02-08-2027' });
+        });
+
+        it('rejects when the type cannot be saved, so the caller can report it against the row', async () => {
+            mockApi.onPost(repositories.routes.MEMBERSHIP_TYPE_UPDATE_API({ name: 'community' }).apiUrl).reply(404);
+
+            await expect(mockActionsStore.dispatch(updateMembershipType(type))).rejects.toBeTruthy();
         });
     });
 

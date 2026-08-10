@@ -1,10 +1,16 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { mui1theme } from 'config';
 
 import MembershipToolbar, { typeOptions } from './MembershipToolbar';
+
+const mockNavigate = jest.fn();
+jest.mock('react-router', () => ({ ...jest.requireActual('react-router'), useNavigate: () => mockNavigate }));
+
+beforeEach(() => mockNavigate.mockClear());
 
 const accountTypes = [
     { value: 'hospital', title: 'Hospital' },
@@ -22,16 +28,18 @@ const setup = (props = {}) => {
     render(
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={mui1theme}>
-                <MembershipToolbar
-                    accountTypes={accountTypes}
-                    searchText=""
-                    type=""
-                    sort="newest"
-                    reloading={false}
-                    pagination={{ total: 42, page: 2, per_page: 20, pages: 3 }}
-                    {...handlers}
-                    {...props}
-                />
+                <MemoryRouter>
+                    <MembershipToolbar
+                        accountTypes={accountTypes}
+                        searchText=""
+                        type=""
+                        sort="newest"
+                        reloading={false}
+                        pagination={{ total: 42, page: 2, per_page: 20, pages: 3 }}
+                        {...handlers}
+                        {...props}
+                    />
+                </MemoryRouter>
             </ThemeProvider>
         </StyledEngineProvider>,
     );
@@ -110,6 +118,16 @@ describe('MembershipToolbar', () => {
         const running = screen.getAllByTestId('membership-export').at(-1);
         expect(running).toBeDisabled();
         expect(running).toHaveTextContent('Exporting..');
+    });
+
+    it('navigates to the per-type expiry settings screen', async () => {
+        setup();
+
+        const button = screen.getByTestId('membership-settings-link');
+        expect(button).toHaveTextContent('Settings');
+
+        await userEvent.click(button);
+        expect(mockNavigate).toHaveBeenCalledWith('/admin/membership/settings');
     });
 
     describe('typeOptions', () => {

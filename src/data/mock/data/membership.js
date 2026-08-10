@@ -161,6 +161,28 @@ export const membershipRenewing = {
     renewal_code: 'renew-me-123',
 };
 
+// The membership types and their expiry dates, for the admin settings screen. Each type's `expiry` is the date
+// its accounts expire on; `computed_expiry` is the date the type's daily rule works out. Where the two match,
+// the type is on its computed date; where they differ, an admin has pinned an override. Day-first dates, the
+// shape the API emits. Mutable, so a saved change is reflected on a reload the way the real store would hold it.
+export const membershipTypes = [
+    { id: 1, name: 'community', expiry: '02-08-2027', computed_expiry: '02-08-2027' },
+    { id: 2, name: 'alumni', expiry: '02-08-2027', computed_expiry: '02-08-2027' },
+    { id: 3, name: 'alumnifriends', expiry: '02-08-2027', computed_expiry: '02-08-2027' },
+    { id: 4, name: 'fryer', expiry: '02-08-2027', computed_expiry: '02-08-2027' },
+    // An override in place: the pinned date differs from the computed one, so it will not update on its own.
+    { id: 5, name: 'hospital', expiry: '31-12-2027', computed_expiry: '24-12-2027' },
+    { id: 6, name: 'reciprocal', expiry: '28-02-2027', computed_expiry: '28-02-2027' },
+    { id: 7, name: 'associate', expiry: '28-02-2027', computed_expiry: '28-02-2027' },
+    { id: 8, name: 'retired', expiry: '05-08-2029', computed_expiry: '05-08-2029' },
+    { id: 9, name: 'alumninew', expiry: '30-11-2026', computed_expiry: '30-11-2026' },
+    { id: 10, name: 'awaitingaurion', expiry: '02-09-2026', computed_expiry: '02-09-2026' },
+    // Another override.
+    { id: 11, name: 'visitors', expiry: '15-01-2027', computed_expiry: '02-09-2026' },
+    // A type with no computed rule, so its date is always an explicit one.
+    { id: 12, name: 'proxy', expiry: '30-06-2027', computed_expiry: null },
+];
+
 // The record a renewal link resolves to: a `renewing` application the form opens prefilled, with identity
 // fields locked. Its id and code match membershipRenewing above, so the landing renewal prompt links straight
 // to it.

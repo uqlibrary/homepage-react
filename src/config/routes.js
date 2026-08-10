@@ -32,6 +32,7 @@ export const flattedPathConfigExact = [
     '/admin/masquerade',
     '/admin/masquerade/',
     '/admin/membership',
+    '/admin/membership/settings',
     '/admin/testntag',
     '/admin/testntag/manage/users',
     '/admin/testntag/manage/teams',
@@ -253,6 +254,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.MembershipAdminList />,
             exact: true,
             pageTitle: locale.pages.admin.membership.title,
+        },
+        {
+            path: pathConfig.admin.membershipsettings,
+            element: <components.MembershipAdminSettings />,
+            exact: true,
+            pageTitle: locale.pages.admin.membershipsettings.title,
         },
     ];
 
@@ -483,4 +490,5 @@ export const breadcrumbs = {
     paymentreceipt: { pathname: '/payment-receipt', title: 'Payment receipt' },
     membership: { pathname: '/membership', title: 'Membership' },
     membershipadmin: { pathname: '/admin/membership', title: 'Membership admin' },
+    membershipadminsettings: { pathname: '/admin/membership/settings', title: 'Membership expiry settings' },
 };
