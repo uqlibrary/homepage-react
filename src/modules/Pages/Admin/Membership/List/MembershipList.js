@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Alert from '@mui/material/Alert';
@@ -18,6 +18,7 @@ import { isFrozen } from 'modules/Pages/Membership/membershipOutage';
 import { DEFAULT_PER_PAGE, SORT_NEWEST, STATUS_ALL } from '../membershipAdmin';
 import { buildCsv, downloadCsv } from '../membershipCsv';
 import MembershipApplicationCard, { fullName } from './MembershipApplicationCard';
+import MembershipApplicationDialog from './MembershipApplicationDialog';
 import MembershipStatusTiles from './MembershipStatusTiles';
 import MembershipToolbar from './MembershipToolbar';
 import { default as locale } from '../membershipAdmin.locale';
@@ -81,6 +82,14 @@ export const MembershipList = ({
     // True while the export is gathering the matching set across pages, so the control reads as busy and cannot
     // be fired again mid-gather.
     const [exporting, setExporting] = useState(false);
+    // The application whose full record is open in the view/edit dialog, if any, and whether a save from it is
+    // in flight.
+    const [pendingView, setPendingView] = useState(null);
+    const [viewSaving, setViewSaving] = useState(false);
+    // The control the view dialog was opened from, so focus can be returned to it when the dialog closes
+    // (WCAG 2.4.3). Focus is moved off it as the dialog opens - otherwise the dialog marks the rest of the page
+    // hidden from assistive tech while this button is still the focused element - and put back here on close.
+    const viewTriggerRef = useRef(null);
 
     const accountTypes = useMemo(() => membershipFormData?.account_types ?? [], [membershipFormData]);
     const typeTitles = useMemo(() => typeTitlesFrom(accountTypes), [accountTypes]);
@@ -174,6 +183,45 @@ export const MembershipList = ({
             setMessage(`${fullName(membership)}: ${sent ? strings.resendDialog.sent : strings.resendDialog.notSent}`);
         } catch (failure) {
             setMessage(`${fullName(membership)}: ${strings.resendDialog.notSent}`);
+        }
+    };
+
+    const onView = membership => {
+        // Remember the control the record was opened from, then take focus off it before the dialog hides the
+        // page behind it, so the focused element is never inside the hidden region. A dialog is always opened
+        // from a focused control, so the guard's empty side is only ever the defensive one.
+        const trigger = document.activeElement;
+        viewTriggerRef.current = trigger;
+        /* istanbul ignore else */
+        if (trigger instanceof HTMLElement) {
+            trigger.blur();
+        }
+        setPendingView(membership);
+    };
+
+    const onCloseView = () => {
+        setPendingView(null);
+        // Return focus once the dialog has released the page, so it lands on a control that is no longer hidden.
+        const trigger = viewTriggerRef.current;
+        /* istanbul ignore else */
+        if (trigger instanceof HTMLElement) {
+            requestAnimationFrame(() => trigger.focus());
+        }
+    };
+
+    const onSaveView = async edited => {
+        // The whole record is sent back with the changed contact fields, the same update path the inline edits
+        // take. On success the card takes on what was saved and the dialog closes; on failure the dialog stays
+        // open over the reason, so the admin can correct and try again.
+        setViewSaving(true);
+        try {
+            const saved = await actions.updateMembership(edited);
+            setRow(saved.id, { busy: null, record: saved });
+            onCloseView();
+        } catch (failure) {
+            setError(messageOf(failure));
+        } finally {
+            setViewSaving(false);
         }
     };
 
@@ -314,6 +362,7 @@ export const MembershipList = ({
                                     onDelete={setPendingDelete}
                                     onUpdate={onUpdate}
                                     onResend={onResend}
+                                    onView={onView}
                                 />
                             ))}
                         </Box>
@@ -350,6 +399,18 @@ export const MembershipList = ({
                 onAction={() => onDelete(pendingDelete)}
                 onCancelAction={() => setPendingDelete(null)}
                 onClose={() => setPendingDelete(null)}
+            />
+
+            {/* The full record, opened from a card to read it whole and correct the applicant's contact
+                details. It stays mounted so focus returns to the card's control when it closes. */}
+            <MembershipApplicationDialog
+                membership={pendingView}
+                membershipFormData={membershipFormData}
+                typeTitles={typeTitles}
+                open={!!pendingView}
+                saving={viewSaving}
+                onSave={onSaveView}
+                onClose={onCloseView}
             />
 
             {/* The outcome of a resend, reported whether it sent or not. No cancel - there is only a result to

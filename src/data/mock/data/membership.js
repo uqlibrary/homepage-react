@@ -215,9 +215,17 @@ const namedApplications = [
         mail: 'newly.applied@example.org',
         date_of_birth: '04-05-1990', // 4 May, which a month-first parser would read as 5 April
         submitted_on: '15-07-2026 13:15:00',
-        // A paying type that paid: its receipt is the evidence an admin confirms it on.
+        phone: '0733650001',
+        home_address_0: '10 Sir Fred Schonell Drive',
+        home_address_1: 'St Lucia',
+        home_address_city: 'Brisbane',
+        home_address_state: 'QLD',
+        home_address_postcode: '4067',
+        home_address_country: 'Australia',
+        // A paying type that paid: its receipt and amount are the evidence an admin confirms it on.
         payment_receipt: 'R7654321',
         payment_response: 'Success',
+        payment_amount: '25.00',
     },
     {
         // A payment the gateway refused. The API writes its "-" blank sentinel to the receipt and 'Failed' to
@@ -246,6 +254,13 @@ const namedApplications = [
         alumni_num: 's1234567',
         submitted_on: '14-07-2026 11:00:00',
         confirmed_on: '03-06-2026',
+        phone: '0733650002',
+        home_address_0: '4 Cordelia Street',
+        home_address_1: 'South Brisbane',
+        home_address_city: 'Brisbane',
+        home_address_state: 'QLD',
+        home_address_postcode: '4101',
+        home_address_country: 'Australia',
         // An issued account, so it carries the expiry and barcode an admin corrects in place.
         expires_on: '31-12-2026',
         barcode: '2406700012345',

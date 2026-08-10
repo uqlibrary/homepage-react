@@ -197,6 +197,7 @@ export const MembershipApplicationCard = ({
     onDelete,
     onUpdate,
     onResend,
+    onView,
 }) => {
     const name = fullName(membership);
     const headingId = `membership-name-${membership.id}`;
@@ -426,73 +427,81 @@ export const MembershipApplicationCard = ({
 
                         {/* The decision on the application, kept in the same corner of every card so an admin
                             always knows where to reach for it. A confirmation already under way, or an
-                            application already deleted, replaces the buttons with a chip saying so, rather than
-                            a control that is unsafe or pointless to press. */}
-                        {(canConfirm || canDelete || canResend || inProgress || deleted) && (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-end',
-                                    alignItems: 'center',
-                                    gap: 0.5,
-                                    marginTop: 1,
-                                }}
+                            application already deleted, replaces those buttons with a chip saying so, rather than
+                            a control that is unsafe or pointless to press. Viewing the full record is offered on
+                            every card, whatever state it is in. */}
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'flex-end',
+                                alignItems: 'center',
+                                gap: 0.5,
+                                marginTop: 1,
+                            }}
+                        >
+                            <Button
+                                size="small"
+                                variant="text"
+                                data-testid={`membership-view-${membership.id}`}
+                                aria-label={strings.viewLabel(name)}
+                                onClick={() => onView(membership)}
                             >
-                                {!!inProgress && (
-                                    <Chip
-                                        size="small"
-                                        variant="outlined"
-                                        label={strings.inProgress}
-                                        data-testid={`membership-inprogress-${membership.id}`}
-                                    />
-                                )}
-                                {!!deleted && (
-                                    <Chip
-                                        size="small"
-                                        variant="outlined"
-                                        label={strings.deleted}
-                                        data-testid={`membership-deleted-${membership.id}`}
-                                    />
-                                )}
-                                {!!canDelete && (
-                                    <Button
-                                        size="small"
-                                        variant="text"
-                                        color="error"
-                                        data-testid={`membership-delete-${membership.id}`}
-                                        aria-label={strings.deleteLabel(name)}
-                                        disabled={busy === 'deleting'}
-                                        onClick={() => onDelete(membership)}
-                                    >
-                                        {busy === 'deleting' ? strings.deleting : strings.delete}
-                                    </Button>
-                                )}
-                                {!!canResend && (
-                                    <Button
-                                        size="small"
-                                        variant="text"
-                                        data-testid={`membership-resend-${membership.id}`}
-                                        aria-label={strings.resendLabel(name)}
-                                        onClick={() => onResend(membership)}
-                                    >
-                                        {strings.resend}
-                                    </Button>
-                                )}
-                                {!!canConfirm && (
-                                    <Button
-                                        size="small"
-                                        variant="contained"
-                                        disableElevation
-                                        data-testid={`membership-confirm-${membership.id}`}
-                                        aria-label={strings.confirmLabel(confirmButtonText(membership), name)}
-                                        disabled={busy === 'confirming'}
-                                        onClick={() => onConfirm(membership)}
-                                    >
-                                        {busy === 'confirming' ? strings.confirming : confirmButtonText(membership)}
-                                    </Button>
-                                )}
-                            </Box>
-                        )}
+                                {strings.view}
+                            </Button>
+                            {!!inProgress && (
+                                <Chip
+                                    size="small"
+                                    variant="outlined"
+                                    label={strings.inProgress}
+                                    data-testid={`membership-inprogress-${membership.id}`}
+                                />
+                            )}
+                            {!!deleted && (
+                                <Chip
+                                    size="small"
+                                    variant="outlined"
+                                    label={strings.deleted}
+                                    data-testid={`membership-deleted-${membership.id}`}
+                                />
+                            )}
+                            {!!canDelete && (
+                                <Button
+                                    size="small"
+                                    variant="text"
+                                    color="error"
+                                    data-testid={`membership-delete-${membership.id}`}
+                                    aria-label={strings.deleteLabel(name)}
+                                    disabled={busy === 'deleting'}
+                                    onClick={() => onDelete(membership)}
+                                >
+                                    {busy === 'deleting' ? strings.deleting : strings.delete}
+                                </Button>
+                            )}
+                            {!!canResend && (
+                                <Button
+                                    size="small"
+                                    variant="text"
+                                    data-testid={`membership-resend-${membership.id}`}
+                                    aria-label={strings.resendLabel(name)}
+                                    onClick={() => onResend(membership)}
+                                >
+                                    {strings.resend}
+                                </Button>
+                            )}
+                            {!!canConfirm && (
+                                <Button
+                                    size="small"
+                                    variant="contained"
+                                    disableElevation
+                                    data-testid={`membership-confirm-${membership.id}`}
+                                    aria-label={strings.confirmLabel(confirmButtonText(membership), name)}
+                                    disabled={busy === 'confirming'}
+                                    onClick={() => onConfirm(membership)}
+                                >
+                                    {busy === 'confirming' ? strings.confirming : confirmButtonText(membership)}
+                                </Button>
+                            )}
+                        </Box>
                     </Box>
                 </CardContent>
             </Card>
@@ -510,6 +519,7 @@ MembershipApplicationCard.propTypes = {
     onDelete: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
     onResend: PropTypes.func.isRequired,
+    onView: PropTypes.func.isRequired,
 };
 
 export default MembershipApplicationCard;

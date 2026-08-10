@@ -401,6 +401,53 @@ describe('MembershipList', () => {
         expect(downloadCsv).not.toHaveBeenCalled();
     });
 
+    const viewablePage = [
+        {
+            id: '102',
+            type: 'community',
+            status: 'confirmed',
+            first_name: 'Already',
+            sn: 'Confirmed',
+            mail: 'already.confirmed@example.org',
+            expires_on: '31-12-2026',
+            barcode: '2406700012345',
+        },
+    ];
+
+    it('opens the view/edit dialog for the application on a card', async () => {
+        setup({ memberships: viewablePage });
+
+        await userEvent.click(screen.getByTestId('membership-view-102'));
+
+        expect(screen.getByTestId('dialogbox-membership-view')).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: /Application — Already Confirmed/ })).toBeInTheDocument();
+    });
+
+    it('saves an edit from the dialog, reflects it on the card, and closes', async () => {
+        const updateMembership = jest.fn().mockResolvedValue({ ...viewablePage[0], sn: 'Renamed' });
+        setup({ memberships: viewablePage, actions: { updateMembership } });
+
+        await userEvent.click(screen.getByTestId('membership-view-102'));
+        await userEvent.click(screen.getByTestId('save-membership-view'));
+
+        expect(updateMembership).toHaveBeenCalled();
+        await waitFor(() => expect(screen.queryByTestId('dialogbox-membership-view')).not.toBeInTheDocument());
+        // The card takes on the saved record: the surname now reads as it was saved.
+        expect(screen.getByTestId('membership-row-102')).toHaveTextContent('Renamed');
+    });
+
+    it('keeps the dialog open over the reason when a save from it fails', async () => {
+        const updateMembership = jest.fn().mockRejectedValue(new Error('nope'));
+        setup({ memberships: viewablePage, actions: { updateMembership } });
+
+        await userEvent.click(screen.getByTestId('membership-view-102'));
+        await userEvent.click(screen.getByTestId('save-membership-view'));
+
+        await waitFor(() => expect(screen.getByTestId('dialogbox-membership-error')).toBeInTheDocument());
+        // The view dialog stays open behind the error, so the admin can correct and try again.
+        expect(screen.getByTestId('dialogbox-membership-view')).toBeInTheDocument();
+    });
+
     it('messageOf reads the API message from a plain rejection and falls back otherwise', () => {
         expect(messageOf({ message: 'Already a member.' })).toBe('Already a member.');
         // A raw axios Error carries nothing an admin can act on, so the fallback stands in.

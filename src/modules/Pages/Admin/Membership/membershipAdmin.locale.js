@@ -73,6 +73,10 @@ export default {
             // accessible name names the applicant, since the button sits among identical ones down the page.
             resend: 'Resend email',
             resendLabel: name => `Resend the renewal email for ${name}`,
+            // Opening the full record to read it and correct the applicant's contact details. Its accessible
+            // name names the applicant, since the button sits among identical ones down the page.
+            view: 'View / edit',
+            viewLabel: name => `View and edit the application for ${name}`,
             // Stands in for an account field an issued account has not been given yet, so the row reads as
             // empty-but-present rather than blank.
             notSet: 'Not set',
@@ -115,6 +119,40 @@ export default {
             // Stands in for the label while the whole matching set is being gathered page by page.
             inProgress: 'Exporting..',
             filename: 'memberships.csv',
+        },
+        // The full record, opened from a card to read it whole and correct the applicant's identity, contact
+        // and address. Only those fields are editable; the rest are shown for context, since deciding what to
+        // correct means seeing the record it sits in. Saved through the same update endpoint as the inline
+        // edits.
+        viewDialog: {
+            dialogId: 'membership-view',
+            // Names the dialog for a screen reader; the applicant's name is appended by the caller.
+            title: 'Application',
+            // The read-only context, above the fields the admin can change.
+            detailsHeading: 'Application',
+            editHeading: 'Contact details',
+            // The read-only facts. Each names the value beside it, since there are no columns to head.
+            details: {
+                type: 'Type',
+                status: 'Status',
+                submitted: 'Submitted',
+                dateOfBirth: 'Date of birth',
+                confirmed: 'Confirmed',
+                expiry: 'Expiry',
+                barcode: 'Barcode',
+                // The payment the legacy record view left out: whether it went through, for how much, and its
+                // receipt, so an admin need not open the gateway to see it.
+                payment: 'Payment',
+                paymentAmount: 'Amount',
+                paymentReceipt: 'Receipt',
+                paid: 'Paid',
+                paymentFailed: 'Failed',
+                // Stands in where a fact was never recorded, so the row reads as empty-but-present.
+                none: 'Not recorded',
+            },
+            save: 'Save changes',
+            saving: 'Saving..',
+            cancel: 'Cancel',
         },
         // The prompt before a delete: it cannot be undone, so it is asked for rather than assumed.
         deleteDialog: {

@@ -32,6 +32,7 @@ const setup = (membership, props = {}) =>
                         onDelete={jest.fn()}
                         onUpdate={jest.fn()}
                         onResend={jest.fn()}
+                        onView={jest.fn()}
                         {...props}
                     />
                 </ul>
@@ -388,6 +389,28 @@ describe('MembershipApplicationCard', () => {
             setup({ ...renewing, confirm_step: 1 });
 
             expect(screen.queryByTestId('membership-resend-103')).not.toBeInTheDocument();
+        });
+    });
+
+    describe('view control', () => {
+        const record = { id: '102', type: 'alumni', status: 'confirmed', first_name: 'Already', sn: 'Confirmed' };
+
+        it('offers View / edit on every card, whatever state it is in, and reports the record when pressed', async () => {
+            const onView = jest.fn();
+            setup(record, { onView });
+
+            const button = screen.getByTestId('membership-view-102');
+            expect(button).toHaveTextContent('View / edit');
+            expect(button).toHaveAccessibleName('View and edit the application for Already Confirmed');
+
+            await userEvent.click(button);
+            expect(onView).toHaveBeenCalledWith(record);
+        });
+
+        it('offers View / edit even on a deleted application', () => {
+            setup(record, { deleted: true });
+
+            expect(screen.getByTestId('membership-view-102')).toBeInTheDocument();
         });
     });
 
