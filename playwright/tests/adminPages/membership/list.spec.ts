@@ -18,10 +18,10 @@ test.describe('Membership admin list', () => {
     test('an admin gets the first page, real per-status counts, and a pager', async ({ page }) => {
         await page.goto(`/admin/membership?user=${ADMIN}`);
 
-        await expect(page.getByTestId('membership-status-tile-all')).toContainText('24');
-        await expect(page.getByTestId('membership-status-tile-unconfirmed')).toContainText('10');
+        await expect(page.getByTestId('membership-status-tile-all')).toContainText('25');
+        await expect(page.getByTestId('membership-status-tile-unconfirmed')).toContainText('11');
         await expect(page.getByTestId('membership-status-tile-renewing')).toContainText('7');
-        await expect(page.getByTestId('membership-list-status')).toContainText(/Showing 1.20 of 24 applications/);
+        await expect(page.getByTestId('membership-list-status')).toContainText(/Showing 1.20 of 25 applications/);
         await expect(page.getByTestId(ROW.newlyApplied).getByRole('heading')).toContainText('Newly Applied');
         await expect(page.getByTestId('membership-pager')).toBeVisible();
     });
@@ -32,7 +32,7 @@ test.describe('Membership admin list', () => {
 
         await page.getByRole('button', { name: 'Go to page 2' }).click();
 
-        await expect(page.getByTestId('membership-list-status')).toContainText(/Showing 21.24 of 24 applications/);
+        await expect(page.getByTestId('membership-list-status')).toContainText(/Showing 21.25 of 25 applications/);
         await expect(page.getByTestId(ROW.newlyApplied)).toHaveCount(0);
     });
 
@@ -41,9 +41,9 @@ test.describe('Membership admin list', () => {
 
         await page.getByTestId('membership-status-tile-unconfirmed').click();
 
-        await expect(page.getByTestId('membership-list-status')).toContainText(/Showing 1.10 of 10 applications/);
+        await expect(page.getByTestId('membership-list-status')).toContainText(/Showing 1.11 of 11 applications/);
         // The tiles still show the whole-queue totals, not the filtered count.
-        await expect(page.getByTestId('membership-status-tile-all')).toContainText('24');
+        await expect(page.getByTestId('membership-status-tile-all')).toContainText('25');
         await expect(page.getByTestId(ROW.newlyApplied)).toBeVisible();
         await expect(page.getByTestId(ROW.alreadyConfirmed)).toHaveCount(0);
     });

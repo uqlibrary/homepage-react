@@ -9,6 +9,8 @@ import MembershipApplicationCard, {
     formatDate,
     formatDateTime,
     fullName,
+    hasFailedPayment,
+    hasReceipt,
     initialsOf,
     isConfirmationInProgress,
     isIssued,
@@ -246,7 +248,7 @@ describe('MembershipApplicationCard', () => {
         it('shows the expiry and barcode of a confirmed account, each editable in place', () => {
             setup(confirmed);
 
-            expect(screen.getByTestId('membership-account-102')).toBeInTheDocument();
+            expect(screen.getByTestId('membership-panel-102')).toBeInTheDocument();
             expect(screen.getByTestId('expiry-102-value')).toHaveTextContent('31-12-2026');
             expect(screen.getByTestId('barcode-102-value')).toHaveTextContent('2406700012345');
             expect(screen.getByTestId('expiry-102-edit-button')).toBeInTheDocument();
@@ -256,16 +258,16 @@ describe('MembershipApplicationCard', () => {
         it('shows a renewing account read-only, with no edit affordance', () => {
             setup(renewing);
 
-            expect(screen.getByTestId('membership-account-103')).toBeInTheDocument();
+            expect(screen.getByTestId('membership-panel-103')).toBeInTheDocument();
             expect(screen.getByTestId('barcode-103-value')).toHaveTextContent('2406700067890');
             expect(screen.queryByTestId('expiry-103-edit-button')).not.toBeInTheDocument();
             expect(screen.queryByTestId('barcode-103-edit-button')).not.toBeInTheDocument();
         });
 
-        it('shows no account panel on an application still waiting on a decision', () => {
+        it('shows no panel on an application still waiting on a decision with nothing to show', () => {
             setup(unconfirmed);
 
-            expect(screen.queryByTestId('membership-account-101')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('membership-panel-101')).not.toBeInTheDocument();
         });
 
         it('reports an edited barcode with the field it changed when saved', async () => {
@@ -286,6 +288,65 @@ describe('MembershipApplicationCard', () => {
 
             await userEvent.click(screen.getByTestId('expiry-102-edit-button'));
             expect(screen.getByTestId('expiry-102-save-button')).toBeDisabled();
+        });
+    });
+
+    describe('payment status', () => {
+        const paid = {
+            id: '101',
+            type: 'community',
+            status: 'unconfirmed',
+            first_name: 'Newly',
+            sn: 'Applied',
+            payment_receipt: 'R7654321',
+            payment_response: 'Success',
+        };
+        const declined = {
+            id: '106',
+            type: 'community',
+            status: 'unconfirmed',
+            first_name: 'Payment',
+            sn: 'Declined',
+            payment_receipt: '-',
+            payment_response: 'Failed',
+        };
+        const neverPaid = { id: '105', type: 'hospital', status: 'unconfirmed', first_name: 'With', sn: 'Documents' };
+
+        it('shows the receipt of a paid application as the evidence to confirm it on', () => {
+            setup(paid);
+
+            expect(screen.getByTestId('membership-panel-101')).toBeInTheDocument();
+            expect(screen.getByTestId('membership-receipt-101')).toHaveTextContent('R7654321');
+            // A success does not linger as a status - the receipt is what stands for it.
+            expect(screen.queryByTestId('membership-payment-failed-101')).not.toBeInTheDocument();
+        });
+
+        it('flags a failed payment in words, and still offers the delete it points to', () => {
+            setup(declined, { onDelete: jest.fn() });
+
+            expect(screen.getByTestId('membership-payment-failed-106')).toHaveTextContent('Failed');
+            // The refused payment writes a "-" sentinel, which is no receipt to show.
+            expect(screen.queryByTestId('membership-receipt-106')).not.toBeInTheDocument();
+            // A failed payment behind an unconfirmed application is the case for Delete.
+            expect(screen.getByTestId('membership-delete-106')).toBeInTheDocument();
+        });
+
+        it('shows no panel for an application that never had a payment to make', () => {
+            setup(neverPaid);
+
+            expect(screen.queryByTestId('membership-panel-105')).not.toBeInTheDocument();
+        });
+
+        it('hasReceipt reads the "-" blank sentinel as no receipt', () => {
+            expect(hasReceipt({ payment_receipt: 'R7654321' })).toBe(true);
+            expect(hasReceipt({ payment_receipt: '-' })).toBe(false);
+            expect(hasReceipt({})).toBe(false);
+        });
+
+        it('hasFailedPayment is true only for a failed response, not a null one', () => {
+            expect(hasFailedPayment({ payment_response: 'Failed' })).toBe(true);
+            expect(hasFailedPayment({ payment_response: 'Success' })).toBe(false);
+            expect(hasFailedPayment({})).toBe(false);
         });
     });
 

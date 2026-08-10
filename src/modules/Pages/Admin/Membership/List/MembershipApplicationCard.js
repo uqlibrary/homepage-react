@@ -9,6 +9,7 @@ import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { alpha } from '@mui/material/styles';
@@ -40,6 +41,24 @@ export const IN_PROGRESS_STEPS = [1, 2, '1', '2'];
 
 export const isIssued = membership => ISSUED_STATUSES.includes(membership?.status);
 export const isConfirmationInProgress = membership => IN_PROGRESS_STEPS.includes(membership?.confirm_step);
+
+/**
+ * The API writes a hyphen where it means a blank: a blank is not saved on its own, so it stores a "-" for a
+ * payment that returned nothing. So a receipt of "-" is no receipt at all - a payment that came back empty,
+ * which the backend pairs with a 'Failed' response - and a receipt of any other value is a real one to show.
+ */
+export const NO_VALUE = '-';
+export const hasReceipt = membership => !!membership?.payment_receipt && membership.payment_receipt !== NO_VALUE;
+
+/**
+ * A payment that was tried and did not work. `payment_response` is written only when a payment is taken, as one
+ * of exactly two words, so a null means no payment was ever attempted and is not a failure. A success does not
+ * linger to be shown here: it confirms the application the moment it lands, and leaves its receipt as the
+ * evidence. What is left to flag is a failure sitting behind an application still waiting on a decision - the
+ * case for Delete rather than Confirm.
+ */
+export const PAYMENT_FAILED = 'Failed';
+export const hasFailedPayment = membership => membership?.payment_response === PAYMENT_FAILED;
 
 // Confirming an applicant who has been confirmed before is a re-confirmation, and reads as one.
 export const confirmButtonText = membership => (membership?.confirmed_on ? strings.reconfirm : strings.confirm);
@@ -197,6 +216,12 @@ export const MembershipApplicationCard = ({
     // A renewing member can be sent their renewal link again, for one who lost or never received it. Held back
     // while a confirmation is in flight or once the application is deleted, the same as the other actions.
     const canResend = membership.status === 'renewing' && !deleted && !inProgress;
+    // A receipt is the evidence a paying application was paid for; a failed payment behind one still waiting on
+    // a decision is the reason to delete it rather than confirm it. Either, or an issued account's own fields,
+    // gives the evidence panel something to hold.
+    const showsReceipt = hasReceipt(membership);
+    const paymentFailed = hasFailedPayment(membership);
+    const showsPanel = issued || showsReceipt || paymentFailed;
 
     return (
         <Box component="li" sx={{ listStyle: 'none' }}>
@@ -312,12 +337,14 @@ export const MembershipApplicationCard = ({
                             {!!membership.alumni_num && membership.alumni_num}
                         </MetaLine>
 
-                        {/* An issued account's expiry and barcode, correctable in place where the account is
-                            confirmed. A renewing account shows them read-only. */}
-                        {!!issued && (
+                        {/* The evidence an admin decides on: a receipt is why a paying application is confirmed
+                            rather than deleted, and a failed payment is why it is deleted rather than confirmed.
+                            An issued account shows the expiry and barcode the decision produced, correctable in
+                            place where the account is confirmed and read-only while it is renewing. */}
+                        {!!showsPanel && (
                             <Box
                                 component="dl"
-                                data-testid={`membership-account-${membership.id}`}
+                                data-testid={`membership-panel-${membership.id}`}
                                 sx={{
                                     display: 'inline-grid',
                                     gridTemplateColumns: 'auto auto',
@@ -332,35 +359,68 @@ export const MembershipApplicationCard = ({
                                     backgroundColor: theme => alpha(theme.palette.primary.main, 0.04),
                                 }}
                             >
-                                <AccountField label={locale.list.inlineEdit.expiry.label}>
-                                    <MembershipInlineEdit
-                                        fieldId={`expiry-${membership.id}`}
-                                        field={locale.list.inlineEdit.expiry.field}
-                                        label={locale.list.inlineEdit.expiry.label}
-                                        placeholder={locale.list.inlineEdit.expiry.placeholder}
-                                        pattern={EXPIRY_PATTERN}
-                                        invalidMessage={locale.list.inlineEdit.expiry.invalid}
-                                        value={membership.expires_on}
-                                        name={name}
-                                        editable={editable}
-                                        saving={busy === 'updating'}
-                                        onSave={value => onUpdate(membership, 'expires_on', value)}
-                                    />
-                                </AccountField>
-                                <AccountField label={locale.list.inlineEdit.barcode.label}>
-                                    <MembershipInlineEdit
-                                        fieldId={`barcode-${membership.id}`}
-                                        field={locale.list.inlineEdit.barcode.field}
-                                        label={locale.list.inlineEdit.barcode.label}
-                                        pattern={BARCODE_PATTERN}
-                                        invalidMessage={locale.list.inlineEdit.barcode.invalid}
-                                        value={membership.barcode}
-                                        name={name}
-                                        editable={editable}
-                                        saving={busy === 'updating'}
-                                        onSave={value => onUpdate(membership, 'barcode', value)}
-                                    />
-                                </AccountField>
+                                {!!paymentFailed && (
+                                    <AccountField label={strings.payment}>
+                                        {/* The word and the icon both say it, so the colour is never the only
+                                            thing that does (WCAG 1.4.1). */}
+                                        <Typography
+                                            component="span"
+                                            variant="body2"
+                                            color="error.main"
+                                            data-testid={`membership-payment-failed-${membership.id}`}
+                                        >
+                                            <ErrorOutlineIcon
+                                                aria-hidden="true"
+                                                sx={{ fontSize: 16, verticalAlign: '-0.2em', marginRight: 0.375 }}
+                                            />
+                                            {strings.paymentFailed}
+                                        </Typography>
+                                    </AccountField>
+                                )}
+                                {!!showsReceipt && (
+                                    <AccountField label={strings.paymentReceipt}>
+                                        <Typography
+                                            component="span"
+                                            variant="body2"
+                                            data-testid={`membership-receipt-${membership.id}`}
+                                        >
+                                            {membership.payment_receipt}
+                                        </Typography>
+                                    </AccountField>
+                                )}
+                                {!!issued && (
+                                    <>
+                                        <AccountField label={locale.list.inlineEdit.expiry.label}>
+                                            <MembershipInlineEdit
+                                                fieldId={`expiry-${membership.id}`}
+                                                field={locale.list.inlineEdit.expiry.field}
+                                                label={locale.list.inlineEdit.expiry.label}
+                                                placeholder={locale.list.inlineEdit.expiry.placeholder}
+                                                pattern={EXPIRY_PATTERN}
+                                                invalidMessage={locale.list.inlineEdit.expiry.invalid}
+                                                value={membership.expires_on}
+                                                name={name}
+                                                editable={editable}
+                                                saving={busy === 'updating'}
+                                                onSave={value => onUpdate(membership, 'expires_on', value)}
+                                            />
+                                        </AccountField>
+                                        <AccountField label={locale.list.inlineEdit.barcode.label}>
+                                            <MembershipInlineEdit
+                                                fieldId={`barcode-${membership.id}`}
+                                                field={locale.list.inlineEdit.barcode.field}
+                                                label={locale.list.inlineEdit.barcode.label}
+                                                pattern={BARCODE_PATTERN}
+                                                invalidMessage={locale.list.inlineEdit.barcode.invalid}
+                                                value={membership.barcode}
+                                                name={name}
+                                                editable={editable}
+                                                saving={busy === 'updating'}
+                                                onSave={value => onUpdate(membership, 'barcode', value)}
+                                            />
+                                        </AccountField>
+                                    </>
+                                )}
                             </Box>
                         )}
 

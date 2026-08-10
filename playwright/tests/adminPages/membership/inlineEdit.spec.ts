@@ -68,7 +68,7 @@ test.describe('Membership admin inline edit', () => {
         await page.goto(`/admin/membership?user=${ADMIN}`);
 
         const row = page.getByTestId(ROW(RENEWING));
-        await expect(row.getByTestId(`membership-account-${RENEWING}`)).toBeVisible();
+        await expect(row.getByTestId(`membership-panel-${RENEWING}`)).toBeVisible();
         await expect(row.getByTestId(`barcode-${RENEWING}-value`)).toHaveText('2406700067890');
         // Its details are settled by confirming the renewal, not edited here, so there is no edit affordance.
         await expect(row.getByTestId(`barcode-${RENEWING}-edit-button`)).toHaveCount(0);

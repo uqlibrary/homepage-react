@@ -76,6 +76,12 @@ export default {
             // Stands in for an account field an issued account has not been given yet, so the row reads as
             // empty-but-present rather than blank.
             notSet: 'Not set',
+            // Payment shown on the card as the evidence behind the confirm-or-delete decision. A payment is
+            // written as exactly 'Success' or 'Failed', and left blank where none was ever taken, so only a
+            // failure is worth a word of its own - a payment that worked has its receipt to show for it.
+            paymentReceipt: 'Receipt',
+            payment: 'Payment',
+            paymentFailed: 'Failed',
         },
         // Correcting an issued account's expiry and barcode where they sit on the card. The value is
         // pattern-checked here because the format is knowable without asking the API, and a bad barcode is

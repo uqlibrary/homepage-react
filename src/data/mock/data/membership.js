@@ -199,10 +199,11 @@ export const membershipSubmitted = (id, type) => ({
         '&ReceiptNo=R7654321&MembershipCode=COM&Success=Y&AmountPaid=25.00',
 });
 
-// The admin queue. The five named applications are the recognisable cases the listing, filters, payment and
-// attachment views are built against (newest, so they lead page one); a spread of generated applications sits
-// behind them so paging and the per-status counts are exercised the way the real ~9,500-row queue would drive
-// them. Dates are day-first, the shape the API emits.
+// The admin queue. The six named applications are the recognisable cases the listing, filters, payment and
+// attachment views are built against (newest, so they lead page one) - a fresh application paid for, one whose
+// payment was refused, one already confirmed, one renewing, one part-way through a confirmation, and one with a
+// document attached; a spread of generated applications sits behind them so paging and the per-status counts
+// are exercised the way the real ~9,500-row queue would drive them. Dates are day-first, the shape the API emits.
 const namedApplications = [
     {
         id: '00000000-0000-0000-0000-000000000101',
@@ -214,6 +215,25 @@ const namedApplications = [
         mail: 'newly.applied@example.org',
         date_of_birth: '04-05-1990', // 4 May, which a month-first parser would read as 5 April
         submitted_on: '15-07-2026 13:15:00',
+        // A paying type that paid: its receipt is the evidence an admin confirms it on.
+        payment_receipt: 'R7654321',
+        payment_response: 'Success',
+    },
+    {
+        // A payment the gateway refused. The API writes its "-" blank sentinel to the receipt and 'Failed' to
+        // the response, and leaves the application unconfirmed - so the card reads it as the case for Delete
+        // rather than Confirm.
+        id: '00000000-0000-0000-0000-000000000106',
+        type: 'community',
+        status: 'unconfirmed',
+        title: 'Mx',
+        first_name: 'Payment',
+        sn: 'Declined',
+        mail: 'payment.declined@example.org',
+        date_of_birth: '12-11-1985',
+        submitted_on: '14-07-2026 09:20:00',
+        payment_receipt: '-',
+        payment_response: 'Failed',
     },
     {
         id: '00000000-0000-0000-0000-000000000102',

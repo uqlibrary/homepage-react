@@ -21,15 +21,15 @@ test.describe('Membership admin export to CSV', () => {
     test('an admin exports every matching application across pages to a named CSV', async ({ page }) => {
         await page.goto(`/admin/membership?user=${ADMIN}`);
         await expect(page.getByTestId('membership-list')).toBeVisible();
-        // The queue holds 24 applications and the page shows 20, so a complete export must reach past page one.
-        await expect(page.getByTestId('membership-status-tile-all')).toContainText('24');
+        // The queue holds 25 applications and the page shows 20, so a complete export must reach past page one.
+        await expect(page.getByTestId('membership-status-tile-all')).toContainText('25');
 
         const { filename, lines } = await csvOf(page, () => page.getByTestId('membership-export').click());
 
         expect(filename).toBe('memberships.csv');
         expect(lines[0]).toBe(HEADER);
         // One row per matching application, gathered from every page rather than only the 20 on screen.
-        expect(lines).toHaveLength(1 + 24);
+        expect(lines).toHaveLength(1 + 25);
         expect(lines.join('\n')).toContain('Newly Applied');
     });
 
