@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
-
-import { mui1theme } from 'config';
+import { useTheme } from '@mui/material/styles';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -37,15 +36,13 @@ const tabs = [
     {
         id: 'trail',
         label: 'Trail',
-        icon: <ParkOutlinedIcon />,
-        subtitle: 'Walk-up overview and welcome notes',
+        icon: <ParkOutlinedIcon sx={{ fontSize: '1.5rem' }} />,
         pages: trailPages,
     },
     {
         id: 'map',
         label: 'Map',
-        icon: <MapOutlinedIcon />,
-        subtitle: 'Orientation and wayfinding placeholders',
+        icon: <MapOutlinedIcon sx={{ fontSize: '1.5rem' }} />,
         page: {
             title: 'Map overview',
             body: 'Placeholder map copy can describe the route, entry points, and the sequence of artworks.',
@@ -55,8 +52,7 @@ const tabs = [
     {
         id: 'feedback',
         label: 'Feedback',
-        icon: <FeedbackOutlinedIcon />,
-        subtitle: 'Mocked responses and review prompts',
+        icon: <FeedbackOutlinedIcon sx={{ fontSize: '1.5rem' }} />,
         page: {
             title: 'Quick response',
             body: 'Placeholder feedback content can ask visitors about clarity, wayfinding, and overall experience.',
@@ -116,6 +112,7 @@ TabPanel.propTypes = {
 };
 
 const ArtTrailApp = () => {
+    const theme = useTheme();
     const [activeTab, setActiveTab] = useState('trail');
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [tabState, setTabState] = useState(buildInitialTabState);
@@ -175,13 +172,13 @@ const ArtTrailApp = () => {
             sx={{
                 '--art-trail-header-height': '64px',
                 '--art-trail-footer-height': footerHeight,
-                '--art-trail-font-size': mui1theme.typography.fontSize,
-                '--art-trail-font-family': mui1theme.typography.bodyFontFamily,
-                '--art-trail-spacing': mui1theme.typography.fontSize,
+                '--art-trail-font-size': theme.typography.fontSize,
+                '--art-trail-font-family': theme.typography.bodyFontFamily,
+                '--art-trail-spacing': theme.typography.fontSize,
                 minHeight: '100vh',
                 height: '100dvh',
                 bgcolor: '#fff',
-                color: mui1theme.palette.designSystem.bodyCopy,
+                color: theme.palette.designSystem.bodyCopy,
                 overflow: 'hidden',
                 fontSize: 'var(--art-trail-font-size)',
             }}
@@ -318,6 +315,7 @@ const ArtTrailApp = () => {
                                                 onClick={() => handleStepChange(-1)}
                                                 disabled={activeState.stepIndex === 0}
                                                 aria-label="Previous page"
+                                                sx={{ fontSize: '1rem' }}
                                             >
                                                 Prev
                                             </Button>
@@ -330,6 +328,7 @@ const ArtTrailApp = () => {
                                             onClick={() => handleStepChange(1)}
                                             disabled={activeState.stepIndex === stepCount - 1}
                                             aria-label={isTrailWelcomeStep ? 'Start the trail' : 'Next page'}
+                                            sx={{ fontSize: '1rem' }}
                                         >
                                             {isTrailWelcomeStep ? 'Start the trail' : 'Next'}
                                         </Button>
@@ -357,6 +356,7 @@ const ArtTrailApp = () => {
                                     icon={tab.icon}
                                     id={`art-trail-tab-${tab.id}`}
                                     aria-controls={`art-trail-tabpanel-${tab.id}`}
+                                    sx={{ fontSize: 'var(--art-trail-font-size)' }}
                                 />
                             ))}
                         </BottomNavigation>

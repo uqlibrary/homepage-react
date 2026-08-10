@@ -26,7 +26,14 @@ const CulturalDisclaimer = ({ onClose }) => {
                 </Grid>
 
                 <Grid sx={{ alignSelf: 'flex-start' }}>
-                    <IconButton aria-label="Dismiss cultural disclaimer" size="large" onClick={onClose}>
+                    <IconButton
+                        aria-label="Dismiss cultural disclaimer"
+                        size="large"
+                        onClick={onClose}
+                        sx={{
+                            fontSize: '1.5rem',
+                        }}
+                    >
                         <CloseIcon fontSize="large" />
                     </IconButton>
                 </Grid>
