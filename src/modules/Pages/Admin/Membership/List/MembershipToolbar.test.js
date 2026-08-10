@@ -17,6 +17,7 @@ const setup = (props = {}) => {
         onType: jest.fn(),
         onSort: jest.fn(),
         onReload: jest.fn(),
+        onExport: jest.fn(),
     };
     render(
         <StyledEngineProvider injectFirst>
@@ -95,6 +96,20 @@ describe('MembershipToolbar', () => {
 
         setup({ reloading: true });
         expect(screen.getAllByTestId('membership-reload').at(-1)).toBeDisabled();
+    });
+
+    it('exports on request, and reads as busy and is blocked while an export runs', async () => {
+        const { onExport } = setup();
+        const button = screen.getByTestId('membership-export');
+        expect(button).toHaveTextContent('Export CSV');
+
+        await userEvent.click(button);
+        expect(onExport).toHaveBeenCalled();
+
+        setup({ exporting: true });
+        const running = screen.getAllByTestId('membership-export').at(-1);
+        expect(running).toBeDisabled();
+        expect(running).toHaveTextContent('Exporting..');
     });
 
     describe('typeOptions', () => {

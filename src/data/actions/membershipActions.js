@@ -20,6 +20,11 @@ import {
 // only ever reads this many back.
 export const MAX_ATTACHMENTS = 4;
 
+// How many records the CSV export asks for at a time. The listing is paged, so an export of the whole matching
+// set walks it a page at a time; a page far larger than the on-screen one keeps that to a handful of requests
+// without asking the server for an unbounded slice (per_page 0 is reserved for a stats-only call).
+export const EXPORT_PER_PAGE = 200;
+
 // The API writes these itself and rejects an update that echoes them back at it, so they are dropped before a
 // record is sent back for saving.
 export const DISALLOWED_SUBMIT_FIELDS = ['submitted_on', 'confirmed_on'];
@@ -314,6 +319,29 @@ export function loadMemberships(query) {
                 }),
             )
             .catch(error => dispatch({ type: actions.MEMBERSHIPS_FAILED, payload: error.message }));
+    };
+}
+
+/**
+ * Gather every application matching the current search and filter, across all pages, for the CSV export.
+ *
+ * The list is server-paginated, so the whole matching set is walked a page at a time - a large page so it takes
+ * only a few requests - and the records are accumulated in order. The status, name, type and sort of the query
+ * are kept; only the paging is the export's own. The gathered records are returned rather than dispatched: the
+ * export builds a file from them and does not touch the page the admin is looking at.
+ */
+export function fetchAllMemberships(query) {
+    return async () => {
+        const all = [];
+        let page = 1;
+        let pages = 1;
+        do {
+            const response = await get(MEMBERSHIPS_LIST_API({ ...query, page, perPage: EXPORT_PER_PAGE }));
+            all.push(...(response.data ?? []).map(membership => convertAttachments(membership)));
+            pages = response.pagination?.pages ?? page;
+            page += 1;
+        } while (page <= pages);
+        return all;
     };
 }
 

@@ -101,6 +101,15 @@ export default {
                 invalid: 'A barcode starts with 24067 and is 13 or 14 digits long',
             },
         },
+        // Downloading the applications matching the current search and filter as a CSV, for reporting and
+        // offline processing. It gathers the whole matching set across pages, not only the page on screen, so
+        // the label reads as the action rather than "export this page".
+        export: {
+            label: 'Export CSV',
+            // Stands in for the label while the whole matching set is being gathered page by page.
+            inProgress: 'Exporting..',
+            filename: 'memberships.csv',
+        },
         // The prompt before a delete: it cannot be undone, so it is asked for rather than assumed.
         deleteDialog: {
             confirmationBoxId: 'membership-delete',

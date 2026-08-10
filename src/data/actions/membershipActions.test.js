@@ -7,6 +7,7 @@ import {
     confirmMembership,
     convertAttachments,
     deleteMembership,
+    fetchAllMemberships,
     flattenAttachments,
     loadMembership,
     loadMembershipByCode,
@@ -472,6 +473,47 @@ describe('Membership actions', () => {
                 actions.MEMBERSHIPS_LOADING,
                 actions.MEMBERSHIPS_FAILED,
             ]);
+        });
+    });
+
+    describe('fetchAllMemberships', () => {
+        it('walks every page and returns the accumulated records in order, converting attachments', async () => {
+            mockApi.onGet(new RegExp('memberships')).reply(config => {
+                const page = Number(config.params.page);
+                const data = page === 1 ? [{ id: 'a', attachment_0: '{"key":"a"}' }] : [{ id: 'b' }];
+                return [200, { data, pagination: { total: 2, page, per_page: 200, pages: 2 } }];
+            });
+
+            const all = await mockActionsStore.dispatch(fetchAllMemberships({ name: 'smith', status: 'all' }));
+
+            expect(all.map(membership => membership.id)).toEqual(['a', 'b']);
+            expect(all[0].attachments).toEqual([{ key: 'a' }]);
+        });
+
+        it('asks for the export page size rather than the on-screen one', async () => {
+            let seenPerPage;
+            mockApi.onGet(new RegExp('memberships')).reply(config => {
+                seenPerPage = config.params.per_page;
+                return [200, { data: [], pagination: { total: 0, page: 1, per_page: 200, pages: 1 } }];
+            });
+
+            await mockActionsStore.dispatch(fetchAllMemberships({}));
+
+            expect(Number(seenPerPage)).toBe(200);
+        });
+
+        it('stops after a single page when the body carries no pagination', async () => {
+            mockApi.onGet(new RegExp('memberships')).reply(200, { data: [{ id: 'only' }] });
+
+            const all = await mockActionsStore.dispatch(fetchAllMemberships({}));
+
+            expect(all.map(membership => membership.id)).toEqual(['only']);
+        });
+
+        it('rejects when a page cannot be read', async () => {
+            mockApi.onGet(new RegExp('memberships')).reply(500);
+
+            await expect(mockActionsStore.dispatch(fetchAllMemberships({}))).rejects.toBeTruthy();
         });
     });
 

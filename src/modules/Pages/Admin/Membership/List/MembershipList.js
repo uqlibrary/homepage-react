@@ -16,6 +16,7 @@ import { breadcrumbs } from 'config/routes';
 
 import { isFrozen } from 'modules/Pages/Membership/membershipOutage';
 import { DEFAULT_PER_PAGE, SORT_NEWEST, STATUS_ALL } from '../membershipAdmin';
+import { buildCsv, downloadCsv } from '../membershipCsv';
 import MembershipApplicationCard, { fullName } from './MembershipApplicationCard';
 import MembershipStatusTiles from './MembershipStatusTiles';
 import MembershipToolbar from './MembershipToolbar';
@@ -77,6 +78,9 @@ export const MembershipList = ({
     // The application awaiting the delete prompt, if any. Delete cannot be undone, so it is asked for before it
     // is done rather than fired straight from the card.
     const [pendingDelete, setPendingDelete] = useState(null);
+    // True while the export is gathering the matching set across pages, so the control reads as busy and cannot
+    // be fired again mid-gather.
+    const [exporting, setExporting] = useState(false);
 
     const accountTypes = useMemo(() => membershipFormData?.account_types ?? [], [membershipFormData]);
     const typeTitles = useMemo(() => typeTitlesFrom(accountTypes), [accountTypes]);
@@ -173,6 +177,20 @@ export const MembershipList = ({
         }
     };
 
+    const onExport = async () => {
+        // Gather every matching application, not just the page on screen, then hand it to the browser as a
+        // file. A failure to gather the set is reported the same way an action failure is.
+        setExporting(true);
+        try {
+            const all = await actions.fetchAllMemberships(query);
+            downloadCsv(strings.export.filename, buildCsv(all, typeTitles));
+        } catch (failure) {
+            setError(messageOf(failure));
+        } finally {
+            setExporting(false);
+        }
+    };
+
     const onStatus = useCallback(status => {
         setFilters(current => ({ ...current, status }));
         setPage(1);
@@ -237,6 +255,8 @@ export const MembershipList = ({
                             onSort={onSort}
                             onReload={onReload}
                             reloading={!!membershipsLoading}
+                            onExport={onExport}
+                            exporting={exporting}
                             pagination={pagination}
                         />
                     </Box>

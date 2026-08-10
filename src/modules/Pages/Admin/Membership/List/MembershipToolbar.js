@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import ClearIcon from '@mui/icons-material/Clear';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -15,6 +17,7 @@ import { default as locale } from '../membershipAdmin.locale';
 
 const strings = locale.list.toolbar;
 const resultStrings = locale.list.results;
+const exportStrings = locale.list.export;
 
 export const typeOptions = (accountTypes = []) =>
     [...accountTypes].sort((a, b) => String(a.title).localeCompare(String(b.title)));
@@ -33,6 +36,8 @@ export const MembershipToolbar = ({
     onSort,
     onReload,
     reloading,
+    onExport,
+    exporting,
     pagination,
 }) => {
     const range = pageRange(pagination);
@@ -118,6 +123,17 @@ export const MembershipToolbar = ({
                 >
                     <RefreshIcon />
                 </IconButton>
+
+                <Button
+                    variant="outlined"
+                    startIcon={<FileDownloadIcon />}
+                    onClick={onExport}
+                    disabled={!!exporting}
+                    data-testid="membership-export"
+                    sx={{ marginBottom: 0.25, whiteSpace: 'nowrap' }}
+                >
+                    {exporting ? exportStrings.inProgress : exportStrings.label}
+                </Button>
             </Box>
 
             {/* Announced as the query changes, because the list redraws below where focus is. */}
@@ -146,6 +162,8 @@ MembershipToolbar.propTypes = {
     onSort: PropTypes.func.isRequired,
     onReload: PropTypes.func.isRequired,
     reloading: PropTypes.bool,
+    onExport: PropTypes.func.isRequired,
+    exporting: PropTypes.bool,
     pagination: PropTypes.object,
 };
 

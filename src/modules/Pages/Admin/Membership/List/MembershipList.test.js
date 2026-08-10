@@ -10,6 +10,14 @@ import MembershipList, { messageOf, typeTitlesFrom } from './MembershipList';
 jest.mock('modules/Pages/Membership/membershipOutage', () => ({ isFrozen: jest.fn(() => false) }));
 const { isFrozen } = require('modules/Pages/Membership/membershipOutage');
 
+// The export's file-building and download are tested in membershipCsv; here we only check the list wires the
+// gathered set into them, so they are stubbed to observe the call without touching jsdom's absent Blob URL API.
+jest.mock('../membershipCsv', () => ({
+    buildCsv: jest.fn(() => 'CSV-BODY'),
+    downloadCsv: jest.fn(),
+}));
+const { buildCsv, downloadCsv } = require('../membershipCsv');
+
 const membershipFormData = {
     account_types: [
         { value: 'community', title: 'Community' },
@@ -56,7 +64,11 @@ const setup = (props = {}) => {
     return actions;
 };
 
-beforeEach(() => isFrozen.mockReturnValue(false));
+beforeEach(() => {
+    isFrozen.mockReturnValue(false);
+    buildCsv.mockClear();
+    downloadCsv.mockClear();
+});
 
 afterEach(() => {
     document.querySelectorAll('uq-site-header').forEach(node => node.remove());
@@ -359,6 +371,34 @@ describe('MembershipList', () => {
         await userEvent.click(screen.getByTestId('membership-resend-103'));
 
         await waitFor(() => expect(screen.getByTestId('message-content')).toHaveTextContent('could not be sent'));
+    });
+
+    it('exports the whole matching set to a named CSV file', async () => {
+        const gathered = [page[0], page[1]];
+        const fetchAllMemberships = jest.fn().mockResolvedValue(gathered);
+        const actions = setup({ actions: { fetchAllMemberships } });
+
+        await userEvent.click(screen.getByTestId('membership-export'));
+
+        // The export asks for the matching set under the current query, not just the page on screen.
+        expect(fetchAllMemberships).toHaveBeenCalledWith(INITIAL_QUERY);
+        await waitFor(() => expect(downloadCsv).toHaveBeenCalledWith('memberships.csv', 'CSV-BODY'));
+        // The rows are turned into the file with the type titles, so the CSV names a type rather than its code.
+        expect(buildCsv).toHaveBeenCalledWith(gathered, { community: 'Community', hospital: 'Hospital' });
+    });
+
+    it('surfaces the reason in a dialog when an export cannot be gathered, and downloads nothing', async () => {
+        const fetchAllMemberships = jest.fn().mockRejectedValue(new Error('nope'));
+        setup({ actions: { fetchAllMemberships } });
+
+        await userEvent.click(screen.getByTestId('membership-export'));
+
+        await waitFor(() =>
+            expect(screen.getByTestId('message-content')).toHaveTextContent(
+                'Please try again, or contact support if the problem continues.',
+            ),
+        );
+        expect(downloadCsv).not.toHaveBeenCalled();
     });
 
     it('messageOf reads the API message from a plain rejection and falls back otherwise', () => {
