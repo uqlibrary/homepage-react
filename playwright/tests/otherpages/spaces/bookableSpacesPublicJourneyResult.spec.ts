@@ -85,6 +85,7 @@ test.describe('Spaces Journey Result page', () => {
             );
         });
     });
+    // consider moving this test to jest
     test('spaces result page has the correct parts', async ({ page }) => {
         const firstSpacePane = page.getByTestId('spaces-result-list-item-1');
 
@@ -105,6 +106,13 @@ test.describe('Spaces Journey Result page', () => {
         await expect(firstSpacePane).toContainText('Space desciption field being used to report the mock data');
 
         await expect(page.getByTestId('space-1-detail-unfavourite')).toBeVisible();
+
+        await expect(page.getByTestId('filter-by-campus')).toBeVisible();
+        await expect(page.getByTestId('filter-group-block-5').locator('h3')).toBeVisible();
+        await expect(page.getByTestId('filter-group-block-5').locator('h3')).toContainText('Acceptable noise');
+        await expect(page.getByTestId('filter-group-block-5').locator('p')).toContainText(
+            'How much conversation and ambient sound is usually acceptable.'
+        );
     });
     test('results page can book a room', async ({ page }) => {
         await page.goto('/spaces/results');
@@ -118,63 +126,6 @@ test.describe('Spaces Journey Result page', () => {
         await expect(page.locator('a[data-testid="space-2-booking-link"]')).toBeVisible();
         await expect(page.locator('a[data-testid="space-2-booking-link"]')).toContainText('Book this space');
         await expect(page.getByTestId('space-2-booking-icon')).toBeVisible();
-    });
-    test('the correct notes appear', async ({ page }) => {
-        // load the spaces results page
-        await page.goto('/spaces/results');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-
-        await expect(
-            page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_AVAILABILITY}`),
-        ).not.toBeVisible();
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_EDIA}`)).not.toBeVisible();
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_ON_FLOOR}`)).not.toBeVisible();
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_LIGHTING}`)).not.toBeVisible();
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_ROOM}`)).not.toBeVisible();
-
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_NOISE_LEVEL}`)).toBeVisible();
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_SPACE}`)).toBeVisible();
-    });
-    test('the sidebar notes will open correctly', async ({ page }) => {
-        // load the spaces results page
-        await page.goto('/spaces/results');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-
-        await expect(page.getByTestId('popover')).not.toBeVisible();
-        await page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_NOISE_LEVEL}`).click();
-        await expect(page.getByTestId('popover')).toBeVisible();
-        await expect(page.getByTestId('popover').locator('h4')).toContainText('Acceptable noise');
-        await expect(page.getByTestId('popover').locator('p')).toContainText(
-            'How much conversation and ambient sound is usually acceptable.',
-        );
-    });
-    test('the sidebar notes can hide with escape key', async ({ page }) => {
-        // load the spaces results page
-        await page.goto('/spaces/results');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-
-        await expect(page.getByTestId('popover')).not.toBeVisible();
-        await page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_NOISE_LEVEL}`).click();
-        await expect(page.getByTestId('popover')).toBeVisible();
-
-        // test the escape key closes the mini dialog
-        await page.getByTestId('popover').press('Escape');
-
-        await expect(page.getByTestId('popover')).not.toBeVisible();
-    });
-    test('the sidebar notes can hide with button press', async ({ page }) => {
-        // load the spaces results page
-        await page.goto('/spaces/results');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-
-        await expect(page.getByTestId('popover')).not.toBeVisible();
-        await page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_NOISE_LEVEL}`).click();
-        await expect(page.getByTestId('popover')).toBeVisible();
-
-        // test the close button closes the mini dialog
-        await page.getByTestId('close-popover-button').click();
-
-        await expect(page.getByTestId('popover')).not.toBeVisible();
     });
     test('the filter sidebars load correctly collapsed or expanded, as defined in the admin', async ({ page }) => {
         // load the spaces results page

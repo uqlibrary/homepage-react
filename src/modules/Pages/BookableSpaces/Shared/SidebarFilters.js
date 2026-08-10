@@ -7,7 +7,6 @@ import { InputLabel, useMediaQuery, useTheme } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import MuiInput from '@mui/material/Input';
-import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import Slider from '@mui/material/Slider';
 import Select from '@mui/material/Select';
@@ -17,7 +16,6 @@ import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CloseIcon from '@mui/icons-material/Close';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import ReplayIcon from '@mui/icons-material/Replay';
 
 import { addClass, removeClass, StyledSkipLinkAnchor, standardText, StyledPrimaryButton } from 'helpers/general';
@@ -212,6 +210,12 @@ const StyledFilterControlsDiv = styled('div')(() => ({
         fontStyle: 'italic',
     },
 }));
+const StyledGroupNoteParagraph = styled('p')(({ theme }) => ({
+    marginBlock: 0,
+    color: theme.palette.designSystem.bodyCopy,
+    fontSize: theme.palette.designSystem.bodySmallFontSize,
+    paddingBottom: '0.5rem',
+}));
 const StyledFilterSpaceList = styled('ul')(() => ({
     marginTop: 0,
     paddingLeft: 0,
@@ -304,20 +308,6 @@ export const SidebarFilters = ({
     const [facilityGroupOpenState, setFacilityGroupOpenState] = React.useState([]);
     const lastAutoExpandedGroupKeyRef = React.useRef('');
     const [defaultCampus, setDefaultCampus] = React.useState(1);
-    const [facilityTypeInfoAnchorEl, setFacilityTypeInfoAnchorEl] = React.useState(null);
-    const [activeFacilityTypeInfo, setActiveFacilityTypeInfo] = React.useState(null);
-
-    const openFacilityTypeInfo = (event, group) => {
-        event?.preventDefault();
-        event?.stopPropagation();
-        setFacilityTypeInfoAnchorEl(event.currentTarget);
-        setActiveFacilityTypeInfo(group);
-    };
-
-    const closeFacilityTypeInfo = () => {
-        setFacilityTypeInfoAnchorEl(null);
-        setActiveFacilityTypeInfo(null);
-    };
 
     function sortedUsedGroups() {
         if (
@@ -868,16 +858,6 @@ export const SidebarFilters = ({
                         data-testid={`facility-type-group-${filterGroupId}-collapsed`}
                     />
                 </IconButton>
-                {!!group?.facility_type_group_help?.trim() && (
-                    <IconButton
-                        size="small"
-                        data-testid={`facility-type-group-info-button-${filterGroupId}`}
-                        aria-label={`More information about ${group?.facility_type_group_name}`}
-                        onClick={event => openFacilityTypeInfo(event, group)}
-                    >
-                        <InfoOutlinedIcon fontSize="small" />
-                    </IconButton>
-                )}
             </StyledFilterControlsDiv>
         );
     };
@@ -1160,6 +1140,9 @@ export const SidebarFilters = ({
                             data-testid={`filter-group-block-${filterGroupId}`}
                         >
                             {showFilterGroupHeading(group, isGroupExpanded, numberChecked, filterGroupId, groupLength)}
+                            {!!group?.facility_type_group_help && (
+                                <StyledGroupNoteParagraph>{group?.facility_type_group_help}</StyledGroupNoteParagraph>
+                            )}
                             {!!isGroupExpanded && (
                                 <StyledFilterSpaceList id={`filter-group-list-${filterGroupId}`}>
                                     {group?.facility_type_children && group?.facility_type_children?.length > 0 ? (
@@ -1176,37 +1159,6 @@ export const SidebarFilters = ({
                 })}
                 {renderFilterActionButtons({ isBottom: true })}
             </StyledSidebarSubDiv>
-            <Popover
-                open={!!facilityTypeInfoAnchorEl}
-                anchorEl={facilityTypeInfoAnchorEl}
-                onClose={closeFacilityTypeInfo}
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                }}
-                transformOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center',
-                }}
-                data-testid="popover"
-            >
-                <div style={{ maxWidth: '320px', padding: '0.75rem 1rem' }}>
-                    <Typography component={'h4'} variant={'subtitle2'} sx={{ mb: 0.5 }}>
-                        {activeFacilityTypeInfo?.facility_type_group_name}
-                    </Typography>
-                    <Typography component={'p'} variant={'body2'} sx={{ mb: 1 }}>
-                        {activeFacilityTypeInfo?.facility_type_group_help || ''}
-                    </Typography>
-                    <Button
-                        size="small"
-                        onClick={closeFacilityTypeInfo}
-                        sx={{ textTransform: 'none' }}
-                        data-testid="close-popover-button"
-                    >
-                        Close
-                    </Button>
-                </div>
-            </Popover>
         </StyledSidebarDiv>
     );
 };
