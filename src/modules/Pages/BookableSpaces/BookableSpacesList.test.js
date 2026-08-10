@@ -9,7 +9,6 @@ import { BookableSpacesList, buildJourneyNavigationUrl } from 'modules/Pages/Boo
 import {
     deserialiseJourneyMapFilterState,
     JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
-    JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const mockDispatch = jest.fn();
