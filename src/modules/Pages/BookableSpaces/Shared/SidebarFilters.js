@@ -583,7 +583,7 @@ export const SidebarFilters = ({
 
             setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
         }
-        scrollToTopOfContent();
+        // scrollToTopOfContent();
     };
 
     const handleCapacityFilterChange = (e, newValue, id = null) => {
