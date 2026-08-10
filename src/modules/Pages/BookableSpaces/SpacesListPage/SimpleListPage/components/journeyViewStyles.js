@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const StyledJourneyContentShell = styled(Box)(({ theme }) => ({
@@ -16,6 +16,7 @@ export const StyledJourneyContentShell = styled(Box)(({ theme }) => ({
 export const StyledJourneyPanelSection = styled('section', {
     shouldForwardProp: prop => prop !== 'hasTopSpacing',
 })(({ theme, hasTopSpacing }) => ({
+    position: 'relative',
     maxWidth: '1200px',
     margin: '0 auto',
     width: '100%',
@@ -30,6 +31,7 @@ export const StyledJourneyPanelSection = styled('section', {
     },
     [theme.breakpoints.down('md')]: {
         maxWidth: '100%',
+        marginLeft: '1rem',
     },
 }));
 
@@ -69,6 +71,22 @@ export const StyledResultsSidebarPanelDiv = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('lg')]: {
         position: 'relative',
         top: 'auto',
+    },
+}));
+
+export const StyledFilterShowHideButton = styled(Button)(({ theme }) => ({
+    [theme.breakpoints.up('md')]: {
+        display: 'none',
+    },
+    [theme.breakpoints.down('md')]: {
+        position: 'absolute',
+        left: '-1rem',
+        top: '250px',
+        zIndex: 2,
+
+        backgroundColor: `${theme.palette.primary.main} !important`,
+        color: '#fff',
+        borderRadius: '0 20px 20px 0',
     },
 }));
 

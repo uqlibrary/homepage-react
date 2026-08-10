@@ -91,7 +91,7 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
         alignItems: 'center',
     },
 }));
-const StyledSidebarDiv = styled('div')(() => ({
+const StyledSidebarDiv = styled('div')(({ theme }) => ({
     position: 'relative',
     height: '100%',
     overflowY: 'auto',
@@ -102,6 +102,12 @@ const StyledSidebarDiv = styled('div')(() => ({
     marginLeft: 0,
     flexBasis: '10%',
     maxWidth: '16.6667%',
+
+    [theme.breakpoints.down('md')]: {
+        '&.mobileHidden': {
+            display: 'none',
+        },
+    },
 
     '&.journeyFilterSidebar': {
         width: '100%',
@@ -1023,7 +1029,7 @@ export const SidebarFilters = ({
             : campusList?.find(c => c.campus_id === selectedCampus)?.campus_id || defaultCampus || 1;
 
     return (
-        <StyledSidebarDiv id="StyledSidebarDivTemp" className={`filterSideBar ${suppliedClassName}`}>
+        <StyledSidebarDiv id="filterSidebar" className={`filterSideBar ${suppliedClassName} mobileHidden`}>
             <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
                 {!isJourneyView && (
                     <StyledSkipLinkAnchor href="#space-wrapper" data-testid="skip-to-spaces-list">

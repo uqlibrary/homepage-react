@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Box, Button, Stack, Typography, useTheme } from '@mui/material';
 
+import TuneIcon from '@mui/icons-material/Tune';
+
 import { StyledSkipLinkAnchor, StyledSecondaryButton } from 'helpers/general';
 
 import BookingLink from 'modules/Pages/BookableSpaces/Shared/BookingLink';
@@ -13,6 +15,7 @@ import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesH
 import SpaceOpenStatusChip from 'modules/Pages/BookableSpaces/Shared/SpaceOpenStatusChip';
 
 import {
+    StyledFilterShowHideButton,
     StyledJourneyPanelSection,
     StyledResultsSidebarPanelDiv,
     StyledResultsSplitLayoutDiv,
@@ -75,8 +78,21 @@ export const JourneyResultsView = ({
         setPage(prevPage => (prevPage > totalPages ? totalPages : prevPage));
     }, [totalPages]);
 
+    const toggleSidebarFilter = () => {
+        const sidebarBlock = document.getElementById('filterSidebar');
+        if (!!sidebarBlock) {
+            // SidebarFilters.js has `mobileHidden` class applied onload
+            sidebarBlock.classList.contains('mobileHidden')
+                ? sidebarBlock.classList.remove('mobileHidden')
+                : sidebarBlock.classList.add('mobileHidden');
+        }
+    };
+
     return (
         <StyledJourneyPanelSection data-testid="bookable-spaces-journey-results-view" hasTopSpacing>
+            <StyledFilterShowHideButton onClick={toggleSidebarFilter} data-testid="spaces-filter-show-hide-button">
+                <TuneIcon />
+            </StyledFilterShowHideButton>
             <StyledResultsSplitLayoutDiv>
                 <Box>
                     <Typography component="h1" variant="h5">

@@ -34,7 +34,7 @@ test.describe('Spaces Journey Result page', () => {
 
             await assertAccessibility(page, '[data-testid="bookable-spaces-journey-results-view"]');
         });
-        test('the skip to filters button works', async ({ page }) => {
+        test('the desktop skip to filters button works', async ({ page }) => {
             // load the spaces results page
             await page.goto('/spaces/results');
             await page.setViewportSize({ width: 1300, height: 1000 });
@@ -212,6 +212,31 @@ test.describe('Spaces Journey Result page', () => {
         await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE}-open`)).toBeVisible();
         await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE}-open`)).toHaveClass(/expandedGroup/);
         await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE}-collapsed`)).not.toBeVisible();
+    });
+    test('on mobile, filter block show-hides correctly', async ({ page }) => {
+        // load the spaces results page
+        await page.goto('/spaces/results');
+        await page.setViewportSize({ width: 390, height: 736 });
+
+        // results off page, filter block visible
+        await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
+        await expect(page.getByTestId('filter-by-campus')).not.toBeVisible();
+
+        // SHOW filters by toggling show-hide-filters button
+        await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
+        await page.getByTestId('spaces-filter-show-hide-button').click();
+
+        // results off page, filter block visible
+        await expect(page.locator('body').getByText(/Search results/)).toBeVisible(); // but below page viewport
+        await expect(page.getByTestId('filter-by-campus')).toBeVisible();
+
+        // HIDE filters by toggling show-hide-filters button
+        await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
+        await page.getByTestId('spaces-filter-show-hide-button').click();
+
+        // results off page, filter block visible
+        await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
+        await expect(page.getByTestId('filter-by-campus')).not.toBeVisible();
     });
     test.describe('Favourites', () => {
         test('can UNfavourite a space on the result page', async ({ page }) => {
