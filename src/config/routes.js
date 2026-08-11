@@ -73,12 +73,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     // A standalone section with its own look and feel — App renders it without the shared chrome.
     const publicStandalonePages = [
         {
-            path: pathConfig.artTrailLanding,
-            element: <components.ArtTrail />,
-            pageTitle: 'Art Trail Welcome',
-            standalone: true,
-        },
-        {
             path: pathConfig.artTrailApp,
             element: <components.ArtTrailApp />,
             pageTitle: 'Art Trail',
@@ -147,6 +141,11 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.dlorOwnObjectEdit(dlorId),
             element: <components.DLOOwnEdit />,
             pageTitle: 'Edit details of your object',
+        },
+        {
+            path: pathConfig.artTrailLanding,
+            element: <components.ArtTrail />,
+            pageTitle: 'Art Trail Welcome',
         },
     ];
 
