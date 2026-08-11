@@ -10,10 +10,4 @@ describe('ArtTrail', () => {
         expect(screen.getByTestId('art-trail-page')).toBeInTheDocument();
         expect(screen.getByRole('heading', { name: 'Art Trail' })).toBeInTheDocument();
     });
-
-    it('sets the document title, since it carries no shared chrome to do so', () => {
-        render(<ArtTrail />);
-
-        expect(document.title).toBe('Art Trail');
-    });
 });

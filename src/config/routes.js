@@ -145,7 +145,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.artTrailLanding,
             element: <components.ArtTrail />,
-            pageTitle: 'Art Trail Welcome',
+            pageTitle: 'Art Trail',
         },
     ];
 
