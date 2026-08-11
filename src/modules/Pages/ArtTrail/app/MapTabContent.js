@@ -36,8 +36,8 @@ const MapTabContent = () => {
             <Grid
                 container
                 direction="column"
-                pl={'var(--art-trail-font-size)'}
-                pr={'var(--art-trail-font-size)'}
+                pl={'var(--art-trail-spacing)'}
+                pr={'var(--art-trail-spacing)'}
                 data-testid="pageContent"
             >
                 <Grid>

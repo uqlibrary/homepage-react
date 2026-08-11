@@ -20,8 +20,8 @@ const WelcomePage = () => {
             <Grid
                 container
                 direction="column"
-                pl={'var(--art-trail-font-size)'}
-                pr={'var(--art-trail-font-size)'}
+                pl={'var(--art-trail-spacing)'}
+                pr={'var(--art-trail-spacing)'}
                 data-testid="pageContent"
             >
                 <Grid container wrap="nowrap" justifyContent="space-between" alignItems="flex-start" columnSpacing={1}>

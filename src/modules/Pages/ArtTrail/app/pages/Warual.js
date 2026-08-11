@@ -13,8 +13,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
-import ArtworkImage from '../assets/images/artwork/Petyarre_2001_02_crop_WEB.jpg';
-import ThornyDevilsImage from '../assets/images/Thorny-Devil-_C_-meyblume-scaled.jpg';
+import ArtworkImage from '../assets/images/artwork/Robinson_2017_02_WEBREADY.jpg';
+import ThursdayIslandImage from '../assets/images/Thursday-Island-_C_-Reef-Pix-stock.adobe-scaled.jpg';
 
 import Hero from '../Hero';
 
@@ -50,6 +50,13 @@ const StyledImageCaption = styled('figcaption')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const StyledUl = styled('ul')(({ theme }) => ({
+    paddingInlineStart: '1.25rem',
+    '& li:not(:last-of-type)': {
+        marginBottom: theme.spacing(1),
+    },
+}));
+
 const StyledDrawerHeader = styled(Typography)(({ theme }) => ({
     fontSize: '1.125rem',
     fontWeight: theme.typography.fontWeightMedium,
@@ -61,21 +68,21 @@ const ArtDrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
             <Grid>
-                <StyledDrawerHeader variant="h3">Gloria Tamerre Petyarre</StyledDrawerHeader>
+                <StyledDrawerHeader variant="h3">Brian Robinson</StyledDrawerHeader>
             </Grid>
             <Grid>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    <em>Devil Mountain Lizard Dreaming</em> 1997
+                    <em>Warual III (Green Turtle)</em> 2015
                     <br />
-                    synthetic polymer paint on canvas
+                    lino print on fabric, edition 1/5
                     <br />
-                    207 x 310 cm
+                    150 x 150 x 5 cm
                     <br />
-                    Collection of The University of Queensland, purchased 2001.
+                    Collection of The University of Queensland, purchased 2017
                     <br />
-                    Reproduced courtesy of the artist © licensed by Aboriginal Artists Agency Ltd.
+                    Reproduced courtesy of the artist, © and onespace, Brisbane.
                     <br />
-                    Photo: Carl Warner.
+                    Photo: Carl Warner
                 </Typography>
             </Grid>
         </Grid>
@@ -89,11 +96,15 @@ const LocationDrawerContent = () => {
             </Grid>
             <Grid>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Where: Level 1,{' '}
-                    <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
-                        Duhig Tower (TBC: THIS MIGHT LINK TO MAP TAB)
+                    Near the kitchen and exit on Level 2,{' '}
+                    <a
+                        href="https://web.library.uq.edu.au/visit/central-library"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Central Library
                     </a>{' '}
-                    (Building 2), St Lucia campus.
+                    (Building 12), St Lucia campus.
                 </Typography>
             </Grid>
         </Grid>
@@ -103,7 +114,7 @@ const LocationDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="'Devil Mountain Lizard Dreaming' 1997 artwork." />
+            <Hero title="'Warual III (Green Turtle)' 2015, Brian Robinson" />
             <Grid
                 container
                 direction="column"
@@ -113,7 +124,7 @@ const Page = ({ openDrawer }) => {
             >
                 <Grid>
                     <Box position="relative">
-                        <StyledImage src={ArtworkImage} alt="'Devil Mountain Lizard Dreaming' 1997 artwork." />
+                        <StyledImage src={ArtworkImage} alt="'Warual III (Green Turtle)' 2015 artwork." />
                         <IconButton
                             size="large"
                             aria-label="More information about this artwork"
@@ -150,6 +161,27 @@ const Page = ({ openDrawer }) => {
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
+                            aria-controls="reflect-content"
+                            id="reflect-header"
+                        >
+                            Reflect
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="reflect-content">
+                            <Typography component={'p'}>
+                                Take a moment to look closely at the small details carved into this lino print.
+                            </Typography>
+                            <StyledUl>
+                                <li>What hidden pop culture references can you find?</li>
+                                <li>
+                                    Why do you think the artist might include these alongside stories of his culture in
+                                    his artworks?
+                                </li>
+                            </StyledUl>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artwork-content"
                             id="about-the-artwork-header"
                         >
@@ -157,15 +189,23 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artwork-content">
                             <Typography component={'p'}>
-                                This artwork depicts the scales of the Anmatyerre's totem animal, the Thorny Devil, who
-                                was responsible for depositing ochre throughout Atnangkere Country. Note the intricate
-                                lines, patterns, and colour, which the artist has used to create the illusion of
-                                movement.
+                                Brian Robinson creates works that combine traditional mark making and patterns from his
+                                cultural belongings with references to his favourite pop culture movies and comics. His
+                                work features cosmic toys, superheroes, cartoons and well-known branded iconography,
+                                co-opted into the spirit world of First Nations imagination that he intertwines with
+                                historical narratives, personal history and humour.
                             </Typography>
                             <Typography component={'p'}>
-                                The artist's work demonstrates a deep connection with Country and the important role of
-                                the artist in their community to continue and protect knowledge, which continues to
-                                future generations.
+                                Robinson is a multi-skilled contemporary artist and is internationally recognised for
+                                his work in printmaking, painting, sculpture and design.
+                            </Typography>
+                            <Typography component={'p'}>
+                                <em>Warual III</em> 2015 reflects the tropical marine environments surrounding Waiben
+                                and the inhabitants of the island.
+                            </Typography>
+                            <Typography component={'p'}>
+                                Such animal motifs have been essential parts of his life and culture, imbued with the
+                                customs, stories, traditions and lifestyles of his Ancestors and family.
                             </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
@@ -179,8 +219,38 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
                             <Typography component={'p'}>
-                                The artist was born c. 1945 in Atnangkere, northeast of Alice Springs in the Northern
-                                Territory.
+                                Brian Robinson was born in 1973 on Waiben (Thursday Island) in Far North Queensland. He
+                                has connections to the Maluyligal, Wuthathi and Dayak people. Growing up on Waiben,
+                                Brian was surrounded by family who were well known fish folk, practicing faiths that
+                                existed with strong cultural traditions and Maluyligal spirituality.
+                            </Typography>
+                            <Typography component={'p'}>
+                                Today, he lives and works in Gimuy (Cairns). Brian Robinson is represented by Onespace
+                                Gallery, Brisbane.
+                            </Typography>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="stories-from-the-collection-content"
+                            id="stories-from-the-collection-header"
+                        >
+                            Stories from the collection
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="stories-from-the-collection-content">
+                            <Typography component={'p'}>
+                                Brian Robinson's work combines traditional mark-making and patterns with pop culture
+                                imagery, demonstrating ways that Aboriginal cultures are continually evolving. Kevin
+                                Gilbert's 1969 essay, 'What do I, as an Aboriginal, think about the old traditions and
+                                customs of my people, and what place do they have in present life and in the future?'
+                                explores similar themes.
+                            </Typography>
+                            <Typography component={'p'}>
+                                Kevin Gilbert was born in 1933 to the Wiradjuri Nation near Condobolin, New South Wales.
+                                In addition to publishing several poetry and prose works, he also wrote 'The Cherry
+                                Pickers', a play about Aboriginal seasonal workers and was the first Aboriginal
+                                playwright to have a play performed in Australia.
                             </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
@@ -194,43 +264,50 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Typography component={'p'} sx={{ pb: 1 }}>
-                                Learn more about <strong>Atnangkere Country.</strong>
+                                Learn more about Waiben (Thursday Island).
                             </Typography>
                             <iframe
-                                title="Indigenous art trail - Atnangkere Country"
-                                src="https://uq.h5p.com/content/1292937940959277909/embed"
-                                aria-label="Indigenous art trail - Atnangkere Country - Devil Mountain Lizard Dreaming 1997"
+                                title="Indigenous art trail - Waiben (Thursday Island)"
+                                src="https://uq.h5p.com/content/1292938905372654189/embed"
+                                aria-label="Indigenous art trail - Waiben (Thursday Island) - Warual III (Green Turtle)"
                                 width="1090"
                                 frameBorder="0"
                                 allowfullscreen="allowfullscreen"
                                 allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+                                style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    aspectRatio: '1090/1033',
+                                    marginBottom: 'var(--art-trail-spacing)',
+                                }}
                             />
-                            <Typography component={'h3'}>Thorny devils</Typography>
-                            <StyledImage src={ThornyDevilsImage} alt="Thorny devil in the desert." loading="lazy" />
-                            <StyledImageCaption>Thorny Devil @meyblume - stock.adobe.com</StyledImageCaption>
+                            <StyledImage src={ThursdayIslandImage} alt="Thursday Island." loading="lazy" />
+                            <StyledImageCaption>Thursday Island @Reef Pix stock.adobe.com</StyledImageCaption>
                             <Typography component={'p'} sx={{ pb: 1 }}>
-                                Thorny devils have a peculiar way of moving across the desert. This movement makes them
-                                appear like a piece of vegetation blowing across the ground and helps them avoid
-                                predators. Watch this{' '}
+                                Watch{' '}
                                 <a
-                                    href="https://youtu.be/sxawWKuA4JM?si=543q69knAQGd-dgc"
+                                    href="https://youtu.be/jCXdWPcXHCE?si=udjcAX9G34U0HLBm"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    video of a thorny devil (YouTube, 23s):
-                                </a>
+                                    Artist story/ Brian Robinson discusses his art practice (YouTube, 5m 56s)
+                                </a>{' '}
+                                to hear Brian Robinson discuss his practice as an artist:
                             </Typography>
                             <iframe
                                 width="560"
                                 height="315"
-                                src="https://www.youtube.com/embed/sxawWKuA4JM?si=6kk89BbR3ZeiubR2"
+                                src="https://www.youtube.com/embed/jCXdWPcXHCE?si=j09ilceFa9rmpk55"
                                 title="YouTube video player"
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerPolicy="strict-origin-when-cross-origin"
                                 allowfullscreen=""
-                                style={{ width: '100%', height: 'auto', aspectRatio: '16/9' }}
+                                style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    aspectRatio: '16/9',
+                                }}
                             />
                         </StyledAccordionDetails>
                     </StyledAccordion>
