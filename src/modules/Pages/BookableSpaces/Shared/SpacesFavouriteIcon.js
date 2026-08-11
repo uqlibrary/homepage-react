@@ -31,6 +31,7 @@ export const SpacesFavouriteIcon = ({
     isFavouriteActionInProgress,
     iconPosition,
     ariaLabel,
+    isDetailPage = false,
 }) => {
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
@@ -39,7 +40,7 @@ export const SpacesFavouriteIcon = ({
     if (!isLoggedIn || !onFavouriteToggle) {
         return null;
     }
-    if (!!isFavouriteActionInProgress && isFavouriteActionInProgress === bookableSpace.space_id) {
+    if (!!isFavouriteActionInProgress && (!!isDetailPage || isFavouriteActionInProgress === bookableSpace.space_id)) {
         return (
             <StyledCircularProgress
                 color="inherit"
@@ -99,6 +100,7 @@ SpacesFavouriteIcon.propTypes = {
     isFavourite: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
     isFavouriteActionInProgress: PropTypes.any,
+    isDetailPage: PropTypes.bool,
     iconPosition: PropTypes.any,
     ariaLabel: PropTypes.string,
 };

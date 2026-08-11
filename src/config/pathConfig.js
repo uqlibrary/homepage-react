@@ -57,5 +57,6 @@ export const pathConfig = {
     dlorOwnTeamList: '/digital-learning-hub/team/manage',
     dlorOwnTeamEdit: dlorTeamId => `/digital-learning-hub/team/edit/${dlorTeamId}`,
     bookablespaces: '/spaces',
+    bookablespacesDetail: spaceUuid => `/spaces/detail/${spaceUuid}`,
     dlorDashboard: '/digital-learning-hub/dashboard',
 };

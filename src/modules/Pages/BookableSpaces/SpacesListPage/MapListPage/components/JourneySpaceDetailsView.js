@@ -249,6 +249,7 @@ const JourneySpaceDetailsView = ({
                                         isFavourite={isSelectedSpaceFavourite}
                                         onFavouriteToggle={() => onFavouriteToggle?.(selectedSpace)}
                                         isFavouriteActionInProgress={isFavouriteActionInProgress}
+                                        isDetailPage
                                     />
                                 )}
                                 {(!narrowView || !!verticalView) && (

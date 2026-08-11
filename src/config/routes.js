@@ -51,6 +51,7 @@ export const flattedPathConfigExact = [
     'https://www.library.uq.edu.au/404.js',
     '/digital-learning-hub-list',
     '/spaces',
+    '/spaces/detail',
     '/admin/spaces',
     '/admin/spacetypes',
     '/admin/spaces/manage/locations',
@@ -82,6 +83,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     const dlorId = ':dlorId';
     const seriesId = ':seriesId';
     const confirmationId = ':confirmationId';
+    const spaceUuid = ':spaceUuid';
 
     const publicPages = [
         {
@@ -176,6 +178,11 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: '/spaces/detail/:spaceId',
             element: <components.BookableSpacesDetailPage />,
             exact: true,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: pathConfig.bookablespacesDetail(spaceUuid),
+            element: <components.BookableSpacesDetailPage />,
             pageTitle: 'Library spaces',
         },
         {
@@ -432,7 +439,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const spaceUuid = ':spaceUuid';
     const bookableSpacesAdminPages = [
         {
             path: pathConfig.admin.bookableSpacesDashboard,
