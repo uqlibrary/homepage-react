@@ -38,7 +38,7 @@ exports[`Component InlineLoader should render as expected 1`] = `
         style="text-align: center;"
       >
         <span
-          class="MuiTypography-root MuiTypography-h5 css-cay52f-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-2utokp-MuiTypography-root"
           id="loading-icon"
         >
           InlineLoader Test
@@ -87,7 +87,7 @@ exports[`Component InlineLoader should render with styles 1`] = `
         style="text-align: center;"
       >
         <span
-          class="MuiTypography-root MuiTypography-h5 css-cay52f-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-2utokp-MuiTypography-root"
           id="loading-icon"
         >
           InlineLoader Styled Test

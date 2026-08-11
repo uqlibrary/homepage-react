@@ -103,7 +103,7 @@ export const mui1theme = createTheme({
         warning: orange[500],
     },
     typography: {
-        fontSize: '16px',
+        fontSize: 16,
         fontWeightLight: 200,
         fontWeightRegular: 300,
         fontWeightMedium: 400,

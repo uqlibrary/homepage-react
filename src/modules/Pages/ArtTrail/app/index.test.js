@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import Cookies from 'js-cookie';
 
 import ArtTrailApp from './index';
+import { trailPages } from './pages';
 
 jest.mock('js-cookie', () => ({
     get: jest.fn(),
@@ -12,6 +13,8 @@ jest.mock('js-cookie', () => ({
 
 const culturalDisclaimerText =
     'Aboriginal and Torres Strait Islander visitors are advised that the description of the following artwork may contain names of people who are deceased. Permission has been granted from the family for the artwork to be shown as part of the UQ Art Collection.';
+
+const totalPages = trailPages.length - 1; // subtract initial welcome screen
 
 describe('ArtTrailApp', () => {
     beforeEach(() => {
@@ -29,7 +32,7 @@ describe('ArtTrailApp', () => {
         expect(screen.getByRole('button', { name: 'Trail' })).toBeInTheDocument();
         expect(screen.queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Start the trail' })).toBeEnabled();
-        expect(screen.queryByText('Page 1 of 6')).not.toBeInTheDocument();
+        expect(screen.queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
         expect(document.title).toBe('Art Trail App');
     });
 
@@ -46,8 +49,8 @@ describe('ArtTrailApp', () => {
         await user.click(screen.getByRole('button', { name: 'Start the trail' }));
         expect(screen.getByRole('button', { name: 'Previous page' })).toBeEnabled();
         expect(screen.getByRole('button', { name: 'Next page' })).toBeEnabled();
-        expect(screen.queryByText('Page 1 of 6')).not.toBeInTheDocument();
-        expect(screen.getByText('1 / 6')).toBeInTheDocument();
+        expect(screen.queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
+        expect(screen.getByText(`1 / ${totalPages}`)).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'About the artwork' })).toBeInTheDocument();
 
         await user.click(screen.getByRole('button', { name: 'Map' }));
@@ -59,8 +62,8 @@ describe('ArtTrailApp', () => {
 
         await user.click(screen.getByRole('button', { name: 'Trail' }));
         expect(screen.getByRole('button', { name: 'Previous page' })).toBeEnabled();
-        expect(screen.queryByText('Page 1 of 6')).not.toBeInTheDocument();
-        expect(screen.getByText('1 / 6')).toBeInTheDocument();
+        expect(screen.queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
+        expect(screen.getByText(`1 / ${totalPages}`)).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'About the artwork' })).toBeInTheDocument();
     });
 
