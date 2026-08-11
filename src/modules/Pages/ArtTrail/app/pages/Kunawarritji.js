@@ -13,7 +13,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
-import ArtworkImage from '../assets/images/artwork/Napandardi_2013_40_crop_WEB.jpg';
+import Artwork1Image from '../assets/images/artwork/2018.27_Kunawarritji-1-landscape-2.jpg';
+import Artwork2Image from '../assets/images/artwork/2018.28_Kunawarritji-2-landscape-2.jpg';
+import DesertImage from '../assets/images/Desert-near-old-Canning-Stock-Route_C_-tolly65_stock.adobe.com-2.jpg';
 
 import Hero from '../Hero';
 
@@ -42,6 +44,12 @@ const StyledImage = styled('img')({
     position: 'relative',
 });
 
+const StyledImageCaption = styled('figcaption')(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
+
 const StyledUl = styled('ul')(({ theme }) => ({
     paddingInlineStart: '1.25rem',
     '& li:not(:last-of-type)': {
@@ -49,24 +57,47 @@ const StyledUl = styled('ul')(({ theme }) => ({
     },
 }));
 
-const ArtDrawerContent = () => {
+const Art1DrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
             <Grid>
-                <Typography variant="h3">Lily Kelly Napangardi</Typography>
+                <Typography variant="h3">Nora Wompi Nungurrayi</Typography>
             </Grid>
             <Grid>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    <em>Sand Hills</em> 2007
+                    <em>Kunawarritji 1</em> 1997
                     <br />
-                    synthetic polymer paint on linen
+                    synthetic polymer paint on Belgian linen
                     <br />
-                    201 x 311 cm
+                    180 x 120 cm
                     <br />
-                    Collection of The University of Queensland. Gift of Patrick Corrigan AM through the Australian
-                    Government's Cultural Gifts Program, 2013.
+                    Collection of The University of Queensland, purchased 2018.
                     <br />
-                    Reproduced courtesy of the artist © licensed by Aboriginal Artists Agency Ltd.
+                    Reproduced courtesy of the artist's estate and Suzanne O'Connell Gallery, Brisbane
+                    <br />
+                    Photo: Carl Warner.
+                </Typography>
+            </Grid>
+        </Grid>
+    );
+};
+const Art2DrawerContent = () => {
+    return (
+        <Grid container direction="column" rowSpacing={1.5}>
+            <Grid>
+                <Typography variant="h3">Nora Wompi Nungurrayi</Typography>
+            </Grid>
+            <Grid>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    <em>Kunawarritji 2</em> 1997
+                    <br />
+                    synthetic polymer paint on Belgian linen
+                    <br />
+                    180 x 120 cm
+                    <br />
+                    Collection of The University of Queensland, purchased 2018.
+                    <br />
+                    Reproduced courtesy of the artist's estate and Suzanne O'Connell Gallery, Brisbane
                     <br />
                     Photo: Carl Warner.
                 </Typography>
@@ -96,7 +127,7 @@ const LocationDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="'Sand Hills' 2007, Lily Kelly Napangardi" />
+            <Hero title="'Kunawarritji 1' and 'Kunawarritji 2' 2012, Nora Wompi Nungurrayi" />
             <Grid
                 container
                 direction="column"
@@ -106,11 +137,44 @@ const Page = ({ openDrawer }) => {
             >
                 <Grid>
                     <Box position="relative">
-                        <StyledImage src={ArtworkImage} alt="Sand Hills 2007 artwork." />
+                        <StyledImage src={Artwork1Image} alt="Kunawarritji 1 artwork." />
                         <IconButton
                             size="large"
                             aria-label="More information about this artwork"
-                            onClick={() => openDrawer(ArtDrawerContent)}
+                            onClick={() => openDrawer(Art1DrawerContent)}
+                            sx={{ position: 'absolute', top: 0, right: 0 }}
+                        >
+                            <InfoOutlinedIcon
+                                fontSize="large"
+                                sx={{
+                                    color: '#fff',
+                                    fontSize: '2.5rem',
+                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
+                                }}
+                            />
+                        </IconButton>
+                        <IconButton
+                            size="large"
+                            aria-label="Location information about this artwork"
+                            onClick={() => openDrawer(LocationDrawerContent)}
+                            sx={{ position: 'absolute', bottom: 0, right: 0 }}
+                        >
+                            <LocationOnOutlinedIcon
+                                fontSize="large"
+                                sx={{
+                                    color: '#fff',
+                                    fontSize: '2.5rem',
+                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
+                                }}
+                            />
+                        </IconButton>
+                    </Box>
+                    <Box position="relative">
+                        <StyledImage src={Artwork2Image} alt="Kunawarritji 2 artwork." />
+                        <IconButton
+                            size="large"
+                            aria-label="More information about this artwork"
+                            onClick={() => openDrawer(Art2DrawerContent)}
                             sx={{ position: 'absolute', top: 0, right: 0 }}
                         >
                             <InfoOutlinedIcon
@@ -143,30 +207,6 @@ const Page = ({ openDrawer }) => {
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="reflect-content"
-                            id="reflect-header"
-                        >
-                            Reflect
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="reflect-content">
-                            <Typography component={'p'}>Take a moment to look closely at this painting.</Typography>
-                            <StyledUl>
-                                <li>Which areas are your eyes most drawn to?</li>
-                                <li>
-                                    As your eyes move across these areas, what kind of movement or energy do you feel?
-                                </li>
-                                <li>Can you imagine this movement and energy performed by sand?</li>
-                            </StyledUl>
-
-                            <Typography component={'p'}>
-                                Try to take yourself to this place and imagine how it might feel in your body to be
-                                there.
-                            </Typography>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artwork-content"
                             id="about-the-artwork-header"
                         >
@@ -174,19 +214,17 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artwork-content">
                             <Typography component={'p'}>
-                                This work by Lily Napangardi depicts the cycles of rainfall and wind across the
-                                sandhills of the Kintore and Coniston areas in the Northern Territory. Sand Hills 2007
-                                is a classic example of her black and white compositions, and depicts the 'tali' (sand
-                                hills) of the Kintore and Coniston areas.
+                                These two paintings depict a place central to the artist's life and community,
+                                Kunawarritji (meaning 'water spring'). What makes these paintings so striking for an
+                                artist of this region is the defined colour palette which utilises soft yellows, pinks,
+                                whites, and blues. These colours overlap and bleed into each other creating fluid
+                                intersections of place.
                             </Typography>
                             <Typography component={'p'}>
-                                Despite her reductive palette, Napangardi imbues these works with movement and
-                                definition by emphasising rows within the net of fine dots. The clusters, lines and
-                                dispersions of minute dots give her canvas the illusion of three-dimensional space and
-                                depth. The effect evokes shifting sand dunes and the desert landscape after rain. The
-                                seasonal changes influence the landscape and, consequently, traditional life. Through
-                                her paintings, Napangardi seeks to demonstrate her deep understanding of Country and
-                                assert her people's connection to the land.
+                                You can see the expressive brushstrokes within each of these works. While both artworks
+                                depict the same place, there is a unique feel to each painting, communicated through
+                                colour, shape and texture. If you look closely at each artwork, you can see the depth of
+                                the underlaid paint, the ochre tones showing through the lighter layers.
                             </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
@@ -200,14 +238,23 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
                             <Typography component={'p'}>
-                                Lily Kelly Napangardi was born in 1948 in the Northern Territory. She is a senior law
-                                woman of the Watiyawanu community near Haasts Bluff, north-west of Alice Springs. She is
-                                a custodian of the Women's Dreaming story associated with Country around Kunajarrayi
-                                (Mount Nicker).
+                                The artist, from the Kukatja language group and Nungurrayi communities, was born c. 1935
+                                near Well 33 in the Kunawarritji Community based along the Canning Stock Route in
+                                mid-Western Australia.
                             </Typography>
                             <Typography component={'p'}>
-                                Napangardi began painting with her husband at Papunya in the 1980s, achieving
-                                recognition in her own right when she began making striking monochromatic works.
+                                Many of the paintings created by this artist connect with nature and place, and this is
+                                because she spent many years of her life moving between Kunawarritji, Balgo, Kiwirrkurra
+                                and Punmu. More than a prolific artist, she was a senior respected elder and cultural
+                                leader who cared for Country and whose obligations drew her to these different places
+                                across her lifetime. The artist passed away in 2017 and it is a privilege to be able to
+                                show her continuing artistic legacy to you today.
+                            </Typography>
+                            <Typography component={'p'}>
+                                Find out{' '}
+                                <a href="https://martumili.com.au/node/73" target="_blank" rel="noopener noreferrer">
+                                    more about the artist.
+                                </a>
                             </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
@@ -221,12 +268,13 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Typography component={'p'} sx={{ pb: 1 }}>
-                                Learn more about <strong>Warlpiri Country.</strong>
+                                This artwork was inspired by the artist’s home at Kunawarritji, part of Martu Country in
+                                Western Australia.
                             </Typography>
                             <iframe
-                                title="Indigenous art trail - Warlpiri Country"
-                                src="https://uq.h5p.com/content/1292937898322727859/embed"
-                                aria-label="Clone of Indigenous art and Library discovery trail - Sand Hills 2007 - Warlpiri Country"
+                                title="Indigenous art trail - Martu Country"
+                                src="https://uq.h5p.com/content/1292938729180054199/embed"
+                                aria-label="Indigenous art trail - Martu Country - Kunawarritji"
                                 width="1090"
                                 frameBorder="0"
                                 allowFullScreen
@@ -235,22 +283,23 @@ const Page = ({ openDrawer }) => {
                             />
                             <StyledUl>
                                 <li>
-                                    <a href="https://ngurra.org/#/sc/1" target="_blank" rel="noopener noreferrer">
-                                        Northern Tanami Indigenous Protected Area digital storybook{' '}
-                                    </a>
-                                    <br /> Watch a video about the Warlpiri story in language.
-                                </li>
-                                <li>
                                     <a
-                                        href="https://ictv.com.au/video/4989-warlukurlangu-yawulyu-song-from-the-place-belonging-to-the-fire"
+                                        href="https://www.kj.org.au/martu-country"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        Warlukurlangu yawulyu ' Song from the place belonging to the fire'{' '}
-                                    </a>{' '}
-                                    <br /> Listen to songs and stories in language from Warlpiri Country.
+                                        Why Martu country is special{' '}
+                                    </a>
+                                    <br /> Read about Martu lands - from Kanyirninpa Jukurrpa.
                                 </li>
                             </StyledUl>
+                            <Typography component={'p'} sx={{ pb: 1 }}>
+                                Kunawarritji is part of Martu Country on what was the old Canning Stock Route.
+                            </Typography>
+                            <StyledImage src={DesertImage} alt="Thorny devil in the desert." loading="lazy" />
+                            <StyledImageCaption>
+                                Desert near old Canning Stock Route @tolly65 – stock.adobe.com
+                            </StyledImageCaption>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                 </Grid>

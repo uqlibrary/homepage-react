@@ -167,7 +167,7 @@ const Page = ({ openDrawer }) => {
                             aria-controls="about-the-artists-content"
                             id="about-the-artists-header"
                         >
-                            About the artists
+                            About the artist
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
                             <Typography component={'p'}>

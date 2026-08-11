@@ -13,7 +13,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
-import ArtworkImage from '../assets/images/artwork/Napandardi_2013_40_crop_WEB.jpg';
+import ArtworkImage from '../assets/images/artwork/Tjupurrula_2014_40_WEB.jpg';
 
 import Hero from '../Hero';
 
@@ -53,18 +53,18 @@ const ArtDrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
             <Grid>
-                <Typography variant="h3">Lily Kelly Napangardi</Typography>
+                <Typography variant="h3">Johnny Yungut Tjupurrula </Typography>
             </Grid>
             <Grid>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    <em>Sand Hills</em> 2007
+                    <em>Tingari ceremonies at Wilkinkarra</em> 2003
                     <br />
                     synthetic polymer paint on linen
                     <br />
-                    201 x 311 cm
+                    182.5 x 152 cm
                     <br />
-                    Collection of The University of Queensland. Gift of Patrick Corrigan AM through the Australian
-                    Government's Cultural Gifts Program, 2013.
+                    Collection of The University of Queensland. Gift of Christopher Thomas and Mark Alexander through
+                    the Australian Government's Cultural Gifts Program, 2014.
                     <br />
                     Reproduced courtesy of the artist © licensed by Aboriginal Artists Agency Ltd.
                     <br />
@@ -96,7 +96,7 @@ const LocationDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="'Sand Hills' 2007, Lily Kelly Napangardi" />
+            <Hero title="'Tingari ceremonies at Wilkinkarra' 2003, Johnny Yungut Tjupurrula" />
             <Grid
                 container
                 direction="column"
@@ -106,7 +106,7 @@ const Page = ({ openDrawer }) => {
             >
                 <Grid>
                     <Box position="relative">
-                        <StyledImage src={ArtworkImage} alt="Sand Hills 2007 artwork." />
+                        <StyledImage src={ArtworkImage} alt="'Tingari ceremonies at Wilkinkarra' 2003 artwork." />
                         <IconButton
                             size="large"
                             aria-label="More information about this artwork"
@@ -149,19 +149,16 @@ const Page = ({ openDrawer }) => {
                             Reflect
                         </AccordionSummary>
                         <StyledAccordionDetails id="reflect-content">
-                            <Typography component={'p'}>Take a moment to look closely at this painting.</Typography>
-                            <StyledUl>
-                                <li>Which areas are your eyes most drawn to?</li>
-                                <li>
-                                    As your eyes move across these areas, what kind of movement or energy do you feel?
-                                </li>
-                                <li>Can you imagine this movement and energy performed by sand?</li>
-                            </StyledUl>
-
                             <Typography component={'p'}>
-                                Try to take yourself to this place and imagine how it might feel in your body to be
-                                there.
+                                Take a moment to look at the painterly marks made by the artist in these artworks.
                             </Typography>
+                            <StyledUl>
+                                <li>What feelings do the colours of each painting convey to you?</li>
+                                <li>
+                                    How might the different colour palettes be telling different parts of the story the
+                                    artist is conveying?
+                                </li>
+                            </StyledUl>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -174,19 +171,9 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artwork-content">
                             <Typography component={'p'}>
-                                This work by Lily Napangardi depicts the cycles of rainfall and wind across the
-                                sandhills of the Kintore and Coniston areas in the Northern Territory. Sand Hills 2007
-                                is a classic example of her black and white compositions, and depicts the 'tali' (sand
-                                hills) of the Kintore and Coniston areas.
-                            </Typography>
-                            <Typography component={'p'}>
-                                Despite her reductive palette, Napangardi imbues these works with movement and
-                                definition by emphasising rows within the net of fine dots. The clusters, lines and
-                                dispersions of minute dots give her canvas the illusion of three-dimensional space and
-                                depth. The effect evokes shifting sand dunes and the desert landscape after rain. The
-                                seasonal changes influence the landscape and, consequently, traditional life. Through
-                                her paintings, Napangardi seeks to demonstrate her deep understanding of Country and
-                                assert her people's connection to the land.
+                                This work considers migration and movements across long expanses of Country which are
+                                significant for Tingari Dreaming Stories. Note the intricate lines, patterns, and
+                                colour, which the artist has used to create the illusion of movement.
                             </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
@@ -200,14 +187,7 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
                             <Typography component={'p'}>
-                                Lily Kelly Napangardi was born in 1948 in the Northern Territory. She is a senior law
-                                woman of the Watiyawanu community near Haasts Bluff, north-west of Alice Springs. She is
-                                a custodian of the Women's Dreaming story associated with Country around Kunajarrayi
-                                (Mount Nicker).
-                            </Typography>
-                            <Typography component={'p'}>
-                                Napangardi began painting with her husband at Papunya in the 1980s, achieving
-                                recognition in her own right when she began making striking monochromatic works.
+                                The artist was born c. 1930 near Tjungimanta, Kiwirrkurra in the Northern Territory.
                             </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
@@ -221,12 +201,12 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Typography component={'p'} sx={{ pb: 1 }}>
-                                Learn more about <strong>Warlpiri Country.</strong>
+                                Learn more about <strong>Kiwirrkurra.</strong>
                             </Typography>
                             <iframe
-                                title="Indigenous art trail - Warlpiri Country"
-                                src="https://uq.h5p.com/content/1292937898322727859/embed"
-                                aria-label="Clone of Indigenous art and Library discovery trail - Sand Hills 2007 - Warlpiri Country"
+                                title="Indigenous art trail - Kiwirrkurra"
+                                src="https://uq.h5p.com/content/1292938712625855909/embed"
+                                aria-label="Indigenous art trail - Kiwirrkurra - Tingari ceremonies at Wilkinkarra 2003"
                                 width="1090"
                                 frameBorder="0"
                                 allowFullScreen
@@ -235,20 +215,17 @@ const Page = ({ openDrawer }) => {
                             />
                             <StyledUl>
                                 <li>
-                                    <a href="https://ngurra.org/#/sc/1" target="_blank" rel="noopener noreferrer">
-                                        Northern Tanami Indigenous Protected Area digital storybook{' '}
-                                    </a>
-                                    <br /> Watch a video about the Warlpiri story in language.
-                                </li>
-                                <li>
                                     <a
-                                        href="https://ictv.com.au/video/4989-warlukurlangu-yawulyu-song-from-the-place-belonging-to-the-fire"
+                                        href="https://www.abc.net.au/news/2025-03-16/pintupi-nine-aboriginal-family-40-years-after-leaving-wa-desert/104824250"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        Warlukurlangu yawulyu ' Song from the place belonging to the fire'{' '}
-                                    </a>{' '}
-                                    <br /> Listen to songs and stories in language from Warlpiri Country.
+                                        From the sands of time, the Pintupi Nine were thrust into the glare of the
+                                        modern world{' '}
+                                    </a>
+                                    <br /> Kiwirrkurra is home to people from the Pintupi, Manyjilyjarra and Kukatja
+                                    language groups. Read more about the Pintupi people and Kiwirrkurra in this ABC News
+                                    article.
                                 </li>
                             </StyledUl>
                         </StyledAccordionDetails>
