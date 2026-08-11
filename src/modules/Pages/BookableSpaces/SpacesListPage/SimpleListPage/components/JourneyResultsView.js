@@ -15,12 +15,13 @@ import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesH
 import SpaceOpenStatusChip from 'modules/Pages/BookableSpaces/Shared/SpaceOpenStatusChip';
 
 import {
+    StyledButtonWrapperStack,
     StyledFilterShowHideButton,
+    StyledListItemStack,
     StyledJourneyPanelSection,
     StyledResultsSidebarPanelDiv,
+    StyledResetButton,
     StyledResultsSplitLayoutDiv,
-    StyledListItemStack,
-    StyledButtonWrapperStack,
 } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
 
 export const JourneyResultsView = ({
@@ -98,17 +99,19 @@ export const JourneyResultsView = ({
                     <Typography component="h1" variant="h5">
                         Search results
                     </Typography>
-                    <Typography component={'h2'} data-testid="spaces-results-summary" variant="body2">
-                        {spaces.length}
-                        {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
-                    </Typography>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography component={'h2'} data-testid="spaces-results-summary">
+                            Filtered: {spaces.length}
+                            {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
+                        </Typography>
+                        <StyledResetButton data-testid="reset-filters-button" onClick={handleClearJourneyFilters}>
+                            Clear filters
+                        </StyledResetButton>
+                    </div>
                     <StyledSkipLinkAnchor href="#topOfSidebar" data-testid="skip-to-filter-list">
                         Skip to filters
                     </StyledSkipLinkAnchor>
                     <StyledButtonWrapperStack direction="row" spacing={1}>
-                        <StyledSecondaryButton onClick={handleClearJourneyFilters}>
-                            Reset quick filters
-                        </StyledSecondaryButton>
                         <StyledSecondaryButton onClick={goToLegacyBrowse}>View on map</StyledSecondaryButton>
                     </StyledButtonWrapperStack>
                     {spaces.length > 0 && (

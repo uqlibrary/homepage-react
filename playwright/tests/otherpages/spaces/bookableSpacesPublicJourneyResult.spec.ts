@@ -169,9 +169,12 @@ test.describe('Spaces Journey Result page', () => {
         await page.goto('/spaces/results');
         await page.setViewportSize({ width: 390, height: 736 });
 
-        // results off page, filter block visible
+        // on load, results on page, filter block hidden
         await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
         await expect(page.getByTestId('filter-by-campus')).not.toBeVisible();
+
+        // because we are in mobile view, the "clear filters" button appears within the search results list
+        await expect(page.getByTestId('reset-filters-button')).toBeVisible();
 
         // SHOW filters by toggling show-hide-filters button
         await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
@@ -185,9 +188,41 @@ test.describe('Spaces Journey Result page', () => {
         await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
         await page.getByTestId('spaces-filter-show-hide-button').click();
 
-        // results off page, filter block visible
+        // results on page again, filter block hidden again
         await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
         await expect(page.getByTestId('filter-by-campus')).not.toBeVisible();
+    });
+    test('on mobile, clear filters button works', async ({ page }) => {
+        // load the spaces results page
+        await page.goto('/spaces/results');
+        await page.setViewportSize({ width: 390, height: 736 });
+        await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
+
+        // initially the filter says "all spaces"
+        await expect(page.getByTestId('spaces-results-summary')).toBeVisible();
+        await expect(page.getByTestId('spaces-results-summary')).toContainText('16 of 16 spaces');
+
+        // open filter sidebar
+        await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
+        await page.getByTestId('spaces-filter-show-hide-button').click();
+
+        // choose a filter
+        await expect(page.getByTestId('filter-show-favourite-spaces-only')).toBeVisible();
+        await page.getByTestId('filter-show-favourite-spaces-only').check();
+
+        // close filter sidebar
+        await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
+        await page.getByTestId('spaces-filter-show-hide-button').click();
+
+        // filter label has updated
+        await expect(page.getByTestId('spaces-results-summary')).toContainText('4 of 16 spaces');
+
+        // click the 'clear filters' button
+        await expect(page.getByTestId('reset-filters-button')).toBeVisible();
+        await page.getByTestId('reset-filters-button').click();
+
+        // filters have cleared
+        await expect(page.getByTestId('spaces-results-summary')).toContainText('16 of 16 spaces');
     });
     test.describe('Favourites', () => {
         test('can UNfavourite a space on the result page', async ({ page }) => {
