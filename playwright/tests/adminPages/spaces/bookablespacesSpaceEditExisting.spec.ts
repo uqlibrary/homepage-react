@@ -1009,9 +1009,9 @@ test.describe('Spaces Admin - edit space', () => {
             'A space in the Law library. Lorem ipsum dolor sit amet',
         );
 
-        await expect(page.getByTestId('space-123456-booking-link').locator('a')).toBeVisible();
-        await expect(page.getByTestId('space-123456-booking-link').locator('a')).toContainText('Book this space');
-        await expect(page.getByTestId('space-123456-booking-link').locator('a')).toHaveAttribute(
+        await expect(page.getByTestId('space-123456-booking-link')).toBeVisible();
+        await expect(page.getByTestId('space-123456-booking-link')).toContainText('Book this space');
+        await expect(page.getByTestId('space-123456-booking-link')).toHaveAttribute(
             'href',
             'https://uqbookit.uq.edu.au/#/app/booking-types/111',
         );

@@ -137,7 +137,7 @@ const SidebarSpacesList = ({
                                     isExpanded={isExpanded}
                                     onToggle={onSpaceToggle}
                                     isFavouriteActionInProgress={isFavouriteActionInProgress}
-                                    isSelectedSpaceFavourite={spacesFavouritesList?.some(
+                                    isFavourite={spacesFavouritesList?.some(
                                         fav => fav.space_id === bookableSpace?.space_id,
                                     )}
                                 />

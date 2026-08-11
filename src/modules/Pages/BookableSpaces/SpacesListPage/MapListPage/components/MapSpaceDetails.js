@@ -161,7 +161,7 @@ const MapSpaceDetails = ({
     onToggle = null,
     showToggle = true,
     isFavouriteActionInProgress = false,
-    isSelectedSpaceFavourite = false,
+    isFavourite = false,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -255,7 +255,7 @@ const MapSpaceDetails = ({
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
                         selectedSpace={bookableSpace}
-                        isSelectedSpaceFavourite={isSelectedSpaceFavourite}
+                        isFavourite={isFavourite}
                         isFavouriteActionInProgress={isFavouriteActionInProgress}
                         showMap={false}
                         showBackButton={false}
@@ -278,7 +278,7 @@ MapSpaceDetails.propTypes = {
     onToggle: PropTypes.func,
     showToggle: PropTypes.bool,
     isFavouriteActionInProgress: PropTypes.any,
-    isSelectedSpaceFavourite: PropTypes.bool,
+    isFavourite: PropTypes.bool,
 };
 
 export default React.memo(MapSpaceDetails);

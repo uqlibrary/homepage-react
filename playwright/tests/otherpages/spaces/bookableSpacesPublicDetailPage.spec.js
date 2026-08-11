@@ -5,6 +5,48 @@ test.describe('Spaces Detail page', () => {
     test.beforeEach(async ({ context }) => {
         await context.clearCookies();
     });
+    test('spaces detail page has expected sections', async ({ page }) => {
+        await page.goto('/spaces/detail/a00de509-570b-4acb-9ca1-89c4baebe2e6');
+
+        await expect(page.getByTestId('space-2-details-name')).toBeVisible();
+        await expect(page.getByTestId('space-2-details-name')).toContainText('Individual study 339');
+
+        await expect(page.getByTestId(`space-2-friendly-location`).locator('.location-campus')).toContainText(
+            'St Lucia',
+        );
+        await expect(page.getByTestId(`space-2-friendly-location`).locator('.location-building')).toContainText(
+            'Zelman Cowen Building',
+        );
+        await expect(page.getByTestId(`space-2-friendly-location`).locator('.location-library')).toContainText(
+            'Architecture and Music Library',
+        );
+        await expect(page.getByTestId(`space-2-friendly-location`).locator('.location-floor')).toContainText(
+            'Level 3',
+        );
+        await expect(page.getByTestId(`space-2-friendly-location`).locator('.location-precise')).not.toBeVisible();
+
+        // closure tested below
+
+        await expect(page.getByTestId(`spaces-2-details-space-type-description`)).toContainText(
+            'Designed for individual study',
+        );
+
+        await expect(page.getByTestId(`space-2-booking-link`)).toContainText('Book this space');
+        await expect(page.getByTestId(`space-2-booking-link`)).toHaveAttribute(
+            'href',
+            `https://uqbookit.uq.edu.au/#/app/booking-types/333`,
+        );
+
+        await expect(page.getByTestId(`space-2-capacity`)).toContainText('Capacity: 8 people');
+
+        await expect(page.getByTestId(`space-2-facility`)).toBeVisible();
+        await expect(page.getByTestId(`space-2-facility`).locator('div > div')).toHaveCount(12);
+
+        await expect(page.getByTestId(`space-2-openingHours`)).toBeVisible();
+        await expect(page.getByTestId(`space-2-openingHours`).locator('div')).toHaveCount(7);
+
+        await expect(page.getByTestId(`spaces-map-wrapper`)).toBeVisible();
+    });
     test.describe('Outage blocks', () => {
         test('spaces detail page has appropriate Current Closure block', async ({ page }) => {
             await page.goto('/spaces/detail/a00de509-570b-4acb-9ca1-89c4baebe2e6');

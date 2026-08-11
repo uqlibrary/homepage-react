@@ -304,35 +304,6 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
     });
 
-    it('restores details view and selected space from session state', () => {
-        window.sessionStorage.setItem(
-            'bookableSpacesJourneyViewState',
-            JSON.stringify({ view: 'details', intentId: null, spaceId: baseSpace.space_uuid }),
-        );
-        window.history.replaceState({}, '', `/spaces/detail/${baseSpace.space_uuid}`);
-
-        renderJourney(defaultProps);
-
-        expect(screen.getByText(/space details/i)).toBeInTheDocument();
-        expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
-    });
-
-    it('restores details view from a hash URL using the full space list when the filtered list does not contain the space', async () => {
-        window.history.replaceState({}, '', '/#/spaces/detail/test-space-uuid-1234');
-
-        renderJourney({
-            ...defaultProps,
-            filteredSpaceLocations: [],
-            highlightedSpace: null,
-            allSpaceLocations: [baseSpace],
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText(/space details/i)).toBeInTheDocument();
-            expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
-        });
-    });
-
     it('restores the favourites-only filter when loading the favourite route directly', async () => {
         window.history.replaceState({}, '', '/#/spaces/results');
         window.sessionStorage.setItem(

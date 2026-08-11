@@ -15,7 +15,6 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { SpacesHomePage } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomePage';
 
-import { JourneyDetailsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyDetailsView';
 import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
 
 import { findSpaceById, JOURNEY_VIEWS } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
@@ -855,20 +854,6 @@ const BookableSpacesWrapper = ({
                         isLoggedIn={isLoggedIn}
                         hasFavouriteSpaces={hasFavourites}
                         hasJourneyMapFilterState={false}
-                    />
-                </StandardPage>
-            )}
-            renderDetailsView={() => (
-                <StandardPage standardPageId="spaces-journey-content-standard-page">
-                    <JourneyDetailsView
-                        selectedSpace={selectedSpace}
-                        isLoggedIn={isLoggedIn}
-                        weeklyHours={weeklyHours}
-                        weeklyHoursLoading={weeklyHoursLoading}
-                        weeklyHoursError={weeklyHoursError}
-                        isSelectedSpaceFavourite={isSelectedSpaceFavourite}
-                        isFavouriteActionInProgress={isFavouriteActionInProgress}
-                        onFavouriteToggle={handleJourneyFavouriteToggle}
                     />
                 </StandardPage>
             )}

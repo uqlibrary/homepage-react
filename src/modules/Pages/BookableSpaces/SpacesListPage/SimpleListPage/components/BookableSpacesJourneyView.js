@@ -15,7 +15,6 @@ export const BookableSpacesJourneyView = ({
     journeyTopRef,
     renderLandingView,
     renderResultsView,
-    renderDetailsView,
 }) => {
     return (
         <StyledJourneyContentShell data-testid="bookable-spaces-journey-results-view-shell" ref={journeyTopRef}>
@@ -29,7 +28,6 @@ export const BookableSpacesJourneyView = ({
             />
             {view === 'landing' && renderLandingView?.()}
             {view === 'results' && renderResultsView?.()}
-            {view === 'details' && !!selectedSpace && renderDetailsView?.()}
         </StyledJourneyContentShell>
     );
 };
@@ -45,7 +43,6 @@ BookableSpacesJourneyView.propTypes = {
     journeyTopRef: PropTypes.object,
     renderLandingView: PropTypes.func,
     renderResultsView: PropTypes.func,
-    renderDetailsView: PropTypes.func,
 };
 
 export default BookableSpacesJourneyView;

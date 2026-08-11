@@ -174,12 +174,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: 'Library spaces',
         },
-        {
-            path: '/spaces/detail/:spaceId',
-            element: <components.BookableSpacesDetailPage />,
-            exact: true,
-            pageTitle: 'Library spaces',
-        },
+        // {
+        //     path: '/spaces/detail/:spaceId',
+        //     element: <components.BookableSpacesDetailPage />,
+        //     exact: true,
+        //     pageTitle: 'Library spaces',
+        // },
         {
             path: pathConfig.bookablespacesDetail(spaceUuid),
             element: <components.BookableSpacesDetailPage />,
