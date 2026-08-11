@@ -823,17 +823,34 @@ export const SidebarFilters = ({
     const showFilterGroupHeading = (group, isGroupExpanded, numberChecked, filterGroupId, groupLength) => {
         return (
             <StyledFilterControlsDiv>
-                <Typography component={'h3'} variant={'h6'} className="group-heading">
-                    {group?.facility_type_group_name}{' '}
-                    {!isGroupExpanded && numberChecked > 0 && (
-                        <span
-                            className="countSelectedCheckboxes"
-                            data-testid={`facility-type-group-${filterGroupId}-expanded-count`}
-                        >
-                            ({numberChecked} of {groupLength})
-                        </span>
-                    )}
-                </Typography>
+                <button
+                    type="button"
+                    className="group-heading"
+                    onClick={() => toggleFilterGroup(filterGroupId)}
+                    aria-expanded={!!isGroupExpanded}
+                    aria-controls={`filter-group-list-${filterGroupId}`}
+                    style={{
+                        cursor: 'pointer',
+                        background: 'none',
+                        border: 'none',
+                        padding: 0,
+                        textAlign: 'left',
+                        font: 'inherit',
+                        color: 'inherit',
+                    }}
+                >
+                    <Typography component={'h3'} variant={'h6'}>
+                        {group?.facility_type_group_name}{' '}
+                        {!isGroupExpanded && numberChecked > 0 && (
+                            <span
+                                className="countSelectedCheckboxes"
+                                data-testid={`facility-type-group-${filterGroupId}-expanded-count`}
+                            >
+                                ({numberChecked} of {groupLength})
+                            </span>
+                        )}
+                    </Typography>
+                </button>
                 <IconButton
                     id={`facility-type-group-${filterGroupId}`}
                     data-testid={`facility-type-group-${filterGroupId}`}

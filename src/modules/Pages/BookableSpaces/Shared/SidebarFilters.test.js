@@ -184,4 +184,20 @@ describe('SidebarFilters campus selector', () => {
         expect(screen.getByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'none' });
         expect(screen.getByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'block' });
     });
+
+    it('toggles the group when the group title is clicked', async () => {
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: facilityGroupFixture,
+            filteredFacilityTypeList: facilityGroupFixture,
+        });
+
+        expect(await screen.findByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'block' });
+        expect(screen.getByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'none' });
+
+        fireEvent.click(screen.getByText('Facilities'));
+
+        expect(screen.getByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'block' });
+        expect(screen.getByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'none' });
+    });
 });
