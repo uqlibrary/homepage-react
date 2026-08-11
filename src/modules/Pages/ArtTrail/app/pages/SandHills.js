@@ -18,12 +18,13 @@ import ArtworkImage from '../assets/images/artwork/Napandardi_2013_40_crop_WEB.j
 import Hero from '../Hero';
 
 const StyledAccordion = styled(Accordion)(() => ({
-    marginBottom: 'var(--art-trail-font-size)',
-    '&.Mui-expanded:last-of-type': { marginBottom: 'var(--art-trail-font-size)' },
+    marginBottom: 'var(--art-trail-spacing)',
+    '&.Mui-expanded:last-of-type': { marginBottom: 'var(--art-trail-spacing)' },
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     '& p': {
+        fontSize: 'var(--art-trail-font-size)',
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
         lineHeight: 1.5,
@@ -49,11 +50,18 @@ const StyledUl = styled('ul')(({ theme }) => ({
     },
 }));
 
+const StyledDrawerHeader = styled(Typography)(({ theme }) => ({
+    fontSize: '1.125rem',
+    fontWeight: theme.typography.fontWeightMedium,
+    fontFamily: 'var(--art-trail-font-family)',
+    lineHeight: '1.6',
+}));
+
 const ArtDrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
             <Grid>
-                <Typography variant="h3">Lily Kelly Napangardi</Typography>
+                <StyledDrawerHeader variant="h3">Lily Kelly Napangardi</StyledDrawerHeader>
             </Grid>
             <Grid>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -78,7 +86,7 @@ const LocationDrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
             <Grid>
-                <Typography variant="h3">View the artwork</Typography>
+                <StyledDrawerHeader variant="h3">View the artwork</StyledDrawerHeader>
             </Grid>
             <Grid>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -100,8 +108,8 @@ const Page = ({ openDrawer }) => {
             <Grid
                 container
                 direction="column"
-                pl={'var(--art-trail-font-size)'}
-                pr={'var(--art-trail-font-size)'}
+                pl={'var(--art-trail-spacing)'}
+                pr={'var(--art-trail-spacing)'}
                 data-testid="pageContent"
             >
                 <Grid>

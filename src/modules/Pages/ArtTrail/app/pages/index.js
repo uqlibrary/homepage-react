@@ -6,6 +6,7 @@ import Tingari from './Tingari';
 import Kunawarritji from './Kunawarritji';
 import Pikkuw from './Pikkuw';
 import Whispers from './Whispers';
+import Warual from './Warual';
 
 export const trailPages = [
     Welcome,
@@ -16,4 +17,5 @@ export const trailPages = [
     Kunawarritji,
     Pikkuw,
     Whispers,
+    Warual,
 ];
