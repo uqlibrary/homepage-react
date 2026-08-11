@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Route, Routes } from 'react-router';
+import { Route, Routes, useLocation } from 'react-router';
 import { routes } from 'config';
 import browserUpdate from 'browser-update';
 import { AccountContext } from 'context';
@@ -29,7 +29,13 @@ const isAdminPage = () => {
     return window.location.pathname.startsWith('/admin/');
 };
 
+const isStandaloneRoute = (pathname, routesConfig = []) => {
+    return routesConfig.some(route => route.standalone && pathname.includes(route.path));
+};
+
 export const App = ({ account, actions }) => {
+    const location = useLocation();
+
     useEffect(() => {
         actions.loadCurrentAccount();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,6 +45,31 @@ export const App = ({ account, actions }) => {
         components: pages,
         account: account,
     });
+
+    // The routed pages, with the account made available to them. Rendered either on their own (standalone
+    // sections) or inside the shared Library chrome below.
+    const routedContent = (
+        <AccountContext.Provider
+            value={{
+                account: {
+                    ...account,
+                },
+            }}
+        >
+            <React.Suspense fallback={<ContentLoader message="Loading" />}>
+                <Routes>
+                    {routesConfig.map((route, index) => (
+                        <Route key={`route_${index}`} {...route} />
+                    ))}
+                </Routes>
+            </React.Suspense>
+        </AccountContext.Provider>
+    );
+
+    // A standalone section brings its own look and feel, so it is rendered without the shared chrome.
+    if (isStandaloneRoute(location.pathname, routesConfig)) {
+        return <div data-testid="standalone-layout">{routedContent}</div>;
+    }
 
     const homepagelink = getHomepageLink();
     let homepageLabel = 'Library';
@@ -78,21 +109,7 @@ export const App = ({ account, actions }) => {
                 <cultural-advice />
                 <div style={{ flexGrow: 1 }}>
                     <a name="content" />
-                    <AccountContext.Provider
-                        value={{
-                            account: {
-                                ...account,
-                            },
-                        }}
-                    >
-                        <React.Suspense fallback={<ContentLoader message="Loading" />}>
-                            <Routes>
-                                {routesConfig.map((route, index) => (
-                                    <Route key={`route_${index}`} {...route} />
-                                ))}
-                            </Routes>
-                        </React.Suspense>
-                    </AccountContext.Provider>
+                    {routedContent}
                 </div>
                 <div id="full-footer-block" style={{ marginTop: '50px' }}>
                     <uq-footer />

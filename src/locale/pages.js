@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import React from 'react';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 /*
@@ -20,7 +19,7 @@ help: {
 - if help is not required, delete help: {} fully (including closing '},')
 
 */
-/* eslint-disable max-len */
+
 export default {
     pages: {
         index: {
@@ -66,6 +65,12 @@ export default {
         },
         pastExamPaperList: {
             title: 'View exam papers',
+        },
+        artTrailLanding: {
+            title: 'Art Trail Welcome',
+        },
+        artTrail: {
+            title: 'Art Trail',
         },
     },
 };

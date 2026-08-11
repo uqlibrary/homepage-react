@@ -51,4 +51,6 @@ export const pathConfig = {
     dlorOwnTeamList: '/digital-learning-hub/team/manage',
     dlorOwnTeamEdit: dlorTeamId => `/digital-learning-hub/team/edit/${dlorTeamId}`,
     dlorDashboard: '/digital-learning-hub/dashboard',
+    artTrailLanding: '/art-trail',
+    artTrailApp: '/art-trail/app',
 };

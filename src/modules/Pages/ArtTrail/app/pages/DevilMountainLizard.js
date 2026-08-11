@@ -1,0 +1,239 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Grid from '@mui/material/Unstable_Grid2';
+import Typography from '@mui/material/Typography';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import { styled } from '@mui/material/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+
+import ArtworkImage from '../assets/images/artwork/Petyarre_2001_02_crop_WEB.jpg';
+import ThornyDevilsImage from '../assets/images/Thorny-Devil-_C_-meyblume-scaled.jpg';
+
+import Hero from '../Hero';
+
+const StyledAccordion = styled(Accordion)(() => ({
+    marginBottom: 'var(--art-trail-font-size)',
+    '&.Mui-expanded:last-of-type': { marginBottom: 'var(--art-trail-font-size)' },
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    '& p': {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        lineHeight: 1.5,
+        '&:first-of-type': {
+            marginTop: 0,
+        },
+        '&:last-of-type': {
+            marginBottom: 0,
+        },
+    },
+}));
+
+const StyledImage = styled('img')({
+    maxWidth: '100%',
+    height: 'auto',
+    position: 'relative',
+});
+
+const StyledImageCaption = styled('figcaption')(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
+
+const ArtDrawerContent = () => {
+    return (
+        <Grid container direction="column" rowSpacing={1.5}>
+            <Grid>
+                <Typography variant="h3">Gloria Tamerre Petyarre</Typography>
+            </Grid>
+            <Grid>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    <em>Devil Mountain Lizard Dreaming</em> 1997
+                    <br />
+                    synthetic polymer paint on canvas
+                    <br />
+                    207 x 310 cm
+                    <br />
+                    Collection of The University of Queensland, purchased 2001.
+                    <br />
+                    Reproduced courtesy of the artist © licensed by Aboriginal Artists Agency Ltd.
+                    <br />
+                    Photo: Carl Warner.
+                </Typography>
+            </Grid>
+        </Grid>
+    );
+};
+const LocationDrawerContent = () => {
+    return (
+        <Grid container direction="column" rowSpacing={1.5}>
+            <Grid>
+                <Typography variant="h3">View the artwork</Typography>
+            </Grid>
+            <Grid>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    Where: Level 1,{' '}
+                    <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
+                        Duhig Tower (TBC: THIS MIGHT LINK TO MAP TAB)
+                    </a>{' '}
+                    (Building 2), St Lucia campus.
+                </Typography>
+            </Grid>
+        </Grid>
+    );
+};
+
+const Page = ({ openDrawer }) => {
+    return (
+        <Grid container direction="column" rowSpacing={2.5}>
+            <Hero title="'Devil Mountain Lizard Dreaming' 1997 artwork." />
+            <Grid
+                container
+                direction="column"
+                pl={'var(--art-trail-font-size)'}
+                pr={'var(--art-trail-font-size)'}
+                data-testid="pageContent"
+            >
+                <Grid>
+                    <Box position="relative">
+                        <StyledImage src={ArtworkImage} alt="'Devil Mountain Lizard Dreaming' 1997 artwork." />
+                        <IconButton
+                            size="large"
+                            aria-label="More information about this artwork"
+                            onClick={() => openDrawer(ArtDrawerContent)}
+                            sx={{ position: 'absolute', top: 0, right: 0 }}
+                        >
+                            <InfoOutlinedIcon
+                                fontSize="large"
+                                sx={{
+                                    color: '#fff',
+                                    fontSize: '2.5rem',
+                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
+                                }}
+                            />
+                        </IconButton>
+                        <IconButton
+                            size="large"
+                            aria-label="Location information about this artwork"
+                            onClick={() => openDrawer(LocationDrawerContent)}
+                            sx={{ position: 'absolute', bottom: 0, right: 0 }}
+                        >
+                            <LocationOnOutlinedIcon
+                                fontSize="large"
+                                sx={{
+                                    color: '#fff',
+                                    fontSize: '2.5rem',
+                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
+                                }}
+                            />
+                        </IconButton>
+                    </Box>
+                </Grid>
+                <Grid>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="about-the-artwork-content"
+                            id="about-the-artwork-header"
+                        >
+                            About the artwork
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="about-the-artwork-content">
+                            <Typography component={'p'}>
+                                This artwork depicts the scales of the Anmatyerre's totem animal, the Thorny Devil, who
+                                was responsible for depositing ochre throughout Atnangkere Country. Note the intricate
+                                lines, patterns, and colour, which the artist has used to create the illusion of
+                                movement.
+                            </Typography>
+                            <Typography component={'p'}>
+                                The artist's work demonstrates a deep connection with Country and the important role of
+                                the artist in their community to continue and protect knowledge, which continues to
+                                future generations.
+                            </Typography>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="about-the-artists-content"
+                            id="about-the-artists-header"
+                        >
+                            About the artist
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="about-the-artists-content">
+                            <Typography component={'p'}>
+                                The artist was born c. 1945 in Atnangkere, northeast of Alice Springs in the Northern
+                                Territory.
+                            </Typography>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="connection-to-country-content"
+                            id="connection-to-country-header"
+                        >
+                            Connection to Country
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="connection-to-country-content">
+                            <Typography component={'p'} sx={{ pb: 1 }}>
+                                Learn more about <strong>Atnangkere Country.</strong>
+                            </Typography>
+                            <iframe
+                                title="Indigenous art trail - Atnangkere Country"
+                                src="https://uq.h5p.com/content/1292937940959277909/embed"
+                                aria-label="Indigenous art trail - Atnangkere Country - Devil Mountain Lizard Dreaming 1997"
+                                width="1090"
+                                frameBorder="0"
+                                allowfullscreen="allowfullscreen"
+                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
+                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+                            />
+                            <Typography component={'h3'}>Thorny devils</Typography>
+                            <StyledImage src={ThornyDevilsImage} alt="Thorny devil in the desert." loading="lazy" />
+                            <StyledImageCaption>Thorny Devil @meyblume - stock.adobe.com</StyledImageCaption>
+                            <Typography component={'p'} sx={{ pb: 1 }}>
+                                Thorny devils have a peculiar way of moving across the desert. This movement makes them
+                                appear like a piece of vegetation blowing across the ground and helps them avoid
+                                predators. Watch this{' '}
+                                <a
+                                    href="https://youtu.be/sxawWKuA4JM?si=543q69knAQGd-dgc"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    video of a thorny devil (YouTube, 23s):
+                                </a>
+                            </Typography>
+                            <iframe
+                                width="560"
+                                height="315"
+                                src="https://www.youtube.com/embed/sxawWKuA4JM?si=6kk89BbR3ZeiubR2"
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                                allowfullscreen=""
+                                style={{ width: '100%', height: 'auto', aspectRatio: '16/9' }}
+                            />
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                </Grid>
+            </Grid>
+        </Grid>
+    );
+};
+
+Page.propTypes = {
+    openDrawer: PropTypes.func.isRequired,
+};
+
+export default Page;
