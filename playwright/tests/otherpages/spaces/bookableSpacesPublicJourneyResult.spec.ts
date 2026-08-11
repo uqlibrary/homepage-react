@@ -40,16 +40,11 @@ test.describe('Spaces Journey Result page', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
 
             await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
+            const campusDropdown = page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').locator('fieldset');
 
             // the first field in the filter sidebar is not focussed
-            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
-                'border-left-color',
-                'rgba(0, 0, 0, 0.23)',
-            );
-            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
-                'border-left-width',
-                '0px',
-            );
+            await expect(campusDropdown).toHaveCSS('border-left-color', 'rgba(0, 0, 0, 0.23)');
+            await expect(campusDropdown).toHaveCSS('border-left-width', '0px');
 
             // tab through allll the links to give a realistic experience
             // (also because when we focus somewhere nearer, it does weird things - do it properly!)
@@ -75,14 +70,9 @@ test.describe('Spaces Journey Result page', () => {
             await page.keyboard.press('Enter'); // activate skip to filters link, lands on filter sidebar
             await page.keyboard.press('Tab'); // tab to choose a campus
 
-            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
-                'border-left-color',
-                COLOR_UQPURPLE,
-            );
-            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
-                'border-left-width',
-                '2px',
-            );
+            // show we have tabbed to the sidebar campus field: looknfeel has changed
+            await expect(campusDropdown).toHaveCSS('border-left-color', COLOR_UQPURPLE);
+            await expect(campusDropdown).toHaveCSS('border-left-width', '2px');
         });
     });
     // consider moving this test to jest
@@ -107,7 +97,7 @@ test.describe('Spaces Journey Result page', () => {
 
         await expect(page.getByTestId('space-1-detail-unfavourite')).toBeVisible();
 
-        await expect(page.getByTestId('filter-by-campus')).toBeVisible();
+        await expect(page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus')).toBeVisible();
         await expect(page.getByTestId('filter-group-block-5').locator('h3')).toBeVisible();
         await expect(page.getByTestId('filter-group-block-5').locator('h3')).toContainText('Acceptable noise');
         await expect(page.getByTestId('filter-group-block-5').locator('p')).toContainText(
@@ -171,7 +161,8 @@ test.describe('Spaces Journey Result page', () => {
 
         // on load, results on page, filter block hidden
         await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
-        await expect(page.getByTestId('filter-by-campus')).not.toBeVisible();
+        const sidebarCampusDropdown = page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus');
+        await expect(sidebarCampusDropdown).not.toBeVisible();
 
         // because we are in mobile view, the "clear filters" button appears within the search results list
         await expect(page.getByTestId('reset-filters-button')).toBeVisible();
@@ -182,7 +173,7 @@ test.describe('Spaces Journey Result page', () => {
 
         // results off page, filter block visible
         await expect(page.locator('body').getByText(/Search results/)).toBeVisible(); // but below page viewport
-        await expect(page.getByTestId('filter-by-campus')).toBeVisible();
+        await expect(sidebarCampusDropdown).toBeVisible();
 
         // HIDE filters by toggling show-hide-filters button
         await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
@@ -190,7 +181,7 @@ test.describe('Spaces Journey Result page', () => {
 
         // results on page again, filter block hidden again
         await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
-        await expect(page.getByTestId('filter-by-campus')).not.toBeVisible();
+        await expect(sidebarCampusDropdown).not.toBeVisible();
     });
     test('on mobile, clear filters button works', async ({ page }) => {
         // load the spaces results page

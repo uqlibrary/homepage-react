@@ -5,11 +5,9 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { InputLabel, useMediaQuery, useTheme } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import MuiInput from '@mui/material/Input';
 import { styled } from '@mui/material/styles';
 import Slider from '@mui/material/Slider';
-import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
@@ -28,6 +26,8 @@ import {
     getActiveSelectedFacilityTypes,
     getFlatFacilityTypeList,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import ChooseCampus from "modules/Pages/BookableSpaces/Shared/ChooseCampus";
+import ChooseLibrary from "modules/Pages/BookableSpaces/Shared/ChooseLibrary";
 
 const StyledSlider = styled(Slider)(() => ({
     marginTop: '1rem', // space for tooltips to appear in
@@ -1051,70 +1051,16 @@ export const SidebarFilters = ({
                 )}
                 {campusList?.length > 0 && (
                     <StyledCampusWrapperDiv>
-                        <h3 id="filter-by-campus-label" htmlFor="filter-by-campus-input">
-                            Choose campus
-                        </h3>
-                        <Select
-                            className="sidebarSelector"
-                            id="filter-by-campus"
-                            labelId="filter-by-campus-label"
-                            data-testid="filter-by-campus"
-                            value={selectedCampusValue}
-                            onChange={handleCampusSelection}
-                            inputProps={{
-                                id: 'filter-by-campus-input',
-                                title: 'Filter the displayed Spaces by campus',
-                            }}
-                        >
-                            <MenuItem value={0} data-testid="campus-all">
-                                All campuses
-                            </MenuItem>
-                            {campusList
-                                ?.filter(campus => campus.campus_space_count > 0)
-                                ?.map((campus, index) => (
-                                    <MenuItem
-                                        value={campus?.campus_id}
-                                        key={`filter-by-campus-menuitem-${index}`}
-                                        selected={campus?.campus_id === 99999}
-                                        data-testid={`campus-${campus?.campus_id}`}
-                                    >
-                                        {campus.campus_name}
-                                    </MenuItem>
-                                ))}
-                        </Select>
-                        {librariesForCampus?.length > 2 && (
-                            // show the selector whenever there is more than two library options available
-                            <>
-                                <h3 id="filter-by-library-label" htmlFor="filter-by-library-input">
-                                    Choose library
-                                </h3>
-                                <Select
-                                    className="sidebarSelector"
-                                    id="filter-by-library"
-                                    labelId="filter-by-library-label"
-                                    data-testid="filter-by-library"
-                                    value={
-                                        librariesForCampus?.find(c => c.library_id === selectedLibrary)?.library_id || 0
-                                    }
-                                    onChange={handleLibrarySelection}
-                                    inputProps={{
-                                        id: 'filter-by-library-input',
-                                        title: 'Filter the displayed Spaces by library',
-                                    }}
-                                >
-                                    {librariesForCampus?.map((library, index) => (
-                                        <MenuItem
-                                            value={library?.library_id}
-                                            key={`filter-by-library-menuitem-${index}`}
-                                            selected={library?.library_id === 99999}
-                                            data-testid={`library-${library?.library_id}`}
-                                        >
-                                            {library.library_name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </>
-                        )}
+                        <ChooseCampus
+                            selectedCampusValue={selectedCampusValue}
+                            campusList={campusList}
+                            handleCampusSelection={handleCampusSelection}
+                        />
+                        <ChooseLibrary
+                            selectedLibrary={selectedLibrary}
+                            librariesForCampus={librariesForCampus}
+                            handleLibrarySelection={handleLibrarySelection}
+                        />
                     </StyledCampusWrapperDiv>
                 )}
                 {isLoggedIn && hasFavouriteSpaces && (
