@@ -22,7 +22,7 @@ export const BookingLink = ({ bookableSpace, hideNoBookingRequired = false }) =>
     );
     if (isBookable(bookableSpace)) {
         return (
-            <StyledIconWordWrapperDiv data-testid={`space-${bookableSpace?.space_id}-booking-link`}>
+            <StyledIconWordWrapperDiv>
                 {uqBookitMakeABookingIcon}
                 <a
                     href={bookableSpace?.space_external_book_url}

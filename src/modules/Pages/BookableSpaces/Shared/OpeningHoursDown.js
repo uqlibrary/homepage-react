@@ -52,7 +52,7 @@ export const OpeningHoursDown = ({
                 <StyledHeadingTypography component="h4" variant="body2" sx={{ mb: 1 }}>
                     {bookableSpace?.space_library_name} opening hours
                 </StyledHeadingTypography>
-                <Stack spacing={0}>
+                <Stack spacing={0} data-testid={`space-${bookableSpace?.space_id}-openingHours`}>
                     {displayList?.map((d, i) => {
                         const isToday = d?.dayName === 'Today';
                         const colorByDay = isToday ? theme.palette.primary.main : theme.palette.designSystem.bodyCopy;

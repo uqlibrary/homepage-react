@@ -23,6 +23,7 @@ const journeyFallbackDetailImage = require('../../../../../../../public/images/d
 
 const StyledDetailSurface = styled('div')(({ theme }) => ({
     color: theme.palette.designSystem.bodyCopy,
+    marginTop: '1rem',
 }));
 const StyledSpaceTitleWrapperBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -58,7 +59,7 @@ const StyledH3Typography = styled(Typography)(({ theme }) => ({
     fontSize: '24px',
     marginBottom: '1rem',
     color: theme.palette.designSystem.headingColor,
-    paddingBotom: '0.5rem',
+    paddingBottom: '0.5rem',
 }));
 const StyledH4Typography = styled(Typography)(({ theme }) => ({
     fontWeight: 500,
@@ -133,7 +134,9 @@ const JourneySpaceDetailsView = ({
     verticalView = true,
     backLabel = 'Back to results',
     onBack,
-    isSelectedSpaceFavourite = false,
+    isFavourite = false,
+    spacesFavouritesLoading = null,
+    spacesFavouritesError = null,
     isFavouriteActionInProgress = false,
     onFavouriteToggle,
     showMap = true,
@@ -243,14 +246,20 @@ const JourneySpaceDetailsView = ({
                     <Box>
                         <StyledSpaceTitleWrapperBox>
                             <span>
-                                {!narrowView && !verticalView && isLoggedIn && !!selectedSpace?.space_id && (
-                                    <SpacesFavouriteIcon
-                                        bookableSpace={selectedSpace}
-                                        isFavourite={isSelectedSpaceFavourite}
-                                        onFavouriteToggle={() => onFavouriteToggle?.(selectedSpace)}
-                                        isFavouriteActionInProgress={isFavouriteActionInProgress}
-                                        isDetailPage
-                                    />
+                                {!narrowView &&
+                                    !verticalView &&
+                                    isLoggedIn &&
+                                    !!selectedSpace?.space_id &&
+                                    spacesFavouritesError !== true && (
+                                        <SpacesFavouriteIcon
+                                            bookableSpace={selectedSpace}
+                                            isFavourite={isFavourite}
+                                            onFavouriteToggle={() => onFavouriteToggle?.(selectedSpace)}
+                                            isFavouriteActionInProgress={
+                                                isFavouriteActionInProgress || spacesFavouritesLoading
+                                            }
+                                            isDetailPage
+                                        />
                                 )}
                                 {(!narrowView || !!verticalView) && (
                                     <Typography
@@ -367,7 +376,7 @@ const JourneySpaceDetailsView = ({
                     <StyledH3Typography component="h2" variant="h6" sx={{ pb: '1rem' }}>
                         Location
                     </StyledH3Typography>
-                    <div style={{ height: isMobileLayout ? '260px' : '340px' }}>
+                    <div style={{ height: isMobileLayout ? '260px' : '340px' }} data-testid="spaces-map-wrapper">
                         <BookableSpacesMap
                             sortedSpaceLocations={[selectedSpace]}
                             spacesFavouritesList={null}
@@ -391,8 +400,10 @@ JourneySpaceDetailsView.propTypes = {
     verticalView: PropTypes.bool,
     backLabel: PropTypes.string,
     onBack: PropTypes.func,
-    isSelectedSpaceFavourite: PropTypes.bool,
-    isFavouriteActionInProgress: PropTypes.any,
+    isFavourite: PropTypes.bool,
+    spacesFavouritesLoading: PropTypes.any,
+    spacesFavouritesError: PropTypes.any,
+    isFavouriteActionInProgress: PropTypes.bool,
     onFavouriteToggle: PropTypes.func,
     showMap: PropTypes.bool,
 };
