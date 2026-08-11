@@ -324,9 +324,11 @@ test.describe('Test and Tag Manage Locations', () => {
         await page.getByTestId('location_picker-locations-building-input').click();
         await page.locator('#location_picker-locations-building-option-2').click();
         await expect(page.getByTestId('action_cell-1-delete-button')).toBeDisabled();
-        await page.getByTestId('action_cell-2-delete-button').click();
+        await page.getByTestId('action_cell-5-delete-button').click();
         await page.getByTestId('confirm-locations').click();
-        await expect(page.getByTestId('confirmation_alert-success-alert')).toBeVisible();
+        await expect(page.getByTestId('confirmation_alert-error-alert')).toBeVisible();
+        await page.getByTestId('cancel-locations').click();
+        await expect(page.getByTestId('confirmation_alert-error-alert')).not.toBeVisible();
 
         // Delete a room
         await page.getByTestId('location_picker-locations-floor-input').click();
