@@ -55,12 +55,12 @@ describe('ArtTrailApp', () => {
         expect(screen.queryByRole('button', { name: 'Next page' })).not.toBeInTheDocument();
         expect(screen.queryByText('Find your way through the trail')).not.toBeInTheDocument();
         expect(screen.getByText('Map component mounts here')).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'Map overview' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'title' })).toBeInTheDocument();
 
         await user.click(screen.getByRole('button', { name: 'Feedback' }));
         expect(screen.queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
         expect(screen.queryByRole('button', { name: 'Next page' })).not.toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'Quick response' })).toBeInTheDocument();
+        expect(screen.getByText('Feedback form here or something else')).toBeInTheDocument();
 
         await user.click(screen.getByRole('button', { name: 'Trail' }));
         expect(screen.getByRole('button', { name: 'Previous page' })).toBeEnabled();
@@ -74,16 +74,15 @@ describe('ArtTrailApp', () => {
 
         render(<ArtTrailApp />);
 
-        await user.click(screen.getByRole('button', { name: 'Open page drawer' }));
+        await user.click(screen.getByRole('button', { name: 'Start the trail' }));
+        await user.click(screen.getByRole('button', { name: 'More information about this artwork' }));
 
-        expect(screen.getByRole('heading', { name: 'More information' })).toBeInTheDocument();
-        expect(
-            screen.getByText(/This introduction explains how the trail works and what visitors should expect/i),
-        ).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: /Hector Tjupuru Burton/i })).toBeInTheDocument();
+        expect(screen.getByText(/synthetic polymer paint on linen/i)).toBeInTheDocument();
 
-        await user.click(screen.getByRole('button', { name: 'Close page drawer' }));
+        await user.keyboard('{Escape}');
 
-        expect(screen.queryByRole('heading', { name: 'More information' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('heading', { name: /Hector Tjupuru Burton/i })).not.toBeInTheDocument();
     });
 
     it('dismisses the cultural disclaimer across tabs and persists dismissal in a cookie', async () => {

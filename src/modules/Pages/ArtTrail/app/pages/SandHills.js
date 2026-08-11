@@ -8,23 +8,85 @@ import Typography from '@mui/material/Typography';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+
+import ArtworkImage from '../assets/images/artwork/Napandardi_2013_40_crop_WEB.jpg';
 
 import Hero from '../Hero';
 
-const SandHillsDrawerContent = () => {
+const StyledAccordion = styled(Accordion)(() => ({
+    marginBottom: 'var(--art-trail-font-size)',
+    '&.Mui-expanded:last-of-type': { marginBottom: 'var(--art-trail-font-size)' },
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    '& p': {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        lineHeight: 1.5,
+        '&:first-of-type': {
+            marginTop: 0,
+        },
+        '&:last-of-type': {
+            marginBottom: 0,
+        },
+    },
+}));
+
+const StyledImage = styled('img')({
+    maxWidth: '100%',
+    height: 'auto',
+    position: 'relative',
+});
+
+const StyledUl = styled('ul')(({ theme }) => ({
+    paddingInlineStart: '1.25rem',
+    '& li:not(:last-of-type)': {
+        marginBottom: theme.spacing(1),
+    },
+}));
+
+const ArtDrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
             <Grid>
-                <Typography variant="body1">
-                    Sand Hills can use this drawer for layered cultural context, curatorial commentary, and optional
-                    supporting notes.
-                </Typography>
+                <Typography variant="h3">Lily Kelly Napangardi</Typography>
             </Grid>
             <Grid>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Longer content will scroll inside the drawer panel, while the footer tabs remain visible below it.
+                    <em>Sand Hills</em> 2007
+                    <br />
+                    synthetic polymer paint on linen
+                    <br />
+                    201 x 311 cm
+                    <br />
+                    Collection of The University of Queensland. Gift of Patrick Corrigan AM through the Australian
+                    Government's Cultural Gifts Program, 2013.
+                    <br />
+                    Reproduced courtesy of the artist © licensed by Aboriginal Artists Agency Ltd.
+                    <br />
+                    Photo: Carl Warner.
+                </Typography>
+            </Grid>
+        </Grid>
+    );
+};
+const LocationDrawerContent = () => {
+    return (
+        <Grid container direction="column" rowSpacing={1.5}>
+            <Grid>
+                <Typography variant="h3">View the artwork</Typography>
+            </Grid>
+            <Grid>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    Where: Level 1,{' '}
+                    <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
+                        Duhig Tower (TBC: THIS MIGHT LINK TO MAP TAB)
+                    </a>{' '}
+                    (Building 2), St Lucia campus.
                 </Typography>
             </Grid>
         </Grid>
@@ -34,10 +96,7 @@ const SandHillsDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero
-                title="Indigenous art and Library discovery trail"
-                subtitle="A self-guided trail to explore Aboriginal and Torres Strait Islander artworks in the University of Queensland Library."
-            />
+            <Hero title="'Sand Hills' 2007, Lily Kelly Napangardi" />
             <Grid
                 container
                 direction="column"
@@ -45,57 +104,155 @@ const Page = ({ openDrawer }) => {
                 pr={'var(--art-trail-font-size)'}
                 data-testid="pageContent"
             >
-                <Grid container wrap="nowrap" justifyContent="space-between" alignItems="flex-start" columnSpacing={1}>
-                    <Grid xs>
-                        <Typography variant="h3" sx={{ fontSize: { xs: '1.5rem', sm: '2.5rem' }, fontWeight: 500 }}>
-                            Welcome
-                        </Typography>
-                    </Grid>
-                    <Grid>
-                        <IconButton aria-label="Open page drawer" onClick={() => openDrawer(SandHillsDrawerContent)}>
-                            <InfoOutlinedIcon />
-                        </IconButton>
-                    </Grid>
-                </Grid>
                 <Grid>
-                    <Box
-                        sx={{
-                            borderRadius: 3,
-                            p: { xs: 2, sm: 3 },
-                            bgcolor: 'rgba(93, 45, 130, 0.06)',
-                            border: '1px dashed',
-                            borderColor: 'secondary.main',
-                        }}
-                    >
-                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.75 }}>
-                            Placeholder
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            Artwork goes here
-                        </Typography>
+                    <Box position="relative">
+                        <StyledImage src={ArtworkImage} alt="Sand Hills 2007 artwork." />
+                        <IconButton
+                            size="large"
+                            aria-label="More information about this artwork"
+                            onClick={() => openDrawer(ArtDrawerContent)}
+                            sx={{ position: 'absolute', top: 0, right: 0 }}
+                        >
+                            <InfoOutlinedIcon
+                                fontSize="large"
+                                sx={{
+                                    color: '#fff',
+                                    fontSize: '2.5rem',
+                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
+                                }}
+                            />
+                        </IconButton>
+                        <IconButton
+                            size="large"
+                            aria-label="Location information about this artwork"
+                            onClick={() => openDrawer(LocationDrawerContent)}
+                            sx={{ position: 'absolute', bottom: 0, right: 0 }}
+                        >
+                            <LocationOnOutlinedIcon
+                                fontSize="large"
+                                sx={{
+                                    color: '#fff',
+                                    fontSize: '2.5rem',
+                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
+                                }}
+                            />
+                        </IconButton>
                     </Box>
                 </Grid>
                 <Grid>
-                    <Accordion
-                        sx={{
-                            mb: 'var(--art-trail-font-size)',
-                            '&.Mui-expanded:last-of-type': { mb: 'var(--art-trail-font-size)' },
-                        }}
-                    >
+                    <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="transcript-content"
-                            id="transcript-panel-header"
+                            aria-controls="reflect-content"
+                            id="reflect-header"
                         >
-                            Audio transcript
+                            Reflect
                         </AccordionSummary>
-                        <AccordionDetails>
-                            Placeholder content for additional information, related items, or a hand-off into the next
-                            trail stop. Placeholder content for additional information, related items, or a hand-off
-                            into the next trail stop. Placeholder content for additional information, related items, or
-                            a hand-off into the next trail stop.
-                        </AccordionDetails>
-                    </Accordion>
+                        <StyledAccordionDetails id="reflect-content">
+                            <Typography component={'p'}>Take a moment to look closely at this painting.</Typography>
+                            <StyledUl>
+                                <li>Which areas are your eyes most drawn to?</li>
+                                <li>
+                                    As your eyes move across these areas, what kind of movement or energy do you feel?
+                                </li>
+                                <li>Can you imagine this movement and energy performed by sand?</li>
+                            </StyledUl>
+
+                            <Typography component={'p'}>
+                                Try to take yourself to this place and imagine how it might feel in your body to be
+                                there.
+                            </Typography>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="about-the-artwork-content"
+                            id="about-the-artwork-header"
+                        >
+                            About the artwork
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="about-the-artwork-content">
+                            <Typography component={'p'}>
+                                This work by Lily Napangardi depicts the cycles of rainfall and wind across the
+                                sandhills of the Kintore and Coniston areas in the Northern Territory. Sand Hills 2007
+                                is a classic example of her black and white compositions, and depicts the 'tali' (sand
+                                hills) of the Kintore and Coniston areas.
+                            </Typography>
+                            <Typography component={'p'}>
+                                Despite her reductive palette, Napangardi imbues these works with movement and
+                                definition by emphasising rows within the net of fine dots. The clusters, lines and
+                                dispersions of minute dots give her canvas the illusion of three-dimensional space and
+                                depth. The effect evokes shifting sand dunes and the desert landscape after rain. The
+                                seasonal changes influence the landscape and, consequently, traditional life. Through
+                                her paintings, Napangardi seeks to demonstrate her deep understanding of Country and
+                                assert her people's connection to the land.
+                            </Typography>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="about-the-artists-content"
+                            id="about-the-artists-header"
+                        >
+                            About the artists
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="about-the-artists-content">
+                            <Typography component={'p'}>
+                                Lily Kelly Napangardi was born in 1948 in the Northern Territory. She is a senior law
+                                woman of the Watiyawanu community near Haasts Bluff, north-west of Alice Springs. She is
+                                a custodian of the Women's Dreaming story associated with Country around Kunajarrayi
+                                (Mount Nicker).
+                            </Typography>
+                            <Typography component={'p'}>
+                                Napangardi began painting with her husband at Papunya in the 1980s, achieving
+                                recognition in her own right when she began making striking monochromatic works.
+                            </Typography>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="connection-to-country-content"
+                            id="connection-to-country-header"
+                        >
+                            Connection to Country
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="connection-to-country-content">
+                            <Typography component={'p'} sx={{ pb: 1 }}>
+                                Learn more about <strong>Warlpiri Country.</strong>
+                            </Typography>
+                            <iframe
+                                title="Indigenous art trail - Warlpiri Country"
+                                src="https://uq.h5p.com/content/1292937898322727859/embed"
+                                aria-label="Clone of Indigenous art and Library discovery trail - Sand Hills 2007 - Warlpiri Country"
+                                width="1090"
+                                frameBorder="0"
+                                allowFullScreen
+                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
+                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+                            />
+                            <StyledUl>
+                                <li>
+                                    <a href="https://ngurra.org/#/sc/1" target="_blank" rel="noopener noreferrer">
+                                        Northern Tanami Indigenous Protected Area digital storybook{' '}
+                                    </a>
+                                    <br /> Watch a video about the Warlpiri story in language.
+                                </li>
+                                <li>
+                                    <a
+                                        href="https://ictv.com.au/video/4989-warlukurlangu-yawulyu-song-from-the-place-belonging-to-the-fire"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Warlukurlangu yawulyu ' Song from the place belonging to the fire'{' '}
+                                    </a>{' '}
+                                    <br /> Listen to songs and stories in language from Warlpiri Country.
+                                </li>
+                            </StyledUl>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
                 </Grid>
             </Grid>
         </Grid>

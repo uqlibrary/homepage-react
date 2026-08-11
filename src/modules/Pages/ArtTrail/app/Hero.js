@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 
 import wholeArtworkImage from './assets/images/UQRAP_Whole-Artwork-RGB.jpg';
 
@@ -32,26 +32,29 @@ const StyledSubheading = styled('h2')(({ theme }) => ({
 const Hero = ({ title, subtitle }) => {
     return (
         <Grid>
-            <Paper
-                elevation={0}
+            <Box
                 sx={{
                     borderRadius: 0,
                     overflow: 'hidden',
                     background: `linear-gradient(90deg, #41215e 35.5%, rgba(65, 33, 94, 0)), url(${wholeArtworkImage}) #d3d3d3 center / cover no-repeat`,
                     color: 'common.white',
                     p: { xs: 2, sm: 3, md: 4 },
+                    minHeight: { xs: 180, sm: 240, md: 340 },
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
                 }}
             >
                 <StyledHeading>{title}</StyledHeading>
-                <StyledSubheading>{subtitle}</StyledSubheading>
-            </Paper>
+                {subtitle && <StyledSubheading>{subtitle}</StyledSubheading>}
+            </Box>
         </Grid>
     );
 };
 
 Hero.propTypes = {
     title: PropTypes.string.isRequired,
-    subtitle: PropTypes.string.isRequired,
+    subtitle: PropTypes.string,
 };
 
 export default Hero;

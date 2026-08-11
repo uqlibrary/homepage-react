@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
+import { grey } from '@mui/material/colors';
 
 import { mui1theme } from 'config';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import ParkOutlinedIcon from '@mui/icons-material/ParkOutlined';
 import AppBar from '@mui/material/AppBar';
@@ -28,13 +28,23 @@ import Toolbar from '@mui/material/Toolbar';
 
 import uqHeaderLogo from './assets/images/uq-logo--reversed.svg';
 import CulturalDisclaimer from './CulturalDisclaimer';
-import FeedbackTabContent from './FeedbackTabContent';
 import MapTabContent from './MapTabContent';
 import { trailPages } from './pages';
 import TrailTabContent from './TrailTabContent';
 
 const CULTURAL_DISCLAIMER_COOKIE = 'ART_TRAIL_CULTURAL_DISCLAIMER_SEEN';
 const FOOTER_TABS_HEIGHT = '56px';
+const DRAWER_BLEEDING = 56;
+
+const Puller = styled('div')(({ theme }) => ({
+    width: 30,
+    height: 6,
+    backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
+    borderRadius: 3,
+    position: 'absolute',
+    top: 8,
+    left: 'calc(50% - 15px)',
+}));
 
 const tabs = [
     {
@@ -51,16 +61,6 @@ const tabs = [
             title: 'Map overview',
             body: 'Placeholder map copy can describe the route, entry points, and the sequence of artworks.',
             highlights: ['Route overview', 'Entrances', 'Landmarks'],
-        },
-    },
-    {
-        id: 'feedback',
-        label: 'Feedback',
-        icon: <FeedbackOutlinedIcon sx={{ fontSize: '1.5rem' }} />,
-        page: {
-            title: 'Quick response',
-            body: 'Placeholder feedback content can ask visitors about clarity, wayfinding, and overall experience.',
-            highlights: ['Quick poll', 'Comment prompt', 'Follow-up link'],
         },
     },
 ];
@@ -92,7 +92,6 @@ const HeaderLogo = () => {
 const tabContentComponents = {
     trail: TrailTabContent,
     map: MapTabContent,
-    feedback: FeedbackTabContent,
 };
 
 const TabPanel = ({ active, children, id }) => {
@@ -388,9 +387,39 @@ const ArtTrailApp = () => {
                 anchor="bottom"
                 open={Boolean(DrawerContentComponent)}
                 onClose={handleDrawerClose}
-                ModalProps={{ keepMounted: true }}
+                onOpen={() => {}}
+                swipeAreaWidth={DRAWER_BLEEDING}
+                ModalProps={{
+                    keepMounted: true,
+                }}
+                sx={{
+                    '& .MuiPaper-root': {
+                        borderTopLeftRadius: 16,
+                        borderTopRightRadius: 16,
+                    },
+                }}
             >
-                <Box sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
+                <Box
+                    data-testid="art-trail-drawer-puller"
+                    sx={{
+                        position: 'absolute',
+                        borderTopLeftRadius: 8,
+                        borderTopRightRadius: 8,
+                        visibility: 'visible',
+                        right: 0,
+                        left: 0,
+                    }}
+                >
+                    <Puller />
+                </Box>
+                <Box
+                    sx={{
+                        width: '100%',
+                        maxWidth: 1100,
+                        mx: 'auto',
+                        pt: 2,
+                    }}
+                >
                     <Grid container direction="column" wrap="nowrap" sx={{ maxHeight: '50vh' }}>
                         <Grid sx={{ px: { xs: 2, sm: 2.5 }, py: 2, overflowY: 'auto' }}>
                             {DrawerContentComponent ? <DrawerContentComponent /> : null}

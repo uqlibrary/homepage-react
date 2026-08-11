@@ -15,6 +15,7 @@ const CulturalDisclaimer = ({ onClose }) => {
                 bgcolor: '#FEF8E8',
                 p: { xs: 'var(--art-trail-spacing)', sm: 2.5 },
             }}
+            data-testid="culturalDisclaimer"
         >
             <Grid container wrap="nowrap" alignItems="flex-start">
                 <Grid xs sx={{ pt: 'var(--art-trail-spacing)' }}>
@@ -33,6 +34,8 @@ const CulturalDisclaimer = ({ onClose }) => {
                         sx={{
                             fontSize: '1.5rem',
                         }}
+                        id="culturalDisclaimerCloseButton"
+                        data-testid="culturalDisclaimerCloseButton"
                     >
                         <CloseIcon fontSize="large" />
                     </IconButton>

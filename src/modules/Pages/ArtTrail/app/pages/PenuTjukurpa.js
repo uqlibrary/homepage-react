@@ -39,13 +39,21 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 const StyledImage = styled('img')({
     maxWidth: '100%',
     height: 'auto',
+    position: 'relative',
 });
 
-const PenuTjukurpaDrawerContent = () => {
+const StyledUl = styled('ul')(({ theme }) => ({
+    paddingInlineStart: '1.25rem',
+    '& li:not(:last-of-type)': {
+        marginBottom: theme.spacing(1),
+    },
+}));
+
+const ArtDrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
             <Grid>
-                <Typography variant="h4">
+                <Typography variant="h3">
                     Hector Tjupuru Burton
                     <br />
                     Ray Ken
@@ -75,13 +83,29 @@ const PenuTjukurpaDrawerContent = () => {
     );
 };
 
+const LocationDrawerContent = () => {
+    return (
+        <Grid container direction="column" rowSpacing={1.5}>
+            <Grid>
+                <Typography variant="h3">View the artwork</Typography>
+            </Grid>
+            <Grid>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    Where: Level 1,{' '}
+                    <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
+                        Duhig Tower (TBC: THIS MIGHT LINK TO MAP TAB)
+                    </a>{' '}
+                    (Building 2), St Lucia campus.
+                </Typography>
+            </Grid>
+        </Grid>
+    );
+};
+
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero
-                title="'Punu Tjukurpa' 2013, Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken"
-                subtitle=""
-            />
+            <Hero title="'Punu Tjukurpa' 2013, Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken" />
             <Grid
                 container
                 direction="column"
@@ -94,12 +118,11 @@ const Page = ({ openDrawer }) => {
                         <StyledImage
                             src={ArtworkImage}
                             alt="'Punu Tjukurpa' 2013, Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken"
-                            sx={{ position: 'relative' }}
                         />
                         <IconButton
                             size="large"
                             aria-label="More information about this artwork"
-                            onClick={() => openDrawer(PenuTjukurpaDrawerContent)}
+                            onClick={() => openDrawer(ArtDrawerContent)}
                             sx={{ position: 'absolute', top: 0, right: 0 }}
                         >
                             <InfoOutlinedIcon
@@ -114,6 +137,7 @@ const Page = ({ openDrawer }) => {
                         <IconButton
                             size="large"
                             aria-label="Location information about this artwork"
+                            onClick={() => openDrawer(LocationDrawerContent)}
                             sx={{ position: 'absolute', bottom: 0, right: 0 }}
                         >
                             <LocationOnOutlinedIcon
@@ -128,6 +152,26 @@ const Page = ({ openDrawer }) => {
                     </Box>
                 </Grid>
                 <Grid>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="reflect-content"
+                            id="reflect-header"
+                        >
+                            Reflect
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="reflect-content">
+                            <Typography component={'p'}>
+                                Take a few minutes to look closely at all the detail in this painting.
+                            </Typography>
+                            <StyledUl>
+                                <li>
+                                    What different shapes and patterns can you see branching off from the central shape?
+                                </li>
+                                <li>Which parts are your eyes most drawn to? Why do they stand out?</li>
+                            </StyledUl>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -189,6 +233,30 @@ const Page = ({ openDrawer }) => {
                                 <strong>Brenton Ken</strong> (c.1944—2018) was born in South Australia and belongs to
                                 the Pitjantjatjara/Yankunytjatjara people.
                             </Typography>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="connection-to-country-content"
+                            id="connection-to-country-header"
+                        >
+                            Connection to Country
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="connection-to-country-content">
+                            <Typography component={'p'} sx={{ pb: 1 }}>
+                                Learn more about <strong>Ngaanyatjarra Pitjantjatjara Yankunytjatjara</strong> Lands.
+                            </Typography>
+                            <iframe
+                                title="Ngaanyatjarra Pitjantjatjara Yankunytjatjara image hotspot"
+                                src="https://uq.h5p.com/content/1292937845127577289/embed"
+                                aria-label="Indigenous art and Library discovery trail - Punu Tjukurpa 2013"
+                                width="1090"
+                                frameBorder="0"
+                                allowFullScreen
+                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
+                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+                            />
                         </StyledAccordionDetails>
                     </StyledAccordion>
                 </Grid>
