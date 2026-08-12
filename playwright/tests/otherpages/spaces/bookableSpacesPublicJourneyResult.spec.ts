@@ -40,7 +40,10 @@ test.describe('Spaces Journey Result page', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
 
             await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
-            const campusDropdown = page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').locator('fieldset');
+            const campusDropdown = page
+                .getByTestId('sidebarCheckboxes')
+                .getByTestId('filter-by-campus')
+                .locator('fieldset');
 
             // the first field in the filter sidebar is not focussed
             await expect(campusDropdown).toHaveCSS('border-left-color', 'rgba(0, 0, 0, 0.23)');
@@ -101,7 +104,7 @@ test.describe('Spaces Journey Result page', () => {
         await expect(page.getByTestId('filter-group-block-5').locator('h3')).toBeVisible();
         await expect(page.getByTestId('filter-group-block-5').locator('h3')).toContainText('Acceptable noise');
         await expect(page.getByTestId('filter-group-block-5').locator('p')).toContainText(
-            'How much conversation and ambient sound is usually acceptable.'
+            'How much conversation and ambient sound is usually acceptable.',
         );
     });
     test('results page can book a room', async ({ page }) => {
