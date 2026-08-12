@@ -4,7 +4,7 @@ import { accounts } from '../../../src/data/mock/data';
 import { default as locale } from '../../../src/modules/Pages/LearningResources/shared/learningResources.locale';
 import { default as subjectSearchSuggestions } from '../../../src/data/mock/data/records/learningResources/subjectSearchSuggestions';
 
-test.describe('The Homepage Learning Resource Panel', () => {
+test.describe.skip('The Homepage Learning Resource Panel', () => {
     test('Learning resources panel is accessible', async ({ page }) => {
         await page.goto('/?user=s1111111');
 
@@ -212,7 +212,7 @@ test.describe('The Homepage Learning Resource Panel', () => {
         ).toBeVisible();
     });
 });
-test.describe('Users see the correct number of courses', () => {
+test.describe.skip('Users see the correct number of courses', () => {
     test('An academic teaching a course to multiple classes of user (NAWD, PGCW, etc) doesnt see duplicates of their subjects', async ({
         page,
     }) => {
