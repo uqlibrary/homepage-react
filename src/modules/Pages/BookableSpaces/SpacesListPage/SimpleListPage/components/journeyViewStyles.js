@@ -30,6 +30,7 @@ export const StyledJourneyPanelSection = styled('section', {
         rowGap: '1.25rem',
     },
     [theme.breakpoints.down('md')]: {
+        paddingTop: '1.5rem',
         maxWidth: '100%',
         marginLeft: '1rem',
     },
@@ -44,6 +45,7 @@ export const StyledResultsSplitLayoutDiv = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         gridTemplateColumns: '1fr',
         width: '100%',
+        gap: 0,
     },
     '& h1': {
         fontFamily: theme.palette.designSystem.fontFamilyH1,
@@ -79,9 +81,9 @@ export const StyledFilterShowHideButton = styled(Button)(({ theme }) => ({
         display: 'none',
     },
     [theme.breakpoints.down('md')]: {
-        position: 'absolute',
+        position: 'fixed',
         left: '-1rem',
-        top: '250px',
+        top: '400px',
         zIndex: 2,
 
         backgroundColor: `${theme.palette.primary.main} !important`,
@@ -129,5 +131,44 @@ export const StyledListItemStack = styled(Stack)(({ theme }) => ({
         position: 'absolute',
         bottom: '1rem',
         left: '1.5rem',
+    },
+}));
+
+export const StyledResetButton = styled(Button)(({ theme }) => ({
+    [theme.breakpoints.up('md')]: {
+        display: 'none',
+    },
+    textTransform: 'initial',
+    textDecoration: 'underline',
+    padding: 0,
+    marginLeft: '0.5rem',
+    marginRight: '1rem',
+    borderRadius: 0,
+    lineHeight: 1.2,
+    fontSize: '1rem',
+    '&:hover, &:focus': {
+        textDecoration: 'underline',
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+    },
+}));
+
+export const StyledSelectorWrapperDiv = styled('div')(({ theme }) => ({
+    [theme.breakpoints.up('md')]: {
+        display: 'none',
+    },
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    '& h3': {
+        marginBlock: 0,
+        fontWeight: 400,
+        fontSize: '1rem',
+    },
+    '& #filter-by-campus, & #filter-by-library': {
+        paddingBlock: 0,
+    },
+    '& fieldset': {
+        borderWidth: 0,
     },
 }));

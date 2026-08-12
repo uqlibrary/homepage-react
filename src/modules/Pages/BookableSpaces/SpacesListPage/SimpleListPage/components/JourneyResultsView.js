@@ -15,13 +15,17 @@ import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesH
 import SpaceOpenStatusChip from 'modules/Pages/BookableSpaces/Shared/SpaceOpenStatusChip';
 
 import {
+    StyledButtonWrapperStack,
     StyledFilterShowHideButton,
+    StyledListItemStack,
     StyledJourneyPanelSection,
     StyledResultsSidebarPanelDiv,
+    StyledResetButton,
     StyledResultsSplitLayoutDiv,
-    StyledListItemStack,
-    StyledButtonWrapperStack,
+    StyledSelectorWrapperDiv,
 } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
+import ChooseCampus from "modules/Pages/BookableSpaces/Shared/ChooseCampus";
+import ChooseLibrary from "modules/Pages/BookableSpaces/Shared/ChooseLibrary";
 
 export const JourneyResultsView = ({
     intentSpaceLocations,
@@ -95,20 +99,52 @@ export const JourneyResultsView = ({
             </StyledFilterShowHideButton>
             <StyledResultsSplitLayoutDiv>
                 <Box>
-                    <Typography component="h1" variant="h5">
-                        Search results
-                    </Typography>
-                    <Typography component={'h2'} data-testid="spaces-results-summary" variant="body2">
-                        {spaces.length}
-                        {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''} spaces
-                    </Typography>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography component="h1" variant="h5">
+                            <span style={{ whiteSpace: 'nowrap'}}>
+                                Search results
+                            </span>
+                        </Typography>
+                        <StyledResetButton data-testid="reset-filters-button" onClick={handleClearJourneyFilters}>
+                            <span style={{ whiteSpace: 'nowrap'}}>
+                                Reset
+                            </span>
+                        </StyledResetButton>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', marginRight: '1rem' }}>
+                        <Typography component={'h2'} data-testid="spaces-results-summary">
+                            Filtered:{' '}
+                            <span style={{ whiteSpace: 'nowrap' }}>
+                                {spaces.length} {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''}
+                            </span>{' '}
+                            spaces
+                        </Typography>
+                        {campusList?.length > 0 && (
+                            <>
+                                <StyledSelectorWrapperDiv>
+                                    <ChooseCampus
+                                        selectedCampusValue={selectedCampus}
+                                        campusList={campusList}
+                                        handleCampusSelection={handleCampusSelection}
+                                        campusLabel="Campus:"
+                                        testId="mobile-campus"
+                                    />
+                                </StyledSelectorWrapperDiv>
+                                <StyledSelectorWrapperDiv>
+                                    <ChooseLibrary
+                                        selectedLibrary={selectedLibrary}
+                                        librariesForCampus={librariesForCampus}
+                                        handleLibrarySelection={handleLibrarySelection}
+                                        libraryLabel="Library:"
+                                    />
+                                </StyledSelectorWrapperDiv>
+                            </>
+                        )}
+                    </div>
                     <StyledSkipLinkAnchor href="#topOfSidebar" data-testid="skip-to-filter-list">
                         Skip to filters
                     </StyledSkipLinkAnchor>
                     <StyledButtonWrapperStack direction="row" spacing={1}>
-                        <StyledSecondaryButton onClick={handleClearJourneyFilters}>
-                            Reset quick filters
-                        </StyledSecondaryButton>
                         <StyledSecondaryButton onClick={goToLegacyBrowse}>View on map</StyledSecondaryButton>
                     </StyledButtonWrapperStack>
                     {spaces.length > 0 && (
