@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 
-import wholeArtworkImage from './assets/images/UQRAP_Whole-Artwork-RGB.jpg';
+import wholeArtworkImage from '../../../../../public/images/artTrail/UQRAP_Whole-Artwork-RGB.jpg';
 
 const StyledHeading = styled('h1')(({ theme }) => ({
     marginTop: 0,

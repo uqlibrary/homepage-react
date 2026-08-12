@@ -13,8 +13,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
-import ArtworkImage from '../assets/images/artwork/Robinson_2017_02_WEBREADY.jpg';
-import ThursdayIslandImage from '../assets/images/Thursday-Island-_C_-Reef-Pix-stock.adobe-scaled.jpg';
+import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Robinson_2017_02_WEBREADY.jpg';
+import ThursdayIslandImage from '../../../../../../public/images/artTrail/Thursday-Island-_C_-Reef-Pix-stock.adobe-scaled.jpg';
 
 import Hero from '../Hero';
 

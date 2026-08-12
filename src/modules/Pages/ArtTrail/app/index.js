@@ -26,7 +26,7 @@ import MobileStepper from '@mui/material/MobileStepper';
 import Paper from '@mui/material/Paper';
 import Toolbar from '@mui/material/Toolbar';
 
-import uqHeaderLogo from './assets/images/uq-logo--reversed.svg';
+import uqHeaderLogo from '../../../../../public/images/artTrail/uq-logo--reversed.svg';
 import CulturalDisclaimer from './CulturalDisclaimer';
 import MapTabContent from './MapTabContent';
 import { trailPages } from './pages';

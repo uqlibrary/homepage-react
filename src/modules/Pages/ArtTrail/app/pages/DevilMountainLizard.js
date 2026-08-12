@@ -13,8 +13,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
-import ArtworkImage from '../assets/images/artwork/Petyarre_2001_02_crop_WEB.jpg';
-import ThornyDevilsImage from '../assets/images/Thorny-Devil-_C_-meyblume-scaled.jpg';
+import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Petyarre_2001_02_crop_WEB.jpg';
+import ThornyDevilsImage from '../../../../../../public/images/artTrail/Thorny-Devil-_C_-meyblume-scaled.jpg';
 
 import Hero from '../Hero';
 

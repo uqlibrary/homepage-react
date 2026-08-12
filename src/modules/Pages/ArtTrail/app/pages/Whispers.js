@@ -13,8 +13,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
-import ArtworkImage from '../assets/images/artwork/UQAM_20260116_CampusArtwork_073_LR.jpg';
-import NorthStradbrokeImage from '../assets/images/North-Stradbroke-Island-_C_-Kevin-stock.adobe-scaled.jpg';
+import ArtworkImage from '../../../../../../public/images/artTrail/artwork/UQAM_20260116_CampusArtwork_073_LR.jpg';
+import NorthStradbrokeImage from '../../../../../../public/images/artTrail/North-Stradbroke-Island-_C_-Kevin-stock.adobe-scaled.jpg';
 
 import Hero from '../Hero';
 
