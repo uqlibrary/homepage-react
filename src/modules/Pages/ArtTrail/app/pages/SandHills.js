@@ -13,7 +13,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
-import ArtworkImage from '../assets/images/artwork/Napandardi_2013_40_crop_WEB.jpg';
+import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Napandardi_2013_40_crop_WEB.jpg';
 
 import Hero from '../Hero';
 

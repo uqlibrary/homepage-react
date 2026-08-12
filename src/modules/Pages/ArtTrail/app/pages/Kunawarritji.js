@@ -13,9 +13,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
-import Artwork1Image from '../assets/images/artwork/2018.27_Kunawarritji-1-landscape-2.jpg';
-import Artwork2Image from '../assets/images/artwork/2018.28_Kunawarritji-2-landscape-2.jpg';
-import DesertImage from '../assets/images/Desert-near-old-Canning-Stock-Route_C_-tolly65_stock.adobe.com-2.jpg';
+import Artwork1Image from '../../../../../../public/images/artTrail/artwork/2018.27_Kunawarritji-1-landscape-2.jpg';
+import Artwork2Image from '../../../../../../public/images/artTrail/artwork/2018.28_Kunawarritji-2-landscape-2.jpg';
+import DesertImage from '../../../../../../public/images/artTrail/Desert-near-old-Canning-Stock-Route_C_-tolly65_stock.adobe.com-2.jpg';
 
 import Hero from '../Hero';
 
