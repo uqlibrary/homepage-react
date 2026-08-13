@@ -1025,8 +1025,13 @@ export const SidebarFilters = ({
             ? 0
             : campusList?.find(c => c.campus_id === selectedCampus)?.campus_id || defaultCampus || 1;
 
+    const shouldHideOnMobile = !String(suppliedClassName || '').includes('popupFilterList');
+
     return (
-        <StyledSidebarDiv id="filterSidebar" className={`filterSideBar ${suppliedClassName} mobileHidden`}>
+        <StyledSidebarDiv
+            id="filterSidebar"
+            className={`filterSideBar ${suppliedClassName} ${shouldHideOnMobile ? 'mobileHidden' : ''}`}
+        >
             <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
                 {!isJourneyView && (
                     <StyledSkipLinkAnchor href="#space-wrapper" data-testid="skip-to-spaces-list">
