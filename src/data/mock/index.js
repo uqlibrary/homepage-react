@@ -26,6 +26,15 @@ import { libHours } from './data/libHours';
 import { training_object, training_object_hospital } from './data/training';
 import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
+import {
+    membershipAttachment,
+    membershipFormData,
+    membershipList,
+    membershipRenewal,
+    membershipRenewing,
+    membershipSubmitted,
+    membershipTypes,
+} from './data/membership';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_PHYS1001 from './data/records/learningResources/examSearch_PHYS1001';
 import examSearch_ENGG from './data/records/learningResources/examSearch_ENGG';
@@ -357,6 +366,195 @@ mock.onGet(/alert\/.*/).reply(config => {
         return [404, { status: 'error', message: 'No records found for that UUID' }];
     }
     return [200, getSpecificAlert(alertId)];
+});
+
+// MEMBERSHIP
+// The data the form and landing chooser are built from, and whether the signed-in user has a renewal waiting.
+// Grown as the membership app is migrated across.
+mock.onGet(routes.MEMBERSHIP_FORM_DATA_API().apiUrl).reply(withDelay([200, membershipFormData]));
+
+// The membership types and their expiry dates, for the admin settings screen. The save mirrors the API: a date
+// equal to the computed one, or a blank one, drops the override and returns the type to its computed date; any
+// other date is stored as an override. The in-memory copy is updated so a change persists across a reload the
+// way the real store would hold it. Ordered before the single-record GET so `membership_types` is not read as a
+// record id.
+mock.onGet(routes.MEMBERSHIP_TYPES_API().apiUrl).reply(withDelay([200, membershipTypes]));
+
+// A well-formed but impossible date - a month past 12 or a day past 31 - models the backend refusing the value.
+const isImpossibleDate = value => {
+    const [day, month] = String(value).split('-').map(Number);
+    return day > 31 || month > 12;
+};
+
+mock.onPost(new RegExp('^membership_type/[^/]+$')).reply(config => {
+    const name = config.url.split('/')[1];
+    const posted = JSON.parse(config.data);
+    if (posted.expiry && isImpossibleDate(posted.expiry)) {
+        return withDelay([500, { message: 'The expiry date could not be saved.' }])();
+    }
+    const type = membershipTypes.find(item => item.name === name);
+    if (type) {
+        // Blank, or equal to the computed date, means "use the computed date"; anything else is an override.
+        const reverts = !posted.expiry || posted.expiry === type.computed_expiry;
+        type.expiry = reverts ? type.computed_expiry : posted.expiry;
+    }
+    return withDelay([200, type ?? posted])();
+});
+// The real API answers `renewing: true` only for a member who actually has a renewal due. The mock mirrors that
+// so all three landing states are reachable locally: `?user=emcommunity` is due for renewal (renewal prompt);
+// any other signed-in user sees the "become a member" welcome; a signed-out visitor sees the returning-member
+// intro. Returning `renewing: true` for everyone hid the welcome state entirely.
+mock.onGet(new RegExp(escapeRegExp('membership/check/renewing.*'))).reply(() =>
+    withDelay([200, user === 'emcommunity' ? membershipRenewing : { renewing: false }])(),
+);
+// A submitted application: the API answers 201 with the saved record, echoing the type back.
+mock.onPost(routes.MEMBERSHIP_CREATE_API().apiUrl).reply(config => {
+    const { type } = JSON.parse(config.data);
+    return withDelay([201, membershipSubmitted('00000000-0000-0000-0000-000000000123', type)])();
+});
+
+// Whether the mock user is in the group the API gates the membership back-office on.
+const isMembershipAdmin = () =>
+    (mockData.accounts[user]?.groups ?? []).some(group => group.includes('lib_libapi_MembershipAdmins'));
+
+// Reading an application back by id, which the received page falls back to on a reload.
+//
+// This is admin-only in production - it sits in the lib_libapi_MembershipAdmins route group - so an applicant
+// reloading /membership/received/:id is refused and loses their Pay now link. That is modelled here rather
+// than answering 200 to everyone, which would tell a developer the reload worked when it never can, and leave
+// the page's real fallback wording unreachable locally.
+mock.onGet(new RegExp('^membership/[0-9a-f-]{36}$')).reply(config => {
+    if (!isMembershipAdmin()) {
+        return withDelay([403, {}])();
+    }
+    const id = config.url.split('/')[1];
+    return withDelay([200, membershipSubmitted(id, 'community')])();
+});
+
+// Recording a payment on the gateway's return leg.
+mock.onPost(new RegExp('^membership/[^/]+/payment$')).reply(withDelay([200, { status: 'ok' }]));
+
+// A renewal link — membership/{id}/{code} — resolves to the record the form opens prefilled.
+mock.onGet(new RegExp(`^membership/${membershipRenewal.id}/[^/]+$`)).reply(withDelay([200, membershipRenewal]));
+
+// Submitting a renewal answers with the saved record, the same as a fresh application.
+mock.onPost(new RegExp('^membership/[^/]+/[^/]+/renew$')).reply(
+    withDelay([200, membershipSubmitted(membershipRenewal.id, membershipRenewal.type)]),
+);
+
+// Uploading a supporting document answers with the stored attachment.
+mock.onPost(routes.MEMBERSHIP_FILE_UPLOAD_API().apiUrl).reply(withDelay([200, [membershipAttachment]]));
+
+// Reading a stored document back answers with a signed URL to it, as the sole element of an array. The real
+// endpoint hands back a short-lived CloudFront URL; here it points at a same-origin asset so opening it in the
+// admin has something harmless to land on rather than a network the mocked app cannot reach.
+mock.onGet(new RegExp('^file/membership/[^/]+$')).reply(withDelay([200, [`${window.location.origin}/favicon.ico`]]));
+
+// Confirming an application. The real endpoint posts to Alma and Prism to issue the account. Success answers
+// 200 with the confirmed record; a refusal the backend can name - here, an applicant who is already a member
+// (id 104) - answers with a 4xx carrying that reason as a message, so the admin is told what actually failed
+// rather than having a 200 unpacked to discover it did. The message travels as the API frames it, a
+// single-element array.
+mock.onPost(new RegExp('^membership/[^/]+/confirm$')).reply(config => {
+    const id = config.url.split('/')[1];
+    const membership = membershipList.find(item => item.id === id);
+    if (id.endsWith('104')) {
+        return withDelay([422, ['This applicant is already a member.']])();
+    }
+    return withDelay([200, { ...membership, status: 'confirmed', confirmed_on: '17-07-2026' }])();
+});
+
+// Saving an edited expiry or barcode. The admin sends the whole record back with the one field changed, and
+// the API answers with what it stored. Reached at the same address as reading one by id, with POST.
+//
+// The two ways this fails are not alike, and both are copied from the API rather than invented:
+//
+//   a taken barcode  -> 400, body is internal text naming the barcode and a record id
+//   a bad expiry     -> 422, body is a message written to be read
+//
+// locale.global.errorMessages has no 400, so the first arrives at the page as a bare axios Error and the page
+// supplies wording of its own; the second is merged over the 422 wording by the interceptor and shown as-is.
+mock.onPost(new RegExp('^membership/[0-9a-f-]{36}$')).reply(config => {
+    const membership = JSON.parse(config.data);
+    if (String(membership.barcode).endsWith('0000')) {
+        return withDelay([
+            400,
+            `Membership: Barcode is already in use [barcode: ${membership.barcode}] (when checking for id = ${membership.id})`,
+        ])();
+    }
+    if (!/^([0-2]?[0-9]|3[01])-([0]?[1-9]|1[0-2])-[0-9]{4}$/.test(String(membership.expires_on ?? ''))) {
+        return withDelay([
+            422,
+            {
+                message:
+                    'The expiry date was invalid. Either it was not in the correct format of "d-m-Y" or that' +
+                    " date doesn't exist (eg 31-09-2023).",
+            },
+        ])();
+    }
+    return withDelay([200, membership])();
+});
+
+// Resending a renewal email. The endpoint reports whether it sent by its body - here always true - rather
+// than by an error status, so a member who lost their link can be sent it again.
+mock.onGet(new RegExp('^membership/[^/]+/mail$')).reply(withDelay([200, true]));
+
+// Deleting an application - reached at the same address as reading one by id, with the DELETE method, so it
+// does not collide with the GET above.
+mock.onDelete(new RegExp('^membership/[0-9a-f-]{36}$')).reply(withDelay([200, { status: 'ok' }]));
+
+// The admin back-office at /admin/membership. The real queue is ~9,500 applications, so this endpoint answers
+// with one searched, filtered, ordered page at a time inside an envelope - `{ data, pagination, counts }`. The
+// filtering, paging and counting are all modelled here so the frontend is built against the intended contract.
+//
+// Day-first submitted dates are turned into a sortable YYYYMMDDHHmmss key.
+const membershipSortKey = membership => {
+    const [date = '', time = ''] = String(membership.submitted_on ?? '').split(' ');
+    const [day = '', month = '', year = ''] = date.split('-');
+    return `${year}${month}${day}${time.replace(/:/g, '')}`;
+};
+
+mock.onGet(new RegExp('^memberships')).reply(config => {
+    const params = config.params ?? {};
+    const name = params['filter[name]'];
+    const type = params['filter[type]'];
+    const status = params['filter[status]'];
+    const ascending = params['orderBy[submitted_on]'] === 'ASC';
+    const page = Number(params.page ?? 1);
+    const perPage = Number(params.per_page ?? 20);
+
+    // Name matches on any part of the name or the email; type matches exactly.
+    const scoped = membershipList.filter(
+        membership =>
+            (!name ||
+                `${membership.first_name} ${membership.sn} ${membership.mail}`
+                    .toLowerCase()
+                    .includes(String(name).toLowerCase())) &&
+            (!type || membership.type === type),
+    );
+
+    // Counts respect the name and type search but not the status filter, so the triage tiles keep their totals
+    // as the admin moves between statuses.
+    const countFor = value => scoped.filter(membership => membership.status === value).length;
+    const counts = {
+        all: scoped.length,
+        unconfirmed: countFor('unconfirmed'),
+        renewing: countFor('renewing'),
+        confirmed: countFor('confirmed'),
+    };
+
+    const filtered = scoped.filter(membership => !status || status === 'all' || membership.status === status);
+    const sorted = [...filtered].sort((a, b) => {
+        const comparison = membershipSortKey(a).localeCompare(membershipSortKey(b));
+        return ascending ? comparison : -comparison;
+    });
+
+    const total = sorted.length;
+    const start = (page - 1) * perPage;
+    const data = sorted.slice(start, start + perPage);
+    const pagination = { total, page, per_page: perPage, pages: Math.ceil(total / perPage) };
+
+    return withDelay([200, { data, pagination, counts }])();
 });
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [

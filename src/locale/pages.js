@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import React from 'react';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 /*
@@ -20,7 +19,7 @@ help: {
 - if help is not required, delete help: {} fully (including closing '},')
 
 */
-/* eslint-disable max-len */
+
 export default {
     pages: {
         index: {
@@ -38,6 +37,12 @@ export default {
         admin: {
             masquerade: {
                 title: 'Masquerade',
+            },
+            membership: {
+                title: 'Membership administration',
+            },
+            membershipsettings: {
+                title: 'Membership expiry settings',
             },
             alerts: {
                 title: 'Alerts administration',
@@ -60,6 +65,9 @@ export default {
         },
         bookExamBooth: {
             title: 'Book an exam booth in the UQ Centre',
+        },
+        membership: {
+            title: 'UQ Library Membership',
         },
         pastExamPaperSearch: {
             title: 'Search exam papers',
