@@ -200,4 +200,13 @@ describe('SidebarFilters campus selector', () => {
         expect(screen.getByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'block' });
         expect(screen.getByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'none' });
     });
+
+    it('does not force the popup filter sidebar to stay hidden on mobile', () => {
+        const { container } = renderWithTheme({
+            ...baseProps,
+            suppliedClassName: 'popupFilterList',
+        });
+
+        expect(container.querySelector('#filterSidebar')).not.toHaveClass('mobileHidden');
+    });
 });
