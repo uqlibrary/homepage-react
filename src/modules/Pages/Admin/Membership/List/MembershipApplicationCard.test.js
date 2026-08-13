@@ -5,6 +5,7 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { mui1theme } from 'config';
 
 import MembershipApplicationCard, {
+    attachmentName,
     confirmButtonText,
     formatDate,
     formatDateTime,
@@ -33,6 +34,7 @@ const setup = (membership, props = {}) =>
                         onUpdate={jest.fn()}
                         onResend={jest.fn()}
                         onView={jest.fn()}
+                        onOpenAttachment={jest.fn()}
                         {...props}
                     />
                 </ul>
@@ -112,6 +114,8 @@ describe('MembershipApplicationCard', () => {
                             onDelete={jest.fn()}
                             onUpdate={jest.fn()}
                             onResend={jest.fn()}
+                            onView={jest.fn()}
+                            onOpenAttachment={jest.fn()}
                         />
                     </ul>
                 </ThemeProvider>
@@ -463,6 +467,51 @@ describe('MembershipApplicationCard', () => {
             expect(formatDate('not-a-date')).toBe('not-a-date');
             expect(formatDateTime('01-07-2026 13:15:00')).toBe('1 Jul 2026, 1:15pm');
             expect(formatDateTime('rubbish')).toBe('rubbish');
+        });
+
+        it('attachmentName reads the stored name, falling back to a generic one', () => {
+            expect(attachmentName({ name: 'proof.pdf' })).toBe('proof.pdf');
+            expect(attachmentName({ key: 'file-1' })).toBe('Document');
+            expect(attachmentName(null)).toBe('Document');
+        });
+    });
+
+    describe('attachments', () => {
+        const withDocuments = {
+            id: '105',
+            type: 'reciprocal',
+            status: 'unconfirmed',
+            first_name: 'With',
+            sn: 'Documents',
+            // The second has no key and no name: the list falls back to the index for its React key, and to a
+            // generic label for the missing name.
+            attachments: [{ key: 'file-1.pdf', name: 'proof-of-employment.pdf' }, {}],
+        };
+
+        it('lists each document, naming an unnamed one generically', () => {
+            setup(withDocuments);
+
+            expect(screen.getByTestId('membership-attachments-105')).toBeInTheDocument();
+            expect(screen.getByTestId('membership-attachment-105-0')).toHaveTextContent('proof-of-employment.pdf');
+            expect(screen.getByTestId('membership-attachment-105-1')).toHaveTextContent('Document');
+        });
+
+        it('names each link by its file and applicant, and opens the one clicked', async () => {
+            const onOpenAttachment = jest.fn();
+            setup(withDocuments, { onOpenAttachment });
+
+            const link = screen.getByRole('button', {
+                name: 'Open proof-of-employment.pdf for With Documents (opens in a new tab)',
+            });
+            await userEvent.click(link);
+
+            expect(onOpenAttachment).toHaveBeenCalledWith(withDocuments.attachments[0]);
+        });
+
+        it('shows no attachments block for an application that carries none', () => {
+            setup({ id: '101', type: 'community', status: 'unconfirmed', first_name: 'No', sn: 'Files' });
+
+            expect(screen.queryByTestId('membership-attachments-101')).not.toBeInTheDocument();
         });
     });
 });

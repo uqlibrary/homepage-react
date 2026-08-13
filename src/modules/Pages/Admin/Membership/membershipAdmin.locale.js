@@ -89,6 +89,19 @@ export default {
             paymentReceipt: 'Receipt',
             payment: 'Payment',
             paymentFailed: 'Failed',
+            // The supporting documents an application carries, shown on the card so an admin can read the proof
+            // behind a reciprocal or hospital application - the evidence to confirm or delete it on - without
+            // opening the record. Each document opens in a new tab from a signed link fetched when it is asked
+            // for.
+            attachments: {
+                label: 'Attachments',
+                // Stands in for a document the backend stored without a name of its own.
+                fallbackName: 'Document',
+                // The link opens the document in a new tab; its accessible name pairs the file with the
+                // applicant, since identical links sit down the page and "Document" on its own names none of
+                // them.
+                openLabel: (file, name) => `Open ${file} for ${name} (opens in a new tab)`,
+            },
         },
         // Correcting an issued account's expiry and barcode where they sit on the card. The value is
         // pattern-checked here because the format is knowable without asking the API, and a bad barcode is

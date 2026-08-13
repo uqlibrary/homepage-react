@@ -457,4 +457,11 @@ describe('membership routes', () => {
         expect(params['filter[status]']).toBeUndefined();
         expect(params['orderBy[submitted_on]']).toBe('DESC');
     });
+
+    it('MEMBERSHIP_FILE_URL_API addresses a stored document by its key, encoded', () => {
+        expect(routes.MEMBERSHIP_FILE_URL_API({ key: 'abc-123.pdf' })).toEqual({
+            apiUrl: 'file/membership/abc-123.pdf',
+        });
+        expect(routes.MEMBERSHIP_FILE_URL_API({ key: 'a b/c.pdf' }).apiUrl).toBe('file/membership/a%20b%2Fc.pdf');
+    });
 });

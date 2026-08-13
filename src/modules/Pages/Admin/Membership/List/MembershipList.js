@@ -239,6 +239,26 @@ export const MembershipList = ({
         }
     };
 
+    const onOpenAttachment = async attachment => {
+        // The signed URL a download needs is not on the record - it is fetched per file and expires - so it is
+        // fetched now that the admin has asked for the file. The tab is opened in the click itself and pointed
+        // at the URL once it arrives: a tab opened after the await would have lost the user gesture a popup
+        // blocker looks for. A failure to get the URL is reported the same way an action failure is.
+        const tab = window.open('', '_blank');
+        try {
+            const url = await actions.getMembershipFileUrl(attachment.key);
+            /* istanbul ignore else - a browser that refused the tab leaves nothing to point at the file */
+            if (tab) {
+                tab.opener = null;
+                tab.location = url;
+            }
+        } catch (failure) {
+            /* istanbul ignore next - closing the emptied tab is best-effort cleanup */
+            tab && tab.close();
+            setError(messageOf(failure));
+        }
+    };
+
     const onStatus = useCallback(status => {
         setFilters(current => ({ ...current, status }));
         setPage(1);
@@ -363,6 +383,7 @@ export const MembershipList = ({
                                     onUpdate={onUpdate}
                                     onResend={onResend}
                                     onView={onView}
+                                    onOpenAttachment={onOpenAttachment}
                                 />
                             ))}
                         </Box>

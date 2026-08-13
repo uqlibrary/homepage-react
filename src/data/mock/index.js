@@ -445,6 +445,11 @@ mock.onPost(new RegExp('^membership/[^/]+/[^/]+/renew$')).reply(
 // Uploading a supporting document answers with the stored attachment.
 mock.onPost(routes.MEMBERSHIP_FILE_UPLOAD_API().apiUrl).reply(withDelay([200, [membershipAttachment]]));
 
+// Reading a stored document back answers with a signed URL to it, as the sole element of an array. The real
+// endpoint hands back a short-lived CloudFront URL; here it points at a same-origin asset so opening it in the
+// admin has something harmless to land on rather than a network the mocked app cannot reach.
+mock.onGet(new RegExp('^file/membership/[^/]+$')).reply(withDelay([200, [`${window.location.origin}/favicon.ico`]]));
+
 // Confirming an application. The real endpoint posts to Alma and Prism to issue the account. Success answers
 // 200 with the confirmed record; a refusal the backend can name - here, an applicant who is already a member
 // (id 104) - answers with a 4xx carrying that reason as a message, so the admin is told what actually failed

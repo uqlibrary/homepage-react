@@ -9,6 +9,7 @@ import {
     deleteMembership,
     fetchAllMemberships,
     flattenAttachments,
+    getMembershipFileUrl,
     loadMembership,
     loadMembershipByCode,
     loadMembershipFormData,
@@ -428,6 +429,28 @@ describe('Membership actions', () => {
             const result = await mockActionsStore.dispatch(uploadMembershipFile(new File(['x'], 'card.pdf')));
 
             expect(result).toEqual({ id: 'file-1', filename: 'card.pdf' });
+        });
+    });
+
+    describe('getMembershipFileUrl', () => {
+        it('returns the signed URL the endpoint answers with', async () => {
+            mockApi
+                .onGet(repositories.routes.MEMBERSHIP_FILE_URL_API({ key: 'doc.pdf' }).apiUrl)
+                .reply(200, ['https://files.example.org/doc.pdf?Signature=abc']);
+
+            const result = await mockActionsStore.dispatch(getMembershipFileUrl('doc.pdf'));
+
+            expect(result).toBe('https://files.example.org/doc.pdf?Signature=abc');
+        });
+
+        it('returns a non-array answer as it stands', async () => {
+            mockApi
+                .onGet(repositories.routes.MEMBERSHIP_FILE_URL_API({ key: 'doc.pdf' }).apiUrl)
+                .reply(200, 'https://files.example.org/doc.pdf');
+
+            const result = await mockActionsStore.dispatch(getMembershipFileUrl('doc.pdf'));
+
+            expect(result).toBe('https://files.example.org/doc.pdf');
         });
     });
 

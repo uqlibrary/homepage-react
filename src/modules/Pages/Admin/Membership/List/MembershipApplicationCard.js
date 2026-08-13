@@ -9,6 +9,7 @@ import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
@@ -64,6 +65,10 @@ export const hasFailedPayment = membership => membership?.payment_response === P
 export const confirmButtonText = membership => (membership?.confirmed_on ? strings.reconfirm : strings.confirm);
 
 export const statusText = status => (!status ? '' : status.charAt(0).toUpperCase() + status.slice(1));
+
+// What a supporting document reads as on its link. The backend usually stores the original filename; a document
+// stored without one still needs a word to click, so a generic one stands in.
+export const attachmentName = attachment => attachment?.name || strings.attachments.fallbackName;
 
 // Colour carries the same meaning the word does, so it is never the only thing saying it (WCAG 1.4.1).
 export const STATUS_COLOURS = { confirmed: 'success', renewing: 'warning' };
@@ -198,9 +203,15 @@ export const MembershipApplicationCard = ({
     onUpdate,
     onResend,
     onView,
+    onOpenAttachment,
 }) => {
     const name = fullName(membership);
     const headingId = `membership-name-${membership.id}`;
+    // The supporting documents the application carries, turned into a list from the API's flat attachment fields
+    // upstream. A reciprocal or hospital application is confirmed or refused on the strength of these, so they
+    // sit on the card rather than only in the full record.
+    const attachments = membership.attachments ?? [];
+    const attachmentsLabelId = `membership-attachments-label-${membership.id}`;
     const inProgress = isConfirmationInProgress(membership);
     // An issued account has an expiry and a barcode to show. Only a confirmed one is corrected here: a renewing
     // account's details belong to the membership being renewed and are settled by confirming the renewal, not
@@ -425,6 +436,43 @@ export const MembershipApplicationCard = ({
                             </Box>
                         )}
 
+                        {/* The supporting documents attached to the application. Each opens in a new tab from a
+                            signed link the admin's click fetches, since the record carries the file's key but no
+                            URL to it. Shown only where there is a document to show. */}
+                        {attachments.length > 0 && (
+                            <Box sx={{ marginTop: 1 }} data-testid={`membership-attachments-${membership.id}`}>
+                                <Typography
+                                    id={attachmentsLabelId}
+                                    component="div"
+                                    variant="caption"
+                                    color="text.secondary"
+                                    sx={{ marginBottom: 0.25 }}
+                                >
+                                    {strings.attachments.label}
+                                </Typography>
+                                <Box
+                                    role="group"
+                                    aria-labelledby={attachmentsLabelId}
+                                    sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}
+                                >
+                                    {attachments.map((attachment, index) => (
+                                        <Button
+                                            key={attachment.key ?? index}
+                                            size="small"
+                                            variant="outlined"
+                                            startIcon={<AttachFileIcon />}
+                                            data-testid={`membership-attachment-${membership.id}-${index}`}
+                                            aria-label={strings.attachments.openLabel(attachmentName(attachment), name)}
+                                            onClick={() => onOpenAttachment(attachment)}
+                                            sx={{ textTransform: 'none', overflowWrap: 'anywhere' }}
+                                        >
+                                            {attachmentName(attachment)}
+                                        </Button>
+                                    ))}
+                                </Box>
+                            </Box>
+                        )}
+
                         {/* The decision on the application, kept in the same corner of every card so an admin
                             always knows where to reach for it. A confirmation already under way, or an
                             application already deleted, replaces those buttons with a chip saying so, rather than
@@ -520,6 +568,7 @@ MembershipApplicationCard.propTypes = {
     onUpdate: PropTypes.func.isRequired,
     onResend: PropTypes.func.isRequired,
     onView: PropTypes.func.isRequired,
+    onOpenAttachment: PropTypes.func.isRequired,
 };
 
 export default MembershipApplicationCard;

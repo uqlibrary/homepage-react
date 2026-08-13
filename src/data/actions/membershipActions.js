@@ -9,6 +9,7 @@ import {
     MEMBERSHIP_CREATE_API,
     MEMBERSHIP_DELETE_API,
     MEMBERSHIP_FILE_UPLOAD_API,
+    MEMBERSHIP_FILE_URL_API,
     MEMBERSHIP_FORM_DATA_API,
     MEMBERSHIP_PAYMENT_API,
     MEMBERSHIP_RENEW_API,
@@ -200,6 +201,21 @@ export function uploadMembershipFile(file) {
         // The Content-Type is left to the browser: it has to set the multipart boundary, which we cannot know.
         const response = await post(MEMBERSHIP_FILE_UPLOAD_API(), data);
 
+        return Array.isArray(response) ? response[0] : response;
+    };
+}
+
+/**
+ * Get a temporary signed URL for one of an application's supporting documents, addressed by its stored key.
+ *
+ * The admin listing carries each attachment's key but no URL to it: the URL is signed and expires, so it is
+ * fetched when the admin asks to open the file rather than held on the record. The endpoint answers with the URL
+ * as the sole element of an array. Nothing is dispatched - the file opens on its own, and a failure is reported
+ * next to the action that asked for it.
+ */
+export function getMembershipFileUrl(key) {
+    return async () => {
+        const response = await get(MEMBERSHIP_FILE_URL_API({ key }));
         return Array.isArray(response) ? response[0] : response;
     };
 }

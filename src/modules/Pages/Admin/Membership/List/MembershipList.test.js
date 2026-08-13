@@ -401,6 +401,50 @@ describe('MembershipList', () => {
         expect(downloadCsv).not.toHaveBeenCalled();
     });
 
+    const withDocsPage = [
+        {
+            id: '105',
+            type: 'reciprocal',
+            status: 'unconfirmed',
+            first_name: 'With',
+            sn: 'Documents',
+            attachments: [{ key: 'file-1.pdf', name: 'proof.pdf' }],
+        },
+    ];
+
+    it('opens a document in a fresh tab, pointing it at the signed URL the API returns', async () => {
+        const tab = { location: '', opener: {}, close: jest.fn() };
+        const openSpy = jest.spyOn(window, 'open').mockReturnValue(tab);
+        const getMembershipFileUrl = jest.fn().mockResolvedValue('https://files.example.org/proof.pdf?Signature=abc');
+        setup({ memberships: withDocsPage, actions: { getMembershipFileUrl } });
+
+        await userEvent.click(screen.getByTestId('membership-attachment-105-0'));
+
+        // The tab is claimed in the click, then pointed at the URL once it has been fetched by its key.
+        expect(openSpy).toHaveBeenCalledWith('', '_blank');
+        expect(getMembershipFileUrl).toHaveBeenCalledWith('file-1.pdf');
+        await waitFor(() => expect(tab.location).toBe('https://files.example.org/proof.pdf?Signature=abc'));
+        expect(tab.opener).toBeNull();
+        openSpy.mockRestore();
+    });
+
+    it('reports a document that could not be reached, and closes the emptied tab', async () => {
+        const tab = { location: '', opener: {}, close: jest.fn() };
+        const openSpy = jest.spyOn(window, 'open').mockReturnValue(tab);
+        const getMembershipFileUrl = jest.fn().mockRejectedValue(new Error('nope'));
+        setup({ memberships: withDocsPage, actions: { getMembershipFileUrl } });
+
+        await userEvent.click(screen.getByTestId('membership-attachment-105-0'));
+
+        await waitFor(() =>
+            expect(screen.getByTestId('message-content')).toHaveTextContent(
+                'Please try again, or contact support if the problem continues.',
+            ),
+        );
+        expect(tab.close).toHaveBeenCalled();
+        openSpy.mockRestore();
+    });
+
     const viewablePage = [
         {
             id: '102',

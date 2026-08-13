@@ -350,6 +350,12 @@ export const MEMBERSHIP_RENEW_API = ({ id, code }) => ({ apiUrl: `membership/${i
 // Upload a supporting document for an application.
 export const MEMBERSHIP_FILE_UPLOAD_API = () => ({ apiUrl: 'file/membership' });
 
+// Get a temporary signed URL for one of an application's stored supporting documents, addressed by its key. The
+// admin download reads this to open the file: the URL is signed and short-lived, so it is fetched per file when
+// the admin asks for it rather than held on the record. The endpoint answers with the URL as the sole element
+// of an array.
+export const MEMBERSHIP_FILE_URL_API = ({ key }) => ({ apiUrl: `file/membership/${encodeURIComponent(key)}` });
+
 // Confirm an application, turning it into an issued library account. The backend posts to Alma and Prism, and
 // reports a rejection in a 200 body rather than as an error status.
 export const MEMBERSHIP_CONFIRM_API = ({ id }) => ({ apiUrl: `membership/${id}/confirm` });
