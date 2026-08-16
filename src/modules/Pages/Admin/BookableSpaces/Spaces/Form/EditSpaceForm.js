@@ -2235,6 +2235,7 @@ export const EditSpaceForm = ({
                 <DialogTitle data-testid="spaces-preview-dialog-title">Space preview</DialogTitle>
                 <DialogContent dividers>
                     <JourneySpaceDetailsView
+                        actions={actions}
                         selectedSpace={previewSpace}
                         weeklyHours={weeklyHours}
                         weeklyHoursLoading={weeklyHoursLoading}

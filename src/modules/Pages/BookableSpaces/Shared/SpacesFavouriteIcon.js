@@ -10,6 +10,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Tooltip } from '@mui/material';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { displayToastErrorMessage, displayToastMessage } from "modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers";
 
 const topLeft = {
     padding: '0.25rem',
@@ -25,10 +26,9 @@ const StyledTooltip = styled(Tooltip)(() => topLeft);
 const StyledCircularProgress = styled(CircularProgress)(() => topLeft);
 
 export const SpacesFavouriteIcon = ({
+    actions,
     bookableSpace,
     isFavourite,
-    onFavouriteToggle,
-    isFavouriteActionInProgress,
     iconPosition,
     ariaLabel,
     isDetailPage = false,
@@ -36,6 +36,34 @@ export const SpacesFavouriteIcon = ({
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
     const theme = useTheme();
+
+    const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = React.useState(false);
+
+    const onFavouriteToggle = async (actionType, spaceId) => {
+        // matching name of action in object key for easy lookup
+        const successMessages = {};
+        successMessages.addSpaceFavourite = 'Space added to favourites';
+        successMessages.removeSpaceFavourite = 'Space removed from favourites';
+        const failureMessages = {};
+        failureMessages.addSpaceFavourite = 'Sorry, an error occurred - the space was not added to favourites.';
+        failureMessages.removeSpaceFavourite = 'SSorry, an error occurred - the space was not removed from favourites.';
+
+        /* istanbul ignore next */
+        if (isFavouriteActionInProgress) {
+            return;
+        }
+        setIsFavouriteActionInProgress(spaceId);
+        try {
+            await actions[actionType](spaceId);
+            displayToastMessage(successMessages[actionType]);
+        } catch {
+            displayToastErrorMessage(failureMessages[actionType]);
+        } finally {
+            setTimeout(() => {
+                setIsFavouriteActionInProgress(false);
+            }, 1000); // show the spinny for a moment, even if it's really fast
+        }
+    };
 
     if (!isLoggedIn || !onFavouriteToggle) {
         return null;
@@ -96,10 +124,9 @@ export const SpacesFavouriteIcon = ({
     );
 };
 SpacesFavouriteIcon.propTypes = {
+    actions: PropTypes.any,
     bookableSpace: PropTypes.any,
     isFavourite: PropTypes.bool,
-    onFavouriteToggle: PropTypes.func,
-    isFavouriteActionInProgress: PropTypes.any,
     isDetailPage: PropTypes.bool,
     iconPosition: PropTypes.any,
     ariaLabel: PropTypes.string,

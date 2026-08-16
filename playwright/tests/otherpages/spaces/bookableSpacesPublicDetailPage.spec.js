@@ -117,7 +117,7 @@ test.describe('Spaces Detail page', () => {
             await expect(page.getByTestId('space-1-detail-favourite')).toBeVisible();
             await expect(page.getByTestId('space-1-detail-unfavourite')).not.toBeVisible();
         });
-        test('spaces detail page can unfavourite', async ({ page }) => {
+        test('spaces detail page can favourite', async ({ page }) => {
             await page.goto('/spaces/detail/97fd5_nm39_gh29');
             await page.setViewportSize({ width: 1300, height: 1000 });
 
