@@ -105,10 +105,9 @@ const StyledLandingHeroInner = styled('div')(({ theme }) => ({
 }));
 
 export const SpacesHomePage = ({
+    actions,
     isLoggedIn,
     spacesFavouritesList,
-    isFavouriteActionInProgress = false,
-    handleJourneyFavouriteToggle,
     allSpaceLocations,
     filteredSpaceLocations,
     highlightedSpace,
@@ -153,6 +152,7 @@ export const SpacesHomePage = ({
                 <StandardPage standardPageId="spaces-journey-content-standard-page">
                     {isLoggedIn && (spacesFavouritesList || []).length > 0 && (
                         <FavouritesList
+                            actions={actions}
                             favouriteIntentDefinition={favouriteIntentDefinition}
                             setSelectedIntentId={setSelectedIntentId}
                             navigateToView={navigateToView}
@@ -163,8 +163,6 @@ export const SpacesHomePage = ({
                             spacesFavouritesList={spacesFavouritesList}
                             selectedIntentId={selectedIntentId}
                             setSelectedSpace={setSelectedSpace}
-                            handleJourneyFavouriteToggle={handleJourneyFavouriteToggle}
-                            isFavouriteActionInProgress={isFavouriteActionInProgress}
                             findSpaceById={findSpaceById}
                             getSpaceIdentifier={getSpaceIdentifier}
                         />
@@ -185,10 +183,10 @@ export const SpacesHomePage = ({
 };
 
 SpacesHomePage.propTypes = {
+    actions: PropTypes.any,
     isLoggedIn: PropTypes.bool,
     spacesFavouritesList: PropTypes.array,
     isFavourite: PropTypes.bool,
-    handleJourneyFavouriteToggle: PropTypes.func,
     allSpaceLocations: PropTypes.array,
     filteredSpaceLocations: PropTypes.array,
     highlightedSpace: PropTypes.object,
@@ -207,7 +205,6 @@ SpacesHomePage.propTypes = {
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
-    isFavouriteActionInProgress: PropTypes.bool,
     activateFavouritesResults: PropTypes.func,
 };
 

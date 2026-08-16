@@ -106,15 +106,9 @@ export const BookableSpacesDetailPage = ({
                     } else {
                         return (
                             <Grid item>
-                                <JourneyBreadcrumbs
-                                    view="details"
-                                    // selectedIntent={selectedIntent}
-                                    // selectedIntentId={selectedIntentId}
-                                    // navigateToView={navigateToView}
-                                    // setSelectedIntentId={setSelectedIntentId}
-                                    // setSelectedSpace={setSelectedSpace}
-                                />
+                                <JourneyBreadcrumbs view="details" />
                                 <JourneySpaceDetailsView
+                                    actions={actions}
                                     selectedSpace={bookableSpaceGetResult.data}
                                     weeklyHours={weeklyHours}
                                     weeklyHoursLoading={weeklyHoursLoading}
@@ -145,8 +139,6 @@ BookableSpacesDetailPage.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     isFavourite: PropTypes.bool,
-    isFavouriteActionInProgress: PropTypes.bool,
-    onFavouriteToggle: PropTypes.func,
     bookableSpaceGetting: PropTypes.any,
     bookableSpaceGetError: PropTypes.any,
     bookableSpaceGetResult: PropTypes.any,

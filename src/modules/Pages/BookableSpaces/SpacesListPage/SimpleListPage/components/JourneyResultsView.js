@@ -28,6 +28,7 @@ import ChooseCampus from "modules/Pages/BookableSpaces/Shared/ChooseCampus";
 import ChooseLibrary from "modules/Pages/BookableSpaces/Shared/ChooseLibrary";
 
 export const JourneyResultsView = ({
+    actions,
     intentSpaceLocations,
     totalSpaceCount,
     handleClearJourneyFilters,
@@ -55,8 +56,6 @@ export const JourneyResultsView = ({
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
-    isFavouriteActionInProgress,
-    onFavouriteToggle,
     spacesFavouritesList,
     showFavouriteSpacesOnly,
     setShowFavouriteSpacesOnly,
@@ -219,12 +218,12 @@ export const JourneyResultsView = ({
                                         </Button>
                                         {isLoggedIn && (
                                             <SpacesFavouriteIcon
+                                                actions={actions}
                                                 bookableSpace={space}
                                                 isFavourite={spacesFavouritesList?.some(
                                                     fav => fav.space_id === space?.space_id,
                                                 )}
-                                                onFavouriteToggle={() => onFavouriteToggle?.(space)}
-                                                isFavouriteActionInProgress={isFavouriteActionInProgress}
+                                                // onFavouriteToggle={() => onFavouriteToggle?.(space)}
                                                 iconPosition="topLeft"
                                             />
                                         )}
@@ -309,6 +308,7 @@ export const JourneyResultsView = ({
 };
 
 JourneyResultsView.propTypes = {
+    actions: PropTypes.any,
     intentSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
     handleClearJourneyFilters: PropTypes.func,
@@ -337,8 +337,6 @@ JourneyResultsView.propTypes = {
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
-    isFavouriteActionInProgress: PropTypes.bool,
-    onFavouriteToggle: PropTypes.func,
     spacesFavouritesList: PropTypes.any,
     showFavouriteSpacesOnly: PropTypes.bool,
     setShowFavouriteSpacesOnly: PropTypes.func,

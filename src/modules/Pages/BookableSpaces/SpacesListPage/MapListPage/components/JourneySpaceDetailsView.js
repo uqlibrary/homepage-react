@@ -19,7 +19,7 @@ import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/Shared/OpeningHou
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
-const journeyFallbackDetailImage = require('../../../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
+const journeyFallbackDetailImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
 const StyledDetailSurface = styled('div')(({ theme }) => ({
     color: theme.palette.designSystem.bodyCopy,
@@ -125,6 +125,7 @@ const StyledTopBox = styled(Box)(() => ({
 }));
 
 const JourneySpaceDetailsView = ({
+    actions,
     selectedSpace,
     weeklyHours,
     weeklyHoursLoading,
@@ -137,8 +138,6 @@ const JourneySpaceDetailsView = ({
     isFavourite = false,
     spacesFavouritesLoading = null,
     spacesFavouritesError = null,
-    isFavouriteActionInProgress = false,
-    onFavouriteToggle,
     showMap = true,
 }) => {
     const theme = useTheme();
@@ -252,12 +251,9 @@ const JourneySpaceDetailsView = ({
                                     !!selectedSpace?.space_id &&
                                     spacesFavouritesError !== true && (
                                         <SpacesFavouriteIcon
+                                            actions={actions}
                                             bookableSpace={selectedSpace}
                                             isFavourite={isFavourite}
-                                            onFavouriteToggle={() => onFavouriteToggle?.(selectedSpace)}
-                                            isFavouriteActionInProgress={
-                                                isFavouriteActionInProgress || spacesFavouritesLoading
-                                            }
                                             isDetailPage
                                         />
                                 )}
@@ -391,6 +387,7 @@ const JourneySpaceDetailsView = ({
 };
 
 JourneySpaceDetailsView.propTypes = {
+    actions: PropTypes.any,
     selectedSpace: PropTypes.object,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
@@ -403,8 +400,6 @@ JourneySpaceDetailsView.propTypes = {
     isFavourite: PropTypes.bool,
     spacesFavouritesLoading: PropTypes.any,
     spacesFavouritesError: PropTypes.any,
-    isFavouriteActionInProgress: PropTypes.bool,
-    onFavouriteToggle: PropTypes.func,
     showMap: PropTypes.bool,
 };
 

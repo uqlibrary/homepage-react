@@ -107,6 +107,7 @@ export const buildLegacyBrowseNavigationUrl = ({ currentUrl }) => {
 };
 
 const BookableSpacesWrapper = ({
+    actions,
     filteredSpaceLocations,
     allSpaceLocations,
     totalSpaceCount,
@@ -134,8 +135,6 @@ const BookableSpacesWrapper = ({
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
-    onFavouriteToggle,
-    isFavouriteActionInProgress,
     onResetAllFilters,
     initialView = 'landing',
     showFavouriteSpacesOnly: controlledShowFavouriteSpacesOnly,
@@ -446,13 +445,6 @@ const BookableSpacesWrapper = ({
         view,
     ]);
 
-    const handleJourneyFavouriteToggle = async space => {
-        if (!space?.space_id || !onFavouriteToggle || !isLoggedIn) {
-            return;
-        }
-        const action = favouriteSpaceIds.has(String(space.space_id)) ? 'removeSpaceFavourite' : 'addSpaceFavourite';
-        await onFavouriteToggle(action, space.space_id);
-    };
     React.useEffect(() => {
         if (!canShowAdvancedFilters) {
             setShowAdvancedFilters(false);
@@ -760,11 +752,11 @@ const BookableSpacesWrapper = ({
             journeyTopRef={journeyTopRef}
             renderLandingView={() => (
                 <SpacesHomePage
+                    actions={actions}
                     isLoggedIn={isLoggedIn}
                     spacesFavouritesList={spacesFavouritesList}
                     isFavourite={spacesFavouritesList?.some(fav => fav.space_id === allSpaceLocations?.space_id)}
                     allSpaceLocations={allSpaceLocations}
-                    handleJourneyFavouriteToggle={handleJourneyFavouriteToggle}
                     filteredSpaceLocations={filteredSpaceLocations}
                     highlightedSpace={highlightedSpace}
                     landingHighlights={landingHighlights}
@@ -789,7 +781,6 @@ const BookableSpacesWrapper = ({
                     weeklyHours={weeklyHours}
                     weeklyHoursLoading={weeklyHoursLoading}
                     weeklyHoursError={weeklyHoursError}
-                    onFavouriteToggle={onFavouriteToggle}
                     selectedFacilityTypes={selectedFacilityTypes}
                     setSelectedFacilityTypes={setSelectedFacilityTypes}
                     filteredFacilityTypeList={filteredFacilityTypeList}
@@ -807,12 +798,12 @@ const BookableSpacesWrapper = ({
                     librariesForCampus={librariesForCampus}
                     selectedLibrary={selectedLibrary}
                     handleLibrarySelection={handleLibrarySelection}
-                    isFavouriteActionInProgress={isFavouriteActionInProgress}
                 />
             )}
             renderResultsView={() => (
                 <StandardPage standardPageId="spaces-journey-content-standard-page" fullWidth>
                     <JourneyResultsView
+                        actions={actions}
                         selectedIntent={selectedIntent}
                         intentSpaceLocations={intentSpaceLocations}
                         totalSpaceCount={totalSpaceCount}
@@ -845,8 +836,6 @@ const BookableSpacesWrapper = ({
                         weeklyHours={weeklyHours}
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
-                        isFavouriteActionInProgress={isFavouriteActionInProgress}
-                        onFavouriteToggle={handleJourneyFavouriteToggle}
                         spacesFavouritesList={spacesFavouritesList}
                         showFavouriteSpacesOnly={showFavouriteSpacesOnly}
                         setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
@@ -862,6 +851,7 @@ const BookableSpacesWrapper = ({
 };
 
 BookableSpacesWrapper.propTypes = {
+    actions: PropTypes.any,
     filteredSpaceLocations: PropTypes.array,
     allSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
@@ -889,8 +879,6 @@ BookableSpacesWrapper.propTypes = {
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
-    onFavouriteToggle: PropTypes.func,
-    isFavouriteActionInProgress: PropTypes.any,
     onResetAllFilters: PropTypes.func,
     initialView: PropTypes.oneOf(['landing', 'results', 'details']),
     showFavouriteSpacesOnly: PropTypes.bool,
