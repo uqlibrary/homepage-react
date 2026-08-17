@@ -20,9 +20,7 @@ test.describe('Spaces Detail page', () => {
         await expect(page.getByTestId(`space-2-friendly-location`).locator('.location-library')).toContainText(
             'Architecture and Music Library',
         );
-        await expect(page.getByTestId(`space-2-friendly-location`).locator('.location-floor')).toContainText(
-            'Level 3',
-        );
+        await expect(page.getByTestId(`space-2-friendly-location`).locator('.location-floor')).toContainText('Level 3');
         await expect(page.getByTestId(`space-2-friendly-location`).locator('.location-precise')).not.toBeVisible();
 
         // closure tested below

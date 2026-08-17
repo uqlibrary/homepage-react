@@ -248,7 +248,6 @@ const BookableSpacesWrapper = ({
 
         return spacesWithFavouriteFilterApplied.filter(space => validCampusIds.has(String(space?.space_campus_id)));
     }, [filteredSpaceLocations, favouriteSpaceIds, hasFavourites, showFavouriteSpacesOnly, validCampusIds]);
-    const isSelectedSpaceFavourite = favouriteSpaceIds.has(String(selectedSpace?.space_id));
 
     const lastAppliedIntentIdRef = React.useRef(null);
     const pendingClearedIntentIdRef = React.useRef(null);
@@ -745,7 +744,6 @@ const BookableSpacesWrapper = ({
             view={view}
             selectedIntent={selectedIntent}
             selectedIntentId={activeIntentId}
-            selectedSpace={selectedSpace}
             navigateToView={navigateToView}
             setSelectedIntentId={setSelectedIntentId}
             setSelectedSpace={setSelectedSpace}

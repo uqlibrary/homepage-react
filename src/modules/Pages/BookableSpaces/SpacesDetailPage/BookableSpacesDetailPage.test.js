@@ -2,12 +2,13 @@ import React from 'react';
 import { rtlRender, WithRouter, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
-
+// eslint-disable-next-line camelcase
 import { default as bookableSpaces_all } from 'data/mock/data/records/bookableSpaces/bookableSpaces_all';
 import { BookableSpacesDetailPage } from './BookableSpacesDetailPage';
 
 const defaultState = {
     bookableSpacesRoomListReducer: {
+        // eslint-disable-next-line camelcase
         bookableSpaceGetResult: bookableSpaces_all.data.locations.find(s => s.space_id === 1),
         bookableSpaceGetting: false,
         bookableSpaceGetError: null,

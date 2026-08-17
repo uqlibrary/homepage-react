@@ -136,7 +136,6 @@ const JourneySpaceDetailsView = ({
     backLabel = 'Back to results',
     onBack,
     isFavourite = false,
-    spacesFavouritesLoading = null,
     spacesFavouritesError = null,
     showMap = true,
 }) => {
@@ -256,7 +255,7 @@ const JourneySpaceDetailsView = ({
                                             isFavourite={isFavourite}
                                             isDetailPage
                                         />
-                                )}
+                                    )}
                                 {(!narrowView || !!verticalView) && (
                                     <Typography
                                         component="h1"
@@ -398,7 +397,6 @@ JourneySpaceDetailsView.propTypes = {
     backLabel: PropTypes.string,
     onBack: PropTypes.func,
     isFavourite: PropTypes.bool,
-    spacesFavouritesLoading: PropTypes.any,
     spacesFavouritesError: PropTypes.any,
     showMap: PropTypes.bool,
 };

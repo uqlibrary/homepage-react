@@ -10,7 +10,10 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Tooltip } from '@mui/material';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { displayToastErrorMessage, displayToastMessage } from "modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers";
+import {
+    displayToastErrorMessage,
+    displayToastMessage,
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
 const topLeft = {
     padding: '0.25rem',

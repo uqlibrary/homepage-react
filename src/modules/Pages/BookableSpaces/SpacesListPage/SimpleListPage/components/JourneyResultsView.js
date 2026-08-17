@@ -24,8 +24,8 @@ import {
     StyledResultsSplitLayoutDiv,
     StyledSelectorWrapperDiv,
 } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
-import ChooseCampus from "modules/Pages/BookableSpaces/Shared/ChooseCampus";
-import ChooseLibrary from "modules/Pages/BookableSpaces/Shared/ChooseLibrary";
+import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
+import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
 export const JourneyResultsView = ({
     actions,
@@ -100,14 +100,10 @@ export const JourneyResultsView = ({
                 <Box>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Typography component="h1" variant="h5">
-                            <span style={{ whiteSpace: 'nowrap'}}>
-                                Search results
-                            </span>
+                            <span style={{ whiteSpace: 'nowrap' }}>Search results</span>
                         </Typography>
                         <StyledResetButton data-testid="reset-filters-button" onClick={handleClearJourneyFilters}>
-                            <span style={{ whiteSpace: 'nowrap'}}>
-                                Reset
-                            </span>
+                            <span style={{ whiteSpace: 'nowrap' }}>Reset</span>
                         </StyledResetButton>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', marginRight: '1rem' }}>
