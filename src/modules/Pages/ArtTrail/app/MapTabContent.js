@@ -5,8 +5,8 @@ import Box from '@mui/material/Box';
 
 const MAZEMAP_SCRIPT_ID = 'art-trail-mazemap-script';
 const MAZEMAP_STYLESHEET_ID = 'art-trail-mazemap-stylesheet';
-const MAZEMAP_SCRIPT_SRC = '/vendor/mazemap.min.js';
-const MAZEMAP_STYLESHEET_HREF = '/vendor/mazemap.min.css';
+const MAZEMAP_SCRIPT_SRC = '/vendor/mazemap/mazemap.min.js';
+const MAZEMAP_STYLESHEET_HREF = '/vendor/mazemap/mazemap.min.css';
 
 const loadMazemapAssets = () => {
     if (window.Mazemap) {
@@ -17,7 +17,7 @@ const loadMazemapAssets = () => {
         const link = document.createElement('link');
         link.id = MAZEMAP_STYLESHEET_ID;
         link.rel = 'stylesheet';
-        link.href = `${process.env.PUBLIC_PATH || ''}${MAZEMAP_STYLESHEET_HREF}`;
+        link.href = `/${process.env.PUBLIC_PATH || ''}${MAZEMAP_STYLESHEET_HREF}`;
         document.head.appendChild(link);
     }
 
@@ -38,7 +38,7 @@ const loadMazemapAssets = () => {
     return new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.id = MAZEMAP_SCRIPT_ID;
-        script.src = `${process.env.PUBLIC_PATH || ''}${MAZEMAP_SCRIPT_SRC}`;
+        script.src = `/${process.env.PUBLIC_PATH || ''}${MAZEMAP_SCRIPT_SRC}`;
         script.async = true;
         script.onload = () => resolve(window.Mazemap);
         script.onerror = reject;
