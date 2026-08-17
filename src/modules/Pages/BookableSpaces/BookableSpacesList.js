@@ -43,10 +43,6 @@ import {
     JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
     normalizeFilterDisplayOn,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
-import {
-    displayToastErrorMessage,
-    displayToastMessage,
-} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { CAMPUS_DUTTON_PARK } from 'config/locale';
 
 const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
@@ -271,7 +267,6 @@ export const BookableSpacesList = ({
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
     const [expandedSpaceId, setExpandedSpaceId] = useState(null);
-    const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = useState(false);
     const [showFavouriteSpacesOnly, setShowFavouriteSpacesOnly] = useState(false);
     const [isMapReady, setIsMapReady] = useState(false);
     const useJourneyExperience = React.useMemo(() => !forceAdvanced, [forceAdvanced]);
@@ -1128,36 +1123,9 @@ export const BookableSpacesList = ({
     const toggleSpacesListPopupVisibility = () => {
         setShowSpacesSelectorPopup(!showSpacesSelectorPopup);
     };
-    const handleFavouriteAction = async (action, spaceId) => {
-        /* istanbul ignore next */
-        if (isFavouriteActionInProgress) {
-            return;
-        }
-        const isAddFavouriteAction = action === 'addSpaceFavourite';
-        setIsFavouriteActionInProgress(spaceId);
-        try {
-            await actions[action](spaceId);
-            displayToastMessage(isAddFavouriteAction ? 'Space added to favourites' : 'Space removed from favourites');
-        } catch {
-            displayToastErrorMessage(
-                isAddFavouriteAction
-                    ? 'Sorry, an error occurred - the space was not added to favourites.'
-                    : 'Sorry, an error occurred - the space was not removed from favourites.',
-            );
-        } finally {
-            setTimeout(() => {
-                setIsFavouriteActionInProgress(false);
-            }, 1000);
-        }
-    };
-
-    // function isSpaceFavourited(space) {
-    //     return spacesFavouritesList?.some(fav => fav.space_id === space?.space_id);
-    // }
 
     // Memoize so that MazeMaps state changes (isMazeMapScriptReady, isMazeMapReady, mapContainer)
     // don't cause SidebarSpacesList to receive a new array reference and re-render unnecessarily.
-
     const sortedSpaceLocations = React.useMemo(() => {
         const allFilterTypes = {};
         getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList)?.data?.facility_type_groups?.forEach(
@@ -1309,6 +1277,7 @@ export const BookableSpacesList = ({
                 } else if (useJourneyExperience) {
                     return (
                         <BookableSpacesWrapper
+                            actions={actions}
                             filteredSpaceLocations={sortedSpaceLocations}
                             allSpaceLocations={bookableSpacesRoomList?.data?.locations || []}
                             totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}
@@ -1336,8 +1305,6 @@ export const BookableSpacesList = ({
                             weeklyHours={weeklyHours}
                             weeklyHoursLoading={weeklyHoursLoading}
                             weeklyHoursError={weeklyHoursError}
-                            onFavouriteToggle={handleFavouriteAction}
-                            isFavouriteActionInProgress={isFavouriteActionInProgress}
                             showFavouriteSpacesOnly={showFavouriteSpacesOnly}
                             setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
                             onResetAllFilters={resetAllSpaceFilters}
@@ -1424,6 +1391,7 @@ export const BookableSpacesList = ({
                                         }
                                     >
                                         <SidebarSpacesList
+                                            actions={actions}
                                             filteredSpaceLocations={sortedSpaceLocations}
                                             totalSpaceCount={bookableSpacesRoomList?.data?.locations?.length || 0}
                                             activeFilterCount={activeFilterCount}
@@ -1435,8 +1403,6 @@ export const BookableSpacesList = ({
                                             suppliedClassName={showSpacesSelectorPopup ? 'popupSpacesSidebar' : 'hide'}
                                             spacesFavouritesList={spacesFavouritesList}
                                             isLoggedIn={isLoggedIn}
-                                            onFavouriteToggle={handleFavouriteAction}
-                                            isFavouriteActionInProgress={isFavouriteActionInProgress}
                                             onSpaceSelect={handleSpaceSelect}
                                             onSpaceToggle={handleSpaceToggle}
                                             expandedSpaceId={expandedSpaceId}

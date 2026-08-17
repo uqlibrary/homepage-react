@@ -103,7 +103,7 @@ test.describe('Spaces', () => {
             await expect(page.locator(`a[data-testid="${ARCH_BOOKABLE}-booking-link"]`)).toContainText(
                 'Book this space',
             );
-            const hrefValue = await page.getByTestId(`${ARCH_BOOKABLE}-booking-link`).locator('a').getAttribute('href');
+            const hrefValue = await page.getByTestId(`${ARCH_BOOKABLE}-booking-link`).getAttribute('href');
             expect(hrefValue).toMatch(new RegExp(`^https://uqbookit.uq.edu.au`)); // we have put the correct value in the page
 
             // expand the panel
@@ -282,12 +282,56 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${CENTRAL_PANEL_TWO}-summary-hours`)).toHaveText(centralHoursText);
         });
 
-        test('facilities are hidden on opening', async ({ page }) => {
+        test('facilities appear correctly', async ({ page }) => {
+            // facilities are hidden on opening
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeDefined();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).not.toBeVisible();
 
             // third panel
             await expect(page.getByTestId(`${LIV}-facility`)).toBeDefined();
+            await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
+
+            // correct facilities appear when panel expands
+            await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
+
+            await page.getByTestId(`${ARCH_BOOKABLE}-facility`).scrollIntoViewIfNeeded();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`).locator('div > div')).toHaveCount(12);
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-23`)).toContainText('Toilets, female');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-22`)).toContainText('Toilets, male');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-29`)).toContainText('Recharge Station');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-31`)).toContainText('Self-printing & scanning');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-17`)).toContainText('Low noise level');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-5`)).toContainText('Computer');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-33`)).toContainText(
+                'Client accessible power point',
+            );
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-38`)).toContainText('Whiteboard');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-39`)).toContainText('Adjustable desks');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-8`)).toContainText('AV equipment');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-13`)).toContainText('Postgraduate only space');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-14`)).toContainText('Undergrad spaces');
+
+            // close first panel
+            await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).not.toBeVisible();
+
+            // third panel
+            await page.getByTestId(`${LIV}-toggle-panel-button`).click();
+            await expect(page.getByTestId(`${LIV}-facility`)).toBeVisible();
+            await expect(page.getByTestId(`${LIV}-facility`).locator('div > div')).toHaveCount(9);
+            await expect(page.getByTestId(`${LIV}-facility-23`)).toContainText('Toilets, female');
+            await expect(page.getByTestId(`${LIV}-facility-22`)).toContainText('Toilets, male');
+            await expect(page.getByTestId(`${LIV}-facility-29`)).toContainText('Recharge Station');
+            await expect(page.getByTestId(`${LIV}-facility-31`)).toContainText('Self-printing & scanning');
+            await expect(page.getByTestId(`${LIV}-facility-33`)).toContainText('Client accessible power point');
+            await expect(page.getByTestId(`${LIV}-facility-8`)).toContainText('AV equipment');
+            await expect(page.getByTestId(`${LIV}-facility-50`)).toContainText('Natural');
+            await expect(page.getByTestId(`${LIV}-facility-13`)).toContainText('Postgraduate only space');
+            await expect(page.getByTestId(`${LIV}-facility-14`)).toContainText('Undergrad spaces');
+
+            // close third panel
+            await page.getByTestId(`${LIV}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
         });
 
@@ -345,50 +389,6 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_PANEL_4}-openingHours-0`)).toBeVisible();
             await expect(page.getByTestId(`${ARCH_PANEL_4}-openingHours-0`)).toContainText('Today');
             await expect(page.getByTestId(`${ARCH_PANEL_4}-openingHours-1`)).toContainText('Tomorrow');
-        });
-
-        test('facilities appear correctly when panel expands', async ({ page }) => {
-            await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
-
-            await page.getByTestId(`${ARCH_BOOKABLE}-facility`).scrollIntoViewIfNeeded();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`).locator('div > div')).toHaveCount(12);
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-23`)).toContainText('Toilets, female');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-22`)).toContainText('Toilets, male');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-29`)).toContainText('Recharge Station');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-31`)).toContainText('Self-printing & scanning');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-17`)).toContainText('Low noise level');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-5`)).toContainText('Computer');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-33`)).toContainText(
-                'Client accessible power point',
-            );
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-38`)).toContainText('Whiteboard');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-39`)).toContainText('Adjustable desks');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-8`)).toContainText('AV equipment');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-13`)).toContainText('Postgraduate only space');
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility-14`)).toContainText('Undergrad spaces');
-
-            // close first panel
-            await page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`).click();
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).not.toBeVisible();
-
-            // third panel
-            await page.getByTestId(`${LIV}-toggle-panel-button`).click();
-            await expect(page.getByTestId(`${LIV}-facility`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-facility`).locator('div > div')).toHaveCount(9);
-            await expect(page.getByTestId(`${LIV}-facility-23`)).toContainText('Toilets, female');
-            await expect(page.getByTestId(`${LIV}-facility-22`)).toContainText('Toilets, male');
-            await expect(page.getByTestId(`${LIV}-facility-29`)).toContainText('Recharge Station');
-            await expect(page.getByTestId(`${LIV}-facility-31`)).toContainText('Self-printing & scanning');
-            await expect(page.getByTestId(`${LIV}-facility-33`)).toContainText('Client accessible power point');
-            await expect(page.getByTestId(`${LIV}-facility-8`)).toContainText('AV equipment');
-            await expect(page.getByTestId(`${LIV}-facility-50`)).toContainText('Natural');
-            await expect(page.getByTestId(`${LIV}-facility-13`)).toContainText('Postgraduate only space');
-            await expect(page.getByTestId(`${LIV}-facility-14`)).toContainText('Undergrad spaces');
-
-            // close third panel
-            await page.getByTestId(`${LIV}-toggle-panel-button`).click();
-            await expect(page.getByTestId(`${LIV}-facility`)).not.toBeVisible();
         });
 
         test('there is a gap either side of the Spaces widget so the user is able to scroll the page when needed', async ({
@@ -1387,8 +1387,11 @@ test.describe('Spaces', () => {
     });
     test.describe('Can change libraries', () => {
         test('it changes to a different library on prompt', async ({ page }) => {
-            const librarySelectorButton = page.getByTestId('filter-by-library');
-            const selectedLibraryButtonLabel = page.getByTestId('filter-by-library').locator('[tabindex="0"]');
+            const librarySelectorButton = page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-library');
+            const selectedLibraryButtonLabel = page
+                .getByTestId('sidebarCheckboxes')
+                .getByTestId('filter-by-library')
+                .locator('[tabindex="0"]');
             const libraryChooserButton = (buttonId: string) => page.getByTestId(`library-${buttonId}`);
             const spacePanelWrapper = page.getByTestId('space-wrapper').locator(':scope > *');
             const all = VISIBLE_SPACES_ALL_CAMPUSES;
@@ -1402,7 +1405,9 @@ test.describe('Spaces', () => {
 
             // all space panels load visible (using filters changes which appear)
             await expect(spacePanelWrapper).toHaveCount(all + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
-            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('All campuses');
+            await expect(
+                page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').locator('[tabindex="0"]'),
+            ).toContainText('All campuses');
 
             // change library
             await librarySelectorButton.click(); // open drop down
@@ -1429,8 +1434,14 @@ test.describe('Spaces', () => {
             page,
             context,
         }) => {
-            const selectedCampusNameElement = page.getByTestId('filter-by-campus').locator('[tabindex="0"]');
-            const selectLibraryNameElement = page.getByTestId('filter-by-library').locator('[tabindex="0"]');
+            const selectedCampusNameElement = page
+                .getByTestId('sidebarCheckboxes')
+                .getByTestId('filter-by-campus')
+                .locator('[tabindex="0"]');
+            const selectLibraryNameElement = page
+                .getByTestId('sidebarCheckboxes')
+                .getByTestId('filter-by-library')
+                .locator('[tabindex="0"]');
 
             // on inital load, it honours the non-default campus cookie
             await page.goto('spaces/mapresults');
@@ -1438,7 +1449,7 @@ test.describe('Spaces', () => {
             await expect(selectLibraryNameElement).toContainText('All libraries');
 
             // change library
-            await page.getByTestId('filter-by-library').click(); // open drop down
+            await page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-library').click(); // open drop down
             await page.getByTestId('library-3').click(); // choose armus
 
             // the library filter selector label updates on change
@@ -1472,7 +1483,7 @@ test.describe('Spaces', () => {
             );
 
             // change campus
-            await page.getByTestId('filter-by-campus').click(); // open drop down
+            await page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').click(); // open drop down
             await page.getByTestId('campus-3').click(); // choose dutton park
             await expect(page.getByTestId('space-1234544')).toBeVisible();
             await expect(page.getByTestId(`${PACE}-friendly-location-collapsed`)).toContainText(
@@ -1497,7 +1508,9 @@ test.describe('Spaces', () => {
 
         test('it remembers the changed campus', async ({ page }) => {
             await page.goto('spaces/mapresults'); // reload page after campus change in before
-            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('Dutton Park');
+            await expect(
+                page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').locator('[tabindex="0"]'),
+            ).toContainText('Dutton Park');
         });
 
         test('bookable links appear correct on load on change of campus', async ({ page }) => {
@@ -1610,7 +1623,9 @@ test.describe('Spaces', () => {
         }) => {
             // on inital load, it honours the non-default campus cookie
             await page.goto('spaces/mapresults');
-            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('Dutton Park');
+            await expect(
+                page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').locator('[tabindex="0"]'),
+            ).toContainText('Dutton Park');
 
             await context.addCookies([
                 { name: 'UQLspacesPreferredCampus', value: '999', domain: 'localhost', path: '/' },
@@ -1618,15 +1633,20 @@ test.describe('Spaces', () => {
 
             // after resetting the cookie invalidly, it ignores campus cookie and uses the default
             await page.goto('spaces/mapresults'); // reload page after campus change in before
-            await expect(page.getByTestId('filter-by-campus').locator('[tabindex="0"]')).toContainText('All campuses');
+            await expect(
+                page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').locator('[tabindex="0"]'),
+            ).toContainText('All campuses');
         });
 
         test('each campus loads correctly', async ({ page }) => {
             const spacePanelWrapper = page.getByTestId('space-wrapper').locator(':scope > *');
             const panelLabel = (panelId: string) =>
                 page.getByTestId(`${panelId}-friendly-location-collapsed`).locator('div');
-            const changeCampusButton = page.getByTestId('filter-by-campus');
-            const librarySelector = page.getByTestId('filter-by-library').locator('[tabindex="0"]');
+            const changeCampusButton = page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus');
+            const librarySelector = page
+                .getByTestId('sidebarCheckboxes')
+                .getByTestId('filter-by-library')
+                .locator('[tabindex="0"]');
             const campusChooser = (campusId: string) => page.getByTestId(`campus-${campusId}`);
 
             const CAMPUS_ID_ST_LUCIA = '1';

@@ -19,10 +19,11 @@ import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/Shared/OpeningHou
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
-const journeyFallbackDetailImage = require('../../../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
+const journeyFallbackDetailImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
 const StyledDetailSurface = styled('div')(({ theme }) => ({
     color: theme.palette.designSystem.bodyCopy,
+    marginTop: '1rem',
 }));
 const StyledSpaceTitleWrapperBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -58,7 +59,7 @@ const StyledH3Typography = styled(Typography)(({ theme }) => ({
     fontSize: '24px',
     marginBottom: '1rem',
     color: theme.palette.designSystem.headingColor,
-    paddingBotom: '0.5rem',
+    paddingBottom: '0.5rem',
 }));
 const StyledH4Typography = styled(Typography)(({ theme }) => ({
     fontWeight: 500,
@@ -124,6 +125,7 @@ const StyledTopBox = styled(Box)(() => ({
 }));
 
 const JourneySpaceDetailsView = ({
+    actions,
     selectedSpace,
     weeklyHours,
     weeklyHoursLoading,
@@ -133,9 +135,8 @@ const JourneySpaceDetailsView = ({
     verticalView = true,
     backLabel = 'Back to results',
     onBack,
-    isSelectedSpaceFavourite = false,
-    isFavouriteActionInProgress = false,
-    onFavouriteToggle,
+    isFavourite = false,
+    spacesFavouritesError = null,
     showMap = true,
 }) => {
     const theme = useTheme();
@@ -243,14 +244,18 @@ const JourneySpaceDetailsView = ({
                     <Box>
                         <StyledSpaceTitleWrapperBox>
                             <span>
-                                {!narrowView && !verticalView && isLoggedIn && !!selectedSpace?.space_id && (
-                                    <SpacesFavouriteIcon
-                                        bookableSpace={selectedSpace}
-                                        isFavourite={isSelectedSpaceFavourite}
-                                        onFavouriteToggle={() => onFavouriteToggle?.(selectedSpace)}
-                                        isFavouriteActionInProgress={isFavouriteActionInProgress}
-                                    />
-                                )}
+                                {!narrowView &&
+                                    !verticalView &&
+                                    isLoggedIn &&
+                                    !!selectedSpace?.space_id &&
+                                    spacesFavouritesError !== true && (
+                                        <SpacesFavouriteIcon
+                                            actions={actions}
+                                            bookableSpace={selectedSpace}
+                                            isFavourite={isFavourite}
+                                            isDetailPage
+                                        />
+                                    )}
                                 {(!narrowView || !!verticalView) && (
                                     <Typography
                                         component="h1"
@@ -366,7 +371,7 @@ const JourneySpaceDetailsView = ({
                     <StyledH3Typography component="h2" variant="h6" sx={{ pb: '1rem' }}>
                         Location
                     </StyledH3Typography>
-                    <div style={{ height: isMobileLayout ? '260px' : '340px' }}>
+                    <div style={{ height: isMobileLayout ? '260px' : '340px' }} data-testid="spaces-map-wrapper">
                         <BookableSpacesMap
                             sortedSpaceLocations={[selectedSpace]}
                             spacesFavouritesList={null}
@@ -381,6 +386,7 @@ const JourneySpaceDetailsView = ({
 };
 
 JourneySpaceDetailsView.propTypes = {
+    actions: PropTypes.any,
     selectedSpace: PropTypes.object,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
@@ -390,9 +396,8 @@ JourneySpaceDetailsView.propTypes = {
     verticalView: PropTypes.bool,
     backLabel: PropTypes.string,
     onBack: PropTypes.func,
-    isSelectedSpaceFavourite: PropTypes.bool,
-    isFavouriteActionInProgress: PropTypes.any,
-    onFavouriteToggle: PropTypes.func,
+    isFavourite: PropTypes.bool,
+    spacesFavouritesError: PropTypes.any,
     showMap: PropTypes.bool,
 };
 

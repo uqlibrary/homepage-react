@@ -59,6 +59,7 @@ const palette = {
         panelBackgroundColor: '#f3f3f4', // $grey-50
         headingColor: '#19151c', // $black
         bodyCopy: '#3b383e', // $grey-900
+        bodySmallFontSize: '14px',
         disabledText: '#d1d0d2', // $grey-300
         fontFamilyH1: 'Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif',
         purple: {

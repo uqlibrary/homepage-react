@@ -150,6 +150,7 @@ CollapsedSection.propTypes = {
 };
 
 const MapSpaceDetails = ({
+    actions,
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
@@ -160,8 +161,7 @@ const MapSpaceDetails = ({
     // collapsed=false: opens from icon in map, no open-close icon
     onToggle = null,
     showToggle = true,
-    isFavouriteActionInProgress = false,
-    isSelectedSpaceFavourite = false,
+    isFavourite = false,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -251,12 +251,12 @@ const MapSpaceDetails = ({
                 )}
                 {!isCollapsed && (
                     <JourneySpaceDetailsView
+                        actions={actions}
                         weeklyHours={weeklyHours}
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
                         selectedSpace={bookableSpace}
-                        isSelectedSpaceFavourite={isSelectedSpaceFavourite}
-                        isFavouriteActionInProgress={isFavouriteActionInProgress}
+                        isFavourite={isFavourite}
                         showMap={false}
                         showBackButton={false}
                         narrowView
@@ -269,6 +269,7 @@ const MapSpaceDetails = ({
 };
 
 MapSpaceDetails.propTypes = {
+    actions: PropTypes.any,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
@@ -277,8 +278,7 @@ MapSpaceDetails.propTypes = {
     isExpanded: PropTypes.bool,
     onToggle: PropTypes.func,
     showToggle: PropTypes.bool,
-    isFavouriteActionInProgress: PropTypes.any,
-    isSelectedSpaceFavourite: PropTypes.bool,
+    isFavourite: PropTypes.bool,
 };
 
 export default React.memo(MapSpaceDetails);

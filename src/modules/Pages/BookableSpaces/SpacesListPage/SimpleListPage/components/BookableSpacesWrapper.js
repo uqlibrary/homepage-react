@@ -15,7 +15,6 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { SpacesHomePage } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomePage';
 
-import { JourneyDetailsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyDetailsView';
 import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
 
 import { findSpaceById, JOURNEY_VIEWS } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
@@ -108,6 +107,7 @@ export const buildLegacyBrowseNavigationUrl = ({ currentUrl }) => {
 };
 
 const BookableSpacesWrapper = ({
+    actions,
     filteredSpaceLocations,
     allSpaceLocations,
     totalSpaceCount,
@@ -135,8 +135,6 @@ const BookableSpacesWrapper = ({
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
-    onFavouriteToggle,
-    isFavouriteActionInProgress,
     onResetAllFilters,
     initialView = 'landing',
     showFavouriteSpacesOnly: controlledShowFavouriteSpacesOnly,
@@ -250,7 +248,6 @@ const BookableSpacesWrapper = ({
 
         return spacesWithFavouriteFilterApplied.filter(space => validCampusIds.has(String(space?.space_campus_id)));
     }, [filteredSpaceLocations, favouriteSpaceIds, hasFavourites, showFavouriteSpacesOnly, validCampusIds]);
-    const isSelectedSpaceFavourite = favouriteSpaceIds.has(String(selectedSpace?.space_id));
 
     const lastAppliedIntentIdRef = React.useRef(null);
     const pendingClearedIntentIdRef = React.useRef(null);
@@ -447,13 +444,6 @@ const BookableSpacesWrapper = ({
         view,
     ]);
 
-    const handleJourneyFavouriteToggle = async space => {
-        if (!space?.space_id || !onFavouriteToggle || !isLoggedIn) {
-            return;
-        }
-        const action = favouriteSpaceIds.has(String(space.space_id)) ? 'removeSpaceFavourite' : 'addSpaceFavourite';
-        await onFavouriteToggle(action, space.space_id);
-    };
     React.useEffect(() => {
         if (!canShowAdvancedFilters) {
             setShowAdvancedFilters(false);
@@ -754,18 +744,17 @@ const BookableSpacesWrapper = ({
             view={view}
             selectedIntent={selectedIntent}
             selectedIntentId={activeIntentId}
-            selectedSpace={selectedSpace}
             navigateToView={navigateToView}
             setSelectedIntentId={setSelectedIntentId}
             setSelectedSpace={setSelectedSpace}
             journeyTopRef={journeyTopRef}
             renderLandingView={() => (
                 <SpacesHomePage
+                    actions={actions}
                     isLoggedIn={isLoggedIn}
                     spacesFavouritesList={spacesFavouritesList}
                     isFavourite={spacesFavouritesList?.some(fav => fav.space_id === allSpaceLocations?.space_id)}
                     allSpaceLocations={allSpaceLocations}
-                    handleJourneyFavouriteToggle={handleJourneyFavouriteToggle}
                     filteredSpaceLocations={filteredSpaceLocations}
                     highlightedSpace={highlightedSpace}
                     landingHighlights={landingHighlights}
@@ -790,7 +779,6 @@ const BookableSpacesWrapper = ({
                     weeklyHours={weeklyHours}
                     weeklyHoursLoading={weeklyHoursLoading}
                     weeklyHoursError={weeklyHoursError}
-                    onFavouriteToggle={onFavouriteToggle}
                     selectedFacilityTypes={selectedFacilityTypes}
                     setSelectedFacilityTypes={setSelectedFacilityTypes}
                     filteredFacilityTypeList={filteredFacilityTypeList}
@@ -808,12 +796,12 @@ const BookableSpacesWrapper = ({
                     librariesForCampus={librariesForCampus}
                     selectedLibrary={selectedLibrary}
                     handleLibrarySelection={handleLibrarySelection}
-                    isFavouriteActionInProgress={isFavouriteActionInProgress}
                 />
             )}
             renderResultsView={() => (
                 <StandardPage standardPageId="spaces-journey-content-standard-page" fullWidth>
                     <JourneyResultsView
+                        actions={actions}
                         selectedIntent={selectedIntent}
                         intentSpaceLocations={intentSpaceLocations}
                         totalSpaceCount={totalSpaceCount}
@@ -846,8 +834,6 @@ const BookableSpacesWrapper = ({
                         weeklyHours={weeklyHours}
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
-                        isFavouriteActionInProgress={isFavouriteActionInProgress}
-                        onFavouriteToggle={handleJourneyFavouriteToggle}
                         spacesFavouritesList={spacesFavouritesList}
                         showFavouriteSpacesOnly={showFavouriteSpacesOnly}
                         setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
@@ -858,25 +844,12 @@ const BookableSpacesWrapper = ({
                     />
                 </StandardPage>
             )}
-            renderDetailsView={() => (
-                <StandardPage standardPageId="spaces-journey-content-standard-page">
-                    <JourneyDetailsView
-                        selectedSpace={selectedSpace}
-                        isLoggedIn={isLoggedIn}
-                        weeklyHours={weeklyHours}
-                        weeklyHoursLoading={weeklyHoursLoading}
-                        weeklyHoursError={weeklyHoursError}
-                        isSelectedSpaceFavourite={isSelectedSpaceFavourite}
-                        isFavouriteActionInProgress={isFavouriteActionInProgress}
-                        onFavouriteToggle={handleJourneyFavouriteToggle}
-                    />
-                </StandardPage>
-            )}
         />
     );
 };
 
 BookableSpacesWrapper.propTypes = {
+    actions: PropTypes.any,
     filteredSpaceLocations: PropTypes.array,
     allSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
@@ -904,8 +877,6 @@ BookableSpacesWrapper.propTypes = {
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
-    onFavouriteToggle: PropTypes.func,
-    isFavouriteActionInProgress: PropTypes.any,
     onResetAllFilters: PropTypes.func,
     initialView: PropTypes.oneOf(['landing', 'results', 'details']),
     showFavouriteSpacesOnly: PropTypes.bool,

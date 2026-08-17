@@ -36,6 +36,7 @@ const StyledSpaceGridWrapperDiv = styled('div')(() => ({
 }));
 
 const SidebarSpacesList = ({
+    actions,
     filteredSpaceLocations,
     totalSpaceCount,
     activeFilterCount,
@@ -45,8 +46,6 @@ const SidebarSpacesList = ({
     StyledStandardCard,
     suppliedClassName = null,
     spacesFavouritesList = null,
-    onFavouriteToggle = null,
-    isFavouriteActionInProgress = false,
     onSpaceSelect = null,
     onSpaceToggle = null,
     expandedSpaceId = null,
@@ -100,12 +99,11 @@ const SidebarSpacesList = ({
                                 title={
                                     <StyledHeadingWrapperSpan>
                                         <SpacesFavouriteIcon
+                                            actions={actions}
                                             bookableSpace={bookableSpace}
                                             isFavourite={spacesFavouritesList?.some(
                                                 fav => fav.space_id === bookableSpace?.space_id,
                                             )}
-                                            onFavouriteToggle={onFavouriteToggle}
-                                            isFavouriteActionInProgress={isFavouriteActionInProgress}
                                         />
                                         <span
                                             onClick={() => onSpaceSelect?.(bookableSpace)}
@@ -129,6 +127,7 @@ const SidebarSpacesList = ({
                                 subCard
                             >
                                 <MapSpaceDetails
+                                    actions={actions}
                                     weeklyHours={weeklyHours}
                                     weeklyHoursLoading={weeklyHoursLoading}
                                     weeklyHoursError={weeklyHoursError}
@@ -136,8 +135,7 @@ const SidebarSpacesList = ({
                                     collapsed
                                     isExpanded={isExpanded}
                                     onToggle={onSpaceToggle}
-                                    isFavouriteActionInProgress={isFavouriteActionInProgress}
-                                    isSelectedSpaceFavourite={spacesFavouritesList?.some(
+                                    isFavourite={spacesFavouritesList?.some(
                                         fav => fav.space_id === bookableSpace?.space_id,
                                     )}
                                 />
@@ -150,6 +148,7 @@ const SidebarSpacesList = ({
 };
 
 SidebarSpacesList.propTypes = {
+    actions: PropTypes.any,
     filteredSpaceLocations: PropTypes.any,
     totalSpaceCount: PropTypes.number,
     activeFilterCount: PropTypes.number,
@@ -159,8 +158,6 @@ SidebarSpacesList.propTypes = {
     StyledStandardCard: PropTypes.any,
     suppliedClassName: PropTypes.string,
     spacesFavouritesList: PropTypes.any,
-    onFavouriteToggle: PropTypes.func,
-    isFavouriteActionInProgress: PropTypes.any,
     onSpaceSelect: PropTypes.func,
     onSpaceToggle: PropTypes.func,
     expandedSpaceId: PropTypes.number,

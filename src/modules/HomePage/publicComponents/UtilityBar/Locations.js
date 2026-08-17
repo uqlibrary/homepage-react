@@ -72,7 +72,7 @@ const StyledOutlinkDiv = styled('div')(({ theme }) => ({
 const StyledDisclaimerParagraph = styled('div')(({ theme }) => ({
     marginTop: '26px',
     paddingLeft: 0,
-    fontSize: '14px',
+    fontSize: theme.palette.designSystem.bodySmallFontSize,
     fontStyle: 'normal',
     fontWeight: 400,
     letterSpacing: '0.16px',

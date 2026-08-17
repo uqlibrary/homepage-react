@@ -31,6 +31,7 @@ const StyledFavouritesContainerGrid = styled(Grid)(() => ({
     },
 }));
 export const FavouritesList = ({
+    actions,
     favouriteIntentDefinition,
     setSelectedIntentId,
     navigateToView,
@@ -41,8 +42,6 @@ export const FavouritesList = ({
     spacesFavouritesList,
     selectedIntentId,
     setSelectedSpace,
-    handleJourneyFavouriteToggle,
-    isFavouriteActionInProgress,
     findSpaceById,
     getSpaceIdentifier,
 }) => {
@@ -144,10 +143,9 @@ export const FavouritesList = ({
                                     }}
                                     followingElement={
                                         <SpacesFavouriteIcon
+                                            actions={actions}
                                             bookableSpace={space}
                                             isFavourite
-                                            onFavouriteToggle={() => handleJourneyFavouriteToggle?.(fav)}
-                                            isFavouriteActionInProgress={isFavouriteActionInProgress}
                                             iconPosition="topLeft"
                                             ariaLabel={`Unfavourite Space ${space?.space_name} in ${space?.space_library_name}`}
                                         />
@@ -162,6 +160,7 @@ export const FavouritesList = ({
     );
 };
 FavouritesList.propTypes = {
+    actions: PropTypes.any,
     favouriteIntentDefinition: PropTypes.any,
     setSelectedIntentId: PropTypes.any,
     navigateToView: PropTypes.any,
@@ -172,8 +171,6 @@ FavouritesList.propTypes = {
     selectedIntentId: PropTypes.any,
     setSelectedSpace: PropTypes.any,
     activateFavouritesResults: PropTypes.func,
-    handleJourneyFavouriteToggle: PropTypes.any,
-    isFavouriteActionInProgress: PropTypes.any,
     findSpaceById: PropTypes.any,
     getSpaceIdentifier: PropTypes.any,
 };

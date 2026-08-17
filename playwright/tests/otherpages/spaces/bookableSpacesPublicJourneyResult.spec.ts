@@ -34,22 +34,20 @@ test.describe('Spaces Journey Result page', () => {
 
             await assertAccessibility(page, '[data-testid="bookable-spaces-journey-results-view"]');
         });
-        test('the skip to filters button works', async ({ page }) => {
+        test('the desktop skip to filters button works', async ({ page }) => {
             // load the spaces results page
             await page.goto('/spaces/results');
             await page.setViewportSize({ width: 1300, height: 1000 });
 
             await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
+            const campusDropdown = page
+                .getByTestId('sidebarCheckboxes')
+                .getByTestId('filter-by-campus')
+                .locator('fieldset');
 
             // the first field in the filter sidebar is not focussed
-            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
-                'border-left-color',
-                'rgba(0, 0, 0, 0.23)',
-            );
-            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
-                'border-left-width',
-                '0px',
-            );
+            await expect(campusDropdown).toHaveCSS('border-left-color', 'rgba(0, 0, 0, 0.23)');
+            await expect(campusDropdown).toHaveCSS('border-left-width', '0px');
 
             // tab through allll the links to give a realistic experience
             // (also because when we focus somewhere nearer, it does weird things - do it properly!)
@@ -75,16 +73,12 @@ test.describe('Spaces Journey Result page', () => {
             await page.keyboard.press('Enter'); // activate skip to filters link, lands on filter sidebar
             await page.keyboard.press('Tab'); // tab to choose a campus
 
-            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
-                'border-left-color',
-                COLOR_UQPURPLE,
-            );
-            await expect(page.getByTestId('filter-by-campus').locator('fieldset')).toHaveCSS(
-                'border-left-width',
-                '2px',
-            );
+            // show we have tabbed to the sidebar campus field: looknfeel has changed
+            await expect(campusDropdown).toHaveCSS('border-left-color', COLOR_UQPURPLE);
+            await expect(campusDropdown).toHaveCSS('border-left-width', '2px');
         });
     });
+    // consider moving this test to jest
     test('spaces result page has the correct parts', async ({ page }) => {
         const firstSpacePane = page.getByTestId('spaces-result-list-item-1');
 
@@ -105,6 +99,13 @@ test.describe('Spaces Journey Result page', () => {
         await expect(firstSpacePane).toContainText('Space desciption field being used to report the mock data');
 
         await expect(page.getByTestId('space-1-detail-unfavourite')).toBeVisible();
+
+        await expect(page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus')).toBeVisible();
+        await expect(page.getByTestId('filter-group-block-5').locator('h3')).toBeVisible();
+        await expect(page.getByTestId('filter-group-block-5').locator('h3')).toContainText('Acceptable noise');
+        await expect(page.getByTestId('filter-group-block-5').locator('p')).toContainText(
+            'How much conversation and ambient sound is usually acceptable.',
+        );
     });
     test('results page can book a room', async ({ page }) => {
         await page.goto('/spaces/results');
@@ -118,63 +119,6 @@ test.describe('Spaces Journey Result page', () => {
         await expect(page.locator('a[data-testid="space-2-booking-link"]')).toBeVisible();
         await expect(page.locator('a[data-testid="space-2-booking-link"]')).toContainText('Book this space');
         await expect(page.getByTestId('space-2-booking-icon')).toBeVisible();
-    });
-    test('the correct notes appear', async ({ page }) => {
-        // load the spaces results page
-        await page.goto('/spaces/results');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-
-        await expect(
-            page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_AVAILABILITY}`),
-        ).not.toBeVisible();
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_EDIA}`)).not.toBeVisible();
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_ON_FLOOR}`)).not.toBeVisible();
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_LIGHTING}`)).not.toBeVisible();
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_ROOM}`)).not.toBeVisible();
-
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_NOISE_LEVEL}`)).toBeVisible();
-        await expect(page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_SPACE}`)).toBeVisible();
-    });
-    test('the sidebar notes will open correctly', async ({ page }) => {
-        // load the spaces results page
-        await page.goto('/spaces/results');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-
-        await expect(page.getByTestId('popover')).not.toBeVisible();
-        await page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_NOISE_LEVEL}`).click();
-        await expect(page.getByTestId('popover')).toBeVisible();
-        await expect(page.getByTestId('popover').locator('h4')).toContainText('Acceptable noise');
-        await expect(page.getByTestId('popover').locator('p')).toContainText(
-            'How much conversation and ambient sound is usually acceptable.',
-        );
-    });
-    test('the sidebar notes can hide with escape key', async ({ page }) => {
-        // load the spaces results page
-        await page.goto('/spaces/results');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-
-        await expect(page.getByTestId('popover')).not.toBeVisible();
-        await page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_NOISE_LEVEL}`).click();
-        await expect(page.getByTestId('popover')).toBeVisible();
-
-        // test the escape key closes the mini dialog
-        await page.getByTestId('popover').press('Escape');
-
-        await expect(page.getByTestId('popover')).not.toBeVisible();
-    });
-    test('the sidebar notes can hide with button press', async ({ page }) => {
-        // load the spaces results page
-        await page.goto('/spaces/results');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-
-        await expect(page.getByTestId('popover')).not.toBeVisible();
-        await page.getByTestId(`facility-type-group-info-button-${FILTER_GROUP_NOISE_LEVEL}`).click();
-        await expect(page.getByTestId('popover')).toBeVisible();
-
-        // test the close button closes the mini dialog
-        await page.getByTestId('close-popover-button').click();
-
-        await expect(page.getByTestId('popover')).not.toBeVisible();
     });
     test('the filter sidebars load correctly collapsed or expanded, as defined in the admin', async ({ page }) => {
         // load the spaces results page
@@ -212,6 +156,67 @@ test.describe('Spaces Journey Result page', () => {
         await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE}-open`)).toBeVisible();
         await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE}-open`)).toHaveClass(/expandedGroup/);
         await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE}-collapsed`)).not.toBeVisible();
+    });
+    test('on mobile, filter block show-hides correctly', async ({ page }) => {
+        // load the spaces results page
+        await page.goto('/spaces/results');
+        await page.setViewportSize({ width: 390, height: 736 });
+
+        // on load, results on page, filter block hidden
+        await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
+        const sidebarCampusDropdown = page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus');
+        await expect(sidebarCampusDropdown).not.toBeVisible();
+
+        // because we are in mobile view, the "clear filters" button appears within the search results list
+        await expect(page.getByTestId('reset-filters-button')).toBeVisible();
+
+        // SHOW filters by toggling show-hide-filters button
+        await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
+        await page.getByTestId('spaces-filter-show-hide-button').click();
+
+        // results off page, filter block visible
+        await expect(page.locator('body').getByText(/Search results/)).toBeVisible(); // but below page viewport
+        await expect(sidebarCampusDropdown).toBeVisible();
+
+        // HIDE filters by toggling show-hide-filters button
+        await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
+        await page.getByTestId('spaces-filter-show-hide-button').click();
+
+        // results on page again, filter block hidden again
+        await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
+        await expect(sidebarCampusDropdown).not.toBeVisible();
+    });
+    test('on mobile, clear filters button works', async ({ page }) => {
+        // load the spaces results page
+        await page.goto('/spaces/results');
+        await page.setViewportSize({ width: 390, height: 736 });
+        await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
+
+        // initially the filter says "all spaces"
+        await expect(page.getByTestId('spaces-results-summary')).toBeVisible();
+        await expect(page.getByTestId('spaces-results-summary')).toContainText('16 of 16 spaces');
+
+        // open filter sidebar
+        await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
+        await page.getByTestId('spaces-filter-show-hide-button').click();
+
+        // choose a filter
+        await expect(page.getByTestId('filter-show-favourite-spaces-only')).toBeVisible();
+        await page.getByTestId('filter-show-favourite-spaces-only').check();
+
+        // close filter sidebar
+        await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
+        await page.getByTestId('spaces-filter-show-hide-button').click();
+
+        // filter label has updated
+        await expect(page.getByTestId('spaces-results-summary')).toContainText('4 of 16 spaces');
+
+        // click the 'clear filters' button
+        await expect(page.getByTestId('reset-filters-button')).toBeVisible();
+        await page.getByTestId('reset-filters-button').click();
+
+        // filters have cleared
+        await expect(page.getByTestId('spaces-results-summary')).toContainText('16 of 16 spaces');
     });
     test.describe('Favourites', () => {
         test('can UNfavourite a space on the result page', async ({ page }) => {
