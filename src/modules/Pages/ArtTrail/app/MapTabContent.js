@@ -5,8 +5,8 @@ import Box from '@mui/material/Box';
 
 const MAZEMAP_SCRIPT_ID = 'art-trail-mazemap-script';
 const MAZEMAP_STYLESHEET_ID = 'art-trail-mazemap-stylesheet';
-const MAZEMAP_SCRIPT_SRC = '/vendor/mazemap/mazemap.min.js';
-const MAZEMAP_STYLESHEET_HREF = '/vendor/mazemap/mazemap.min.css';
+const MAZEMAP_SCRIPT_SRC = 'vendor/mazemap/mazemap.min.js';
+const MAZEMAP_STYLESHEET_HREF = 'vendor/mazemap/mazemap.min.css';
 
 const loadMazemapAssets = () => {
     if (window.Mazemap) {
@@ -91,9 +91,8 @@ const MapTabContent = ({ active }) => {
             sx={{
                 position: 'relative',
                 width: '100%',
-                minHeight:
-                    'calc(100dvh - var(--art-trail-header-height) - var(--art-trail-footer-height) - var(--art-trail-content-bottom-padding))',
-                height: 'calc(100dvh - var(--art-trail-header-height) - var(--art-trail-footer-height) - var(--art-trail-content-bottom-padding))',
+                minHeight: 'calc(100dvh - var(--art-trail-header-height) - var(--art-trail-footer-height))',
+                height: 'calc(100dvh - var(--art-trail-header-height) - var(--art-trail-footer-height))',
                 overflow: 'hidden',
             }}
         >
