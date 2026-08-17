@@ -105,8 +105,9 @@ const MapTabContent = ({ active }) => {
                 mapInstanceRef.current = new Mazemap.Map({
                     container: mapContainerRef.current,
                     campuses: 'uq',
-                    center: { lat: -27.49664388431794, lng: 153.0143995439455 },
-                    zoom: 19,
+                    center: { lat: -27.49634, lng: 153.01405 },
+                    bearing: -16,
+                    zoom: 18.4,
                     zLevel: -1,
                     RTLTextPlugin: null,
                 });
