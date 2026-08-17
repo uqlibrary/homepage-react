@@ -31,6 +31,7 @@ import CulturalDisclaimer from './CulturalDisclaimer';
 import MapTabContent from './MapTabContent';
 import { trailPages } from './pages';
 import TrailTabContent from './TrailTabContent';
+import useDocumentScrollLock from './hooks/useDocumentScrollLock';
 
 const CULTURAL_DISCLAIMER_COOKIE = 'ART_TRAIL_CULTURAL_DISCLAIMER_SEEN';
 const FOOTER_TABS_HEIGHT = '56px';
@@ -129,6 +130,8 @@ const ArtTrailApp = () => {
         document.title = 'Art Trail App';
     }, []);
 
+    useDocumentScrollLock();
+
     const activeTabConfig = useMemo(() => tabs.find(tab => tab.id === activeTab) ?? tabs[0], [activeTab]);
     const activeTabPages = getTabPages(activeTabConfig);
     const activeState = tabState[activeTabConfig.id];
@@ -190,6 +193,7 @@ const ArtTrailApp = () => {
                 '--art-trail-font-size': `${appTheme.typography.fontSize}px`,
                 '--art-trail-font-family': appTheme.typography.bodyFontFamily,
                 '--art-trail-spacing': `${appTheme.typography.fontSize}px`,
+                '--art-trail-content-bottom-padding': `${appTheme.typography.fontSize * 3}px`,
                 minHeight: '100vh',
                 height: '100dvh',
                 bgcolor: '#fff',
@@ -243,7 +247,7 @@ const ArtTrailApp = () => {
             <Box
                 sx={{
                     mt: 'var(--art-trail-header-height)',
-                    height: 'calc(100% - var(--art-trail-header-height))',
+                    height: 'calc(100% - var(--art-trail-header-height) - var(--art-trail-footer-height))',
                     overflow: 'hidden',
                 }}
             >
@@ -255,7 +259,9 @@ const ArtTrailApp = () => {
                         height: '100%',
                         overflowY: 'auto',
                         overflowX: 'hidden',
-                        pb: 'calc(var(--art-trail-footer-height) + env(safe-area-inset-bottom, 0px))',
+                        overscrollBehavior: 'contain',
+                        WebkitOverflowScrolling: 'touch',
+                        pb: 'calc(var(--art-trail-content-bottom-padding) + env(safe-area-inset-bottom, 0px))',
                     }}
                 >
                     <Grid sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
