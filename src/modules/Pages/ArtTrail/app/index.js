@@ -35,7 +35,6 @@ import useDocumentScrollLock from './hooks/useDocumentScrollLock';
 
 const CULTURAL_DISCLAIMER_COOKIE = 'ART_TRAIL_CULTURAL_DISCLAIMER_SEEN';
 const FOOTER_TABS_HEIGHT = '56px';
-const DRAWER_BLEEDING = 56;
 
 const Puller = styled('div')(({ theme }) => ({
     width: 30,
@@ -178,7 +177,14 @@ const ArtTrailApp = () => {
         const panelPage = panelPages[panelState.stepIndex] ?? panelPages[0];
         const TabContentComponent = tabContentComponents[tab.id];
 
-        return <TabContentComponent tab={tab} page={panelPage} openDrawer={handleOpenDrawer} />;
+        return (
+            <TabContentComponent
+                tab={tab}
+                page={panelPage}
+                openDrawer={handleOpenDrawer}
+                active={tab.id === activeTab}
+            />
+        );
     };
 
     const DrawerContentComponent = drawerContent;
@@ -261,10 +267,12 @@ const ArtTrailApp = () => {
                         overflowX: 'hidden',
                         overscrollBehavior: 'contain',
                         WebkitOverflowScrolling: 'touch',
-                        pb: 'calc(var(--art-trail-content-bottom-padding) + env(safe-area-inset-bottom, 0px))',
+                        pb: showStepper
+                            ? 'calc(var(--art-trail-content-bottom-padding) + env(safe-area-inset-bottom, 0px))'
+                            : 0,
                     }}
                 >
-                    <Grid sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
+                    <Grid sx={{ width: '100%', maxWidth: 1100, mx: 'auto', height: '100%' }}>
                         <Grid container direction="column" rowSpacing={2.5}>
                             {showCulturalDisclaimer && (
                                 <Grid>
@@ -302,6 +310,7 @@ const ArtTrailApp = () => {
                     borderTop: '1px solid',
                     borderColor: 'divider',
                     bgcolor: 'background.paper',
+                    overflow: 'hidden',
                 }}
             >
                 {showStepper && (
@@ -362,7 +371,17 @@ const ArtTrailApp = () => {
                     </>
                 )}
 
-                <Grid container sx={{ px: { xs: 0.5, sm: 1.5 }, py: 0.25 }}>
+                <Grid
+                    container
+                    sx={{
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        px: { xs: 0.5, sm: 1.5 },
+                        py: 0.25,
+                    }}
+                >
                     <Grid xs={12} sx={{ maxWidth: 1100, mx: 'auto', width: '100%' }}>
                         <BottomNavigation
                             showLabels
@@ -394,7 +413,6 @@ const ArtTrailApp = () => {
                 open={Boolean(DrawerContentComponent)}
                 onClose={handleDrawerClose}
                 onOpen={() => {}}
-                swipeAreaWidth={DRAWER_BLEEDING}
                 ModalProps={{
                     keepMounted: true,
                 }}

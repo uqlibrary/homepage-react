@@ -57,8 +57,7 @@ describe('ArtTrailApp', () => {
         expect(screen.queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
         expect(screen.queryByRole('button', { name: 'Next page' })).not.toBeInTheDocument();
         expect(screen.queryByText('Find your way through the trail')).not.toBeInTheDocument();
-        expect(screen.getByText('Map component mounts here')).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'title' })).toBeInTheDocument();
+        expect(screen.getByTestId('mazemap-container')).toBeInTheDocument();
 
         await user.click(screen.getByRole('button', { name: 'Trail' }));
         expect(screen.getByRole('button', { name: 'Previous page' })).toBeEnabled();
