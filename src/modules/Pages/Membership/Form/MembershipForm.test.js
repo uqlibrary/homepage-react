@@ -1,0 +1,358 @@
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { mui1theme } from 'config';
+
+import locale from '../membership.locale';
+import { isFrozen, isPaymentGatewayOutage } from '../membershipOutage';
+import MembershipForm from './MembershipForm';
+
+const { form } = locale;
+
+const mockNavigate = jest.fn();
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
+    useNavigate: () => mockNavigate,
+}));
+
+// Both outage windows are in the past, so the real functions are always false; force them on to test the guards.
+jest.mock('../membershipOutage', () => ({
+    isFrozen: jest.fn(() => false),
+    isPaymentGatewayOutage: jest.fn(() => false),
+}));
+
+// The upload component has its own test; here it stands in for driving the form's wiring — its onChange feeds
+// the submit payload and its onPendingChange gates the submit.
+jest.mock('./MembershipFileUpload', () => {
+    const MockFileUpload = ({ onChange, onPendingChange }) => (
+        <div data-testid="membership-file-upload">
+            <button type="button" data-testid="mock-add-attachment" onClick={() => onChange([{ id: 'stored-1' }])}>
+                add
+            </button>
+            <button type="button" data-testid="mock-set-pending" onClick={() => onPendingChange(true)}>
+                pending
+            </button>
+        </div>
+    );
+    MockFileUpload.propTypes = {
+        onChange: require('prop-types').func,
+        onPendingChange: require('prop-types').func,
+    };
+    return MockFileUpload;
+});
+
+const membershipFormData = {
+    account_types: [
+        {
+            title: 'Community',
+            value: 'community',
+            conditions: 'For members of the general public. Membership costs $25 per year.',
+            upload: 'Please upload proof of eligibility.',
+            payment_options: [{ code: 'COM', description: '12 months ($25)' }],
+        },
+        { title: 'Fryer Library', value: 'fryer' },
+    ],
+    titles: ['Mr', 'Ms', 'Dr'],
+};
+
+const setup = (props = {}, route = '/membership/form/community') => {
+    const actions = {
+        loadMembershipFormData: jest.fn(),
+        clearMembership: jest.fn(),
+        loadMembershipByCode: jest.fn(),
+        submitMembership: jest.fn().mockResolvedValue({ id: 'abc-123' }),
+        renewMembership: jest.fn().mockResolvedValue({ id: 'abc-123' }),
+        uploadMembershipFile: jest.fn(),
+        ...props.actions,
+    };
+
+    const element = <MembershipForm {...{ membershipFormData, ...props, actions }} />;
+
+    const utils = render(
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={mui1theme}>
+                <MemoryRouter initialEntries={[route]}>
+                    <Routes>
+                        <Route path="/membership/form/:type" element={element} />
+                        <Route path="/membership/form/:type/:id/:code" element={element} />
+                    </Routes>
+                </MemoryRouter>
+            </ThemeProvider>
+        </StyledEngineProvider>,
+    );
+
+    return { ...utils, actions };
+};
+
+const selectOption = async (field, value) => {
+    await userEvent.click(screen.getByTestId(`${field}-select`));
+    await userEvent.click(screen.getByTestId(`${field}-option-${value}`));
+};
+
+const fillInCommunityForm = async () => {
+    await selectOption('title', 'Mr');
+    await userEvent.type(screen.getByTestId('first_name-input'), 'Jane');
+    await userEvent.type(screen.getByTestId('sn-input'), 'Tester');
+    await selectOption('date_of_birth_day', '1');
+    await selectOption('date_of_birth_month', '02');
+    await selectOption('date_of_birth_year', '1970');
+    await userEvent.type(screen.getByTestId('mail-input'), 'jane@example.org');
+    await userEvent.type(screen.getByTestId('home_address_0-input'), '123 Library Way');
+    await userEvent.type(screen.getByTestId('home_address_city-input'), 'St Lucia');
+    await userEvent.type(screen.getByTestId('home_address_state-input'), 'QLD');
+    await userEvent.type(screen.getByTestId('home_address_postcode-input'), '4067');
+    await userEvent.type(screen.getByTestId('phone-input'), '0733654000');
+};
+
+describe('MembershipForm', () => {
+    beforeEach(() => {
+        mockNavigate.mockClear();
+        isFrozen.mockReturnValue(false);
+        isPaymentGatewayOutage.mockReturnValue(false);
+    });
+
+    it('closes the form for everyone during a maintenance freeze', () => {
+        isFrozen.mockReturnValue(true);
+        setup();
+
+        expect(screen.getByTestId('membership-form-frozen')).toHaveTextContent(form.frozen);
+        expect(screen.queryByTestId('membership-form')).not.toBeInTheDocument();
+    });
+
+    it('turns a paying type away during a payment gateway outage', () => {
+        isPaymentGatewayOutage.mockReturnValue(true);
+        setup();
+
+        expect(screen.getByTestId('membership-form-outage')).toHaveTextContent(form.paymentGatewayOutage);
+        expect(screen.queryByTestId('membership-form')).not.toBeInTheDocument();
+    });
+
+    it('loads the form data when it is not yet in the store', () => {
+        const { actions } = setup({ membershipFormData: undefined });
+
+        expect(screen.getByText('Loading the application form')).toBeInTheDocument();
+        expect(actions.loadMembershipFormData).toHaveBeenCalledTimes(1);
+    });
+
+    it('shows an error when the form data could not be loaded', () => {
+        setup({ membershipFormDataError: 'boom' });
+
+        expect(screen.getByTestId('membership-form-load-error')).toHaveTextContent(form.loadFailed);
+    });
+
+    it('sends an unrecognised type back to the landing chooser', async () => {
+        setup({}, '/membership/form/nope');
+
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/membership', { replace: true }));
+    });
+
+    it('renders the community form for a known type', () => {
+        setup();
+
+        expect(screen.getByTestId('membership-form')).toBeInTheDocument();
+        expect(screen.getByTestId('membership-form-section-account')).toBeInTheDocument();
+        expect(screen.getByTestId('membership-form-postcode-help')).toBeInTheDocument();
+
+        const contactUs = screen.getByTestId('membership-form-contact-us');
+        expect(contactUs).toHaveAttribute('target', '_blank');
+        expect(contactUs).toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
+    it('introduces the type with its conditions text from the form config', () => {
+        setup();
+
+        expect(screen.getByTestId('membership-form-conditions')).toHaveTextContent(
+            'For members of the general public. Membership costs $25 per year.',
+        );
+    });
+
+    it('omits the postcode helper for a type that collects no home address', () => {
+        setup({}, '/membership/form/fryer');
+
+        expect(screen.getByTestId('membership-form-section-organisation')).toBeInTheDocument();
+        expect(screen.queryByTestId('membership-form-postcode-help')).not.toBeInTheDocument();
+        // This fixture entry carries no conditions text, so none is shown.
+        expect(screen.queryByTestId('membership-form-conditions')).not.toBeInTheDocument();
+    });
+
+    it('sets the second-level breadcrumb on the site header when one is present', () => {
+        const siteHeader = document.createElement('uq-site-header');
+        document.body.appendChild(siteHeader);
+
+        setup();
+
+        expect(siteHeader.getAttribute('secondleveltitle')).toBeTruthy();
+        expect(siteHeader.getAttribute('secondLevelUrl')).toBeTruthy();
+        document.body.removeChild(siteHeader);
+    });
+
+    it('sends the application and goes to the received page', async () => {
+        const { actions } = setup();
+
+        await fillInCommunityForm();
+        await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+        await waitFor(() => expect(actions.submitMembership).toHaveBeenCalledTimes(1));
+        const request = actions.submitMembership.mock.calls[0][0];
+        expect(request.type).toBe('community');
+        expect(request.date_of_birth).toBe('1-02-1970');
+        expect(request.payment_code).toBe('COM');
+
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/membership/received/abc-123'));
+    });
+
+    it('reports what is wrong instead of refusing to submit', async () => {
+        const { actions } = setup();
+
+        await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+        await waitFor(() =>
+            expect(screen.getByTestId('membership-form-error-summary')).toHaveTextContent(form.invalidSummary),
+        );
+        expect(actions.submitMembership).not.toHaveBeenCalled();
+    });
+
+    it('reports a submission that the server rejected', async () => {
+        const { actions } = setup({
+            actions: { submitMembership: jest.fn().mockRejectedValue({ errors: { mail: 'taken' } }) },
+        });
+
+        await fillInCommunityForm();
+        await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+        await waitFor(() => expect(actions.submitMembership).toHaveBeenCalled());
+        await waitFor(() =>
+            expect(screen.getByTestId('membership-form-server-error')).toHaveTextContent(form.submitFailed),
+        );
+        expect(mockNavigate).not.toHaveBeenCalledWith(expect.stringContaining('/received'));
+    });
+
+    it('says it is working, and cannot be submitted twice', () => {
+        setup({ membershipSaving: true });
+
+        expect(screen.getByTestId('membership-form-submit')).toBeDisabled();
+        expect(screen.getByTestId('membership-form-submit')).toHaveTextContent(form.applying);
+    });
+
+    it('clears any earlier record when it mounts, so a fresh application starts clean', () => {
+        const { actions } = setup();
+
+        expect(actions.clearMembership).toHaveBeenCalled();
+    });
+
+    describe('supporting documents', () => {
+        it('asks for documents on a type whose config wants them', () => {
+            setup();
+
+            expect(screen.getByTestId('membership-file-upload')).toBeInTheDocument();
+        });
+
+        it('does not ask for documents on a type that does not', () => {
+            setup({}, '/membership/form/fryer');
+
+            expect(screen.queryByTestId('membership-file-upload')).not.toBeInTheDocument();
+        });
+
+        it('will not apply while a document is still waiting to upload', async () => {
+            const { actions } = setup();
+
+            await fillInCommunityForm();
+            await userEvent.click(screen.getByTestId('mock-set-pending'));
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+            await waitFor(() =>
+                expect(screen.getByTestId('membership-form-server-error')).toHaveTextContent(
+                    'Please upload the documents you have selected',
+                ),
+            );
+            expect(actions.submitMembership).not.toHaveBeenCalled();
+        });
+
+        it('carries uploaded documents into the submission', async () => {
+            const { actions } = setup();
+
+            await fillInCommunityForm();
+            await userEvent.click(screen.getByTestId('mock-add-attachment'));
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+            await waitFor(() => expect(actions.submitMembership).toHaveBeenCalled());
+            expect(actions.submitMembership.mock.calls[0][0].attachments).toEqual([{ id: 'stored-1' }]);
+        });
+    });
+
+    describe('renewing from an emailed link', () => {
+        const renewalRoute = '/membership/form/community/abc-009/the-code';
+        const renewalRecord = {
+            id: 'abc-009',
+            type: 'community',
+            status: 'renewing',
+            title: 'Ms',
+            first_name: 'Renewing',
+            sn: 'Member',
+            date_of_birth: '2-12-1985',
+            mail: 'renewing.member@example.org',
+            phone: '0733654000',
+            home_address_0: '123 Library Way',
+            home_address_city: 'Brisbane',
+            home_address_state: 'QLD',
+            home_address_postcode: '4067',
+        };
+
+        it('fetches the record the renewal link points at', () => {
+            const { actions } = setup({ membership: null }, renewalRoute);
+
+            expect(actions.loadMembershipByCode).toHaveBeenCalledWith('abc-009', 'the-code');
+        });
+
+        it('waits for the record before showing the form', () => {
+            setup({ membership: null, membershipLoading: true }, renewalRoute);
+
+            expect(screen.getByText('Loading the application form')).toBeInTheDocument();
+            expect(screen.queryByTestId('membership-form')).not.toBeInTheDocument();
+        });
+
+        it('prefills the form and locks the identity fields', async () => {
+            setup({ membership: renewalRecord }, renewalRoute);
+
+            await waitFor(() => expect(screen.getByTestId('first_name-input')).toHaveValue('Renewing'));
+            expect(screen.getByTestId('first_name-input')).toBeDisabled();
+            expect(screen.getByTestId('sn-input')).toBeDisabled();
+            // An editable field is not locked.
+            expect(screen.getByTestId('mail-input')).not.toBeDisabled();
+            // A renewal keeps the address it already has, so the postcode helper drops away.
+            expect(screen.queryByTestId('membership-form-postcode-help')).not.toBeInTheDocument();
+        });
+
+        it('renews and goes to the received page', async () => {
+            const { actions } = setup({ membership: renewalRecord }, renewalRoute);
+
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+            await waitFor(() => expect(actions.renewMembership).toHaveBeenCalledTimes(1));
+            expect(actions.renewMembership).toHaveBeenCalledWith(
+                expect.objectContaining({ id: 'abc-009', code: 'the-code' }),
+            );
+            await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/membership/received/abc-123'));
+        });
+
+        it('labels the button as a renewal', () => {
+            setup({ membership: renewalRecord }, renewalRoute);
+
+            expect(screen.getByTestId('membership-form-submit')).toHaveTextContent(form.renew);
+        });
+
+        it('says it is renewing while the renewal is in flight', () => {
+            setup({ membership: renewalRecord, membershipSaving: true }, renewalRoute);
+
+            expect(screen.getByTestId('membership-form-submit')).toHaveTextContent(form.renewing);
+        });
+
+        it('reports a renewal whose record could not be loaded', () => {
+            setup({ membership: null, membershipError: 'Forbidden' }, renewalRoute);
+
+            expect(screen.getByTestId('membership-form-load-error')).toHaveTextContent(form.renewalLoadFailed);
+        });
+    });
+});
