@@ -40,6 +40,7 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 const StyledImage = styled('img')({
     maxWidth: '100%',
+    width: '100%',
     height: 'auto',
     position: 'relative',
 });
@@ -104,13 +105,7 @@ const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="'Devil Mountain Lizard Dreaming' 1997 artwork." />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
+            <Grid container direction="column" data-testid="pageContent">
                 <Grid>
                     <Box position="relative">
                         <StyledImage src={ArtworkImage} alt="'Devil Mountain Lizard Dreaming' 1997 artwork." />

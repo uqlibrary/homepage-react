@@ -39,6 +39,7 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 const StyledImage = styled('img')({
     maxWidth: '100%',
+    width: '100%',
     height: 'auto',
     position: 'relative',
 });
@@ -104,13 +105,7 @@ const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="'Pikkuw (Saltwater crocodile)' 2008, Craig Koomeeta" />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
+            <Grid container direction="column" data-testid="pageContent">
                 <Grid>
                     <Box position="relative">
                         <StyledImage src={ArtworkImage} alt="'Pikkuw (Saltwater crocodile)' 2008 artwork." />
@@ -221,28 +216,6 @@ const Page = ({ openDrawer }) => {
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="about-the-artists-content"
-                            id="about-the-artists-header"
-                        >
-                            Stories from the collection
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artists-content">
-                            <Typography component={'p'}>
-                                Artist Craig Koomeeta's work draws upon the traditional stories of his Apelech Ancestors
-                                from the area around Aurukun. Following colonisation, this area became a mission under
-                                the control of the Presbyterian Church of Queensland.
-                            </Typography>
-                            <Typography component={'p'}>
-                                In 1936, the Church commissioned Norman F Nelson to conduct an inspection and evaluation
-                                of the work and properties of four missions in North Queensland, including Aurukun. The
-                                resulting reports and photos provide a record of the community and contribute to ongoing
-                                truth-telling.
-                            </Typography>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
                             aria-controls="connection-to-country-content"
                             id="connection-to-country-header"
                         >
@@ -283,6 +256,28 @@ const Page = ({ openDrawer }) => {
                                 allowfullscreen=""
                                 style={{ width: '100%', height: 'auto', aspectRatio: '16/9' }}
                             />
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="about-the-artists-content"
+                            id="about-the-artists-header"
+                        >
+                            Stories from the collection
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="about-the-artists-content">
+                            <Typography component={'p'}>
+                                Artist Craig Koomeeta's work draws upon the traditional stories of his Apelech Ancestors
+                                from the area around Aurukun. Following colonisation, this area became a mission under
+                                the control of the Presbyterian Church of Queensland.
+                            </Typography>
+                            <Typography component={'p'}>
+                                In 1936, the Church commissioned Norman F Nelson to conduct an inspection and evaluation
+                                of the work and properties of four missions in North Queensland, including Aurukun. The
+                                resulting reports and photos provide a record of the community and contribute to ongoing
+                                truth-telling.
+                            </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                 </Grid>

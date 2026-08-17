@@ -39,6 +39,7 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 const StyledImage = styled('img')({
     maxWidth: '100%',
+    width: '100%',
     height: 'auto',
     position: 'relative',
 });
@@ -114,13 +115,7 @@ const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="'Punu Tjukurpa' 2013, Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken" />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
+            <Grid container direction="column" data-testid="pageContent">
                 <Grid>
                     <Box position="relative">
                         <StyledImage
@@ -163,26 +158,6 @@ const Page = ({ openDrawer }) => {
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="reflect-content"
-                            id="reflect-header"
-                        >
-                            Reflect
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="reflect-content">
-                            <Typography component={'p'}>
-                                Take a few minutes to look closely at all the detail in this painting.
-                            </Typography>
-                            <StyledUl>
-                                <li>
-                                    What different shapes and patterns can you see branching off from the central shape?
-                                </li>
-                                <li>Which parts are your eyes most drawn to? Why do they stand out?</li>
-                            </StyledUl>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artwork-content"
                             id="about-the-artwork-header"
                         >
@@ -211,6 +186,26 @@ const Page = ({ openDrawer }) => {
                                 Through this shared storytelling, Punu Tjukurpa creates a conduit between deep ancestral
                                 roots and future generations.
                             </Typography>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="reflect-content"
+                            id="reflect-header"
+                        >
+                            Reflect
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="reflect-content">
+                            <Typography component={'p'}>
+                                Take a few minutes to look closely at all the detail in this painting.
+                            </Typography>
+                            <StyledUl>
+                                <li>
+                                    What different shapes and patterns can you see branching off from the central shape?
+                                </li>
+                                <li>Which parts are your eyes most drawn to? Why do they stand out?</li>
+                            </StyledUl>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
