@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 
+import { ART_TRAIL_MAP_POIS } from './mapPois';
+
 const MAZEMAP_SCRIPT_ID = 'art-trail-mazemap-script';
 const MAZEMAP_STYLESHEET_ID = 'art-trail-mazemap-stylesheet';
 const MAZEMAP_SCRIPT_SRC = 'vendor/mazemap/mazemap.min.js';
@@ -46,9 +48,43 @@ const loadMazemapAssets = () => {
     });
 };
 
+const createPoiMarkerElement = poi => {
+    const element = document.createElement('div');
+    element.setAttribute('aria-label', poi.title);
+    element.style.width = '18px';
+    element.style.height = '18px';
+    element.style.borderRadius = '50%';
+    element.style.backgroundColor = poi.color;
+    element.style.border = '2px solid #ffffff';
+    element.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.24)';
+
+    return element;
+};
+
+export const createMazemapPoiMarkers = ({ Mazemap, map, pois = ART_TRAIL_MAP_POIS }) => {
+    if (!Mazemap?.ZLevelMarker || !map) {
+        return [];
+    }
+
+    return pois.map(poi => {
+        const popup = Mazemap.Popup ? new Mazemap.Popup({ offset: 12 }).setText(poi.title) : null;
+        const marker = new Mazemap.ZLevelMarker(createPoiMarkerElement(poi), {
+            zLevel: poi.zLevel,
+            offset: [0, -9],
+        }).setLngLat([poi.lng, poi.lat]);
+
+        if (popup && marker.setPopup) {
+            marker.setPopup(popup);
+        }
+
+        return marker.addTo(map);
+    });
+};
+
 const MapTabContent = ({ active }) => {
     const mapContainerRef = useRef(null);
     const mapInstanceRef = useRef(null);
+    const markerInstancesRef = useRef([]);
 
     useEffect(() => {
         if (!active || /jsdom/i.test(window.navigator.userAgent)) {
@@ -71,8 +107,13 @@ const MapTabContent = ({ active }) => {
                     campuses: 'uq',
                     center: { lat: -27.49664388431794, lng: 153.0143995439455 },
                     zoom: 19,
-                    zLevel: 1,
+                    zLevel: -1,
                     RTLTextPlugin: null,
+                });
+
+                markerInstancesRef.current = createMazemapPoiMarkers({
+                    Mazemap,
+                    map: mapInstanceRef.current,
                 });
             })
             .catch(() => {});
@@ -80,6 +121,8 @@ const MapTabContent = ({ active }) => {
 
     useEffect(() => {
         return () => {
+            markerInstancesRef.current.forEach(marker => marker?.remove?.());
+            markerInstancesRef.current = [];
             mapInstanceRef.current?.remove?.();
             mapInstanceRef.current = null;
         };
