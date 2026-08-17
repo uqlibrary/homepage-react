@@ -9,26 +9,19 @@ import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { Grid } from '@mui/material';
 import JourneyBreadcrumbs from '../SpacesListPage/SimpleListPage/components/JourneyBreadcrumbs';
-import { getSpaceIdentifier, JOURNEY_VIEWS } from '../Shared/spacesHelpers';
 
 export const BookableSpacesDetailPage = ({
-                                             actions,
-                                             weeklyHours,
-                                             weeklyHoursLoading,
-                                             weeklyHoursError,
-                                             // facilityTypeList,
-                                             // facilityTypeListLoading,
-                                             // facilityTypeListError,
-                                             // campusList,
-                                             // campusListLoading,
-                                             // campusListError,
-                                             bookableSpaceGetting,
-                                             bookableSpaceGetError,
-                                             bookableSpaceGetResult,
-                                             spacesFavouritesList,
-                                             spacesFavouritesLoading,
-                                             spacesFavouritesError,
-                                         }) => {
+    actions,
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
+    bookableSpaceGetting,
+    bookableSpaceGetError,
+    bookableSpaceGetResult,
+    spacesFavouritesList,
+    // spacesFavouritesLoading,
+    spacesFavouritesError,
+}) => {
     console.log(
         'BookableSpacesDetailPage start bookableSpace =',
         bookableSpaceGetting,
@@ -120,7 +113,7 @@ export const BookableSpacesDetailPage = ({
                                     isFavourite={spacesFavouritesList?.some(
                                         fav => fav.space_id === bookableSpaceGetResult?.data?.space_id,
                                     )}
-                                    spacesFavouritesLoading={spacesFavouritesLoading || bookableSpaceGetting}
+                                    // spacesFavouritesLoading={spacesFavouritesLoading || bookableSpaceGetting}
                                     spacesFavouritesError={spacesFavouritesError || bookableSpaceGetError}
                                 />
                             </Grid>
@@ -144,7 +137,7 @@ BookableSpacesDetailPage.propTypes = {
     bookableSpaceGetResult: PropTypes.any,
     selectedSpace: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
-    spacesFavouritesLoading: PropTypes.any,
+    // spacesFavouritesLoading: PropTypes.any,
     spacesFavouritesError: PropTypes.any,
 };
 

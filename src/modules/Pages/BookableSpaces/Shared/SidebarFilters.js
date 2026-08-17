@@ -26,8 +26,8 @@ import {
     getActiveSelectedFacilityTypes,
     getFlatFacilityTypeList,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
-import ChooseCampus from "modules/Pages/BookableSpaces/Shared/ChooseCampus";
-import ChooseLibrary from "modules/Pages/BookableSpaces/Shared/ChooseLibrary";
+import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
+import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
 const StyledSlider = styled(Slider)(() => ({
     marginTop: '1rem', // space for tooltips to appear in

@@ -8,7 +8,6 @@ export const BookableSpacesJourneyView = ({
     view,
     selectedIntent,
     selectedIntentId,
-    selectedSpace,
     navigateToView,
     setSelectedIntentId,
     setSelectedSpace,

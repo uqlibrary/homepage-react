@@ -43,10 +43,6 @@ import {
     JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
     normalizeFilterDisplayOn,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
-import {
-    displayToastErrorMessage,
-    displayToastMessage,
-} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { CAMPUS_DUTTON_PARK } from 'config/locale';
 
 const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
