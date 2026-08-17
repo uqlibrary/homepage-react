@@ -40,6 +40,7 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 const StyledImage = styled('img')({
     maxWidth: '100%',
+    width: '100%',
     height: 'auto',
     position: 'relative',
 });
@@ -120,13 +121,7 @@ const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="'Whispers (Poles)' 2023, Megan Cope" />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
+            <Grid container direction="column" data-testid="pageContent">
                 <Grid>
                     <Box position="relative">
                         <StyledImage src={ArtworkImage} alt="Whispers 2023 artwork." />
@@ -163,24 +158,6 @@ const Page = ({ openDrawer }) => {
                     </Box>
                 </Grid>
                 <Grid>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="reflect-content"
-                            id="reflect-header"
-                        >
-                            Reflect
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="reflect-content">
-                            <Typography component={'p'}>
-                                Megan Cope often uses elements of Country in her artworks.
-                            </Typography>
-                            <StyledUl>
-                                <li>What do you think displaying these materials off-Country might say?</li>
-                                <li>Why do you think this is important to the artist?</li>
-                            </StyledUl>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -223,6 +200,24 @@ const Page = ({ openDrawer }) => {
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
+                            aria-controls="reflect-content"
+                            id="reflect-header"
+                        >
+                            Reflect
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="reflect-content">
+                            <Typography component={'p'}>
+                                Megan Cope often uses elements of Country in her artworks.
+                            </Typography>
+                            <StyledUl>
+                                <li>What do you think displaying these materials off-Country might say?</li>
+                                <li>Why do you think this is important to the artist?</li>
+                            </StyledUl>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artists-content"
                             id="about-the-artists-header"
                         >
@@ -239,46 +234,6 @@ const Page = ({ openDrawer }) => {
                                 <a href="https://www.megancope.com.au/about" target="_blank" rel="noopener noreferrer">
                                     her website
                                 </a>
-                            </Typography>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="stories-from-the-collection-content"
-                            id="stories-from-the-collection-header"
-                        >
-                            Stories from the collection
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="stories-from-the-collection-content">
-                            <Typography component={'p'}>
-                                This artwork connects to <strong>Quandamooka Country</strong> and{' '}
-                                <strong>Minjerrbah (North Stradbroke Island)</strong>, also the home of Oodgeroo
-                                Noonuccal, a poet, artist and Aboriginal activist.
-                            </Typography>
-                            <Typography component={'p'}>
-                                The Fryer Collection holds the{' '}
-                                <a
-                                    href="https://manuscripts.library.uq.edu.au/index.php/uqfl84"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Oodgeroo Noonuccal papers
-                                </a>
-                                , a collection of poetry, speeches, correspondence, photos and other materials relating
-                                to Noonuccal’s life and work.
-                            </Typography>
-                            <Typography component={'p'}>
-                                One remarkable item included in the collection is the poem{' '}
-                                <a
-                                    href="https://uq.pressbooks.pub/storying-the-archive/chapter/response-to-oodgeroo-noonuccals-poems/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <em>Yusuf (Hijacker)</em>
-                                </a>
-                                . Noonuccal wrote this poem on the back of a paper airplane sick bag while she was held
-                                hostage during the British Airways VC10 hijacking in 1974.
                             </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
@@ -339,6 +294,46 @@ const Page = ({ openDrawer }) => {
                                 loading="lazy"
                             />
                             <StyledImageCaption>North Stradbroke Island @Kevin stock.adobe.com.</StyledImageCaption>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="stories-from-the-collection-content"
+                            id="stories-from-the-collection-header"
+                        >
+                            Stories from the collection
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="stories-from-the-collection-content">
+                            <Typography component={'p'}>
+                                This artwork connects to <strong>Quandamooka Country</strong> and{' '}
+                                <strong>Minjerrbah (North Stradbroke Island)</strong>, also the home of Oodgeroo
+                                Noonuccal, a poet, artist and Aboriginal activist.
+                            </Typography>
+                            <Typography component={'p'}>
+                                The Fryer Collection holds the{' '}
+                                <a
+                                    href="https://manuscripts.library.uq.edu.au/index.php/uqfl84"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Oodgeroo Noonuccal papers
+                                </a>
+                                , a collection of poetry, speeches, correspondence, photos and other materials relating
+                                to Noonuccal’s life and work.
+                            </Typography>
+                            <Typography component={'p'}>
+                                One remarkable item included in the collection is the poem{' '}
+                                <a
+                                    href="https://uq.pressbooks.pub/storying-the-archive/chapter/response-to-oodgeroo-noonuccals-poems/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <em>Yusuf (Hijacker)</em>
+                                </a>
+                                . Noonuccal wrote this poem on the back of a paper airplane sick bag while she was held
+                                hostage during the British Airways VC10 hijacking in 1974.
+                            </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                 </Grid>

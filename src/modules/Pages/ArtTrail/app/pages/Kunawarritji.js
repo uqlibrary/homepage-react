@@ -41,6 +41,7 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 const StyledImage = styled('img')({
     maxWidth: '100%',
+    width: '100%',
     height: 'auto',
     position: 'relative',
 });
@@ -136,13 +137,7 @@ const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="'Kunawarritji 1' and 'Kunawarritji 2' 2012, Nora Wompi Nungurrayi" />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
+            <Grid container direction="column" data-testid="pageContent">
                 <Grid>
                     <Box position="relative">
                         <StyledImage src={Artwork1Image} alt="Kunawarritji 1 artwork." />

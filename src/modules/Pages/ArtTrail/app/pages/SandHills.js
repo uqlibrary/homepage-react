@@ -39,6 +39,7 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 const StyledImage = styled('img')({
     maxWidth: '100%',
+    width: '100%',
     height: 'auto',
     position: 'relative',
 });
@@ -105,13 +106,7 @@ const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="'Sand Hills' 2007, Lily Kelly Napangardi" />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
+            <Grid container direction="column" data-testid="pageContent">
                 <Grid>
                     <Box position="relative">
                         <StyledImage src={ArtworkImage} alt="Sand Hills 2007 artwork." />
@@ -151,30 +146,6 @@ const Page = ({ openDrawer }) => {
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="reflect-content"
-                            id="reflect-header"
-                        >
-                            Reflect
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="reflect-content">
-                            <Typography component={'p'}>Take a moment to look closely at this painting.</Typography>
-                            <StyledUl>
-                                <li>Which areas are your eyes most drawn to?</li>
-                                <li>
-                                    As your eyes move across these areas, what kind of movement or energy do you feel?
-                                </li>
-                                <li>Can you imagine this movement and energy performed by sand?</li>
-                            </StyledUl>
-
-                            <Typography component={'p'}>
-                                Try to take yourself to this place and imagine how it might feel in your body to be
-                                there.
-                            </Typography>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artwork-content"
                             id="about-the-artwork-header"
                         >
@@ -195,6 +166,30 @@ const Page = ({ openDrawer }) => {
                                 seasonal changes influence the landscape and, consequently, traditional life. Through
                                 her paintings, Napangardi seeks to demonstrate her deep understanding of Country and
                                 assert her people's connection to the land.
+                            </Typography>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="reflect-content"
+                            id="reflect-header"
+                        >
+                            Reflect
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="reflect-content">
+                            <Typography component={'p'}>Take a moment to look closely at this painting.</Typography>
+                            <StyledUl>
+                                <li>Which areas are your eyes most drawn to?</li>
+                                <li>
+                                    As your eyes move across these areas, what kind of movement or energy do you feel?
+                                </li>
+                                <li>Can you imagine this movement and energy performed by sand?</li>
+                            </StyledUl>
+
+                            <Typography component={'p'}>
+                                Try to take yourself to this place and imagine how it might feel in your body to be
+                                there.
                             </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>

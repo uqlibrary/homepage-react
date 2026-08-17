@@ -39,6 +39,7 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 const StyledImage = styled('img')({
     maxWidth: '100%',
+    width: '100%',
     height: 'auto',
     position: 'relative',
 });
@@ -105,13 +106,7 @@ const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="'Tingari ceremonies at Wilkinkarra' 2003, Johnny Yungut Tjupurrula" />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
+            <Grid container direction="column" data-testid="pageContent">
                 <Grid>
                     <Box position="relative">
                         <StyledImage src={ArtworkImage} alt="'Tingari ceremonies at Wilkinkarra' 2003 artwork." />
@@ -151,6 +146,22 @@ const Page = ({ openDrawer }) => {
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
+                            aria-controls="about-the-artwork-content"
+                            id="about-the-artwork-header"
+                        >
+                            About the artwork
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="about-the-artwork-content">
+                            <Typography component={'p'}>
+                                This work considers migration and movements across long expanses of Country which are
+                                significant for Tingari Dreaming Stories. Note the intricate lines, patterns, and
+                                colour, which the artist has used to create the illusion of movement.
+                            </Typography>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
                             aria-controls="reflect-content"
                             id="reflect-header"
                         >
@@ -167,22 +178,6 @@ const Page = ({ openDrawer }) => {
                                     artist is conveying?
                                 </li>
                             </StyledUl>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="about-the-artwork-content"
-                            id="about-the-artwork-header"
-                        >
-                            About the artwork
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content">
-                            <Typography component={'p'}>
-                                This work considers migration and movements across long expanses of Country which are
-                                significant for Tingari Dreaming Stories. Note the intricate lines, patterns, and
-                                colour, which the artist has used to create the illusion of movement.
-                            </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>

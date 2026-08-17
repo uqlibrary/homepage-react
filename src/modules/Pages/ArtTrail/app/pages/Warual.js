@@ -40,6 +40,7 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 const StyledImage = styled('img')({
     maxWidth: '100%',
+    width: '100%',
     height: 'auto',
     position: 'relative',
 });
@@ -115,13 +116,7 @@ const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="'Warual III (Green Turtle)' 2015, Brian Robinson" />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
+            <Grid container direction="column" data-testid="pageContent">
                 <Grid>
                     <Box position="relative">
                         <StyledImage src={ArtworkImage} alt="'Warual III (Green Turtle)' 2015 artwork." />
@@ -161,27 +156,6 @@ const Page = ({ openDrawer }) => {
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="reflect-content"
-                            id="reflect-header"
-                        >
-                            Reflect
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="reflect-content">
-                            <Typography component={'p'}>
-                                Take a moment to look closely at the small details carved into this lino print.
-                            </Typography>
-                            <StyledUl>
-                                <li>What hidden pop culture references can you find?</li>
-                                <li>
-                                    Why do you think the artist might include these alongside stories of his culture in
-                                    his artworks?
-                                </li>
-                            </StyledUl>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artwork-content"
                             id="about-the-artwork-header"
                         >
@@ -212,6 +186,27 @@ const Page = ({ openDrawer }) => {
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
+                            aria-controls="reflect-content"
+                            id="reflect-header"
+                        >
+                            Reflect
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="reflect-content">
+                            <Typography component={'p'}>
+                                Take a moment to look closely at the small details carved into this lino print.
+                            </Typography>
+                            <StyledUl>
+                                <li>What hidden pop culture references can you find?</li>
+                                <li>
+                                    Why do you think the artist might include these alongside stories of his culture in
+                                    his artworks?
+                                </li>
+                            </StyledUl>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artists-content"
                             id="about-the-artists-header"
                         >
@@ -227,30 +222,6 @@ const Page = ({ openDrawer }) => {
                             <Typography component={'p'}>
                                 Today, he lives and works in Gimuy (Cairns). Brian Robinson is represented by Onespace
                                 Gallery, Brisbane.
-                            </Typography>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="stories-from-the-collection-content"
-                            id="stories-from-the-collection-header"
-                        >
-                            Stories from the collection
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="stories-from-the-collection-content">
-                            <Typography component={'p'}>
-                                Brian Robinson's work combines traditional mark-making and patterns with pop culture
-                                imagery, demonstrating ways that Aboriginal cultures are continually evolving. Kevin
-                                Gilbert's 1969 essay, 'What do I, as an Aboriginal, think about the old traditions and
-                                customs of my people, and what place do they have in present life and in the future?'
-                                explores similar themes.
-                            </Typography>
-                            <Typography component={'p'}>
-                                Kevin Gilbert was born in 1933 to the Wiradjuri Nation near Condobolin, New South Wales.
-                                In addition to publishing several poetry and prose works, he also wrote 'The Cherry
-                                Pickers', a play about Aboriginal seasonal workers and was the first Aboriginal
-                                playwright to have a play performed in Australia.
                             </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
@@ -309,6 +280,30 @@ const Page = ({ openDrawer }) => {
                                     aspectRatio: '16/9',
                                 }}
                             />
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="stories-from-the-collection-content"
+                            id="stories-from-the-collection-header"
+                        >
+                            Stories from the collection
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="stories-from-the-collection-content">
+                            <Typography component={'p'}>
+                                Brian Robinson's work combines traditional mark-making and patterns with pop culture
+                                imagery, demonstrating ways that Aboriginal cultures are continually evolving. Kevin
+                                Gilbert's 1969 essay, 'What do I, as an Aboriginal, think about the old traditions and
+                                customs of my people, and what place do they have in present life and in the future?'
+                                explores similar themes.
+                            </Typography>
+                            <Typography component={'p'}>
+                                Kevin Gilbert was born in 1933 to the Wiradjuri Nation near Condobolin, New South Wales.
+                                In addition to publishing several poetry and prose works, he also wrote 'The Cherry
+                                Pickers', a play about Aboriginal seasonal workers and was the first Aboriginal
+                                playwright to have a play performed in Australia.
+                            </Typography>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                 </Grid>

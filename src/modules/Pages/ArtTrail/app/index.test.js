@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event';
 import Cookies from 'js-cookie';
 
 import ArtTrailApp from './index';
+import { createMazemapPoiMarkers } from './MapTabContent';
+import { ART_TRAIL_MAP_POIS } from './mapPois';
 import { trailPages } from './pages';
 
 jest.mock('js-cookie', () => ({
@@ -102,5 +104,55 @@ describe('ArtTrailApp', () => {
         render(<ArtTrailApp />);
 
         expect(screen.queryByText(culturalDisclaimerText)).not.toBeInTheDocument();
+    });
+
+    it('creates a marker for each hardcoded map POI', () => {
+        const addTo = jest.fn(function addTo(map) {
+            this.map = map;
+            return this;
+        });
+        const setLngLat = jest.fn(function setLngLat(lngLat) {
+            this.lngLat = lngLat;
+            return this;
+        });
+        const setPopup = jest.fn(function setPopup(popup) {
+            this.popup = popup;
+            return this;
+        });
+        const markerConstructor = jest.fn(function ZLevelMarker(element, options) {
+            this.element = element;
+            this.options = options;
+            this.setLngLat = setLngLat;
+            this.setPopup = setPopup;
+            this.addTo = addTo;
+        });
+        const popupSetText = jest.fn(function setText(text) {
+            this.text = text;
+            return this;
+        });
+        const popupConstructor = jest.fn(function Popup() {
+            this.setText = popupSetText;
+        });
+        const map = { id: 'mock-map' };
+
+        const markers = createMazemapPoiMarkers({
+            Mazemap: {
+                ZLevelMarker: markerConstructor,
+                Popup: popupConstructor,
+            },
+            map,
+        });
+
+        expect(markers).toHaveLength(ART_TRAIL_MAP_POIS.length);
+        expect(markerConstructor).toHaveBeenCalledTimes(ART_TRAIL_MAP_POIS.length);
+        expect(markerConstructor).toHaveBeenNthCalledWith(
+            1,
+            expect.any(HTMLElement),
+            expect.objectContaining({ zLevel: ART_TRAIL_MAP_POIS[0].zLevel, offset: [0, -9] }),
+        );
+        expect(setLngLat).toHaveBeenNthCalledWith(1, [ART_TRAIL_MAP_POIS[0].lng, ART_TRAIL_MAP_POIS[0].lat]);
+        expect(addTo).toHaveBeenCalledTimes(ART_TRAIL_MAP_POIS.length);
+        expect(addTo).toHaveBeenCalledWith(map);
+        expect(popupSetText).toHaveBeenNthCalledWith(1, ART_TRAIL_MAP_POIS[0].title);
     });
 });
