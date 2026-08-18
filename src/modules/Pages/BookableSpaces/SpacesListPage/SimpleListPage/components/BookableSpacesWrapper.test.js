@@ -216,6 +216,21 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(window.location.pathname).toBe(`/spaces/detail/${baseSpace.space_uuid}`);
     });
 
+    it('scrolls to the top when the detail route is active', async () => {
+        const scrollToMock = jest.fn();
+        window.scrollTo = scrollToMock;
+
+        rtlRender(
+            <WithRouter route="*" initialEntries={['/spaces/detail/test-space-uuid-1234']}>
+                <BookableSpacesWrapper {...defaultProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => {
+            expect(scrollToMock).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'auto' });
+        });
+    });
+
     it('uses a simple results link for the landing card without encoding intent in the URL', () => {
         window.history.replaceState({}, '', '/spaces');
 

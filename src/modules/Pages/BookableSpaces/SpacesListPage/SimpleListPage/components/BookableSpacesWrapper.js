@@ -734,10 +734,35 @@ const BookableSpacesWrapper = ({
     }, [activeIntentId, applyIntentFilters, availableIntentDefinitions, view]);
 
     React.useEffect(() => {
-        if (view === 'details') {
-            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        if (!isDetailsRoute) {
+            return;
         }
-    }, [view]);
+
+        const resetScrollToTop = () => {
+            if (typeof window === 'undefined') {
+                return;
+            }
+
+            if ('scrollRestoration' in window.history) {
+                window.history.scrollRestoration = 'manual';
+            }
+
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+            window.scrollTo(0, 0);
+        };
+
+        resetScrollToTop();
+        const frameId = window.requestAnimationFrame(resetScrollToTop);
+        const timeoutId = window.setTimeout(resetScrollToTop, 50);
+
+        return () => {
+            window.cancelAnimationFrame(frameId);
+            window.clearTimeout(timeoutId);
+            if ('scrollRestoration' in window.history) {
+                window.history.scrollRestoration = 'auto';
+            }
+        };
+    }, [currentPath, isDetailsRoute]);
 
     return (
         <BookableSpacesJourneyView
