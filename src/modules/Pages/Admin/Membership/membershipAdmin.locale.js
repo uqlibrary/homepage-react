@@ -14,7 +14,9 @@ export default {
             legend: 'Filter by status',
             all: 'All',
             unconfirmed: 'Unconfirmed',
-            renewing: 'Renewing',
+            // This bucket holds renewals the member has already completed that now await an admin's
+            // re-confirmation, so it reads 'Reconfirm' rather than 'Renewing'. The filter value stays 'renewing'.
+            renewing: 'Reconfirm',
             confirmed: 'Confirmed',
             // The accessible name of a tile pairs its label with its count, since the two are drawn apart.
             label: (label, count) => `${label}, ${count}`,
