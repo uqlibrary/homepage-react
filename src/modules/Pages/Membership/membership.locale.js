@@ -55,6 +55,10 @@ export default {
             url: 'https://auspost.com.au/postcode',
             after: ' page useful.',
         },
+        captcha: {
+            instruction: 'Please complete the check below to confirm you are not a robot, then apply.',
+            error: 'The verification check could not be loaded. Please refresh the page and try again.',
+        },
     },
     upload: {
         title: 'Document Upload',

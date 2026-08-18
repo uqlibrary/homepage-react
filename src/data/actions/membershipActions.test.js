@@ -109,6 +109,30 @@ describe('Membership actions', () => {
                 actions.MEMBERSHIP_SAVE_FAILED,
             ]);
         });
+
+        it('sends the CAPTCHA token as a header when one is supplied', async () => {
+            let sentHeaders;
+            mockApi.onPost(repositories.routes.MEMBERSHIP_CREATE_API().apiUrl).reply(config => {
+                sentHeaders = config.headers;
+                return [201, { id: 'abc-123' }];
+            });
+
+            await mockActionsStore.dispatch(submitMembership({ type: 'community' }, 'a-waf-token'));
+
+            expect(sentHeaders['x-aws-waf-token']).toBe('a-waf-token');
+        });
+
+        it('sends no CAPTCHA header when no token is supplied', async () => {
+            let sentHeaders;
+            mockApi.onPost(repositories.routes.MEMBERSHIP_CREATE_API().apiUrl).reply(config => {
+                sentHeaders = config.headers;
+                return [201, { id: 'abc-123' }];
+            });
+
+            await mockActionsStore.dispatch(submitMembership({ type: 'community' }));
+
+            expect(sentHeaders['x-aws-waf-token']).toBeUndefined();
+        });
     });
 
     describe('confirmMembership', () => {

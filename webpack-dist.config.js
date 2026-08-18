@@ -147,6 +147,15 @@ const webpackConfig = {
             'process.env.PUBLIC_PATH': JSON.stringify(config.basePath),
             'process.env.GOOGLE_MAPS_URL': JSON.stringify(config.googleMaps),
             'process.env.GOOGLE_MAPS_API_KEY': JSON.stringify(process.env.GOOGLE_MAPS_API_KEY),
+            // AWS WAF CAPTCHA on the membership form: the integration URL is set per environment in config.js, the
+            // encrypted API key comes from the build environment. A mock build serves a local stand-in instead so
+            // the gate can be exercised without AWS; leaving either empty turns the CAPTCHA off for that build.
+            'process.env.AWS_WAF_CAPTCHA_INTEGRATION_URL': JSON.stringify(
+                useMock ? '/mock-aws-waf' : config.awsWafCaptchaIntegrationUrl || '',
+            ),
+            'process.env.AWS_WAF_CAPTCHA_API_KEY': JSON.stringify(
+                useMock ? 'mock-captcha-api-key' : process.env.AWS_WAF_CAPTCHA_API_KEY || '',
+            ),
             'process.env.ENABLE_LOG': JSON.stringify(
                 !!process.env.CI_BRANCH && process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'cc',
             ),

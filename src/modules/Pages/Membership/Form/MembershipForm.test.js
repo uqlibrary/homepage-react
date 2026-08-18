@@ -7,6 +7,8 @@ import { mui1theme } from 'config';
 
 import locale from '../membership.locale';
 import { isFrozen, isPaymentGatewayOutage } from '../membershipOutage';
+import { isMembershipCaptchaConfigured } from 'config/general';
+import { getMembershipCaptchaToken } from './MembershipCaptcha';
 import MembershipForm from './MembershipForm';
 
 const { form } = locale;
@@ -22,6 +24,28 @@ jest.mock('../membershipOutage', () => ({
     isFrozen: jest.fn(() => false),
     isPaymentGatewayOutage: jest.fn(() => false),
 }));
+
+// The CAPTCHA is off unless a test turns it on, so the bulk of the form's behaviour is exercised without it.
+jest.mock('config/general', () => ({
+    ...jest.requireActual('config/general'),
+    isMembershipCaptchaConfigured: jest.fn(() => false),
+}));
+
+// The real puzzle loads AWS's script and is covered in MembershipCaptcha.test.js; here it stands in as a solve
+// button so the form's gating and the token it sends can be driven.
+jest.mock('./MembershipCaptcha', () => {
+    const MockCaptcha = ({ onSolved }) => (
+        <button type="button" data-testid="mock-captcha-solve" onClick={onSolved}>
+            solve
+        </button>
+    );
+    MockCaptcha.propTypes = { onSolved: require('prop-types').func };
+    return {
+        __esModule: true,
+        MembershipCaptcha: MockCaptcha,
+        getMembershipCaptchaToken: jest.fn(() => Promise.resolve('waf-token-123')),
+    };
+});
 
 // The upload component has its own test; here it stands in for driving the form's wiring — its onChange feeds
 // the submit payload and its onPendingChange gates the submit.
@@ -111,6 +135,7 @@ describe('MembershipForm', () => {
         mockNavigate.mockClear();
         isFrozen.mockReturnValue(false);
         isPaymentGatewayOutage.mockReturnValue(false);
+        isMembershipCaptchaConfigured.mockReturnValue(false);
     });
 
     it('closes the form for everyone during a maintenance freeze', () => {
@@ -353,6 +378,47 @@ describe('MembershipForm', () => {
             setup({ membership: null, membershipError: 'Forbidden' }, renewalRoute);
 
             expect(screen.getByTestId('membership-form-load-error')).toHaveTextContent(form.renewalLoadFailed);
+        });
+    });
+
+    describe('CAPTCHA protection', () => {
+        beforeEach(() => {
+            isMembershipCaptchaConfigured.mockReturnValue(true);
+            getMembershipCaptchaToken.mockClear();
+            getMembershipCaptchaToken.mockResolvedValue('waf-token-123');
+        });
+
+        it('holds back the submit button until the puzzle is solved', async () => {
+            setup();
+
+            expect(screen.getByTestId('mock-captcha-solve')).toBeInTheDocument();
+            expect(screen.queryByTestId('membership-form-submit')).not.toBeInTheDocument();
+
+            await userEvent.click(screen.getByTestId('mock-captcha-solve'));
+
+            expect(screen.getByTestId('membership-form-submit')).toBeInTheDocument();
+        });
+
+        it('sends the solved CAPTCHA token with the application', async () => {
+            const { actions } = setup();
+
+            await fillInCommunityForm();
+            await userEvent.click(screen.getByTestId('mock-captcha-solve'));
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+            await waitFor(() => expect(actions.submitMembership).toHaveBeenCalled());
+            expect(getMembershipCaptchaToken).toHaveBeenCalledTimes(1);
+            expect(actions.submitMembership.mock.calls[0][1]).toBe('waf-token-123');
+        });
+
+        it('does not ask a renewal to solve a puzzle', () => {
+            setup(
+                { membership: { id: 'abc-009', type: 'community', status: 'renewing' } },
+                '/membership/form/community/abc-009/the-code',
+            );
+
+            expect(screen.queryByTestId('mock-captcha-solve')).not.toBeInTheDocument();
+            expect(screen.getByTestId('membership-form-submit')).toBeInTheDocument();
         });
     });
 });

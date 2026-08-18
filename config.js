@@ -17,6 +17,9 @@ const deployment = {
         reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
         removeConsoleLog: false,
         hashRouter: true,
+        // AWS WAF CAPTCHA integration URL (from the WAF console's Application integration page). Empty leaves the
+        // membership form's CAPTCHA off; the encrypted API key is supplied via the AWS_WAF_CAPTCHA_API_KEY build env.
+        awsWafCaptchaIntegrationUrl: '',
     },
     staging: {
         url: () => 'https://homepage-staging.library.uq.edu.au/',
@@ -33,6 +36,7 @@ const deployment = {
         publicPath: '/',
         reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js',
         removeConsoleLog: false,
+        awsWafCaptchaIntegrationUrl: '',
     },
     production: {
         url: () => 'https://homepage-production.library.uq.edu.au/',
@@ -49,6 +53,7 @@ const deployment = {
         publicPath: '/',
         reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
         removeConsoleLog: true,
+        awsWafCaptchaIntegrationUrl: '',
     },
 };
 

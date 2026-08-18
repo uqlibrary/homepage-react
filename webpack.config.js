@@ -160,6 +160,14 @@ module.exports = {
             'process.env.BRANCH': JSON.stringify('development'),
             'process.env.GIT_SHA': JSON.stringify(process.env.CI_COMMIT_ID),
             'process.env.SESSION_COOKIE_NAME': JSON.stringify(process.env.SESSION_COOKIE_NAME),
+            // The mock build serves a local stand-in for AWS's CAPTCHA script (public/mock-aws-waf/jsapi.js) so the
+            // membership form's CAPTCHA gate can be driven locally and in the e2e tests without reaching AWS.
+            'process.env.AWS_WAF_CAPTCHA_INTEGRATION_URL': JSON.stringify(
+                useMock ? '/mock-aws-waf' : process.env.AWS_WAF_CAPTCHA_INTEGRATION_URL || '',
+            ),
+            'process.env.AWS_WAF_CAPTCHA_API_KEY': JSON.stringify(
+                useMock ? 'mock-captcha-api-key' : process.env.AWS_WAF_CAPTCHA_API_KEY || '',
+            ),
         }),
         new Dotenv(),
         new MomentTimezoneDataPlugin({
