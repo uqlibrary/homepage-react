@@ -11,6 +11,10 @@ import { styled } from '@mui/material/styles';
 
 import Hero from '../Hero';
 
+import Book1Image from '../../../../../../public/images/artTrail/UQ_BlakHistory_Book-cover_900x1200px-350x467.jpg';
+import Book2Image from '../../../../../../public/images/artTrail/Storying_the_Archive.jpg';
+import Book3Image from '../../../../../../public/images/artTrail/Guide_LanguageRelationships_Final6a_300ppi.jpg';
+
 const StyledImage = styled('img')({
     width: '100%',
     height: 'auto',
@@ -64,7 +68,7 @@ const ContinueJourney = () => {
                                             rel="noopener noreferrer"
                                         >
                                             <StyledImage
-                                                src="/images/artTrail/UQ_BlakHistory_Book-cover_900x1200px-350x467.jpg"
+                                                src={Book1Image}
                                                 alt="Front cover image of the book 'UQ has a Blak history', which shows several archive images from around the UQ St Lucia campus"
                                             />
                                         </a>
@@ -99,7 +103,7 @@ const ContinueJourney = () => {
                                             rel="noopener noreferrer"
                                         >
                                             <StyledImage
-                                                src="/images/artTrail/Storying_the_Archive.jpg"
+                                                src={Book2Image}
                                                 alt="Front cover image of the book 'Storying the archive', which shows a montage of people's faces at the top and Indigenous artwork at the bottom"
                                             />
                                         </a>
@@ -133,7 +137,7 @@ const ContinueJourney = () => {
                                             rel="noopener noreferrer"
                                         >
                                             <StyledImage
-                                                src="/images/artTrail/Guide_LanguageRelationships_Final6a_300ppi.jpg"
+                                                src={Book3Image}
                                                 alt="Front cover image of the book 'The language of relationships with Aboriginal and Torres Strait Islander peoples - Introductory guide', which shows a photograph of a large group of people under a marquee in deep discussion with each other. Indigenous artwork is shown underneath the photo."
                                             />
                                         </a>

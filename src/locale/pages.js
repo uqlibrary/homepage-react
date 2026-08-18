@@ -38,6 +38,12 @@ export default {
             masquerade: {
                 title: 'Masquerade',
             },
+            membership: {
+                title: 'Membership administration',
+            },
+            membershipsettings: {
+                title: 'Membership expiry settings',
+            },
             alerts: {
                 title: 'Alerts administration',
                 form: {
@@ -59,6 +65,9 @@ export default {
         },
         bookExamBooth: {
             title: 'Book an exam booth in the UQ Centre',
+        },
+        membership: {
+            title: 'UQ Library Membership',
         },
         pastExamPaperSearch: {
             title: 'Search exam papers',
