@@ -171,6 +171,15 @@ const ArtTrailApp = () => {
         }));
     };
 
+    const handleSelectTrailPage = stepIndex => {
+        handleDrawerClose();
+        setActiveTab('trail');
+        updateTabState('trail', currentTabState => ({
+            ...currentTabState,
+            stepIndex: Math.min(Math.max(stepIndex, 0), trailPages.length - 1),
+        }));
+    };
+
     const renderTabContent = tab => {
         const panelState = tabState[tab.id];
         const panelPages = getTabPages(tab);
@@ -183,6 +192,7 @@ const ArtTrailApp = () => {
                 page={panelPage}
                 openDrawer={handleOpenDrawer}
                 active={tab.id === activeTab}
+                onSelectTrailPage={handleSelectTrailPage}
             />
         );
     };
@@ -243,9 +253,16 @@ const ArtTrailApp = () => {
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                     >
-                        <MenuItem onClick={handleMenuClose}>Trail overview</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>Map and stops</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>Visitor feedback</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>Indigenous art and Library discovery trail</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>'Punu Tjukurpa' 2013</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>'Sand Hills' 2007</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>'Devil Mountain Lizard Dreaming' 1997</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>'Tingari ceremonies at Wilkinkarra' 2003</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>'Kunawarritji 1' and 'Kunawarritji 2' 2012</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>'Pikkuw (Saltwater crocodile)' 2007</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>'Whispers (Poles)' 2023</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>'Warual III (Green Turtle)' 2015</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>Continue your journey</MenuItem>
                     </Menu>
                 </Toolbar>
             </AppBar>
