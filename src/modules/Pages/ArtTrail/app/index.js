@@ -6,6 +6,7 @@ import { grey } from '@mui/material/colors';
 
 import { mui1theme } from 'config';
 
+import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -29,12 +30,39 @@ import Toolbar from '@mui/material/Toolbar';
 import uqHeaderLogo from '../../../../../public/images/artTrail/uq-logo--reversed.svg';
 import CulturalDisclaimer from './CulturalDisclaimer';
 import MapTabContent from './MapTabContent';
+import { ART_TRAIL_MAP_POIS } from './mapPois';
 import { trailPages } from './pages';
 import TrailTabContent from './TrailTabContent';
 import useDocumentScrollLock from './hooks/useDocumentScrollLock';
 
 const CULTURAL_DISCLAIMER_COOKIE = 'ART_TRAIL_CULTURAL_DISCLAIMER_SEEN';
 const FOOTER_TABS_HEIGHT = '56px';
+const HEADER_HEIGHT = '64px';
+
+const stripInlineMarkup = value => value?.replace(/<[^>]+>/g, '') ?? '';
+
+const menuArtworkItems = ART_TRAIL_MAP_POIS.filter(
+    (poi, index, pois) => pois.findIndex(candidate => candidate.trailStepIndex === poi.trailStepIndex) === index,
+).map(poi => ({
+    id: poi.id,
+    label: `${poi.popupTitle || ''} ${stripInlineMarkup(poi.popupDescription)}`.trim(),
+    thumbnailSrc: poi.popupThumbnailSrc,
+    thumbnailAlt: poi.popupThumbnailAlt,
+    trailStepIndex: poi.trailStepIndex,
+}));
+
+const menuItems = [
+    {
+        id: 'trail-overview',
+        label: 'Indigenous art and Library discovery trail',
+        trailStepIndex: 0,
+    },
+    ...menuArtworkItems,
+    {
+        id: 'continue-your-journey',
+        label: 'Continue your journey',
+    },
+];
 
 const Puller = styled('div')(({ theme }) => ({
     width: 30,
@@ -180,6 +208,14 @@ const ArtTrailApp = () => {
         }));
     };
 
+    const handleMenuItemClick = menuItem => {
+        handleMenuClose();
+
+        if (typeof menuItem.trailStepIndex === 'number') {
+            handleSelectTrailPage(menuItem.trailStepIndex);
+        }
+    };
+
     const renderTabContent = tab => {
         const panelState = tabState[tab.id];
         const panelPages = getTabPages(tab);
@@ -203,7 +239,7 @@ const ArtTrailApp = () => {
         <Box
             data-testid="art-trail-app"
             sx={{
-                '--art-trail-header-height': '64px',
+                '--art-trail-header-height': HEADER_HEIGHT,
                 '--art-trail-footer-height': footerHeight,
                 '--art-trail-footer-tabs-height': FOOTER_TABS_HEIGHT,
                 '--art-trail-font-size': `${appTheme.typography.fontSize}px`,
@@ -225,6 +261,7 @@ const ArtTrailApp = () => {
                     height: 'var(--art-trail-header-height)',
                     justifyContent: 'center',
                     boxShadow: 3,
+                    zIndex: currentTheme => currentTheme.zIndex.modal + 1,
                 }}
             >
                 <Toolbar sx={{ minHeight: 'var(--art-trail-header-height)', px: { xs: 1.5, sm: 2.5 } }}>
@@ -235,37 +272,130 @@ const ArtTrailApp = () => {
                                 edge="start"
                                 aria-label="open navigation menu"
                                 sx={{ fontSize: '1.5rem' }}
-                                onClick={event => setMenuAnchor(event.currentTarget)}
+                                onClick={event =>
+                                    setMenuAnchor(currentAnchor => (currentAnchor ? null : event.currentTarget))
+                                }
                             >
-                                <MenuIcon />
+                                {menuAnchor ? <CloseIcon /> : <MenuIcon />}
                             </IconButton>
                         </Grid>
                         <Grid xs>
                             <HeaderLogo />
                         </Grid>
                     </Grid>
-
-                    <Menu
-                        anchorEl={menuAnchor}
-                        open={Boolean(menuAnchor)}
-                        onClose={handleMenuClose}
-                        keepMounted
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                    >
-                        <MenuItem onClick={handleMenuClose}>Indigenous art and Library discovery trail</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>'Punu Tjukurpa' 2013</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>'Sand Hills' 2007</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>'Devil Mountain Lizard Dreaming' 1997</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>'Tingari ceremonies at Wilkinkarra' 2003</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>'Kunawarritji 1' and 'Kunawarritji 2' 2012</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>'Pikkuw (Saltwater crocodile)' 2007</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>'Whispers (Poles)' 2023</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>'Warual III (Green Turtle)' 2015</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>Continue your journey</MenuItem>
-                    </Menu>
                 </Toolbar>
             </AppBar>
+
+            <Menu
+                anchorEl={menuAnchor}
+                open={Boolean(menuAnchor)}
+                onClose={handleMenuClose}
+                keepMounted
+                disableScrollLock
+                marginThreshold={0}
+                anchorReference="none"
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                slotProps={{
+                    root: {
+                        sx: {
+                            zIndex: currentTheme => currentTheme.zIndex.modal,
+                        },
+                    },
+                    paper: {
+                        sx: {
+                            position: 'fixed',
+                            top: {
+                                xs: `${HEADER_HEIGHT} !important`,
+                                sm: `calc(${HEADER_HEIGHT} + 16px) !important`,
+                            },
+                            bottom: {
+                                xs: '0 !important',
+                                sm: '16px !important',
+                            },
+                            left: { xs: '0 !important', sm: '16px !important' },
+                            right: { xs: '0 !important', sm: 'auto !important' },
+                            width: { xs: '100%', sm: 'min(420px, calc(100vw - 32px))' },
+                            maxWidth: { xs: '100%', sm: 420 },
+                            height: 'auto',
+                            maxHeight: {
+                                xs: 'none',
+                                sm: `min(720px, calc(100dvh - ${HEADER_HEIGHT} - 32px))`,
+                            },
+                            mt: '0 !important',
+                            borderRadius: { xs: 0, sm: 2 },
+                            bgcolor: 'primary.main',
+                            color: 'primary.contrastText',
+                            boxShadow: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            transform: 'none !important',
+                            overflow: 'hidden',
+                            '& .MuiMenu-list': {
+                                boxSizing: 'border-box',
+                                flex: 1,
+                                minHeight: 0,
+                                height: '100%',
+                                overflowY: 'auto',
+                                overflowX: 'hidden',
+                                overscrollBehavior: 'contain',
+                                WebkitOverflowScrolling: 'touch',
+                                paddingTop: 0,
+                                paddingBottom: 'calc(16px + env(safe-area-inset-bottom, 0px))',
+                            },
+                        },
+                    },
+                    list: {
+                        sx: {
+                            p: 0,
+                        },
+                    },
+                }}
+            >
+                {menuItems.map(menuItem => (
+                    <MenuItem
+                        key={menuItem.id}
+                        onClick={() => handleMenuItemClick(menuItem)}
+                        sx={{
+                            alignItems: 'flex-start',
+                            columnGap: menuItem.thumbnailSrc ? 1.5 : 0,
+                            px: { xs: 2, sm: 2.5 },
+                            py: 1.5,
+                            whiteSpace: 'normal',
+                            color: 'inherit',
+                            '&:not(:last-of-type)': {
+                                borderBottom: '1px solid rgba(255, 255, 255, 0.16)',
+                            },
+                            '&:hover': {
+                                bgcolor: 'rgba(255, 255, 255, 0.08)',
+                            },
+                        }}
+                    >
+                        {menuItem.thumbnailSrc ? (
+                            <Box
+                                component="img"
+                                src={menuItem.thumbnailSrc}
+                                alt={menuItem.thumbnailAlt || ''}
+                                sx={{
+                                    width: 56,
+                                    height: 56,
+                                    objectFit: 'cover',
+                                    borderRadius: 1.5,
+                                    flexShrink: 0,
+                                }}
+                            />
+                        ) : null}
+                        <Box
+                            sx={{
+                                minWidth: 0,
+                                display: 'grid',
+                                alignContent: 'center',
+                            }}
+                        >
+                            {menuItem.label}
+                        </Box>
+                    </MenuItem>
+                ))}
+            </Menu>
 
             <Box
                 sx={{

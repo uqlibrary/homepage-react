@@ -181,10 +181,21 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
     const markerInstancesRef = useRef([]);
     const activePopupRef = useRef(null);
 
+    const closeActivePopup = () => {
+        activePopupRef.current?.remove?.();
+        activePopupRef.current = null;
+    };
+
     useEffect(() => {
         if (!active || /jsdom/i.test(window.navigator.userAgent)) {
+            closeActivePopup();
             return;
         }
+
+        const handleSelectTrailPageFromMap = stepIndex => {
+            closeActivePopup();
+            onSelectTrailPage?.(stepIndex);
+        };
 
         if (mapInstanceRef.current) {
             mapInstanceRef.current.resize?.();
@@ -210,7 +221,7 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
                 markerInstancesRef.current = createMazemapPoiMarkers({
                     Mazemap,
                     map: mapInstanceRef.current,
-                    onSelectTrailPage,
+                    onSelectTrailPage: handleSelectTrailPageFromMap,
                     activePopupRef,
                 });
             })
@@ -219,8 +230,7 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
 
     useEffect(() => {
         return () => {
-            activePopupRef.current?.remove?.();
-            activePopupRef.current = null;
+            closeActivePopup();
             markerInstancesRef.current.forEach(marker => marker?.remove?.());
             markerInstancesRef.current = [];
             mapInstanceRef.current?.remove?.();
