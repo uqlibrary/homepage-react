@@ -61,6 +61,7 @@ const menuItems = [
     {
         id: 'continue-your-journey',
         label: 'Continue your journey',
+        trailStepIndex: 9,
     },
 ];
 
@@ -306,13 +307,13 @@ const ArtTrailApp = () => {
                             position: 'fixed',
                             top: {
                                 xs: `${HEADER_HEIGHT} !important`,
-                                sm: `calc(${HEADER_HEIGHT} + 16px) !important`,
+                                sm: `${HEADER_HEIGHT} !important`,
                             },
                             bottom: {
                                 xs: '0 !important',
                                 sm: '16px !important',
                             },
-                            left: { xs: '0 !important', sm: '16px !important' },
+                            left: '0 !important',
                             right: { xs: '0 !important', sm: 'auto !important' },
                             width: { xs: '100%', sm: 'min(420px, calc(100vw - 32px))' },
                             maxWidth: { xs: '100%', sm: 420 },
@@ -322,7 +323,7 @@ const ArtTrailApp = () => {
                                 sm: `min(720px, calc(100dvh - ${HEADER_HEIGHT} - 32px))`,
                             },
                             mt: '0 !important',
-                            borderRadius: { xs: 0, sm: 2 },
+                            borderRadius: 0,
                             bgcolor: 'primary.main',
                             color: 'primary.contrastText',
                             boxShadow: 8,
