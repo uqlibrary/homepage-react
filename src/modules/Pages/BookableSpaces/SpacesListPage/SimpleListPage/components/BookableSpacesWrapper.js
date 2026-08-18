@@ -733,11 +733,12 @@ const BookableSpacesWrapper = ({
         applyIntentFilters(requestedIntent, { replaceExistingFilters: true });
     }, [activeIntentId, applyIntentFilters, availableIntentDefinitions, view]);
 
-    React.useEffect(() => {
-        if (view === 'details') {
-            journeyTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }, [view]);
+    // Removing as per Nick's request.
+    // React.useEffect(() => {
+    //     if (view === 'details') {
+    //         journeyTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    //     }
+    // }, [view]);
 
     return (
         <BookableSpacesJourneyView
