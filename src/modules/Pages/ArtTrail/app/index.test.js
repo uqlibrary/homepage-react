@@ -163,11 +163,17 @@ describe('ArtTrailApp', () => {
             expect.objectContaining({ zLevel: ART_TRAIL_MAP_POIS[0].zLevel, offset: [0, -9] }),
         );
         expect(markerConstructor.mock.calls[0][0].textContent).toBe(`${ART_TRAIL_MAP_POIS[0].trailStepIndex}`);
-        expect(markerConstructor.mock.calls[0][0].style.color).toBe('rgb(255, 255, 255)');
+        expect(markerConstructor.mock.calls[0][0].className).toContain('artTrailMapMarker');
+        expect(markerConstructor.mock.calls[0][0].style.getPropertyValue('--art-trail-marker-color')).toBe(
+            ART_TRAIL_MAP_POIS[0].color,
+        );
         expect(setLngLat).toHaveBeenNthCalledWith(1, [ART_TRAIL_MAP_POIS[0].lng, ART_TRAIL_MAP_POIS[0].lat]);
         expect(addTo).toHaveBeenCalledTimes(ART_TRAIL_MAP_POIS.length);
         expect(addTo).toHaveBeenCalledWith(map);
         expect(popupSetDOMContent).toHaveBeenNthCalledWith(1, expect.any(HTMLElement));
+        expect(popupSetDOMContent.mock.calls[0][0].querySelector('img').getAttribute('src')).toBe(
+            ART_TRAIL_MAP_POIS[0].popupThumbnailSrc,
+        );
         expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain(ART_TRAIL_MAP_POIS[0].popupTitle);
         expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain('Punu Tjukurpa 2013');
         expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain(ART_TRAIL_MAP_POIS[0].popupLevelLabel);

@@ -13,13 +13,17 @@ const MAZEMAP_STYLESHEET_HREF = 'vendor/mazemap/mazemap.min.css';
 
 const popupClassNames = {
     container: 'artTrailMapPopup',
+    media: 'artTrailMapPopupMedia',
+    image: 'artTrailMapPopupImage',
+    body: 'artTrailMapPopupBody',
     title: 'artTrailMapPopupTitle',
     titleLink: 'artTrailMapPopupTitleLink',
     description: 'artTrailMapPopupDescription',
     level: 'artTrailMapPopupLevel',
 };
-const MARKER_SIZE_PX = 27;
-const MARKER_FONT_SIZE_PX = 15;
+const markerClassNames = {
+    marker: 'artTrailMapMarker',
+};
 
 const loadMazemapAssets = () => {
     if (window.Mazemap) {
@@ -63,18 +67,8 @@ const createPoiMarkerElement = poi => {
     const element = document.createElement('div');
     element.setAttribute('aria-label', poi.title || poi.popupTitle || `Trail stop ${poi.trailStepIndex}`);
     element.textContent = typeof poi.trailStepIndex === 'number' ? `${poi.trailStepIndex}` : '';
-    element.style.width = `${MARKER_SIZE_PX}px`;
-    element.style.height = `${MARKER_SIZE_PX}px`;
-    element.style.display = 'grid';
-    element.style.placeItems = 'center';
-    element.style.borderRadius = '50%';
-    element.style.backgroundColor = poi.color;
-    element.style.border = '2px solid #ffffff';
-    element.style.color = '#ffffff';
-    element.style.fontSize = `${MARKER_FONT_SIZE_PX}px`;
-    element.style.fontWeight = '700';
-    element.style.lineHeight = '1';
-    element.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.24)';
+    element.className = markerClassNames.marker;
+    element.style.setProperty('--art-trail-marker-color', poi.color);
 
     return element;
 };
@@ -82,6 +76,22 @@ const createPoiMarkerElement = poi => {
 const createPoiPopupContent = (poi, onSelectTrailPage) => {
     const container = document.createElement('div');
     container.className = popupClassNames.container;
+
+    if (poi.popupThumbnailSrc) {
+        const media = document.createElement('div');
+        media.className = popupClassNames.media;
+
+        const image = document.createElement('img');
+        image.className = popupClassNames.image;
+        image.src = poi.popupThumbnailSrc;
+        image.alt = poi.popupThumbnailAlt || poi.popupTitle || poi.title || 'Artwork thumbnail';
+        image.loading = 'lazy';
+        media.appendChild(image);
+        container.appendChild(media);
+    }
+
+    const body = document.createElement('div');
+    body.className = popupClassNames.body;
 
     const title = document.createElement(typeof poi.trailStepIndex === 'number' && onSelectTrailPage ? 'a' : 'div');
     title.textContent = poi.popupTitle || poi.title;
@@ -99,21 +109,23 @@ const createPoiPopupContent = (poi, onSelectTrailPage) => {
         });
     }
 
-    container.appendChild(title);
+    body.appendChild(title);
 
     if (poi.popupDescription) {
         const description = document.createElement('div');
         description.className = popupClassNames.description;
         description.innerHTML = poi.popupDescription;
-        container.appendChild(description);
+        body.appendChild(description);
     }
 
     if (poi.popupLevelLabel || typeof poi.zLevel === 'number') {
         const level = document.createElement('div');
         level.textContent = poi.popupLevelLabel || `Level ${poi.zLevel}`;
         level.className = popupClassNames.level;
-        container.appendChild(level);
+        body.appendChild(level);
     }
+
+    container.appendChild(body);
 
     return container;
 };
@@ -220,10 +232,41 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
         <>
             <GlobalStyles
                 styles={{
+                    [`.${markerClassNames.marker}`]: {
+                        width: '27px',
+                        height: '27px',
+                        display: 'grid',
+                        placeItems: 'center',
+                        borderRadius: '50%',
+                        backgroundColor: 'var(--art-trail-marker-color)',
+                        border: '2px solid #ffffff',
+                        color: '#ffffff',
+                        fontSize: '15px',
+                        fontWeight: 700,
+                        lineHeight: 1,
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.24)',
+                    },
                     [`.${popupClassNames.container}`]: {
                         display: 'grid',
+                        gridTemplateColumns: '72px minmax(0, 1fr)',
+                        gap: '10px',
+                        alignItems: 'start',
+                        maxWidth: '280px',
+                    },
+                    [`.${popupClassNames.media}`]: {
+                        width: '72px',
+                    },
+                    [`.${popupClassNames.image}`]: {
+                        display: 'block',
+                        width: '72px',
+                        height: '72px',
+                        objectFit: 'cover',
+                        borderRadius: '8px',
+                    },
+                    [`.${popupClassNames.body}`]: {
+                        display: 'grid',
                         gap: '4px',
-                        maxWidth: '220px',
+                        minWidth: 0,
                     },
                     [`.${popupClassNames.title}`]: {
                         fontSize: '14px',
@@ -246,10 +289,9 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
                     },
                     [`.${popupClassNames.level}`]: {
                         fontSize: '11px',
-                        fontWeight: 600,
+                        fontWeight: 400,
                         letterSpacing: '0.04em',
-                        textTransform: 'uppercase',
-                        opacity: 0.72,
+                        lineHeight: 1.2,
                     },
                 }}
             />
