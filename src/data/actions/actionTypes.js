@@ -443,3 +443,36 @@ export const LOANS_LOADED = 'LOANS_LOADED';
 export const VEMCOUNT_LOADING = 'VEMCOUNT_LOADING';
 export const VEMCOUNT_FAILED = 'VEMCOUNT_FAILED';
 export const VEMCOUNT_LOADED = 'VEMCOUNT_LOADED';
+
+// MEMBERSHIP
+// The data the form and landing chooser are built from: account_types, titles, hospital.*, reciprocal.*
+export const MEMBERSHIP_FORM_DATA_LOADING = 'MEMBERSHIP_FORM_DATA_LOADING';
+export const MEMBERSHIP_FORM_DATA_LOADED = 'MEMBERSHIP_FORM_DATA_LOADED';
+export const MEMBERSHIP_FORM_DATA_FAILED = 'MEMBERSHIP_FORM_DATA_FAILED';
+
+// a single membership record — loaded, saved, cleared
+export const MEMBERSHIP_LOADING = 'MEMBERSHIP_LOADING';
+export const MEMBERSHIP_LOADED = 'MEMBERSHIP_LOADED';
+export const MEMBERSHIP_FAILED = 'MEMBERSHIP_FAILED';
+export const MEMBERSHIP_CLEAR = 'MEMBERSHIP_CLEAR';
+
+export const MEMBERSHIP_SAVING = 'MEMBERSHIP_SAVING';
+export const MEMBERSHIP_SAVED = 'MEMBERSHIP_SAVED';
+export const MEMBERSHIP_SAVE_FAILED = 'MEMBERSHIP_SAVE_FAILED';
+export const MEMBERSHIP_DELETED = 'MEMBERSHIP_DELETED';
+
+// the admin listing of applications
+export const MEMBERSHIPS_LOADING = 'MEMBERSHIPS_LOADING';
+export const MEMBERSHIPS_LOADED = 'MEMBERSHIPS_LOADED';
+export const MEMBERSHIPS_FAILED = 'MEMBERSHIPS_FAILED';
+export const MEMBERSHIPS_CLEAR = 'MEMBERSHIPS_CLEAR';
+
+// whether the signed-in user has a renewal waiting
+export const MEMBERSHIP_RENEWING_LOADING = 'MEMBERSHIP_RENEWING_LOADING';
+export const MEMBERSHIP_RENEWING_LOADED = 'MEMBERSHIP_RENEWING_LOADED';
+export const MEMBERSHIP_RENEWING_FAILED = 'MEMBERSHIP_RENEWING_FAILED';
+
+// the membership types and their default expiry, for the admin settings screen
+export const MEMBERSHIP_TYPES_LOADING = 'MEMBERSHIP_TYPES_LOADING';
+export const MEMBERSHIP_TYPES_LOADED = 'MEMBERSHIP_TYPES_LOADED';
+export const MEMBERSHIP_TYPES_FAILED = 'MEMBERSHIP_TYPES_FAILED';
