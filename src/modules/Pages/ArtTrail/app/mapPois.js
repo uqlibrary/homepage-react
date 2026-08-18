@@ -1,10 +1,20 @@
+import BurtonThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/Burton_2016_03_crop-scaled.jpg';
+import NapangardiThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/Napandardi_2013_40_crop_WEB.jpg';
+import PetyarreThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/Petyarre_2001_02_crop_WEB.jpg';
+import TjupurrulaThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/Tjupurrula_2014_40_WEB.jpg';
+import Kunawarritji1Thumbnail from '../../../../../public/images/artTrail/artwork/thumbs/2018.27_Kunawarritji-1-landscape-2.jpg';
+import Kunawarritji2Thumbnail from '../../../../../public/images/artTrail/artwork/thumbs/2018.28_Kunawarritji-2-landscape-2.jpg';
+import PikkuwThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/UQAM_20241219_CampusArtwork_046.jpg';
+import WhispersThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/UQAM_20260116_CampusArtwork_073_LR.jpg';
+import WarualThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/Robinson_2017_02_WEBREADY.jpg';
+
 export const ART_TRAIL_MAP_POIS = [
     {
         id: 'artwork-entry-1',
         popupTitle: 'Hector Tjupuru Burton, Ray Ken, Mick Wikilyiri & Brenton Ken,',
         popupDescription: '<em>Punu Tjukurpa</em> 2013',
         popupLevelLabel: 'Duhig Tower, Level 1',
-        popupThumbnailSrc: '/images/artTrail/artwork/thumbs/Burton_2016_03_crop-scaled.jpg',
+        popupThumbnailSrc: BurtonThumbnail,
         popupThumbnailAlt: 'Punu Tjukurpa artwork thumbnail',
         trailStepIndex: 1,
         lng: 153.014414,
@@ -17,7 +27,7 @@ export const ART_TRAIL_MAP_POIS = [
         popupTitle: 'Lily Kelly Napangardi,',
         popupDescription: '<em>Sand Hills</em> 2007',
         popupLevelLabel: 'Duhig Tower, Level 1',
-        popupThumbnailSrc: '/images/artTrail/artwork/thumbs/Napandardi_2013_40_crop_WEB.jpg',
+        popupThumbnailSrc: NapangardiThumbnail,
         popupThumbnailAlt: 'Sand Hills artwork thumbnail',
         trailStepIndex: 2,
         lng: 153.0144104,
@@ -30,7 +40,7 @@ export const ART_TRAIL_MAP_POIS = [
         popupTitle: 'Gloria Tamerre Petyarre,',
         popupDescription: '<em>Devil Mountain Lizard Dreaming</em> 1997',
         popupLevelLabel: 'Duhig Tower, Level 1',
-        popupThumbnailSrc: '/images/artTrail/artwork/thumbs/Petyarre_2001_02_crop_WEB.jpg',
+        popupThumbnailSrc: PetyarreThumbnail,
         popupThumbnailAlt: 'Devil Mountain Lizard Dreaming artwork thumbnail',
         trailStepIndex: 3,
         lng: 153.0144235,
@@ -43,7 +53,7 @@ export const ART_TRAIL_MAP_POIS = [
         popupTitle: 'Johnny Yungut Tjupurrula,',
         popupDescription: '<em>Tingari ceremonies at Wilkinkarra</em> 2003',
         popupLevelLabel: 'Duhig Tower, Level 1',
-        popupThumbnailSrc: '/images/artTrail/artwork/thumbs/Tjupurrula_2014_40_WEB.jpg',
+        popupThumbnailSrc: TjupurrulaThumbnail,
         popupThumbnailAlt: 'Tingari ceremonies at Wilkinkarra artwork thumbnail',
         trailStepIndex: 4,
         lng: 153.01443,
@@ -56,7 +66,7 @@ export const ART_TRAIL_MAP_POIS = [
         popupTitle: 'Nora Wompi Nungurrayi,',
         popupDescription: '<em>Kunawarritji 1</em> and <em>Kunawarritji 2</em> 2012',
         popupLevelLabel: 'Duhig Tower, Level 2',
-        popupThumbnailSrc: '/images/artTrail/artwork/thumbs/2018.27_Kunawarritji-1-landscape-2.jpg',
+        popupThumbnailSrc: Kunawarritji1Thumbnail,
         popupThumbnailAlt: 'Kunawarritji 1 artwork thumbnail',
         trailStepIndex: 5,
         lng: 153.01427,
@@ -69,7 +79,7 @@ export const ART_TRAIL_MAP_POIS = [
         popupTitle: 'Nora Wompi Nungurrayi,',
         popupDescription: '<em>Kunawarritji 1</em> and <em>Kunawarritji 2</em> 2012',
         popupLevelLabel: 'Duhig Tower, Level 2',
-        popupThumbnailSrc: '/images/artTrail/artwork/thumbs/2018.28_Kunawarritji-2-landscape-2.jpg',
+        popupThumbnailSrc: Kunawarritji2Thumbnail,
         popupThumbnailAlt: 'Kunawarritji 2 artwork thumbnail',
         trailStepIndex: 5,
         lng: 153.01426,
@@ -82,7 +92,7 @@ export const ART_TRAIL_MAP_POIS = [
         popupTitle: 'Craig Koomeeta,',
         popupDescription: '<em>Pikkuw (Saltwater crocodile)</em> 2008',
         popupLevelLabel: 'Central Library, Level 1',
-        popupThumbnailSrc: '/images/artTrail/artwork/thumbs/UQAM_20241219_CampusArtwork_046.jpg',
+        popupThumbnailSrc: PikkuwThumbnail,
         popupThumbnailAlt: 'Pikkuw artwork thumbnail',
         trailStepIndex: 6,
         lng: 153.01398,
@@ -95,7 +105,7 @@ export const ART_TRAIL_MAP_POIS = [
         popupTitle: 'Megan Cope,',
         popupDescription: '<em>Whispers (Poles)</em> 2023',
         popupLevelLabel: 'Central Library, Level 1',
-        popupThumbnailSrc: '/images/artTrail/artwork/thumbs/UQAM_20260116_CampusArtwork_073_LR.jpg',
+        popupThumbnailSrc: WhispersThumbnail,
         popupThumbnailAlt: 'Whispers artwork thumbnail',
         trailStepIndex: 7,
         lng: 153.013879,
@@ -108,7 +118,7 @@ export const ART_TRAIL_MAP_POIS = [
         popupTitle: 'Megan Cope,',
         popupDescription: '<em>Whispers (Poles)</em> 2023',
         popupLevelLabel: 'Central Library, Level 1',
-        popupThumbnailSrc: '/images/artTrail/artwork/thumbs/UQAM_20260116_CampusArtwork_073_LR.jpg',
+        popupThumbnailSrc: WhispersThumbnail,
         popupThumbnailAlt: 'Whispers artwork thumbnail',
         trailStepIndex: 7,
         lng: 153.01378,
@@ -121,7 +131,7 @@ export const ART_TRAIL_MAP_POIS = [
         popupTitle: 'Brian Robinson,',
         popupDescription: '<em>Warual III (Green Turtle)</em> 2015',
         popupLevelLabel: 'Central Library, Level 2',
-        popupThumbnailSrc: '/images/artTrail/artwork/thumbs/Robinson_2017_02_WEBREADY.jpg',
+        popupThumbnailSrc: WarualThumbnail,
         popupThumbnailAlt: 'Warual III artwork thumbnail',
         trailStepIndex: 8,
         lng: 153.013755,
