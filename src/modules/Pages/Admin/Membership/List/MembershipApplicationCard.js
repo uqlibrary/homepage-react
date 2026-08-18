@@ -1,0 +1,574 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import { alpha } from '@mui/material/styles';
+import { visuallyHidden } from '@mui/utils';
+import moment from 'moment';
+
+import MembershipInlineEdit from './MembershipInlineEdit';
+import { default as locale } from '../membershipAdmin.locale';
+
+const strings = locale.list.row;
+
+// An expiry is written day-first, and a barcode starts with the library's 24067 prefix and runs to 13 or 14
+// digits. Both are checked before a save is offered, so a malformed value is caught without a round trip.
+export const EXPIRY_PATTERN = /^[0-9]{1,2}-[0-9]{1,2}-[0-9]{4}$/;
+export const BARCODE_PATTERN = /^24067[0-9]{8,9}$/;
+
+/**
+ * The applicant's full name, in the order it is written on a card and in an aria-label.
+ */
+export const fullName = membership =>
+    [membership?.title, membership?.first_name, membership?.sn].filter(Boolean).join(' ');
+
+// The two statuses that mean the application already exists as a library account.
+export const ISSUED_STATUSES = ['confirmed', 'renewing'];
+
+// The backend reports a confirmation it has begun but not finished as step 1 or 2. Acting on the application
+// again is unsafe until that settles.
+export const IN_PROGRESS_STEPS = [1, 2, '1', '2'];
+
+export const isIssued = membership => ISSUED_STATUSES.includes(membership?.status);
+export const isConfirmationInProgress = membership => IN_PROGRESS_STEPS.includes(membership?.confirm_step);
+
+/**
+ * The API writes a hyphen where it means a blank: a blank is not saved on its own, so it stores a "-" for a
+ * payment that returned nothing. So a receipt of "-" is no receipt at all - a payment that came back empty,
+ * which the backend pairs with a 'Failed' response - and a receipt of any other value is a real one to show.
+ */
+export const NO_VALUE = '-';
+export const hasReceipt = membership => !!membership?.payment_receipt && membership.payment_receipt !== NO_VALUE;
+
+/**
+ * A payment that was tried and did not work. `payment_response` is written only when a payment is taken, as one
+ * of exactly two words, so a null means no payment was ever attempted and is not a failure. A success does not
+ * linger to be shown here: it confirms the application the moment it lands, and leaves its receipt as the
+ * evidence. What is left to flag is a failure sitting behind an application still waiting on a decision - the
+ * case for Delete rather than Confirm.
+ */
+export const PAYMENT_FAILED = 'Failed';
+export const hasFailedPayment = membership => membership?.payment_response === PAYMENT_FAILED;
+
+// Confirming an applicant who has been confirmed before is a re-confirmation, and reads as one.
+export const confirmButtonText = membership => (membership?.confirmed_on ? strings.reconfirm : strings.confirm);
+
+export const statusText = status => (!status ? '' : status.charAt(0).toUpperCase() + status.slice(1));
+
+// What a supporting document reads as on its link. The backend usually stores the original filename; a document
+// stored without one still needs a word to click, so a generic one stands in.
+export const attachmentName = attachment => attachment?.name || strings.attachments.fallbackName;
+
+// Colour carries the same meaning the word does, so it is never the only thing saying it (WCAG 1.4.1).
+export const STATUS_COLOURS = { confirmed: 'success', renewing: 'warning' };
+export const statusColour = status => STATUS_COLOURS[status] ?? 'default';
+
+// Every date this API emits is day-first: the Membership model sets `$dateFormat = 'd-m-Y'` and serialises
+// through it, and submitted_on is written as `date('d-m-Y H:i:s')`. Handing those to a bare moment() is not
+// merely imprecise - it reads 04-05-1990 as 5 April, because moment falls back to the platform parser and that
+// one is month-first. A date of birth is what an admin checks an applicant against, so it has to be the date
+// the applicant gave.
+export const API_DATE_FORMAT = 'D-M-YYYY';
+export const API_DATETIME_FORMAT = 'D-M-YYYY H:mm:ss';
+
+// Better to show what arrived than "Invalid date": the raw value is at least a clue to what went wrong.
+const format = (value, inputFormat, outputFormat) => {
+    const parsed = moment(value, inputFormat);
+    return parsed.isValid() ? parsed.format(outputFormat) : value;
+};
+
+// A birth date has no time of day. Formatting it as one printed a meaningless "12:00am" after every one.
+export const formatDate = value => format(value, API_DATE_FORMAT, 'D MMM YYYY');
+export const formatDateTime = value => format(value, API_DATETIME_FORMAT, 'D MMM YYYY, h:mma');
+
+/**
+ * A fact drawn as an icon rather than a word. The icon is decoration - it is the hidden label that names the
+ * value, since a date reads as "10 Jul 2026" to a screen reader and nothing tells it which date that is.
+ */
+export const IconFact = ({ icon: Icon, label, children }) => (
+    <>
+        <Icon aria-hidden="true" sx={{ fontSize: 14, verticalAlign: '-0.2em', marginRight: 0.375 }} />
+        <Box component="span" sx={visuallyHidden}>
+            {label}{' '}
+        </Box>
+        {children}
+    </>
+);
+
+IconFact.propTypes = { icon: PropTypes.elementType, label: PropTypes.string, children: PropTypes.node };
+
+// The avatar is decoration that helps an admin find their place in a long queue, so it is hidden from screen
+// readers - the name is right beside it.
+export const initialsOf = membership =>
+    [membership?.first_name, membership?.sn]
+        .filter(Boolean)
+        .map(part => part.trim()[0])
+        .join('')
+        .toUpperCase();
+
+/**
+ * The applicant's details: one line of "a · b · c" where there is room for it, a fact per line where there is
+ * not.
+ *
+ * The separators are decoration: a screen reader reading "middot" between every fact would be noise, so they
+ * are hidden and each fact is its own element.
+ *
+ * Wide, this runs as text rather than as a flex row. A flex gap sits on both sides of every separator, which
+ * leaves each dot marooned in its own pocket of air instead of reading as punctuation, and flex wrapping treats
+ * a separator as a child in its own right, so a card could end a line on a dot and push the fact it belonged to
+ * onto the next one. Here each separator shares a span with the fact that follows it and has no whitespace
+ * between them, so the two can only ever wrap together.
+ *
+ * Narrow, a dot earns nothing. A separator only does work when two facts share a line; a fact that starts one
+ * has already been separated by the break above it, and a leading dot there just reads as a bullet. On a phone
+ * almost every fact starts its own line anyway, so the facts stack and the dots go - which also stops a fact
+ * being split down the middle, "Born" stranded at one line's end and its date at the next one's start.
+ */
+export const MetaLine = ({ children, ...props }) => {
+    const items = React.Children.toArray(children).filter(Boolean);
+    return (
+        <Typography component="div" variant="caption" color="text.secondary" sx={{ lineHeight: 1.6 }} {...props}>
+            {items.map((item, index) => (
+                <React.Fragment key={index}>
+                    {index > 0 && ' '}
+                    {/* A fact is atomic: it wraps to the next line whole, rather than leaving "Submitted" at the
+                        end of one line and its date at the start of the next. The line breaks between facts
+                        instead - of which there is always one to spare, since a fact too long to share a line
+                        gets one of its own. */}
+                    <Box component="span" sx={{ display: { xs: 'block', sm: 'inline' }, whiteSpace: { sm: 'nowrap' } }}>
+                        {index > 0 && (
+                            <Box
+                                component="span"
+                                aria-hidden="true"
+                                sx={{ display: { xs: 'none', sm: 'inline' }, color: 'text.disabled', marginRight: 0.5 }}
+                            >
+                                ·
+                            </Box>
+                        )}
+                        {item}
+                    </Box>
+                </React.Fragment>
+            ))}
+        </Typography>
+    );
+};
+
+MetaLine.propTypes = { children: PropTypes.node };
+
+/**
+ * One labelled value in the issued-account panel, drawn as a term-and-definition pair so a screen reader reads
+ * "Expiry, 31 Dec 2026" rather than two loose strings.
+ */
+export const AccountField = ({ label, children }) => (
+    <>
+        <Box component="dt" sx={{ typography: 'caption', color: 'text.secondary', alignSelf: 'center' }}>
+            {label}
+        </Box>
+        <Box component="dd" sx={{ margin: 0 }}>
+            {children}
+        </Box>
+    </>
+);
+
+AccountField.propTypes = { label: PropTypes.string, children: PropTypes.node };
+
+/**
+ * One application in the admin queue.
+ *
+ * A card rather than a table row. An admin here works one application at a time rather than comparing a column
+ * of dates down the page, so each application is a record with a heading, its status beside it, and its facts on
+ * the line beneath.
+ *
+ * The heading matters beyond looks: it lets a screen reader user jump between applications instead of walking
+ * every cell of a grid.
+ */
+export const MembershipApplicationCard = ({
+    membership,
+    typeTitles,
+    busy,
+    deleted,
+    onConfirm,
+    onDelete,
+    onUpdate,
+    onResend,
+    onView,
+    onOpenAttachment,
+}) => {
+    const name = fullName(membership);
+    const headingId = `membership-name-${membership.id}`;
+    // The supporting documents the application carries, turned into a list from the API's flat attachment fields
+    // upstream. A reciprocal or hospital application is confirmed or refused on the strength of these, so they
+    // sit on the card rather than only in the full record.
+    const attachments = membership.attachments ?? [];
+    const attachmentsLabelId = `membership-attachments-label-${membership.id}`;
+    const inProgress = isConfirmationInProgress(membership);
+    // An issued account has an expiry and a barcode to show. Only a confirmed one is corrected here: a renewing
+    // account's details belong to the membership being renewed and are settled by confirming the renewal, not
+    // edited mid-flight.
+    const issued = isIssued(membership);
+    const editable = membership.status === 'confirmed';
+    // A confirmed account has no confirm to offer; a renewing one can be re-confirmed, and one still waiting on
+    // a decision can be confirmed. Nothing is actionable while a confirmation is already in flight, or once the
+    // application has been deleted.
+    const canConfirm = !deleted && !inProgress && (membership.status === 'renewing' || !isIssued(membership));
+    // Only an application still waiting on a decision is deleted from here - an issued account is not thrown
+    // away from the queue, and a confirmation in flight must settle first.
+    const canDelete = !deleted && !inProgress && !isIssued(membership);
+    // A renewing member can be sent their renewal link again, for one who lost or never received it. Held back
+    // while a confirmation is in flight or once the application is deleted, the same as the other actions.
+    const canResend = membership.status === 'renewing' && !deleted && !inProgress;
+    // A receipt is the evidence a paying application was paid for; a failed payment behind one still waiting on
+    // a decision is the reason to delete it rather than confirm it. Either, or an issued account's own fields,
+    // gives the evidence panel something to hold.
+    const showsReceipt = hasReceipt(membership);
+    const paymentFailed = hasFailedPayment(membership);
+    const showsPanel = issued || showsReceipt || paymentFailed;
+
+    return (
+        <Box component="li" sx={{ listStyle: 'none' }}>
+            <Card
+                variant="outlined"
+                component="article"
+                aria-labelledby={headingId}
+                data-testid={`membership-row-${membership.id}`}
+                sx={{
+                    borderRadius: 2,
+                    transition: 'border-color 120ms ease, box-shadow 120ms ease',
+                    // Hover is an affordance, never the way anything is revealed - everything here is on the
+                    // page whether a pointer is over it or not (WCAG 1.4.13, and keyboard users have no hover).
+                    '&:hover': {
+                        borderColor: theme => alpha(theme.palette.primary.main, 0.4),
+                        boxShadow: theme => `0 1px 8px ${alpha(theme.palette.primary.main, 0.08)}`,
+                    },
+                    // A deleted application stays on the page so the admin sees the delete took, but reads as
+                    // spent rather than live.
+                    ...(deleted ? { opacity: 0.6 } : {}),
+                }}
+            >
+                <CardContent
+                    sx={{
+                        display: 'flex',
+                        gap: 1.5,
+                        paddingY: 1.5,
+                        '&:last-child': { paddingBottom: 1.5 },
+                    }}
+                >
+                    <Avatar
+                        aria-hidden="true"
+                        sx={{
+                            bgcolor: theme => alpha(theme.palette.primary.main, 0.1),
+                            color: 'primary.main',
+                            fontSize: 13,
+                            fontWeight: 600,
+                            width: 36,
+                            height: 36,
+                            flexShrink: 0,
+                        }}
+                    >
+                        {initialsOf(membership)}
+                    </Avatar>
+
+                    {/* One column beside the avatar. */}
+                    <Box sx={{ flex: '1 1 auto', minWidth: 0 }}>
+                        {/* The name and the application's status share the top line: the name to jump to, the
+                            status to read at a glance. */}
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'flex-start',
+                                gap: 1,
+                            }}
+                        >
+                            <Typography
+                                id={headingId}
+                                component="h2"
+                                variant="subtitle1"
+                                sx={{ fontWeight: 600, lineHeight: 1.4 }}
+                            >
+                                {name}
+                            </Typography>
+
+                            <Chip
+                                size="small"
+                                label={statusText(membership.status)}
+                                color={statusColour(membership.status)}
+                                data-testid={`membership-status-${membership.id}`}
+                                sx={{ flexShrink: 0 }}
+                            />
+                        </Box>
+
+                        <MetaLine data-testid={`membership-meta-${membership.id}`}>
+                            {/* The type is a fact about the application, not a state of it. It leads the line,
+                                and carries the only emphasis in it, because it is the fact that decides which
+                                rules apply. The hospital service that qualifies it follows immediately. */}
+                            <Box
+                                component="span"
+                                sx={{ fontWeight: 600, color: 'text.primary' }}
+                                data-testid={`membership-type-${membership.id}`}
+                            >
+                                {typeTitles[membership.type] ?? membership.type}
+                            </Box>
+                            {!!membership.hospital_service && membership.hospital_service}
+                            {!!membership.mail && (
+                                <Link
+                                    href={`mailto:${membership.mail}?subject=${encodeURIComponent(
+                                        strings.mailSubject,
+                                    )}`}
+                                    // The one fact that opts out of staying whole. An address has no length
+                                    // limit worth trusting, and an unbreakable one would push the card wider
+                                    // than the screen (WCAG 1.4.10).
+                                    sx={{ whiteSpace: 'normal', overflowWrap: 'anywhere' }}
+                                >
+                                    <MailOutlineIcon
+                                        aria-hidden="true"
+                                        sx={{ fontSize: 14, verticalAlign: '-0.2em', marginRight: 0.375 }}
+                                    />
+                                    {membership.mail}
+                                </Link>
+                            )}
+                            {!!membership.submitted_on && (
+                                <IconFact icon={EventOutlinedIcon} label={strings.submittedOn}>
+                                    {formatDateTime(membership.submitted_on)}
+                                </IconFact>
+                            )}
+                            {!!membership.date_of_birth &&
+                                membership.type !== 'fryer' &&
+                                `${strings.birthdate} ${formatDate(membership.date_of_birth)}`}
+                            {!!membership.alumni_num && membership.alumni_num}
+                        </MetaLine>
+
+                        {/* The evidence an admin decides on: a receipt is why a paying application is confirmed
+                            rather than deleted, and a failed payment is why it is deleted rather than confirmed.
+                            An issued account shows the expiry and barcode the decision produced, correctable in
+                            place where the account is confirmed and read-only while it is renewing. */}
+                        {!!showsPanel && (
+                            <Box
+                                component="dl"
+                                data-testid={`membership-panel-${membership.id}`}
+                                sx={{
+                                    display: 'inline-grid',
+                                    gridTemplateColumns: 'auto auto',
+                                    columnGap: 1.5,
+                                    rowGap: 0.25,
+                                    alignItems: 'center',
+                                    margin: 0,
+                                    marginTop: 1,
+                                    paddingX: 1.25,
+                                    paddingY: 0.75,
+                                    borderRadius: 1.5,
+                                    backgroundColor: theme => alpha(theme.palette.primary.main, 0.04),
+                                }}
+                            >
+                                {!!paymentFailed && (
+                                    <AccountField label={strings.payment}>
+                                        {/* The word and the icon both say it, so the colour is never the only
+                                            thing that does (WCAG 1.4.1). */}
+                                        <Typography
+                                            component="span"
+                                            variant="body2"
+                                            color="error.main"
+                                            data-testid={`membership-payment-failed-${membership.id}`}
+                                        >
+                                            <ErrorOutlineIcon
+                                                aria-hidden="true"
+                                                sx={{ fontSize: 16, verticalAlign: '-0.2em', marginRight: 0.375 }}
+                                            />
+                                            {strings.paymentFailed}
+                                        </Typography>
+                                    </AccountField>
+                                )}
+                                {!!showsReceipt && (
+                                    <AccountField label={strings.paymentReceipt}>
+                                        <Typography
+                                            component="span"
+                                            variant="body2"
+                                            data-testid={`membership-receipt-${membership.id}`}
+                                        >
+                                            {membership.payment_receipt}
+                                        </Typography>
+                                    </AccountField>
+                                )}
+                                {!!issued && (
+                                    <>
+                                        <AccountField label={locale.list.inlineEdit.expiry.label}>
+                                            <MembershipInlineEdit
+                                                fieldId={`expiry-${membership.id}`}
+                                                field={locale.list.inlineEdit.expiry.field}
+                                                label={locale.list.inlineEdit.expiry.label}
+                                                placeholder={locale.list.inlineEdit.expiry.placeholder}
+                                                pattern={EXPIRY_PATTERN}
+                                                invalidMessage={locale.list.inlineEdit.expiry.invalid}
+                                                value={membership.expires_on}
+                                                name={name}
+                                                editable={editable}
+                                                saving={busy === 'updating'}
+                                                onSave={value => onUpdate(membership, 'expires_on', value)}
+                                            />
+                                        </AccountField>
+                                        <AccountField label={locale.list.inlineEdit.barcode.label}>
+                                            <MembershipInlineEdit
+                                                fieldId={`barcode-${membership.id}`}
+                                                field={locale.list.inlineEdit.barcode.field}
+                                                label={locale.list.inlineEdit.barcode.label}
+                                                pattern={BARCODE_PATTERN}
+                                                invalidMessage={locale.list.inlineEdit.barcode.invalid}
+                                                value={membership.barcode}
+                                                name={name}
+                                                editable={editable}
+                                                saving={busy === 'updating'}
+                                                onSave={value => onUpdate(membership, 'barcode', value)}
+                                            />
+                                        </AccountField>
+                                    </>
+                                )}
+                            </Box>
+                        )}
+
+                        {/* The supporting documents attached to the application. Each opens in a new tab from a
+                            signed link the admin's click fetches, since the record carries the file's key but no
+                            URL to it. Shown only where there is a document to show. */}
+                        {attachments.length > 0 && (
+                            <Box sx={{ marginTop: 1 }} data-testid={`membership-attachments-${membership.id}`}>
+                                <Typography
+                                    id={attachmentsLabelId}
+                                    component="div"
+                                    variant="caption"
+                                    color="text.secondary"
+                                    sx={{ marginBottom: 0.25 }}
+                                >
+                                    {strings.attachments.label}
+                                </Typography>
+                                <Box
+                                    role="group"
+                                    aria-labelledby={attachmentsLabelId}
+                                    sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}
+                                >
+                                    {attachments.map((attachment, index) => (
+                                        <Button
+                                            key={attachment.key ?? index}
+                                            size="small"
+                                            variant="outlined"
+                                            startIcon={<AttachFileIcon />}
+                                            data-testid={`membership-attachment-${membership.id}-${index}`}
+                                            aria-label={strings.attachments.openLabel(attachmentName(attachment), name)}
+                                            onClick={() => onOpenAttachment(attachment)}
+                                            sx={{ textTransform: 'none', overflowWrap: 'anywhere' }}
+                                        >
+                                            {attachmentName(attachment)}
+                                        </Button>
+                                    ))}
+                                </Box>
+                            </Box>
+                        )}
+
+                        {/* The decision on the application, kept in the same corner of every card so an admin
+                            always knows where to reach for it. A confirmation already under way, or an
+                            application already deleted, replaces those buttons with a chip saying so, rather than
+                            a control that is unsafe or pointless to press. Viewing the full record is offered on
+                            every card, whatever state it is in. */}
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'flex-end',
+                                alignItems: 'center',
+                                gap: 0.5,
+                                marginTop: 1,
+                            }}
+                        >
+                            <Button
+                                size="small"
+                                variant="text"
+                                data-testid={`membership-view-${membership.id}`}
+                                aria-label={strings.viewLabel(name)}
+                                onClick={() => onView(membership)}
+                            >
+                                {strings.view}
+                            </Button>
+                            {!!inProgress && (
+                                <Chip
+                                    size="small"
+                                    variant="outlined"
+                                    label={strings.inProgress}
+                                    data-testid={`membership-inprogress-${membership.id}`}
+                                />
+                            )}
+                            {!!deleted && (
+                                <Chip
+                                    size="small"
+                                    variant="outlined"
+                                    label={strings.deleted}
+                                    data-testid={`membership-deleted-${membership.id}`}
+                                />
+                            )}
+                            {!!canDelete && (
+                                <Button
+                                    size="small"
+                                    variant="text"
+                                    color="error"
+                                    data-testid={`membership-delete-${membership.id}`}
+                                    aria-label={strings.deleteLabel(name)}
+                                    disabled={busy === 'deleting'}
+                                    onClick={() => onDelete(membership)}
+                                >
+                                    {busy === 'deleting' ? strings.deleting : strings.delete}
+                                </Button>
+                            )}
+                            {!!canResend && (
+                                <Button
+                                    size="small"
+                                    variant="text"
+                                    data-testid={`membership-resend-${membership.id}`}
+                                    aria-label={strings.resendLabel(name)}
+                                    onClick={() => onResend(membership)}
+                                >
+                                    {strings.resend}
+                                </Button>
+                            )}
+                            {!!canConfirm && (
+                                <Button
+                                    size="small"
+                                    variant="contained"
+                                    disableElevation
+                                    data-testid={`membership-confirm-${membership.id}`}
+                                    aria-label={strings.confirmLabel(confirmButtonText(membership), name)}
+                                    disabled={busy === 'confirming'}
+                                    onClick={() => onConfirm(membership)}
+                                >
+                                    {busy === 'confirming' ? strings.confirming : confirmButtonText(membership)}
+                                </Button>
+                            )}
+                        </Box>
+                    </Box>
+                </CardContent>
+            </Card>
+        </Box>
+    );
+};
+
+MembershipApplicationCard.propTypes = {
+    membership: PropTypes.object.isRequired,
+    typeTitles: PropTypes.object.isRequired,
+    // What this card is waiting on, if anything: 'confirming' | 'deleting' | 'updating'.
+    busy: PropTypes.string,
+    deleted: PropTypes.bool,
+    onConfirm: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onUpdate: PropTypes.func.isRequired,
+    onResend: PropTypes.func.isRequired,
+    onView: PropTypes.func.isRequired,
+    onOpenAttachment: PropTypes.func.isRequired,
+};
+
+export default MembershipApplicationCard;
