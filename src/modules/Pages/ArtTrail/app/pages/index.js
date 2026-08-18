@@ -7,6 +7,7 @@ import Kunawarritji from './Kunawarritji';
 import Pikkuw from './Pikkuw';
 import Whispers from './Whispers';
 import Warual from './Warual';
+import ContinueJourney from './ContinueJourney';
 
 export const trailPages = [
     Welcome,
@@ -18,4 +19,5 @@ export const trailPages = [
     Pikkuw,
     Whispers,
     Warual,
+    ContinueJourney,
 ];

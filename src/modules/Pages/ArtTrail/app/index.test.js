@@ -45,8 +45,10 @@ describe('ArtTrailApp', () => {
 
         await user.click(screen.getByRole('button', { name: 'open navigation menu' }));
 
-        expect(screen.getByRole('menuitem', { name: 'Trail overview' })).toBeInTheDocument();
-        await user.click(screen.getByRole('menuitem', { name: 'Trail overview' }));
+        expect(
+            screen.getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' }),
+        ).toBeInTheDocument();
+        await user.click(screen.getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' }));
 
         await user.click(screen.getByRole('button', { name: 'Start the trail' }));
         expect(screen.getByRole('button', { name: 'Previous page' })).toBeEnabled();
@@ -107,6 +109,8 @@ describe('ArtTrailApp', () => {
     });
 
     it('creates a marker for each hardcoded map POI', () => {
+        const onSelectTrailPage = jest.fn();
+        const activePopupRef = { current: null };
         const addTo = jest.fn(function addTo(map) {
             this.map = map;
             return this;
@@ -126,12 +130,18 @@ describe('ArtTrailApp', () => {
             this.setPopup = setPopup;
             this.addTo = addTo;
         });
-        const popupSetText = jest.fn(function setText(text) {
-            this.text = text;
+        const popupSetDOMContent = jest.fn(function setDOMContent(content) {
+            this.content = content;
             return this;
         });
+        const popupRemove = jest.fn(function remove() {
+            return this;
+        });
+        const popupIsOpen = jest.fn(() => true);
         const popupConstructor = jest.fn(function Popup() {
-            this.setText = popupSetText;
+            this.setDOMContent = popupSetDOMContent;
+            this.remove = popupRemove;
+            this.isOpen = popupIsOpen;
         });
         const map = { id: 'mock-map' };
 
@@ -141,6 +151,8 @@ describe('ArtTrailApp', () => {
                 Popup: popupConstructor,
             },
             map,
+            onSelectTrailPage,
+            activePopupRef,
         });
 
         expect(markers).toHaveLength(ART_TRAIL_MAP_POIS.length);
@@ -150,9 +162,28 @@ describe('ArtTrailApp', () => {
             expect.any(HTMLElement),
             expect.objectContaining({ zLevel: ART_TRAIL_MAP_POIS[0].zLevel, offset: [0, -9] }),
         );
+        expect(markerConstructor.mock.calls[0][0].textContent).toBe(`${ART_TRAIL_MAP_POIS[0].trailStepIndex}`);
+        expect(markerConstructor.mock.calls[0][0].className).toContain('artTrailMapMarker');
+        expect(markerConstructor.mock.calls[0][0].style.getPropertyValue('--art-trail-marker-color')).toBe(
+            ART_TRAIL_MAP_POIS[0].color,
+        );
         expect(setLngLat).toHaveBeenNthCalledWith(1, [ART_TRAIL_MAP_POIS[0].lng, ART_TRAIL_MAP_POIS[0].lat]);
         expect(addTo).toHaveBeenCalledTimes(ART_TRAIL_MAP_POIS.length);
         expect(addTo).toHaveBeenCalledWith(map);
-        expect(popupSetText).toHaveBeenNthCalledWith(1, ART_TRAIL_MAP_POIS[0].title);
+        expect(popupSetDOMContent).toHaveBeenNthCalledWith(1, expect.any(HTMLElement));
+        expect(popupSetDOMContent.mock.calls[0][0].querySelector('img').getAttribute('src')).toBe(
+            ART_TRAIL_MAP_POIS[0].popupThumbnailSrc,
+        );
+        expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain(ART_TRAIL_MAP_POIS[0].popupTitle);
+        expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain('Punu Tjukurpa 2013');
+        expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain(ART_TRAIL_MAP_POIS[0].popupLevelLabel);
+        expect(popupSetDOMContent.mock.calls[0][0].querySelector(`.${'artTrailMapPopupDescription'}`).innerHTML).toBe(
+            ART_TRAIL_MAP_POIS[0].popupDescription,
+        );
+        markerConstructor.mock.calls[0][0].click();
+        markerConstructor.mock.calls[1][0].click();
+        expect(popupConstructor.mock.instances[0].remove).toHaveBeenCalledTimes(1);
+        popupSetDOMContent.mock.calls[0][0].querySelector('a').click();
+        expect(onSelectTrailPage).toHaveBeenCalledWith(ART_TRAIL_MAP_POIS[0].trailStepIndex);
     });
 });
