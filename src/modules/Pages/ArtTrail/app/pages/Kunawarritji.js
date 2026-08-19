@@ -5,10 +5,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
-import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -18,59 +15,15 @@ import Artwork2Image from '../../../../../../public/images/artTrail/artwork/2018
 import DesertImage from '../../../../../../public/images/artTrail/Desert-near-old-Canning-Stock-Route_C_-tolly65_stock.adobe.com-2.jpg';
 
 import Hero from '../Hero';
-
-const StyledAccordion = styled(Accordion)(() => ({
-    marginBottom: 'var(--art-trail-spacing)',
-    '&.Mui-expanded:last-of-type': { marginBottom: 'var(--art-trail-spacing)' },
-}));
-
-const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    '& p': {
-        fontSize: 'var(--art-trail-font-size)',
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        lineHeight: 1.5,
-        '&:first-of-type': {
-            marginTop: 0,
-        },
-        '&:last-of-type': {
-            marginBottom: 0,
-        },
-    },
-}));
-
-const StyledImage = styled('img')({
-    maxWidth: '100%',
-    width: '100%',
-    height: 'auto',
-    position: 'relative',
-});
-
-const StyledImageCaption = styled('figcaption')(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary,
-}));
-
-const StyledUl = styled('ul')(({ theme }) => ({
-    paddingInlineStart: '1.25rem',
-    '& li:not(:last-of-type)': {
-        marginBottom: theme.spacing(1),
-    },
-}));
-
-const StyledDrawerHeader = styled(Typography)(({ theme }) => ({
-    fontSize: '1.125rem',
-    fontWeight: theme.typography.fontWeightMedium,
-    fontFamily: 'var(--art-trail-font-family)',
-    lineHeight: '1.6',
-}));
-
-const StyledAccordionGrid = styled(Grid)(() => ({
-    paddingLeft: 'var(--art-trail-spacing)',
-    paddingRight: 'var(--art-trail-spacing)',
-    paddingBottom: 'calc(var(--art-trail-spacing) * 2)',
-}));
+import {
+    StyledAccordion,
+    StyledAccordionDetails,
+    StyledAccordionGrid,
+    StyledDrawerHeader,
+    StyledImage,
+    StyledImageCaption,
+    StyledUl,
+} from '../SharedComponents';
 
 const Art1DrawerContent = () => {
     return (
@@ -130,7 +83,7 @@ const LocationDrawerContent = () => {
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     Where: Level 1,{' '}
                     <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
-                        Duhig Tower (TBC: THIS MIGHT LINK TO MAP TAB)
+                        Duhig Tower
                     </a>{' '}
                     (Building 2), St Lucia campus.
                 </Typography>

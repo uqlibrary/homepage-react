@@ -10,14 +10,14 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
 
 import Hero from '../Hero';
+import TrailImage from '../SharedComponents/TrailImage';
 
 import Book1Image from '../../../../../../public/images/artTrail/UQ_BlakHistory_Book-cover_900x1200px-350x467.jpg';
 import Book2Image from '../../../../../../public/images/artTrail/Storying_the_Archive.jpg';
 import Book3Image from '../../../../../../public/images/artTrail/Guide_LanguageRelationships_Final6a_300ppi.jpg';
 
-const StyledImage = styled('img')({
+const StyledImage = styled(TrailImage)({
     width: '100%',
-    height: 'auto',
 });
 
 const ContinueJourney = () => {

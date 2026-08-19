@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 
-const PAGE_TRANSITION_DURATION_MS = 360;
-const PAGE_TRANSITION_EASING = 'cubic-bezier(0.32, 0.72, 0, 1)';
+const FORWARD_PAGE_TRANSITION_DURATION_MS = 720;
+const BACKWARD_PAGE_TRANSITION_DURATION_MS = 600;
+const PAGE_TRANSITION_EASING = 'cubic-bezier(0.2, 0.82, 0.2, 1)';
 const PAGE_BACKGROUND_COLOR = '#fff';
 
 const buildEnteringTransform = (direction, isAnimating) => {
@@ -12,7 +13,7 @@ const buildEnteringTransform = (direction, isAnimating) => {
         return 'translate3d(0, 0, 0) scale(1)';
     }
 
-    return direction === 'backward' ? 'translate3d(-10%, 0, 0) scale(1)' : 'translate3d(10%, 0, 0) scale(1)';
+    return direction === 'backward' ? 'translate3d(-8%, 0, 0) scale(1)' : 'translate3d(24%, 0, 0) scale(1)';
 };
 
 const buildExitingTransform = (direction, isAnimating) => {
@@ -20,7 +21,7 @@ const buildExitingTransform = (direction, isAnimating) => {
         return 'translate3d(0, 0, 0) scale(1)';
     }
 
-    return direction === 'backward' ? 'translate3d(26%, 0, 0) scale(1)' : 'translate3d(-26%, 0, 0) scale(1)';
+    return direction === 'backward' ? 'translate3d(34%, 0, 0) scale(1)' : 'translate3d(0, 0, 0) scale(1)';
 };
 
 const buildEnteringShadow = (direction, isAnimating) => {
@@ -28,7 +29,7 @@ const buildEnteringShadow = (direction, isAnimating) => {
         return 'none';
     }
 
-    return direction === 'backward' ? '18px 0 36px rgba(15, 23, 42, 0.08)' : '-18px 0 36px rgba(15, 23, 42, 0.08)';
+    return direction === 'backward' ? '18px 0 42px rgba(15, 23, 42, 0.1)' : '-22px 0 48px rgba(15, 23, 42, 0.14)';
 };
 
 const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection }) => {
@@ -41,6 +42,8 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection }
     const transitionIdRef = useRef(0);
     const displayedPageRef = useRef(page);
     const displayedPageKeyRef = useRef(pageKey);
+    const transitionDurationMs =
+        navigationDirection === 'backward' ? BACKWARD_PAGE_TRANSITION_DURATION_MS : FORWARD_PAGE_TRANSITION_DURATION_MS;
 
     useEffect(() => {
         displayedPageRef.current = displayedPage;
@@ -86,8 +89,8 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection }
 
             setExitingPage(null);
             setIsAnimating(false);
-        }, PAGE_TRANSITION_DURATION_MS);
-    }, [page, pageKey]);
+        }, transitionDurationMs);
+    }, [page, pageKey, transitionDurationMs]);
 
     const PageComponent = displayedPage;
     const ExitingPageComponent = exitingPage;
@@ -105,8 +108,7 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection }
                         pointerEvents: 'none',
                         bgcolor: PAGE_BACKGROUND_COLOR,
                         transform: buildExitingTransform(navigationDirection, isAnimating),
-                        opacity: 1,
-                        transition: `transform ${PAGE_TRANSITION_DURATION_MS}ms ${PAGE_TRANSITION_EASING}`,
+                        transition: `transform ${transitionDurationMs}ms ${PAGE_TRANSITION_EASING}`,
                         willChange: 'transform',
                     }}
                 >
@@ -121,10 +123,9 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection }
                     transform: showTransition
                         ? buildEnteringTransform(navigationDirection, isAnimating)
                         : 'translate3d(0, 0, 0) scale(1)',
-                    opacity: 1,
                     boxShadow: showTransition ? buildEnteringShadow(navigationDirection, isAnimating) : 'none',
                     transition: showTransition
-                        ? `transform ${PAGE_TRANSITION_DURATION_MS}ms ${PAGE_TRANSITION_EASING}, box-shadow ${PAGE_TRANSITION_DURATION_MS}ms ${PAGE_TRANSITION_EASING}`
+                        ? `transform ${transitionDurationMs}ms ${PAGE_TRANSITION_EASING}, box-shadow ${transitionDurationMs}ms ${PAGE_TRANSITION_EASING}`
                         : 'none',
                     willChange: showTransition ? 'transform, box-shadow' : 'auto',
                 }}
