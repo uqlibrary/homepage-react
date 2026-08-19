@@ -58,6 +58,12 @@ const StyledDrawerHeader = styled(Typography)(({ theme }) => ({
     lineHeight: '1.6',
 }));
 
+const StyledAccordionGrid = styled(Grid)(() => ({
+    paddingLeft: 'var(--art-trail-spacing)',
+    paddingRight: 'var(--art-trail-spacing)',
+    paddingBottom: 'calc(var(--art-trail-spacing) * 2)',
+}));
+
 const ArtDrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
@@ -105,8 +111,8 @@ const LocationDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="'Sand Hills' 2007, Lily Kelly Napangardi" />
-            <Grid container direction="column" data-testid="pageContent">
+            <Hero title="'Sand Hills' 2007, Lily Kelly Napangardi" sx={{ pb: 0 }} data-testid="pageHero" />
+            <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
                         <StyledImage src={ArtworkImage} alt="Sand Hills 2007 artwork." />
@@ -142,7 +148,7 @@ const Page = ({ openDrawer }) => {
                         </IconButton>
                     </Box>
                 </Grid>
-                <Grid>
+                <StyledAccordionGrid>
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -256,7 +262,7 @@ const Page = ({ openDrawer }) => {
                             </StyledUl>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                </Grid>
+                </StyledAccordionGrid>
             </Grid>
         </Grid>
     );

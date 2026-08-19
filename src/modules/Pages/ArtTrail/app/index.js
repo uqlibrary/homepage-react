@@ -148,6 +148,7 @@ const ArtTrailApp = () => {
     const appTheme = theme?.palette?.designSystem ? theme : mui1theme;
     const [activeTab, setActiveTab] = useState('trail');
     const [menuAnchor, setMenuAnchor] = useState(null);
+    const [trailNavigationDirection, setTrailNavigationDirection] = useState('forward');
     const [tabState, setTabState] = useState(buildInitialTabState);
     const [drawerContent, setDrawerContent] = useState(null);
     const [showCulturalDisclaimer, setShowCulturalDisclaimer] = useState(
@@ -194,6 +195,11 @@ const ArtTrailApp = () => {
 
     const handleStepChange = direction => {
         handleDrawerClose();
+
+        if (activeTabConfig.id === 'trail') {
+            setTrailNavigationDirection(direction < 0 ? 'backward' : 'forward');
+        }
+
         updateTabState(activeTabConfig.id, currentTabState => ({
             ...currentTabState,
             stepIndex: Math.min(Math.max(currentTabState.stepIndex + direction, 0), stepCount - 1),
@@ -202,6 +208,7 @@ const ArtTrailApp = () => {
 
     const handleSelectTrailPage = stepIndex => {
         handleDrawerClose();
+        setTrailNavigationDirection(stepIndex < tabState.trail.stepIndex ? 'backward' : 'forward');
         setActiveTab('trail');
         updateTabState('trail', currentTabState => ({
             ...currentTabState,
@@ -227,8 +234,10 @@ const ArtTrailApp = () => {
             <TabContentComponent
                 tab={tab}
                 page={panelPage}
+                pageKey={`${tab.id}-${panelState.stepIndex}`}
                 openDrawer={handleOpenDrawer}
                 active={tab.id === activeTab}
+                navigationDirection={tab.id === 'trail' ? trailNavigationDirection : 'forward'}
                 onSelectTrailPage={handleSelectTrailPage}
             />
         );

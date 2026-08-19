@@ -29,9 +29,9 @@ const StyledSubheading = styled('h2')(({ theme }) => ({
     marginTop: '1rem',
 }));
 
-const Hero = ({ title, subtitle }) => {
+const Hero = ({ title, subtitle, sx }) => {
     return (
-        <Grid>
+        <Grid sx={sx}>
             <Box
                 sx={{
                     borderRadius: 0,
@@ -55,6 +55,7 @@ const Hero = ({ title, subtitle }) => {
 Hero.propTypes = {
     title: PropTypes.string.isRequired,
     subtitle: PropTypes.string,
+    sx: PropTypes.object,
 };
 
 export default Hero;
