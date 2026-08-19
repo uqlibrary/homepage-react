@@ -18,6 +18,7 @@ import { SelectField } from 'modules/SharedComponents/Toolbox/SelectField';
 import { required, email as emailValidator } from 'helpers/validation';
 
 import { getFieldConfig, getFieldOptions, isSelectField } from 'modules/Pages/Membership/membershipFormFields';
+import { getVisibleFields } from 'modules/Pages/Membership/membershipFieldRules';
 import { phone as phoneValidator, postcode as postcodeValidator } from 'modules/Pages/Membership/membershipValidation';
 import {
     formatDate,
@@ -61,6 +62,32 @@ export const FIELD_VALIDATORS = {
 // Pull just the editable fields off a record, as the values the form starts from.
 export const editableValues = membership =>
     EDITABLE_FIELDS.reduce((values, field) => ({ ...values, [field]: membership?.[field] ?? '' }), {});
+
+// The identity, contact and address fields have their own rows above - editable there - and the date-of-birth
+// parts are shown as one date, so the type-specific block below does not repeat them. The mandatory-terms tick
+// is the applicant's consent to apply, not a fact about who they are, so it is left out too.
+const DETAIL_ROWS_SHOWN_ELSEWHERE = new Set([
+    ...EDITABLE_FIELDS,
+    'date_of_birth_day',
+    'date_of_birth_month',
+    'date_of_birth_year',
+    'accept_mandatory_terms',
+]);
+
+/**
+ * The extra facts an application's type collected, to show an admin read-only beneath the contact details - the
+ * ones the old record view listed at the foot of the record. Driven by the type's own field rules, so every
+ * type brings its own (a student number and awards for alumni, a service for hospital, an institution for
+ * reciprocal, a nominated borrower for proxy, and so on) without this view naming any of them. Only fields the
+ * applicant actually filled in are kept, so a record shows no empty rows for the parts its type left optional.
+ */
+export const extraDetailFields = membership =>
+    getVisibleFields(membership?.type)
+        .filter(field => !DETAIL_ROWS_SHOWN_ELSEWHERE.has(field))
+        .filter(field => {
+            const value = membership?.[field];
+            return value !== undefined && value !== null && value !== '';
+        });
 
 /**
  * One read-only fact of the record, drawn as a term-and-definition pair so a screen reader reads "Status,
@@ -228,6 +255,14 @@ export const MembershipApplicationDialog = ({
                             </DetailRow>
                         </>
                     )}
+                    {!!record?.payment_code && (
+                        <DetailRow label={strings.details.paymentCode}>{record.payment_code}</DetailRow>
+                    )}
+                    {extraDetailFields(record).map(field => (
+                        <DetailRow key={field} label={getFieldConfig(field).label}>
+                            {record[field]}
+                        </DetailRow>
+                    ))}
                 </Box>
 
                 <Divider sx={{ marginY: 2 }} />
