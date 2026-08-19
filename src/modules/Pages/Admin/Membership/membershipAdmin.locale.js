@@ -56,6 +56,11 @@ export default {
             // Prefixes its value on the line of facts, rather than heading a column, so it is as short as it
             // can be and still say what the value is.
             birthdate: 'Born',
+            // Labels for the type-specific facts that ride on their own line beneath the contact facts, so a bare
+            // student number or hospital service reads as what it is. Kept short - they prefix their value rather
+            // than heading a column.
+            studentNumber: 'Student no.',
+            service: 'Service',
             // The action that turns an application into an account. It reads 'Re-confirm' where the applicant
             // has been confirmed before, since confirming again is a different, deliberate thing to do.
             confirm: 'Confirm',
