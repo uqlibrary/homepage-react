@@ -56,6 +56,32 @@ export const BookableSpacesDetailPage = ({
         }
     }, [actions, isLoggedIn, spaceUuid]);
 
+    useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        if ('scrollRestoration' in window.history) {
+            window.history.scrollRestoration = 'manual';
+        }
+
+        try {
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        } catch {
+            // Ignore browsers without the object-form scroll API.
+        }
+
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+
+        return () => {
+            if ('scrollRestoration' in window.history) {
+                window.history.scrollRestoration = 'auto';
+            }
+        };
+    }, [spaceUuid]);
+
     if (bookableSpaceGetting === false) {
         console.log('BookableSpacesDetailPage loaded =', bookableSpaceGetResult?.data);
     }
