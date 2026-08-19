@@ -51,4 +51,30 @@ describe('JourneyBreadcrumbs', () => {
         expect(setSelectedSpace).toHaveBeenCalledWith(null);
         expect(navigateToView).toHaveBeenCalledWith('results', { intentId: 'quiet', spaceId: null });
     });
+
+    it('does not throw when breadcrumb callbacks are not provided on the standalone detail page', async () => {
+        setupSiteHeader();
+
+        rtlRender(
+            <JourneyBreadcrumbs
+                view="details"
+                selectedIntent={{ id: 'quiet', label: 'Quiet space' }}
+                selectedIntentId="quiet"
+                navigateToView={jest.fn()}
+                setSelectedIntentId={jest.fn()}
+            />,
+        );
+
+        const breadcrumbLink = await waitFor(() => {
+            const node = document
+                .querySelector('uq-site-header')
+                ?.shadowRoot?.querySelector('#journey-site-breadcrumb-0');
+            expect(node).toBeTruthy();
+            return node;
+        });
+
+        expect(() => {
+            breadcrumbLink.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        }).not.toThrow();
+    });
 });
