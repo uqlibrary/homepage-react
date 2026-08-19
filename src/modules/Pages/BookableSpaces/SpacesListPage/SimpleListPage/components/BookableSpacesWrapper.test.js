@@ -231,6 +231,36 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
     });
 
+    it('scrolls to the top when the results route is active', async () => {
+        const scrollToMock = jest.fn();
+        window.scrollTo = scrollToMock;
+
+        rtlRender(
+            <WithRouter route="*" initialEntries={['/spaces/results']}>
+                <BookableSpacesWrapper {...defaultProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => {
+            expect(scrollToMock).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'auto' });
+        });
+    });
+
+    it('scrolls to the top when the landing route is active', async () => {
+        const scrollToMock = jest.fn();
+        window.scrollTo = scrollToMock;
+
+        rtlRender(
+            <WithRouter route="*" initialEntries={['/spaces']}>
+                <BookableSpacesWrapper {...defaultProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => {
+            expect(scrollToMock).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'auto' });
+        });
+    });
+
     it('scrolls to the top when a hash-based detail route is active', async () => {
         const scrollToMock = jest.fn();
         window.scrollTo = scrollToMock;

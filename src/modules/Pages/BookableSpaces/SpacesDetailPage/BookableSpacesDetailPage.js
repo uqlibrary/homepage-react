@@ -57,8 +57,14 @@ export const BookableSpacesDetailPage = ({
     }, [actions, isLoggedIn, spaceUuid]);
 
     useEffect(() => {
+        const restoreScrollBehavior = () => {
+            if ('scrollRestoration' in window.history) {
+                window.history.scrollRestoration = 'auto';
+            }
+        };
+
         if (typeof window === 'undefined') {
-            return;
+            return restoreScrollBehavior;
         }
 
         if ('scrollRestoration' in window.history) {
@@ -75,11 +81,7 @@ export const BookableSpacesDetailPage = ({
         document.documentElement.scrollTop = 0;
         document.body.scrollTop = 0;
 
-        return () => {
-            if ('scrollRestoration' in window.history) {
-                window.history.scrollRestoration = 'auto';
-            }
-        };
+        return restoreScrollBehavior;
     }, [spaceUuid]);
 
     if (bookableSpaceGetting === false) {

@@ -734,8 +734,10 @@ const BookableSpacesWrapper = ({
     }, [activeIntentId, applyIntentFilters, availableIntentDefinitions, view]);
 
     React.useEffect(() => {
-        if (!isDetailsRoute) {
-            return;
+        const noOpCleanup = () => {};
+        const shouldResetScroll = isLandingRoute || isResultsRoute || isDetailsRoute;
+        if (!shouldResetScroll) {
+            return noOpCleanup;
         }
 
         const resetScrollToTop = () => {
@@ -772,7 +774,7 @@ const BookableSpacesWrapper = ({
         const timeoutId = window.setTimeout(resetScrollToTop, 50);
         const lateTimeoutId = window.setTimeout(resetScrollToTop, 150);
 
-        return () => {
+        const cleanUpScrollReset = () => {
             window.cancelAnimationFrame(frameId);
             window.clearTimeout(timeoutId);
             window.clearTimeout(lateTimeoutId);
@@ -780,7 +782,9 @@ const BookableSpacesWrapper = ({
                 window.history.scrollRestoration = 'auto';
             }
         };
-    }, [currentPath, isDetailsRoute]);
+
+        return cleanUpScrollReset;
+    }, [currentPath, isDetailsRoute, isLandingRoute, isResultsRoute]);
 
     return (
         <BookableSpacesJourneyView
