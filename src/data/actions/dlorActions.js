@@ -692,12 +692,11 @@ export function loadDlorAdminNotes(uuid) {
     };
 }
 
-// eslint-disable-next-line camelcase
+// eslint passes with the comment, prettier-eslint doesn't pass
 export function saveDlorAdminNote(uuid, object_admin_note_content) {
     return dispatch => {
         dispatch({ type: actions.DLOR_ADMIN_NOTES_LOADING });
         return post(DLOR_ADMIN_NOTES_API(uuid), {
-            // eslint-disable-next-line camelcase
             object_admin_note_content,
         })
             .then(response => {
