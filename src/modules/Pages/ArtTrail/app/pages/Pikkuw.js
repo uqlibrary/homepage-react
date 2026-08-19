@@ -5,10 +5,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
-import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -16,46 +13,13 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/UQAM_20241219_CampusArtwork_046.jpg';
 
 import Hero from '../Hero';
-
-const StyledAccordion = styled(Accordion)(() => ({
-    marginBottom: 'var(--art-trail-spacing)',
-    '&.Mui-expanded:last-of-type': { marginBottom: 'var(--art-trail-spacing)' },
-}));
-
-const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    '& p': {
-        fontSize: 'var(--art-trail-font-size)',
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        lineHeight: 1.5,
-        '&:first-of-type': {
-            marginTop: 0,
-        },
-        '&:last-of-type': {
-            marginBottom: 0,
-        },
-    },
-}));
-
-const StyledImage = styled('img')({
-    maxWidth: '100%',
-    width: '100%',
-    height: 'auto',
-    position: 'relative',
-});
-
-const StyledDrawerHeader = styled(Typography)(({ theme }) => ({
-    fontSize: '1.125rem',
-    fontWeight: theme.typography.fontWeightMedium,
-    fontFamily: 'var(--art-trail-font-family)',
-    lineHeight: '1.6',
-}));
-
-const StyledAccordionGrid = styled(Grid)(() => ({
-    paddingLeft: 'var(--art-trail-spacing)',
-    paddingRight: 'var(--art-trail-spacing)',
-    paddingBottom: 'calc(var(--art-trail-spacing) * 2)',
-}));
+import {
+    StyledAccordion,
+    StyledAccordionDetails,
+    StyledAccordionGrid,
+    StyledDrawerHeader,
+    StyledImage,
+} from '../SharedComponents';
 
 const ArtDrawerContent = () => {
     return (

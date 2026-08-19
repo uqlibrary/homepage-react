@@ -24,6 +24,25 @@ const popupClassNames = {
 const markerClassNames = {
     marker: 'artTrailMapMarker',
 };
+const mapClassNames = {
+    hiddenGeolocateControl: 'artTrailMapHiddenGeolocateControl',
+};
+
+const createUserLocationControl = Mazemap => {
+    if (!Mazemap?.mapboxgl?.GeolocateControl || !navigator.geolocation) {
+        return null;
+    }
+
+    return new Mazemap.mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true,
+        },
+        showAccuracyCircle: true,
+        showUserHeading: true,
+        showUserLocation: true,
+        trackUserLocation: true,
+    });
+};
 
 const loadMazemapAssets = () => {
     if (window.Mazemap) {
@@ -180,6 +199,8 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
     const mapInstanceRef = useRef(null);
     const markerInstancesRef = useRef([]);
     const activePopupRef = useRef(null);
+    const geolocateControlRef = useRef(null);
+    const geolocateTriggerTimeoutRef = useRef(null);
 
     const closeActivePopup = () => {
         activePopupRef.current?.remove?.();
@@ -224,15 +245,35 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
                     onSelectTrailPage: handleSelectTrailPageFromMap,
                     activePopupRef,
                 });
+
+                const geolocateControl = createUserLocationControl(Mazemap);
+
+                if (geolocateControl && mapInstanceRef.current.addControl) {
+                    geolocateControlRef.current = geolocateControl;
+                    mapInstanceRef.current.addControl(geolocateControl, 'top-right');
+                    geolocateControl._container?.classList.add(mapClassNames.hiddenGeolocateControl);
+                    geolocateTriggerTimeoutRef.current = window.setTimeout(() => {
+                        try {
+                            geolocateControl.trigger?.();
+                        } catch (error) {
+                            // Ignore geolocation failures such as permission denials.
+                        }
+                    }, 0);
+                }
             })
             .catch(() => {});
     }, [active, onSelectTrailPage]);
 
     useEffect(() => {
         return () => {
+            window.clearTimeout(geolocateTriggerTimeoutRef.current);
             closeActivePopup();
             markerInstancesRef.current.forEach(marker => marker?.remove?.());
             markerInstancesRef.current = [];
+            if (geolocateControlRef.current && mapInstanceRef.current?.removeControl) {
+                mapInstanceRef.current.removeControl(geolocateControlRef.current);
+            }
+            geolocateControlRef.current = null;
             mapInstanceRef.current?.remove?.();
             mapInstanceRef.current = null;
         };
@@ -255,6 +296,9 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
                         fontWeight: 700,
                         lineHeight: 1,
                         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.24)',
+                    },
+                    [`.${mapClassNames.hiddenGeolocateControl}`]: {
+                        display: 'none !important',
                     },
                     [`.${popupClassNames.container}`]: {
                         display: 'grid',
