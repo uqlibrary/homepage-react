@@ -18,7 +18,7 @@ import {
     StyledAccordionDetails,
     StyledAccordionGrid,
     StyledDrawerHeader,
-    StyledImage,
+    StyledTrailImage,
     StyledUl,
 } from '../SharedComponents';
 
@@ -86,9 +86,11 @@ const Page = ({ openDrawer }) => {
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
-                        <StyledImage
+                        <StyledTrailImage
                             src={ArtworkImage}
                             alt="'Punu Tjukurpa' 2013, Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken"
+                            intrinsicWidth={2548}
+                            intrinsicHeight={2532}
                         />
                         <IconButton
                             size="large"

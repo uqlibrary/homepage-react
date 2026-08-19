@@ -70,6 +70,8 @@ const ContinueJourney = () => {
                                             <StyledImage
                                                 src={Book1Image}
                                                 alt="Front cover image of the book 'UQ has a Blak history', which shows several archive images from around the UQ St Lucia campus"
+                                                intrinsicWidth={350}
+                                                intrinsicHeight={467}
                                             />
                                         </a>
                                     </Typography>
@@ -105,6 +107,8 @@ const ContinueJourney = () => {
                                             <StyledImage
                                                 src={Book2Image}
                                                 alt="Front cover image of the book 'Storying the archive', which shows a montage of people's faces at the top and Indigenous artwork at the bottom"
+                                                intrinsicWidth={300}
+                                                intrinsicHeight={400}
                                             />
                                         </a>
                                     </Typography>
@@ -139,6 +143,8 @@ const ContinueJourney = () => {
                                             <StyledImage
                                                 src={Book3Image}
                                                 alt="Front cover image of the book 'The language of relationships with Aboriginal and Torres Strait Islander peoples - Introductory guide', which shows a photograph of a large group of people under a marquee in deep discussion with each other. Indigenous artwork is shown underneath the photo."
+                                                intrinsicWidth={1013}
+                                                intrinsicHeight={1500}
                                             />
                                         </a>
                                     </Typography>

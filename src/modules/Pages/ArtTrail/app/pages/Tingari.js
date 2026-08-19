@@ -18,7 +18,7 @@ import {
     StyledAccordionDetails,
     StyledAccordionGrid,
     StyledDrawerHeader,
-    StyledImage,
+    StyledTrailImage,
     StyledUl,
 } from '../SharedComponents';
 
@@ -77,7 +77,12 @@ const Page = ({ openDrawer }) => {
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
-                        <StyledImage src={ArtworkImage} alt="'Tingari ceremonies at Wilkinkarra' 2003 artwork." />
+                        <StyledTrailImage
+                            src={ArtworkImage}
+                            alt="'Tingari ceremonies at Wilkinkarra' 2003 artwork."
+                            intrinsicWidth={709}
+                            intrinsicHeight={841}
+                        />
                         <IconButton
                             size="large"
                             aria-label="More information about this artwork"

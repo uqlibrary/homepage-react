@@ -21,7 +21,7 @@ const buildExitingTransform = (direction, isAnimating) => {
         return 'translate3d(0, 0, 0) scale(1)';
     }
 
-    return direction === 'backward' ? 'translate3d(34%, 0, 0) scale(1)' : 'translate3d(0, 0, 0) scale(1)';
+    return direction === 'backward' ? 'translate3d(108%, 0, 0) scale(1)' : 'translate3d(0, 0, 0) scale(1)';
 };
 
 const buildEnteringShadow = (direction, isAnimating) => {

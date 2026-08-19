@@ -20,6 +20,7 @@ import {
     StyledAccordionDetails,
     StyledAccordionGrid,
     StyledDrawerHeader,
+    StyledTrailImage,
     StyledImage,
     StyledImageCaption,
     StyledUl,
@@ -103,7 +104,12 @@ const Page = ({ openDrawer }) => {
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
-                        <StyledImage src={Artwork1Image} alt="Kunawarritji 1 artwork." />
+                        <StyledTrailImage
+                            src={Artwork1Image}
+                            alt="Kunawarritji 1 artwork."
+                            intrinsicWidth={4671}
+                            intrinsicHeight={3096}
+                        />
                         <IconButton
                             size="large"
                             aria-label="More information about this artwork"
@@ -136,7 +142,12 @@ const Page = ({ openDrawer }) => {
                         </IconButton>
                     </Box>
                     <Box position="relative">
-                        <StyledImage src={Artwork2Image} alt="Kunawarritji 2 artwork." />
+                        <StyledImage
+                            src={Artwork2Image}
+                            alt="Kunawarritji 2 artwork."
+                            intrinsicWidth={3042}
+                            intrinsicHeight={2043}
+                        />
                         <IconButton
                             size="large"
                             aria-label="More information about this artwork"

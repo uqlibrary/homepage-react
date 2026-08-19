@@ -19,6 +19,7 @@ import {
     StyledAccordionDetails,
     StyledAccordionGrid,
     StyledDrawerHeader,
+    StyledTrailImage,
     StyledImage,
     StyledImageCaption,
 } from '../SharedComponents';
@@ -73,7 +74,12 @@ const Page = ({ openDrawer }) => {
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
-                        <StyledImage src={ArtworkImage} alt="'Devil Mountain Lizard Dreaming' 1997 artwork." />
+                        <StyledTrailImage
+                            src={ArtworkImage}
+                            alt="'Devil Mountain Lizard Dreaming' 1997 artwork."
+                            intrinsicWidth={709}
+                            intrinsicHeight={464}
+                        />
                         <IconButton
                             size="large"
                             aria-label="More information about this artwork"
