@@ -163,6 +163,10 @@ export default {
                 payment: 'Payment',
                 paymentAmount: 'Amount',
                 paymentReceipt: 'Receipt',
+                // The pricing code the application was lodged under, kept on the record beside the payment it
+                // drives. Shown read-only, as the old record view did, since it is set at submission and not
+                // something an admin corrects here.
+                paymentCode: 'Payment code',
                 paid: 'Paid',
                 paymentFailed: 'Failed',
                 // Stands in where a fact was never recorded, so the row reads as empty-but-present.
