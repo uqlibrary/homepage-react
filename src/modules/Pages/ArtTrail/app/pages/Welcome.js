@@ -9,8 +9,11 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import Hero from '../Hero';
+import { StyledAudioPlayer } from '../SharedComponents';
 
-const WelcomePage = () => {
+const WELCOME_AUDIO_SRC = '/audio/artTrail/sample1.mp3';
+
+const WelcomePage = ({ mediaStopSignal }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero
@@ -37,6 +40,13 @@ const WelcomePage = () => {
                             <p>Tap “Start the Trail” below to begin.</p>
                         </Typography>
                     </Grid>
+                </Grid>
+                <Grid>
+                    <StyledAudioPlayer
+                        title="Listen to this page"
+                        src={WELCOME_AUDIO_SRC}
+                        stopSignal={mediaStopSignal}
+                    />
                 </Grid>
                 <Grid>
                     <Accordion
@@ -66,6 +76,7 @@ const WelcomePage = () => {
 };
 
 WelcomePage.propTypes = {
+    mediaStopSignal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     openDrawer: PropTypes.func.isRequired,
 };
 

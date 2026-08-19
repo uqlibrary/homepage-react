@@ -229,6 +229,7 @@ const ArtTrailApp = () => {
         const panelPages = getTabPages(tab);
         const panelPage = panelPages[panelState.stepIndex] ?? panelPages[0];
         const TabContentComponent = tabContentComponents[tab.id];
+        const mediaStopSignal = `${activeTab}:${tabState.trail.stepIndex}`;
 
         return (
             <TabContentComponent
@@ -238,6 +239,7 @@ const ArtTrailApp = () => {
                 openDrawer={handleOpenDrawer}
                 active={tab.id === activeTab}
                 navigationDirection={tab.id === 'trail' ? trailNavigationDirection : 'forward'}
+                mediaStopSignal={mediaStopSignal}
                 onSelectTrailPage={handleSelectTrailPage}
             />
         );

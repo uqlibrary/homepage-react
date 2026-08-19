@@ -11,6 +11,7 @@ import { styled } from '@mui/material/styles';
 
 import Hero from '../Hero';
 import TrailImage from '../SharedComponents/TrailImage';
+import { StyledAudioPlayer } from '../SharedComponents';
 
 import Book1Image from '../../../../../../public/images/artTrail/UQ_BlakHistory_Book-cover_900x1200px-350x467.jpg';
 import Book2Image from '../../../../../../public/images/artTrail/Storying_the_Archive.jpg';
@@ -20,7 +21,9 @@ const StyledImage = styled(TrailImage)({
     width: '100%',
 });
 
-const ContinueJourney = () => {
+const CONTINUE_JOURNEY_AUDIO_SRC = '/audio/artTrail/sample2.mp3';
+
+const ContinueJourney = ({ mediaStopSignal }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="Exploring Aboriginal and Torres Strait Islander stories" />
@@ -40,6 +43,13 @@ const ContinueJourney = () => {
                             </p>
                         </Typography>
                     </Grid>
+                </Grid>
+                <Grid>
+                    <StyledAudioPlayer
+                        title="Listen to this page"
+                        src={CONTINUE_JOURNEY_AUDIO_SRC}
+                        stopSignal={mediaStopSignal}
+                    />
                 </Grid>
                 <Grid>
                     <Accordion
@@ -204,6 +214,7 @@ const ContinueJourney = () => {
 };
 
 ContinueJourney.propTypes = {
+    mediaStopSignal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     openDrawer: PropTypes.func.isRequired,
 };
 

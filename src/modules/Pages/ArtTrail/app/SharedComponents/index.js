@@ -4,6 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
+import TrailAudioPlayer from './TrailAudioPlayer';
 import TrailImage from './TrailImage';
 
 export const StyledAccordion = styled(Accordion)(() => ({
@@ -36,6 +37,8 @@ export const StyledTrailImage = styled(TrailImage)({
     width: '100%',
     position: 'relative',
 });
+
+export const StyledAudioPlayer = styled(TrailAudioPlayer)({});
 
 export const StyledImageCaption = styled('figcaption')(({ theme }) => ({
     marginTop: theme.spacing(1),
