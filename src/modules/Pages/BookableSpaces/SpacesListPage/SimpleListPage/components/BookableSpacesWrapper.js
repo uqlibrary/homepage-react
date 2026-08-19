@@ -734,10 +734,57 @@ const BookableSpacesWrapper = ({
     }, [activeIntentId, applyIntentFilters, availableIntentDefinitions, view]);
 
     React.useEffect(() => {
-        if (view === 'details') {
-            journeyTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const noOpCleanup = () => {};
+        const shouldResetScroll = isLandingRoute || isResultsRoute || isDetailsRoute;
+        if (!shouldResetScroll) {
+            return noOpCleanup;
         }
-    }, [view]);
+
+        const resetScrollToTop = () => {
+            if (typeof window === 'undefined') {
+                return;
+            }
+
+            if ('scrollRestoration' in window.history) {
+                window.history.scrollRestoration = 'manual';
+            }
+
+            try {
+                window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+            } catch {
+                // Ignore browsers that do not support the object-form scroll API.
+            }
+
+            window.scrollTo(0, 0);
+
+            const { documentElement, body, scrollingElement } = document;
+            if (documentElement) {
+                documentElement.scrollTop = 0;
+            }
+            if (body) {
+                body.scrollTop = 0;
+            }
+            if (scrollingElement) {
+                scrollingElement.scrollTop = 0;
+            }
+        };
+
+        resetScrollToTop();
+        const frameId = window.requestAnimationFrame(resetScrollToTop);
+        const timeoutId = window.setTimeout(resetScrollToTop, 50);
+        const lateTimeoutId = window.setTimeout(resetScrollToTop, 150);
+
+        const cleanUpScrollReset = () => {
+            window.cancelAnimationFrame(frameId);
+            window.clearTimeout(timeoutId);
+            window.clearTimeout(lateTimeoutId);
+            if ('scrollRestoration' in window.history) {
+                window.history.scrollRestoration = 'auto';
+            }
+        };
+
+        return cleanUpScrollReset;
+    }, [currentPath, isDetailsRoute, isLandingRoute, isResultsRoute]);
 
     return (
         <BookableSpacesJourneyView

@@ -20,6 +20,9 @@ export const buildJourneyBreadcrumbHtml = items =>
     });
 
 export const buildJourneyBreadcrumbItems = ({ view, selectedIntentId, navigateToView, setSelectedSpace }) => {
+    const safeNavigateToView = typeof navigateToView === 'function' ? navigateToView : () => {};
+    const safeSetSelectedSpace = typeof setSelectedSpace === 'function' ? setSelectedSpace : () => {};
+
     const buildEntry = (label, nextView, intentId, spaceId, onClick) => ({
         label,
         href: serialiseJourneyUrl({ view: nextView, intentId, spaceId }),
@@ -51,8 +54,8 @@ export const buildJourneyBreadcrumbItems = ({ view, selectedIntentId, navigateTo
     if (view === 'details') {
         items.push(
             buildEntry('Results', 'results', selectedIntentId, null, () => {
-                setSelectedSpace(null);
-                navigateToView('results', { intentId: selectedIntentId, spaceId: null });
+                safeSetSelectedSpace(null);
+                safeNavigateToView('results', { intentId: selectedIntentId, spaceId: null });
             }),
         );
         items.push({ label: 'Space details' });
@@ -146,8 +149,8 @@ JourneyBreadcrumbs.propTypes = {
     selectedIntent: PropTypes.object,
     selectedIntentId: PropTypes.string,
     navigateToView: PropTypes.func.isRequired,
-    setSelectedIntentId: PropTypes.func.isRequired,
-    setSelectedSpace: PropTypes.func.isRequired,
+    setSelectedIntentId: PropTypes.func,
+    setSelectedSpace: PropTypes.func,
 };
 
 export default JourneyBreadcrumbs;
