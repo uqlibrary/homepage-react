@@ -26,7 +26,12 @@ export const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     },
 }));
 
-export const StyledImage = styled(TrailImage)({
+export const StyledImage = styled('img')({
+    maxWidth: '100%',
+    width: '100%',
+    position: 'relative',
+});
+export const StyledTrailImage = styled(TrailImage)({
     maxWidth: '100%',
     width: '100%',
     position: 'relative',
@@ -55,5 +60,5 @@ export const StyledDrawerHeader = styled(Typography)(({ theme }) => ({
 export const StyledAccordionGrid = styled(Grid)(() => ({
     paddingLeft: 'var(--art-trail-spacing)',
     paddingRight: 'var(--art-trail-spacing)',
-    paddingBottom: 'calc(var(--art-trail-spacing) * 2)',
+    paddingBottom: 'calc(var(--art-trail-spacing) * 3)',
 }));

@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
-import ParkOutlinedIcon from '@mui/icons-material/ParkOutlined';
+import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import AppBar from '@mui/material/AppBar';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -79,7 +79,7 @@ const tabs = [
     {
         id: 'trail',
         label: 'Trail',
-        icon: <ParkOutlinedIcon sx={{ fontSize: '1.5rem' }} />,
+        icon: <RouteOutlinedIcon sx={{ fontSize: '1.5rem' }} />,
         pages: trailPages,
     },
     {
@@ -276,7 +276,7 @@ const ArtTrailApp = () => {
             >
                 <Toolbar sx={{ minHeight: 'var(--art-trail-header-height)', px: { xs: 1.5, sm: 2.5 } }}>
                     <Grid container wrap="nowrap" alignItems="center" columnSpacing={1}>
-                        <Grid>
+                        <Grid ml={1}>
                             <IconButton
                                 color="inherit"
                                 edge="start"

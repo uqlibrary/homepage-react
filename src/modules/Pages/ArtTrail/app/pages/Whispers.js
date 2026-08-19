@@ -19,6 +19,7 @@ import {
     StyledAccordionDetails,
     StyledAccordionGrid,
     StyledDrawerHeader,
+    StyledTrailImage,
     StyledImage,
     StyledImageCaption,
     StyledUl,
@@ -83,7 +84,12 @@ const Page = ({ openDrawer }) => {
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
-                        <StyledImage src={ArtworkImage} alt="Whispers 2023 artwork." />
+                        <StyledTrailImage
+                            src={ArtworkImage}
+                            alt="Whispers 2023 artwork."
+                            intrinsicWidth={1667}
+                            intrinsicHeight={2500}
+                        />
                         <IconButton
                             size="large"
                             aria-label="More information about this artwork"
