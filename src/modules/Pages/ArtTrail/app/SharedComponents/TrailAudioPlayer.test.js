@@ -71,7 +71,9 @@ describe('TrailAudioPlayer', () => {
     it('resets to the start without resuming playback when replay is pressed', async () => {
         const user = userEvent.setup();
 
-        const { container } = render(<TrailAudioPlayer src="https://example.com/audio.mp3" title="Listen to this page" />);
+        const { container } = render(
+            <TrailAudioPlayer src="https://example.com/audio.mp3" title="Listen to this page" />,
+        );
 
         const audioElement = container.querySelector('audio');
 
