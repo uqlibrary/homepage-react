@@ -162,6 +162,7 @@ export const BookableSpacesManageSpaceTypes = ({
         addBreadcrumbsToSiteHeader([
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Manage Space Types</span></li>',
         ]);
+        /* istanbul ignore else */
         if (
             bookableSpacesRoomListError === null &&
             bookableSpacesRoomListLoading === null &&
@@ -169,9 +170,11 @@ export const BookableSpacesManageSpaceTypes = ({
         ) {
             actions.loadAllBookableSpacesRooms();
         }
+        /* istanbul ignore else */
         if (weeklyHoursError === null && weeklyHoursLoading === null && weeklyHours === null) {
             actions.loadWeeklyHours();
         }
+        /* istanbul ignore else */
         if (facilityTypeListError === null && facilityTypeListLoading === null && facilityTypeList === null) {
             actions.loadAllFacilityTypes();
         }

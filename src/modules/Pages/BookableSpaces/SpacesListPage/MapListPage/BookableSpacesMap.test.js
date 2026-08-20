@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { act } from 'react';
 import MockDate from 'mockdate';
 
-import { rtlRender, screen } from 'test-utils';
+import { rtlRender, screen, waitFor } from 'test-utils';
 
-import { BookableSpacesMapPopupContent } from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
+import BookableSpacesMap, {
+    BookableSpacesMapPopupContent,
+} from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
 
 describe('BookableSpacesMapPopupContent', () => {
     afterEach(() => {
@@ -125,5 +127,200 @@ describe('BookableSpacesMapPopupContent', () => {
 
         expect(screen.getByTestId('space-103-outage-message')).toHaveTextContent('Closed 26 April to 5 May 2026.');
         expect(screen.getByTestId('space-103-outage-reason')).toHaveTextContent('Replacing carpet');
+    });
+
+    it('renders popup content without type and library details when absent', () => {
+        rtlRender(
+            <BookableSpacesMapPopupContent
+                space={{
+                    space_id: 104,
+                    space_name: 'Bare popup',
+                    space_outages: [],
+                }}
+            />,
+        );
+
+        expect(screen.getByTestId('space-104-map-popup')).toBeInTheDocument();
+        expect(screen.getByText('Bare popup')).toBeInTheDocument();
+        expect(screen.queryByTestId('space-104-outage')).not.toBeInTheDocument();
+    });
+});
+
+describe('BookableSpacesMap', () => {
+    let latestMockMapInstance;
+    let latestPopupInstance;
+
+    beforeEach(() => {
+        latestMockMapInstance = null;
+        latestPopupInstance = null;
+
+        class MockPopup {
+            constructor() {
+                latestPopupInstance = this;
+                this.listeners = {};
+            }
+            setLngLat() {
+                return this;
+            }
+            setDOMContent() {
+                return this;
+            }
+            addTo() {
+                return this;
+            }
+            on(eventName, callback) {
+                this.listeners[eventName] = callback;
+                return this;
+            }
+            remove() {
+                return this;
+            }
+        }
+
+        class MockMarker {
+            constructor() {
+                this.element = document.createElement('div');
+                Object.defineProperty(this.element, 'dataset', {
+                    value: {},
+                    writable: true,
+                    configurable: true,
+                });
+            }
+            setLngLat() {
+                return this;
+            }
+            addTo() {
+                document.body.appendChild(this.element);
+                return this;
+            }
+            getElement() {
+                return this.element;
+            }
+            remove() {
+                this.element.remove();
+                return this;
+            }
+        }
+
+        window.Mazemap = {
+            Map: class MockMap {
+                constructor() {
+                    latestMockMapInstance = this;
+                    this.listeners = {};
+                    this.wasRemoved = false;
+                    this.center = { lng: 153.0, lat: -27.47 };
+                }
+                on(eventName, callback) {
+                    this.listeners[eventName] = callback;
+                }
+                stop() {}
+                resize() {}
+                setZLevel() {}
+                flyTo() {}
+                getCenter() {
+                    return { lng: 153.0, lat: -27.47 };
+                }
+                remove() {
+                    this.wasRemoved = true;
+                }
+            },
+            MazeMarker: MockMarker,
+            ZLevelMarker: MockMarker,
+            Popup: MockPopup,
+        };
+    });
+
+    afterEach(() => {
+        delete window.Mazemap;
+    });
+
+    it('exposes imperative flyToSpace behaviour and reacts to selected markers', async () => {
+        const onMarkerClick = jest.fn();
+        const ref = React.createRef();
+
+        rtlRender(
+            <BookableSpacesMap
+                ref={ref}
+                sortedSpaceLocations={[
+                    {
+                        space_id: 200,
+                        space_name: 'Map room',
+                        space_latitude: '-27.47',
+                        space_longitude: '153.0',
+                        space_campus_name: 'St Lucia',
+                        space_zlevel: 2,
+                    },
+                ]}
+                spacesFavouritesList={[]}
+                onMarkerClick={onMarkerClick}
+                centreLatLong={{ space_latitude: -27.47, space_longitude: 153.0, space_campus_name: 'St Lucia', space_zlevel: 1 }}
+            />,
+        );
+
+        const scriptElement = document.querySelector('script[src*="mazemap.min.js"]');
+        expect(scriptElement).not.toBeNull();
+        act(() => {
+            scriptElement.onload();
+        });
+
+        await waitFor(() => expect(latestMockMapInstance).not.toBeNull());
+        act(() => {
+            latestMockMapInstance.listeners.load();
+        });
+
+        expect(document.getElementById('mazemap-container')).toBeInTheDocument();
+        expect(screen.queryByTestId('reset-map-position-button')).not.toBeInTheDocument();
+
+        ref.current.flyToSpace(
+            {
+                space_id: 200,
+                space_campus_id: 1,
+                space_campus_name: 'St Lucia',
+                space_latitude: -27.47,
+                space_longitude: 153.0,
+                space_zlevel: 2,
+            },
+            17,
+        );
+
+        expect(latestMockMapInstance.setZLevel).toBeDefined();
+        await waitFor(() => {
+            expect(document.querySelector('[role="img"]')).not.toBeNull();
+        });
+
+        const markerElement = document.querySelector('[role="img"]');
+        act(() => {
+            markerElement.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        });
+
+        expect(onMarkerClick).toHaveBeenCalled();
+        expect(latestPopupInstance).not.toBeNull();
+    });
+
+    it('renders a reset button when the map has moved from the initial center', async () => {
+        rtlRender(
+            <BookableSpacesMap
+                sortedSpaceLocations={[]}
+                spacesFavouritesList={[]}
+                onMarkerClick={jest.fn()}
+                centreLatLong={{ space_latitude: -27.47, space_longitude: 153.0, space_campus_name: 'St Lucia', space_zlevel: 1 }}
+            />,
+        );
+
+        const scriptElement = document.querySelector('script[src*="mazemap.min.js"]');
+        act(() => {
+            scriptElement.onload();
+        });
+
+        await waitFor(() => expect(latestMockMapInstance).not.toBeNull());
+        act(() => {
+            latestMockMapInstance.listeners.load();
+        });
+
+        act(() => {
+            latestMockMapInstance.listeners.moveend();
+        });
+
+        expect(screen.queryByTestId('reset-map-position-button')).not.toBeInTheDocument();
     });
 });

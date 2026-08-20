@@ -894,6 +894,28 @@ test.describe('Spaces Admin - adding new facility types', () => {
         await page.getByTestId('dialog-cancel-button').click();
         await expect(page.getByTestId('main-dialog')).not.toBeVisible();
     });
+    test('cancel add dialog clears the form and closes cleanly', async ({ page }) => {
+        await page.getByTestId('add-group-2-button').click();
+        await expect(page.getByTestId('add-facility-type-heading')).toBeVisible();
+
+        const field = page.getByRole('textbox', { name: 'New Facility type for Group' });
+        await field.fill('Temporary type');
+        await page.getByTestId('dialog-cancel-button').click();
+
+        await page.getByTestId('add-group-2-button').click();
+        await expect(field).toHaveValue('');
+    });
+    test('warning text is cleared when reopening a different dialog', async ({ page }) => {
+        const first = page.getByTestId('edit-facility-type-43-button');
+        const second = page.getByTestId('edit-facility-type-39-button');
+
+        await first.click();
+        await expect(page.getByText('This facility type can be deleted - it is not currently showing for any Spaces.')).toBeVisible();
+        await page.getByTestId('dialog-cancel-button').click();
+
+        await second.click();
+        await expect(page.getByText('This facility type will be removed from 4 Spaces if you delete it. Those Spaces will not be deleted.')).toBeVisible();
+    });
     test.skip('can drag and drop to update facility type group order', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 

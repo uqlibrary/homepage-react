@@ -4,11 +4,22 @@ import {
     FILTER_DISPLAY_ON_BOTH,
     FILTER_DISPLAY_ON_MAP,
     FILTER_DISPLAY_ON_SIMPLE,
+    deserialiseJourneyMapFilterState,
     getActiveSelectedFacilityTypes,
     getFriendlyFloorName,
+    getFriendlyLocationDescription,
+    getJourneySearchParams,
     getOrdinalSuffixFor,
+    getSpaceIdentifier,
+    isBookable,
     isInt,
     normalizeFilterDisplayOn,
+    parseJourneyStateFromUrl,
+    serialiseJourneyMapFilterState,
+    serialiseJourneyUrl,
+    findSpaceById,
+    getFlatFacilityTypeList,
+    spaceOpeningHours,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 describe('spaces helpers', () => {
@@ -190,5 +201,117 @@ describe('spaces helpers', () => {
                 selected: true,
             },
         ]);
+    });
+
+    it('supports friendly location description and bookable helpers', () => {
+        const expanded = getFriendlyLocationDescription({
+            space_name: 'Room 1',
+            space_library_name: 'Library',
+            space_campus_name: 'St Lucia',
+            space_building_name: 'Building',
+            space_building_number: '42',
+            space_floor_name: '3',
+            space_is_ground_floor: false,
+        });
+        expect(expanded.props.children).toEqual(expect.arrayContaining([expect.anything()]));
+
+        const collapsed = getFriendlyLocationDescription({ space_library_name: 'Library' }, true);
+        expect(collapsed.props.children).toContain('Library');
+
+        expect(isBookable({ space_external_book_url: 'https://example.com' })).toBe(true);
+        expect(isBookable({ space_external_book_url: 'nope' })).toBe(false);
+        expect(findSpaceById([{ space_id: 3 }, { space_uuid: 'abc' }], 'abc')).toEqual({ space_uuid: 'abc' });
+        expect(findSpaceById([{ space_id: 3 }], 3)).toEqual({ space_id: 3 });
+        expect(getSpaceIdentifier({ space_uuid: 'abc' })).toBe('abc');
+        expect(getSpaceIdentifier({ space_id: 12 })).toBe(12);
+    });
+
+    it('handles flat facility lists and opening hours', () => {
+        const facilityGroups = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_children: [
+                            {
+                                facility_type_id: 10,
+                                facility_type_name: 'Whiteboard',
+                                filter_display_on: 'simple',
+                                facility_special_action: 'booking',
+                            },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        expect(getFlatFacilityTypeList(facilityGroups)).toEqual([
+            {
+                facility_type_group_id: 1,
+                facility_type_id: 10,
+                facility_type_name: 'Whiteboard',
+                facility_special_action: 'booking',
+                hide_in_public_filter_list: undefined,
+                filter_display_on: 'simple',
+            },
+        ]);
+
+        const today = new Date();
+        const dayName = today.toLocaleDateString('en-US', { weekday: 'long' });
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        const hours = {
+            locations: [
+                {
+                    departments: [
+                        {
+                            lid: 77,
+                            weeks: [
+                                {
+                                    [dayName]: {
+                                        date: formatDate(today),
+                                        open: '09:00:00',
+                                        close: '17:00:00',
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        };
+
+        expect(spaceOpeningHours({ space_opening_hours_id: 77 }, hours)).toHaveLength(1);
+        expect(spaceOpeningHours({ space_opening_hours_id: 99 }, hours)).toEqual([]);
+    });
+
+    it('serialises and parses journey query state for map and hash routes', () => {
+        const url = new URL('https://example.com/spaces/results/filters=bookable?journeyStep=results');
+        expect(getJourneySearchParams(url)).toMatchObject({ usesHashQuery: false });
+
+        const serialised = serialiseJourneyMapFilterState({
+            selectedFacilityTypes: [{ facility_type_id: FILTER_BOOKABLE_TYPE_ID, selected: true }],
+            selectedCampus: 'St Lucia',
+            selectedLibrary: 'Library',
+            capacityFilterValue: [10, 20],
+            showFavouriteSpacesOnly: true,
+        });
+        expect(serialised).toContain('b64.');
+
+        const searchParams = new URLSearchParams();
+        searchParams.set('mapFilters', serialised);
+        expect(deserialiseJourneyMapFilterState(searchParams)).toMatchObject({
+            selectedCampus: 'St Lucia',
+            selectedLibrary: 'Library',
+            showFavouriteSpacesOnly: true,
+        });
+
+        window.history.pushState({}, '', '/');
+        expect(parseJourneyStateFromUrl([{ id: 'a123' }])).toMatchObject({ view: 'landing' });
+
+        window.history.pushState({}, '', '/spaces/detail/99');
+        expect(parseJourneyStateFromUrl([{ id: 'a123' }])).toMatchObject({ view: 'details', spaceId: '99' });
+
+        expect(serialiseJourneyUrl({ view: 'details', spaceId: 99 })).toBe('/spaces/detail/99');
     });
 });
