@@ -236,6 +236,7 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
                     bearing: -16,
                     zoom: 18.4,
                     zLevel: -1,
+                    zLevelControl: false,
                     RTLTextPlugin: null,
                 });
 
