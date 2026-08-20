@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -28,7 +27,7 @@ const ArtDrawerContent = () => {
                 <StyledDrawerHeader variant="h3">Craig Koomeeta</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     <em>Pikkuw (Saltwater crocodile)</em> 2008
                     <br />
                     natural ochres with synthetic polymer binder on milkwood
@@ -43,7 +42,7 @@ const ArtDrawerContent = () => {
                     Installation view, UQ Library.
                     <br />
                     Photo: Joe Ruckli
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -55,7 +54,7 @@ const LocationDrawerContent = () => {
                 <StyledDrawerHeader variant="h3">View the artwork</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     Near the AskUs desk on Level 1,{' '}
                     <a
                         href="https://web.library.uq.edu.au/visit/central-library"
@@ -65,7 +64,7 @@ const LocationDrawerContent = () => {
                         Central Library
                     </a>{' '}
                     (Building 12), St Lucia campus.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -126,13 +125,13 @@ const Page = ({ openDrawer }) => {
                             About the artwork
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artwork-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 <em>Pikkuw (Saltwater crocodile)</em> 2008, created by artist Craig Koomeeta, is a
                                 tribute to his mother's country as it refers to the relationships between different
                                 communities of Koomeeta's Apelech clan. It is also a testament to the stories of coastal
                                 saltwater clans.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 The carving is of a male saltwater crocodile named Pikkuw. According to Koomeeta's
                                 cultural lore, Pikkuw eloped with a female freshwater crocodile from Kencherang Lagoon,
                                 a large freshwater lagoon north of Aurukun. Min Kena, a big freshwater male crocodile
@@ -143,18 +142,18 @@ const Page = ({ openDrawer }) => {
                                 search for him. When they found him, he was injured and bleeding, so they made a
                                 stretcher and took him back to the beach where he slept for many nights. When he awoke
                                 the saltwater crocodile family sang many songs.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 Pikkuw is decorated here in rich ochre colours and Apelech clan paint up designs,
                                 representing the salt water coastal kin of these countries.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 This work by Koomeeta remembers the strength of Ancestors and the importance of
                                 continuing practices during times of colonial violence. Koomeeta also considers the
                                 wisdom and foresight of Elders to pass on cultural knowledge and the visions of
                                 community to foster self-determining ways that regenerate cultural expression for future
                                 generations.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -166,26 +165,26 @@ const Page = ({ openDrawer }) => {
                             About the artist
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 Born in 1977, Craig Koomeeta is from the Wik Alkan language group and hails from lands
                                 encompassing the Western Cape York Peninsula.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 He is a senior Apelech man with a strong family history and is heavily involved within
                                 his community in Aurukun.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 Koomeeta began refining his cultural practice at 14-years-old. His Uncle Ronald
                                 Toilkalkin taught him the art of carving, a central practice for many Aurukun artists.
                                 In Aurukun, carving evolved from early clay-based moulding and sculptural techniques.
                                 Following Australia's invasion, colonisers introduced tools and assimilatory practices
                                 which led to an increased use of timber carving.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 The traditional stories of Koomeeta's Apelech Ancestors, the creation brothers and
                                 spiritual beings, whose journeys shaped Aurukun and the five clans, inform Koomeeta's
                                 artworks.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -197,9 +196,9 @@ const Page = ({ openDrawer }) => {
                             Connection to Country
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
-                            <Typography component={'p'} sx={{ pb: 1 }}>
+                            <Box sx={{ paddingBottom: '1rem' }}>
                                 Learn more about <strong>Wik Country.</strong>
-                            </Typography>
+                            </Box>
                             <iframe
                                 title="Indigenous art trail - Wik Country"
                                 src="https://uq.h5p.com/content/1292938863165241189/embed"
@@ -210,7 +209,7 @@ const Page = ({ openDrawer }) => {
                                 allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
                                 style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
                             />
-                            <Typography component={'p'} sx={{ pb: 1 }}>
+                            <Box sx={{ paddingBottom: '1rem' }}>
                                 In this video{' '}
                                 <a
                                     href="https://youtu.be/QB14YlFEPiQ?si=LAtIOW3WVV3h3FWT"
@@ -219,7 +218,7 @@ const Page = ({ openDrawer }) => {
                                 >
                                     Craig Koomeeta discusses his traditional stories (YouTube, 4m 10s)
                                 </a>
-                            </Typography>
+                            </Box>
                             <iframe
                                 width="560"
                                 height="315"
@@ -242,17 +241,17 @@ const Page = ({ openDrawer }) => {
                             Stories from the collection
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 Artist Craig Koomeeta's work draws upon the traditional stories of his Apelech Ancestors
                                 from the area around Aurukun. Following colonisation, this area became a mission under
                                 the control of the Presbyterian Church of Queensland.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 In 1936, the Church commissioned Norman F Nelson to conduct an inspection and evaluation
                                 of the work and properties of four missions in North Queensland, including Aurukun. The
                                 resulting reports and photos provide a record of the community and contribute to ongoing
                                 truth-telling.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                 </StyledAccordionGrid>

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -33,7 +32,7 @@ const Art1DrawerContent = () => {
                 <StyledDrawerHeader variant="h3">Nora Wompi Nungurrayi</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     <em>Kunawarritji 1</em> 1997
                     <br />
                     synthetic polymer paint on Belgian linen
@@ -45,7 +44,7 @@ const Art1DrawerContent = () => {
                     Reproduced courtesy of the artist's estate and Suzanne O'Connell Gallery, Brisbane
                     <br />
                     Photo: Carl Warner.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -57,7 +56,7 @@ const Art2DrawerContent = () => {
                 <StyledDrawerHeader variant="h3">Nora Wompi Nungurrayi</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     <em>Kunawarritji 2</em> 1997
                     <br />
                     synthetic polymer paint on Belgian linen
@@ -69,7 +68,7 @@ const Art2DrawerContent = () => {
                     Reproduced courtesy of the artist's estate and Suzanne O'Connell Gallery, Brisbane
                     <br />
                     Photo: Carl Warner.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -81,13 +80,13 @@ const LocationDrawerContent = () => {
                 <StyledDrawerHeader variant="h3">View the artwork</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     Where: Level 1,{' '}
                     <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
                         Duhig Tower
                     </a>{' '}
                     (Building 2), St Lucia campus.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -190,19 +189,19 @@ const Page = ({ openDrawer }) => {
                             About the artwork
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artwork-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 These two paintings depict a place central to the artist's life and community,
                                 Kunawarritji (meaning 'water spring'). What makes these paintings so striking for an
                                 artist of this region is the defined colour palette which utilises soft yellows, pinks,
                                 whites, and blues. These colours overlap and bleed into each other creating fluid
                                 intersections of place.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 You can see the expressive brushstrokes within each of these works. While both artworks
                                 depict the same place, there is a unique feel to each painting, communicated through
                                 colour, shape and texture. If you look closely at each artwork, you can see the depth of
                                 the underlaid paint, the ochre tones showing through the lighter layers.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -214,25 +213,25 @@ const Page = ({ openDrawer }) => {
                             About the artist
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 The artist, from the Kukatja language group and Nungurrayi communities, was born c. 1935
                                 near Well 33 in the Kunawarritji Community based along the Canning Stock Route in
                                 mid-Western Australia.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 Many of the paintings created by this artist connect with nature and place, and this is
                                 because she spent many years of her life moving between Kunawarritji, Balgo, Kiwirrkurra
                                 and Punmu. More than a prolific artist, she was a senior respected elder and cultural
                                 leader who cared for Country and whose obligations drew her to these different places
                                 across her lifetime. The artist passed away in 2017 and it is a privilege to be able to
                                 show her continuing artistic legacy to you today.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 Find out{' '}
                                 <a href="https://martumili.com.au/node/73" target="_blank" rel="noopener noreferrer">
                                     more about the artist.
                                 </a>
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -244,10 +243,10 @@ const Page = ({ openDrawer }) => {
                             Connection to Country
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
-                            <Typography component={'p'} sx={{ pb: 1 }}>
+                            <Box component="p" sx={{ paddingBottom: '1rem' }}>
                                 This artwork was inspired by the artist’s home at Kunawarritji, part of Martu Country in
                                 Western Australia.
-                            </Typography>
+                            </Box>
                             <iframe
                                 title="Indigenous art trail - Martu Country"
                                 src="https://uq.h5p.com/content/1292938729180054199/embed"
@@ -270,9 +269,9 @@ const Page = ({ openDrawer }) => {
                                     <br /> Read about Martu lands - from Kanyirninpa Jukurrpa.
                                 </li>
                             </StyledUl>
-                            <Typography component={'p'} sx={{ pb: 1 }}>
+                            <Box component="p" sx={{ paddingBottom: '1rem' }}>
                                 Kunawarritji is part of Martu Country on what was the old Canning Stock Route.
-                            </Typography>
+                            </Box>
                             <StyledImage src={DesertImage} alt="Thorny devil in the desert." loading="lazy" />
                             <StyledImageCaption>
                                 Desert near old Canning Stock Route @tolly65 – stock.adobe.com

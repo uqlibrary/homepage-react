@@ -7,6 +7,11 @@ import { styled } from '@mui/material/styles';
 import TrailAudioPlayer from './TrailAudioPlayer';
 import TrailImage from './TrailImage';
 
+export const StyledHeading = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+}));
+
 export const StyledAccordion = styled(Accordion)(() => ({
     marginBottom: 'var(--art-trail-spacing)',
     '&.Mui-expanded:last-of-type': { marginBottom: 'var(--art-trail-spacing)' },
@@ -14,10 +19,8 @@ export const StyledAccordion = styled(Accordion)(() => ({
 
 export const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     '& p': {
-        fontSize: 'var(--art-trail-font-size)',
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        lineHeight: 1.5,
         '&:first-of-type': {
             marginTop: 0,
         },
@@ -51,6 +54,7 @@ export const StyledUl = styled('ul')(({ theme }) => ({
     '& li:not(:last-of-type)': {
         marginBottom: theme.spacing(1),
     },
+    fontSize: 'var(--art-trail-font-size)',
 }));
 
 export const StyledDrawerHeader = styled(Typography)(({ theme }) => ({

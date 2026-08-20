@@ -31,7 +31,7 @@ const ArtDrawerContent = () => {
                 <StyledDrawerHeader variant="h3">Gloria Tamerre Petyarre</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     <em>Devil Mountain Lizard Dreaming</em> 1997
                     <br />
                     synthetic polymer paint on canvas
@@ -43,7 +43,7 @@ const ArtDrawerContent = () => {
                     Reproduced courtesy of the artist © licensed by Aboriginal Artists Agency Ltd.
                     <br />
                     Photo: Carl Warner.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -55,13 +55,13 @@ const LocationDrawerContent = () => {
                 <StyledDrawerHeader variant="h3">View the artwork</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     Where: Level 1,{' '}
                     <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
                         Duhig Tower
                     </a>{' '}
                     (Building 2), St Lucia campus.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -122,17 +122,17 @@ const Page = ({ openDrawer }) => {
                             About the artwork
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artwork-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 This artwork depicts the scales of the Anmatyerre's totem animal, the Thorny Devil, who
                                 was responsible for depositing ochre throughout Atnangkere Country. Note the intricate
                                 lines, patterns, and colour, which the artist has used to create the illusion of
                                 movement.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 The artist's work demonstrates a deep connection with Country and the important role of
                                 the artist in their community to continue and protect knowledge, which continues to
                                 future generations.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -144,10 +144,10 @@ const Page = ({ openDrawer }) => {
                             About the artist
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 The artist was born c. 1945 in Atnangkere, northeast of Alice Springs in the Northern
                                 Territory.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -159,9 +159,9 @@ const Page = ({ openDrawer }) => {
                             Connection to Country
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
-                            <Typography component={'p'} sx={{ pb: 1 }}>
+                            <Box component="p" sx={{ paddingBottom: '1rem' }}>
                                 Learn more about <strong>Atnangkere Country.</strong>
-                            </Typography>
+                            </Box>
                             <iframe
                                 title="Indigenous art trail - Atnangkere Country"
                                 src="https://uq.h5p.com/content/1292937940959277909/embed"
@@ -175,7 +175,7 @@ const Page = ({ openDrawer }) => {
                             <Typography component={'h3'}>Thorny devils</Typography>
                             <StyledImage src={ThornyDevilsImage} alt="Thorny devil in the desert." loading="lazy" />
                             <StyledImageCaption>Thorny Devil @meyblume - stock.adobe.com</StyledImageCaption>
-                            <Typography component={'p'} sx={{ pb: 1 }}>
+                            <Box component="p" sx={{ paddingBottom: '1rem' }}>
                                 Thorny devils have a peculiar way of moving across the desert. This movement makes them
                                 appear like a piece of vegetation blowing across the ground and helps them avoid
                                 predators. Watch this{' '}
@@ -186,7 +186,7 @@ const Page = ({ openDrawer }) => {
                                 >
                                     video of a thorny devil (YouTube, 23s):
                                 </a>
-                            </Typography>
+                            </Box>
                             <iframe
                                 width="560"
                                 height="315"

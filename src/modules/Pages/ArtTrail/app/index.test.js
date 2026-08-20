@@ -55,7 +55,7 @@ describe('ArtTrailApp', () => {
         expect(screen.getByRole('button', { name: 'Next page' })).toBeEnabled();
         expect(screen.queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
         expect(screen.getByText(`1 / ${totalPages}`)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'About the artwork' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'View more' })).toBeInTheDocument();
 
         await user.click(screen.getByRole('button', { name: 'Map' }));
         expect(screen.queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
@@ -67,7 +67,7 @@ describe('ArtTrailApp', () => {
         expect(screen.getByRole('button', { name: 'Previous page' })).toBeEnabled();
         expect(screen.queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
         expect(screen.getByText(`1 / ${totalPages}`)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'About the artwork' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'View more' })).toBeInTheDocument();
     });
 
     it('opens and closes the page drawer from a Trail page', async () => {
@@ -84,6 +84,30 @@ describe('ArtTrailApp', () => {
         await user.keyboard('{Escape}');
 
         expect(screen.queryByRole('heading', { name: /Hector Tjupuru Burton/i })).not.toBeInTheDocument();
+    });
+
+    it('resets the scroll position when changing Trail pages', async () => {
+        const user = userEvent.setup();
+
+        render(<ArtTrailApp />);
+
+        const scrollContainer = screen.getByTestId('art-trail-scroll-container');
+
+        Object.defineProperty(scrollContainer, 'scrollTop', {
+            configurable: true,
+            writable: true,
+            value: 240,
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Start the trail' }));
+
+        expect(scrollContainer.scrollTop).toBe(0);
+
+        scrollContainer.scrollTop = 180;
+
+        await user.click(screen.getByRole('button', { name: 'Next page' }));
+
+        expect(scrollContainer.scrollTop).toBe(0);
     });
 
     it('dismisses the cultural disclaimer across tabs and persists dismissal in a cookie', async () => {

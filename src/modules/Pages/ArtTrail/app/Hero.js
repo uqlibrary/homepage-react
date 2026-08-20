@@ -9,7 +9,7 @@ import wholeArtworkImage from '../../../../../public/images/artTrail/UQRAP_Whole
 
 const StyledHeading = styled('h1')(({ theme }) => ({
     marginTop: 0,
-    marginBottom: 0,
+    marginBottom: '1rem',
     paddingTop: 0,
     paddingBottom: 0,
     fontSize: '1.875rem',
@@ -21,12 +21,11 @@ const StyledHeading = styled('h1')(({ theme }) => ({
     fontFamily: theme.typography.headingFontFamily,
 }));
 
-const StyledSubheading = styled('h2')(({ theme }) => ({
+const StyledSubheading = styled('div')(({ theme }) => ({
     fontSize: '1.125rem',
     fontWeight: theme.typography.fontWeightMedium,
-    fontFamily: 'var(--art-trail-font-family)',
-    lineHeight: '1.6',
-    marginTop: '1rem',
+    lineHeight: 1.5,
+    fontFamily: theme.typography.bodyFontFamily,
 }));
 
 const Hero = ({ title, subtitle, sx }) => {
