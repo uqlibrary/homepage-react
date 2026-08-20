@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -6,10 +6,16 @@ import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import HeadphonesOutlinedIcon from '@mui/icons-material/HeadphonesOutlined';
-import PauseCircleOutlineRoundedIcon from '@mui/icons-material/PauseCircleOutlineRounded';
 import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
 import ReplayRoundedIcon from '@mui/icons-material/ReplayRounded';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
+
+const PLAYBACK_STATES = {
+    IDLE: 'idle',
+    PLAYING: 'playing',
+    STOPPED: 'stopped',
+};
+const CONTROL_BUTTON_SIZE_PX = 48;
 
 const formatTime = value => {
     if (!Number.isFinite(value) || value <= 0) {
@@ -28,11 +34,12 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
     const hasMountedStopSignalRef = useRef(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [hasPlaybackStarted, setHasPlaybackStarted] = useState(false);
+    const [playbackState, setPlaybackState] = useState(PLAYBACK_STATES.IDLE);
     const [playbackError, setPlaybackError] = useState(false);
     const descriptionId = useId();
     const timeId = useId();
+    const isPlaying = playbackState === PLAYBACK_STATES.PLAYING;
+    const isStopped = playbackState === PLAYBACK_STATES.STOPPED;
     const progressValue = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0;
     const progressValueText = useMemo(() => {
         if (!duration) {
@@ -44,15 +51,20 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
 
     const resetPlaybackState = () => {
         setCurrentTime(0);
-        setIsPlaying(false);
+        setPlaybackState(PLAYBACK_STATES.IDLE);
         setPlaybackError(false);
     };
 
-    const stopPlayback = ({ resetToStart = true } = {}) => {
+    const stopPlayback = useCallback(({ resetToStart = true, nextState = PLAYBACK_STATES.IDLE } = {}) => {
         const audioElement = audioRef.current;
 
         if (!audioElement) {
-            resetPlaybackState();
+            if (resetToStart) {
+                resetPlaybackState();
+            } else {
+                setPlaybackState(nextState);
+                setPlaybackError(false);
+            }
             return;
         }
 
@@ -60,60 +72,65 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
 
         if (resetToStart) {
             audioElement.currentTime = 0;
+            resetPlaybackState();
+            return;
         }
 
-        resetPlaybackState();
-    };
+        setPlaybackState(nextState);
+        setPlaybackError(false);
+    }, []);
 
-    const handlePlayPause = async () => {
+    const startPlayback = async ({ restartFromBeginning = false } = {}) => {
         const audioElement = audioRef.current;
 
         if (!audioElement) {
             return;
         }
 
-        if (isPlaying) {
-            audioElement.pause();
-            setIsPlaying(false);
-            return;
+        if (restartFromBeginning) {
+            audioElement.currentTime = 0;
+            setCurrentTime(0);
         }
 
         try {
             await audioElement.play();
-            setHasPlaybackStarted(true);
-            setIsPlaying(true);
+            setPlaybackState(PLAYBACK_STATES.PLAYING);
             setPlaybackError(false);
         } catch {
-            setIsPlaying(false);
+            setPlaybackState(PLAYBACK_STATES.IDLE);
             setPlaybackError(true);
         }
     };
 
-    const handleReplay = async () => {
+    const handleReplay = () => {
         const audioElement = audioRef.current;
 
         if (!audioElement) {
             return;
         }
 
+        audioElement.pause();
         audioElement.currentTime = 0;
         setCurrentTime(0);
-
-        try {
-            await audioElement.play();
-            setHasPlaybackStarted(true);
-            setIsPlaying(true);
-            setPlaybackError(false);
-        } catch {
-            setIsPlaying(false);
-            setPlaybackError(true);
-        }
+        setPlaybackState(PLAYBACK_STATES.IDLE);
+        setPlaybackError(false);
     };
+
+    let leadingControl = (
+        <Box aria-hidden="true" sx={{ width: CONTROL_BUTTON_SIZE_PX, height: CONTROL_BUTTON_SIZE_PX }} />
+    );
+
+    if (isStopped) {
+        leadingControl = (
+            <IconButton aria-label={`Replay ${title}`} onClick={handleReplay} color="primary" size="large">
+                <ReplayRoundedIcon fontSize="large" />
+            </IconButton>
+        );
+    }
 
     useEffect(() => {
         resetPlaybackState();
         setDuration(0);
-        setHasPlaybackStarted(false);
     }, [src]);
 
     useEffect(() => {
@@ -123,13 +140,13 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
         }
 
         stopPlayback();
-    }, [stopSignal]);
+    }, [stopPlayback, stopSignal]);
 
     useEffect(() => {
         return () => {
             stopPlayback();
         };
-    }, []);
+    }, [stopPlayback]);
 
     return (
         <Box
@@ -157,18 +174,18 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                     setCurrentTime(event.currentTarget.currentTime || 0);
                 }}
                 onPlay={() => {
-                    setIsPlaying(true);
-                    setHasPlaybackStarted(true);
+                    setPlaybackState(PLAYBACK_STATES.PLAYING);
                 }}
                 onPause={() => {
-                    setIsPlaying(false);
+                    setPlaybackState(currentState =>
+                        currentState === PLAYBACK_STATES.PLAYING ? PLAYBACK_STATES.STOPPED : currentState,
+                    );
                 }}
                 onEnded={() => {
-                    setCurrentTime(0);
-                    setIsPlaying(false);
+                    resetPlaybackState();
                 }}
                 onError={() => {
-                    setIsPlaying(false);
+                    setPlaybackState(PLAYBACK_STATES.IDLE);
                     setPlaybackError(true);
                 }}
             />
@@ -178,8 +195,7 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                     gridTemplateColumns: 'auto minmax(0, 1fr) auto',
                     alignItems: 'center',
                     columnGap: 1,
-                    px: 1.5,
-                    py: 1,
+                    px: 1,
                 }}
             >
                 <Box
@@ -190,7 +206,7 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                         color: isPlaying ? 'primary.main' : 'text.secondary',
                     }}
                 >
-                    <HeadphonesOutlinedIcon />
+                    <HeadphonesOutlinedIcon fontSize="large" />
                 </Box>
                 <Box sx={{ minWidth: 0 }}>
                     <Typography variant="subtitle2" component="p" sx={{ color: 'text.primary' }}>
@@ -205,36 +221,35 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                         {progressValueText}
                     </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', columnGap: 0.25 }}>
-                    {hasPlaybackStarted && !isPlaying ? (
-                        <IconButton aria-label={`Replay ${title}`} onClick={handleReplay} color="primary" size="large">
-                            <ReplayRoundedIcon fontSize="large" />
-                        </IconButton>
-                    ) : null}
+                <Box
+                    sx={{
+                        display: 'grid',
+                        gridTemplateColumns: `repeat(2, ${CONTROL_BUTTON_SIZE_PX}px)`,
+                        alignItems: 'center',
+                        justifyItems: 'center',
+                        columnGap: 0.25,
+                    }}
+                >
+                    {leadingControl}
                     {isPlaying ? (
                         <IconButton
-                            aria-label={`Pause ${title}`}
-                            onClick={handlePlayPause}
-                            color="primary"
-                            size="large"
-                        >
-                            <PauseCircleOutlineRoundedIcon fontSize="large" />
-                        </IconButton>
-                    ) : (
-                        <IconButton aria-label={`Play ${title}`} onClick={handlePlayPause} color="primary" size="large">
-                            <PlayCircleOutlineRoundedIcon fontSize="large" />
-                        </IconButton>
-                    )}
-                    {(isPlaying || currentTime > 0) && !playbackError ? (
-                        <IconButton
                             aria-label={`Stop ${title}`}
-                            onClick={() => stopPlayback()}
+                            onClick={() => stopPlayback({ resetToStart: false, nextState: PLAYBACK_STATES.STOPPED })}
                             color="primary"
                             size="large"
                         >
                             <StopCircleOutlinedIcon fontSize="large" />
                         </IconButton>
-                    ) : null}
+                    ) : (
+                        <IconButton
+                            aria-label={`Play ${title}`}
+                            onClick={() => startPlayback()}
+                            color="primary"
+                            size="large"
+                        >
+                            <PlayCircleOutlineRoundedIcon fontSize="large" />
+                        </IconButton>
+                    )}
                 </Box>
             </Box>
             <LinearProgress

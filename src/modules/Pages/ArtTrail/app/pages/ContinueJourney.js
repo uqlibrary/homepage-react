@@ -7,21 +7,16 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { styled } from '@mui/material/styles';
 
 import Hero from '../Hero';
-import TrailImage from '../SharedComponents/TrailImage';
+import { StyledImage } from '../SharedComponents';
 import { StyledAudioPlayer } from '../SharedComponents';
 
 import Book1Image from '../../../../../../public/images/artTrail/UQ_BlakHistory_Book-cover_900x1200px-350x467.jpg';
 import Book2Image from '../../../../../../public/images/artTrail/Storying_the_Archive.jpg';
 import Book3Image from '../../../../../../public/images/artTrail/Guide_LanguageRelationships_Final6a_300ppi.jpg';
 
-const StyledImage = styled(TrailImage)({
-    width: '100%',
-});
-
-const CONTINUE_JOURNEY_AUDIO_SRC = '/audio/artTrail/sample2.mp3';
+import ContinueJourneyAudio from '../../../../../../public/audio/artTrail/continuejourney.mp3';
 
 const ContinueJourney = ({ mediaStopSignal }) => {
     return (
@@ -47,7 +42,7 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                 <Grid>
                     <StyledAudioPlayer
                         title="Listen to this page"
-                        src={CONTINUE_JOURNEY_AUDIO_SRC}
+                        src={ContinueJourneyAudio}
                         stopSignal={mediaStopSignal}
                     />
                 </Grid>
@@ -80,8 +75,6 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                                             <StyledImage
                                                 src={Book1Image}
                                                 alt="Front cover image of the book 'UQ has a Blak history', which shows several archive images from around the UQ St Lucia campus"
-                                                intrinsicWidth={350}
-                                                intrinsicHeight={467}
                                             />
                                         </a>
                                     </Typography>
@@ -117,8 +110,6 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                                             <StyledImage
                                                 src={Book2Image}
                                                 alt="Front cover image of the book 'Storying the archive', which shows a montage of people's faces at the top and Indigenous artwork at the bottom"
-                                                intrinsicWidth={300}
-                                                intrinsicHeight={400}
                                             />
                                         </a>
                                     </Typography>
@@ -153,8 +144,6 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                                             <StyledImage
                                                 src={Book3Image}
                                                 alt="Front cover image of the book 'The language of relationships with Aboriginal and Torres Strait Islander peoples - Introductory guide', which shows a photograph of a large group of people under a marquee in deep discussion with each other. Indigenous artwork is shown underneath the photo."
-                                                intrinsicWidth={1013}
-                                                intrinsicHeight={1500}
                                             />
                                         </a>
                                     </Typography>

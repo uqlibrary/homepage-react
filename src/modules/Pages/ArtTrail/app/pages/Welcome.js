@@ -10,8 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import Hero from '../Hero';
 import { StyledAudioPlayer } from '../SharedComponents';
-
-const WELCOME_AUDIO_SRC = '/audio/artTrail/sample1.mp3';
+import WelcomeAudio from '../../../../../../public/audio/artTrail/welcome.mp3';
 
 const WelcomePage = ({ mediaStopSignal }) => {
     return (
@@ -42,11 +41,7 @@ const WelcomePage = ({ mediaStopSignal }) => {
                     </Grid>
                 </Grid>
                 <Grid>
-                    <StyledAudioPlayer
-                        title="Listen to this page"
-                        src={WELCOME_AUDIO_SRC}
-                        stopSignal={mediaStopSignal}
-                    />
+                    <StyledAudioPlayer title="Listen to this page" src={WelcomeAudio} stopSignal={mediaStopSignal} />
                 </Grid>
                 <Grid>
                     <Accordion
