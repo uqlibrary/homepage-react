@@ -1,5 +1,4 @@
 import { expect, test } from '@uq/pw/test';
-import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 import { assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
 test.describe('Spaces Admin - manage space types', () => {
@@ -47,7 +46,11 @@ test.describe('Spaces Admin - manage space types', () => {
 
         await page.getByTestId('space-types-add-button').click();
         await page.getByTestId('space-types-add-name-input').locator('input').fill('New test room');
-        await page.getByTestId('space-types-add-description-input').locator('textarea').first().fill('For accessibility tests');
+        await page
+            .getByTestId('space-types-add-description-input')
+            .locator('textarea')
+            .first()
+            .fill('For accessibility tests');
         await page.getByTestId('space-types-add-ok-button').click();
 
         await assertToastHasMessage(page, 'Space type created');
@@ -60,7 +63,11 @@ test.describe('Spaces Admin - manage space types', () => {
 
         await page.getByTestId('space-types-add-button').click();
         await page.getByTestId('space-types-add-name-input').locator('input').fill('Draft value');
-        await page.getByTestId('space-types-add-description-input').locator('textarea').first().fill('Temporary description');
+        await page
+            .getByTestId('space-types-add-description-input')
+            .locator('textarea')
+            .first()
+            .fill('Temporary description');
         await page.getByTestId('space-types-add-cancel-button').click();
 
         await page.getByTestId('space-types-add-button').click();
@@ -74,7 +81,11 @@ test.describe('Spaces Admin - manage space types', () => {
 
         await page.getByTestId('space-type-row-1-edit-button').click();
         await page.getByTestId('space-type-row-1-name-input').locator('input').fill('Updated communal space');
-        await page.getByTestId('space-type-row-1-description-input').locator('textarea').first().fill('Updated description');
+        await page
+            .getByTestId('space-type-row-1-description-input')
+            .locator('textarea')
+            .first()
+            .fill('Updated description');
         await page.getByTestId('space-type-row-1-save-button').click();
 
         await assertToastHasMessage(page, 'Space type updated');

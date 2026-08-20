@@ -43,7 +43,14 @@ describe('FavouritesList', () => {
         const props = {
             ...defaultProps,
             spacesFavouritesList: [{ space_id: 10, label: 'Room 10' }],
-            filteredSpaceLocations: [{ space_id: 10, space_name: 'Room 10', space_type_details: { space_type_name: 'Study' }, space_library_name: 'Library' }],
+            filteredSpaceLocations: [
+                {
+                    space_id: 10,
+                    space_name: 'Room 10',
+                    space_type_details: { space_type_name: 'Study' },
+                    space_library_name: 'Library',
+                },
+            ],
         };
 
         renderWithProviders(<FavouritesList {...props} />);
@@ -70,12 +77,32 @@ describe('FavouritesList', () => {
                 { space_id: 30, label: 'Room 30' },
             ],
             allSpaceLocations: [
-                { space_id: 10, space_name: 'Room 10', space_type_details: { space_type_name: 'Study' }, space_library_name: 'Library' },
-                { space_id: 20, space_name: 'Room 20', space_type_details: { space_type_name: 'Study' }, space_library_name: 'Library' },
-                { space_id: 30, space_name: 'Room 30', space_type_details: { space_type_name: 'Study' }, space_library_name: 'Library' },
+                {
+                    space_id: 10,
+                    space_name: 'Room 10',
+                    space_type_details: { space_type_name: 'Study' },
+                    space_library_name: 'Library',
+                },
+                {
+                    space_id: 20,
+                    space_name: 'Room 20',
+                    space_type_details: { space_type_name: 'Study' },
+                    space_library_name: 'Library',
+                },
+                {
+                    space_id: 30,
+                    space_name: 'Room 30',
+                    space_type_details: { space_type_name: 'Study' },
+                    space_library_name: 'Library',
+                },
             ],
             filteredSpaceLocations: [
-                { space_id: 10, space_name: 'Room 10', space_type_details: { space_type_name: 'Study' }, space_library_name: 'Library' },
+                {
+                    space_id: 10,
+                    space_name: 'Room 10',
+                    space_type_details: { space_type_name: 'Study' },
+                    space_library_name: 'Library',
+                },
             ],
         };
 
@@ -101,7 +128,14 @@ describe('FavouritesList', () => {
         const props = {
             ...defaultProps,
             spacesFavouritesList: [{ space_id: 999, label: 'Missing room' }],
-            allSpaceLocations: [{ space_id: 999, space_name: 'Missing room', space_type_details: { space_type_name: 'Study' }, space_library_name: 'Library' }],
+            allSpaceLocations: [
+                {
+                    space_id: 999,
+                    space_name: 'Missing room',
+                    space_type_details: { space_type_name: 'Study' },
+                    space_library_name: 'Library',
+                },
+            ],
             filteredSpaceLocations: [],
             highlightedSpace: null,
             selectedIntentId: 'quiet',

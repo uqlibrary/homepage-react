@@ -253,7 +253,12 @@ describe('BookableSpacesMap', () => {
                 ]}
                 spacesFavouritesList={[]}
                 onMarkerClick={onMarkerClick}
-                centreLatLong={{ space_latitude: -27.47, space_longitude: 153.0, space_campus_name: 'St Lucia', space_zlevel: 1 }}
+                centreLatLong={{
+                    space_latitude: -27.47,
+                    space_longitude: 153.0,
+                    space_campus_name: 'St Lucia',
+                    space_zlevel: 1,
+                }}
             />,
         );
 
@@ -303,7 +308,12 @@ describe('BookableSpacesMap', () => {
                 sortedSpaceLocations={[]}
                 spacesFavouritesList={[]}
                 onMarkerClick={jest.fn()}
-                centreLatLong={{ space_latitude: -27.47, space_longitude: 153.0, space_campus_name: 'St Lucia', space_zlevel: 1 }}
+                centreLatLong={{
+                    space_latitude: -27.47,
+                    space_longitude: 153.0,
+                    space_campus_name: 'St Lucia',
+                    space_zlevel: 1,
+                }}
             />,
         );
 

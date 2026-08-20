@@ -27,14 +27,7 @@ describe('SpaceOutagePanel', () => {
     });
 
     it('shows the add-mode notice when the panel is used before a space record exists', () => {
-        rtlRender(
-            <SpaceOutagePanel
-                {...defaultProps}
-                mode="add"
-                spaceId={null}
-                spaceOutageList={[]}
-            />,
-        );
+        rtlRender(<SpaceOutagePanel {...defaultProps} mode="add" spaceId={null} spaceOutageList={[]} />);
 
         expect(screen.getByTestId('space-outage-add-mode-notice')).toBeInTheDocument();
         expect(screen.getByText(/Save this space first/i)).toBeInTheDocument();

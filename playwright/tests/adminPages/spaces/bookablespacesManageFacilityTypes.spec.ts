@@ -910,11 +910,17 @@ test.describe('Spaces Admin - adding new facility types', () => {
         const second = page.getByTestId('edit-facility-type-39-button');
 
         await first.click();
-        await expect(page.getByText('This facility type can be deleted - it is not currently showing for any Spaces.')).toBeVisible();
+        await expect(
+            page.getByText('This facility type can be deleted - it is not currently showing for any Spaces.'),
+        ).toBeVisible();
         await page.getByTestId('dialog-cancel-button').click();
 
         await second.click();
-        await expect(page.getByText('This facility type will be removed from 4 Spaces if you delete it. Those Spaces will not be deleted.')).toBeVisible();
+        await expect(
+            page.getByText(
+                'This facility type will be removed from 4 Spaces if you delete it. Those Spaces will not be deleted.',
+            ),
+        ).toBeVisible();
     });
     test.skip('can drag and drop to update facility type group order', async ({ page, context }) => {
         await setTestDataCookie(context, page);

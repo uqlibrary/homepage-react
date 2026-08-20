@@ -4,6 +4,7 @@ const mockDndDrag = jest.fn();
 const mockDndDrop = jest.fn();
 
 jest.mock('react-dnd', () => ({
+    // eslint-disable-next-line react/prop-types
     DndProvider: ({ children }) => <>{children}</>,
     useDrag: (...args) => mockDndDrag(...args),
     useDrop: (...args) => mockDndDrop(...args),
@@ -111,24 +112,14 @@ describe('BookableSpacesManageFacilities', () => {
     });
 
     it('shows the loading state while facility type data is still being loaded', () => {
-        rtlRender(
-            <BookableSpacesManageFacilities
-                {...defaultProps}
-                facilityTypeListLoading={true}
-                facilityTypeUpdating={true}
-            />,
-        );
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} facilityTypeListLoading facilityTypeUpdating />);
 
         expect(screen.getByText('Loading')).toBeInTheDocument();
     });
 
     it('shows the API error state when facility type loading fails', () => {
         rtlRender(
-            <BookableSpacesManageFacilities
-                {...defaultProps}
-                facilityTypeListError={true}
-                facilityTypeListLoading={false}
-            />,
+            <BookableSpacesManageFacilities {...defaultProps} facilityTypeListError facilityTypeListLoading={false} />,
         );
 
         expect(screen.getByTestId('apiError')).toHaveTextContent('Something went wrong - please try again later.');
@@ -144,12 +135,15 @@ describe('BookableSpacesManageFacilities', () => {
 
         mockDndDrop.mockImplementation(config => {
             const props = { ...config };
-            return [{}, ref => {
-                if (ref && typeof props.drop === 'function') {
-                    ref.drop = props.drop;
-                }
-                return ref;
-            }];
+            return [
+                {},
+                ref => {
+                    if (ref && typeof props.drop === 'function') {
+                        ref.drop = props.drop;
+                    }
+                    return ref;
+                },
+            ];
         });
 
         rtlRender(<BookableSpacesManageFacilities {...defaultProps} actions={actions} />);
@@ -177,12 +171,15 @@ describe('BookableSpacesManageFacilities', () => {
 
         mockDndDrop.mockImplementation(config => {
             const props = { ...config };
-            return [{}, ref => {
-                if (ref && typeof props.drop === 'function') {
-                    ref.drop = props.drop;
-                }
-                return ref;
-            }];
+            return [
+                {},
+                ref => {
+                    if (ref && typeof props.drop === 'function') {
+                        ref.drop = props.drop;
+                    }
+                    return ref;
+                },
+            ];
         });
 
         rtlRender(<BookableSpacesManageFacilities {...defaultProps} actions={actions} />);
@@ -207,12 +204,15 @@ describe('BookableSpacesManageFacilities', () => {
 
         mockDndDrop.mockImplementation(config => {
             const props = { ...config };
-            return [{}, ref => {
-                if (ref && typeof props.drop === 'function') {
-                    ref.drop = props.drop;
-                }
-                return ref;
-            }];
+            return [
+                {},
+                ref => {
+                    if (ref && typeof props.drop === 'function') {
+                        ref.drop = props.drop;
+                    }
+                    return ref;
+                },
+            ];
         });
 
         rtlRender(<BookableSpacesManageFacilities {...defaultProps} actions={actions} />);

@@ -30,7 +30,9 @@ describe('AdminButton', () => {
         expect(screen.getByTestId('admin-spacetypes-visit-dashboard-button')).toHaveTextContent('Manage Space Types');
         expect(screen.getByTestId('admin-spaces-visit-manage-locations-button')).toHaveTextContent('Manage Locations');
         expect(screen.getByTestId('admin-spaces-visit-add-space-button')).toHaveTextContent('Add new Space');
-        expect(screen.getByTestId('admin-spaces-visit-manage-facilities-button')).toHaveTextContent('Manage Facility types');
+        expect(screen.getByTestId('admin-spaces-visit-manage-facilities-button')).toHaveTextContent(
+            'Manage Facility types',
+        );
         expect(screen.getByTestId('admin-spaces-visit-homepage-button')).toHaveTextContent('Visit public Spaces page');
     });
 
