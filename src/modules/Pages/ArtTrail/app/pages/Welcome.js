@@ -2,15 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import Hero from '../Hero';
+import { StyledHeading, StyledAudioPlayer } from '../SharedComponents';
+import WelcomeAudio from '../../../../../../public/audio/artTrail/welcome.mp3';
 
-const WelcomePage = () => {
+const WelcomePage = ({ mediaStopSignal }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero
@@ -24,18 +26,18 @@ const WelcomePage = () => {
                 pr={'var(--art-trail-spacing)'}
                 data-testid="pageContent"
             >
+                <Grid>
+                    <StyledAudioPlayer title="Listen to this page" src={WelcomeAudio} stopSignal={mediaStopSignal} />
+                </Grid>
                 <Grid container wrap="nowrap" justifyContent="space-between" alignItems="flex-start" columnSpacing={1}>
                     <Grid xs>
-                        <Typography variant="h3" sx={{ fontSize: { xs: '1.5rem', sm: '2.5rem' }, fontWeight: 500 }}>
-                            Welcome
-                        </Typography>
-                        <Typography variant="body1" component="div">
+                        <Box component="div">
                             <p>
                                 Welcome to the Indigenous Art and Library Discovery Trail at The University of
                                 Queensland Library.
                             </p>
                             <p>Tap “Start the Trail” below to begin.</p>
-                        </Typography>
+                        </Box>
                     </Grid>
                 </Grid>
                 <Grid>
@@ -53,10 +55,9 @@ const WelcomePage = () => {
                             Audio transcript
                         </AccordionSummary>
                         <AccordionDetails>
-                            Placeholder content for additional information, related items, or a hand-off into the next
-                            trail stop. Placeholder content for additional information, related items, or a hand-off
-                            into the next trail stop. Placeholder content for additional information, related items, or
-                            a hand-off into the next trail stop.
+                            <StyledHeading variant="h6" component="h3">
+                                About the Indigenous art and Library discovery trail
+                            </StyledHeading>
                         </AccordionDetails>
                     </Accordion>
                 </Grid>
@@ -66,6 +67,7 @@ const WelcomePage = () => {
 };
 
 WelcomePage.propTypes = {
+    mediaStopSignal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     openDrawer: PropTypes.func.isRequired,
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
 import { useTheme, styled } from '@mui/material/styles';
@@ -34,6 +34,7 @@ import { ART_TRAIL_MAP_POIS } from './mapPois';
 import { trailPages } from './pages';
 import TrailTabContent from './TrailTabContent';
 import useDocumentScrollLock from './hooks/useDocumentScrollLock';
+import { GlobalStyles } from '@mui/material';
 
 const CULTURAL_DISCLAIMER_COOKIE = 'ART_TRAIL_CULTURAL_DISCLAIMER_SEEN';
 const FOOTER_TABS_HEIGHT = '56px';
@@ -146,6 +147,7 @@ TabPanel.propTypes = {
 const ArtTrailApp = () => {
     const theme = useTheme();
     const appTheme = theme?.palette?.designSystem ? theme : mui1theme;
+    const scrollContainerRef = useRef(null);
     const [activeTab, setActiveTab] = useState('trail');
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [trailNavigationDirection, setTrailNavigationDirection] = useState('forward');
@@ -193,8 +195,23 @@ const ArtTrailApp = () => {
         }));
     };
 
+    const resetScrollPosition = () => {
+        const scrollContainer = scrollContainerRef.current;
+
+        if (!scrollContainer) {
+            return;
+        }
+
+        scrollContainer.scrollTop = 0;
+
+        if (typeof scrollContainer.scrollTo === 'function') {
+            scrollContainer.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        }
+    };
+
     const handleStepChange = direction => {
         handleDrawerClose();
+        resetScrollPosition();
 
         if (activeTabConfig.id === 'trail') {
             setTrailNavigationDirection(direction < 0 ? 'backward' : 'forward');
@@ -208,6 +225,7 @@ const ArtTrailApp = () => {
 
     const handleSelectTrailPage = stepIndex => {
         handleDrawerClose();
+        resetScrollPosition();
         setTrailNavigationDirection(stepIndex < tabState.trail.stepIndex ? 'backward' : 'forward');
         setActiveTab('trail');
         updateTabState('trail', currentTabState => ({
@@ -229,6 +247,7 @@ const ArtTrailApp = () => {
         const panelPages = getTabPages(tab);
         const panelPage = panelPages[panelState.stepIndex] ?? panelPages[0];
         const TabContentComponent = tabContentComponents[tab.id];
+        const mediaStopSignal = `${activeTab}:${tabState.trail.stepIndex}`;
 
         return (
             <TabContentComponent
@@ -238,6 +257,7 @@ const ArtTrailApp = () => {
                 openDrawer={handleOpenDrawer}
                 active={tab.id === activeTab}
                 navigationDirection={tab.id === 'trail' ? trailNavigationDirection : 'forward'}
+                mediaStopSignal={mediaStopSignal}
                 onSelectTrailPage={handleSelectTrailPage}
             />
         );
@@ -264,6 +284,65 @@ const ArtTrailApp = () => {
                 fontSize: 'var(--art-trail-font-size)',
             }}
         >
+            <GlobalStyles
+                styles={{
+                    h1: {
+                        fontSize: '2.5rem',
+                        fontWeight: appTheme.typography.heavy,
+                        lineHeight: 1.2,
+                        fontFamily: appTheme.typography.headingFontFamily,
+                    },
+                    h2: {
+                        fontSize: '2rem',
+                        fontWeight: appTheme.typography.heavy,
+                        lineHeight: 1.2,
+                        fontFamily: appTheme.typography.headingFontFamily,
+                    },
+                    h3: {
+                        fontSize: '1.5rem',
+                        fontWeight: appTheme.typography.heavy,
+                        lineHeight: 1.2,
+                        fontFamily: appTheme.typography.headingFontFamily,
+                    },
+                    h4: {
+                        fontSize: '1.25rem',
+                        fontWeight: appTheme.typography.heavy,
+                        lineHeight: 1.2,
+                        fontFamily: appTheme.typography.headingFontFamily,
+                    },
+                    h5: {
+                        fontSize: '1.125rem',
+                        fontWeight: appTheme.typography.heavy,
+                        lineHeight: 1.2,
+                        fontFamily: appTheme.typography.headingFontFamily,
+                    },
+                    h6: {
+                        fontSize: '1rem',
+                        fontWeight: appTheme.typography.heavy,
+                        lineHeight: 1.2,
+                        fontFamily: appTheme.typography.headingFontFamily,
+                    },
+                    div: {
+                        fontSize: '1rem',
+                        fontWeight: appTheme.typography.fontWeightMedium,
+                        lineHeight: 1.5,
+                        fontFamily: appTheme.typography.bodyFontFamily,
+                    },
+                    p: {
+                        fontSize: '1rem',
+                        fontWeight: appTheme.typography.fontWeightMedium,
+                        lineHeight: 1.5,
+                        fontFamily: appTheme.typography.bodyFontFamily,
+                        marginBottom: '1rem',
+                    },
+                    li: {
+                        fontSize: '1rem',
+                        fontWeight: appTheme.typography.fontWeightMedium,
+                        lineHeight: 1.5,
+                        fontFamily: appTheme.typography.bodyFontFamily,
+                    },
+                }}
+            />
             <AppBar
                 position="fixed"
                 color="primary"
@@ -418,6 +497,8 @@ const ArtTrailApp = () => {
                     container
                     direction="column"
                     wrap="nowrap"
+                    ref={scrollContainerRef}
+                    data-testid="art-trail-scroll-container"
                     sx={{
                         height: '100%',
                         overflowY: 'auto',

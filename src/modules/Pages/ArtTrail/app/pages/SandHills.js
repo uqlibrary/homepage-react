@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -29,7 +28,7 @@ const ArtDrawerContent = () => {
                 <StyledDrawerHeader variant="h3">Lily Kelly Napangardi</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     <em>Sand Hills</em> 2007
                     <br />
                     synthetic polymer paint on linen
@@ -42,7 +41,7 @@ const ArtDrawerContent = () => {
                     Reproduced courtesy of the artist © licensed by Aboriginal Artists Agency Ltd.
                     <br />
                     Photo: Carl Warner.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -54,13 +53,13 @@ const LocationDrawerContent = () => {
                 <StyledDrawerHeader variant="h3">View the artwork</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     Where: Level 1,{' '}
                     <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
                         Duhig Tower
                     </a>{' '}
                     (Building 2), St Lucia campus.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -121,13 +120,13 @@ const Page = ({ openDrawer }) => {
                             About the artwork
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artwork-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 This work by Lily Napangardi depicts the cycles of rainfall and wind across the
                                 sandhills of the Kintore and Coniston areas in the Northern Territory. Sand Hills 2007
                                 is a classic example of her black and white compositions, and depicts the 'tali' (sand
                                 hills) of the Kintore and Coniston areas.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 Despite her reductive palette, Napangardi imbues these works with movement and
                                 definition by emphasising rows within the net of fine dots. The clusters, lines and
                                 dispersions of minute dots give her canvas the illusion of three-dimensional space and
@@ -135,7 +134,7 @@ const Page = ({ openDrawer }) => {
                                 seasonal changes influence the landscape and, consequently, traditional life. Through
                                 her paintings, Napangardi seeks to demonstrate her deep understanding of Country and
                                 assert her people's connection to the land.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -147,7 +146,7 @@ const Page = ({ openDrawer }) => {
                             Reflect
                         </AccordionSummary>
                         <StyledAccordionDetails id="reflect-content">
-                            <Typography component={'p'}>Take a moment to look closely at this painting.</Typography>
+                            <Box component="p">Take a moment to look closely at this painting.</Box>
                             <StyledUl>
                                 <li>Which areas are your eyes most drawn to?</li>
                                 <li>
@@ -156,10 +155,10 @@ const Page = ({ openDrawer }) => {
                                 <li>Can you imagine this movement and energy performed by sand?</li>
                             </StyledUl>
 
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 Try to take yourself to this place and imagine how it might feel in your body to be
                                 there.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -171,16 +170,16 @@ const Page = ({ openDrawer }) => {
                             About the artist
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 Lily Kelly Napangardi was born in 1948 in the Northern Territory. She is a senior law
                                 woman of the Watiyawanu community near Haasts Bluff, north-west of Alice Springs. She is
                                 a custodian of the Women's Dreaming story associated with Country around Kunajarrayi
                                 (Mount Nicker).
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 Napangardi began painting with her husband at Papunya in the 1980s, achieving
                                 recognition in her own right when she began making striking monochromatic works.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -192,9 +191,9 @@ const Page = ({ openDrawer }) => {
                             Connection to Country
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
-                            <Typography component={'p'} sx={{ pb: 1 }}>
+                            <Box component="p" sx={{ paddingBottom: '1rem' }}>
                                 Learn more about <strong>Warlpiri Country.</strong>
-                            </Typography>
+                            </Box>
                             <iframe
                                 title="Indigenous art trail - Warlpiri Country"
                                 src="https://uq.h5p.com/content/1292937898322727859/embed"

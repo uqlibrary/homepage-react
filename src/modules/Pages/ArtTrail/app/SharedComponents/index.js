@@ -4,7 +4,13 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
+import TrailAudioPlayer from './TrailAudioPlayer';
 import TrailImage from './TrailImage';
+
+export const StyledHeading = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+}));
 
 export const StyledAccordion = styled(Accordion)(() => ({
     marginBottom: 'var(--art-trail-spacing)',
@@ -13,10 +19,8 @@ export const StyledAccordion = styled(Accordion)(() => ({
 
 export const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     '& p': {
-        fontSize: 'var(--art-trail-font-size)',
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        lineHeight: 1.5,
         '&:first-of-type': {
             marginTop: 0,
         },
@@ -37,6 +41,8 @@ export const StyledTrailImage = styled(TrailImage)({
     position: 'relative',
 });
 
+export const StyledAudioPlayer = styled(TrailAudioPlayer)({});
+
 export const StyledImageCaption = styled('figcaption')(({ theme }) => ({
     marginTop: theme.spacing(1),
     fontSize: '0.875rem',
@@ -48,6 +54,7 @@ export const StyledUl = styled('ul')(({ theme }) => ({
     '& li:not(:last-of-type)': {
         marginBottom: theme.spacing(1),
     },
+    fontSize: 'var(--art-trail-font-size)',
 }));
 
 export const StyledDrawerHeader = styled(Typography)(({ theme }) => ({

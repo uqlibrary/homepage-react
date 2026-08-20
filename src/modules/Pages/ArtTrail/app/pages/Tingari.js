@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -29,7 +28,7 @@ const ArtDrawerContent = () => {
                 <StyledDrawerHeader variant="h3">Johnny Yungut Tjupurrula </StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     <em>Tingari ceremonies at Wilkinkarra</em> 2003
                     <br />
                     synthetic polymer paint on linen
@@ -42,7 +41,7 @@ const ArtDrawerContent = () => {
                     Reproduced courtesy of the artist © licensed by Aboriginal Artists Agency Ltd.
                     <br />
                     Photo: Carl Warner.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -54,13 +53,13 @@ const LocationDrawerContent = () => {
                 <StyledDrawerHeader variant="h3">View the artwork</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     Where: Level 1,{' '}
                     <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
                         Duhig Tower
                     </a>{' '}
                     (Building 2), St Lucia campus.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -125,11 +124,11 @@ const Page = ({ openDrawer }) => {
                             About the artwork
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artwork-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 This work considers migration and movements across long expanses of Country which are
                                 significant for Tingari Dreaming Stories. Note the intricate lines, patterns, and
                                 colour, which the artist has used to create the illusion of movement.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -141,9 +140,9 @@ const Page = ({ openDrawer }) => {
                             Reflect
                         </AccordionSummary>
                         <StyledAccordionDetails id="reflect-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 Take a moment to look at the painterly marks made by the artist in these artworks.
-                            </Typography>
+                            </Box>
                             <StyledUl>
                                 <li>What feelings do the colours of each painting convey to you?</li>
                                 <li>
@@ -162,9 +161,9 @@ const Page = ({ openDrawer }) => {
                             About the artist
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 The artist was born c. 1930 near Tjungimanta, Kiwirrkurra in the Northern Territory.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
                     <StyledAccordion>
@@ -176,9 +175,9 @@ const Page = ({ openDrawer }) => {
                             Connection to Country
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
-                            <Typography component={'p'} sx={{ pb: 1 }}>
+                            <Box component="p" sx={{ paddingBottom: '1rem' }}>
                                 Learn more about <strong>Kiwirrkurra.</strong>
-                            </Typography>
+                            </Box>
                             <iframe
                                 title="Indigenous art trail - Kiwirrkurra"
                                 src="https://uq.h5p.com/content/1292938712625855909/embed"

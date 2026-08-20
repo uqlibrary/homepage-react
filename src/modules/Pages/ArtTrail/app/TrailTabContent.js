@@ -32,7 +32,7 @@ const buildEnteringShadow = (direction, isAnimating) => {
     return direction === 'backward' ? '18px 0 42px rgba(15, 23, 42, 0.1)' : '-22px 0 48px rgba(15, 23, 42, 0.14)';
 };
 
-const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection }) => {
+const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection, mediaStopSignal }) => {
     const [displayedPage, setDisplayedPage] = useState(() => page);
     const [displayedPageKey, setDisplayedPageKey] = useState(() => pageKey);
     const [exitingPage, setExitingPage] = useState(null);
@@ -112,7 +112,7 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection }
                         willChange: 'transform',
                     }}
                 >
-                    <ExitingPageComponent tab={tab} openDrawer={openDrawer} />
+                    <ExitingPageComponent tab={tab} openDrawer={openDrawer} mediaStopSignal={mediaStopSignal} />
                 </Box>
             ) : null}
             <Box
@@ -130,13 +130,14 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection }
                     willChange: showTransition ? 'transform, box-shadow' : 'auto',
                 }}
             >
-                <PageComponent tab={tab} openDrawer={openDrawer} />
+                <PageComponent tab={tab} openDrawer={openDrawer} mediaStopSignal={mediaStopSignal} />
             </Box>
         </Box>
     );
 };
 
 TrailTabContent.propTypes = {
+    mediaStopSignal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     navigationDirection: PropTypes.oneOf(['forward', 'backward']).isRequired,
     pageKey: PropTypes.string.isRequired,
     tab: PropTypes.shape({
