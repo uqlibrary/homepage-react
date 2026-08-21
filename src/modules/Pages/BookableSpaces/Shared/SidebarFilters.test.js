@@ -149,6 +149,97 @@ describe('SidebarFilters campus selector', () => {
         expect(screen.getAllByRole('slider').length).toBeGreaterThan(0);
     });
 
+    it('creates a selected capacity filter when the slider is changed before the filter exists in state', () => {
+        const setSelectedFacilityTypes = jest.fn();
+        const capacityGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: capacityGroupFixture,
+            setSelectedFacilityTypes,
+            selectedFacilityTypes: [],
+            filteredFacilityTypeList: capacityGroupFixture,
+        });
+
+        fireEvent.change(screen.getByTestId('capacitySlider-inputRight'), { target: { value: '8' } });
+
+        expect(setSelectedFacilityTypes).toHaveBeenCalled();
+        const updater = setSelectedFacilityTypes.mock.calls.find(([value]) => typeof value === 'function')?.[0];
+
+        expect(updater).toEqual(expect.any(Function));
+        expect(updater([])).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    facility_type_id: 9003,
+                    selected: true,
+                    facility_special_action: 'capacity',
+                }),
+            ]),
+        );
+    });
+
+    it('keeps the active capacity bound when one side of the range is temporarily cleared while editing', () => {
+        const setCapacityFilterValue = jest.fn();
+        const capacityGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: capacityGroupFixture,
+            setCapacityFilterValue,
+            capacityFilterValue: [8, 24],
+            filteredFacilityTypeList: capacityGroupFixture,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+            ],
+        });
+
+        fireEvent.change(screen.getByTestId('capacitySlider-inputLeft'), { target: { value: '' } });
+
+        expect(setCapacityFilterValue).toHaveBeenLastCalledWith([8, 24]);
+    });
+
     it('only shows the capacity filter once in the active filter list and clears it when dismissed', () => {
         let latestState = [
             { facility_type_group_id: 1, facility_type_id: 9002, selected: true, unselected: false },

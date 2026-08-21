@@ -798,27 +798,36 @@ export const BookableSpacesList = ({
         const rejectedFilters = [];
 
         selectedFacilityTypes?.forEach(filter => {
-            if (filter?.selected) {
-                const groupId = facilityTypeToGroup[filter?.facility_type_id] ?? filter?.facility_type_group_id;
-                if (groupId !== null && groupId !== undefined) {
-                    if (!selectedFiltersByGroup[groupId]) {
-                        selectedFiltersByGroup[groupId] = [];
-                    }
-                    selectedFiltersByGroup[groupId].push(filter?.facility_type_id);
+            if (!filter?.selected) {
+                if (filter?.unselected) {
+                    rejectedFilters?.push(filter?.facility_type_id);
                 }
+                return;
             }
 
-            // Collect rejected facility types
-            if (filter?.unselected) {
-                rejectedFilters?.push(filter?.facility_type_id);
+            const isSpecialFilter =
+                Number(filter?.facility_type_id) === FILTER_BOOKABLE_TYPE_ID ||
+                Number(filter?.facility_type_id) === FILTER_CAPACITY_TYPE_ID ||
+                filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME ||
+                filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME ||
+                filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME;
+
+            if (isSpecialFilter) {
+                return;
+            }
+
+            const groupId = facilityTypeToGroup[filter?.facility_type_id] ?? filter?.facility_type_group_id;
+            if (groupId !== null && groupId !== undefined) {
+                if (!selectedFiltersByGroup[groupId]) {
+                    selectedFiltersByGroup[groupId] = [];
+                }
+                selectedFiltersByGroup[groupId].push(filter?.facility_type_id);
             }
         });
 
         // check if space should be excluded due to rejected facility types
         if (rejectedFilters?.length > 0) {
             const hasRejectedFacility = rejectedFilters?.some(rejectedId => {
-                // we have no "don't include" for currently-open
-                // we have no "don't include" for capacity
                 return spaceFacilityTypes?.includes(rejectedId);
             });
             if (hasRejectedFacility) {
@@ -826,16 +835,6 @@ export const BookableSpacesList = ({
             }
         }
 
-        // If no inclusion filters are selected, show all spaces (that haven't been rejected)
-        if (Object.keys(selectedFiltersByGroup)?.length === 0) {
-            return true;
-        }
-
-        const hasActiveCapacityRange =
-            Array.isArray(capacityFilterValue) &&
-            capacityFilterValue.length >= 2 &&
-            (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
-                Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
         const hasBookableFilterSelected = (selectedFacilityTypes || []).some(filter => {
             if (!filter?.selected) {
                 return false;
@@ -846,75 +845,52 @@ export const BookableSpacesList = ({
                 filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME
             );
         });
+        const hasCapacityFilterSelected = (selectedFacilityTypes || []).some(filter => {
+            if (!filter?.selected) {
+                return false;
+            }
+
+            return (
+                Number(filter?.facility_type_id) === FILTER_CAPACITY_TYPE_ID ||
+                filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME
+            );
+        });
+
+        if (hasBookableFilterSelected && !isBookable(space)) {
+            return false;
+        }
+
+        if (hasCapacityFilterSelected) {
+            const capacityMatches = matchesCapacityFilter({
+                space,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                hasBookableFilterSelected,
+            });
+            if (!capacityMatches) {
+                return false;
+            }
+        }
+
+        // If no inclusion filters are selected, show all spaces (that haven't been rejected)
+        if (Object.keys(selectedFiltersByGroup)?.length === 0) {
+            return true;
+        }
 
         // AND between groups
         for (const groupId in selectedFiltersByGroup) {
             if (Object.hasOwn(selectedFiltersByGroup, groupId)) {
                 const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
-                const hasBookableFilterInGroup = selectedFiltersInGroup?.some(filterId => {
+                const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
                     const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                    return (
-                        Number(filter?.facility_type_id) === FILTER_BOOKABLE_TYPE_ID ||
-                        filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME
-                    );
-                });
-                const hasCapacityFilterInGroup = selectedFiltersInGroup?.some(filterId => {
-                    const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                    return filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME;
+                    if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
+                        return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
+                    }
+                    return spaceFacilityTypes?.includes(filterId);
                 });
 
-                let hasMatchInGroup = false;
-                if (hasBookableFilterInGroup && hasCapacityFilterInGroup) {
-                    const bookableMatches = isBookable(space);
-                    const capacityMatches = matchesCapacityFilter({
-                        space,
-                        capacityFilterValue,
-                        minimumSpaceCapacity,
-                        maximumSpaceCapacity,
-                        hasBookableFilterSelected: true,
-                    });
-
-                    const otherFiltersInGroup = selectedFiltersInGroup.filter(filterId => {
-                        const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                        return !(
-                            Number(filter?.facility_type_id) === FILTER_BOOKABLE_TYPE_ID ||
-                            filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME ||
-                            filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME
-                        );
-                    });
-
-                    const hasOtherGroupMatch = otherFiltersInGroup?.some(filterId => {
-                        const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                        if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
-                            return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
-                        }
-                        return spaceFacilityTypes?.includes(filterId);
-                    });
-
-                    hasMatchInGroup =
-                        bookableMatches && capacityMatches && (otherFiltersInGroup.length === 0 || hasOtherGroupMatch);
-                } else {
-                    // OR within group for standard choose-many filters.
-                    hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
-                        const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                        if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
-                            return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
-                        } else if (filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME) {
-                            return isBookable(space);
-                        } else if (filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME) {
-                            return matchesCapacityFilter({
-                                space,
-                                capacityFilterValue,
-                                minimumSpaceCapacity,
-                                maximumSpaceCapacity,
-                                hasBookableFilterSelected,
-                            });
-                        } else {
-                            return spaceFacilityTypes?.includes(filterId);
-                        }
-                    });
-                }
                 if (!hasMatchInGroup) {
                     return false;
                 }

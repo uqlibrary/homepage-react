@@ -186,6 +186,24 @@ export const isBookable = space => {
     return space?.space_external_book_url?.startsWith('http');
 };
 
+export const normalizeCapacityFilterValue = (capacityFilterValue, minimumSpaceCapacity, maximumSpaceCapacity) => {
+    const rawMinimum = Number(capacityFilterValue?.[0]);
+    const rawMaximum = Number(capacityFilterValue?.[1]);
+    const safeMinimum = Number.isFinite(rawMinimum) ? rawMinimum : Number(minimumSpaceCapacity ?? 1);
+    const safeMaximum = Number.isFinite(rawMaximum) ? rawMaximum : Number(maximumSpaceCapacity ?? safeMinimum);
+
+    const clampedMinimum = Math.min(
+        Math.max(safeMinimum, Number(minimumSpaceCapacity ?? 1)),
+        Number(maximumSpaceCapacity ?? safeMinimum),
+    );
+    const clampedMaximum = Math.min(
+        Math.max(safeMaximum, Number(minimumSpaceCapacity ?? 1)),
+        Number(maximumSpaceCapacity ?? safeMinimum),
+    );
+
+    return [Math.min(clampedMinimum, clampedMaximum), Math.max(clampedMinimum, clampedMaximum)];
+};
+
 export const matchesCapacityFilter = ({
     space,
     capacityFilterValue,
@@ -193,8 +211,13 @@ export const matchesCapacityFilter = ({
     maximumSpaceCapacity,
     hasBookableFilterSelected = false,
 }) => {
-    const minimumCapacity = Number(capacityFilterValue?.[0] ?? minimumSpaceCapacity);
-    const maximumCapacity = Number(capacityFilterValue?.[1] ?? maximumSpaceCapacity);
+    const sanitizedCapacityFilterValue = normalizeCapacityFilterValue(
+        capacityFilterValue,
+        minimumSpaceCapacity,
+        maximumSpaceCapacity,
+    );
+    const minimumCapacity = Number(sanitizedCapacityFilterValue?.[0] ?? minimumSpaceCapacity);
+    const maximumCapacity = Number(sanitizedCapacityFilterValue?.[1] ?? maximumSpaceCapacity);
     const normalizedCapacity = Number(space?.space_capacity);
     const hasCapacity = Number.isFinite(normalizedCapacity) && normalizedCapacity > 0;
 

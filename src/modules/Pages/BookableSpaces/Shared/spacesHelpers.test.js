@@ -20,6 +20,7 @@ import {
     findSpaceById,
     getFlatFacilityTypeList,
     matchesCapacityFilter,
+    normalizeCapacityFilterValue,
     spaceOpeningHours,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
@@ -241,6 +242,32 @@ describe('spaces helpers', () => {
                 hasBookableFilterSelected: true,
             }),
         ).toBe(false);
+    });
+
+    it('sanitizes invalid or reversed capacity ranges before matching', () => {
+        expect(normalizeCapacityFilterValue(['', 8], 1, 20)).toEqual([1, 8]);
+        expect(normalizeCapacityFilterValue([12, 4], 1, 20)).toEqual([4, 12]);
+        expect(normalizeCapacityFilterValue([undefined, 20], 1, 20)).toEqual([1, 20]);
+
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 6 },
+                capacityFilterValue: ['', 8],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 20,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true);
+
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 6 },
+                capacityFilterValue: [12, 4],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 20,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true);
     });
 
     it('supports friendly location description and bookable helpers', () => {

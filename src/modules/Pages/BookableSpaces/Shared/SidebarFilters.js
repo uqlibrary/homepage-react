@@ -542,10 +542,33 @@ export const SidebarFilters = ({
         scrollToTopOfContent();
     };
 
+    const resolveFacilityType = (facilityTypeId, facilitySpecialAction) => {
+        const selectedMatch = selectedFacilityTypes?.find(
+            filter =>
+                isSameFacilityTypeId(filter?.facility_type_id, facilityTypeId) ||
+                (!!facilitySpecialAction && filter?.facility_special_action === facilitySpecialAction),
+        );
+        if (selectedMatch) {
+            return selectedMatch;
+        }
+
+        return getFlatFacilityTypeList(filteredFacilityTypeList)?.find(
+            filter =>
+                isSameFacilityTypeId(filter?.facility_type_id, facilityTypeId) ||
+                (!!facilitySpecialAction && filter?.facility_special_action === facilitySpecialAction),
+        );
+    };
+
     const handleFilterSelection = (isChecked, facilityType) => {
         clearJourneyIntentId();
-        const facilityTypeId = facilityType?.facility_type_id;
-        const facilitySpecialAction = facilityType?.facility_special_action;
+        const resolvedFacilityType =
+            facilityType ||
+            resolveFacilityType(
+                facilityType?.facility_type_id,
+                facilityType?.facility_special_action,
+            );
+        const facilityTypeId = resolvedFacilityType?.facility_type_id;
+        const facilitySpecialAction = resolvedFacilityType?.facility_special_action;
 
         showHideActiveFilterListItems(facilityTypeId, isChecked);
         setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
@@ -554,18 +577,50 @@ export const SidebarFilters = ({
 
     const handleCapacityFilterChange = (e, newValue, id = null) => {
         clearJourneyIntentId();
-        setCapacityFilterValue(newValue);
 
-        // we have to pass the id directly on the Slider, but we can get it from the field for the 2 Text fields
+        const previousMin = Number(capacityFilterValue?.[0]);
+        const previousMax = Number(capacityFilterValue?.[1]);
+
+        const normaliseCapacityValue = (rawValue, fallbackValue) => {
+            if (rawValue === '' || rawValue === null || rawValue === undefined) {
+                return fallbackValue;
+            }
+            if (typeof rawValue === 'string' && rawValue.trim() === '') {
+                return fallbackValue;
+            }
+            const parsedValue = Number(rawValue);
+            return Number.isFinite(parsedValue) ? parsedValue : fallbackValue;
+        };
+
+        const safeValue = Array.isArray(newValue)
+            ? newValue.map((value, index) => {
+                  const fallbackValue = index === 0 ? previousMin : previousMax;
+                  return normaliseCapacityValue(value, fallbackValue);
+              })
+            : normaliseCapacityValue(newValue, previousMin);
+
+        const sanitizedValue = safeValue?.length >= 2
+            ? [
+                  Math.min(Math.max(Number(safeValue[0]), Number(minimumSpaceCapacity)), Number(maximumSpaceCapacity)),
+                  Math.max(Math.min(Number(safeValue[1]), Number(maximumSpaceCapacity)), Number(minimumSpaceCapacity)),
+              ]
+            : safeValue;
+
+        const normalizedValue = Array.isArray(sanitizedValue) && sanitizedValue.length === 2
+            ? [Math.min(sanitizedValue[0], sanitizedValue[1]), Math.max(sanitizedValue[0], sanitizedValue[1])]
+            : sanitizedValue;
+
+        setCapacityFilterValue(normalizedValue);
+
         const idInput = id ?? e?.target?.id;
         const parts = idInput?.split('-');
         const facilityTypeId =
             !!parts && parts.length === 3 ? parseInt(parts.pop(), 10) : /* istanbul ignore next */ -999;
 
-        const capacityFilterType = selectedFacilityTypes?.find(ft =>
-            isSameFacilityTypeId(ft?.facility_type_id, facilityTypeId),
-        );
-        const isCapacityDefaultValues = newValue[0] === minimumSpaceCapacity && newValue[1] === maximumSpaceCapacity;
+        const capacityFilterType = resolveFacilityType(facilityTypeId, FILTER_SPACE_CAPACITY_ACTION_NAME);
+        const isCapacityDefaultValues =
+            Number(normalizedValue?.[0]) === Number(minimumSpaceCapacity) &&
+            Number(normalizedValue?.[1]) === Number(maximumSpaceCapacity);
         if (isCapacityDefaultValues) {
             clearSpecialFilter(facilityTypeId, capacityFilterType?.facility_special_action);
         } else {
@@ -573,8 +628,8 @@ export const SidebarFilters = ({
         }
     };
     const handleCapacityMinInputChange = e => {
-        const newMin = e?.target?.value === '' ? '' : Number(e?.target?.value);
-        handleCapacityFilterChange(e, [newMin, capacityFilterValue[1]]);
+        const nextMinimum = e?.target?.value === '' ? '' : Number(e?.target?.value);
+        handleCapacityFilterChange(e, [nextMinimum, capacityFilterValue[1]]);
     };
     const handleCapacityMinInputBlur = e => {
         const value = e?.target?.value;
@@ -585,8 +640,8 @@ export const SidebarFilters = ({
         }
     };
     const handleCapacityMaxInputChange = e => {
-        const newMax = e?.target?.value === '' ? '' : Number(e?.target?.value);
-        handleCapacityFilterChange(e, [capacityFilterValue[0], newMax]);
+        const nextMaximum = e?.target?.value === '' ? '' : Number(e?.target?.value);
+        handleCapacityFilterChange(e, [capacityFilterValue[0], nextMaximum]);
     };
     const handleCapacityMaxInputBlur = e => {
         const value = e.target.value;
