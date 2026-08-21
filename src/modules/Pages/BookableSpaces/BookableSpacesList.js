@@ -892,7 +892,8 @@ export const BookableSpacesList = ({
                         return spaceFacilityTypes?.includes(filterId);
                     });
 
-                    hasMatchInGroup = bookableMatches && capacityMatches && (otherFiltersInGroup.length === 0 || hasOtherGroupMatch);
+                    hasMatchInGroup =
+                        bookableMatches && capacityMatches && (otherFiltersInGroup.length === 0 || hasOtherGroupMatch);
                 } else {
                     // OR within group for standard choose-many filters.
                     hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {

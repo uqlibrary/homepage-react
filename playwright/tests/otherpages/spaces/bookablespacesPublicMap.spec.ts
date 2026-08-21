@@ -953,24 +953,31 @@ test.describe('Spaces', () => {
                 3 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
-            // clear the capacity filters by unchecking "is bookable"
+            // unchecking "is bookable" should not clear the separate capacity filter
             await bookableCheckbox.locator('input[type="checkbox"]').uncheck();
 
-            // the page is reset
-            await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
+            await expect(page.getByTestId('space-wrapper').locator(':scope > *')).not.toHaveCount(
                 VISIBLE_SPACES_ALL_CAMPUSES + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
-            await expect(filterCount).not.toBeVisible();
-            await expect(spacesCount).not.toBeVisible();
-            await expect(cartoucheList).not.toBeVisible();
-            await expect(deselectAllFiltersButton).not.toBeVisible();
+            await expect(filterCount).toContainText('1');
+            await expect(cartoucheList.locator(':scope > *')).toHaveCount(1);
+            await expect(deselectAllFiltersButton).toBeVisible();
+            await expect(spacesCount).toBeVisible();
 
-            // reopen the bookable checkbox and the capacity slider has cleared
+            // re-checking bookable restores the combined bookable + capacity filter
             await bookableCheckbox.locator('input[type="checkbox"]').check();
+            await expect(filterCount).toContainText('2');
+            await expect(cartoucheList.locator(':scope > *')).toHaveCount(2);
+            await expect(spacesCount).toContainText('3');
+            await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
+                3 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
+            );
+
+            // the capacity slider remains configured after reapplying the bookable filter
             await expect(minimumCapacityField).toBeVisible();
-            await expect(minimumCapacityField).toHaveValue('1');
+            await expect(minimumCapacityField).toHaveValue('8');
             await expect(maximumCapacityField).toBeVisible();
-            await expect(maximumCapacityField).toHaveValue('24');
+            await expect(maximumCapacityField).toHaveValue('20');
         });
         test('can use special filter: capacity and clear all', async ({ page }) => {
             const filterCount = page.getByTestId('space-filter-count').locator('span');

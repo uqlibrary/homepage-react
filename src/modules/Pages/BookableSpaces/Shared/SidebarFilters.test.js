@@ -110,16 +110,36 @@ describe('SidebarFilters campus selector', () => {
                             facility_type_group_id: 1,
                             facility_type_group_name: 'Facilities',
                             facility_type_children: [
-                                { facility_type_id: 9002, facility_type_name: 'Bookable', facility_special_action: 'bookable' },
-                                { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                                {
+                                    facility_type_id: 9002,
+                                    facility_type_name: 'Bookable',
+                                    facility_special_action: 'bookable',
+                                },
+                                {
+                                    facility_type_id: 9003,
+                                    facility_type_name: 'Space capacity',
+                                    facility_special_action: 'capacity',
+                                },
                             ],
                         },
                     ],
                 },
             },
             selectedFacilityTypes: [
-                { facility_type_group_id: 1, facility_type_id: 9002, selected: false, unselected: false, facility_special_action: 'bookable' },
-                { facility_type_group_id: 1, facility_type_id: 9003, selected: false, unselected: false, facility_special_action: 'capacity' },
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9002,
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: 'bookable',
+                },
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
             ],
         });
 
