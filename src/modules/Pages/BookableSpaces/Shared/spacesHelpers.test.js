@@ -19,6 +19,7 @@ import {
     serialiseJourneyUrl,
     findSpaceById,
     getFlatFacilityTypeList,
+    matchesCapacityFilter,
     spaceOpeningHours,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
@@ -183,7 +184,7 @@ describe('spaces helpers', () => {
         expect(normalizeFilterDisplayOn('ADVANCED')).toEqual(FILTER_DISPLAY_ON_BOTH); // case sensitive
     });
 
-    it('collapses the capacity filter into the bookable selection for active counts', () => {
+    it('keeps the bookable and capacity filters separate for active counts', () => {
         const selectedFacilityTypes = [
             {
                 facility_type_id: FILTER_BOOKABLE_TYPE_ID,
@@ -195,12 +196,51 @@ describe('spaces helpers', () => {
             },
         ];
 
-        expect(getActiveSelectedFacilityTypes(selectedFacilityTypes)).toEqual([
-            {
-                facility_type_id: FILTER_BOOKABLE_TYPE_ID,
-                selected: true,
-            },
-        ]);
+        expect(getActiveSelectedFacilityTypes(selectedFacilityTypes)).toEqual(selectedFacilityTypes);
+    });
+
+    it('matches capacity filters differently when bookable is selected', () => {
+        const capacityFilterValue = [4, 8];
+
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: null },
+                capacityFilterValue,
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 20,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true);
+
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 0 },
+                capacityFilterValue,
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 20,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true);
+
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 5 },
+                capacityFilterValue,
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 20,
+                hasBookableFilterSelected: true,
+            }),
+        ).toBe(true);
+
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: null },
+                capacityFilterValue,
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 20,
+                hasBookableFilterSelected: true,
+            }),
+        ).toBe(false);
     });
 
     it('supports friendly location description and bookable helpers', () => {

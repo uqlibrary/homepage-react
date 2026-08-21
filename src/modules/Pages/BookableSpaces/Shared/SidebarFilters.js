@@ -546,33 +546,9 @@ export const SidebarFilters = ({
         clearJourneyIntentId();
         const facilityTypeId = facilityType?.facility_type_id;
         const facilitySpecialAction = facilityType?.facility_special_action;
-        if (!isChecked && isSameFacilityTypeId(facilityType?.facility_type_id, FILTER_BOOKABLE_TYPE_ID)) {
-            // when they uncheck the Bookable checkbox, clear the capacity slider and sibling filter state
-            showHideActiveFilterListItems(FILTER_CAPACITY_TYPE_ID, false);
-            showHideActiveFilterListItems(facilityTypeId, false);
 
-            setSelectedFacilityTypes(prevSelectedFacilityTypes => {
-                const existingFilters = prevSelectedFacilityTypes || [];
-                return existingFilters.map(ftf => {
-                    const isBookableOrCapacityFilter =
-                        isSameFacilityTypeId(ftf?.facility_type_id, FILTER_BOOKABLE_TYPE_ID) ||
-                        isSameFacilityTypeId(ftf?.facility_type_id, FILTER_CAPACITY_TYPE_ID);
-                    if (!isBookableOrCapacityFilter) {
-                        return ftf;
-                    }
-                    return {
-                        ...ftf,
-                        selected: false,
-                        unselected: false,
-                    };
-                });
-            });
-            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
-        } else {
-            showHideActiveFilterListItems(facilityTypeId, isChecked);
-
-            setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
-        }
+        showHideActiveFilterListItems(facilityTypeId, isChecked);
+        setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
         // scrollToTopOfContent();
     };
 
@@ -703,12 +679,6 @@ export const SidebarFilters = ({
         value: PropTypes.node,
     };
     const writeCapacitySlider = facilityType => {
-        if (
-            !selectedFacilityTypes?.find(f1 => isSameFacilityTypeId(f1?.facility_type_id, FILTER_BOOKABLE_TYPE_ID))
-                ?.selected
-        ) {
-            return null;
-        }
         return (
             <>
                 <StyledCapacityLabelTypography component={'h4'} variant={'h6'}>
@@ -884,6 +854,11 @@ export const SidebarFilters = ({
             Array.isArray(capacityFilterValue) &&
             capacityFilterValue.length === 2 &&
             (capacityFilterValue[0] !== minimumSpaceCapacity || capacityFilterValue[1] !== maximumSpaceCapacity);
+        const hasSelectedCapacityFilter = activeSelectedFacilityTypes?.some(
+            filter =>
+                Number(filter?.facility_type_id) === FILTER_CAPACITY_TYPE_ID ||
+                filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME,
+        );
         const cartouches = [];
 
         activeSelectedFacilityTypes?.forEach(f => {
@@ -905,7 +880,7 @@ export const SidebarFilters = ({
             );
         });
 
-        if (activeCapacityFilter) {
+        if (activeCapacityFilter && !hasSelectedCapacityFilter) {
             cartouches.push(
                 <li key="cartouche-select-capacity">
                     <Button

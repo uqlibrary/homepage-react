@@ -186,17 +186,27 @@ export const isBookable = space => {
     return space?.space_external_book_url?.startsWith('http');
 };
 
-export const getActiveSelectedFacilityTypes = selectedFacilityTypes => {
-    const selectedFilters = (selectedFacilityTypes || []).filter(ft => ft?.selected);
-    const hasBookableFilter = selectedFilters.some(ft => Number(ft?.facility_type_id) === FILTER_BOOKABLE_TYPE_ID);
+export const matchesCapacityFilter = ({
+    space,
+    capacityFilterValue,
+    minimumSpaceCapacity,
+    maximumSpaceCapacity,
+    hasBookableFilterSelected = false,
+}) => {
+    const minimumCapacity = Number(capacityFilterValue?.[0] ?? minimumSpaceCapacity);
+    const maximumCapacity = Number(capacityFilterValue?.[1] ?? maximumSpaceCapacity);
+    const normalizedCapacity = Number(space?.space_capacity);
+    const hasCapacity = Number.isFinite(normalizedCapacity) && normalizedCapacity > 0;
 
-    return selectedFilters.filter(filter => {
-        const facilityTypeId = Number(filter?.facility_type_id);
-        if (facilityTypeId === FILTER_CAPACITY_TYPE_ID && hasBookableFilter) {
-            return false;
-        }
-        return true;
-    });
+    if (hasBookableFilterSelected) {
+        return hasCapacity && normalizedCapacity >= minimumCapacity && normalizedCapacity <= maximumCapacity;
+    }
+
+    return !hasCapacity || (normalizedCapacity >= minimumCapacity && normalizedCapacity <= maximumCapacity);
+};
+
+export const getActiveSelectedFacilityTypes = selectedFacilityTypes => {
+    return (selectedFacilityTypes || []).filter(ft => ft?.selected);
 };
 
 export const findSpaceById = (spaces, targetSpaceId) => {

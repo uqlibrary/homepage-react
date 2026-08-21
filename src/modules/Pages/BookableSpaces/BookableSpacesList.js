@@ -41,6 +41,7 @@ import {
     getFlatFacilityTypeList,
     isBookable,
     JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
+    matchesCapacityFilter,
     normalizeFilterDisplayOn,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { CAMPUS_DUTTON_PARK } from 'config/locale';
@@ -851,35 +852,68 @@ export const BookableSpacesList = ({
             if (Object.hasOwn(selectedFiltersByGroup, groupId)) {
                 const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
-                // OR within group
-                const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
+                const hasBookableFilterInGroup = selectedFiltersInGroup?.some(filterId => {
                     const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                    if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
-                        return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
-                    } else if (
-                        (filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME ||
-                            (hasActiveCapacityRange && hasBookableFilterSelected)) &&
-                        (selectedFiltersInGroup.includes(FILTER_BOOKABLE_TYPE_ID) || hasBookableFilterSelected)
-                    ) {
-                        return (
-                            isBookable(space) &&
-                            !!space?.space_capacity &&
-                            space?.space_capacity >= Number(capacityFilterValue?.[0] ?? minimumSpaceCapacity) &&
-                            space?.space_capacity <= Number(capacityFilterValue?.[1] ?? maximumSpaceCapacity)
-                        );
-                    } else if (
-                        filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME &&
-                        !selectedFiltersInGroup.includes(FILTER_CAPACITY_TYPE_ID)
-                    ) {
-                        // we only check the bookable action on its own if we aren't checking the capacity action
-                        return isBookable(space);
-                    } else {
-                        // We could specifically exclude FILTER_BOOKABLE_ACTION_NAME here, but we don't need to because
-                        // it doesn't have a matching filter.
-                        // regular checkbox from admin-managed facility-types
-                        return spaceFacilityTypes?.includes(filterId);
-                    }
+                    return (
+                        Number(filter?.facility_type_id) === FILTER_BOOKABLE_TYPE_ID ||
+                        filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME
+                    );
                 });
+                const hasCapacityFilterInGroup = selectedFiltersInGroup?.some(filterId => {
+                    const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
+                    return filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME;
+                });
+
+                let hasMatchInGroup = false;
+                if (hasBookableFilterInGroup && hasCapacityFilterInGroup) {
+                    const bookableMatches = isBookable(space);
+                    const capacityMatches = matchesCapacityFilter({
+                        space,
+                        capacityFilterValue,
+                        minimumSpaceCapacity,
+                        maximumSpaceCapacity,
+                        hasBookableFilterSelected: true,
+                    });
+
+                    const otherFiltersInGroup = selectedFiltersInGroup.filter(filterId => {
+                        const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
+                        return !(
+                            Number(filter?.facility_type_id) === FILTER_BOOKABLE_TYPE_ID ||
+                            filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME ||
+                            filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME
+                        );
+                    });
+
+                    const hasOtherGroupMatch = otherFiltersInGroup?.some(filterId => {
+                        const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
+                        if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
+                            return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
+                        }
+                        return spaceFacilityTypes?.includes(filterId);
+                    });
+
+                    hasMatchInGroup = bookableMatches && capacityMatches && (otherFiltersInGroup.length === 0 || hasOtherGroupMatch);
+                } else {
+                    // OR within group for standard choose-many filters.
+                    hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
+                        const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
+                        if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
+                            return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
+                        } else if (filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME) {
+                            return isBookable(space);
+                        } else if (filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME) {
+                            return matchesCapacityFilter({
+                                space,
+                                capacityFilterValue,
+                                minimumSpaceCapacity,
+                                maximumSpaceCapacity,
+                                hasBookableFilterSelected,
+                            });
+                        } else {
+                            return spaceFacilityTypes?.includes(filterId);
+                        }
+                    });
+                }
                 if (!hasMatchInGroup) {
                     return false;
                 }
@@ -1223,8 +1257,13 @@ export const BookableSpacesList = ({
         capacityFilterValue.length === 2 &&
         (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
             Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
+    const activeSelectedFacilityTypes = (getActiveSelectedFacilityTypes(selectedFacilityTypes) || []).filter(
+        filter =>
+            Number(filter?.facility_type_id) !== FILTER_CAPACITY_TYPE_ID &&
+            filter?.facility_special_action !== FILTER_SPACE_CAPACITY_ACTION_NAME,
+    );
     const activeFilterCount =
-        (getActiveSelectedFacilityTypes(selectedFacilityTypes)?.length || 0) +
+        (activeSelectedFacilityTypes?.length || 0) +
         (showFavouriteSpacesOnly ? 1 : 0) +
         (hasActiveCapacityFilter ? 1 : 0);
     const hasActiveFilters = (activeFilterCount || 0) > 0;

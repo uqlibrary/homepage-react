@@ -100,7 +100,36 @@ describe('SidebarFilters campus selector', () => {
         expect(screen.getByText('Choose library')).toBeInTheDocument();
     });
 
-    it('only clears the capacity filter state when the capacity cartouche is dismissed', () => {
+    it('shows the space capacity slider even when the bookable filter is not selected', () => {
+        renderWithTheme({
+            ...baseProps,
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_children: [
+                                { facility_type_id: 9002, facility_type_name: 'Bookable', facility_special_action: 'bookable' },
+                                { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                            ],
+                        },
+                    ],
+                },
+            },
+            selectedFacilityTypes: [
+                { facility_type_group_id: 1, facility_type_id: 9002, selected: false, unselected: false, facility_special_action: 'bookable' },
+                { facility_type_group_id: 1, facility_type_id: 9003, selected: false, unselected: false, facility_special_action: 'capacity' },
+            ],
+        });
+
+        fireEvent.click(screen.getByText('Facilities'));
+
+        expect(screen.getByText('Space capacity')).toBeInTheDocument();
+        expect(screen.getAllByRole('slider').length).toBeGreaterThan(0);
+    });
+
+    it('only shows the capacity filter once in the active filter list and clears it when dismissed', () => {
         let latestState = [
             { facility_type_group_id: 1, facility_type_id: 9002, selected: true, unselected: false },
             { facility_type_group_id: 1, facility_type_id: 9003, selected: true, unselected: false },
@@ -113,6 +142,7 @@ describe('SidebarFilters campus selector', () => {
         const setCapacityFilterValue = jest.fn();
         const props = {
             ...baseProps,
+            activeFilterCount: 1,
             capacityFilterValue: [4, 8],
             setSelectedFacilityTypes,
             setCapacityFilterValue,
@@ -135,7 +165,9 @@ describe('SidebarFilters campus selector', () => {
 
         renderWithTheme(props);
 
-        fireEvent.click(screen.getByTestId('button-deselect-selected-capacity'));
+        expect(screen.getByTestId('space-filter-count')).toHaveTextContent('Active filters 1');
+        expect(screen.queryByTestId('button-deselect-selected-capacity')).not.toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('button-deselect-selected-9003'));
 
         expect(latestState).toHaveLength(3);
         expect(latestState.find(f => f.facility_type_id === 9002)).toMatchObject({ selected: true });
