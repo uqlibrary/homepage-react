@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
+import DisclosureSection from './DisclosureSection';
 import TrailAudioPlayer from './TrailAudioPlayer';
 import TrailImage from './TrailImage';
 
@@ -116,3 +117,5 @@ export const StyledButtonDSSecondary = styled(StyedButtonDS)(({ theme }) => ({
         borderColor: theme.palette.primary.main,
     },
 }));
+
+export { DisclosureSection };

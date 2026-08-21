@@ -292,6 +292,7 @@ const ArtTrailApp = () => {
                 {menuItems.map(menuItem => (
                     <MenuItem
                         key={menuItem.id}
+                        aria-label={menuItem.ariaLabel || menuItem.label}
                         onClick={() => handleMenuItemClick(menuItem)}
                         sx={createMenuItemSx(Boolean(menuItem.thumbnailSrc))}
                     >
@@ -303,7 +304,7 @@ const ArtTrailApp = () => {
                                 sx={MENU_ITEM_IMAGE_SX}
                             />
                         ) : null}
-                        <Box sx={MENU_ITEM_LABEL_SX}>{menuItem.label}</Box>
+                        <Box sx={MENU_ITEM_LABEL_SX} dangerouslySetInnerHTML={{ __html: menuItem.label }} />
                     </MenuItem>
                 ))}
             </Menu>

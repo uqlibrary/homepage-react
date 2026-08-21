@@ -46,6 +46,7 @@ describe('ArtTrailApp', () => {
         await userEvent.click(getByRole('button', { name: 'open navigation menu' }));
 
         expect(getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' })).toBeInTheDocument();
+        expect(getByText('Punu Tjukurpa', { selector: 'em' })).toBeInTheDocument();
         await userEvent.click(getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' }));
 
         await userEvent.click(getByRole('button', { name: 'Start the trail' }));

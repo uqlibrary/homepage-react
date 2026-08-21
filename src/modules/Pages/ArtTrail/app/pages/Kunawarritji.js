@@ -15,6 +15,8 @@ import DesertImage from '../../../../../../public/images/artTrail/Desert-near-ol
 
 import Hero from '../Hero';
 import {
+    DisclosureSection,
+    StyledHeading,
     StyledAccordion,
     StyledAccordionDetails,
     StyledAccordionGrid,
@@ -180,15 +182,13 @@ const Page = ({ openDrawer }) => {
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="about-the-artwork-content"
-                            id="about-the-artwork-header"
-                        >
-                            About the artwork
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content">
+                    <DisclosureSection
+                        heading={
+                            <StyledHeading variant="h6" component="h3">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
                             <Box component="p">
                                 These two paintings depict a place central to the artist's life and community,
                                 Kunawarritji (meaning 'water spring'). What makes these paintings so striking for an
@@ -196,14 +196,16 @@ const Page = ({ openDrawer }) => {
                                 whites, and blues. These colours overlap and bleed into each other creating fluid
                                 intersections of place.
                             </Box>
+                        }
+                        details={
                             <Box component="p">
                                 You can see the expressive brushstrokes within each of these works. While both artworks
                                 depict the same place, there is a unique feel to each painting, communicated through
                                 colour, shape and texture. If you look closely at each artwork, you can see the depth of
                                 the underlaid paint, the ochre tones showing through the lighter layers.
                             </Box>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
+                        }
+                    />
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}

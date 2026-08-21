@@ -203,7 +203,7 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                     sx={{
                         display: 'grid',
                         placeItems: 'center',
-                        color: isPlaying ? 'primary.main' : 'text.secondary',
+                        color: 'primary.main',
                     }}
                 >
                     <HeadphonesOutlinedIcon fontSize="large" />

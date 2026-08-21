@@ -37,10 +37,7 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                     />
                 </Grid>
                 <Grid container wrap="nowrap" justifyContent="space-between" alignItems="flex-start" columnSpacing={1}>
-                    <Grid xs>
-                        The journey doesn't end here. It continues across campus, in the archives and through the
-                        stories held and cared for within the Library.
-                    </Grid>
+                    <Grid xs>Thank you for exploring the Indigenous Art and Library Discovery Trail.</Grid>
                 </Grid>
                 <Grid>
                     <Accordion
@@ -57,6 +54,15 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                             Audio transcript
                         </AccordionSummary>
                         <AccordionDetails>
+                            <Box component="p" mb={2}>
+                                We hope the artworks and stories you have encountered today have inspired you to
+                                reflect, learn and connect more deeply with Aboriginal and Torres Strait Islander
+                                cultures, histories and communities.
+                            </Box>
+                            <Box component="p" mb={2}>
+                                The journey doesn't end here. It continues across campus, in the archives and through
+                                the stories held and cared for within the Library.
+                            </Box>
                             <Box component="p" mb={2}>
                                 Explore these freely available open textbooks to learn more:
                             </Box>
@@ -164,21 +170,6 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                                 .
                             </Box>
                         </AccordionDetails>
-                    </Accordion>
-                    <Accordion
-                        sx={{
-                            mb: 'var(--art-trail-spacing)',
-                            '&.Mui-expanded:last-of-type': { mb: 'var(--art-trail-spacing)' },
-                        }}
-                    >
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="feedback-content"
-                            id="feedback-panel-header"
-                        >
-                            Let us know about your journey
-                        </AccordionSummary>
-                        <AccordionDetails>Form here</AccordionDetails>
                     </Accordion>
                 </Grid>
             </Grid>

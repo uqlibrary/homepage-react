@@ -78,7 +78,7 @@ const STEPPER_SX = {
 };
 
 const MENU_ITEM_BASE_SX = {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     px: { xs: 2, sm: 2.5 },
     py: 1.5,
     whiteSpace: 'normal',

@@ -14,6 +14,8 @@ import NorthStradbrokeImage from '../../../../../../public/images/artTrail/North
 
 import Hero from '../Hero';
 import {
+    DisclosureSection,
+    StyledHeading,
     StyledAccordion,
     StyledAccordionDetails,
     StyledAccordionGrid,
@@ -122,6 +124,49 @@ const Page = ({ openDrawer }) => {
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>
+                    <DisclosureSection
+                        heading={
+                            <StyledHeading variant="h6" component="h3">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
+                            <Box component={'p'}>
+                                Megan Cope's Whispers (Poles) 2023 emerges from her connection to Quandamooka Country,
+                                which encompasses lands, sands, and seas in present-day Moreton Bay.
+                            </Box>
+                        }
+                        details={
+                            <>
+                                <Box component={'p'}>
+                                    Cope's recent practice is informed by her cultural relationships and ancestral
+                                    practices to Kinyingarra (meaning 'oyster' in Jandai and Gowar languages), and the
+                                    histories and devastations to midden sites and oyster reefs on Quandamooka Country.
+                                    Oyster reefs are vital for healthy and resilient saltwater ecosystems: they act as
+                                    natural breakwaters, filter and improve water quality, and provide habitat for fish
+                                    and other marine life.
+                                </Box>
+                                <Box component={'p'}>
+                                    Cope's work demonstrates the role of art in physically healing saltwater Country and
+                                    coastal environments that have been colonised and now transformed through climate
+                                    change. This series of hand-built Kinyingarra poles replicates the formations of
+                                    Cope's living artwork, Kinyingarra Guwinyanba (2022), created on Quandamooka Country
+                                    in the intertidal zone. Her “On Country” iterations are designed to cultivate growth
+                                    and create habitat in the water where they are planted. In situ, they become living
+                                    land and sea art sculptures, fostering regenerative practice, restoring place, and
+                                    innovating ancestral methods of caring for Country.
+                                </Box>
+                                <Box component={'p'}>
+                                    <em>Whispers (Poles)</em> is a selection from a large-scale public work of over 200
+                                    poles created in 2023 through collaboration and knowledge exchange in Gadigal
+                                    Country. In this work, community and Country are interwoven, emphasising shared and
+                                    ongoing responsibilities to care for saltwater ecosystems that have nourished both
+                                    generations and connected life worlds.
+                                </Box>
+                            </>
+                        }
+                    />
+
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -130,36 +175,7 @@ const Page = ({ openDrawer }) => {
                         >
                             About the artwork
                         </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content">
-                            <Box component={'p'}>
-                                Megan Cope's Whispers (Poles) 2023 emerges from her connection to Quandamooka Country,
-                                which encompasses lands, sands, and seas in present-day Moreton Bay.
-                            </Box>
-                            <Box component={'p'}>
-                                Cope's recent practice is informed by her cultural relationships and ancestral practices
-                                to Kinyingarra (meaning 'oyster' in Jandai and Gowar languages), and the histories and
-                                devastations to midden sites and oyster reefs on Quandamooka Country. Oyster reefs are
-                                vital for healthy and resilient saltwater ecosystems: they act as natural breakwaters,
-                                filter and improve water quality, and provide habitat for fish and other marine life.
-                            </Box>
-                            <Box component={'p'}>
-                                Cope's work demonstrates the role of art in physically healing saltwater Country and
-                                coastal environments that have been colonised and now transformed through climate
-                                change. This series of hand-built Kinyingarra poles replicates the formations of Cope's
-                                living artwork, Kinyingarra Guwinyanba (2022), created on Quandamooka Country in the
-                                intertidal zone. Her “On Country” iterations are designed to cultivate growth and create
-                                habitat in the water where they are planted. In situ, they become living land and sea
-                                art sculptures, fostering regenerative practice, restoring place, and innovating
-                                ancestral methods of caring for Country.
-                            </Box>
-                            <Box component={'p'}>
-                                <em>Whispers (Poles)</em> is a selection from a large-scale public work of over 200
-                                poles created in 2023 through collaboration and knowledge exchange in Gadigal Country.
-                                In this work, community and Country are interwoven, emphasising shared and ongoing
-                                responsibilities to care for saltwater ecosystems that have nourished both generations
-                                and connected life worlds.
-                            </Box>
-                        </StyledAccordionDetails>
+                        <StyledAccordionDetails id="about-the-artwork-content" />
                     </StyledAccordion>
                     <StyledAccordion>
                         <AccordionSummary
