@@ -10,8 +10,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
-import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import AppBar from '@mui/material/AppBar';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -30,41 +28,40 @@ import Toolbar from '@mui/material/Toolbar';
 import uqHeaderLogo from '../../../../../public/images/artTrail/uq-logo--reversed.svg';
 import CulturalDisclaimer from './CulturalDisclaimer';
 import MapTabContent from './MapTabContent';
-import { ART_TRAIL_MAP_POIS } from './mapPois';
 import { trailPages } from './pages';
 import TrailTabContent from './TrailTabContent';
+import {
+    CONTENT_HEIGHT_SX,
+    createAppRootSx,
+    createDrawerSx,
+    createGlobalStyles,
+    createMenuItemSx,
+    createMenuSlotProps,
+    createScrollContainerSx,
+    createStepperSx,
+    DRAWER_CONTAINER_SX,
+    DRAWER_INNER_SX,
+    DRAWER_PULLER_SX,
+    DRAWER_SCROLL_SX,
+    FOOTER_BUTTON_SX,
+    FOOTER_CONTENT_SX,
+    FOOTER_NAV_SX,
+    FOOTER_SX,
+    FOOTER_STEPPER_ROW_SX,
+    FOOTER_TAB_ACTION_SX,
+    FOOTER_TAB_ROW_SX,
+    HEADER_LOGO_IMAGE_SX,
+    HEADER_LOGO_SX,
+    ICON_BUTTON_SX,
+    MENU_ITEM_IMAGE_SX,
+    MENU_ITEM_LABEL_SX,
+    SCROLL_VIEWPORT_SX,
+} from './appShellStyles';
+import { tabs, menuItems } from './config';
 import useDocumentScrollLock from './hooks/useDocumentScrollLock';
 import { GlobalStyles } from '@mui/material';
 
 const CULTURAL_DISCLAIMER_COOKIE = 'ART_TRAIL_CULTURAL_DISCLAIMER_SEEN';
-const FOOTER_TABS_HEIGHT = '56px';
-const HEADER_HEIGHT = '64px';
-
-const stripInlineMarkup = value => value?.replace(/<[^>]+>/g, '') ?? '';
-
-const menuArtworkItems = ART_TRAIL_MAP_POIS.filter(
-    (poi, index, pois) => pois.findIndex(candidate => candidate.trailStepIndex === poi.trailStepIndex) === index,
-).map(poi => ({
-    id: poi.id,
-    label: `${poi.popupTitle || ''} ${stripInlineMarkup(poi.popupDescription)}`.trim(),
-    thumbnailSrc: poi.popupThumbnailSrc,
-    thumbnailAlt: poi.popupThumbnailAlt,
-    trailStepIndex: poi.trailStepIndex,
-}));
-
-const menuItems = [
-    {
-        id: 'trail-overview',
-        label: 'Indigenous art and Library discovery trail',
-        trailStepIndex: 0,
-    },
-    ...menuArtworkItems,
-    {
-        id: 'continue-your-journey',
-        label: 'Continue your journey',
-        trailStepIndex: 9,
-    },
-];
 
 const Puller = styled('div')(({ theme }) => ({
     width: 30,
@@ -75,25 +72,6 @@ const Puller = styled('div')(({ theme }) => ({
     top: 8,
     left: 'calc(50% - 15px)',
 }));
-
-const tabs = [
-    {
-        id: 'trail',
-        label: 'Trail',
-        icon: <RouteOutlinedIcon sx={{ fontSize: '1.5rem' }} />,
-        pages: trailPages,
-    },
-    {
-        id: 'map',
-        label: 'Map',
-        icon: <MapOutlinedIcon sx={{ fontSize: '1.5rem' }} />,
-        page: {
-            title: 'Map overview',
-            body: 'Placeholder map copy can describe the route, entry points, and the sequence of artworks.',
-            highlights: ['Route overview', 'Entrances', 'Landmarks'],
-        },
-    },
-];
 
 const getTabPages = tab => tab.pages ?? [tab.page];
 
@@ -111,11 +89,11 @@ const HeaderLogo = () => {
             component="a"
             href="https://www.uq.edu.au"
             className="logo--large"
-            sx={{ display: 'grid', padding: '1rem' }}
+            sx={HEADER_LOGO_SX}
             target="_blank"
             rel="noopener noreferrer"
         >
-            <Box component="img" src={uqHeaderLogo} alt="The University of Queensland" sx={{ height: '40px' }} />
+            <Box component="img" src={uqHeaderLogo} alt="The University of Queensland" sx={HEADER_LOGO_IMAGE_SX} />
         </Box>
     );
 };
@@ -266,83 +244,8 @@ const ArtTrailApp = () => {
     const DrawerContentComponent = drawerContent;
 
     return (
-        <Box
-            data-testid="art-trail-app"
-            sx={{
-                '--art-trail-header-height': HEADER_HEIGHT,
-                '--art-trail-footer-height': footerHeight,
-                '--art-trail-footer-tabs-height': FOOTER_TABS_HEIGHT,
-                '--art-trail-font-size': `${appTheme.typography.fontSize}px`,
-                '--art-trail-font-family': appTheme.typography.bodyFontFamily,
-                '--art-trail-spacing': `${appTheme.typography.fontSize}px`,
-                '--art-trail-content-bottom-padding': `${appTheme.typography.fontSize * 3}px`,
-                minHeight: '100vh',
-                height: '100dvh',
-                bgcolor: '#fff',
-                color: appTheme.palette.designSystem.bodyCopy,
-                overflow: 'hidden',
-                fontSize: 'var(--art-trail-font-size)',
-            }}
-        >
-            <GlobalStyles
-                styles={{
-                    h1: {
-                        fontSize: '2.5rem',
-                        fontWeight: appTheme.typography.heavy,
-                        lineHeight: 1.2,
-                        fontFamily: appTheme.typography.headingFontFamily,
-                    },
-                    h2: {
-                        fontSize: '2rem',
-                        fontWeight: appTheme.typography.heavy,
-                        lineHeight: 1.2,
-                        fontFamily: appTheme.typography.headingFontFamily,
-                    },
-                    h3: {
-                        fontSize: '1.5rem',
-                        fontWeight: appTheme.typography.heavy,
-                        lineHeight: 1.2,
-                        fontFamily: appTheme.typography.headingFontFamily,
-                    },
-                    h4: {
-                        fontSize: '1.25rem',
-                        fontWeight: appTheme.typography.heavy,
-                        lineHeight: 1.2,
-                        fontFamily: appTheme.typography.headingFontFamily,
-                    },
-                    h5: {
-                        fontSize: '1.125rem',
-                        fontWeight: appTheme.typography.heavy,
-                        lineHeight: 1.2,
-                        fontFamily: appTheme.typography.headingFontFamily,
-                    },
-                    h6: {
-                        fontSize: '1rem',
-                        fontWeight: appTheme.typography.heavy,
-                        lineHeight: 1.2,
-                        fontFamily: appTheme.typography.headingFontFamily,
-                    },
-                    div: {
-                        fontSize: '1rem',
-                        fontWeight: appTheme.typography.fontWeightMedium,
-                        lineHeight: 1.5,
-                        fontFamily: appTheme.typography.bodyFontFamily,
-                    },
-                    p: {
-                        fontSize: '1rem',
-                        fontWeight: appTheme.typography.fontWeightMedium,
-                        lineHeight: 1.5,
-                        fontFamily: appTheme.typography.bodyFontFamily,
-                        marginBottom: '1rem',
-                    },
-                    li: {
-                        fontSize: '1rem',
-                        fontWeight: appTheme.typography.fontWeightMedium,
-                        lineHeight: 1.5,
-                        fontFamily: appTheme.typography.bodyFontFamily,
-                    },
-                }}
-            />
+        <Box data-testid="art-trail-app" sx={createAppRootSx(appTheme, footerHeight)}>
+            <GlobalStyles styles={createGlobalStyles(appTheme)} />
             <AppBar
                 position="fixed"
                 color="primary"
@@ -360,7 +263,7 @@ const ArtTrailApp = () => {
                                 color="inherit"
                                 edge="start"
                                 aria-label="open navigation menu"
-                                sx={{ fontSize: '1.5rem' }}
+                                sx={ICON_BUTTON_SX}
                                 onClick={event =>
                                     setMenuAnchor(currentAnchor => (currentAnchor ? null : event.currentTarget))
                                 }
@@ -384,133 +287,37 @@ const ArtTrailApp = () => {
                 marginThreshold={0}
                 anchorReference="none"
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                slotProps={{
-                    root: {
-                        sx: {
-                            zIndex: currentTheme => currentTheme.zIndex.modal,
-                        },
-                    },
-                    paper: {
-                        sx: {
-                            position: 'fixed',
-                            top: {
-                                xs: `${HEADER_HEIGHT} !important`,
-                                sm: `${HEADER_HEIGHT} !important`,
-                            },
-                            bottom: {
-                                xs: '0 !important',
-                                sm: '16px !important',
-                            },
-                            left: '0 !important',
-                            right: { xs: '0 !important', sm: 'auto !important' },
-                            width: { xs: '100%', sm: 'min(420px, calc(100vw - 32px))' },
-                            maxWidth: { xs: '100%', sm: 420 },
-                            height: 'auto',
-                            maxHeight: {
-                                xs: 'none',
-                                sm: `min(720px, calc(100dvh - ${HEADER_HEIGHT} - 32px))`,
-                            },
-                            mt: '0 !important',
-                            borderRadius: 0,
-                            bgcolor: 'primary.main',
-                            color: 'primary.contrastText',
-                            boxShadow: 8,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            transform: 'none !important',
-                            overflow: 'hidden',
-                            '& .MuiMenu-list': {
-                                boxSizing: 'border-box',
-                                flex: 1,
-                                minHeight: 0,
-                                height: '100%',
-                                overflowY: 'auto',
-                                overflowX: 'hidden',
-                                overscrollBehavior: 'contain',
-                                WebkitOverflowScrolling: 'touch',
-                                paddingTop: 0,
-                                paddingBottom: 'calc(16px + env(safe-area-inset-bottom, 0px))',
-                            },
-                        },
-                    },
-                    list: {
-                        sx: {
-                            p: 0,
-                        },
-                    },
-                }}
+                slotProps={createMenuSlotProps()}
             >
                 {menuItems.map(menuItem => (
                     <MenuItem
                         key={menuItem.id}
                         onClick={() => handleMenuItemClick(menuItem)}
-                        sx={{
-                            alignItems: 'flex-start',
-                            columnGap: menuItem.thumbnailSrc ? 1.5 : 0,
-                            px: { xs: 2, sm: 2.5 },
-                            py: 1.5,
-                            whiteSpace: 'normal',
-                            color: 'inherit',
-                            '&:not(:last-of-type)': {
-                                borderBottom: '1px solid rgba(255, 255, 255, 0.16)',
-                            },
-                            '&:hover': {
-                                bgcolor: 'rgba(255, 255, 255, 0.08)',
-                            },
-                        }}
+                        sx={createMenuItemSx(Boolean(menuItem.thumbnailSrc))}
                     >
                         {menuItem.thumbnailSrc ? (
                             <Box
                                 component="img"
                                 src={menuItem.thumbnailSrc}
                                 alt={menuItem.thumbnailAlt || ''}
-                                sx={{
-                                    width: 56,
-                                    height: 56,
-                                    objectFit: 'cover',
-                                    borderRadius: 1.5,
-                                    flexShrink: 0,
-                                }}
+                                sx={MENU_ITEM_IMAGE_SX}
                             />
                         ) : null}
-                        <Box
-                            sx={{
-                                minWidth: 0,
-                                display: 'grid',
-                                alignContent: 'center',
-                            }}
-                        >
-                            {menuItem.label}
-                        </Box>
+                        <Box sx={MENU_ITEM_LABEL_SX}>{menuItem.label}</Box>
                     </MenuItem>
                 ))}
             </Menu>
 
-            <Box
-                sx={{
-                    mt: 'var(--art-trail-header-height)',
-                    height: 'calc(100% - var(--art-trail-header-height) - var(--art-trail-footer-height))',
-                    overflow: 'hidden',
-                }}
-            >
+            <Box sx={SCROLL_VIEWPORT_SX}>
                 <Grid
                     container
                     direction="column"
                     wrap="nowrap"
                     ref={scrollContainerRef}
                     data-testid="art-trail-scroll-container"
-                    sx={{
-                        height: '100%',
-                        overflowY: 'auto',
-                        overflowX: 'hidden',
-                        overscrollBehavior: 'contain',
-                        WebkitOverflowScrolling: 'touch',
-                        pb: showStepper
-                            ? 'calc(var(--art-trail-content-bottom-padding) + env(safe-area-inset-bottom, 0px))'
-                            : 0,
-                    }}
+                    sx={createScrollContainerSx(showStepper)}
                 >
-                    <Grid sx={{ width: '100%', maxWidth: 1100, mx: 'auto', height: '100%' }}>
+                    <Grid sx={CONTENT_HEIGHT_SX}>
                         <Grid container direction="column" rowSpacing={2.5}>
                             {showCulturalDisclaimer && (
                                 <Grid>
@@ -533,46 +340,17 @@ const ArtTrailApp = () => {
                 </Grid>
             </Box>
 
-            <Paper
-                component="footer"
-                square
-                elevation={8}
-                sx={{
-                    position: 'fixed',
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    height: 'var(--art-trail-footer-height)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    borderTop: '1px solid',
-                    borderColor: 'divider',
-                    bgcolor: 'background.paper',
-                    overflow: 'hidden',
-                }}
-            >
+            <Paper component="footer" square elevation={8} sx={FOOTER_SX}>
                 {showStepper && (
                     <>
-                        <Grid container sx={{ px: { xs: 1.5, sm: 2.5 }, py: 1.25, pt: 0, pb: 0 }}>
-                            <Grid xs={12} sx={{ maxWidth: 1100, mx: 'auto', width: '100%' }}>
+                        <Grid container sx={FOOTER_STEPPER_ROW_SX}>
+                            <Grid xs={12} sx={FOOTER_CONTENT_SX}>
                                 <MobileStepper
                                     variant={isTrailWelcomeStep ? 'dots' : 'text'}
                                     position="static"
                                     steps={visibleStepperSteps}
                                     activeStep={visibleActiveStep}
-                                    sx={{
-                                        bgcolor: 'transparent',
-                                        px: 0,
-                                        '& .MuiMobileStepper-dots': {
-                                            display: isTrailWelcomeStep ? 'none' : undefined,
-                                        },
-                                        '& .MuiMobileStepper-dot': {
-                                            mx: 0.35,
-                                        },
-                                        '& .MuiMobileStepper-dotActive': {
-                                            bgcolor: 'primary.main',
-                                        },
-                                    }}
+                                    sx={createStepperSx(isTrailWelcomeStep)}
                                     backButton={
                                         isTrailWelcomeStep ? (
                                             <Box />
@@ -583,7 +361,7 @@ const ArtTrailApp = () => {
                                                 onClick={() => handleStepChange(-1)}
                                                 disabled={activeState.stepIndex === 0}
                                                 aria-label="Previous page"
-                                                sx={{ fontSize: '1rem' }}
+                                                sx={FOOTER_BUTTON_SX}
                                             >
                                                 Prev
                                             </Button>
@@ -596,7 +374,7 @@ const ArtTrailApp = () => {
                                             onClick={() => handleStepChange(1)}
                                             disabled={activeState.stepIndex === stepCount - 1}
                                             aria-label={isTrailWelcomeStep ? 'Start the trail' : 'Next page'}
-                                            sx={{ fontSize: '1rem' }}
+                                            sx={FOOTER_BUTTON_SX}
                                         >
                                             {isTrailWelcomeStep ? 'Start the trail' : 'Next'}
                                         </Button>
@@ -609,18 +387,8 @@ const ArtTrailApp = () => {
                     </>
                 )}
 
-                <Grid
-                    container
-                    sx={{
-                        position: 'absolute',
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        px: { xs: 0.5, sm: 1.5 },
-                        py: 0.25,
-                    }}
-                >
-                    <Grid xs={12} sx={{ maxWidth: 1100, mx: 'auto', width: '100%' }}>
+                <Grid container sx={FOOTER_TAB_ROW_SX}>
+                    <Grid xs={12} sx={FOOTER_CONTENT_SX}>
                         <BottomNavigation
                             showLabels
                             value={activeTab}
@@ -628,7 +396,7 @@ const ArtTrailApp = () => {
                                 handleDrawerClose();
                                 setActiveTab(nextTab);
                             }}
-                            sx={{ height: 'var(--art-trail-footer-tabs-height)' }}
+                            sx={FOOTER_NAV_SX}
                         >
                             {tabs.map(tab => (
                                 <BottomNavigationAction
@@ -638,7 +406,7 @@ const ArtTrailApp = () => {
                                     icon={tab.icon}
                                     id={`art-trail-tab-${tab.id}`}
                                     aria-controls={`art-trail-tabpanel-${tab.id}`}
-                                    sx={{ fontSize: 'var(--art-trail-font-size)' }}
+                                    sx={FOOTER_TAB_ACTION_SX}
                                 />
                             ))}
                         </BottomNavigation>
@@ -654,38 +422,14 @@ const ArtTrailApp = () => {
                 ModalProps={{
                     keepMounted: true,
                 }}
-                sx={{
-                    '& .MuiPaper-root': {
-                        borderTopLeftRadius: 16,
-                        borderTopRightRadius: 16,
-                    },
-                }}
+                sx={createDrawerSx(appTheme)}
             >
-                <Box
-                    data-testid="art-trail-drawer-puller"
-                    sx={{
-                        position: 'absolute',
-                        borderTopLeftRadius: 8,
-                        borderTopRightRadius: 8,
-                        visibility: 'visible',
-                        right: 0,
-                        left: 0,
-                    }}
-                >
+                <Box data-testid="art-trail-drawer-puller" sx={DRAWER_PULLER_SX}>
                     <Puller />
                 </Box>
-                <Box
-                    sx={{
-                        width: '100%',
-                        maxWidth: 1100,
-                        mx: 'auto',
-                        pt: 2,
-                    }}
-                >
-                    <Grid container direction="column" wrap="nowrap" sx={{ maxHeight: '50vh' }}>
-                        <Grid sx={{ px: { xs: 2, sm: 2.5 }, py: 2, overflowY: 'auto' }}>
-                            {DrawerContentComponent ? <DrawerContentComponent /> : null}
-                        </Grid>
+                <Box sx={DRAWER_INNER_SX}>
+                    <Grid container direction="column" wrap="nowrap" sx={DRAWER_CONTAINER_SX}>
+                        <Grid sx={DRAWER_SCROLL_SX}>{DrawerContentComponent ? <DrawerContentComponent /> : null}</Grid>
                     </Grid>
                 </Box>
             </SwipeableDrawer>

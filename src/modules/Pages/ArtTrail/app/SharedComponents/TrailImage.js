@@ -37,8 +37,8 @@ const TrailImage = ({
             aria-label={alt}
             sx={{
                 width: '100%',
-                height: `calc(100dvw / (${numericWidth} / ${numericHeight}))`,
-                aspectRatio: `${numericWidth} / ${numericHeight}`,
+                height: numericWidth && numericHeight ? `calc(100dvw / (${numericWidth} / ${numericHeight}))` : 'auto',
+                aspectRatio: numericWidth && numericHeight ? `${numericWidth} / ${numericHeight}` : undefined,
                 position: 'relative',
                 ...style,
             }}
@@ -61,7 +61,8 @@ const TrailImage = ({
 
             <img
                 alt={alt}
-                width="100%"
+                width={numericWidth ?? undefined}
+                height={numericHeight ?? undefined}
                 loading={loading}
                 src={src}
                 onLoad={handleLoad}

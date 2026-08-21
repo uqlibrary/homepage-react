@@ -1,12 +1,12 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { rtlRender, userEvent } from 'test-utils';
 import Cookies from 'js-cookie';
 
 import ArtTrailApp from './index';
-import { createMazemapPoiMarkers } from './MapTabContent';
-import { ART_TRAIL_MAP_POIS } from './mapPois';
+import { ART_TRAIL_MAP_POIS } from './config/mapPois';
 import { trailPages } from './pages';
+import { markerClassNames, popupClassNames } from './appShellStyles';
+import { createMazemapPoiMarkers } from './utils/mapUtils';
 
 jest.mock('js-cookie', () => ({
     get: jest.fn(),
@@ -18,6 +18,8 @@ const culturalDisclaimerText =
 
 const totalPages = trailPages.length - 1; // subtract initial welcome screen
 
+const setup = () => rtlRender(<ArtTrailApp />);
+
 describe('ArtTrailApp', () => {
     beforeEach(() => {
         Cookies.get.mockReset();
@@ -26,72 +28,64 @@ describe('ArtTrailApp', () => {
     });
 
     it('renders the fixed app shell and sets the document title', () => {
-        render(<ArtTrailApp />);
+        const { getByTestId, getByText, getByRole, queryByRole, queryByText } = setup();
 
-        expect(screen.getByTestId('art-trail-app')).toBeInTheDocument();
-        expect(screen.getByText(culturalDisclaimerText)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'open navigation menu' })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Trail' })).toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Start the trail' })).toBeEnabled();
-        expect(screen.queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
+        expect(getByTestId('art-trail-app')).toBeInTheDocument();
+        expect(getByText(culturalDisclaimerText)).toBeInTheDocument();
+        expect(getByRole('button', { name: 'open navigation menu' })).toBeInTheDocument();
+        expect(getByRole('button', { name: 'Trail' })).toBeInTheDocument();
+        expect(queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
+        expect(getByRole('button', { name: 'Start the trail' })).toBeEnabled();
+        expect(queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
         expect(document.title).toBe('Art Trail App');
     });
 
     it('opens the menu and preserves the Trail page state across tab switches', async () => {
-        const user = userEvent.setup();
+        const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup();
 
-        render(<ArtTrailApp />);
+        await userEvent.click(getByRole('button', { name: 'open navigation menu' }));
 
-        await user.click(screen.getByRole('button', { name: 'open navigation menu' }));
+        expect(getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' })).toBeInTheDocument();
+        await userEvent.click(getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' }));
 
-        expect(
-            screen.getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' }),
-        ).toBeInTheDocument();
-        await user.click(screen.getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' }));
+        await userEvent.click(getByRole('button', { name: 'Start the trail' }));
+        expect(getByRole('button', { name: 'Previous page' })).toBeEnabled();
+        expect(getByRole('button', { name: 'Next page' })).toBeEnabled();
+        expect(queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
+        expect(getByText(`1 / ${totalPages}`)).toBeInTheDocument();
+        expect(getByRole('button', { name: 'View more' })).toBeInTheDocument();
 
-        await user.click(screen.getByRole('button', { name: 'Start the trail' }));
-        expect(screen.getByRole('button', { name: 'Previous page' })).toBeEnabled();
-        expect(screen.getByRole('button', { name: 'Next page' })).toBeEnabled();
-        expect(screen.queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
-        expect(screen.getByText(`1 / ${totalPages}`)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'View more' })).toBeInTheDocument();
+        await userEvent.click(getByRole('button', { name: 'Map' }));
+        expect(queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
+        expect(queryByRole('button', { name: 'Next page' })).not.toBeInTheDocument();
+        expect(queryByText('Find your way through the trail')).not.toBeInTheDocument();
+        expect(getByTestId('mazemap-container')).toBeInTheDocument();
 
-        await user.click(screen.getByRole('button', { name: 'Map' }));
-        expect(screen.queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Next page' })).not.toBeInTheDocument();
-        expect(screen.queryByText('Find your way through the trail')).not.toBeInTheDocument();
-        expect(screen.getByTestId('mazemap-container')).toBeInTheDocument();
-
-        await user.click(screen.getByRole('button', { name: 'Trail' }));
-        expect(screen.getByRole('button', { name: 'Previous page' })).toBeEnabled();
-        expect(screen.queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
-        expect(screen.getByText(`1 / ${totalPages}`)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'View more' })).toBeInTheDocument();
+        await userEvent.click(getByRole('button', { name: 'Trail' }));
+        expect(getByRole('button', { name: 'Previous page' })).toBeEnabled();
+        expect(queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
+        expect(getByText(`1 / ${totalPages}`)).toBeInTheDocument();
+        expect(getByRole('button', { name: 'View more' })).toBeInTheDocument();
     });
 
     it('opens and closes the page drawer from a Trail page', async () => {
-        const user = userEvent.setup();
+        const { getByRole, getByText, queryByRole } = setup();
 
-        render(<ArtTrailApp />);
+        await userEvent.click(getByRole('button', { name: 'Start the trail' }));
+        await userEvent.click(getByRole('button', { name: 'More information about this artwork' }));
 
-        await user.click(screen.getByRole('button', { name: 'Start the trail' }));
-        await user.click(screen.getByRole('button', { name: 'More information about this artwork' }));
+        expect(getByRole('heading', { name: /Hector Tjupuru Burton/i })).toBeInTheDocument();
+        expect(getByText(/synthetic polymer paint on linen/i)).toBeInTheDocument();
 
-        expect(screen.getByRole('heading', { name: /Hector Tjupuru Burton/i })).toBeInTheDocument();
-        expect(screen.getByText(/synthetic polymer paint on linen/i)).toBeInTheDocument();
+        await userEvent.keyboard('{Escape}');
 
-        await user.keyboard('{Escape}');
-
-        expect(screen.queryByRole('heading', { name: /Hector Tjupuru Burton/i })).not.toBeInTheDocument();
+        expect(queryByRole('heading', { name: /Hector Tjupuru Burton/i })).not.toBeInTheDocument();
     });
 
     it('resets the scroll position when changing Trail pages', async () => {
-        const user = userEvent.setup();
+        const { getByRole, getByTestId } = setup();
 
-        render(<ArtTrailApp />);
-
-        const scrollContainer = screen.getByTestId('art-trail-scroll-container');
+        const scrollContainer = getByTestId('art-trail-scroll-container');
 
         Object.defineProperty(scrollContainer, 'scrollTop', {
             configurable: true,
@@ -99,37 +93,35 @@ describe('ArtTrailApp', () => {
             value: 240,
         });
 
-        await user.click(screen.getByRole('button', { name: 'Start the trail' }));
+        await userEvent.click(getByRole('button', { name: 'Start the trail' }));
 
         expect(scrollContainer.scrollTop).toBe(0);
 
         scrollContainer.scrollTop = 180;
 
-        await user.click(screen.getByRole('button', { name: 'Next page' }));
+        await userEvent.click(getByRole('button', { name: 'Next page' }));
 
         expect(scrollContainer.scrollTop).toBe(0);
     });
 
     it('dismisses the cultural disclaimer across tabs and persists dismissal in a cookie', async () => {
-        const user = userEvent.setup();
+        const { getByRole, queryByText } = setup();
 
-        render(<ArtTrailApp />);
-
-        await user.click(screen.getByRole('button', { name: 'Dismiss cultural disclaimer' }));
+        await userEvent.click(getByRole('button', { name: 'Dismiss cultural disclaimer' }));
 
         expect(Cookies.set).toHaveBeenCalledWith('ART_TRAIL_CULTURAL_DISCLAIMER_SEEN', 'true', { path: '/' });
-        expect(screen.queryByText(culturalDisclaimerText)).not.toBeInTheDocument();
+        expect(queryByText(culturalDisclaimerText)).not.toBeInTheDocument();
 
-        await user.click(screen.getByRole('button', { name: 'Map' }));
-        expect(screen.queryByText(culturalDisclaimerText)).not.toBeInTheDocument();
+        await userEvent.click(getByRole('button', { name: 'Map' }));
+        expect(queryByText(culturalDisclaimerText)).not.toBeInTheDocument();
     });
 
     it('does not render the cultural disclaimer when the dismissal cookie is true', () => {
         Cookies.get.mockReturnValue('true');
 
-        render(<ArtTrailApp />);
+        const { queryByText } = setup();
 
-        expect(screen.queryByText(culturalDisclaimerText)).not.toBeInTheDocument();
+        expect(queryByText(culturalDisclaimerText)).not.toBeInTheDocument();
     });
 
     it('creates a marker for each hardcoded map POI', () => {
@@ -177,6 +169,8 @@ describe('ArtTrailApp', () => {
             map,
             onSelectTrailPage,
             activePopupRef,
+            markerClassNames,
+            popupClassNames,
         });
 
         expect(markers).toHaveLength(ART_TRAIL_MAP_POIS.length);
