@@ -5,6 +5,7 @@ import {
     isAlertsAdminUser,
     isDlorAdminUser,
     isSpacesAdminUser,
+    isMembershipAdminUser,
     isTestTagUser,
 } from 'helpers/access';
 import { pathConfig } from './pathConfig';
@@ -31,6 +32,8 @@ export const flattedPathConfigExact = [
     '/admin/dlor/schedule',
     '/admin/masquerade',
     '/admin/masquerade/',
+    '/admin/membership',
+    '/admin/membership/settings',
     '/admin/testntag',
     '/admin/testntag/manage/users',
     '/admin/testntag/manage/teams',
@@ -103,6 +106,52 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.BookExamBooth />,
             exact: false,
             pageTitle: locale.pages.bookExamBooth.title,
+        },
+        {
+            path: pathConfig.membership,
+            element: <components.MembershipLanding />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            path: pathConfig.membershipForm(':type'),
+            element: <components.MembershipForm />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            // The shape renewal emails sent over the years carry, so it has to keep working.
+            path: pathConfig.membershipRenewal(':type', ':id', ':code'),
+            element: <components.MembershipForm />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            path: pathConfig.membershipReceived(':id'),
+            element: <components.MembershipReceived />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            // Nothing in the app routes here — a renewal goes to the received page — but the route existed and
+            // links to it may still be in circulation.
+            path: pathConfig.membershipRenewed(':id'),
+            element: <components.MembershipReceived />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            path: pathConfig.membershipRenewedIndex,
+            element: <components.MembershipRenewed />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            // Where the payment gateway sends the applicant back to.
+            path: pathConfig.membershipPaymentConfirmation,
+            element: <components.MembershipPaymentConfirmation />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
         },
         {
             path: pathConfig.dlorView(dlorId),
@@ -239,6 +288,23 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.Masquerade />,
             exact: true,
             pageTitle: locale.pages.admin.masquerade.title,
+        },
+    ];
+
+    // Gated on the same AD group the API gates these endpoints on - see isMembershipAdminUser. Every page in
+    // this section goes in here, so the gate covers the section rather than a page of it.
+    const membershipAdminDisplay = [
+        {
+            path: pathConfig.admin.membership,
+            element: <components.MembershipAdminList />,
+            exact: true,
+            pageTitle: locale.pages.admin.membership.title,
+        },
+        {
+            path: pathConfig.admin.membershipsettings,
+            element: <components.MembershipAdminSettings />,
+            exact: true,
+            pageTitle: locale.pages.admin.membershipsettings.title,
         },
     ];
 
@@ -485,6 +551,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
+        ...(account && isMembershipAdminUser(account) ? membershipAdminDisplay : []),
         ...(account && isTestTagUser(account) ? testntagDisplay : []),
         ...(account ? dlorTeamAdminDisplay : []),
         ...(account ? authenticatedDlorDisplay : []),
@@ -509,4 +576,7 @@ export const breadcrumbs = {
     learningresources: { pathname: '/learning-resources', title: 'Learning resources' },
     paymentreceipt: { pathname: '/payment-receipt', title: 'Payment receipt' },
     bookablespaces: { pathname: '/spaces', title: 'Spaces' },
+    membership: { pathname: '/membership', title: 'Membership' },
+    membershipadmin: { pathname: '/admin/membership', title: 'Membership admin' },
+    membershipadminsettings: { pathname: '/admin/membership/settings', title: 'Membership expiry settings' },
 };

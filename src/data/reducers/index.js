@@ -56,3 +56,8 @@ export { default as bookablespacesFacilityTypeReducer } from './bookablespacesFa
 export { default as bookableSpaceLocationReducer } from './bookableSpaceLocationReducer';
 export { default as dlorScheduleReducer } from './dlorScheduleReducer';
 export { default as dlorDashboardReducer } from './dlorDashboardReducer';
+export { default as membershipFormDataReducer } from './membershipFormDataReducer';
+export { default as membershipRenewingReducer } from './membershipRenewingReducer';
+export { default as membershipReducer } from './membershipReducer';
+export { default as membershipListReducer } from './membershipListReducer';
+export { default as membershipTypesReducer } from './membershipTypesReducer';
