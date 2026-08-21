@@ -82,12 +82,19 @@ const Page = ({ openDrawer }) => {
             onClick={() => setIsExpanded(true)}
             aria-expanded={false}
             aria-controls={expandedContentId}
+            endIcon={
+                <ExpandMoreIcon
+                    sx={{
+                        transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.2s ease',
+                    }}
+                />
+            }
             sx={{
                 px: 0,
-                py: 0,
-                minWidth: 0,
-                minHeight: 0,
-                ml: 0.5,
+                pt: 1.5,
+                pb: 0,
+                ml: 0,
                 verticalAlign: 'baseline',
                 textTransform: 'none',
                 fontSize: '1rem',
@@ -100,6 +107,12 @@ const Page = ({ openDrawer }) => {
                     textDecoration: 'underline',
                     backgroundColor: 'transparent',
                 },
+                textAlign: 'center',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%)',
             }}
         >
             View more
@@ -108,7 +121,6 @@ const Page = ({ openDrawer }) => {
     const toggleButton = (
         <Button
             type="button"
-            variant="text"
             onClick={() => setIsExpanded(currentState => !currentState)}
             aria-expanded={isExpanded}
             aria-controls={expandedContentId}
@@ -123,8 +135,9 @@ const Page = ({ openDrawer }) => {
             sx={{
                 px: 0,
                 py: 0,
+                width: '100%',
                 minWidth: 0,
-                justifyContent: 'flex-start',
+                justifyContent: 'center',
                 textTransform: 'none',
                 fontSize: '1rem',
                 fontWeight: 400,
@@ -139,6 +152,7 @@ const Page = ({ openDrawer }) => {
                 '& .MuiButton-endIcon': {
                     ml: 0.25,
                 },
+                backgroundColor: 'white',
             }}
         >
             {isExpanded ? 'View less' : 'View more'}
@@ -198,7 +212,7 @@ const Page = ({ openDrawer }) => {
                         <StyledHeading variant="h6" component="h3">
                             About the artwork
                         </StyledHeading>
-                        <Box>
+                        <Box sx={{ position: 'relative' }}>
                             <p>
                                 This work was created by senior men from the Men's Painting Room. Their work celebrates
                                 their memories of Country, family history and Tjukurpa (the creation story for the Amata

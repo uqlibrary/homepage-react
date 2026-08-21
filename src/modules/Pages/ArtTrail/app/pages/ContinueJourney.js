@@ -29,18 +29,18 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                 pr={'var(--art-trail-spacing)'}
                 data-testid="pageContent"
             >
-                <Grid container wrap="nowrap" justifyContent="space-between" alignItems="flex-start" columnSpacing={1}>
-                    <Grid xs>
-                        The journey doesn't end here. It continues across campus, in the archives and through the
-                        stories held and cared for within the Library.
-                    </Grid>
-                </Grid>
                 <Grid>
                     <StyledAudioPlayer
                         title="Listen to this page"
                         src={ContinueJourneyAudio}
                         stopSignal={mediaStopSignal}
                     />
+                </Grid>
+                <Grid container wrap="nowrap" justifyContent="space-between" alignItems="flex-start" columnSpacing={1}>
+                    <Grid xs>
+                        The journey doesn't end here. It continues across campus, in the archives and through the
+                        stories held and cared for within the Library.
+                    </Grid>
                 </Grid>
                 <Grid>
                     <Accordion
