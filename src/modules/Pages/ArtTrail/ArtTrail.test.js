@@ -1,13 +1,19 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { rtlRender } from 'test-utils';
 
 import ArtTrail from './ArtTrail';
 
-describe('ArtTrail', () => {
-    it('renders the blank standalone page', () => {
-        render(<ArtTrail />);
+const setup = (props = {}) => {
+    return rtlRender(<ArtTrail {...props} />);
+};
 
-        expect(screen.getByTestId('art-trail-page')).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'Art Trail' })).toBeInTheDocument();
+describe('ArtTrail', () => {
+    it('renders the landing page', () => {
+        const { getByTestId, getByRole } = setup();
+
+        expect(getByTestId('art-trail-page')).toBeInTheDocument();
+        expect(
+            getByRole('heading', { name: 'Welcome to the University of Queensland Library Art Trail' }),
+        ).toBeInTheDocument();
     });
 });

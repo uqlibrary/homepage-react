@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 
-const FORWARD_PAGE_TRANSITION_DURATION_MS = 720;
-const BACKWARD_PAGE_TRANSITION_DURATION_MS = 600;
+const FORWARD_PAGE_TRANSITION_DURATION_MS = 1000;
+const BACKWARD_PAGE_TRANSITION_DURATION_MS = 500;
 const PAGE_TRANSITION_EASING = 'cubic-bezier(0.2, 0.82, 0.2, 1)';
 const PAGE_BACKGROUND_COLOR = '#fff';
 
@@ -32,23 +32,20 @@ const buildEnteringShadow = (direction, isAnimating) => {
     return direction === 'backward' ? '18px 0 42px rgba(15, 23, 42, 0.1)' : '-22px 0 48px rgba(15, 23, 42, 0.14)';
 };
 
+const createTransitionState = ({ page, pageKey, exitingPage = null }) => ({
+    displayedPage: page,
+    displayedPageKey: pageKey,
+    exitingPage,
+});
+
 const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection, mediaStopSignal }) => {
-    const [displayedPage, setDisplayedPage] = useState(() => page);
-    const [displayedPageKey, setDisplayedPageKey] = useState(() => pageKey);
-    const [exitingPage, setExitingPage] = useState(null);
+    const [transitionState, setTransitionState] = useState(() => createTransitionState({ page, pageKey }));
     const [isAnimating, setIsAnimating] = useState(false);
     const animationFrameRef = useRef(null);
     const animationTimeoutRef = useRef(null);
     const transitionIdRef = useRef(0);
-    const displayedPageRef = useRef(page);
-    const displayedPageKeyRef = useRef(pageKey);
     const transitionDurationMs =
         navigationDirection === 'backward' ? BACKWARD_PAGE_TRANSITION_DURATION_MS : FORWARD_PAGE_TRANSITION_DURATION_MS;
-
-    useEffect(() => {
-        displayedPageRef.current = displayedPage;
-        displayedPageKeyRef.current = displayedPageKey;
-    }, [displayedPage, displayedPageKey]);
 
     useEffect(() => {
         return () => {
@@ -58,20 +55,23 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection, 
     }, []);
 
     useEffect(() => {
-        if (pageKey === displayedPageKeyRef.current) {
+        if (pageKey === transitionState.displayedPageKey) {
             return;
         }
 
         const transitionId = transitionIdRef.current + 1;
         transitionIdRef.current = transitionId;
-        const previousPage = displayedPageRef.current;
 
         window.cancelAnimationFrame(animationFrameRef.current);
         window.clearTimeout(animationTimeoutRef.current);
 
-        setExitingPage(() => previousPage);
-        setDisplayedPage(() => page);
-        setDisplayedPageKey(pageKey);
+        setTransitionState(currentState =>
+            createTransitionState({
+                page,
+                pageKey,
+                exitingPage: currentState.displayedPage,
+            }),
+        );
         setIsAnimating(false);
 
         animationFrameRef.current = window.requestAnimationFrame(() => {
@@ -87,13 +87,13 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection, 
                 return;
             }
 
-            setExitingPage(null);
+            setTransitionState(currentState => ({ ...currentState, exitingPage: null }));
             setIsAnimating(false);
         }, transitionDurationMs);
-    }, [page, pageKey, transitionDurationMs]);
+    }, [page, pageKey, transitionDurationMs, transitionState.displayedPageKey]);
 
-    const PageComponent = displayedPage;
-    const ExitingPageComponent = exitingPage;
+    const PageComponent = transitionState.displayedPage;
+    const ExitingPageComponent = transitionState.exitingPage;
     const showTransition = Boolean(ExitingPageComponent);
 
     return (

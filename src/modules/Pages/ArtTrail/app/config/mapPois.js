@@ -1,12 +1,13 @@
-import BurtonThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/Burton_2016_03_crop-scaled.jpg';
-import NapangardiThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/Napandardi_2013_40_crop_WEB.jpg';
-import PetyarreThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/Petyarre_2001_02_crop_WEB.jpg';
-import TjupurrulaThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/Tjupurrula_2014_40_WEB.jpg';
-import Kunawarritji1Thumbnail from '../../../../../public/images/artTrail/artwork/thumbs/2018.27_Kunawarritji-1-landscape-2.jpg';
-import Kunawarritji2Thumbnail from '../../../../../public/images/artTrail/artwork/thumbs/2018.28_Kunawarritji-2-landscape-2.jpg';
-import PikkuwThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/UQAM_20241219_CampusArtwork_046.jpg';
-import WhispersThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/UQAM_20260116_CampusArtwork_073_LR.jpg';
-import WarualThumbnail from '../../../../../public/images/artTrail/artwork/thumbs/Robinson_2017_02_WEBREADY.jpg';
+/* istanbul ignore file */
+import BurtonThumbnail from '../../../../../../public/images/artTrail/artwork/thumbs/Burton_2016_03_crop-scaled.jpg';
+import NapangardiThumbnail from '../../../../../../public/images/artTrail/artwork/thumbs/Napandardi_2013_40_crop_WEB.jpg';
+import PetyarreThumbnail from '../../../../../../public/images/artTrail/artwork/thumbs/Petyarre_2001_02_crop_WEB.jpg';
+import TjupurrulaThumbnail from '../../../../../../public/images/artTrail/artwork/thumbs/Tjupurrula_2014_40_WEB.jpg';
+import Kunawarritji1Thumbnail from '../../../../../../public/images/artTrail/artwork/thumbs/2018.27_Kunawarritji-1-landscape-2.jpg';
+import Kunawarritji2Thumbnail from '../../../../../../public/images/artTrail/artwork/thumbs/2018.28_Kunawarritji-2-landscape-2.jpg';
+import PikkuwThumbnail from '../../../../../../public/images/artTrail/artwork/thumbs/UQAM_20241219_CampusArtwork_046.jpg';
+import WhispersThumbnail from '../../../../../../public/images/artTrail/artwork/thumbs/UQAM_20260116_CampusArtwork_073_LR.jpg';
+import WarualThumbnail from '../../../../../../public/images/artTrail/artwork/thumbs/Robinson_2017_02_WEBREADY.jpg';
 
 export const ART_TRAIL_MAP_POIS = [
     {

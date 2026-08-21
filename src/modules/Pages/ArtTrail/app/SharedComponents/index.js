@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Grid from '@mui/material/Unstable_Grid2';

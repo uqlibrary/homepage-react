@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
@@ -8,11 +8,12 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
 const CulturalDisclaimer = ({ onClose }) => {
+    const theme = useTheme();
     return (
         <Paper
             elevation={0}
             sx={{
-                bgcolor: '#FEF8E8',
+                bgcolor: theme.palette.designSystem.warningYellow,
                 p: { xs: 'var(--art-trail-spacing)', sm: 2.5 },
             }}
             data-testid="culturalDisclaimer"
