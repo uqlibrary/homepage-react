@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -12,12 +11,16 @@ import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Burto
 
 import Hero from '../Hero';
 import {
+    DisclosureSection,
     StyledHeading,
     StyledAccordionGrid,
+    StyledAccordion,
+    StyledAccordionDetails,
     StyledDrawerHeader,
     StyledTrailImage,
     StyledUl,
 } from '../SharedComponents';
+import AccordionSummary from '@mui/material/AccordionSummary';
 
 const ArtDrawerContent = () => {
     return (
@@ -73,78 +76,6 @@ const LocationDrawerContent = () => {
 };
 
 const Page = ({ openDrawer }) => {
-    const [isExpanded, setIsExpanded] = React.useState(false);
-    const expandedContentId = React.useId();
-    const collapsedInlineButton = (
-        <Button
-            type="button"
-            variant="text"
-            onClick={() => setIsExpanded(true)}
-            aria-expanded={false}
-            aria-controls={expandedContentId}
-            sx={{
-                px: 0,
-                py: 0,
-                minWidth: 0,
-                minHeight: 0,
-                ml: 0.5,
-                verticalAlign: 'baseline',
-                textTransform: 'none',
-                fontSize: '1rem',
-                fontWeight: 400,
-                lineHeight: 1.5,
-                color: 'primary.main',
-                textDecoration: 'underline',
-                textUnderlineOffset: '0.14em',
-                '&:hover': {
-                    textDecoration: 'underline',
-                    backgroundColor: 'transparent',
-                },
-            }}
-        >
-            View more
-        </Button>
-    );
-    const toggleButton = (
-        <Button
-            type="button"
-            variant="text"
-            onClick={() => setIsExpanded(currentState => !currentState)}
-            aria-expanded={isExpanded}
-            aria-controls={expandedContentId}
-            endIcon={
-                <ExpandMoreIcon
-                    sx={{
-                        transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                        transition: 'transform 0.2s ease',
-                    }}
-                />
-            }
-            sx={{
-                px: 0,
-                py: 0,
-                minWidth: 0,
-                justifyContent: 'flex-start',
-                textTransform: 'none',
-                fontSize: '1rem',
-                fontWeight: 400,
-                lineHeight: 1.5,
-                color: 'primary.main',
-                textDecoration: 'underline',
-                textUnderlineOffset: '0.14em',
-                '&:hover': {
-                    textDecoration: 'underline',
-                    backgroundColor: 'transparent',
-                },
-                '& .MuiButton-endIcon': {
-                    ml: 0.25,
-                },
-            }}
-        >
-            {isExpanded ? 'View less' : 'View more'}
-        </Button>
-    );
-
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero
@@ -194,21 +125,22 @@ const Page = ({ openDrawer }) => {
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>
-                    <Box>
-                        <StyledHeading variant="h6" component="h3">
-                            About the artwork
-                        </StyledHeading>
-                        <Box>
+                    <DisclosureSection
+                        heading={
+                            <StyledHeading variant="h6" component="h3">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
                             <p>
                                 This work was created by senior men from the Men's Painting Room. Their work celebrates
                                 their memories of Country, family history and Tjukurpa (the creation story for the Amata
                                 region). The group have used the motif of the trees of their Country to represent
                                 family, community, and their relationship to the land.
-                                {!isExpanded && collapsedInlineButton}
                             </p>
-                        </Box>
-                        {isExpanded ? (
-                            <Box id={expandedContentId}>
+                        }
+                        details={
+                            <>
                                 <p>
                                     For Anangu communities, the tree is a significant motif for ancestry and family. It
                                     is different to the way non-Indigenous families might think about a 'family tree',
@@ -225,60 +157,83 @@ const Page = ({ openDrawer }) => {
                                     Through this shared storytelling, Punu Tjukurpa creates a conduit between deep
                                     ancestral roots and future generations.
                                 </p>
-                                <StyledHeading variant="h6" component="h3">
-                                    Reflect
-                                </StyledHeading>
-                                <p>Take a few minutes to look closely at all the detail in this painting.</p>
-                                <StyledUl>
-                                    <li>
-                                        What different shapes and patterns can you see branching off from the central
-                                        shape?
-                                    </li>
-                                    <li>Which parts are your eyes most drawn to? Why do they stand out?</li>
-                                </StyledUl>
-                                <StyledHeading variant="h6" component="h3">
-                                    About the artists
-                                </StyledHeading>
-                                <p>
-                                    <strong>Hector Tjupuru Burton</strong> (c. 1937—2017) is a senior Pitjantjatjara law
-                                    man. He was born near Pukatja (Ernabella) in South Australia. He encouraged other
-                                    senior men to join him in forming a Men’s Painting Room. The painting room provided
-                                    artists with an opportunity to record their sacred stories, inspired by ancestors of
-                                    the Musgrave Ranges that rise above the Amata region.
-                                </p>
-                                <p>
-                                    <strong>Ray Ken</strong> (c. 1940—2018) was born near Indulkana in South Australia.
-                                    He belongs to the Pitjantjatjara/Yankunytjatjara people.
-                                </p>
-                                <p>
-                                    <strong>Mick Wikilyiri</strong> (c. 1940—) was born in Amata, South Australia and is
-                                    a Pitjantjatjara man.
-                                </p>
-                                <p>
-                                    <strong>Brenton Ken</strong> (c.1944—2018) was born in South Australia and belongs
-                                    to the Pitjantjatjara/Yankunytjatjara people.
-                                </p>
-                                <StyledHeading variant="h6" component="h3">
-                                    Connection to Country
-                                </StyledHeading>
-                                <p>
-                                    Learn more about <strong>Ngaanyatjarra Pitjantjatjara Yankunytjatjara</strong>{' '}
-                                    Lands.
-                                </p>
-                                <iframe
-                                    title="Ngaanyatjarra Pitjantjatjara Yankunytjatjara image hotspot"
-                                    src="https://uq.h5p.com/content/1292937845127577289/embed"
-                                    aria-label="Indigenous art and Library discovery trail - Punu Tjukurpa 2013"
-                                    width="1090"
-                                    frameBorder="0"
-                                    allowFullScreen
-                                    allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                    style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
-                                />
+                            </>
+                        }
+                    />
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="reflect-content"
+                            id="reflect-header"
+                        >
+                            Reflect
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="reflect-content">
+                            <Box component={'p'}>
+                                Take a few minutes to look closely at all the detail in this painting.
                             </Box>
-                        ) : null}
-                        {isExpanded ? <Box sx={{ mt: 0.25 }}>{toggleButton}</Box> : null}
-                    </Box>
+                            <StyledUl>
+                                <li>
+                                    What different shapes and patterns can you see branching off from the central shape?
+                                </li>
+                                <li>Which parts are your eyes most drawn to? Why do they stand out?</li>
+                            </StyledUl>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="about-the-artists-content"
+                            id="about-the-artists-header"
+                        >
+                            About the artists
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="about-the-artists-content">
+                            <Box component={'p'}>
+                                <strong>Hector Tjupuru Burton</strong> (c. 1937—2017) is a senior Pitjantjatjara law
+                                man. He was born near Pukatja (Ernabella) in South Australia. He encouraged other senior
+                                men to join him in forming a Men’s Painting Room. The painting room provided artists
+                                with an opportunity to record their sacred stories, inspired by the ancestors of the
+                                Musgrave Ranges that rise above the Amata region.
+                            </Box>
+                            <Box component={'p'}>
+                                <strong>Ray Ken</strong> (c. 1940—2018) was born near Indulkana in South Australia. He
+                                belongs to the Pitjantjatjara/Yankunytjatjara people.
+                            </Box>
+                            <Box component={'p'}>
+                                <strong>Mick Wikilyiri</strong> (c. 1940—) was born in Amata, South Australia and is a
+                                Pitjantjatjara man.
+                            </Box>
+                            <Box component={'p'}>
+                                <strong>Brenton Ken</strong> (c.1944—2018) was born in South Australia and belongs to
+                                the Pitjantjatjara/Yankunytjatjara people.
+                            </Box>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="connection-to-country-content"
+                            id="connection-to-country-header"
+                        >
+                            Connection to Country
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="connection-to-country-content">
+                            <Box component={'p'} sx={{ pb: 1 }}>
+                                Learn more about <strong>Ngaanyatjarra Pitjantjatjara Yankunytjatjara</strong> Lands.
+                            </Box>
+                            <iframe
+                                title="Ngaanyatjarra Pitjantjatjara Yankunytjatjara image hotspot"
+                                src="https://uq.h5p.com/content/1292937845127577289/embed"
+                                aria-label="Indigenous art and Library discovery trail - Punu Tjukurpa 2013"
+                                width="1090"
+                                frameBorder="0"
+                                allowFullScreen
+                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
+                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+                            />
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
                 </StyledAccordionGrid>
             </Grid>
         </Grid>

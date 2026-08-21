@@ -13,6 +13,8 @@ import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Napan
 
 import Hero from '../Hero';
 import {
+    DisclosureSection,
+    StyledHeading,
     StyledAccordion,
     StyledAccordionDetails,
     StyledAccordionGrid,
@@ -111,21 +113,21 @@ const Page = ({ openDrawer }) => {
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="about-the-artwork-content"
-                            id="about-the-artwork-header"
-                        >
-                            About the artwork
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content">
+                    <DisclosureSection
+                        heading={
+                            <StyledHeading variant="h6" component="h3">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
                             <Box component="p">
                                 This work by Lily Napangardi depicts the cycles of rainfall and wind across the
                                 sandhills of the Kintore and Coniston areas in the Northern Territory. Sand Hills 2007
                                 is a classic example of her black and white compositions, and depicts the 'tali' (sand
                                 hills) of the Kintore and Coniston areas.
                             </Box>
+                        }
+                        details={
                             <Box component="p">
                                 Despite her reductive palette, Napangardi imbues these works with movement and
                                 definition by emphasising rows within the net of fine dots. The clusters, lines and
@@ -135,8 +137,9 @@ const Page = ({ openDrawer }) => {
                                 her paintings, Napangardi seeks to demonstrate her deep understanding of Country and
                                 assert her people's connection to the land.
                             </Box>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
+                        }
+                    />
+
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}

@@ -4,6 +4,7 @@ import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import { ART_TRAIL_MAP_POIS } from './mapPois';
 import { TAB_ICON_SX } from '../appShellStyles';
 import { trailPages } from '../pages';
+import DefaultArtwork from '../../../../../../public/images/artTrail/UQRAP_River-Artwork-RGB.jpg';
 
 const stripInlineMarkup = value => value?.replace(/<[^>]+>/g, '') ?? '';
 
@@ -28,24 +29,33 @@ const tabs = [
 
 const menuArtworkItems = ART_TRAIL_MAP_POIS.filter(
     (poi, index, pois) => pois.findIndex(candidate => candidate.trailStepIndex === poi.trailStepIndex) === index,
-).map(poi => ({
-    id: poi.id,
-    label: `${poi.popupTitle || ''} ${stripInlineMarkup(poi.popupDescription)}`.trim(),
-    thumbnailSrc: poi.popupThumbnailSrc,
-    thumbnailAlt: poi.popupThumbnailAlt,
-    trailStepIndex: poi.trailStepIndex,
-}));
+).map(poi => {
+    const label = `${poi.popupTitle || ''} ${poi.popupDescription || ''}`.trim();
+
+    return {
+        id: poi.id,
+        label,
+        ariaLabel: stripInlineMarkup(label),
+        thumbnailSrc: poi.popupThumbnailSrc,
+        thumbnailAlt: poi.popupThumbnailAlt,
+        trailStepIndex: poi.trailStepIndex,
+    };
+});
 
 const menuItems = [
     {
         id: 'trail-overview',
         label: 'Indigenous art and Library discovery trail',
+        thumbnailSrc: DefaultArtwork,
+        thumbnailAlt: 'Continue your journey thumbnail',
         trailStepIndex: 0,
     },
     ...menuArtworkItems,
     {
         id: 'continue-your-journey',
         label: 'Continue your journey',
+        thumbnailSrc: DefaultArtwork,
+        thumbnailAlt: 'Continue your journey thumbnail',
         trailStepIndex: 9,
     },
 ];

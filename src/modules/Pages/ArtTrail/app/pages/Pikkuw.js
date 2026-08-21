@@ -13,6 +13,8 @@ import ArtworkImage from '../../../../../../public/images/artTrail/artwork/UQAM_
 
 import Hero from '../Hero';
 import {
+    DisclosureSection,
+    StyledHeading,
     StyledAccordion,
     StyledAccordionDetails,
     StyledAccordionGrid,
@@ -116,46 +118,48 @@ const Page = ({ openDrawer }) => {
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="about-the-artwork-content"
-                            id="about-the-artwork-header"
-                        >
-                            About the artwork
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content">
+                    <DisclosureSection
+                        heading={
+                            <StyledHeading variant="h6" component="h3">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
                             <Box component="p">
                                 <em>Pikkuw (Saltwater crocodile)</em> 2008, created by artist Craig Koomeeta, is a
                                 tribute to his mother's country as it refers to the relationships between different
                                 communities of Koomeeta's Apelech clan. It is also a testament to the stories of coastal
                                 saltwater clans.
                             </Box>
-                            <Box component="p">
-                                The carving is of a male saltwater crocodile named Pikkuw. According to Koomeeta's
-                                cultural lore, Pikkuw eloped with a female freshwater crocodile from Kencherang Lagoon,
-                                a large freshwater lagoon north of Aurukun. Min Kena, a big freshwater male crocodile
-                                from Kencherang Lagoon, was deeply angered by the elopement and attacked Pikkuw. Pikkuw
-                                bit Min Kena on the tail giving him a noticeably shorter tail. Unfortunately for Pikkuw,
-                                Min Kena bit him back on the snout which is why as you can see in this carving that
-                                During the colossal fight Pikkuw's saltwater family heard him cry out and proceeded to
-                                search for him. When they found him, he was injured and bleeding, so they made a
-                                stretcher and took him back to the beach where he slept for many nights. When he awoke
-                                the saltwater crocodile family sang many songs.
-                            </Box>
-                            <Box component="p">
-                                Pikkuw is decorated here in rich ochre colours and Apelech clan paint up designs,
-                                representing the salt water coastal kin of these countries.
-                            </Box>
-                            <Box component="p">
-                                This work by Koomeeta remembers the strength of Ancestors and the importance of
-                                continuing practices during times of colonial violence. Koomeeta also considers the
-                                wisdom and foresight of Elders to pass on cultural knowledge and the visions of
-                                community to foster self-determining ways that regenerate cultural expression for future
-                                generations.
-                            </Box>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
+                        }
+                        details={
+                            <>
+                                <Box component="p">
+                                    The carving is of a male saltwater crocodile named Pikkuw. According to Koomeeta's
+                                    cultural lore, Pikkuw eloped with a female freshwater crocodile from Kencherang
+                                    Lagoon, a large freshwater lagoon north of Aurukun. Min Kena, a big freshwater male
+                                    crocodile from Kencherang Lagoon, was deeply angered by the elopement and attacked
+                                    Pikkuw. Pikkuw bit Min Kena on the tail giving him a noticeably shorter tail.
+                                    Unfortunately for Pikkuw, Min Kena bit him back on the snout which is why as you can
+                                    see in this carving that During the colossal fight Pikkuw's saltwater family heard
+                                    him cry out and proceeded to search for him. When they found him, he was injured and
+                                    bleeding, so they made a stretcher and took him back to the beach where he slept for
+                                    many nights. When he awoke the saltwater crocodile family sang many songs.
+                                </Box>
+                                <Box component="p">
+                                    Pikkuw is decorated here in rich ochre colours and Apelech clan paint up designs,
+                                    representing the salt water coastal kin of these countries.
+                                </Box>
+                                <Box component="p">
+                                    This work by Koomeeta remembers the strength of Ancestors and the importance of
+                                    continuing practices during times of colonial violence. Koomeeta also considers the
+                                    wisdom and foresight of Elders to pass on cultural knowledge and the visions of
+                                    community to foster self-determining ways that regenerate cultural expression for
+                                    future generations.
+                                </Box>
+                            </>
+                        }
+                    />
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}

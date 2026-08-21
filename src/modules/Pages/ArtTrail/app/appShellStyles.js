@@ -13,6 +13,7 @@ export const FOOTER_NAV_SX = { height: 'var(--art-trail-footer-tabs-height)' };
 export const FOOTER_TAB_ACTION_SX = { fontSize: 'var(--art-trail-font-size)' };
 export const FOOTER_BUTTON_SX = { fontSize: '1rem' };
 export const FOOTER_STEPPER_ROW_SX = { px: { xs: 1.5, sm: 2.5 }, py: 1.25, pt: 0, pb: 0 };
+
 export const FOOTER_TAB_ROW_SX = {
     position: 'absolute',
     left: 0,
@@ -21,6 +22,7 @@ export const FOOTER_TAB_ROW_SX = {
     px: { xs: 0.5, sm: 1.5 },
     py: 0.25,
 };
+
 export const DRAWER_PULLER_SX = {
     position: 'absolute',
     borderTopLeftRadius: 8,
@@ -29,19 +31,24 @@ export const DRAWER_PULLER_SX = {
     right: 0,
     left: 0,
 };
+
 export const DRAWER_INNER_SX = {
     width: '100%',
     maxWidth: 1100,
     mx: 'auto',
     pt: 2,
 };
+
 export const DRAWER_CONTAINER_SX = { maxHeight: '50vh' };
+
 export const DRAWER_SCROLL_SX = { px: { xs: 2, sm: 2.5 }, py: 2, overflowY: 'auto' };
+
 export const SCROLL_VIEWPORT_SX = {
     mt: 'var(--art-trail-header-height)',
     height: 'calc(100% - var(--art-trail-header-height) - var(--art-trail-footer-height))',
     overflow: 'hidden',
 };
+
 export const FOOTER_SX = {
     position: 'fixed',
     left: 0,
@@ -71,7 +78,7 @@ const STEPPER_SX = {
 };
 
 const MENU_ITEM_BASE_SX = {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     px: { xs: 2, sm: 2.5 },
     py: 1.5,
     whiteSpace: 'normal',

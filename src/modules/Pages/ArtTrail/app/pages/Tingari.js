@@ -13,6 +13,8 @@ import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Tjupu
 
 import Hero from '../Hero';
 import {
+    DisclosureSection,
+    StyledHeading,
     StyledAccordion,
     StyledAccordionDetails,
     StyledAccordionGrid,
@@ -115,22 +117,22 @@ const Page = ({ openDrawer }) => {
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="about-the-artwork-content"
-                            id="about-the-artwork-header"
-                        >
-                            About the artwork
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content">
+                    <DisclosureSection
+                        forceExpanded
+                        heading={
+                            <StyledHeading variant="h6" component="h3">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
                             <Box component="p">
                                 This work considers migration and movements across long expanses of Country which are
                                 significant for Tingari Dreaming Stories. Note the intricate lines, patterns, and
                                 colour, which the artist has used to create the illusion of movement.
                             </Box>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
+                        }
+                    />
+
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}

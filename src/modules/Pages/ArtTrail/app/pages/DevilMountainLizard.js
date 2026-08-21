@@ -15,6 +15,8 @@ import ThornyDevilsImage from '../../../../../../public/images/artTrail/Thorny-D
 
 import Hero from '../Hero';
 import {
+    DisclosureSection,
+    StyledHeading,
     StyledAccordion,
     StyledAccordionDetails,
     StyledAccordionGrid,
@@ -113,28 +115,28 @@ const Page = ({ openDrawer }) => {
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="about-the-artwork-content"
-                            id="about-the-artwork-header"
-                        >
-                            About the artwork
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content">
+                    <DisclosureSection
+                        heading={
+                            <StyledHeading variant="h6" component="h3">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
                             <Box component="p">
                                 This artwork depicts the scales of the Anmatyerre's totem animal, the Thorny Devil, who
                                 was responsible for depositing ochre throughout Atnangkere Country. Note the intricate
                                 lines, patterns, and colour, which the artist has used to create the illusion of
                                 movement.
                             </Box>
+                        }
+                        details={
                             <Box component="p">
                                 The artist's work demonstrates a deep connection with Country and the important role of
                                 the artist in their community to continue and protect knowledge, which continues to
                                 future generations.
                             </Box>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
+                        }
+                    />
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}

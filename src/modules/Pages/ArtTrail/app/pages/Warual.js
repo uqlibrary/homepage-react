@@ -14,6 +14,8 @@ import ThursdayIslandImage from '../../../../../../public/images/artTrail/Thursd
 
 import Hero from '../Hero';
 import {
+    DisclosureSection,
+    StyledHeading,
     StyledAccordion,
     StyledAccordionDetails,
     StyledAccordionGrid,
@@ -117,6 +119,39 @@ const Page = ({ openDrawer }) => {
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>
+                    <DisclosureSection
+                        heading={
+                            <StyledHeading variant="h6" component="h3">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
+                            <Box component="p">
+                                Brian Robinson creates works that combine traditional mark making and patterns from his
+                                cultural belongings with references to his favourite pop culture movies and comics. His
+                                work features cosmic toys, superheroes, cartoons and well-known branded iconography,
+                                co-opted into the spirit world of First Nations imagination that he intertwines with
+                                historical narratives, personal history and humour.
+                            </Box>
+                        }
+                        details={
+                            <>
+                                <Box component="p">
+                                    Robinson is a multi-skilled contemporary artist and is internationally recognised
+                                    for his work in printmaking, painting, sculpture and design.
+                                </Box>
+                                <Box component="p">
+                                    <em>Warual III</em> 2015 reflects the tropical marine environments surrounding
+                                    Waiben and the inhabitants of the island.
+                                </Box>
+                                <Box component="p">
+                                    Such animal motifs have been essential parts of his life and culture, imbued with
+                                    the customs, stories, traditions and lifestyles of his Ancestors and family.
+                                </Box>
+                            </>
+                        }
+                    />
+
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -125,27 +160,7 @@ const Page = ({ openDrawer }) => {
                         >
                             About the artwork
                         </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content">
-                            <Box component="p">
-                                Brian Robinson creates works that combine traditional mark making and patterns from his
-                                cultural belongings with references to his favourite pop culture movies and comics. His
-                                work features cosmic toys, superheroes, cartoons and well-known branded iconography,
-                                co-opted into the spirit world of First Nations imagination that he intertwines with
-                                historical narratives, personal history and humour.
-                            </Box>
-                            <Box component="p">
-                                Robinson is a multi-skilled contemporary artist and is internationally recognised for
-                                his work in printmaking, painting, sculpture and design.
-                            </Box>
-                            <Box component="p">
-                                <em>Warual III</em> 2015 reflects the tropical marine environments surrounding Waiben
-                                and the inhabitants of the island.
-                            </Box>
-                            <Box component="p">
-                                Such animal motifs have been essential parts of his life and culture, imbued with the
-                                customs, stories, traditions and lifestyles of his Ancestors and family.
-                            </Box>
-                        </StyledAccordionDetails>
+                        <StyledAccordionDetails id="about-the-artwork-content" />
                     </StyledAccordion>
                     <StyledAccordion>
                         <AccordionSummary
