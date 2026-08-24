@@ -254,7 +254,7 @@ const Page = ({ openDrawer }) => {
                                 >
                                     Megan Cope's regenerate artworks in Minjerribah | Art Works (YouTube, 9m 56s)
                                 </a>{' '}
-                                to learn more about how Megan Cope’s artworks are part of restoring and caring for
+                                to learn more about how Megan Cope's artworks are part of restoring and caring for
                                 Country:
                             </Box>
                             <iframe
@@ -306,7 +306,7 @@ const Page = ({ openDrawer }) => {
                                     Oodgeroo Noonuccal papers
                                 </a>
                                 , a collection of poetry, speeches, correspondence, photos and other materials relating
-                                to Noonuccal’s life and work.
+                                to Noonuccal's life and work.
                             </Box>
                             <Box component={'p'}>
                                 One remarkable item included in the collection is the poem{' '}

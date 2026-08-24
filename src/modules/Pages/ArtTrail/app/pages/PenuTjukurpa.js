@@ -196,7 +196,7 @@ const Page = ({ openDrawer }) => {
                             <Box component={'p'}>
                                 <strong>Hector Tjupuru Burton</strong> (c. 1937—2017) is a senior Pitjantjatjara law
                                 man. He was born near Pukatja (Ernabella) in South Australia. He encouraged other senior
-                                men to join him in forming a Men’s Painting Room. The painting room provided artists
+                                men to join him in forming a Men's Painting Room. The painting room provided artists
                                 with an opportunity to record their sacred stories, inspired by the ancestors of the
                                 Musgrave Ranges that rise above the Amata region.
                             </Box>
