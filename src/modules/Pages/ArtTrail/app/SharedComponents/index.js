@@ -70,7 +70,7 @@ export const StyledDrawerHeader = styled(Typography)(({ theme }) => ({
 export const StyledAccordionGrid = styled(Grid)(() => ({
     paddingLeft: 'var(--art-trail-spacing)',
     paddingRight: 'var(--art-trail-spacing)',
-    paddingBottom: 'calc(var(--art-trail-spacing) * 3)',
+    paddingBottom: 'var(--art-trail-spacing)',
 }));
 
 export const StyedButtonDS = styled(Button)(({ theme }) => ({
