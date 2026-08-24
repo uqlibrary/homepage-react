@@ -72,7 +72,15 @@ const LocationDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="'Devil Mountain Lizard Dreaming' 1997 artwork." sx={{ pb: 0 }} data-testid="pageHero" />
+            <Hero
+                title={
+                    <span>
+                        Gloria Tamerre Petyarre, <em>'Devil Mountain Lizard Dreaming'</em> 1997
+                    </span>
+                }
+                sx={{ pb: 0 }}
+                data-testid="pageHero"
+            />
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">

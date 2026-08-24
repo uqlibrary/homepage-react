@@ -65,7 +65,7 @@ export const ART_TRAIL_MAP_POIS = [
     {
         id: 'artwork-entry-5a',
         popupTitle: 'Nora Wompi Nungurrayi,',
-        popupDescription: '<em>Kunawarritji 1</em> and <em>Kunawarritji 2</em> 2012',
+        popupDescription: '<em>Kunawarritji 1</em> 2012',
         popupLevelLabel: 'Duhig Tower, Level 2',
         popupThumbnailSrc: Kunawarritji1Thumbnail,
         popupThumbnailAlt: 'Kunawarritji 1 artwork thumbnail',
@@ -78,7 +78,7 @@ export const ART_TRAIL_MAP_POIS = [
     {
         id: 'artwork-entry-5b',
         popupTitle: 'Nora Wompi Nungurrayi,',
-        popupDescription: '<em>Kunawarritji 1</em> and <em>Kunawarritji 2</em> 2012',
+        popupDescription: '<em>Kunawarritji 2</em> 2012',
         popupLevelLabel: 'Duhig Tower, Level 2',
         popupThumbnailSrc: Kunawarritji2Thumbnail,
         popupThumbnailAlt: 'Kunawarritji 2 artwork thumbnail',

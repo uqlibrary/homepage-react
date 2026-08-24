@@ -62,7 +62,7 @@ const expandablePageCases = [
     {
         name: 'Warual',
         PageComponent: Warual,
-        detailsTextPattern: /Robinson is a multi-skilled contemporary artist and is internationally recognised/i,
+        detailsTextPattern: /Brian is a multi-skilled contemporary artist and is internationally recognised/i,
         infoButtonCount: 1,
         locationButtonCount: 1,
         uniqueDrawerCount: 2,

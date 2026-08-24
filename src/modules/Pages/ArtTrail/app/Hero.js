@@ -52,7 +52,7 @@ const Hero = ({ title, subtitle, sx }) => {
 };
 
 Hero.propTypes = {
-    title: PropTypes.string.isRequired,
+    title: PropTypes.node.isRequired,
     subtitle: PropTypes.string,
     sx: PropTypes.object,
 };

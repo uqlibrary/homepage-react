@@ -76,7 +76,15 @@ const LocationDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="'Warual III (Green Turtle)' 2015, Brian Robinson" sx={{ pb: 0 }} data-testid="pageHero" />
+            <Hero
+                title={
+                    <span>
+                        Brian Robinson, <em>'Warual III (Green Turtle)'</em> 2015
+                    </span>
+                }
+                sx={{ pb: 0 }}
+                data-testid="pageHero"
+            />
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
@@ -137,8 +145,8 @@ const Page = ({ openDrawer }) => {
                         details={
                             <>
                                 <Box component="p">
-                                    Robinson is a multi-skilled contemporary artist and is internationally recognised
-                                    for his work in printmaking, painting, sculpture and design.
+                                    Brian is a multi-skilled contemporary artist and is internationally recognised for
+                                    his work in printmaking, painting, sculpture and design.
                                 </Box>
                                 <Box component="p">
                                     <em>Warual III</em> 2015 reflects the tropical marine environments surrounding
@@ -273,8 +281,15 @@ const Page = ({ openDrawer }) => {
                             <Box component={'p'}>
                                 Brian Robinson's work combines traditional mark-making and patterns with pop culture
                                 imagery, demonstrating ways that Aboriginal cultures are continually evolving. Kevin
-                                Gilbert's 1969 essay, 'What do I, as an Aboriginal, think about the old traditions and
-                                customs of my people, and what place do they have in present life and in the future?'
+                                Gilbert's 1969 essay,{' '}
+                                <a
+                                    href="https://manuscripts.library.uq.edu.au/index.php/f1806"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    'What do I, as an Aboriginal, think about the old traditions and customs of my
+                                    people, and what place do they have in present life and in the future?'
+                                </a>
                                 explores similar themes.
                             </Box>
                             <Box component={'p'}>
