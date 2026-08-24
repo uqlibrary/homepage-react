@@ -19,8 +19,10 @@ export const FOOTER_TAB_ROW_SX = {
     left: 0,
     right: 0,
     bottom: 0,
+    boxSizing: 'border-box',
     px: { xs: 0.5, sm: 1.5 },
     py: 0.25,
+    pb: 'calc(2px + env(safe-area-inset-bottom, 0px))',
 };
 
 export const DRAWER_PULLER_SX = {
@@ -45,7 +47,7 @@ export const DRAWER_SCROLL_SX = { px: { xs: 2, sm: 2.5 }, py: 2, overflowY: 'aut
 
 export const SCROLL_VIEWPORT_SX = {
     mt: 'var(--art-trail-header-height)',
-    height: 'calc(100% - var(--art-trail-header-height) - var(--art-trail-footer-height))',
+    height: 'calc(100dvh - var(--art-trail-header-height) - var(--art-trail-footer-safe-height) - 2px )',
     overflow: 'hidden',
 };
 
@@ -54,13 +56,14 @@ export const FOOTER_SX = {
     left: 0,
     right: 0,
     bottom: 0,
-    height: 'var(--art-trail-footer-height)',
+    height: 'var(--art-trail-footer-safe-height)',
     display: 'flex',
     flexDirection: 'column',
     borderTop: '1px solid',
     borderColor: 'divider',
     bgcolor: 'background.paper',
     overflow: 'hidden',
+    boxShadow: 'none',
 };
 
 const STEPPER_SX = {
@@ -205,11 +208,12 @@ const createMapGlobalStyles = appTheme => ({
 export const createAppRootSx = (appTheme, footerHeight) => ({
     '--art-trail-header-height': HEADER_HEIGHT,
     '--art-trail-footer-height': footerHeight,
+    '--art-trail-footer-safe-height': 'calc(var(--art-trail-footer-height) + env(safe-area-inset-bottom, 0px))',
     '--art-trail-footer-tabs-height': FOOTER_TABS_HEIGHT,
     '--art-trail-font-size': `${appTheme.typography.fontSize}px`,
     '--art-trail-font-family': appTheme.typography.bodyFontFamily,
     '--art-trail-spacing': `${appTheme.typography.fontSize}px`,
-    '--art-trail-content-bottom-padding': `${appTheme.typography.fontSize * 3}px`,
+    '--art-trail-content-bottom-padding': `${appTheme.typography.fontSize * 1}px`,
     minHeight: '100vh',
     height: '100dvh',
     bgcolor: appTheme.palette.white.main,
