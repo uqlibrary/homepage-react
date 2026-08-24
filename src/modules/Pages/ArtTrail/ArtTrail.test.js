@@ -9,11 +9,13 @@ const setup = (props = {}) => {
 
 describe('ArtTrail', () => {
     it('renders the landing page', () => {
-        const { getByTestId, getByRole } = setup();
+        const { getByRole } = setup();
 
-        expect(getByTestId('art-trail-page')).toBeInTheDocument();
         expect(
-            getByRole('heading', { name: 'Welcome to the University of Queensland Library Art Trail' }),
+            getByRole('heading', {
+                name: 'Welcome to the Indigenous Art and Library Discovery Trail at the University of Queensland Library.',
+            }),
         ).toBeInTheDocument();
+        expect(getByRole('button', { name: 'Launch Web App' })).toBeInTheDocument();
     });
 });

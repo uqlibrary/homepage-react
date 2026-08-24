@@ -79,7 +79,11 @@ const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero
-                title="'Punu Tjukurpa' 2013, Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken"
+                title={
+                    <span>
+                        Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken, <em>'Punu Tjukurpa'</em> 2013
+                    </span>
+                }
                 sx={{ pb: 0 }}
                 data-testid="pageHero"
             />
@@ -88,7 +92,7 @@ const Page = ({ openDrawer }) => {
                     <Box position="relative">
                         <StyledTrailImage
                             src={ArtworkImage}
-                            alt="'Punu Tjukurpa' 2013, Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken"
+                            alt="Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken 'Punu Tjukurpa' 2013"
                             intrinsicWidth={2548}
                             intrinsicHeight={2532}
                         />
@@ -132,31 +136,31 @@ const Page = ({ openDrawer }) => {
                             </StyledHeading>
                         }
                         summary={
-                            <p>
+                            <Box component={'p'}>
                                 This work was created by senior men from the Men's Painting Room. Their work celebrates
                                 their memories of Country, family history and Tjukurpa (the creation story for the Amata
                                 region). The group have used the motif of the trees of their Country to represent
                                 family, community, and their relationship to the land.
-                            </p>
+                            </Box>
                         }
                         details={
                             <>
-                                <p>
+                                <Box component={'p'}>
                                     For Anangu communities, the tree is a significant motif for ancestry and family. It
                                     is different to the way non-Indigenous families might think about a 'family tree',
                                     which usually depicts their ancestors at the top of the tree, amongst the leaves.
-                                </p>
-                                <p>
-                                    In the Anangu way, as you can see in this work, Punu Tjukurpa, the Ancestors are
-                                    roots, which we see spreading deep across the bottom of the painting. The artists
-                                    and Elders who share knowledge are the trunk, in the centre, and the children and
-                                    future generations are at the top, represented by the young yellow and green
-                                    sprouting leaves, yet to grow.
-                                </p>
-                                <p>
-                                    Through this shared storytelling, Punu Tjukurpa creates a conduit between deep
-                                    ancestral roots and future generations.
-                                </p>
+                                </Box>
+                                <Box component={'p'}>
+                                    In the Anangu way, as you can see in this work, <em>Punu Tjukurpa</em>, the
+                                    Ancestors are the roots, which we see spreading deep across the bottom of the
+                                    painting. The artists and Elders who share knowledge are the trunk, in the centre,
+                                    and the children and future generations are at the top, represented by the young
+                                    yellow and green sprouting leaves, yet to grow.
+                                </Box>
+                                <Box component={'p'}>
+                                    Through this shared storytelling, <em>Punu Tjukurpa</em> creates a conduit between
+                                    deep ancestral roots and future generations.
+                                </Box>
                             </>
                         }
                     />

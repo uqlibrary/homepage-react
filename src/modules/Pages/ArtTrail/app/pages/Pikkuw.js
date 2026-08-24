@@ -20,6 +20,7 @@ import {
     StyledAccordionGrid,
     StyledDrawerHeader,
     StyledTrailImage,
+    StyledUl,
 } from '../SharedComponents';
 
 const ArtDrawerContent = () => {
@@ -75,7 +76,15 @@ const LocationDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="'Pikkuw (Saltwater crocodile)' 2008, Craig Koomeeta" sx={{ pb: 0 }} data-testid="pageHero" />
+            <Hero
+                title={
+                    <span>
+                        Craig Koomeeta, <em>'Pikkuw (Saltwater crocodile)'</em> 2008
+                    </span>
+                }
+                sx={{ pb: 0 }}
+                data-testid="pageHero"
+            />
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
@@ -139,12 +148,13 @@ const Page = ({ openDrawer }) => {
                                     cultural lore, Pikkuw eloped with a female freshwater crocodile from Kencherang
                                     Lagoon, a large freshwater lagoon north of Aurukun. Min Kena, a big freshwater male
                                     crocodile from Kencherang Lagoon, was deeply angered by the elopement and attacked
-                                    Pikkuw. Pikkuw bit Min Kena on the tail giving him a noticeably shorter tail.
-                                    Unfortunately for Pikkuw, Min Kena bit him back on the snout which is why as you can
-                                    see in this carving that During the colossal fight Pikkuw's saltwater family heard
-                                    him cry out and proceeded to search for him. When they found him, he was injured and
-                                    bleeding, so they made a stretcher and took him back to the beach where he slept for
-                                    many nights. When he awoke the saltwater crocodile family sang many songs.
+                                    Pikkuw. Pikkuw bit Min Kena on the tail, giving him a noticeably shorter tail.
+                                    Unfortunately for Pikkuw, Min Kena bit him back on the snout. This is why, as you
+                                    can see in this carving, Pikkuw's snout is shorter than his tail. During the
+                                    colossal fight Pikkuw's saltwater family heard him cry out and proceeded to search
+                                    for him. When they found him, he was injured and bleeding, so they made a stretcher
+                                    and took him back to the beach where he slept for many nights. When he awoke, the
+                                    saltwater crocodile family sang many songs.
                                 </Box>
                                 <Box component="p">
                                     Pikkuw is decorated here in rich ochre colours and Apelech clan paint up designs,
@@ -160,6 +170,30 @@ const Page = ({ openDrawer }) => {
                             </>
                         }
                     />
+
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="reflect-content"
+                            id="reflect-header"
+                        >
+                            Reflect
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="reflect-content">
+                            <StyledUl style={{ marginTop: 0 }}>
+                                <li>What different materials can you see in this work?</li>
+                                <li>
+                                    Look closely at how the artist's hand is visible (or invisible) in each different
+                                    material of the crocodile - can you identify any areas where evidence of the
+                                    artist's hand is visible?
+                                </li>
+                            </StyledUl>
+                            <Box component="p">
+                                Take a moment to reflect on the amount of care and patience that assembling this
+                                significant piece would have taken.
+                            </Box>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -253,8 +287,15 @@ const Page = ({ openDrawer }) => {
                             <Box component="p">
                                 In 1936, the Church commissioned Norman F Nelson to conduct an inspection and evaluation
                                 of the work and properties of four missions in North Queensland, including Aurukun. The
-                                resulting reports and photos provide a record of the community and contribute to ongoing
-                                truth-telling.
+                                resulting{' '}
+                                <a
+                                    href="https://manuscripts.library.uq.edu.au/index.php/uqfl57"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    reports and photos
+                                </a>{' '}
+                                provide a record of the community and contribute to ongoing truth-telling.
                             </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>

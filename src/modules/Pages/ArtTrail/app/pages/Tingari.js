@@ -71,7 +71,11 @@ const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero
-                title="'Tingari ceremonies at Wilkinkarra' 2003, Johnny Yungut Tjupurrula"
+                title={
+                    <span>
+                        Johnny Yungut Tjupurrula, <em>'Tingari ceremonies at Wilkinkarra'</em> 2003
+                    </span>
+                }
                 sx={{ pb: 0 }}
                 data-testid="pageHero"
             />
@@ -133,27 +137,6 @@ const Page = ({ openDrawer }) => {
                         }
                     />
 
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="reflect-content"
-                            id="reflect-header"
-                        >
-                            Reflect
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="reflect-content">
-                            <Box component="p">
-                                Take a moment to look at the painterly marks made by the artist in these artworks.
-                            </Box>
-                            <StyledUl>
-                                <li>What feelings do the colours of each painting convey to you?</li>
-                                <li>
-                                    How might the different colour palettes be telling different parts of the story the
-                                    artist is conveying?
-                                </li>
-                            </StyledUl>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}

@@ -70,7 +70,15 @@ const LocationDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="'Sand Hills' 2007, Lily Kelly Napangardi" sx={{ pb: 0 }} data-testid="pageHero" />
+            <Hero
+                title={
+                    <span>
+                        Lily Kelly Napangardi, <em>'Sand Hills'</em> 2007
+                    </span>
+                }
+                sx={{ pb: 0 }}
+                data-testid="pageHero"
+            />
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
@@ -122,7 +130,8 @@ const Page = ({ openDrawer }) => {
                         summary={
                             <Box component="p">
                                 This work by Lily Napangardi depicts the cycles of rainfall and wind across the
-                                sandhills of the Kintore and Coniston areas in the Northern Territory. Sand Hills 2007
+                                sandhills of the Kintore and Coniston areas in the Northern Territory.{' '}
+                                <em>Sand Hills 2007</em>
                                 is a classic example of her black and white compositions, and depicts the 'tali' (sand
                                 hills) of the Kintore and Coniston areas.
                             </Box>

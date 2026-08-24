@@ -81,7 +81,15 @@ const LocationDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="'Whispers (Poles)' 2023, Megan Cope" sx={{ pb: 0 }} data-testid="pageHero" />
+            <Hero
+                title={
+                    <span>
+                        Megan Cope, <em>'Whispers (Poles)'</em> 2023
+                    </span>
+                }
+                sx={{ pb: 0 }}
+                data-testid="pageHero"
+            />
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
@@ -132,8 +140,8 @@ const Page = ({ openDrawer }) => {
                         }
                         summary={
                             <Box component={'p'}>
-                                Megan Cope's Whispers (Poles) 2023 emerges from her connection to Quandamooka Country,
-                                which encompasses lands, sands, and seas in present-day Moreton Bay.
+                                Megan Cope's <em>Whispers (Poles)</em> 2023 emerges from her connection to Quandamooka
+                                Country, which encompasses lands, sands, and seas in present-day Moreton Bay.
                             </Box>
                         }
                         details={
@@ -150,11 +158,11 @@ const Page = ({ openDrawer }) => {
                                     Cope's work demonstrates the role of art in physically healing saltwater Country and
                                     coastal environments that have been colonised and now transformed through climate
                                     change. This series of hand-built Kinyingarra poles replicates the formations of
-                                    Cope's living artwork, Kinyingarra Guwinyanba (2022), created on Quandamooka Country
-                                    in the intertidal zone. Her “On Country” iterations are designed to cultivate growth
-                                    and create habitat in the water where they are planted. In situ, they become living
-                                    land and sea art sculptures, fostering regenerative practice, restoring place, and
-                                    innovating ancestral methods of caring for Country.
+                                    Cope's living artwork, <em>Kinyingarra Guwinyanba</em> (2022), created on
+                                    Quandamooka Country in the intertidal zone. Her “On Country” iterations are designed
+                                    to cultivate growth and create habitat in the water where they are planted. In situ,
+                                    they become living land and sea art sculptures, fostering regenerative practice,
+                                    restoring place, and innovating ancestral methods of caring for Country.
                                 </Box>
                                 <Box component={'p'}>
                                     <em>Whispers (Poles)</em> is a selection from a large-scale public work of over 200

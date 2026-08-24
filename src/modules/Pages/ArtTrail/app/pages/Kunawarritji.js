@@ -83,7 +83,7 @@ const LocationDrawerContent = () => {
             </Grid>
             <Grid>
                 <Box component="p" sx={{ color: 'text.secondary' }}>
-                    Where: Level 1,{' '}
+                    Where: Level 2,{' '}
                     <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
                         Duhig Tower
                     </a>{' '}
@@ -98,7 +98,11 @@ const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero
-                title="'Kunawarritji 1' and 'Kunawarritji 2' 2012, Nora Wompi Nungurrayi"
+                title={
+                    <span>
+                        Nora Wompi Nungurrayi, <em>'Kunawarritji 1'</em> and <em>'Kunawarritji 2'</em> 2012
+                    </span>
+                }
                 sx={{ pb: 0 }}
                 data-testid="pageHero"
             />
@@ -206,6 +210,28 @@ const Page = ({ openDrawer }) => {
                             </Box>
                         }
                     />
+
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="reflect-content"
+                            id="reflect-header"
+                        >
+                            Reflect
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="reflect-content">
+                            <Box component="p">
+                                Take a moment to look at the painterly marks made by the artist in these artworks.
+                            </Box>
+                            <StyledUl>
+                                <li>What feelings do the colours of each painting convey to you?</li>
+                                <li>
+                                    How might the different colour palettes be telling different parts of the story the
+                                    artist is conveying?
+                                </li>
+                            </StyledUl>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -246,7 +272,7 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Box component="p" sx={{ paddingBottom: '1rem' }}>
-                                This artwork was inspired by the artist’s home at Kunawarritji, part of Martu Country in
+                                This artwork was inspired by the artist's home at Kunawarritji, part of Martu Country in
                                 Western Australia.
                             </Box>
                             <iframe
@@ -266,7 +292,7 @@ const Page = ({ openDrawer }) => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        Why Martu country is special{' '}
+                                        Why Martu Country is special{' '}
                                     </a>
                                     <br /> Read about Martu lands - from Kanyirninpa Jukurrpa.
                                 </li>
@@ -276,7 +302,7 @@ const Page = ({ openDrawer }) => {
                             </Box>
                             <StyledImage src={DesertImage} alt="Thorny devil in the desert." loading="lazy" />
                             <StyledImageCaption>
-                                Desert near old Canning Stock Route @tolly65 – stock.adobe.com
+                                Desert near old Canning Stock Route @tolly65 - stock.adobe.com
                             </StyledImageCaption>
                         </StyledAccordionDetails>
                     </StyledAccordion>

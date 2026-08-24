@@ -356,7 +356,7 @@
         ],
         "moduleNameMapper": {
             "\\.(css|scss|sass)$": "<rootDir>/__mocks__/styles.js",
-            "\\.(jpg|jpeg|svg|mp3|wav|m4a|ogg)$": "<rootDir>/__mocks__/images.js"
+            "\\.(png|jpg|jpeg|svg|mp3|wav|m4a|ogg)$": "<rootDir>/__mocks__/images.js"
         },
         "transformIgnorePatterns": [
             "<rootDir>/node_modules/"
