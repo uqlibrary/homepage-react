@@ -3,14 +3,17 @@ import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
-import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import Hero from '../Hero';
-import { StyledImage } from '../SharedComponents';
-import { StyledAudioPlayer } from '../SharedComponents';
+import {
+    StyledImage,
+    StyledAccordionGrid,
+    StyledAudioPlayer,
+    StyledAccordion,
+    StyledAccordionDetails,
+} from '../SharedComponents';
 
 import Book1Image from '../../../../../../public/images/artTrail/UQ_BlakHistory_Book-cover_900x1200px-350x467.jpg';
 import Book2Image from '../../../../../../public/images/artTrail/Storying_the_Archive.jpg';
@@ -22,13 +25,7 @@ const ContinueJourney = ({ mediaStopSignal }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="Exploring Aboriginal and Torres Strait Islander stories" />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
+            <StyledAccordionGrid container direction="column" data-testid="pageContent">
                 <Grid>
                     <StyledAudioPlayer
                         title="Listen to this page"
@@ -40,7 +37,7 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                     <Grid xs>Thank you for exploring the Indigenous Art and Library Discovery Trail.</Grid>
                 </Grid>
                 <Grid>
-                    <Accordion
+                    <StyledAccordion
                         sx={{
                             mb: 'var(--art-trail-spacing)',
                             '&.Mui-expanded:last-of-type': { mb: 'var(--art-trail-spacing)' },
@@ -53,7 +50,7 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                         >
                             Audio transcript
                         </AccordionSummary>
-                        <AccordionDetails>
+                        <StyledAccordionDetails>
                             <Box component="p" mb={2}>
                                 We hope the artworks and stories you have encountered today have inspired you to
                                 reflect, learn and connect more deeply with Aboriginal and Torres Strait Islander
@@ -169,10 +166,10 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                                 </a>
                                 .
                             </Box>
-                        </AccordionDetails>
-                    </Accordion>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
                 </Grid>
-            </Grid>
+            </StyledAccordionGrid>
         </Grid>
     );
 };
