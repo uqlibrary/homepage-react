@@ -9,7 +9,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Burton_2016_03_crop-scaled.jpg';
 
-import Hero from '../Hero';
+import Hero from '../SharedComponents/Hero';
 import {
     DisclosureSection,
     StyledHeading,
@@ -81,7 +81,7 @@ const Page = ({ openDrawer }) => {
             <Hero
                 title={
                     <span>
-                        Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken, <em>'Punu Tjukurpa'</em> 2013
+                        Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken, <em>Punu Tjukurpa</em> 2013
                     </span>
                 }
                 sx={{ pb: 0 }}

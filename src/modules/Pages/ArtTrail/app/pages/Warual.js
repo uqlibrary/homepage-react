@@ -12,7 +12,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Robinson_2017_02_WEBREADY.jpg';
 import ThursdayIslandImage from '../../../../../../public/images/artTrail/Thursday-Island-_C_-Reef-Pix-stock.adobe-scaled.jpg';
 
-import Hero from '../Hero';
+import Hero from '../SharedComponents/Hero';
 import {
     DisclosureSection,
     StyledHeading,
@@ -79,7 +79,7 @@ const Page = ({ openDrawer }) => {
             <Hero
                 title={
                     <span>
-                        Brian Robinson, <em>'Warual III (Green Turtle)'</em> 2015
+                        Brian Robinson, <em>Warual III (Green Turtle)</em> 2015
                     </span>
                 }
                 sx={{ pb: 0 }}
@@ -163,16 +163,6 @@ const Page = ({ openDrawer }) => {
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="about-the-artwork-content"
-                            id="about-the-artwork-header"
-                        >
-                            About the artwork
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content" />
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
                             aria-controls="reflect-content"
                             id="reflect-header"
                         >
@@ -203,7 +193,7 @@ const Page = ({ openDrawer }) => {
                             <Box component="p">
                                 Brian Robinson was born in 1973 on Waiben (Thursday Island) in Far North Queensland. He
                                 has connections to the Maluyligal, Wuthathi and Dayak people. Growing up on Waiben,
-                                Brian was surrounded by family who were well known fish folk, practicing faiths that
+                                Robinson was surrounded by family who were well known fish folk, practicing faiths that
                                 existed with strong cultural traditions and Maluyligal spirituality.
                             </Box>
                             <Box component="p">
@@ -289,7 +279,7 @@ const Page = ({ openDrawer }) => {
                                 >
                                     'What do I, as an Aboriginal, think about the old traditions and customs of my
                                     people, and what place do they have in present life and in the future?'
-                                </a>
+                                </a>{' '}
                                 explores similar themes.
                             </Box>
                             <Box component={'p'}>

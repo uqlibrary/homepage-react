@@ -12,7 +12,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/UQAM_20260116_CampusArtwork_073_LR.jpg';
 import NorthStradbrokeImage from '../../../../../../public/images/artTrail/North-Stradbroke-Island-_C_-Kevin-stock.adobe-scaled.jpg';
 
-import Hero from '../Hero';
+import Hero from '../SharedComponents/Hero';
 import {
     DisclosureSection,
     StyledHeading,
@@ -84,7 +84,7 @@ const Page = ({ openDrawer }) => {
             <Hero
                 title={
                     <span>
-                        Megan Cope, <em>'Whispers (Poles)'</em> 2023
+                        Megan Cope, <em>Whispers (Poles)</em> 2023
                     </span>
                 }
                 sx={{ pb: 0 }}
@@ -178,16 +178,6 @@ const Page = ({ openDrawer }) => {
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="about-the-artwork-content"
-                            id="about-the-artwork-header"
-                        >
-                            About the artwork
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content" />
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
                             aria-controls="reflect-content"
                             id="reflect-header"
                         >
@@ -260,7 +250,7 @@ const Page = ({ openDrawer }) => {
                             <iframe
                                 width="560"
                                 height="315"
-                                src="https://www.youtube.com/embed/sxawWKuA4JM?si=6kk89BbR3ZeiubR2"
+                                src="https://www.youtube.com/embed/MDLi3CIUJII?si=IIQU3xb96JcDf4fA"
                                 title="YouTube video player"
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

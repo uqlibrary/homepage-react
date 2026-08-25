@@ -11,7 +11,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Tjupurrula_2014_40_WEB.jpg';
 
-import Hero from '../Hero';
+import Hero from '../SharedComponents/Hero';
 import {
     DisclosureSection,
     StyledHeading,
@@ -73,7 +73,7 @@ const Page = ({ openDrawer }) => {
             <Hero
                 title={
                     <span>
-                        Johnny Yungut Tjupurrula, <em>'Tingari ceremonies at Wilkinkarra'</em> 2003
+                        Johnny Yungut Tjupurrula, <em>Tingari ceremonies at Wilkinkarra</em> 2003
                     </span>
                 }
                 sx={{ pb: 0 }}
