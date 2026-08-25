@@ -12,10 +12,12 @@ import artwork from '../../../../public/images/artTrail/iphone.png';
 const openSubfolder = () => {
     // Ensure current path ends with a slash so the browser treats it as a directory
     const currentDir = window.location.href.endsWith('/') ? window.location.href : `${window.location.href}/`;
+    const width = screen.availWidth;
+    const height = screen.availHeight;
 
+    const features = `width=${width},height=${height},left=0,top=0,menubar=no,toolbar=no,location=no,status=no,noopener,noreferrer`;
     const targetUrl = new URL('app', currentDir).href;
-    console.log('Opening subfolder URL:', targetUrl);
-    window.open(targetUrl, '_blank', 'noopener,noreferrer');
+    window.open(targetUrl, '_blank', features);
 };
 
 export const ArtTrail = () => {

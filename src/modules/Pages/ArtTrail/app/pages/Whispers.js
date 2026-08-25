@@ -11,6 +11,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/UQAM_20260116_CampusArtwork_073_LR.jpg';
 import NorthStradbrokeImage from '../../../../../../public/images/artTrail/North-Stradbroke-Island-_C_-Kevin-stock.adobe-scaled.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/Whispers.jpg';
 
 import Hero from '../SharedComponents/Hero';
 import {
@@ -223,17 +224,21 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Box component={'p'} sx={{ pb: 1 }}>
-                                Learn more about <strong>Quandamooka Country.</strong>
+                                Learn more about{' '}
+                                <a
+                                    href="https://aiatsis.gov.au/explore/map-indigenous-australia"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Quandamooka Country
+                                </a>
+                                .
                             </Box>
-                            <iframe
-                                title="Indigenosu art trail - Quandamooka"
-                                src="https://uq.h5p.com/content/1292938875849479079/embed"
-                                aria-label="Indigenous art trail - Quandamooka - Whispers"
-                                width="1090"
-                                frameBorder="0"
-                                allowfullscreen="allowfullscreen"
-                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with the south east region of Queensland highlighted, showing the location of Quandamooka Country."
+                                loading="lazy"
                             />
                             <Box component={'p'} sx={{ pb: 1 }}>
                                 Watch{' '}

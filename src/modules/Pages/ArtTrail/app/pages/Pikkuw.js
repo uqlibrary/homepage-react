@@ -10,6 +10,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/UQAM_20241219_CampusArtwork_046.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/Pikkuw.jpg';
 
 import Hero from '../SharedComponents/Hero';
 import {
@@ -21,6 +22,7 @@ import {
     StyledDrawerHeader,
     StyledTrailImage,
     StyledUl,
+    StyledImage,
 } from '../SharedComponents';
 
 const ArtDrawerContent = () => {
@@ -235,17 +237,21 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Box sx={{ paddingBottom: '1rem' }}>
-                                Learn more about <strong>Wik Country.</strong>
+                                Learn more about{' '}
+                                <a
+                                    href="https://aiatsis.gov.au/explore/map-indigenous-australia"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Wik Country
+                                </a>
+                                .
                             </Box>
-                            <iframe
-                                title="Indigenous art trail - Wik Country"
-                                src="https://uq.h5p.com/content/1292938863165241189/embed"
-                                aria-label="Indigenous art trail - Wik Country - Pikkuw"
-                                width="1090"
-                                frameBorder="0"
-                                allowfullscreen="allowfullscreen"
-                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with the northern Queensland highlighted, showing the location of Wik Country."
+                                loading="lazy"
                             />
                             <Box sx={{ paddingBottom: '1rem' }}>
                                 In this video{' '}

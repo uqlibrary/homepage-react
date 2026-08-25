@@ -12,6 +12,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Petyarre_2001_02_crop_WEB.jpg';
 import ThornyDevilsImage from '../../../../../../public/images/artTrail/Thorny-Devil-_C_-meyblume-scaled.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/DevilMountainLizard.jpg';
 
 import Hero from '../SharedComponents/Hero';
 import {
@@ -170,17 +171,20 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Box component="p" sx={{ paddingBottom: '1rem' }}>
-                                Learn more about <strong>Atnangkere Country.</strong>
+                                Learn more about{' '}
+                                <a
+                                    href="https://aiatsis.gov.au/explore/map-indigenous-australia"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Atnangkere Country
+                                </a>
+                                .
                             </Box>
-                            <iframe
-                                title="Indigenous art trail - Atnangkere Country"
-                                src="https://uq.h5p.com/content/1292937940959277909/embed"
-                                aria-label="Indigenous art trail - Atnangkere Country - Devil Mountain Lizard Dreaming 1997"
-                                width="1090"
-                                frameBorder="0"
-                                allowfullscreen="allowfullscreen"
-                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with the south east region of Northern Territory highlighted, showing the location of Atnangkere Country."
+                                loading="lazy"
                             />
                             <Typography component={'h3'}>Thorny devils</Typography>
                             <StyledImage src={ThornyDevilsImage} alt="Thorny devil in the desert." loading="lazy" />
