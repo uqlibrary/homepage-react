@@ -14,7 +14,7 @@ jest.mock('js-cookie', () => ({
 }));
 
 const culturalDisclaimerText =
-    'Aboriginal and Torres Strait Islander visitors are advised that the description of the following artwork may contain names of people who are deceased. Permission has been granted from the family for the artwork to be shown as part of the UQ Art Collection.';
+    'Aboriginal and Torres Strait Islander peoples are advised that the following may contain images, voices or names of deceased persons in photographs, film, audio recordings or printed material';
 
 const totalPages = trailPages.length - 1; // subtract initial welcome screen
 
@@ -28,10 +28,10 @@ describe('ArtTrailApp', () => {
     });
 
     it('renders the fixed app shell and sets the document title', () => {
-        const { getByTestId, getByText, getByRole, queryByRole, queryByText } = setup();
+        const { getByTestId, getByRole, queryByRole, queryByText } = setup();
 
         expect(getByTestId('art-trail-app')).toBeInTheDocument();
-        expect(getByText(culturalDisclaimerText)).toBeInTheDocument();
+        expect(getByTestId('culturalDisclaimer')).toHaveTextContent(culturalDisclaimerText);
         expect(getByRole('button', { name: 'open navigation menu' })).toBeInTheDocument();
         expect(getByRole('button', { name: 'Trail' })).toBeInTheDocument();
         expect(queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
