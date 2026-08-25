@@ -12,7 +12,7 @@ describe('CulturalDisclaimer', () => {
         expect(getByTestId('culturalDisclaimer')).toBeInTheDocument();
         expect(
             getByText(
-                /Aboriginal and Torres Strait Islander visitors are advised that the description of the following artwork may contain names of people who are deceased/i,
+                /Aboriginal and Torres Strait Islander peoples are advised that the following may contain images, voices or names of deceased persons in photographs, film, audio recordings or printed material./i,
             ),
         ).toBeInTheDocument();
         expect(getByRole('button', { name: 'Dismiss cultural disclaimer' })).toBeInTheDocument();

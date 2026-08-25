@@ -11,6 +11,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Robinson_2017_02_WEBREADY.jpg';
 import ThursdayIslandImage from '../../../../../../public/images/artTrail/Thursday-Island-_C_-Reef-Pix-stock.adobe-scaled.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/Warual.jpg';
 
 import Hero from '../SharedComponents/Hero';
 import {
@@ -212,22 +213,21 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Box component="p" sx={{ pb: 1 }}>
-                                Learn more about Waiben (Thursday Island).
+                                Learn more about{' '}
+                                <a
+                                    href="https://aiatsis.gov.au/explore/map-indigenous-australia"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Waiben (Thursday Island)
+                                </a>
+                                .
                             </Box>
-                            <iframe
-                                title="Indigenous art trail - Waiben (Thursday Island)"
-                                src="https://uq.h5p.com/content/1292938905372654189/embed"
-                                aria-label="Indigenous art trail - Waiben (Thursday Island) - Warual III (Green Turtle)"
-                                width="1090"
-                                frameBorder="0"
-                                allowfullscreen="allowfullscreen"
-                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                style={{
-                                    width: '100%',
-                                    height: 'auto',
-                                    aspectRatio: '1090/1033',
-                                    marginBottom: 'var(--art-trail-spacing)',
-                                }}
+
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with Far North Queensland highlighted, showing the location of Waiben (Thursday Island)."
+                                loading="lazy"
                             />
                             <StyledImage src={ThursdayIslandImage} alt="Thursday Island." loading="lazy" />
                             <StyledImageCaption>Thursday Island @Reef Pix stock.adobe.com</StyledImageCaption>

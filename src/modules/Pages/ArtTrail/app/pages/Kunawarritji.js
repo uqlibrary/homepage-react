@@ -12,6 +12,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import Artwork1Image from '../../../../../../public/images/artTrail/artwork/2018.27_Kunawarritji-1-landscape-2.jpg';
 import Artwork2Image from '../../../../../../public/images/artTrail/artwork/2018.28_Kunawarritji-2-landscape-2.jpg';
 import DesertImage from '../../../../../../public/images/artTrail/Desert-near-old-Canning-Stock-Route_C_-tolly65_stock.adobe.com-2.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/Kunawarritji.jpg';
 
 import Hero from '../SharedComponents/Hero';
 import {
@@ -272,18 +273,20 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Box component="p" sx={{ paddingBottom: '1rem' }}>
-                                This artwork was inspired by the artist's home at Kunawarritji, part of Martu Country in
-                                Western Australia.
+                                This artwork was inspired by the artist's home at Kunawarritji, part of{' '}
+                                <a
+                                    href="https://aiatsis.gov.au/explore/map-indigenous-australia"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Martu Country
+                                </a>{' '}
+                                in Western Australia.
                             </Box>
-                            <iframe
-                                title="Indigenous art trail - Martu Country"
-                                src="https://uq.h5p.com/content/1292938729180054199/embed"
-                                aria-label="Indigenous art trail - Martu Country - Kunawarritji"
-                                width="1090"
-                                frameBorder="0"
-                                allowFullScreen
-                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with the north west of Western Australia highlighted, showing the location of Martu Country."
+                                loading="lazy"
                             />
                             <StyledUl>
                                 <li>

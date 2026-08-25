@@ -8,6 +8,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Burton_2016_03_crop-scaled.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/PenuTjukurpa.jpg';
 
 import Hero from '../SharedComponents/Hero';
 import {
@@ -19,6 +20,7 @@ import {
     StyledDrawerHeader,
     StyledTrailImage,
     StyledUl,
+    StyledImage,
 } from '../SharedComponents';
 import AccordionSummary from '@mui/material/AccordionSummary';
 
@@ -224,17 +226,20 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Box component={'p'} sx={{ pb: 1 }}>
-                                Learn more about <strong>Ngaanyatjarra Pitjantjatjara Yankunytjatjara</strong> Lands.
+                                Learn more about{' '}
+                                <a
+                                    href="https://empoweredcommunities.org.au/our-regions/npy-lands/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Ngaanyatjarra Pitjantjatjara Yankunytjatjara
+                                </a>{' '}
+                                Lands.
                             </Box>
-                            <iframe
-                                title="Ngaanyatjarra Pitjantjatjara Yankunytjatjara image hotspot"
-                                src="https://uq.h5p.com/content/1292937845127577289/embed"
-                                aria-label="Indigenous art and Library discovery trail - Punu Tjukurpa 2013"
-                                width="1090"
-                                frameBorder="0"
-                                allowFullScreen
-                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with the north west of Southern Australia highlighted, showing the location of Ngaanyatjarra Pitjantjatjara Yankunytjatjara Lands."
+                                loading="lazy"
                             />
                         </StyledAccordionDetails>
                     </StyledAccordion>

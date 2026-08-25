@@ -10,6 +10,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Napandardi_2013_40_crop_WEB.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/SandHills.jpg';
 
 import Hero from '../SharedComponents/Hero';
 import {
@@ -21,6 +22,7 @@ import {
     StyledDrawerHeader,
     StyledTrailImage,
     StyledUl,
+    StyledImage,
 } from '../SharedComponents';
 
 const ArtDrawerContent = () => {
@@ -203,17 +205,21 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Box component="p" sx={{ paddingBottom: '1rem' }}>
-                                Learn more about <strong>Warlpiri Country.</strong>
+                                Learn more about{' '}
+                                <a
+                                    href="https://aiatsis.gov.au/austlang/language/c15"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Warlpiri Country
+                                </a>
+                                .
                             </Box>
-                            <iframe
-                                title="Indigenous art trail - Warlpiri Country"
-                                src="https://uq.h5p.com/content/1292937898322727859/embed"
-                                aria-label="Clone of Indigenous art and Library discovery trail - Sand Hills 2007 - Warlpiri Country"
-                                width="1090"
-                                frameBorder="0"
-                                allowFullScreen
-                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with the south west region of Northern Territory highlighted, showing the location of Warlpiri Country."
+                                loading="lazy"
                             />
                             <StyledUl>
                                 <li>

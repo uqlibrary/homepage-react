@@ -10,6 +10,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Tjupurrula_2014_40_WEB.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/Tingari.jpg';
 
 import Hero from '../SharedComponents/Hero';
 import {
@@ -21,6 +22,7 @@ import {
     StyledDrawerHeader,
     StyledTrailImage,
     StyledUl,
+    StyledImage,
 } from '../SharedComponents';
 
 const ArtDrawerContent = () => {
@@ -161,17 +163,21 @@ const Page = ({ openDrawer }) => {
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
                             <Box component="p" sx={{ paddingBottom: '1rem' }}>
-                                Learn more about <strong>Kiwirrkurra.</strong>
+                                Learn more about{' '}
+                                <a
+                                    href="https://www.ngaanyatjarra.org.au/communities/kiwirrkurra/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Kiwirrkurra
+                                </a>
+                                .
                             </Box>
-                            <iframe
-                                title="Indigenous art trail - Kiwirrkurra"
-                                src="https://uq.h5p.com/content/1292938712625855909/embed"
-                                aria-label="Indigenous art trail - Kiwirrkurra - Tingari ceremonies at Wilkinkarra 2003"
-                                width="1090"
-                                frameBorder="0"
-                                allowFullScreen
-                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with the south west region of Northern Territory highlighted, showing the location of Kiwirrkurra."
+                                loading="lazy"
                             />
                             <StyledUl>
                                 <li>
