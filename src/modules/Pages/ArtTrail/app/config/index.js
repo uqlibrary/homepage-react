@@ -30,7 +30,8 @@ const tabs = [
 const menuArtworkItems = ART_TRAIL_MAP_POIS.filter(
     (poi, index, pois) => pois.findIndex(candidate => candidate.trailStepIndex === poi.trailStepIndex) === index,
 ).map(poi => {
-    const label = `${poi.popupTitle || ''} ${poi.popupDescription || ''}`.trim();
+    const label =
+        `${poi.menuTitle || poi.popupTitle || ''} ${poi.menuDescription || poi.popupDescription || ''}`.trim();
 
     return {
         id: poi.id,

@@ -19,27 +19,32 @@ const CulturalDisclaimer = ({ onClose }) => {
             data-testid="culturalDisclaimer"
         >
             <Grid container wrap="nowrap" alignItems="flex-start">
-                <Grid xs sx={{ pt: 'var(--art-trail-spacing)' }}>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Aboriginal and Torres Strait Islander visitors are advised that the description of the following
-                        artwork may contain names of people who are deceased. Permission has been granted from the
-                        family for the artwork to be shown as part of the UQ Art Collection.
-                    </Typography>
-                </Grid>
-
-                <Grid sx={{ alignSelf: 'flex-start' }}>
+                <Grid xs>
                     <IconButton
                         aria-label="Dismiss cultural disclaimer"
-                        size="large"
+                        size="medium"
                         onClick={onClose}
                         sx={{
                             fontSize: '1.5rem',
+                            float: 'right',
+                            pt: 0,
+                            pr: 0,
+                            mt: '-5px',
+                            mr: '-5px',
                         }}
                         id="culturalDisclaimerCloseButton"
                         data-testid="culturalDisclaimerCloseButton"
                     >
-                        <CloseIcon fontSize="large" />
+                        <CloseIcon fontSize="medium" />
                     </IconButton>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        Aboriginal and Torres Strait Islander peoples are advised that the following may contain images,
+                        voices or names of deceased persons in photographs, film, audio recordings or printed material.
+                        <br />
+                        <br />
+                        Aboriginal and Torres Strait Islander material and information accessed through UQ Library may
+                        be culturally sensitive for some individuals.
+                    </Typography>
                 </Grid>
             </Grid>
         </Paper>

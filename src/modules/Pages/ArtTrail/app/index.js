@@ -26,7 +26,8 @@ import Paper from '@mui/material/Paper';
 import Toolbar from '@mui/material/Toolbar';
 
 import uqHeaderLogo from '../../../../../public/images/artTrail/uq-logo--reversed.svg';
-import CulturalDisclaimer from './CulturalDisclaimer';
+
+import CulturalDisclaimer from './SharedComponents/CulturalDisclaimer';
 import MapTabContent from './MapTabContent';
 import { trailPages } from './pages';
 import TrailTabContent from './TrailTabContent';
@@ -341,7 +342,14 @@ const ArtTrailApp = () => {
                 </Grid>
             </Box>
 
-            <Paper component="footer" square elevation={8} sx={FOOTER_SX}>
+            <Paper
+                component="footer"
+                square
+                elevation={8}
+                sx={{
+                    ...FOOTER_SX,
+                }}
+            >
                 {showStepper && (
                     <>
                         <Grid container sx={FOOTER_STEPPER_ROW_SX}>

@@ -11,7 +11,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/UQAM_20241219_CampusArtwork_046.jpg';
 
-import Hero from '../Hero';
+import Hero from '../SharedComponents/Hero';
 import {
     DisclosureSection,
     StyledHeading,
@@ -79,7 +79,7 @@ const Page = ({ openDrawer }) => {
             <Hero
                 title={
                     <span>
-                        Craig Koomeeta, <em>'Pikkuw (Saltwater crocodile)'</em> 2008
+                        Craig Koomeeta, <em>Pikkuw (Saltwater crocodile)</em> 2008
                     </span>
                 }
                 sx={{ pb: 0 }}

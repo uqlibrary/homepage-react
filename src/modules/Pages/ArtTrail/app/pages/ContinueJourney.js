@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import Hero from '../Hero';
+import Hero from '../SharedComponents/Hero';
 import {
     StyledImage,
     StyledAccordionGrid,

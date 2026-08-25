@@ -13,7 +13,7 @@ import Artwork1Image from '../../../../../../public/images/artTrail/artwork/2018
 import Artwork2Image from '../../../../../../public/images/artTrail/artwork/2018.28_Kunawarritji-2-landscape-2.jpg';
 import DesertImage from '../../../../../../public/images/artTrail/Desert-near-old-Canning-Stock-Route_C_-tolly65_stock.adobe.com-2.jpg';
 
-import Hero from '../Hero';
+import Hero from '../SharedComponents/Hero';
 import {
     DisclosureSection,
     StyledHeading,
@@ -35,7 +35,7 @@ const Art1DrawerContent = () => {
             </Grid>
             <Grid>
                 <Box component="p" sx={{ color: 'text.secondary' }}>
-                    <em>Kunawarritji 1</em> 1997
+                    <em>Kunawarritji 1</em> 2012
                     <br />
                     synthetic polymer paint on Belgian linen
                     <br />
@@ -59,7 +59,7 @@ const Art2DrawerContent = () => {
             </Grid>
             <Grid>
                 <Box component="p" sx={{ color: 'text.secondary' }}>
-                    <em>Kunawarritji 2</em> 1997
+                    <em>Kunawarritji 2</em> 2012
                     <br />
                     synthetic polymer paint on Belgian linen
                     <br />
@@ -100,7 +100,7 @@ const Page = ({ openDrawer }) => {
             <Hero
                 title={
                     <span>
-                        Nora Wompi Nungurrayi, <em>'Kunawarritji 1'</em> and <em>'Kunawarritji 2'</em> 2012
+                        Nora Wompi Nungurrayi, <em>Kunawarritji 1</em> and <em>Kunawarritji 2</em> 2012
                     </span>
                 }
                 sx={{ pb: 0 }}

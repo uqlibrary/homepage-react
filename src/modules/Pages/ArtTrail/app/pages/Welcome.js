@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import Hero from '../Hero';
+import Hero from '../SharedComponents/Hero';
 import { StyledAudioPlayer, StyledAccordionGrid, StyledAccordion, StyledAccordionDetails } from '../SharedComponents';
 import WelcomeAudio from '../../../../../../public/audio/artTrail/welcome.mp3';
 
@@ -57,10 +57,9 @@ const WelcomePage = ({ mediaStopSignal }) => {
                             </p>
                             <p>
                                 Before you begin, the University of Queensland would like to acknowledge the Traditional
-                                Owners and their custodianship of the lands on which we meet and learn. We pay our
-                                respects to their Ancestors and their descendants, who continue cultural and spiritual
-                                connections to Country. We recognise their valuable contributions to Australian and
-                                global society.
+                                Owners and their custodianship of the lands on which we meet. We pay our respects to
+                                their Ancestors and their descendants, who continue cultural and spiritual connections
+                                to Country. We recognise their valuable contributions to Australian and global society.
                             </p>
                         </StyledAccordionDetails>
                     </StyledAccordion>
