@@ -121,6 +121,10 @@ const webpackConfig = {
                     from: resolve(__dirname, 'public', '404.js'),
                     to: resolve(__dirname, './dist/', config.basePath),
                 },
+                {
+                    from: resolve(__dirname, 'public', 'vendor', 'mazemap'),
+                    to: resolve(__dirname, './dist/', config.basePath, 'vendor', 'mazemap'),
+                },
             ],
         }),
         new ProgressBarPlugin({
@@ -223,6 +227,10 @@ const webpackConfig = {
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
+                type: 'asset/resource',
+            },
+            {
+                test: /\.(mp3|wav|ogg|m4a)$/i,
                 type: 'asset/resource',
             },
         ],
