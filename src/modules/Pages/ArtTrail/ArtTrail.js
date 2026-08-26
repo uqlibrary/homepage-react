@@ -9,7 +9,7 @@ import { StyedButtonDS } from './app/SharedComponents';
 
 import artwork from '../../../../public/images/artTrail/iphone.png';
 
-const openSubfolder = () => {
+const launchApp = () => {
     // Ensure current path ends with a slash so the browser treats it as a directory
     const currentDir = window.location.href.endsWith('/') ? window.location.href : `${window.location.href}/`;
     const width = screen.availWidth;
@@ -56,7 +56,7 @@ export const ArtTrail = () => {
                             held and cared for within the library.
                         </p>
                         <StyedButtonDS
-                            onClick={openSubfolder}
+                            onClick={launchApp}
                             data-testid="launch-webapp-button"
                             sx={{ width: { xs: '100%', sm: 'auto' } }}
                         >

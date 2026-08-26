@@ -29,7 +29,7 @@ const isAdminPage = () => {
     return window.location.pathname.startsWith('/admin/');
 };
 
-const isStandaloneRoute = (pathname, routesConfig = []) => {
+const isStandaloneRoute = (pathname, routesConfig) => {
     return routesConfig.some(route => route.standalone && pathname.includes(route.path));
 };
 

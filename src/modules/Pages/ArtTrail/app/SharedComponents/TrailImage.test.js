@@ -38,4 +38,20 @@ describe('TrailImage', () => {
         expect(image).toHaveAttribute('width', String(defaultProps.intrinsicWidth));
         expect(image).toHaveAttribute('height', String(defaultProps.intrinsicHeight));
     });
+
+    describe('coverage', () => {
+        it('falls back to automatic sizing when intrinsic dimensions are invalid', () => {
+            const { getByAltText } = setup({ intrinsicWidth: 'invalid', intrinsicHeight: 0 });
+
+            const image = getByAltText(defaultProps.alt);
+            const imageWrapper = image.parentElement;
+
+            expect(image).not.toHaveAttribute('width');
+            expect(image).not.toHaveAttribute('height');
+            expect(imageWrapper).toHaveStyle({ height: 'auto' });
+            expect(imageWrapper).not.toHaveStyle({
+                aspectRatio: `${defaultProps.intrinsicWidth} / ${defaultProps.intrinsicHeight}`,
+            });
+        });
+    });
 });

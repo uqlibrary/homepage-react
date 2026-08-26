@@ -162,6 +162,28 @@ describe('mapUtils', () => {
         }
     });
 
+    it('resolves immediately when MazeMaps becomes available while reusing an existing script', async () => {
+        const existingScript = document.createElement('script');
+        existingScript.id = 'art-trail-mazemap-script';
+        document.body.appendChild(existingScript);
+        const mazemap = { Map: jest.fn() };
+        const mazemapGetter = jest.fn().mockReturnValueOnce(undefined).mockReturnValue(mazemap);
+
+        Object.defineProperty(window, 'Mazemap', {
+            configurable: true,
+            get: mazemapGetter,
+        });
+
+        await expect(loadMazemapAssets()).resolves.toBe(mazemap);
+        expect(mazemapGetter).toHaveBeenCalledTimes(3);
+
+        Object.defineProperty(window, 'Mazemap', {
+            configurable: true,
+            writable: true,
+            value: undefined,
+        });
+    });
+
     it('builds marker and popup DOM content with the expected classes, metadata, and link behavior', () => {
         const onSelectTrailPage = jest.fn();
         const markerElement = createPoiMarkerElement(samplePoi, markerClassNames);
@@ -207,6 +229,39 @@ describe('mapUtils', () => {
         expect(popupContent.querySelector('a')).not.toBeInTheDocument();
         expect(popupContent.querySelector(`.${popupClassNames.title}`).tagName).toBe('DIV');
         expect(popupContent.querySelector(`.${popupClassNames.level}`)).toHaveTextContent('Level 2');
+    });
+
+    it('falls back through popup thumbnail alt and title options', () => {
+        const popupTitleContent = createPoiPopupContent(
+            {
+                popupThumbnailSrc: '/images/popup-title-thumb.jpg',
+                popupTitle: 'Popup title',
+                title: 'Artwork title',
+            },
+            undefined,
+            popupClassNames,
+        );
+        const artworkTitleContent = createPoiPopupContent(
+            {
+                popupThumbnailSrc: '/images/artwork-title-thumb.jpg',
+                title: 'Artwork title',
+            },
+            undefined,
+            popupClassNames,
+        );
+        const defaultAltContent = createPoiPopupContent(
+            {
+                popupThumbnailSrc: '/images/default-alt-thumb.jpg',
+            },
+            undefined,
+            popupClassNames,
+        );
+
+        expect(popupTitleContent.querySelector('img')).toHaveAttribute('alt', 'Popup title');
+        expect(popupTitleContent.querySelector(`.${popupClassNames.title}`)).toHaveTextContent('Popup title');
+        expect(artworkTitleContent.querySelector('img')).toHaveAttribute('alt', 'Artwork title');
+        expect(artworkTitleContent.querySelector(`.${popupClassNames.title}`)).toHaveTextContent('Artwork title');
+        expect(defaultAltContent.querySelector('img')).toHaveAttribute('alt', 'Artwork thumbnail');
     });
 
     it('returns an empty marker list when Mazemap markers or the map instance are unavailable', () => {
@@ -319,5 +374,67 @@ describe('mapUtils', () => {
 
         markerConstructor.mock.calls[1][0].click();
         expect(popupOne.remove).toHaveBeenCalledTimes(1);
+    });
+
+    it('falls back to the artwork title for text-only popups', () => {
+        const addTo = jest.fn(function addTo(map) {
+            this.map = map;
+            return this;
+        });
+        const markerConstructor = jest.fn(function ZLevelMarker() {
+            this.setLngLat = jest.fn(() => this);
+            this.setPopup = jest.fn(() => this);
+            this.addTo = addTo;
+        });
+        const setText = jest.fn();
+
+        createMazemapPoiMarkers({
+            Mazemap: {
+                Popup: jest.fn(() => ({ setText })),
+                ZLevelMarker: markerConstructor,
+            },
+            map: { id: 'mock-map' },
+            markerClassNames,
+            pois: [{ ...samplePoi, popupTitle: undefined, title: 'Artwork title' }],
+            popupClassNames,
+        });
+
+        expect(setText).toHaveBeenCalledWith('Artwork title');
+    });
+
+    it('uses popup titles for marker labels and removes previous popups without isOpen', () => {
+        const previousPopup = { remove: jest.fn() };
+        const popup = { setDOMContent: jest.fn() };
+        const activePopupRef = { current: previousPopup };
+        const addTo = jest.fn(function addTo(map) {
+            this.map = map;
+            return this;
+        });
+        const markerConstructor = jest.fn(function ZLevelMarker(element) {
+            this.element = element;
+            this.setLngLat = jest.fn(() => this);
+            this.setPopup = jest.fn(() => this);
+            this.addTo = addTo;
+        });
+
+        createMazemapPoiMarkers({
+            Mazemap: {
+                Popup: jest.fn(() => popup),
+                ZLevelMarker: markerConstructor,
+            },
+            activePopupRef,
+            map: { id: 'mock-map' },
+            markerClassNames,
+            pois: [{ ...samplePoi, title: undefined, popupTitle: 'Popup title' }],
+            popupClassNames,
+        });
+
+        const markerElement = markerConstructor.mock.calls[0][0];
+        expect(markerElement).toHaveAttribute('aria-label', 'Popup title');
+
+        markerElement.click();
+
+        expect(previousPopup.remove).toHaveBeenCalledTimes(1);
+        expect(activePopupRef.current).toBe(popup);
     });
 });

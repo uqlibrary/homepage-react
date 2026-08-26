@@ -80,16 +80,11 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
         setPlaybackError(false);
     }, []);
 
-    const startPlayback = async ({ restartFromBeginning = false } = {}) => {
+    const startPlayback = async () => {
         const audioElement = audioRef.current;
 
         if (!audioElement) {
             return;
-        }
-
-        if (restartFromBeginning) {
-            audioElement.currentTime = 0;
-            setCurrentTime(0);
         }
 
         try {

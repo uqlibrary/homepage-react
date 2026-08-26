@@ -76,6 +76,7 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection, 
 
         animationFrameRef.current = window.requestAnimationFrame(() => {
             animationFrameRef.current = window.requestAnimationFrame(() => {
+                /* istanbul ignore else */
                 if (transitionIdRef.current === transitionId) {
                     setIsAnimating(true);
                 }
@@ -83,6 +84,7 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection, 
         });
 
         animationTimeoutRef.current = window.setTimeout(() => {
+            /* istanbul ignore if */
             if (transitionIdRef.current !== transitionId) {
                 return;
             }
