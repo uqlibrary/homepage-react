@@ -14,18 +14,18 @@ const StyledHeading = styled('h1')(({ theme }) => ({
     paddingBottom: 0,
     fontSize: '1.875rem',
     fontStyle: 'normal',
-    fontWeight: theme.typography.fontWeightHeavy,
+    fontWeight: theme.typography.artTrail.fontWeightHeavy,
     lineHeight: '120%',
     letterSpacing: '0.4px',
     color: '#fff',
-    fontFamily: theme.typography.headingFontFamily,
+    fontFamily: theme.typography.artTrail.headingFontFamily,
 }));
 
 const StyledSubheading = styled('div')(({ theme }) => ({
     fontSize: '1.125rem',
     fontWeight: theme.typography.fontWeightMedium,
     lineHeight: 1.5,
-    fontFamily: theme.typography.bodyFontFamily,
+    fontFamily: theme.typography.artTrail.bodyFontFamily,
 }));
 
 const Hero = ({ title, subtitle, sx }) => {

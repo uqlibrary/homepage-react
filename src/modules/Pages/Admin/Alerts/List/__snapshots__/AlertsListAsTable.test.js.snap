@@ -29,7 +29,7 @@ exports[`AlertsListAsTable default values render correctly 1`] = `
   >
     <table
       aria-label="custom pagination table"
-      class="MuiTable-root table css-ebihn6-MuiTable-root"
+      class="MuiTable-root table css-i991eq-MuiTable-root"
       style="min-height: 200px;"
     >
       <thead
@@ -40,7 +40,7 @@ exports[`AlertsListAsTable default values render correctly 1`] = `
           md-row=""
         >
           <th
-            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1o4rtu4-MuiTableCell-root"
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1c9afxo-MuiTableCell-root"
             scope="row"
           >
             <span
@@ -50,25 +50,25 @@ exports[`AlertsListAsTable default values render correctly 1`] = `
             </span>
           </th>
           <th
-            class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-vuz5j2-MuiTableCell-root"
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1qewcd6-MuiTableCell-root"
             scope="row"
           >
             Alert
           </th>
           <th
-            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1o4rtu4-MuiTableCell-root"
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1c9afxo-MuiTableCell-root"
             scope="row"
           >
             Publish date
           </th>
           <th
-            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1o4rtu4-MuiTableCell-root"
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1c9afxo-MuiTableCell-root"
             scope="row"
           >
             Unpublish date
           </th>
           <th
-            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1o4rtu4-MuiTableCell-root"
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1c9afxo-MuiTableCell-root"
             scope="row"
           >
             <span
@@ -89,7 +89,7 @@ exports[`AlertsListAsTable default values render correctly 1`] = `
           style="display: table-row;"
         >
           <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-1nyqpp-MuiTableCell-root"
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-1xwnbnq-MuiTableCell-root"
           >
             <p>
               No alerts
