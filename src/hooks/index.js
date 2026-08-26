@@ -30,12 +30,16 @@ export const useWidth = () => {
 
 export function useTitle(title) {
     useEffect(() => {
+        if (!title) {
+            return undefined;
+        }
+
         const prevTitle = document.title;
         document.title = title;
         return () => {
             document.title = prevTitle;
         };
-    });
+    }, [title]);
 }
 
 // from https://stackoverflow.com/a/34425083

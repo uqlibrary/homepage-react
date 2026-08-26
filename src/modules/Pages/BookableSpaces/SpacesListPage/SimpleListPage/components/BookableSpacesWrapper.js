@@ -12,6 +12,7 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import FoodIcon from '@mui/icons-material/Fastfood';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import { useTitle } from 'hooks';
 
 import { SpacesHomePage } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomePage';
 
@@ -171,13 +172,6 @@ const BookableSpacesWrapper = ({
     const shouldShowAdvancedFilters = canShowAdvancedFilters && (isDesktopResultsLayout || showAdvancedFilters);
     const hasFavourites = isLoggedIn && (spacesFavouritesList?.length || 0) > 0;
 
-    const availableIntentDefinitions = React.useMemo(
-        () => (hasFavourites ? [favouriteIntentDefinition, ...intentDefinitions] : intentDefinitions),
-        [hasFavourites],
-    );
-
-    const activeIntentId = selectedIntentId || latestIntentIdRef.current || null;
-    const selectedIntent = availableIntentDefinitions.find(intent => intent.id === activeIntentId) || null;
     const currentPath = `${location.pathname}${location.hash}`;
     const isDetailsRoute =
         currentPath.startsWith('/spaces/detail/') ||
@@ -189,6 +183,27 @@ const BookableSpacesWrapper = ({
         currentPath.startsWith('/spaces/mapresults') ||
         currentPath.includes('#/spaces/results') ||
         currentPath.includes('#/spaces/mapresults');
+    const [pageAnnouncement, setPageAnnouncement] = React.useState('');
+
+    React.useEffect(() => {
+        setPageAnnouncement(
+            isResultsRoute || view === 'results' ? 'Bookable Spaces search results' : 'Bookable Spaces',
+        );
+    }, [isResultsRoute, view]);
+
+    useTitle(
+        isResultsRoute || view === 'results'
+            ? 'Bookable Spaces search results - UQ Library'
+            : 'Bookable Spaces - UQ Library',
+    );
+
+    const availableIntentDefinitions = React.useMemo(
+        () => (hasFavourites ? [favouriteIntentDefinition, ...intentDefinitions] : intentDefinitions),
+        [hasFavourites],
+    );
+
+    const activeIntentId = selectedIntentId || latestIntentIdRef.current || null;
+    const selectedIntent = availableIntentDefinitions.find(intent => intent.id === activeIntentId) || null;
     const isLandingRoute =
         !isDetailsRoute &&
         !isResultsRoute &&
@@ -847,6 +862,11 @@ const BookableSpacesWrapper = ({
             )}
             renderResultsView={() => (
                 <StandardPage standardPageId="spaces-journey-content-standard-page" fullWidth>
+                    {pageAnnouncement && (
+                        <div aria-live="polite" aria-atomic="true" style={{ position: 'absolute', left: '-9999px' }}>
+                            {pageAnnouncement}
+                        </div>
+                    )}
                     <JourneyResultsView
                         actions={actions}
                         selectedIntent={selectedIntent}

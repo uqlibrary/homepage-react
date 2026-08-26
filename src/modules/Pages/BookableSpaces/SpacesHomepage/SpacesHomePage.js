@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 import FavouritesList from 'modules/Pages/BookableSpaces/SpacesHomepage/components/FavouritesList';
 import SpacesQuickLinks from 'modules/Pages/BookableSpaces/SpacesHomepage/components/SpacesQuickLinks';
 import { getSpaceIdentifier, findSpaceById } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { useTitle } from 'hooks';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
@@ -104,6 +105,18 @@ const StyledLandingHeroInner = styled('div')(({ theme }) => ({
     },
 }));
 
+const srOnlyAnnouncementStyle = {
+    position: 'absolute',
+    width: '1px',
+    height: '1px',
+    padding: 0,
+    margin: '-1px',
+    overflow: 'hidden',
+    clip: 'rect(0, 0, 0, 0)',
+    whiteSpace: 'nowrap',
+    border: 0,
+};
+
 export const SpacesHomePage = ({
     actions,
     isLoggedIn,
@@ -123,6 +136,13 @@ export const SpacesHomePage = ({
     getIntentLandingUrl,
     onIntentLinkNavigate,
 }) => {
+    const [pageAnnouncement, setPageAnnouncement] = React.useState('');
+    useTitle('Bookable Spaces - UQ Library');
+
+    React.useEffect(() => {
+        setPageAnnouncement('Bookable Spaces');
+    }, []);
+
     const hasFavourites = isLoggedIn && (spacesFavouritesList?.length || 0) > 0;
     const availableIntentDefinitionsForLanding = React.useMemo(
         () => (hasFavourites ? [favouriteIntentDefinition, ...availableIntentDefinitions] : availableIntentDefinitions),
@@ -131,6 +151,11 @@ export const SpacesHomePage = ({
 
     return (
         <>
+            {pageAnnouncement && (
+                <div aria-live="polite" aria-atomic="true" style={srOnlyAnnouncementStyle}>
+                    {pageAnnouncement}
+                </div>
+            )}
             <StyledLandingHeroShell>
                 <StyledLandingHeroInner data-testid="spaces-journey-landing-hero-inner">
                     <StyledLandingHeroLayout data-testid="spaces-journey-landing-hero-layout">
