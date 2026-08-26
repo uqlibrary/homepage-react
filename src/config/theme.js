@@ -103,14 +103,18 @@ export const mui1theme = createTheme({
         warning: orange[500],
     },
     typography: {
+        fontSize: 16,
         fontWeightLight: 200,
         fontWeightRegular: 300,
         fontWeightMedium: 400,
+        fontWeightHeavy: 500,
         useNextVariants: true,
         suppressDeprecationWarnings: true,
         caption: {
             color: '#000',
         },
+        headingFontFamily: 'Montserrat,Helvetica,Arial,sans-serif',
+        bodyFontFamily: 'Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif',
     },
     overrides: {
         MuiFormLabel: {

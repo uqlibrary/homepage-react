@@ -66,6 +66,12 @@ export const DLOOwnTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/A
 // Dashboard
 export const DLODashboard = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Dashboard/DashboardContainer')));
 export const DLOBulkSchedule = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/BulkSchedule/DLOBulkScheduleContainer')));
+
+// Art Trail
+export const ArtTrail = lazy(() => lazyRetry(() => import('modules/Pages/ArtTrail/ArtTrail')));
+export const ArtTrailApp = lazy(() => lazyRetry(() => import('modules/Pages/ArtTrail/app')));
+
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+

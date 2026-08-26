@@ -41,7 +41,7 @@ exports[`Component AppLoader should render as expected 1`] = `
       class="MuiGrid-root MuiGrid-item spaceBetween css-13i4rnv-MuiGrid-root"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 white css-1uywuy6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 white css-1xkf790-MuiTypography-root"
       >
         Fez frontend
       </h6>
