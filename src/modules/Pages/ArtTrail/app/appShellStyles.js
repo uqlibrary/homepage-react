@@ -289,6 +289,7 @@ export const createGlobalStyles = appTheme => ({
         '&:visited': {
             color: appTheme.palette.primary.main,
         },
+        textDecoration: 'underline',
     },
     ...createMapGlobalStyles(appTheme),
 });

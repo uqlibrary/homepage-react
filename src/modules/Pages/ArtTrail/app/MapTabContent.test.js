@@ -111,6 +111,45 @@ describe('MapTabContent', () => {
         expect(onSelectTrailPage).toHaveBeenCalledWith(3);
     });
 
+    it('shows an unavailable message when MazeMaps fails to load', async () => {
+        setNavigatorUserAgent('Mozilla/5.0');
+        loadMazemapAssets.mockRejectedValue(new Error('MazeMaps unavailable'));
+
+        const { findByRole, queryByTestId } = setup({ active: true });
+
+        expect(await findByRole('status')).toHaveTextContent('Map is unavailable');
+        expect(queryByTestId('mazemap-container')).not.toBeInTheDocument();
+    });
+
+    it('shows an unavailable message when loaded MazeMaps assets do not provide a Map constructor', async () => {
+        setNavigatorUserAgent('Mozilla/5.0');
+        loadMazemapAssets.mockResolvedValue({});
+
+        const { findByRole, queryByTestId } = setup({ active: true });
+
+        expect(await findByRole('status')).toHaveTextContent('Map is unavailable');
+        expect(queryByTestId('mazemap-container')).not.toBeInTheDocument();
+    });
+
+    it('ignores a MazeMaps load failure after initialization is cancelled', async () => {
+        setNavigatorUserAgent('Mozilla/5.0');
+        let rejectLoad;
+        loadMazemapAssets.mockReturnValue(
+            new Promise((resolve, reject) => {
+                rejectLoad = reject;
+            }),
+        );
+
+        const { unmount } = setup({ active: true });
+
+        expect(loadMazemapAssets).toHaveBeenCalledTimes(1);
+        unmount();
+
+        await act(async () => {
+            rejectLoad(new Error('MazeMaps unavailable'));
+        });
+    });
+
     it('resizes the existing map when the tab becomes active again', async () => {
         setNavigatorUserAgent('Mozilla/5.0');
 

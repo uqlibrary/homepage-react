@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -7,6 +7,7 @@ import { mapClassNames, markerClassNames, popupClassNames } from './appShellStyl
 import { loadMazemapAssets, createMazemapPoiMarkers, createUserLocationControl } from './utils/mapUtils';
 
 const MapTabContent = ({ active, onSelectTrailPage }) => {
+    const [mapUnavailable, setMapUnavailable] = useState(false);
     const mapContainerRef = useRef(null);
     const mapInstanceRef = useRef(null);
     const markerInstancesRef = useRef([]);
@@ -20,10 +21,17 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
     };
 
     useEffect(() => {
+        let cancelled = false;
+        const cancelInitialization = () => {
+            cancelled = true;
+        };
+
         if (!active || /jsdom/i.test(window.navigator.userAgent)) {
             closeActivePopup();
-            return;
+            return cancelInitialization;
         }
+
+        setMapUnavailable(false);
 
         const handleSelectTrailPageFromMap = stepIndex => {
             closeActivePopup();
@@ -32,12 +40,18 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
 
         if (mapInstanceRef.current) {
             mapInstanceRef.current.resize?.();
-            return;
+            return cancelInitialization;
         }
 
         loadMazemapAssets()
             .then(Mazemap => {
-                if (!mapContainerRef.current || !Mazemap?.Map || mapInstanceRef.current) {
+                /* istanbul ignore if */
+                if (cancelled || !mapContainerRef.current || mapInstanceRef.current) {
+                    return;
+                }
+
+                if (!Mazemap?.Map) {
+                    setMapUnavailable(true);
                     return;
                 }
 
@@ -76,7 +90,13 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
                     }, 0);
                 }
             })
-            .catch(() => {});
+            .catch(() => {
+                if (!cancelled) {
+                    setMapUnavailable(true);
+                }
+            });
+
+        return cancelInitialization;
     }, [active, onSelectTrailPage]);
 
     useEffect(() => {
@@ -105,12 +125,18 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
                 overflow: 'hidden',
             }}
         >
-            <Box
-                ref={mapContainerRef}
-                data-testid="mazemap-container"
-                aria-label="MazeMaps campus map"
-                sx={{ position: 'absolute', inset: 0, height: '100%', width: '100%' }}
-            />
+            {mapUnavailable ? (
+                <Box role="status" sx={{ height: '100%', display: 'grid', placeItems: 'center', p: 2 }}>
+                    Map is unavailable
+                </Box>
+            ) : (
+                <Box
+                    ref={mapContainerRef}
+                    data-testid="mazemap-container"
+                    aria-label="MazeMaps campus map"
+                    sx={{ position: 'absolute', inset: 0, height: '100%', width: '100%' }}
+                />
+            )}
         </Box>
     );
 };

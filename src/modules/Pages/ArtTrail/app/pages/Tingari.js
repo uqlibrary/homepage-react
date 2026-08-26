@@ -126,7 +126,7 @@ const Page = ({ openDrawer }) => {
                     <DisclosureSection
                         forceExpanded
                         heading={
-                            <StyledHeading variant="h6" component="h3">
+                            <StyledHeading variant="h6" component="h2">
                                 About the artwork
                             </StyledHeading>
                         }
