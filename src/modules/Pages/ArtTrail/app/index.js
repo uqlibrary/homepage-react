@@ -188,7 +188,14 @@ const ArtTrailApp = () => {
         }
     };
 
+    const clearActiveControlFocus = () => {
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+    };
+
     const handleStepChange = direction => {
+        clearActiveControlFocus();
         handleDrawerClose();
         resetScrollPosition();
 
@@ -203,6 +210,7 @@ const ArtTrailApp = () => {
     };
 
     const handleSelectTrailPage = stepIndex => {
+        clearActiveControlFocus();
         handleDrawerClose();
         resetScrollPosition();
         setTrailNavigationDirection(stepIndex < tabState.trail.stepIndex ? 'backward' : 'forward');
@@ -378,6 +386,7 @@ const ArtTrailApp = () => {
                                     }
                                     nextButton={
                                         <Button
+                                            key={isTrailWelcomeStep ? 'start-trail' : 'next-page'}
                                             size="small"
                                             endIcon={isTrailWelcomeStep ? null : <ChevronRightIcon />}
                                             onClick={() => handleStepChange(1)}

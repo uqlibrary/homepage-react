@@ -15,6 +15,7 @@ const defaultTab = {
 const createMockPage = testId => {
     const MockPage = ({ tab, openDrawer, mediaStopSignal }) => (
         <div data-testid={testId}>
+            <h1 tabIndex={-1}>{testId} heading</h1>
             <div>{tab.label}</div>
             <div>{tab.subtitle}</div>
             <div>{mediaStopSignal}</div>
@@ -105,6 +106,34 @@ describe('TrailTabContent', () => {
 
         expect(queryByTestId('page-one')).not.toBeInTheDocument();
         expect(getByTestId('page-two')).toBeInTheDocument();
+    });
+
+    it('moves focus to the incoming page heading when page content changes', () => {
+        const PageOne = createMockPage('page-one');
+        const PageTwo = createMockPage('page-two');
+        const { getByRole, rerender } = setup({ page: PageOne, pageKey: 'page-one' });
+
+        rerender(
+            <TrailTabContent
+                tab={defaultTab}
+                page={PageTwo}
+                pageKey="page-two"
+                openDrawer={jest.fn()}
+                navigationDirection="forward"
+                mediaStopSignal="trail:1"
+            />,
+        );
+
+        act(() => {
+            jest.advanceTimersByTime(0);
+        });
+
+        expect(getByRole('heading', { name: 'page-two heading' })).toHaveAttribute('tabindex', '-1');
+        expect(getByRole('heading', { name: 'page-two heading' })).toHaveFocus();
+
+        act(() => {
+            jest.advanceTimersByTime(FORWARD_PAGE_TRANSITION_DURATION_MS);
+        });
     });
 
     it('uses the shorter backward transition duration before removing the previous page', () => {

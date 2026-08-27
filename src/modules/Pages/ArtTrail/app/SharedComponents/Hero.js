@@ -44,7 +44,7 @@ const Hero = ({ title, subtitle, sx }) => {
                     justifyContent: 'center',
                 }}
             >
-                <StyledHeading>{title}</StyledHeading>
+                <StyledHeading tabIndex={-1}>{title}</StyledHeading>
                 {subtitle && <StyledSubheading>{subtitle}</StyledSubheading>}
             </Box>
         </Grid>

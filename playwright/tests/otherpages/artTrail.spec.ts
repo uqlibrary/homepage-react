@@ -152,10 +152,25 @@ test.describe('Art Trail', () => {
 
             for (const pageIndex of [0, 9]) {
                 await openTrailPage(page, pageIndex);
-                await page.getByRole('button', { name: 'Play Listen to this page' }).click();
+                await page.getByRole('button', { name: 'Play Listen to this page', exact: true }).click();
                 await expect(page.getByRole('button', { name: 'Stop Listen to this page' })).toBeVisible();
+                await expect(page.getByRole('button', { name: 'Stop Listen to this page' })).toBeFocused();
+                await expect(page.getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
+                await expect
+                    .poll(async () =>
+                        Number(
+                            await page
+                                .getByRole('progressbar', { name: 'Listen to this page progress' })
+                                .getAttribute('aria-valuenow'),
+                        ),
+                    )
+                    .toBeGreaterThan(0);
                 await page.getByRole('button', { name: 'Stop Listen to this page' }).click();
                 await expect(page.getByRole('button', { name: 'Replay Listen to this page' })).toBeVisible();
+                await expect(page.getByRole('button', { name: 'Replay Listen to this page' })).toBeEnabled();
+                await page.getByRole('button', { name: 'Replay Listen to this page' }).click();
+                await expect(page.getByRole('button', { name: 'Play Listen to this page', exact: true })).toBeFocused();
+                await expect(page.getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
             }
         });
 
@@ -164,6 +179,28 @@ test.describe('Art Trail', () => {
 
             await openTrailPage(page, 5);
             await openTrailPage(page, 9);
+        });
+
+        test('moves focus from Start the trail to the heading after Space-key navigation', async ({ page }) => {
+            await page.goto('/art-trail/app?user=public');
+            const startButton = page.getByRole('button', { name: 'Start the trail' });
+            await startButton.evaluate(button => {
+                const trackedWindow = window as typeof window & { startTrailButton?: Element };
+                trackedWindow.startTrailButton = button;
+            });
+
+            await startButton.focus();
+            await page.keyboard.press('Space');
+
+            const heading = page.getByRole('heading', { level: 1, name: trailPages[1].heading });
+            expect(
+                await page.evaluate(() => {
+                    const trackedWindow = window as typeof window & { startTrailButton?: Element };
+                    return trackedWindow.startTrailButton?.isConnected;
+                }),
+            ).toBe(false);
+            await expect(heading).toBeFocused();
+            await expect(page.getByRole('button', { name: 'Next page' })).not.toBeFocused();
         });
     });
 });
