@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Route, Routes } from 'react-router';
+import { Route, Routes, useLocation } from 'react-router';
 import { routes } from 'config';
 import browserUpdate from 'browser-update';
 import { AccountContext } from 'context';
@@ -29,11 +29,56 @@ const isAdminPage = () => {
     return window.location.pathname.startsWith('/admin/') || window.location.hash.startsWith('#/admin/');
 };
 
+const srOnlyAnnouncementStyle = {
+    position: 'absolute',
+    width: '1px',
+    height: '1px',
+    padding: 0,
+    margin: '-1px',
+    overflow: 'hidden',
+    clip: 'rect(0, 0, 0, 0)',
+    whiteSpace: 'nowrap',
+    border: 0,
+};
+
+const getPageAnnouncement = ({ pathname = '', hash = '' } = {}) => {
+    const currentPath = `${pathname}${hash}`;
+
+    if (currentPath === '/spaces' || currentPath === '/spaces/' || currentPath === '/#/spaces') {
+        return 'Bookable Spaces';
+    }
+
+    if (currentPath.startsWith('/spaces/results') || currentPath.includes('#/spaces/results')) {
+        return 'Bookable Spaces search results';
+    }
+
+    if (currentPath.startsWith('/spaces/mapresults') || currentPath.includes('#/spaces/mapresults')) {
+        return 'Bookable Spaces map';
+    }
+
+    if (currentPath.startsWith('/spaces/details/') || currentPath.startsWith('/spaces/detail/')) {
+        return 'Space Details';
+    }
+
+    if (currentPath.includes('#/spaces/details/') || currentPath.includes('#/spaces/detail/')) {
+        return 'Space Details';
+    }
+
+    return 'UQ Library';
+};
+
 export const App = ({ account, actions }) => {
+    const location = useLocation();
+    const [liveAnnouncement, setLiveAnnouncement] = useState('Library');
+
     useEffect(() => {
         actions.loadCurrentAccount();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        setLiveAnnouncement(getPageAnnouncement(location));
+    }, [location]);
 
     const routesConfig = routes.getRoutesConfig({
         components: pages,
@@ -65,6 +110,9 @@ export const App = ({ account, actions }) => {
             }}
         >
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
+                <div aria-live="polite" aria-atomic="true" style={srOnlyAnnouncementStyle}>
+                    {liveAnnouncement}
+                </div>
                 <uq-header hidelibrarymenuitem="true" />
                 <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink}>
                     <span slot="site-utilities">
