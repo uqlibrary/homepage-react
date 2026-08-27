@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { fireEvent, rtlRender, userEvent } from 'test-utils';
+import { fireEvent, rtlRender, userEvent, waitFor } from 'test-utils';
 
 import TrailAudioPlayer from './TrailAudioPlayer';
 
@@ -50,7 +50,7 @@ describe('TrailAudioPlayer', () => {
         fireEvent.loadedMetadata(audioElement);
 
         expect(getByRole('button', { name: 'Play Listen to this page' })).toBeInTheDocument();
-        expect(queryByRole('button', { name: 'Replay Listen to this page' })).not.toBeInTheDocument();
+        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
         expect(queryByRole('button', { name: 'Stop Listen to this page' })).not.toBeInTheDocument();
         expect(getByRole('progressbar', { name: 'Listen to this page progress' })).toHaveAttribute(
             'aria-valuetext',
@@ -66,6 +66,8 @@ describe('TrailAudioPlayer', () => {
         expect(window.HTMLMediaElement.prototype.play).toHaveBeenCalledTimes(1);
         expect(queryByRole('button', { name: 'Play Listen to this page' })).not.toBeInTheDocument();
         expect(getByRole('button', { name: 'Stop Listen to this page' })).toBeInTheDocument();
+        await waitFor(() => expect(getByRole('button', { name: 'Stop Listen to this page' })).toHaveFocus());
+        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
         expect(getByRole('progressbar', { name: 'Listen to this page progress' })).toHaveAttribute(
             'aria-valuetext',
             '0:12 of 0:42',
@@ -74,12 +76,12 @@ describe('TrailAudioPlayer', () => {
         fireEvent.ended(audioElement);
 
         expect(getByRole('button', { name: 'Play Listen to this page' })).toBeEnabled();
-        expect(queryByRole('button', { name: 'Replay Listen to this page' })).not.toBeInTheDocument();
+        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
         expect(queryByRole('button', { name: 'Stop Listen to this page' })).not.toBeInTheDocument();
     });
 
     it('resets to the start without resuming playback when replay is pressed', async () => {
-        const { container, getByRole, queryByRole } = setup();
+        const { container, getByRole } = setup();
 
         const audioElement = container.querySelector('audio');
 
@@ -100,18 +102,19 @@ describe('TrailAudioPlayer', () => {
         expect(window.HTMLMediaElement.prototype.pause).toHaveBeenCalled();
         expect(audioElement.currentTime).toBe(9);
         expect(getByRole('button', { name: 'Play Listen to this page' })).toBeEnabled();
-        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeInTheDocument();
+        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeEnabled();
 
         await userEvent.click(getByRole('button', { name: 'Replay Listen to this page' }));
 
         expect(audioElement.currentTime).toBe(0);
         expect(window.HTMLMediaElement.prototype.play).toHaveBeenCalledTimes(1);
         expect(getByRole('button', { name: 'Play Listen to this page' })).toBeEnabled();
-        expect(queryByRole('button', { name: 'Replay Listen to this page' })).not.toBeInTheDocument();
+        await waitFor(() => expect(getByRole('button', { name: 'Play Listen to this page' })).toHaveFocus());
+        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
     });
 
     it('stops and resets when the stop signal changes', async () => {
-        const { container, getByRole, queryByRole, rerender } = setup({ stopSignal: 'trail:0' });
+        const { container, getByRole, rerender } = setup({ stopSignal: 'trail:0' });
 
         const audioElement = container.querySelector('audio');
 
@@ -134,7 +137,7 @@ describe('TrailAudioPlayer', () => {
         expect(window.HTMLMediaElement.prototype.pause).toHaveBeenCalled();
         expect(audioElement.currentTime).toBe(0);
         expect(getByRole('button', { name: 'Play Listen to this page' })).toBeEnabled();
-        expect(queryByRole('button', { name: 'Replay Listen to this page' })).not.toBeInTheDocument();
+        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
     });
 
     it('shows an error when playback is rejected or the audio element reports an error', async () => {
@@ -160,7 +163,7 @@ describe('TrailAudioPlayer', () => {
     });
 
     it('handles media value fallbacks, pause transitions, and source resets', () => {
-        const { container, getByRole, queryByRole, rerender } = setup();
+        const { container, getByRole, rerender } = setup();
         const audioElement = container.querySelector('audio');
 
         Object.defineProperty(audioElement, 'duration', {
@@ -196,12 +199,12 @@ describe('TrailAudioPlayer', () => {
         fireEvent.timeUpdate(audioElement);
         fireEvent.pause(audioElement);
 
-        expect(queryByRole('button', { name: 'Replay Listen to this page' })).not.toBeInTheDocument();
+        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
 
         fireEvent.play(audioElement);
         fireEvent.pause(audioElement);
 
-        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeInTheDocument();
+        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
 
         rerender(<TrailAudioPlayer src="https://example.com/replacement.mp3" title="Listen to this page" />);
 
@@ -209,7 +212,7 @@ describe('TrailAudioPlayer', () => {
             'aria-valuetext',
             'Not started',
         );
-        expect(queryByRole('button', { name: 'Replay Listen to this page' })).not.toBeInTheDocument();
+        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
     });
 
     it('handles controls safely when the audio ref is unavailable', async () => {
@@ -232,8 +235,14 @@ describe('TrailAudioPlayer', () => {
         expect(window.HTMLMediaElement.prototype.play).not.toHaveBeenCalled();
 
         fireEvent.play(audioElement);
+        Object.defineProperty(audioElement, 'currentTime', {
+            configurable: true,
+            writable: true,
+            value: 3,
+        });
+        fireEvent.timeUpdate(audioElement);
         await userEvent.click(getByRole('button', { name: 'Stop Listen to this page' }));
-        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeInTheDocument();
+        expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeEnabled();
 
         await userEvent.click(getByRole('button', { name: 'Replay Listen to this page' }));
         expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeInTheDocument();

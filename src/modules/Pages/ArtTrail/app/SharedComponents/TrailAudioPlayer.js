@@ -31,6 +31,9 @@ const formatTime = value => {
 
 const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) => {
     const audioRef = useRef(null);
+    const playButtonRef = useRef(null);
+    const stopButtonRef = useRef(null);
+    const pendingFocusRef = useRef(null);
     const hasMountedStopSignalRef = useRef(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -40,6 +43,7 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
     const timeId = useId();
     const isPlaying = playbackState === PLAYBACK_STATES.PLAYING;
     const isStopped = playbackState === PLAYBACK_STATES.STOPPED;
+    const canReplay = isStopped && currentTime > 0;
     const progressValue = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0;
     const progressValueText = useMemo(() => {
         if (!duration) {
@@ -88,10 +92,12 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
         }
 
         try {
+            pendingFocusRef.current = 'stop';
             await audioElement.play();
             setPlaybackState(PLAYBACK_STATES.PLAYING);
             setPlaybackError(false);
         } catch {
+            pendingFocusRef.current = null;
             setPlaybackState(PLAYBACK_STATES.IDLE);
             setPlaybackError(true);
         }
@@ -104,24 +110,13 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
             return;
         }
 
+        pendingFocusRef.current = 'play';
         audioElement.pause();
         audioElement.currentTime = 0;
         setCurrentTime(0);
         setPlaybackState(PLAYBACK_STATES.IDLE);
         setPlaybackError(false);
     };
-
-    let leadingControl = (
-        <Box aria-hidden="true" sx={{ width: CONTROL_BUTTON_SIZE_PX, height: CONTROL_BUTTON_SIZE_PX }} />
-    );
-
-    if (isStopped) {
-        leadingControl = (
-            <IconButton aria-label={`Replay ${title}`} onClick={handleReplay} color="primary" size="large">
-                <ReplayRoundedIcon fontSize="large" />
-            </IconButton>
-        );
-    }
 
     useEffect(() => {
         resetPlaybackState();
@@ -136,6 +131,16 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
 
         stopPlayback();
     }, [stopPlayback, stopSignal]);
+
+    useEffect(() => {
+        if (pendingFocusRef.current === 'stop') {
+            stopButtonRef.current?.focus();
+        } else if (pendingFocusRef.current === 'play') {
+            playButtonRef.current?.focus();
+        }
+
+        pendingFocusRef.current = null;
+    }, [playbackState]);
 
     useEffect(() => {
         return () => {
@@ -225,9 +230,18 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                         columnGap: 0.25,
                     }}
                 >
-                    {leadingControl}
+                    <IconButton
+                        aria-label={`Replay ${title}`}
+                        onClick={handleReplay}
+                        disabled={!canReplay}
+                        color="primary"
+                        size="large"
+                    >
+                        <ReplayRoundedIcon fontSize="large" />
+                    </IconButton>
                     {isPlaying ? (
                         <IconButton
+                            ref={stopButtonRef}
                             aria-label={`Stop ${title}`}
                             onClick={() => stopPlayback({ resetToStart: false, nextState: PLAYBACK_STATES.STOPPED })}
                             color="primary"
@@ -237,6 +251,7 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                         </IconButton>
                     ) : (
                         <IconButton
+                            ref={playButtonRef}
                             aria-label={`Play ${title}`}
                             onClick={() => startPlayback()}
                             color="primary"
