@@ -5,6 +5,7 @@ import {
     createPoiPopupContent,
     createUserLocationControl,
     loadMazemapAssets,
+    stripHtml,
 } from './mapUtils';
 
 const markerClassNames = {
@@ -32,6 +33,7 @@ const samplePoi = {
     popupThumbnailAlt: 'Punu Tjukurpa artwork thumbnail',
     popupThumbnailSrc: '/images/artwork-thumb.jpg',
     popupTitle: 'Hector Tjupuru Burton, Ray Ken, Mick Wikilyiri & Brenton Ken,',
+    tableLinkText: 'Hector Tjupuru Burton, Ray Ken, Mick Wikilyiri and Brenton Ken, <em>Punu Tjukurpa</em>, 2013',
     title: 'Punu Tjukurpa',
     trailStepIndex: 1,
     zLevel: -1,
@@ -66,6 +68,10 @@ describe('mapUtils', () => {
         } else {
             delete navigator.geolocation;
         }
+    });
+
+    it('strips HTML from configured map labels', () => {
+        expect(stripHtml('Artist, <em>Artwork</em>, 2026')).toBe('Artist, Artwork, 2026');
     });
 
     it('creates a geolocation control only when Mazemap and browser geolocation are available', () => {
@@ -203,6 +209,14 @@ describe('mapUtils', () => {
         expect(popupContent.querySelector('img')).toHaveAttribute('alt', samplePoi.popupThumbnailAlt);
         expect(titleLink).toHaveTextContent(samplePoi.popupTitle);
         expect(titleLink).toHaveAttribute('href', '#');
+        expect(titleLink).toHaveAttribute(
+            'title',
+            'Hector Tjupuru Burton, Ray Ken, Mick Wikilyiri and Brenton Ken, Punu Tjukurpa, 2013',
+        );
+        expect(titleLink).toHaveAttribute(
+            'aria-label',
+            'Hector Tjupuru Burton, Ray Ken, Mick Wikilyiri and Brenton Ken, Punu Tjukurpa, 2013',
+        );
         expect(titleLink.className).toContain(popupClassNames.title);
         expect(titleLink.className).toContain(popupClassNames.titleLink);
         expect(popupContent.querySelector(`.${popupClassNames.description}`).innerHTML).toBe(
@@ -455,7 +469,7 @@ describe('mapUtils', () => {
                 popupEventHandlers.close?.();
                 popupElement.remove();
             }),
-            setDOMContent: jest.fn(),
+            setDOMContent: jest.fn(content => popupElement.appendChild(content)),
         };
         const markerConstructor = jest.fn(function ZLevelMarker(element) {
             this.element = element;
@@ -478,6 +492,7 @@ describe('mapUtils', () => {
             activePopupRef,
             map: { id: 'mock-map' },
             markerClassNames,
+            onSelectTrailPage: jest.fn(),
             pois: [samplePoi],
             popupClassNames,
         });
@@ -490,7 +505,7 @@ describe('mapUtils', () => {
         popupEventHandlers.open();
 
         expect(activePopupRef.current).toBe(popup);
-        expect(closeButton).toHaveFocus();
+        expect(popupElement.querySelector(`.${popupClassNames.titleLink}`)).toHaveFocus();
 
         markerElement.focus();
         markerElement.dispatchEvent(
@@ -510,6 +525,6 @@ describe('mapUtils', () => {
         popupEventHandlers.open();
 
         expect(activePopupRef.current).toBe(popup);
-        expect(closeButton).toHaveFocus();
+        expect(popupElement.querySelector(`.${popupClassNames.titleLink}`)).toHaveFocus();
     });
 });

@@ -6,6 +6,12 @@ const MAZEMAP_STYLESHEET_ID = 'art-trail-mazemap-stylesheet';
 const MAZEMAP_SCRIPT_SRC = 'vendor/mazemap/mazemap.min.js';
 const MAZEMAP_STYLESHEET_HREF = 'vendor/mazemap/mazemap.min.css';
 
+export const stripHtml = html => {
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    return container.textContent || /* istanbul ignore next */ '';
+};
+
 export const createUserLocationControl = Mazemap => {
     if (!Mazemap?.mapboxgl?.GeolocateControl || !navigator.geolocation) {
         return null;
@@ -101,7 +107,10 @@ export const createPoiPopupContent = (poi, onSelectTrailPage, popupClassNames) =
             : popupClassNames.title;
 
     if (title.tagName === 'A') {
+        const linkLabel = stripHtml(poi.tableLinkText);
         title.href = '#';
+        title.title = linkLabel;
+        title.setAttribute('aria-label', linkLabel);
         title.addEventListener('click', event => {
             event.preventDefault();
             event.stopPropagation();
@@ -198,7 +207,7 @@ export const createMazemapPoiMarkers = ({
                 }
 
                 document.addEventListener('keydown', handleEscapeKeyDown);
-                popupElement?.querySelector('.mapboxgl-popup-close-button')?.focus();
+                popupElement?.querySelector(`.${popupClassNames.titleLink}`)?.focus();
             };
             const handlePopupClose = () => {
                 document.removeEventListener('keydown', handleEscapeKeyDown);

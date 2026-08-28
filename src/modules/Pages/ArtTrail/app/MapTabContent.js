@@ -10,12 +10,13 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { visuallyHidden } from '@mui/utils';
 
 import Hero from './SharedComponents/Hero';
 
 import { mapClassNames, markerClassNames, popupClassNames } from './appShellStyles';
 import { ART_TRAIL_MAP_POIS } from './config/mapPois';
-import { loadMazemapAssets, createMazemapPoiMarkers, createUserLocationControl } from './utils/mapUtils';
+import { loadMazemapAssets, createMazemapPoiMarkers, createUserLocationControl, stripHtml } from './utils/mapUtils';
 
 const mapTableRows = ART_TRAIL_MAP_POIS.filter(
     (poi, index, pois) => pois.findIndex(candidate => candidate.trailStepIndex === poi.trailStepIndex) === index,
@@ -24,6 +25,7 @@ const mapTableRows = ART_TRAIL_MAP_POIS.filter(
 const MapTabContent = ({ active, onSelectTrailPage }) => {
     const [mapUnavailable, setMapUnavailable] = useState(false);
     const mapContainerRef = useRef(null);
+    const artworkTableRef = useRef(null);
     const mapInstanceRef = useRef(null);
     const markerInstancesRef = useRef([]);
     const activePopupRef = useRef(null);
@@ -132,6 +134,29 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
     return (
         <Grid container direction="column" wrap="nowrap">
             <Hero title="Art Trail Map of St Lucia campus" />
+            <Link
+                href="#art-trail-artwork-locations"
+                onClick={event => {
+                    event.preventDefault();
+                    artworkTableRef.current?.focus();
+                }}
+                sx={{
+                    ...visuallyHidden,
+                    '&:focus': {
+                        position: 'relative',
+                        width: 'auto',
+                        height: 'auto',
+                        margin: 1,
+                        padding: 1,
+                        overflow: 'visible',
+                        clip: 'auto',
+                        whiteSpace: 'normal',
+                        zIndex: 1,
+                    },
+                }}
+            >
+                Skip to artwork locations
+            </Link>
             <Grid container direction="row" columnSpacing={2.5} data-testid="pageContent">
                 <Grid xs={12} sm={6}>
                     <Box
@@ -159,7 +184,12 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
                 </Grid>
                 <Grid xs={12} sm={6}>
                     <TableContainer>
-                        <Table aria-label="Art Trail artwork locations">
+                        <Table
+                            ref={artworkTableRef}
+                            id="art-trail-artwork-locations"
+                            tabIndex={-1}
+                            aria-label="Art Trail artwork locations"
+                        >
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Artwork</TableCell>
@@ -168,7 +198,7 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
                             </TableHead>
                             <TableBody>
                                 {mapTableRows.map(poi => {
-                                    const tableLinkLabel = poi.tableLinkText.replace(/<\/?em>/g, '');
+                                    const tableLinkLabel = stripHtml(poi.tableLinkText);
                                     const accessibleLinkTitle = `${tableLinkLabel}, ${poi.popupLevelLabel}`;
 
                                     return (

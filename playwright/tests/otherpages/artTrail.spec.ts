@@ -142,7 +142,10 @@ test.describe('Art Trail', () => {
             await page.keyboard.press('Enter');
 
             const closePopupButton = page.getByRole('button', { name: 'Close popup' });
-            await expect(closePopupButton).toBeFocused();
+            const artworkLink = page
+                .getByTestId('mazemap-container')
+                .getByRole('link', { name: /Lily Kelly Napangardi/ });
+            await expect(artworkLink).toBeFocused();
 
             await marker.focus();
             await page.keyboard.press('Shift+Tab');
@@ -153,18 +156,17 @@ test.describe('Art Trail', () => {
             });
             await nextMarker.focus();
             await page.keyboard.press('Enter');
-            await expect(closePopupButton).toBeFocused();
+            await expect(
+                page.getByTestId('mazemap-container').getByRole('link', { name: /Gloria Tamerre Petyarre/ }),
+            ).toBeFocused();
             await page.keyboard.press('Escape');
             await expect(closePopupButton).not.toBeVisible();
             await expect(nextMarker).toBeFocused();
 
             await marker.focus();
             await page.keyboard.press('Space');
-            await expect(closePopupButton).toBeFocused();
+            await expect(artworkLink).toBeFocused();
 
-            const artworkLink = page
-                .getByTestId('mazemap-container')
-                .getByRole('link', { name: /Lily Kelly Napangardi/ });
             await expect(artworkLink).toBeVisible();
             await artworkLink.click();
 
