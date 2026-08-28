@@ -37,8 +37,8 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                     <Grid xs>
                         <Box component="p">Thank you for exploring the Indigenous Art and Library Discovery Trail.</Box>
                         <Box component="p">
-                            If you'd like to get in touch about this project or provide feedback, please get in touch
-                            via the{' '}
+                            If you'd like to get in touch about this project or provide feedback, please contact us via
+                            the{' '}
                             <a
                                 href="https://support.my.uq.edu.au/app/library/feedback"
                                 target="_blank"
@@ -51,6 +51,30 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                     </Grid>
                 </Grid>
                 <Grid>
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="transcript-content"
+                            id="transcript-panel-header"
+                        >
+                            Audio transcript
+                        </AccordionSummary>
+                        <StyledAccordionDetails>
+                            <Box component="p" mb={2}>
+                                We hope the artworks and stories you have encountered today have inspired you to
+                                reflect, learn and connect more deeply with Aboriginal and Torres Strait Islander
+                                cultures, histories and communities.
+                            </Box>
+                            <Box component="p" mb={2}>
+                                The journey doesn't end here. It continues across campus, in the archives and through
+                                the stories held and cared for within the Library.
+                            </Box>
+                            <Box component="p" mb={2}>
+                                To continue your journey, explore the resources below or visit Fryer Library to discover
+                                more Aboriginal and Torres Strait Islander stories.
+                            </Box>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
                     <StyledAccordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -166,30 +190,6 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                                     Fryer Library
                                 </a>
                                 .
-                            </Box>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="transcript-content"
-                            id="transcript-panel-header"
-                        >
-                            Audio transcript
-                        </AccordionSummary>
-                        <StyledAccordionDetails>
-                            <Box component="p" mb={2}>
-                                We hope the artworks and stories you have encountered today have inspired you to
-                                reflect, learn and connect more deeply with Aboriginal and Torres Strait Islander
-                                cultures, histories and communities.
-                            </Box>
-                            <Box component="p" mb={2}>
-                                The journey doesn't end here. It continues across campus, in the archives and through
-                                the stories held and cared for within the Library.
-                            </Box>
-                            <Box component="p" mb={2}>
-                                To continue your journey, explore the resources below or visit Fryer Library to discover
-                                more Aboriginal and Torres Strait Islander stories.
                             </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>

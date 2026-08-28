@@ -37,7 +37,7 @@ describe('ArtTrailApp', () => {
         expect(queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
         expect(getByRole('button', { name: 'Start the trail' })).toBeEnabled();
         expect(queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
-        expect(document.title).toBe('Art Trail App');
+        expect(document.title).toBe('The University of Queensland Indigenous Art and Library Discovery Trail');
     });
 
     it('opens the menu and preserves the Trail page state across tab switches', async () => {

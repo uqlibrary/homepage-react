@@ -15,6 +15,10 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
+StyledHeading.defaultProps = {
+    tabIndex: 0,
+};
+
 export const StyledAccordion = styled(Accordion)(() => ({
     marginBottom: 'var(--art-trail-spacing)',
     '&.Mui-expanded:last-of-type': { marginBottom: 'var(--art-trail-spacing)' },

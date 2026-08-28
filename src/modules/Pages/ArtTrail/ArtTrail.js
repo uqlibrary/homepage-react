@@ -4,7 +4,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-// import { StandardCard } from '../../SharedComponents/Toolbox/StandardCard';
 import { StyedButtonDS } from './app/SharedComponents';
 
 import artwork from '../../../../public/images/artTrail/iphone.png';

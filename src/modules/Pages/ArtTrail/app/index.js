@@ -59,7 +59,7 @@ import {
     SCROLL_VIEWPORT_SX,
 } from './appShellStyles';
 import { tabs, menuItems } from './config';
-import useDocumentScrollLock from './hooks/useDocumentScrollLock';
+import { useDocumentScrollLock, useGoogleAnalytics } from './hooks';
 import { GlobalStyles } from '@mui/material';
 
 const CULTURAL_DISCLAIMER_COOKIE = 'ART_TRAIL_CULTURAL_DISCLAIMER_SEEN';
@@ -137,7 +137,7 @@ const ArtTrailApp = () => {
     );
 
     useEffect(() => {
-        document.title = 'Art Trail App';
+        document.title = 'The University of Queensland Indigenous Art and Library Discovery Trail';
     }, []);
 
     useDocumentScrollLock();
@@ -153,6 +153,24 @@ const ArtTrailApp = () => {
     const visibleActiveStep =
         isTrailTab && activeState.stepIndex > 0 ? activeState.stepIndex - 1 : activeState.stepIndex;
     const footerHeight = showStepper ? '112px' : '64px';
+
+    const { trackPageView } = useGoogleAnalytics();
+    const lastTrackedPageRef = useRef(null);
+    const pageKey = `${activeTabConfig.id}-${activeState.stepIndex}`;
+
+    useEffect(() => {
+        if (lastTrackedPageRef.current === pageKey) {
+            return;
+        }
+
+        lastTrackedPageRef.current = pageKey;
+
+        trackPageView({
+            page_title: activeTabPages[activeState.stepIndex].analyticsTitle,
+            page_index: activeState.stepIndex,
+            tab: activeTabConfig.id,
+        });
+    }, [activeState.stepIndex, activeTabConfig.id, activeTabPages, pageKey, trackPageView]);
 
     const handleMenuClose = () => setMenuAnchor(null);
 

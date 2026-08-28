@@ -157,13 +157,7 @@ test.describe('Art Trail', () => {
                 await expect(page.getByRole('button', { name: 'Stop Listen to this page' })).toBeFocused();
                 await expect(page.getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
                 await expect
-                    .poll(async () =>
-                        Number(
-                            await page
-                                .getByRole('progressbar', { name: 'Listen to this page progress' })
-                                .getAttribute('aria-valuenow'),
-                        ),
-                    )
+                    .poll(async () => Number(await page.getByTestId('audio-progress').getAttribute('aria-valuenow')))
                     .toBeGreaterThan(0);
                 await page.getByRole('button', { name: 'Stop Listen to this page' }).click();
                 await expect(page.getByRole('button', { name: 'Replay Listen to this page' })).toBeVisible();

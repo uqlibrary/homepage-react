@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
+import { visuallyHidden } from '@mui/utils';
 import HeadphonesOutlinedIcon from '@mui/icons-material/HeadphonesOutlined';
 import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
 import ReplayRoundedIcon from '@mui/icons-material/ReplayRounded';
@@ -29,6 +30,14 @@ const formatTime = value => {
     return `${minutes}:${String(seconds).padStart(2, '0')}`;
 };
 
+const formatSpokenTime = value => {
+    const totalSeconds = Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ${seconds} ${seconds === 1 ? 'second' : 'seconds'}`;
+};
+
 const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) => {
     const audioRef = useRef(null);
     const playButtonRef = useRef(null);
@@ -45,12 +54,19 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
     const isStopped = playbackState === PLAYBACK_STATES.STOPPED;
     const canReplay = isStopped && currentTime > 0;
     const progressValue = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0;
-    const progressValueText = useMemo(() => {
+    const progressDisplayText = useMemo(() => {
         if (!duration) {
             return 'Not started';
         }
 
         return `${formatTime(currentTime)} of ${formatTime(duration)}`;
+    }, [currentTime, duration]);
+    const progressValueText = useMemo(() => {
+        if (!duration) {
+            return 'Not started';
+        }
+
+        return `${formatSpokenTime(currentTime)} of ${formatSpokenTime(duration)}`;
     }, [currentTime, duration]);
 
     const resetPlaybackState = () => {
@@ -217,7 +233,10 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                             {description}
                         </Typography>
                     ) : null}
-                    <Typography id={timeId} variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                    <Typography aria-hidden="true" variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                        {progressDisplayText}
+                    </Typography>
+                    <Typography id={timeId} component="span" sx={visuallyHidden}>
                         {progressValueText}
                     </Typography>
                 </Box>
@@ -263,11 +282,10 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                 </Box>
             </Box>
             <LinearProgress
+                data-testid="audio-progress"
                 variant="determinate"
                 value={progressValue}
-                aria-label={`${title} progress`}
-                aria-describedby={[description ? descriptionId : null, timeId].filter(Boolean).join(' ')}
-                aria-valuetext={progressValueText}
+                aria-hidden="true"
                 sx={{
                     height: 3,
                     borderRadius: 0,
