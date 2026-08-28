@@ -166,9 +166,7 @@ const ArtTrailApp = () => {
         lastTrackedPageRef.current = pageKey;
 
         trackPageView({
-            page_title: activeTabPages[activeState.stepIndex].analyticsTitle,
-            page_index: activeState.stepIndex,
-            tab: activeTabConfig.id,
+            page_title: activeTabPages[activeState.stepIndex].pageTitle,
         });
     }, [activeState.stepIndex, activeTabConfig.id, activeTabPages, pageKey, trackPageView]);
 
@@ -251,13 +249,14 @@ const ArtTrailApp = () => {
         const panelState = tabState[tab.id];
         const panelPages = getTabPages(tab);
         const panelPage = panelPages[panelState.stepIndex] ?? panelPages[0];
+        const PanelPageComponent = panelPage.component;
         const TabContentComponent = tabContentComponents[tab.id];
         const mediaStopSignal = `${activeTab}:${tabState.trail.stepIndex}`;
 
         return (
             <TabContentComponent
                 tab={tab}
-                page={panelPage}
+                page={PanelPageComponent}
                 pageKey={`${tab.id}-${panelState.stepIndex}`}
                 openDrawer={handleOpenDrawer}
                 active={tab.id === activeTab}

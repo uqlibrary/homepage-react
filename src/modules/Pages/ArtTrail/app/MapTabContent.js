@@ -1,10 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+
+import Hero from './SharedComponents/Hero';
 
 import { mapClassNames, markerClassNames, popupClassNames } from './appShellStyles';
+import { ART_TRAIL_MAP_POIS } from './config/mapPois';
 import { loadMazemapAssets, createMazemapPoiMarkers, createUserLocationControl } from './utils/mapUtils';
+
+const mapTableRows = ART_TRAIL_MAP_POIS.filter(
+    (poi, index, pois) => pois.findIndex(candidate => candidate.trailStepIndex === poi.trailStepIndex) === index,
+);
 
 const MapTabContent = ({ active, onSelectTrailPage }) => {
     const [mapUnavailable, setMapUnavailable] = useState(false);
@@ -115,29 +130,71 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
     }, []);
 
     return (
-        <Box
-            data-testid="pageContent"
-            sx={{
-                position: 'relative',
-                width: '100%',
-                minHeight: 'calc(100dvh - var(--art-trail-header-height) - var(--art-trail-footer-height))',
-                height: 'calc(100dvh - var(--art-trail-header-height) - var(--art-trail-footer-height))',
-                overflow: 'hidden',
-            }}
-        >
-            {mapUnavailable ? (
-                <Box role="status" sx={{ height: '100%', display: 'grid', placeItems: 'center', p: 2 }}>
-                    Map is unavailable
-                </Box>
-            ) : (
-                <Box
-                    ref={mapContainerRef}
-                    data-testid="mazemap-container"
-                    aria-label="MazeMaps campus map"
-                    sx={{ position: 'absolute', inset: 0, height: '100%', width: '100%' }}
-                />
-            )}
-        </Box>
+        <Grid container direction="column" wrap="nowrap">
+            <Hero title="Art Trail Map of St Lucia campus" />
+            <Grid container direction="row" columnSpacing={2.5} data-testid="pageContent">
+                <Grid xs={12} sm={6}>
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            width: '100%',
+                            height: 'auto',
+                            aspectRatio: '4 / 3',
+                            overflow: 'hidden',
+                        }}
+                    >
+                        {mapUnavailable ? (
+                            <Box role="status" sx={{ height: '100%', display: 'grid', placeItems: 'center', p: 2 }}>
+                                Map is unavailable
+                            </Box>
+                        ) : (
+                            <Box
+                                ref={mapContainerRef}
+                                data-testid="mazemap-container"
+                                aria-label="MazeMaps campus map"
+                                sx={{ position: 'absolute', inset: 0, height: '100%', width: '100%' }}
+                            />
+                        )}
+                    </Box>
+                </Grid>
+                <Grid xs={12} sm={6}>
+                    <TableContainer>
+                        <Table aria-label="Art Trail artwork locations">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Artwork</TableCell>
+                                    <TableCell>Location</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {mapTableRows.map(poi => {
+                                    const tableLinkLabel = poi.tableLinkText.replace(/<\/?em>/g, '');
+                                    const accessibleLinkTitle = `${tableLinkLabel}, ${poi.popupLevelLabel}`;
+
+                                    return (
+                                        <TableRow key={poi.trailStepIndex}>
+                                            <TableCell>
+                                                <Link
+                                                    href={`#${poi.id}`}
+                                                    title={accessibleLinkTitle}
+                                                    aria-label={accessibleLinkTitle}
+                                                    onClick={event => {
+                                                        event.preventDefault();
+                                                        onSelectTrailPage?.(poi.trailStepIndex);
+                                                    }}
+                                                    dangerouslySetInnerHTML={{ __html: poi.tableLinkText }}
+                                                />
+                                            </TableCell>
+                                            <TableCell>{poi.popupLevelLabel}</TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Grid>
+            </Grid>
+        </Grid>
     );
 };
 

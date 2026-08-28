@@ -49,12 +49,7 @@ const useGoogleAnalytics = () => {
 
     const trackPageView = useCallback(
         (/* istanbul ignore next */ parameters = {}) => {
-            trackEvent(trackingEvents.ART_TRAIL_PAGE_VIEW, {
-                page_title: document.title,
-                page_location: window.location.href,
-                page_path: window.location.pathname,
-                ...parameters,
-            });
+            trackEvent(trackingEvents.ART_TRAIL_PAGE_VIEW, parameters);
         },
         [trackEvent],
     );

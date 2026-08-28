@@ -136,11 +136,35 @@ test.describe('Art Trail', () => {
             await page.goto('/art-trail/app?user=public');
             await page.getByRole('button', { name: 'Map' }).click();
 
-            const marker = page.getByRole('button', { name: 'Lily Kelly Napangardi,' });
+            const marker = page.getByRole('button', { name: 'Sand Hills, Duhig Tower, Level 1' });
             await expect(marker).toBeVisible();
-            await marker.click();
+            await marker.focus();
+            await page.keyboard.press('Enter');
 
-            const artworkLink = page.getByRole('link', { name: /Lily Kelly Napangardi/ });
+            const closePopupButton = page.getByRole('button', { name: 'Close popup' });
+            await expect(closePopupButton).toBeFocused();
+
+            await marker.focus();
+            await page.keyboard.press('Shift+Tab');
+            await expect(closePopupButton).toBeFocused();
+
+            const nextMarker = page.getByRole('button', {
+                name: 'Devil Mountain Lizard Dreaming, Duhig Tower, Level 1',
+            });
+            await nextMarker.focus();
+            await page.keyboard.press('Enter');
+            await expect(closePopupButton).toBeFocused();
+            await page.keyboard.press('Escape');
+            await expect(closePopupButton).not.toBeVisible();
+            await expect(nextMarker).toBeFocused();
+
+            await marker.focus();
+            await page.keyboard.press('Space');
+            await expect(closePopupButton).toBeFocused();
+
+            const artworkLink = page
+                .getByTestId('mazemap-container')
+                .getByRole('link', { name: /Lily Kelly Napangardi/ });
             await expect(artworkLink).toBeVisible();
             await artworkLink.click();
 

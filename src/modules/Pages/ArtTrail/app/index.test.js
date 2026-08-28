@@ -6,6 +6,7 @@ import ArtTrailApp from './index';
 import { ART_TRAIL_MAP_POIS } from './config/mapPois';
 import { trailPages } from './pages';
 import { markerClassNames, popupClassNames } from './appShellStyles';
+import trackingEvents from './config/trackingEvents';
 import { createMazemapPoiMarkers } from './utils/mapUtils';
 
 jest.mock('js-cookie', () => ({
@@ -22,9 +23,39 @@ const setup = () => rtlRender(<ArtTrailApp />);
 
 describe('ArtTrailApp', () => {
     beforeEach(() => {
+        delete window.dataLayer;
         Cookies.get.mockReset();
         Cookies.set.mockReset();
         Cookies.get.mockReturnValue(undefined);
+    });
+
+    it('tracks each selected Trail and Map page by title', async () => {
+        const { getByRole } = setup();
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: trackingEvents.ART_TRAIL_PAGE_VIEW,
+                page_title: trailPages[0].pageTitle,
+            },
+        ]);
+
+        await userEvent.click(getByRole('button', { name: 'Start the trail' }));
+        await userEvent.click(getByRole('button', { name: 'Map' }));
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: trackingEvents.ART_TRAIL_PAGE_VIEW,
+                page_title: trailPages[0].pageTitle,
+            },
+            {
+                event: trackingEvents.ART_TRAIL_PAGE_VIEW,
+                page_title: trailPages[1].pageTitle,
+            },
+            {
+                event: trackingEvents.ART_TRAIL_PAGE_VIEW,
+                page_title: 'Art Trail Map of St Lucia campus',
+            },
+        ]);
     });
 
     it('renders the fixed app shell and sets the document title', () => {
@@ -46,7 +77,9 @@ describe('ArtTrailApp', () => {
         await userEvent.click(getByRole('button', { name: 'open navigation menu' }));
 
         expect(getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' })).toBeInTheDocument();
-        expect(getByText('Punu Tjukurpa', { selector: 'em' })).toBeInTheDocument();
+        expect(getByRole('menuitem', { name: /Hector Tjupuru Burton/i }).querySelector('em')).toHaveTextContent(
+            'Punu Tjukurpa',
+        );
         await userEvent.click(getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' }));
 
         await userEvent.click(getByRole('button', { name: 'Start the trail' }));
@@ -224,7 +257,7 @@ describe('ArtTrailApp', () => {
         expect(popupSetDOMContent.mock.calls[0][0].querySelector('img').getAttribute('src')).toBe(
             ART_TRAIL_MAP_POIS[0].popupThumbnailSrc,
         );
-        expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain(ART_TRAIL_MAP_POIS[0].popupTitle);
+        expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain(ART_TRAIL_MAP_POIS[0].menuTitle);
         expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain('Punu Tjukurpa 2013');
         expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain(ART_TRAIL_MAP_POIS[0].popupLevelLabel);
         expect(popupSetDOMContent.mock.calls[0][0].querySelector(`.${'artTrailMapPopupDescription'}`).innerHTML).toBe(

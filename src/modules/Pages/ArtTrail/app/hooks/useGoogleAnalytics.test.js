@@ -98,7 +98,7 @@ describe('useGoogleAnalytics', () => {
         ]);
     });
 
-    it('tracks page views with derived values and supplied parameters', () => {
+    it('tracks page views with the supplied page title', () => {
         const { result } = renderHook(() => useGoogleAnalytics());
 
         act(() => {
@@ -108,10 +108,8 @@ describe('useGoogleAnalytics', () => {
         expect(window.dataLayer).toEqual([
             {
                 event: trackingEvents.ART_TRAIL_PAGE_VIEW,
-                page_type: 'art-trail',
                 page_title: 'Artwork title',
-                page_location: window.location.href,
-                page_path: '/art-trail/app',
+                page_type: 'art-trail',
             },
         ]);
     });

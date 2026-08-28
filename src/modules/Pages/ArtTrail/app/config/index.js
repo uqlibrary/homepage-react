@@ -20,9 +20,7 @@ const tabs = [
         label: 'Map',
         icon: <MapOutlinedIcon sx={TAB_ICON_SX} />,
         page: {
-            title: 'Map overview',
-            body: 'Placeholder map copy can describe the route, entry points, and the sequence of artworks.',
-            highlights: ['Route overview', 'Entrances', 'Landmarks'],
+            pageTitle: 'Art Trail Map of St Lucia campus',
         },
     },
 ];
