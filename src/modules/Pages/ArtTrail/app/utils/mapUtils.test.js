@@ -229,6 +229,11 @@ describe('mapUtils', () => {
         expect(onSelectTrailPage).toHaveBeenCalledWith(samplePoi.trailStepIndex);
         expect(clickEvent.defaultPrevented).toBe(true);
         expect(stopPropagation).toHaveBeenCalledTimes(1);
+
+        titleLink.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' }));
+        titleLink.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: ' ' }));
+
+        expect(onSelectTrailPage).toHaveBeenCalledTimes(3);
     });
 
     it('falls back to non-link popup titles and default level text when no trail selection callback is available', () => {
@@ -505,7 +510,12 @@ describe('mapUtils', () => {
         popupEventHandlers.open();
 
         expect(activePopupRef.current).toBe(popup);
-        expect(popupElement.querySelector(`.${popupClassNames.titleLink}`)).toHaveFocus();
+        const popupLink = popupElement.querySelector(`.${popupClassNames.titleLink}`);
+        expect(popupLink).toHaveFocus();
+
+        popupLink.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Tab' }));
+
+        expect(closeButton).toHaveFocus();
 
         markerElement.focus();
         markerElement.dispatchEvent(
