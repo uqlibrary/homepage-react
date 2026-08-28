@@ -9,6 +9,7 @@ jest.mock('./utils/mapUtils', () => ({
     createMazemapPoiMarkers: jest.fn(),
     createUserLocationControl: jest.fn(),
     loadMazemapAssets: jest.fn(),
+    stripHtml: jest.requireActual('./utils/mapUtils').stripHtml,
 }));
 
 const setup = (props = {}) => rtlRender(<MapTabContent active={false} onSelectTrailPage={jest.fn()} {...props} />);
@@ -64,6 +65,19 @@ describe('MapTabContent', () => {
         fireEvent.click(artworkLink);
 
         expect(onSelectTrailPage).toHaveBeenCalledWith(2);
+    });
+
+    it('skips keyboard focus directly to the artwork locations table', () => {
+        const { getByRole } = setup();
+        const skipLink = getByRole('link', { name: 'Skip to artwork locations' });
+        const table = getByRole('table', { name: 'Art Trail artwork locations' });
+
+        expect(skipLink).toHaveAttribute('href', '#art-trail-artwork-locations');
+        expect(table).toHaveAttribute('tabindex', '-1');
+
+        fireEvent.click(skipLink);
+
+        expect(table).toHaveFocus();
     });
 
     it('initializes MazeMaps, markers, and geolocation when active outside jsdom', async () => {

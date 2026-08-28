@@ -71,6 +71,22 @@ describe('ArtTrailApp', () => {
         expect(document.title).toBe('The University of Queensland Indigenous Art and Library Discovery Trail');
     });
 
+    it('moves focus to the page heading on initial load and Map tab navigation', async () => {
+        const { getByRole } = setup();
+
+        await waitFor(() =>
+            expect(
+                getByRole('heading', { level: 1, name: 'Indigenous art and Library discovery trail' }),
+            ).toHaveFocus(),
+        );
+
+        await userEvent.click(getByRole('button', { name: 'Map' }));
+
+        await waitFor(() =>
+            expect(getByRole('heading', { level: 1, name: 'Art Trail Map of St Lucia campus' })).toHaveFocus(),
+        );
+    });
+
     it('opens the menu and preserves the Trail page state across tab switches', async () => {
         const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup();
 
