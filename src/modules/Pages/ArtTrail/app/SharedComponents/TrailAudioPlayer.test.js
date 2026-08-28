@@ -33,7 +33,7 @@ describe('TrailAudioPlayer', () => {
     });
 
     it('shows play initially, then only stop while playing, and resets after ending', async () => {
-        const { container, getByRole, queryByRole } = setup({ description: 'Intro' });
+        const { container, getByRole, getByTestId, getByText, queryByRole } = setup({ description: 'Intro' });
 
         const audioElement = container.querySelector('audio');
 
@@ -52,10 +52,10 @@ describe('TrailAudioPlayer', () => {
         expect(getByRole('button', { name: 'Play Listen to this page' })).toBeInTheDocument();
         expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
         expect(queryByRole('button', { name: 'Stop Listen to this page' })).not.toBeInTheDocument();
-        expect(getByRole('progressbar', { name: 'Listen to this page progress' })).toHaveAttribute(
-            'aria-valuetext',
-            '0:00 of 0:42',
-        );
+        expect(queryByRole('progressbar')).not.toBeInTheDocument();
+        expect(getByTestId('audio-progress')).toHaveAttribute('aria-hidden', 'true');
+        expect(getByText('0:00 of 0:42')).toHaveAttribute('aria-hidden', 'true');
+        expect(getByText('0 minutes 0 seconds of 0 minutes 42 seconds')).toBeInTheDocument();
 
         await userEvent.click(getByRole('button', { name: 'Play Listen to this page' }));
 
@@ -68,10 +68,8 @@ describe('TrailAudioPlayer', () => {
         expect(getByRole('button', { name: 'Stop Listen to this page' })).toBeInTheDocument();
         await waitFor(() => expect(getByRole('button', { name: 'Stop Listen to this page' })).toHaveFocus());
         expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
-        expect(getByRole('progressbar', { name: 'Listen to this page progress' })).toHaveAttribute(
-            'aria-valuetext',
-            '0:12 of 0:42',
-        );
+        expect(getByText('0:12 of 0:42')).toHaveAttribute('aria-hidden', 'true');
+        expect(getByText('0 minutes 12 seconds of 0 minutes 42 seconds')).toBeInTheDocument();
 
         fireEvent.ended(audioElement);
 
@@ -111,6 +109,24 @@ describe('TrailAudioPlayer', () => {
         expect(getByRole('button', { name: 'Play Listen to this page' })).toBeEnabled();
         await waitFor(() => expect(getByRole('button', { name: 'Play Listen to this page' })).toHaveFocus());
         expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
+    });
+
+    it('uses singular minute and second units in the spoken progress text', () => {
+        const { container, getByText } = setup();
+        const audioElement = container.querySelector('audio');
+
+        Object.defineProperty(audioElement, 'duration', {
+            configurable: true,
+            value: 61,
+        });
+        Object.defineProperty(audioElement, 'currentTime', {
+            configurable: true,
+            value: 1,
+        });
+
+        fireEvent.loadedMetadata(audioElement);
+
+        expect(getByText('0 minutes 1 second of 1 minute 1 second')).toBeInTheDocument();
     });
 
     it('stops and resets when the stop signal changes', async () => {
@@ -163,7 +179,7 @@ describe('TrailAudioPlayer', () => {
     });
 
     it('handles media value fallbacks, pause transitions, and source resets', () => {
-        const { container, getByRole, rerender } = setup();
+        const { container, getByRole, getByTestId, getByText, rerender } = setup();
         const audioElement = container.querySelector('audio');
 
         Object.defineProperty(audioElement, 'duration', {
@@ -178,10 +194,7 @@ describe('TrailAudioPlayer', () => {
 
         fireEvent.loadedMetadata(audioElement);
 
-        expect(getByRole('progressbar', { name: 'Listen to this page progress' })).toHaveAttribute(
-            'aria-valuetext',
-            'Not started',
-        );
+        expect(getByText('Not started', { selector: '[id]' })).toBeInTheDocument();
 
         Object.defineProperty(audioElement, 'duration', {
             configurable: true,
@@ -190,10 +203,7 @@ describe('TrailAudioPlayer', () => {
         audioElement.currentTime = 20;
         fireEvent.loadedMetadata(audioElement);
 
-        expect(getByRole('progressbar', { name: 'Listen to this page progress' })).toHaveAttribute(
-            'aria-valuenow',
-            '100',
-        );
+        expect(getByTestId('audio-progress')).toHaveAttribute('aria-valuenow', '100');
 
         audioElement.currentTime = 0;
         fireEvent.timeUpdate(audioElement);
@@ -208,10 +218,7 @@ describe('TrailAudioPlayer', () => {
 
         rerender(<TrailAudioPlayer src="https://example.com/replacement.mp3" title="Listen to this page" />);
 
-        expect(getByRole('progressbar', { name: 'Listen to this page progress' })).toHaveAttribute(
-            'aria-valuetext',
-            'Not started',
-        );
+        expect(getByText('Not started', { selector: '[id]' })).toBeInTheDocument();
         expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
     });
 

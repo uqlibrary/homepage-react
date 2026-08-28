@@ -172,6 +172,19 @@ describe('Artwork pages', () => {
                 expect(renderedLocationDrawer.container).toHaveTextContent(locationDrawerTextPattern);
             });
 
+            it('moves focus from the final location button to the artwork heading', async () => {
+                const { getAllByRole, getByRole } = setup(PageComponent);
+                const locationButtons = getAllByRole('button', {
+                    name: 'Location information about this artwork',
+                });
+                const artworkHeading = getByRole('heading', { name: 'About the artwork' });
+
+                locationButtons[locationButtons.length - 1].focus();
+                await userEvent.tab();
+
+                expect(artworkHeading).toHaveFocus();
+            });
+
             it('renders the expected about-the-artwork disclosure content', async () => {
                 const { getByRole, queryByRole, queryByText } = setup(PageComponent);
 

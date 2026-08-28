@@ -27,6 +27,7 @@ const samplePoi = {
     lat: -27.496418,
     lng: 153.014414,
     popupDescription: '<em>Punu Tjukurpa</em> 2013',
+    popupAriaLabel: 'Punu Tjukurpa, Duhig Tower, Level 1',
     popupLevelLabel: 'Duhig Tower, Level 1',
     popupThumbnailAlt: 'Punu Tjukurpa artwork thumbnail',
     popupThumbnailSrc: '/images/artwork-thumb.jpg',
@@ -192,7 +193,7 @@ describe('mapUtils', () => {
         const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
         const stopPropagation = jest.spyOn(clickEvent, 'stopPropagation');
 
-        expect(markerElement).toHaveAttribute('aria-label', samplePoi.title);
+        expect(markerElement).toHaveAttribute('aria-label', samplePoi.popupAriaLabel);
         expect(markerElement).toHaveTextContent(String(samplePoi.trailStepIndex));
         expect(markerElement).toHaveClass(markerClassNames.marker);
         expect(markerElement.style.getPropertyValue('--art-trail-marker-color')).toBe(samplePoi.color);
@@ -425,7 +426,7 @@ describe('mapUtils', () => {
             activePopupRef,
             map: { id: 'mock-map' },
             markerClassNames,
-            pois: [{ ...samplePoi, title: undefined, popupTitle: 'Popup title' }],
+            pois: [{ ...samplePoi, popupAriaLabel: 'Popup title', title: undefined, popupTitle: 'Popup title' }],
             popupClassNames,
         });
 
@@ -436,5 +437,79 @@ describe('mapUtils', () => {
 
         expect(previousPopup.remove).toHaveBeenCalledTimes(1);
         expect(activePopupRef.current).toBe(popup);
+    });
+
+    it('supports keyboard activation and dismissal of marker popups', () => {
+        const popupEventHandlers = {};
+        const popupElement = document.createElement('div');
+        const closeButton = document.createElement('button');
+        closeButton.className = 'mapboxgl-popup-close-button';
+        popupElement.appendChild(closeButton);
+
+        const popup = {
+            getElement: jest.fn(() => popupElement),
+            on: jest.fn((eventName, handler) => {
+                popupEventHandlers[eventName] = handler;
+            }),
+            remove: jest.fn(() => {
+                popupEventHandlers.close?.();
+                popupElement.remove();
+            }),
+            setDOMContent: jest.fn(),
+        };
+        const markerConstructor = jest.fn(function ZLevelMarker(element) {
+            this.element = element;
+            document.body.appendChild(element);
+            this.setLngLat = jest.fn(() => this);
+            this.setPopup = jest.fn(() => this);
+            this.addTo = jest.fn(() => this);
+            this.togglePopup = jest.fn(() => {
+                document.body.appendChild(popupElement);
+                popupEventHandlers.open?.();
+            });
+        });
+        const activePopupRef = { current: null };
+
+        createMazemapPoiMarkers({
+            Mazemap: {
+                Popup: jest.fn(() => popup),
+                ZLevelMarker: markerConstructor,
+            },
+            activePopupRef,
+            map: { id: 'mock-map' },
+            markerClassNames,
+            pois: [samplePoi],
+            popupClassNames,
+        });
+
+        const markerElement = markerConstructor.mock.calls[0][0];
+        expect(markerElement).toHaveAttribute('role', 'button');
+        expect(markerElement).toHaveAttribute('tabindex', '0');
+
+        document.body.appendChild(popupElement);
+        popupEventHandlers.open();
+
+        expect(activePopupRef.current).toBe(popup);
+        expect(closeButton).toHaveFocus();
+
+        markerElement.focus();
+        markerElement.dispatchEvent(
+            new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Tab', shiftKey: true }),
+        );
+
+        expect(closeButton).toHaveFocus();
+
+        markerElement.focus();
+        document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Escape' }));
+
+        expect(popup.remove).toHaveBeenCalledTimes(1);
+        expect(activePopupRef.current).toBeNull();
+        expect(markerElement).toHaveFocus();
+
+        document.body.appendChild(popupElement);
+        popupEventHandlers.open();
+
+        expect(activePopupRef.current).toBe(popup);
+        expect(closeButton).toHaveFocus();
     });
 });

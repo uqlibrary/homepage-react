@@ -63,7 +63,9 @@ export const loadMazemapAssets = () => {
 
 export const createPoiMarkerElement = (poi, markerClassNames) => {
     const element = document.createElement('div');
-    element.setAttribute('aria-label', poi.title || poi.popupTitle);
+    element.setAttribute('aria-label', poi.popupAriaLabel);
+    element.setAttribute('role', 'button');
+    element.tabIndex = 0;
     element.textContent = typeof poi.trailStepIndex === 'number' ? `${poi.trailStepIndex}` : '';
     element.className = markerClassNames.marker;
     element.style.setProperty('--art-trail-marker-color', poi.color);
@@ -92,7 +94,7 @@ export const createPoiPopupContent = (poi, onSelectTrailPage, popupClassNames) =
     body.className = popupClassNames.body;
 
     const title = document.createElement(typeof poi.trailStepIndex === 'number' && onSelectTrailPage ? 'a' : 'div');
-    title.textContent = poi.popupTitle || poi.title;
+    title.textContent = poi.popupTitle || poi.menuTitle || poi.title;
     title.className =
         typeof poi.trailStepIndex === 'number' && onSelectTrailPage
             ? `${popupClassNames.title} ${popupClassNames.titleLink}`
@@ -157,7 +159,7 @@ export const createMazemapPoiMarkers = ({
         } else {
             /* istanbul ignore else */
             if (popup?.setText) {
-                popup.setText(poi.popupTitle || poi.title);
+                popup.setText(poi.popupTitle || poi.menuTitle || poi.title);
             }
         }
 
@@ -168,15 +170,54 @@ export const createMazemapPoiMarkers = ({
 
         /* istanbul ignore else */
         if (popup && activePopupRef) {
-            markerElement.addEventListener('click', () => {
-                const previousPopup = activePopupRef.current;
+            const handleMarkerKeyDown = event => {
+                const activePopupCloseButton = activePopupRef.current
+                    ?.getElement?.()
+                    ?.querySelector('.mapboxgl-popup-close-button');
 
+                if (event.key === 'Tab' && event.shiftKey && activePopupCloseButton) {
+                    event.preventDefault();
+                    activePopupCloseButton.focus();
+                }
+            };
+            const handleEscapeKeyDown = event => {
+                if (event.key !== 'Escape' || activePopupRef.current !== popup) {
+                    return;
+                }
+
+                event.preventDefault();
+                popup.remove?.();
+            };
+            const handlePopupOpen = () => {
+                const previousPopup = activePopupRef.current;
+                const popupElement = popup.getElement?.();
+
+                activePopupRef.current = popup;
                 if (previousPopup && previousPopup !== popup && (!previousPopup.isOpen || previousPopup.isOpen())) {
                     previousPopup.remove?.();
                 }
 
-                activePopupRef.current = popup;
-            });
+                document.addEventListener('keydown', handleEscapeKeyDown);
+                popupElement?.querySelector('.mapboxgl-popup-close-button')?.focus();
+            };
+            const handlePopupClose = () => {
+                document.removeEventListener('keydown', handleEscapeKeyDown);
+                const shouldRestoreMarkerFocus = activePopupRef.current === popup;
+
+                if (shouldRestoreMarkerFocus) {
+                    activePopupRef.current = null;
+                    markerElement.focus();
+                }
+            };
+
+            markerElement.addEventListener('keydown', handleMarkerKeyDown);
+
+            if (popup.on) {
+                popup.on('open', handlePopupOpen);
+                popup.on('close', handlePopupClose);
+            } else {
+                markerElement.addEventListener('click', handlePopupOpen);
+            }
         }
 
         return marker.addTo(map);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, rtlRender, waitFor } from 'test-utils';
+import { act, fireEvent, rtlRender, waitFor } from 'test-utils';
 
 import MapTabContent from './MapTabContent';
 import { mapClassNames, markerClassNames, popupClassNames } from './appShellStyles';
@@ -43,6 +43,27 @@ describe('MapTabContent', () => {
         expect(getByTestId('pageContent')).toBeInTheDocument();
         expect(getByLabelText('MazeMaps campus map')).toBeInTheDocument();
         expect(loadMazemapAssets).not.toHaveBeenCalled();
+    });
+
+    it('renders an artwork location table whose links open the related trail pages', () => {
+        const onSelectTrailPage = jest.fn();
+        const { getAllByRole, getByRole } = setup({ onSelectTrailPage });
+        const table = getByRole('table', { name: 'Art Trail artwork locations' });
+        const artworkLink = getByRole('link', {
+            name: 'Lily Kelly Napangardi, Sand Hills, 2007, Duhig Tower, Level 1',
+        });
+
+        expect(getAllByRole('row')).toHaveLength(9);
+        expect(table).toHaveTextContent('Artwork');
+        expect(table).toHaveTextContent('Location');
+        expect(artworkLink).toHaveTextContent('Lily Kelly Napangardi, Sand Hills, 2007');
+        expect(artworkLink.querySelector('em')).toHaveTextContent('Sand Hills');
+        expect(artworkLink).not.toHaveTextContent('Duhig Tower, Level 1');
+        expect(artworkLink).toHaveAttribute('title', 'Lily Kelly Napangardi, Sand Hills, 2007, Duhig Tower, Level 1');
+
+        fireEvent.click(artworkLink);
+
+        expect(onSelectTrailPage).toHaveBeenCalledWith(2);
     });
 
     it('initializes MazeMaps, markers, and geolocation when active outside jsdom', async () => {
