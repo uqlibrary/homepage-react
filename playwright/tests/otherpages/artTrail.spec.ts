@@ -147,6 +147,9 @@ test.describe('Art Trail', () => {
                 .getByRole('link', { name: /Lily Kelly Napangardi/ });
             await expect(artworkLink).toBeFocused();
 
+            await page.keyboard.press('Tab');
+            await expect(closePopupButton).toBeFocused();
+
             await marker.focus();
             await page.keyboard.press('Shift+Tab');
             await expect(closePopupButton).toBeFocused();
@@ -167,8 +170,7 @@ test.describe('Art Trail', () => {
             await page.keyboard.press('Space');
             await expect(artworkLink).toBeFocused();
 
-            await expect(artworkLink).toBeVisible();
-            await artworkLink.click();
+            await page.keyboard.press('Enter');
 
             await expect(page.getByRole('heading', { name: trailPages[2].heading })).toBeVisible();
         });

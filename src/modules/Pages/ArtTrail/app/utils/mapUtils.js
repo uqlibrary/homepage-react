@@ -108,13 +108,19 @@ export const createPoiPopupContent = (poi, onSelectTrailPage, popupClassNames) =
 
     if (title.tagName === 'A') {
         const linkLabel = stripHtml(poi.tableLinkText);
-        title.href = '#';
-        title.title = linkLabel;
-        title.setAttribute('aria-label', linkLabel);
-        title.addEventListener('click', event => {
+        const selectTrailPage = event => {
             event.preventDefault();
             event.stopPropagation();
             onSelectTrailPage(poi.trailStepIndex);
+        };
+        title.href = '#';
+        title.title = linkLabel;
+        title.setAttribute('aria-label', linkLabel);
+        title.addEventListener('click', selectTrailPage);
+        title.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                selectTrailPage(event);
+            }
         });
     }
 
@@ -197,9 +203,22 @@ export const createMazemapPoiMarkers = ({
                 event.preventDefault();
                 popup.remove?.();
             };
+            const handlePopupLinkKeyDown = event => {
+                if (event.key !== 'Tab' || event.shiftKey) {
+                    return;
+                }
+
+                const popupCloseButton = popup.getElement?.()?.querySelector('.mapboxgl-popup-close-button');
+
+                if (popupCloseButton) {
+                    event.preventDefault();
+                    popupCloseButton.focus();
+                }
+            };
             const handlePopupOpen = () => {
                 const previousPopup = activePopupRef.current;
                 const popupElement = popup.getElement?.();
+                const popupLink = popupElement?.querySelector(`.${popupClassNames.titleLink}`);
 
                 activePopupRef.current = popup;
                 if (previousPopup && previousPopup !== popup && (!previousPopup.isOpen || previousPopup.isOpen())) {
@@ -207,10 +226,15 @@ export const createMazemapPoiMarkers = ({
                 }
 
                 document.addEventListener('keydown', handleEscapeKeyDown);
-                popupElement?.querySelector(`.${popupClassNames.titleLink}`)?.focus();
+                popupLink?.addEventListener('keydown', handlePopupLinkKeyDown);
+                popupLink?.focus();
             };
             const handlePopupClose = () => {
                 document.removeEventListener('keydown', handleEscapeKeyDown);
+                popup
+                    .getElement?.()
+                    ?.querySelector(`.${popupClassNames.titleLink}`)
+                    ?.removeEventListener('keydown', handlePopupLinkKeyDown);
                 const shouldRestoreMarkerFocus = activePopupRef.current === popup;
 
                 if (shouldRestoreMarkerFocus) {
