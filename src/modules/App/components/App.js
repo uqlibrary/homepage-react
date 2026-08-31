@@ -125,22 +125,23 @@ export const App = ({ account, actions }) => {
                 </div>
                 <cultural-advice />
                 <div style={{ flexGrow: 1 }}>
-                    <a name="content" />
-                    <AccountContext.Provider
-                        value={{
-                            account: {
-                                ...account,
-                            },
-                        }}
-                    >
-                        <React.Suspense fallback={<ContentLoader message="Loading" />}>
-                            <Routes>
-                                {routesConfig.map((route, index) => (
-                                    <Route key={`route_${index}`} {...route} />
-                                ))}
-                            </Routes>
-                        </React.Suspense>
-                    </AccountContext.Provider>
+                    <main id="content" tabIndex="-1">
+                        <AccountContext.Provider
+                            value={{
+                                account: {
+                                    ...account,
+                                },
+                            }}
+                        >
+                            <React.Suspense fallback={<ContentLoader message="Loading" />}>
+                                <Routes>
+                                    {routesConfig.map((route, index) => (
+                                        <Route key={`route_${index}`} {...route} />
+                                    ))}
+                                </Routes>
+                            </React.Suspense>
+                        </AccountContext.Provider>
+                    </main>
                 </div>
                 <div id="full-footer-block" style={{ marginTop: '50px' }}>
                     <uq-footer />
