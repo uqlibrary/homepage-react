@@ -113,7 +113,7 @@ export const App = ({ account, actions }) => {
                 <div aria-live="polite" aria-atomic="true" style={srOnlyAnnouncementStyle}>
                     {liveAnnouncement}
                 </div>
-                <uq-header hidelibrarymenuitem="true" />
+                <uq-header hidelibrarymenuitem="true" skipnavid="content" />
                 <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink}>
                     <span slot="site-utilities">
                         <auth-button />
