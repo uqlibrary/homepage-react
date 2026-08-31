@@ -44,27 +44,29 @@ const srOnlyAnnouncementStyle = {
 const getPageAnnouncement = ({ pathname = '', hash = '' } = {}) => {
     const currentPath = `${pathname}${hash}`;
 
+    let spokenContent = '';
+
     if (currentPath === '/spaces' || currentPath === '/spaces/' || currentPath === '/#/spaces') {
-        return 'Bookable Spaces';
+        spokenContent = 'Bookable Spaces';
     }
 
     if (currentPath.startsWith('/spaces/results') || currentPath.includes('#/spaces/results')) {
-        return 'Bookable Spaces search results';
+        spokenContent = 'Bookable Spaces search results';
     }
 
     if (currentPath.startsWith('/spaces/mapresults') || currentPath.includes('#/spaces/mapresults')) {
-        return 'Bookable Spaces map';
+        spokenContent = 'Bookable Spaces map';
     }
 
     if (currentPath.startsWith('/spaces/details/') || currentPath.startsWith('/spaces/detail/')) {
-        return 'Space Details';
+        spokenContent = 'Space Details';
     }
 
     if (currentPath.includes('#/spaces/details/') || currentPath.includes('#/spaces/detail/')) {
-        return 'Space Details';
+        spokenContent = 'Space Details';
     }
 
-    return 'UQ Library';
+    return `${spokenContent}. Library. The University of Queensland.`;
 };
 
 export const App = ({ account, actions }) => {
