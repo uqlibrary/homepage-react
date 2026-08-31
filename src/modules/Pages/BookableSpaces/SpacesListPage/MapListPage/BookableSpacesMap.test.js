@@ -1,7 +1,7 @@
 import React, { act } from 'react';
 import MockDate from 'mockdate';
 
-import { rtlRender, screen, waitFor } from 'test-utils';
+import { rtlRender, screen, waitFor, WithRouter } from 'test-utils';
 
 import BookableSpacesMap, {
     BookableSpacesMapPopupContent,
@@ -14,23 +14,27 @@ describe('BookableSpacesMapPopupContent', () => {
 
     it('renders a current outage in the popup using UserAttention styling content', () => {
         rtlRender(
-            <BookableSpacesMapPopupContent
-                space={{
-                    space_id: 100,
-                    space_name: 'Popup room',
-                    space_type_details: { space_type_name: 'Meeting room' },
-                    space_external_book_url: 'https://uqbookit.uq.edu.au/#/app/booking-types/100',
-                    space_outages: [
-                        {
-                            space_outage_id: 1,
-                            space_outage_start: '2000-01-01 09:00:00',
-                            space_outage_end: '2999-01-01 12:00:00',
-                            space_outage_reason: 'Electrical maintenance',
-                        },
-                    ],
-                }}
-                isFavourite
-            />,
+            <WithRouter>
+                <BookableSpacesMapPopupContent
+                    space={{
+                        space_id: 100,
+                        space_name: 'Popup room',
+                        space_library_name: 'St Lucia Library',
+                        space_building_name: 'Forgan Smith Building',
+                        space_type_details: { space_type_name: 'Meeting room' },
+                        space_external_book_url: 'https://uqbookit.uq.edu.au/#/app/booking-types/100',
+                        space_outages: [
+                            {
+                                space_outage_id: 1,
+                                space_outage_start: '2000-01-01 09:00:00',
+                                space_outage_end: '2999-01-01 12:00:00',
+                                space_outage_reason: 'Electrical maintenance',
+                            },
+                        ],
+                    }}
+                    isFavourite
+                />
+            </WithRouter>,
         );
 
         expect(screen.getByTestId('space-100-map-popup')).toBeInTheDocument();
@@ -46,6 +50,9 @@ describe('BookableSpacesMapPopupContent', () => {
             'https://uqbookit.uq.edu.au/#/app/booking-types/100',
         );
 
+        const popupTitleLink = screen.getByText('Meeting room Popup room').closest('a');
+        expect(popupTitleLink).toHaveAttribute('href', '/spaces/detail/100');
+        expect(screen.getByText('Forgan Smith Building')).toBeInTheDocument();
         expect(screen.getByTestId('space-100-favourite-message')).toHaveTextContent('One of your favourite spaces');
     });
 
@@ -53,21 +60,23 @@ describe('BookableSpacesMapPopupContent', () => {
         MockDate.set('2026-04-24T09:00:00');
 
         rtlRender(
-            <BookableSpacesMapPopupContent
-                space={{
-                    space_id: 102,
-                    space_name: 'Popup room same day current',
-                    space_type_details: { space_type_name: 'Project room' },
-                    space_outages: [
-                        {
-                            space_outage_id: 3,
-                            space_outage_start: '2026-04-24 08:00:00',
-                            space_outage_end: '2026-04-24 13:00:00',
-                            space_outage_reason: 'Power works',
-                        },
-                    ],
-                }}
-            />,
+            <WithRouter>
+                <BookableSpacesMapPopupContent
+                    space={{
+                        space_id: 102,
+                        space_name: 'Popup room same day current',
+                        space_type_details: { space_type_name: 'Project room' },
+                        space_outages: [
+                            {
+                                space_outage_id: 3,
+                                space_outage_start: '2026-04-24 08:00:00',
+                                space_outage_end: '2026-04-24 13:00:00',
+                                space_outage_reason: 'Power works',
+                            },
+                        ],
+                    }}
+                />
+            </WithRouter>,
         );
 
         expect(screen.getByTestId('space-102-outage-message')).toHaveTextContent(
@@ -79,21 +88,23 @@ describe('BookableSpacesMapPopupContent', () => {
         MockDate.set('2026-04-24T10:00:00');
 
         rtlRender(
-            <BookableSpacesMapPopupContent
-                space={{
-                    space_id: 101,
-                    space_name: 'Popup room upcoming',
-                    space_type_details: { space_type_name: 'Project room' },
-                    space_outages: [
-                        {
-                            space_outage_id: 2,
-                            space_outage_start: '2026-04-30 09:00:00',
-                            space_outage_end: '2026-04-30 12:00:00',
-                            space_outage_reason: 'Lift works',
-                        },
-                    ],
-                }}
-            />,
+            <WithRouter>
+                <BookableSpacesMapPopupContent
+                    space={{
+                        space_id: 101,
+                        space_name: 'Popup room upcoming',
+                        space_type_details: { space_type_name: 'Project room' },
+                        space_outages: [
+                            {
+                                space_outage_id: 2,
+                                space_outage_start: '2026-04-30 09:00:00',
+                                space_outage_end: '2026-04-30 12:00:00',
+                                space_outage_reason: 'Lift works',
+                            },
+                        ],
+                    }}
+                />
+            </WithRouter>,
         );
 
         expect(screen.getByText('Upcoming closure')).toBeInTheDocument();
@@ -107,22 +118,24 @@ describe('BookableSpacesMapPopupContent', () => {
         MockDate.set('2026-04-24T10:00:00');
 
         rtlRender(
-            <BookableSpacesMapPopupContent
-                space={{
-                    space_id: 103,
-                    space_name: 'Popup room date only',
-                    space_type_details: { space_type_name: 'Project room' },
-                    space_outages: [
-                        {
-                            space_outage_id: 5,
-                            space_outage_start: '2026-04-26 08:00:00',
-                            space_outage_end: '2026-05-05 14:00:00',
-                            space_outage_reason: 'Replacing carpet',
-                            space_outage_show_time_public: false,
-                        },
-                    ],
-                }}
-            />,
+            <WithRouter>
+                <BookableSpacesMapPopupContent
+                    space={{
+                        space_id: 103,
+                        space_name: 'Popup room date only',
+                        space_type_details: { space_type_name: 'Project room' },
+                        space_outages: [
+                            {
+                                space_outage_id: 5,
+                                space_outage_start: '2026-04-26 08:00:00',
+                                space_outage_end: '2026-05-05 14:00:00',
+                                space_outage_reason: 'Replacing carpet',
+                                space_outage_show_time_public: false,
+                            },
+                        ],
+                    }}
+                />
+            </WithRouter>,
         );
 
         expect(screen.getByTestId('space-103-outage-message')).toHaveTextContent('Closed 26 April to 5 May 2026.');
@@ -131,13 +144,15 @@ describe('BookableSpacesMapPopupContent', () => {
 
     it('renders popup content without type and library details when absent', () => {
         rtlRender(
-            <BookableSpacesMapPopupContent
-                space={{
-                    space_id: 104,
-                    space_name: 'Bare popup',
-                    space_outages: [],
-                }}
-            />,
+            <WithRouter>
+                <BookableSpacesMapPopupContent
+                    space={{
+                        space_id: 104,
+                        space_name: 'Bare popup',
+                        space_outages: [],
+                    }}
+                />
+            </WithRouter>,
         );
 
         expect(screen.getByTestId('space-104-map-popup')).toBeInTheDocument();
@@ -239,27 +254,29 @@ describe('BookableSpacesMap', () => {
         const ref = React.createRef();
 
         rtlRender(
-            <BookableSpacesMap
-                ref={ref}
-                sortedSpaceLocations={[
-                    {
-                        space_id: 200,
-                        space_name: 'Map room',
-                        space_latitude: '-27.47',
-                        space_longitude: '153.0',
+            <WithRouter>
+                <BookableSpacesMap
+                    ref={ref}
+                    sortedSpaceLocations={[
+                        {
+                            space_id: 200,
+                            space_name: 'Map room',
+                            space_latitude: '-27.47',
+                            space_longitude: '153.0',
+                            space_campus_name: 'St Lucia',
+                            space_zlevel: 2,
+                        },
+                    ]}
+                    spacesFavouritesList={[]}
+                    onMarkerClick={onMarkerClick}
+                    centreLatLong={{
+                        space_latitude: -27.47,
+                        space_longitude: 153.0,
                         space_campus_name: 'St Lucia',
-                        space_zlevel: 2,
-                    },
-                ]}
-                spacesFavouritesList={[]}
-                onMarkerClick={onMarkerClick}
-                centreLatLong={{
-                    space_latitude: -27.47,
-                    space_longitude: 153.0,
-                    space_campus_name: 'St Lucia',
-                    space_zlevel: 1,
-                }}
-            />,
+                        space_zlevel: 1,
+                    }}
+                />
+            </WithRouter>,
         );
 
         const scriptElement = document.querySelector('script[src*="mazemap.min.js"]');
@@ -304,17 +321,19 @@ describe('BookableSpacesMap', () => {
 
     it('renders a reset button when the map has moved from the initial center', async () => {
         rtlRender(
-            <BookableSpacesMap
-                sortedSpaceLocations={[]}
-                spacesFavouritesList={[]}
-                onMarkerClick={jest.fn()}
-                centreLatLong={{
-                    space_latitude: -27.47,
-                    space_longitude: 153.0,
-                    space_campus_name: 'St Lucia',
-                    space_zlevel: 1,
-                }}
-            />,
+            <WithRouter>
+                <BookableSpacesMap
+                    sortedSpaceLocations={[]}
+                    spacesFavouritesList={[]}
+                    onMarkerClick={jest.fn()}
+                    centreLatLong={{
+                        space_latitude: -27.47,
+                        space_longitude: 153.0,
+                        space_campus_name: 'St Lucia',
+                        space_zlevel: 1,
+                    }}
+                />
+            </WithRouter>,
         );
 
         const scriptElement = document.querySelector('script[src*="mazemap.min.js"]');
