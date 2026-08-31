@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -11,11 +12,13 @@ import { StyledAudioPlayer, StyledAccordionGrid, StyledAccordion, StyledAccordio
 import WelcomeAudio from '../../../../../../public/audio/artTrail/welcome.mp3';
 
 const WelcomePage = ({ mediaStopSignal }) => {
+    const theme = useTheme();
+
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero
                 title="Indigenous art and Library discovery trail"
-                subtitle="A self-guided trail to explore Aboriginal and Torres Strait Islander artworks in the University of Queensland Library."
+                subtitle="A self-guided exploration of Aboriginal and Torres Strait Islander artworks and stories in the University of Queensland Library. "
             />
             <StyledAccordionGrid container direction="column" data-testid="pageContent">
                 <Grid>
@@ -23,7 +26,7 @@ const WelcomePage = ({ mediaStopSignal }) => {
                 </Grid>
                 <Grid container>
                     <Grid xs>
-                        <Box component="div">
+                        <Box>
                             <p>
                                 Welcome to the Indigenous Art and Library Discovery Trail at The University of
                                 Queensland Library.
@@ -64,6 +67,10 @@ const WelcomePage = ({ mediaStopSignal }) => {
                         </StyledAccordionDetails>
                     </StyledAccordion>
                 </Grid>
+                <Box sx={{ mb: 2, p: 2, backgroundColor: theme.palette.designSystem.warningYellow }}>
+                    Brisbane River pattern from A Guidance Through Time by Quandamooka artists Casey Coolwell and Kyra
+                    Mancktelow.
+                </Box>
             </StyledAccordionGrid>
         </Grid>
     );

@@ -5,6 +5,9 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 
+import { getArtworkPoiById } from '../config/mapPois';
+import { stripHtml } from '../utils/mapUtils';
+import AriaAnnounce from './AriaAnnounce';
 import wholeArtworkImage from '../../../../../../public/images/artTrail/UQRAP_River-Artwork-RGB.jpg';
 
 const StyledHeading = styled('h1')(({ theme }) => ({
@@ -28,10 +31,14 @@ const StyledSubheading = styled('div')(({ theme }) => ({
     fontFamily: theme.typography.artTrail.bodyFontFamily,
 }));
 
-const Hero = ({ title, subtitle, sx }) => {
+const Hero = ({ id, title, subtitle, sx }) => {
+    const _titleText = title || getArtworkPoiById(id)?.tableLinkText;
+    const cleanTitle = stripHtml(_titleText);
     return (
         <Grid sx={sx}>
+            <AriaAnnounce message={cleanTitle} />
             <Box
+                data-testid="pageHero"
                 sx={{
                     borderRadius: 0,
                     overflow: 'hidden',
@@ -44,7 +51,7 @@ const Hero = ({ title, subtitle, sx }) => {
                     justifyContent: 'center',
                 }}
             >
-                <StyledHeading tabIndex={-1}>{title}</StyledHeading>
+                <StyledHeading tabIndex={-1} dangerouslySetInnerHTML={{ __html: _titleText }} />
                 {subtitle && <StyledSubheading>{subtitle}</StyledSubheading>}
             </Box>
         </Grid>
@@ -52,7 +59,8 @@ const Hero = ({ title, subtitle, sx }) => {
 };
 
 Hero.propTypes = {
-    title: PropTypes.node.isRequired,
+    id: PropTypes.string,
+    title: PropTypes.string,
     subtitle: PropTypes.string,
     sx: PropTypes.object,
 };

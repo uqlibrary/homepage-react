@@ -2,17 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import ArtworkImage from '../../../../../../public/images/artTrail/artwork/UQAM_20241219_CampusArtwork_046.jpg';
 import MapImage from '../../../../../../public/images/artTrail/maps/Pikkuw.jpg';
 
 import Hero from '../SharedComponents/Hero';
+import InformationButton from '../SharedComponents/InformationButton';
+import LocationButton from '../SharedComponents/LocationButton';
 import {
     DisclosureSection,
     StyledHeading,
@@ -56,7 +55,7 @@ const LocationDrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
             <Grid>
-                <StyledDrawerHeader variant="h3">View the artwork</StyledDrawerHeader>
+                <StyledDrawerHeader variant="h3">Artwork location</StyledDrawerHeader>
             </Grid>
             <Grid>
                 <Box component="p" sx={{ color: 'text.secondary' }}>
@@ -78,15 +77,7 @@ const LocationDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero
-                title={
-                    <span>
-                        Craig Koomeeta, <em>Pikkuw (Saltwater crocodile)</em> 2008
-                    </span>
-                }
-                sx={{ pb: 0 }}
-                data-testid="pageHero"
-            />
+            <Hero id="artwork-pikkuw" sx={{ pb: 0 }} />
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
@@ -96,36 +87,9 @@ const Page = ({ openDrawer }) => {
                             intrinsicWidth={2500}
                             intrinsicHeight={1667}
                         />
-                        <IconButton
-                            size="large"
-                            aria-label="More information about this artwork"
-                            onClick={() => openDrawer(ArtDrawerContent)}
-                            sx={{ position: 'absolute', top: 0, right: 0 }}
-                        >
-                            <InfoOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            aria-label="Location information about this artwork"
-                            onClick={() => openDrawer(LocationDrawerContent)}
-                            sx={{ position: 'absolute', bottom: 0, right: 0 }}
-                        >
-                            <LocationOnOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
+
+                        <InformationButton onClick={() => openDrawer(ArtDrawerContent)} />
+                        <LocationButton onClick={() => openDrawer(LocationDrawerContent)} />
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>
