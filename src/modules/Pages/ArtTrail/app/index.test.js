@@ -40,7 +40,7 @@ describe('ArtTrailApp', () => {
         ]);
 
         await userEvent.click(getByRole('button', { name: 'Start the trail' }));
-        await userEvent.click(getByRole('button', { name: 'Map' }));
+        await userEvent.click(getByRole('button', { name: 'Art Trail by location on a map' }));
 
         expect(window.dataLayer).toEqual([
             {
@@ -64,7 +64,7 @@ describe('ArtTrailApp', () => {
         expect(getByTestId('art-trail-app')).toBeInTheDocument();
         expect(getByTestId('culturalDisclaimer')).toHaveTextContent(culturalDisclaimerText);
         expect(getByRole('button', { name: 'open navigation menu' })).toBeInTheDocument();
-        expect(getByRole('button', { name: 'Trail' })).toBeInTheDocument();
+        expect(getByRole('button', { name: 'Art Trail in sequential order' })).toBeInTheDocument();
         expect(queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
         expect(getByRole('button', { name: 'Start the trail' })).toBeEnabled();
         expect(queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
@@ -80,7 +80,7 @@ describe('ArtTrailApp', () => {
             ).toHaveFocus(),
         );
 
-        await userEvent.click(getByRole('button', { name: 'Map' }));
+        await userEvent.click(getByRole('button', { name: 'Art Trail by location on a map' }));
 
         await waitFor(() =>
             expect(getByRole('heading', { level: 1, name: 'Art Trail Map of St Lucia campus' })).toHaveFocus(),
@@ -99,20 +99,20 @@ describe('ArtTrailApp', () => {
         await userEvent.click(getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' }));
 
         await userEvent.click(getByRole('button', { name: 'Start the trail' }));
-        await waitFor(() => expect(getByRole('heading', { level: 1, name: /Hector Tijupuru Burton/i })).toHaveFocus());
+        await waitFor(() => expect(getByRole('heading', { level: 1, name: /Hector Tjupuru Burton/i })).toHaveFocus());
         expect(getByRole('button', { name: 'Previous page' })).toBeEnabled();
         expect(getByRole('button', { name: 'Next page' })).toBeEnabled();
         expect(queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
         expect(getByText(`1 / ${totalPages}`)).toBeInTheDocument();
         expect(getByRole('button', { name: 'View more' })).toBeInTheDocument();
 
-        await userEvent.click(getByRole('button', { name: 'Map' }));
+        await userEvent.click(getByRole('button', { name: 'Art Trail by location on a map' }));
         expect(queryByRole('button', { name: 'Previous page' })).not.toBeInTheDocument();
         expect(queryByRole('button', { name: 'Next page' })).not.toBeInTheDocument();
         expect(queryByText('Find your way through the trail')).not.toBeInTheDocument();
         expect(getByTestId('mazemap-container')).toBeInTheDocument();
 
-        await userEvent.click(getByRole('button', { name: 'Trail' }));
+        await userEvent.click(getByRole('button', { name: 'Art Trail in sequential order' }));
         expect(getByRole('button', { name: 'Previous page' })).toBeEnabled();
         expect(queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
         expect(getByText(`1 / ${totalPages}`)).toBeInTheDocument();
@@ -120,7 +120,7 @@ describe('ArtTrailApp', () => {
     });
 
     it('opens and closes the page drawer from a Trail page', async () => {
-        const { getByRole, getByText, queryByRole } = setup();
+        const { getByRole, getByText, queryByText } = setup();
 
         await userEvent.click(getByRole('button', { name: 'Start the trail' }));
         await userEvent.click(getByRole('button', { name: 'More information about this artwork' }));
@@ -130,7 +130,7 @@ describe('ArtTrailApp', () => {
 
         await userEvent.keyboard('{Escape}');
 
-        expect(queryByRole('heading', { name: /Hector Tjupuru Burton/i })).not.toBeInTheDocument();
+        expect(queryByText(/synthetic polymer paint on linen/i)).not.toBeInTheDocument();
     });
 
     it('moves focus to the page heading after menu navigation', async () => {
@@ -149,7 +149,7 @@ describe('ArtTrailApp', () => {
         startButton.focus();
         await userEvent.keyboard('{Enter}');
 
-        await waitFor(() => expect(getByRole('heading', { level: 1, name: /Hector Tijupuru Burton/i })).toHaveFocus());
+        await waitFor(() => expect(getByRole('heading', { level: 1, name: /Hector Tjupuru Burton/i })).toHaveFocus());
     });
 
     it('moves focus to the page heading after Space-key navigation', async () => {
@@ -159,7 +159,7 @@ describe('ArtTrailApp', () => {
         startButton.focus();
         await userEvent.keyboard(' ');
 
-        await waitFor(() => expect(getByRole('heading', { level: 1, name: /Hector Tijupuru Burton/i })).toHaveFocus());
+        await waitFor(() => expect(getByRole('heading', { level: 1, name: /Hector Tjupuru Burton/i })).toHaveFocus());
         expect(startButton).not.toHaveFocus();
     });
 
@@ -193,7 +193,7 @@ describe('ArtTrailApp', () => {
         expect(Cookies.set).toHaveBeenCalledWith('ART_TRAIL_CULTURAL_DISCLAIMER_SEEN', 'true', { path: '/' });
         expect(queryByText(culturalDisclaimerText)).not.toBeInTheDocument();
 
-        await userEvent.click(getByRole('button', { name: 'Map' }));
+        await userEvent.click(getByRole('button', { name: 'Art Trail by location on a map' }));
         expect(queryByText(culturalDisclaimerText)).not.toBeInTheDocument();
     });
 

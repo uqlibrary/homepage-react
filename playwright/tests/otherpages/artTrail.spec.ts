@@ -8,7 +8,7 @@ import type { Page } from '@playwright/test';
 
 const trailPages = [
     { heading: /Indigenous art and Library discovery trail/i, infoButtons: 0, locationButtons: 0 },
-    { heading: /Hector Tijupuru Burton/, infoButtons: 1, locationButtons: 1 },
+    { heading: /Hector Tjupuru Burton/, infoButtons: 1, locationButtons: 1 },
     { heading: /Lily Kelly Napangardi/, infoButtons: 1, locationButtons: 1 },
     { heading: /Gloria Tamerre Petyarre/, infoButtons: 1, locationButtons: 1 },
     { heading: /Johnny Yungut Tjupurrula/, infoButtons: 1, locationButtons: 1 },
@@ -17,7 +17,7 @@ const trailPages = [
     { heading: /Megan Cope/, infoButtons: 1, locationButtons: 1 },
     { heading: /Brian Robinson/, infoButtons: 1, locationButtons: 1 },
     {
-        heading: /Exploring Aboriginal and Torres Strait Islander stories/,
+        heading: /Continue your journey/,
         infoButtons: 0,
         locationButtons: 0,
     },

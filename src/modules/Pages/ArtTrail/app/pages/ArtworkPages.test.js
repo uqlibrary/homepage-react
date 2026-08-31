@@ -20,7 +20,7 @@ const expandablePageCases = [
         locationButtonCount: 1,
         uniqueDrawerCount: 2,
         artDrawerTextPatterns: [/Lily Kelly Napangardi.*Sand Hills.*2007/i],
-        locationDrawerTextPattern: /Where: Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
+        locationDrawerTextPattern: /Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
     },
     {
         name: 'DevilMountainLizard',
@@ -30,7 +30,7 @@ const expandablePageCases = [
         locationButtonCount: 1,
         uniqueDrawerCount: 2,
         artDrawerTextPatterns: [/Gloria Tamerre Petyarre.*Devil Mountain Lizard Dreaming.*1997/i],
-        locationDrawerTextPattern: /Where: Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
+        locationDrawerTextPattern: /Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
     },
     {
         name: 'Kunawarritji',
@@ -43,7 +43,7 @@ const expandablePageCases = [
             /Nora Wompi Nungurrayi.*Kunawarritji 1.*2012/i,
             /Nora Wompi Nungurrayi.*Kunawarritji 2.*2012/i,
         ],
-        locationDrawerTextPattern: /Where: Level 2, Duhig Tower \(Building 2\), St Lucia campus/i,
+        locationDrawerTextPattern: /Level 2, Duhig Tower \(Building 2\), St Lucia campus/i,
     },
     {
         name: 'PenuTjukurpa',
@@ -53,7 +53,7 @@ const expandablePageCases = [
         locationButtonCount: 1,
         uniqueDrawerCount: 2,
         artDrawerTextPatterns: [/Hector Tjupuru Burton.*Punu Tjukurpa.*2013/i],
-        locationDrawerTextPattern: /Where: Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
+        locationDrawerTextPattern: /Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
     },
     {
         name: 'Pikkuw',
@@ -93,7 +93,7 @@ const expandablePageCases = [
         locationButtonCount: 1,
         uniqueDrawerCount: 2,
         artDrawerTextPatterns: [/Johnny Yungut Tjupurrula.*Tingari ceremonies at Wilkinkarra.*2003/i],
-        locationDrawerTextPattern: /Where: Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
+        locationDrawerTextPattern: /Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
     },
 ];
 
@@ -168,7 +168,7 @@ describe('Artwork pages', () => {
                 const LocationDrawerContent = openDrawer.mock.calls[infoButtonCount][0];
                 const renderedLocationDrawer = rtlRender(<LocationDrawerContent />);
 
-                expect(renderedLocationDrawer.getByRole('heading', { name: 'View the artwork' })).toBeInTheDocument();
+                expect(renderedLocationDrawer.getByRole('heading', { name: 'Artwork location' })).toBeInTheDocument();
                 expect(renderedLocationDrawer.container).toHaveTextContent(locationDrawerTextPattern);
             });
 
@@ -212,9 +212,7 @@ describe('Artwork pages', () => {
     it('renders Continue Journey resources, transcript, and audio content', async () => {
         const { getByRole, getByText } = setup(ContinueJourney, { mediaStopSignal: 'trail:9' });
 
-        expect(
-            getByRole('heading', { name: 'Exploring Aboriginal and Torres Strait Islander stories' }),
-        ).toBeInTheDocument();
+        expect(getByRole('heading', { name: 'Continue your journey' })).toBeInTheDocument();
         expect(getByRole('group', { name: 'Listen to this page' })).toBeInTheDocument();
         expect(
             getByText(/Thank you for exploring the Indigenous Art and Library Discovery Trail/i),
