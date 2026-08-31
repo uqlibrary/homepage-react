@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 import React, { useImperativeHandle, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { Link, MemoryRouter } from 'react-router';
 import { createRoot } from 'react-dom/client';
 
 import { styled, ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
@@ -10,6 +11,7 @@ import { CAMPUS_ST_LUCIA } from 'config/locale';
 import { addClass, removeClass } from 'helpers/general';
 
 import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
+import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
 
@@ -60,6 +62,19 @@ const StyledPopupContent = styled('div')(() => ({
     lineHeight: 1.4,
 }));
 
+const StyledPopupTitleLink = styled(Link)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    fontWeight: 700,
+    textDecoration: 'underline',
+    '&:hover, &:focus': {
+        backgroundColor: 'transparent',
+        '& span': {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+        },
+    },
+}));
+
 const StyledFavouriteNote = styled('em')(() => ({
     display: 'block',
     marginTop: '0.5rem',
@@ -74,22 +89,23 @@ const StyledPopupBookingDiv = styled('div')(() => ({
 export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) => {
     const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
     const spaceTypeName = space?.space_type_details?.space_type_name ?? null;
+    const detailUrl = serialiseJourneyUrl({
+        view: 'details',
+        spaceId: space?.space_uuid || space?.space_id || null,
+    });
+
+    const popupTitleText = [spaceTypeName, space?.space_name ?? ''].filter(Boolean).join(' ');
 
     return (
         <StyledPopupContent data-testid={`space-${space?.space_id}-map-popup`}>
-            <strong>{space?.space_name ?? ''}</strong>
+            <StyledPopupTitleLink to={detailUrl} reloadDocument>
+                <span>{popupTitleText}</span>
+            </StyledPopupTitleLink>
 
-            {!!spaceTypeName && (
+            {!!space?.space_building_name && (
                 <>
                     <br />
-                    <strong>{spaceTypeName}</strong>
-                </>
-            )}
-
-            {!!space?.space_library_name && (
-                <>
-                    <br />
-                    <span>{space.space_library_name}</span>
+                    <span>{space.space_building_name}</span>
                 </>
             )}
 
@@ -208,7 +224,9 @@ const BookableSpacesMap = React.forwardRef(
                 const popupRoot = createRoot(container);
                 popupRoot.render(
                     <MuiThemeProvider theme={mui1theme}>
-                        <BookableSpacesMapPopupContent space={space} isFavourite={isFavourite} />
+                        <MemoryRouter initialEntries={[window.location.pathname || '/']}>
+                            <BookableSpacesMapPopupContent space={space} isFavourite={isFavourite} />
+                        </MemoryRouter>
                     </MuiThemeProvider>,
                 );
                 activePopupRootRef.current = popupRoot;
@@ -397,10 +415,29 @@ const BookableSpacesMap = React.forwardRef(
                         markerEl.dataset.baseZindex = '';
                     }
                     markerEl.addEventListener('click', e => {
+                        const map = mazeMapInstanceRef.current;
                         const targetZLevel = mapPoint?.space_zlevel !== null ? parseFloat(mapPoint.space_zlevel) : null;
                         if (targetZLevel !== null) {
-                            mazeMapInstanceRef.current?.stop();
-                            mazeMapInstanceRef.current?.setZLevel(targetZLevel);
+                            map?.stop();
+                            map?.setZLevel(targetZLevel);
+                        }
+                        if (mapPoint?.space_longitude && mapPoint?.space_latitude) {
+                            const nextCenter = [Number(mapPoint.space_longitude), Number(mapPoint.space_latitude)];
+                            const currentCenter = map?.getCenter?.();
+                            const isAlreadyCentered =
+                                currentCenter &&
+                                Math.abs(currentCenter.lng - nextCenter[0]) < 0.0001 &&
+                                Math.abs(currentCenter.lat - nextCenter[1]) < 0.0001;
+
+                            if (!isAlreadyCentered) {
+                                map?.stop();
+                                map?.flyTo({
+                                    center: nextCenter,
+                                    zoom: map?.getZoom?.() ?? 17,
+                                    curve: 0.08,
+                                    speed: 0.35,
+                                });
+                            }
                         }
                         setSelectedMarker(markerEl, mapPoint);
                         onMarkerClick(e, mapPoint, markerEl);
