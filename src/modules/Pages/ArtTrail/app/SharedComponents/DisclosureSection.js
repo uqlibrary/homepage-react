@@ -53,11 +53,11 @@ const EXPANDED_BUTTON_SX = {
 };
 
 const DisclosureSection = ({
-    collapsedLabel = 'View more',
-    details,
-    expandedLabel = 'View less',
     heading,
     summary,
+    details,
+    collapsedLabel = 'View more',
+    expandedLabel = 'View less',
     forceExpanded = false,
 }) => {
     const [isExpanded, setIsExpanded] = React.useState(forceExpanded);
@@ -105,7 +105,7 @@ const DisclosureSection = ({
 
 DisclosureSection.propTypes = {
     collapsedLabel: PropTypes.string,
-    details: PropTypes.node.isRequired,
+    details: PropTypes.node,
     expandedLabel: PropTypes.string,
     heading: PropTypes.node,
     summary: PropTypes.node.isRequired,

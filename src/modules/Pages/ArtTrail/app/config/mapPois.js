@@ -11,7 +11,7 @@ import WarualThumbnail from '../../../../../../public/images/artTrail/artwork/th
 
 export const ART_TRAIL_MAP_POIS = [
     {
-        id: 'artwork-entry-1',
+        id: 'artwork-punu-tjukurpa',
         menuTitle: 'Hector Tjupuru Burton, Ray Ken, Mick Wikilyiri & Brenton Ken,',
         popupAriaLabel: 'Punu Tjukurpa, Duhig Tower, Level 1',
         popupDescription: '<em>Punu Tjukurpa</em> 2013',
@@ -26,7 +26,7 @@ export const ART_TRAIL_MAP_POIS = [
         color: '#51247a',
     },
     {
-        id: 'artwork-entry-2',
+        id: 'artwork-sand-hills',
         popupTitle: 'Lily Kelly Napangardi,',
         popupAriaLabel: 'Sand Hills, Duhig Tower, Level 1',
         popupDescription: '<em>Sand Hills</em> 2007',
@@ -41,7 +41,7 @@ export const ART_TRAIL_MAP_POIS = [
         color: '#51247a',
     },
     {
-        id: 'artwork-entry-3',
+        id: 'artwork-devil-mountain-lizard-dreaming',
         popupTitle: 'Gloria Tamerre Petyarre,',
         popupAriaLabel: 'Devil Mountain Lizard Dreaming, Duhig Tower, Level 1',
         popupDescription: '<em>Devil Mountain Lizard Dreaming</em> 1997',
@@ -56,7 +56,7 @@ export const ART_TRAIL_MAP_POIS = [
         color: '#51247a',
     },
     {
-        id: 'artwork-entry-4',
+        id: 'artwork-tingari-ceremonies',
         popupTitle: 'Johnny Yungut Tjupurrula,',
         popupAriaLabel: 'Tingari ceremonies at Wilkinkarra, Duhig Tower, Level 1',
         popupDescription: '<em>Tingari ceremonies at Wilkinkarra</em> 2003',
@@ -71,7 +71,7 @@ export const ART_TRAIL_MAP_POIS = [
         color: '#51247a',
     },
     {
-        id: 'artwork-entry-5a',
+        id: 'artwork-nora-wompi-nungurrayi',
         menuTitle: 'Nora Wompi Nungurrayi,',
         menuDescription: '<em>Kunawarritji 1</em> and <em>Kunawarritji 2</em> 2012',
         popupTitle: 'Nora Wompi Nungurrayi,',
@@ -88,7 +88,7 @@ export const ART_TRAIL_MAP_POIS = [
         color: '#51247a',
     },
     {
-        id: 'artwork-entry-5b',
+        id: 'artwork-nora-wompi-nungurrayi-2',
         popupTitle: 'Nora Wompi Nungurrayi,',
         popupAriaLabel: 'Kunawarritji 2, Duhig Tower, Level 2',
         popupDescription: '<em>Kunawarritji 2</em> 2012',
@@ -102,7 +102,7 @@ export const ART_TRAIL_MAP_POIS = [
         color: '#51247a',
     },
     {
-        id: 'artwork-entry-6',
+        id: 'artwork-pikkuw',
         popupTitle: 'Craig Koomeeta,',
         popupAriaLabel: 'Pikkuw (Saltwater crocodile), Central Library, Level 1',
         popupDescription: '<em>Pikkuw (Saltwater crocodile)</em> 2008',
@@ -117,7 +117,7 @@ export const ART_TRAIL_MAP_POIS = [
         color: '#51247a',
     },
     {
-        id: 'artwork-entry-7a',
+        id: 'artwork-whispers',
         popupTitle: 'Megan Cope,',
         popupAriaLabel: 'Whispers (Poles), Central Library, Level 1',
         popupDescription: '<em>Whispers (Poles)</em> 2023',
@@ -132,7 +132,7 @@ export const ART_TRAIL_MAP_POIS = [
         color: '#51247a',
     },
     {
-        id: 'artwork-entry-7b',
+        id: 'artwork-whispers-2',
         popupTitle: 'Megan Cope,',
         popupAriaLabel: 'Whispers (Poles), Central Library, Level 1',
         popupDescription: '<em>Whispers (Poles)</em> 2023',
@@ -146,7 +146,7 @@ export const ART_TRAIL_MAP_POIS = [
         color: '#51247a',
     },
     {
-        id: 'artwork-entry-8',
+        id: 'artwork-warual',
         popupTitle: 'Brian Robinson,',
         popupAriaLabel: 'Warual III, Central Library, Level 2',
         popupDescription: '<em>Warual III (Green Turtle)</em> 2015',
@@ -161,3 +161,5 @@ export const ART_TRAIL_MAP_POIS = [
         color: '#51247a',
     },
 ];
+
+export const getArtworkPoiById = id => ART_TRAIL_MAP_POIS.find(poi => poi.id === id) ?? {};

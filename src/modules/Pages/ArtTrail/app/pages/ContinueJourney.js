@@ -24,7 +24,7 @@ import ContinueJourneyAudio from '../../../../../../public/audio/artTrail/contin
 const ContinueJourney = ({ mediaStopSignal }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="Exploring Aboriginal and Torres Strait Islander stories" />
+            <Hero title="Continue your journey" />
             <StyledAccordionGrid container direction="column" data-testid="pageContent">
                 <Grid>
                     <StyledAudioPlayer

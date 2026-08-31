@@ -445,7 +445,9 @@ const ArtTrailApp = () => {
                                     label={tab.label}
                                     icon={tab.icon}
                                     id={`art-trail-tab-${tab.id}`}
+                                    data-testid={`art-trail-tab-${tab.id}`}
                                     aria-controls={`art-trail-tabpanel-${tab.id}`}
+                                    aria-label={tab.ariaLabel}
                                     sx={FOOTER_TAB_ACTION_SX}
                                 />
                             ))}

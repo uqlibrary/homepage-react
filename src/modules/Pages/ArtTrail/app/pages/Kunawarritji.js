@@ -2,12 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 import Artwork1Image from '../../../../../../public/images/artTrail/artwork/2018.27_Kunawarritji-1-landscape-2.jpg';
 import Artwork2Image from '../../../../../../public/images/artTrail/artwork/2018.28_Kunawarritji-2-landscape-2.jpg';
@@ -15,6 +12,8 @@ import DesertImage from '../../../../../../public/images/artTrail/Desert-near-ol
 import MapImage from '../../../../../../public/images/artTrail/maps/Kunawarritji.jpg';
 
 import Hero from '../SharedComponents/Hero';
+import InformationButton from '../SharedComponents/InformationButton';
+import LocationButton from '../SharedComponents/LocationButton';
 import {
     DisclosureSection,
     StyledHeading,
@@ -80,11 +79,11 @@ const LocationDrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
             <Grid>
-                <StyledDrawerHeader variant="h3">View the artwork</StyledDrawerHeader>
+                <StyledDrawerHeader variant="h3">Artwork location</StyledDrawerHeader>
             </Grid>
             <Grid>
                 <Box component="p" sx={{ color: 'text.secondary' }}>
-                    Where: Level 2,{' '}
+                    Level 2,{' '}
                     <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
                         Duhig Tower
                     </a>{' '}
@@ -98,15 +97,7 @@ const LocationDrawerContent = () => {
 const Page = ({ openDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero
-                title={
-                    <span>
-                        Nora Wompi Nungurrayi, <em>Kunawarritji 1</em> and <em>Kunawarritji 2</em> 2012
-                    </span>
-                }
-                sx={{ pb: 0 }}
-                data-testid="pageHero"
-            />
+            <Hero id="artwork-nora-wompi-nungurrayi" sx={{ pb: 0 }} />
             <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
@@ -116,36 +107,9 @@ const Page = ({ openDrawer }) => {
                             intrinsicWidth={4671}
                             intrinsicHeight={3096}
                         />
-                        <IconButton
-                            size="large"
-                            aria-label="More information about this artwork"
-                            onClick={() => openDrawer(Art1DrawerContent)}
-                            sx={{ position: 'absolute', top: 0, right: 0 }}
-                        >
-                            <InfoOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            aria-label="Location information about this artwork"
-                            onClick={() => openDrawer(LocationDrawerContent)}
-                            sx={{ position: 'absolute', bottom: 0, right: 0 }}
-                        >
-                            <LocationOnOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
+
+                        <InformationButton onClick={() => openDrawer(Art1DrawerContent)} />
+                        <LocationButton onClick={() => openDrawer(LocationDrawerContent)} />
                     </Box>
                     <Box position="relative">
                         <StyledImage
@@ -154,36 +118,9 @@ const Page = ({ openDrawer }) => {
                             intrinsicWidth={3042}
                             intrinsicHeight={2043}
                         />
-                        <IconButton
-                            size="large"
-                            aria-label="More information about this artwork"
-                            onClick={() => openDrawer(Art2DrawerContent)}
-                            sx={{ position: 'absolute', top: 0, right: 0 }}
-                        >
-                            <InfoOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            aria-label="Location information about this artwork"
-                            onClick={() => openDrawer(LocationDrawerContent)}
-                            sx={{ position: 'absolute', bottom: 0, right: 0 }}
-                        >
-                            <LocationOnOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
+
+                        <InformationButton onClick={() => openDrawer(Art2DrawerContent)} />
+                        <LocationButton onClick={() => openDrawer(LocationDrawerContent)} />
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>

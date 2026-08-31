@@ -12,12 +12,14 @@ const tabs = [
     {
         id: 'trail',
         label: 'Trail',
+        ariaLabel: 'Art Trail in sequential order',
         icon: <RouteOutlinedIcon sx={TAB_ICON_SX} />,
         pages: trailPages,
     },
     {
         id: 'map',
         label: 'Map',
+        ariaLabel: 'Art Trail by location on a map',
         icon: <MapOutlinedIcon sx={TAB_ICON_SX} />,
         page: {
             pageTitle: 'Art Trail Map of St Lucia campus',

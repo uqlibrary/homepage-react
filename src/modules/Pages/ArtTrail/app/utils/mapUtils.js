@@ -210,6 +210,7 @@ export const createMazemapPoiMarkers = ({
 
                 const popupCloseButton = popup.getElement?.()?.querySelector('.mapboxgl-popup-close-button');
 
+                /* istanbul ignore else */
                 if (popupCloseButton) {
                     event.preventDefault();
                     popupCloseButton.focus();
