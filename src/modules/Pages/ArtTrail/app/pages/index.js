@@ -13,7 +13,7 @@ export const trailPages = [
     { component: Welcome, pageTitle: 'Indigenous art and Library discovery trail' },
     {
         component: PenuTjukurpa,
-        pageTitle: 'Hector Tijupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken, Punu Tjukurpa 2013',
+        pageTitle: 'Hector Tjupuru Burton, Ray Ken, Mick Wikilyiri, Brenton Ken, Punu Tjukurpa 2013',
     },
     { component: SandHills, pageTitle: 'Lily Kelly Napangardi, Sand Hills 2007' },
     {

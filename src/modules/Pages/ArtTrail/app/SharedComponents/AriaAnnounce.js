@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -15,9 +15,27 @@ const srOnlyAnnouncementStyle = {
 };
 
 const AriaAnnounce = ({ message }) => {
+    const [announcement, setAnnouncement] = useState('');
+
+    useEffect(() => {
+        setAnnouncement('');
+
+        const timeout = window.setTimeout(() => {
+            setAnnouncement(message);
+        }, 50);
+
+        return () => window.clearTimeout(timeout);
+    }, [message]);
+
     return (
-        <Box aria-live="polite" aria-atomic="true" sx={srOnlyAnnouncementStyle} data-testid="aria-announcement">
-            {message}
+        <Box
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            sx={srOnlyAnnouncementStyle}
+            data-testid="aria-announcement"
+        >
+            {announcement}
         </Box>
     );
 };
