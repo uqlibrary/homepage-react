@@ -42,7 +42,6 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection, 
     const [transitionState, setTransitionState] = useState(() => createTransitionState({ page, pageKey }));
     const [isAnimating, setIsAnimating] = useState(false);
     const incomingPageRef = useRef(null);
-    const hasMountedRef = useRef(false);
     const focusFrameRef = useRef(null);
     const animationFrameRef = useRef(null);
     const animationTimeoutRef = useRef(null);
@@ -59,19 +58,9 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection, 
     }, []);
 
     useEffect(() => {
-        if (!hasMountedRef.current) {
-            hasMountedRef.current = true;
-            return;
-        }
-
         window.cancelAnimationFrame(focusFrameRef.current);
         focusFrameRef.current = window.requestAnimationFrame(() => {
-            const heading = incomingPageRef.current?.querySelector('h1');
-
-            /* istanbul ignore else */
-            if (heading) {
-                heading.focus({ preventScroll: true });
-            }
+            incomingPageRef.current?.querySelector('h1')?.focus({ preventScroll: true });
         });
     }, [transitionState.displayedPageKey]);
 

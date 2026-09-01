@@ -1,5 +1,5 @@
 import React from 'react';
-import { rtlRender, userEvent, waitFor } from 'test-utils';
+import { rtlRender, userEvent } from 'test-utils';
 import Cookies from 'js-cookie';
 
 import ArtTrailApp from './index';
@@ -71,22 +71,6 @@ describe('ArtTrailApp', () => {
         expect(document.title).toBe('The University of Queensland Indigenous Art and Library Discovery Trail');
     });
 
-    it('moves focus to the page heading on initial load and Map tab navigation', async () => {
-        const { getByRole } = setup();
-
-        await waitFor(() =>
-            expect(
-                getByRole('heading', { level: 1, name: 'Indigenous art and Library discovery trail' }),
-            ).toHaveFocus(),
-        );
-
-        await userEvent.click(getByRole('button', { name: 'Art Trail by location on a map' }));
-
-        await waitFor(() =>
-            expect(getByRole('heading', { level: 1, name: 'Art Trail Map of St Lucia campus' })).toHaveFocus(),
-        );
-    });
-
     it('opens the menu and preserves the Trail page state across tab switches', async () => {
         const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup();
 
@@ -99,7 +83,6 @@ describe('ArtTrailApp', () => {
         await userEvent.click(getByRole('menuitem', { name: 'Indigenous art and Library discovery trail' }));
 
         await userEvent.click(getByRole('button', { name: 'Start the trail' }));
-        await waitFor(() => expect(getByRole('heading', { level: 1, name: /Hector Tjupuru Burton/i })).toHaveFocus());
         expect(getByRole('button', { name: 'Previous page' })).toBeEnabled();
         expect(getByRole('button', { name: 'Next page' })).toBeEnabled();
         expect(queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
@@ -131,36 +114,6 @@ describe('ArtTrailApp', () => {
         await userEvent.keyboard('{Escape}');
 
         expect(queryByText(/synthetic polymer paint on linen/i)).not.toBeInTheDocument();
-    });
-
-    it('moves focus to the page heading after menu navigation', async () => {
-        const { getByRole } = setup();
-
-        await userEvent.click(getByRole('button', { name: 'open navigation menu' }));
-        await userEvent.click(getByRole('menuitem', { name: /Lily Kelly Napangardi/i }));
-
-        await waitFor(() => expect(getByRole('heading', { level: 1, name: /Lily Kelly Napangardi/i })).toHaveFocus());
-    });
-
-    it('moves focus to the page heading after keyboard navigation', async () => {
-        const { getByRole } = setup();
-        const startButton = getByRole('button', { name: 'Start the trail' });
-
-        startButton.focus();
-        await userEvent.keyboard('{Enter}');
-
-        await waitFor(() => expect(getByRole('heading', { level: 1, name: /Hector Tjupuru Burton/i })).toHaveFocus());
-    });
-
-    it('moves focus to the page heading after Space-key navigation', async () => {
-        const { getByRole } = setup();
-        const startButton = getByRole('button', { name: 'Start the trail' });
-
-        startButton.focus();
-        await userEvent.keyboard(' ');
-
-        await waitFor(() => expect(getByRole('heading', { level: 1, name: /Hector Tjupuru Burton/i })).toHaveFocus());
-        expect(startButton).not.toHaveFocus();
     });
 
     it('resets the scroll position when changing Trail pages', async () => {

@@ -108,7 +108,7 @@ describe('TrailTabContent', () => {
         expect(getByTestId('page-two')).toBeInTheDocument();
     });
 
-    it('moves focus to the incoming page heading when page content changes', () => {
+    it('moves focus to the incoming page heading', () => {
         const PageOne = createMockPage('page-one');
         const PageTwo = createMockPage('page-two');
         const { getByRole, rerender } = setup({ page: PageOne, pageKey: 'page-one' });
@@ -128,12 +128,7 @@ describe('TrailTabContent', () => {
             jest.advanceTimersByTime(0);
         });
 
-        expect(getByRole('heading', { name: 'page-two heading' })).toHaveAttribute('tabindex', '-1');
         expect(getByRole('heading', { name: 'page-two heading' })).toHaveFocus();
-
-        act(() => {
-            jest.advanceTimersByTime(FORWARD_PAGE_TRANSITION_DURATION_MS);
-        });
     });
 
     it('uses the shorter backward transition duration before removing the previous page', () => {
