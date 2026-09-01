@@ -83,7 +83,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.artTrailApp,
             element: <components.ArtTrailApp />,
-            pageTitle: 'Art Trail',
+            pageTitle: 'Indigenous art and Library discovery trail',
             standalone: true,
         },
     ];
@@ -199,7 +199,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.artTrailLanding,
             element: <components.ArtTrail />,
-            pageTitle: 'Art Trail',
+            pageTitle: 'Landing page for the Indigenous art and Library discovery trail',
         },
     ];
 

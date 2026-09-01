@@ -151,6 +151,25 @@ const ArtTrailApp = () => {
     const { trackPageView } = useGoogleAnalytics();
     const lastTrackedPageRef = useRef(null);
     const pageKey = `${activeTabConfig.id}-${activeState.stepIndex}`;
+    const previousPageKeyRef = useRef(pageKey);
+    const [announcement, setAnnouncement] = useState('');
+
+    useEffect(() => {
+        const focusFrame = window.requestAnimationFrame(() => {
+            document.querySelector('#art-trail-tabpanel-trail h1')?.focus({ preventScroll: true });
+        });
+
+        return () => window.cancelAnimationFrame(focusFrame);
+    }, []);
+
+    useEffect(() => {
+        if (pageKey === previousPageKeyRef.current) {
+            return;
+        }
+
+        previousPageKeyRef.current = pageKey;
+        setAnnouncement(stripHtml(activeTabPages[activeState.stepIndex].pageTitle));
+    }, [activeState.stepIndex, activeTabPages, pageKey]);
 
     useEffect(() => {
         if (lastTrackedPageRef.current === pageKey) {
@@ -172,8 +191,6 @@ const ArtTrailApp = () => {
     const visibleActiveStep =
         isTrailTab && activeState.stepIndex > 0 ? activeState.stepIndex - 1 : activeState.stepIndex;
     const footerHeight = showStepper ? '112px' : '64px';
-    const activePageTitle = activeTabPages[activeState.stepIndex].pageTitle;
-    const announcement = stripHtml(activePageTitle);
 
     const handleMenuClose = () => setMenuAnchor(null);
 
