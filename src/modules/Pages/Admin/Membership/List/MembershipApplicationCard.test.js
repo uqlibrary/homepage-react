@@ -17,6 +17,7 @@ import MembershipApplicationCard, {
     isIssued,
     statusColour,
     statusText,
+    typeFacts,
 } from './MembershipApplicationCard';
 
 const typeTitles = { community: 'Community', alumni: 'Alumni', hospital: 'Hospital' };
@@ -68,7 +69,7 @@ describe('MembershipApplicationCard', () => {
         expect(screen.getByTestId('membership-meta-101')).toHaveTextContent('1 Jul 2026');
     });
 
-    it('shows the hospital service and colours a confirmed status', () => {
+    it('shows the hospital service as a labelled fact and colours a confirmed status', () => {
         setup({
             id: '104',
             type: 'hospital',
@@ -79,11 +80,11 @@ describe('MembershipApplicationCard', () => {
             submitted_on: '10-07-2026 15:00:00',
         });
 
-        expect(screen.getByTestId('membership-meta-104')).toHaveTextContent('Royal Brisbane');
+        expect(screen.getByTestId('membership-facts-104')).toHaveTextContent('Service Royal Brisbane');
         expect(screen.getByTestId('membership-status-104')).toHaveTextContent('Confirmed');
     });
 
-    it('shows the alumni number and hides the date of birth for a fryer applicant', () => {
+    it('shows the alumni number as a labelled fact and hides the date of birth for a fryer applicant', () => {
         const { rerender } = setup({
             id: '102',
             type: 'alumni',
@@ -92,7 +93,7 @@ describe('MembershipApplicationCard', () => {
             sn: 'Confirmed',
             alumni_num: 's1234567',
         });
-        expect(screen.getByTestId('membership-meta-102')).toHaveTextContent('s1234567');
+        expect(screen.getByTestId('membership-facts-102')).toHaveTextContent('Student no. s1234567');
         expect(screen.getByTestId('membership-status-102')).toHaveTextContent('Renewing');
 
         // A fryer applicant keeps their date of birth off the card even when the record carries one.
@@ -124,6 +125,8 @@ describe('MembershipApplicationCard', () => {
         expect(screen.getByTestId('membership-meta-107')).not.toHaveTextContent('Born');
         // A type with no title in the map falls back to its own value.
         expect(screen.getByTestId('membership-type-107')).toHaveTextContent('fryer');
+        // A fryer applicant carries no type-specific facts, so that line is not drawn at all.
+        expect(screen.queryByTestId('membership-facts-107')).not.toBeInTheDocument();
     });
 
     it('renders a spare record with no optional facts', () => {
@@ -473,6 +476,17 @@ describe('MembershipApplicationCard', () => {
             expect(attachmentName({ name: 'proof.pdf' })).toBe('proof.pdf');
             expect(attachmentName({ key: 'file-1' })).toBe('Document');
             expect(attachmentName(null)).toBe('Document');
+        });
+
+        it('typeFacts pairs each type-specific value it finds with a label, and returns none otherwise', () => {
+            expect(typeFacts({ alumni_num: 's1234567' })).toEqual([
+                { key: 'alumni_num', label: 'Student no.', value: 's1234567' },
+            ]);
+            expect(typeFacts({ hospital_service: 'RBWH' })).toEqual([
+                { key: 'hospital_service', label: 'Service', value: 'RBWH' },
+            ]);
+            expect(typeFacts({ type: 'community' })).toEqual([]);
+            expect(typeFacts(undefined)).toEqual([]);
         });
     });
 

@@ -14,7 +14,9 @@ export default {
             legend: 'Filter by status',
             all: 'All',
             unconfirmed: 'Unconfirmed',
-            renewing: 'Renewing',
+            // This bucket holds renewals the member has already completed that now await an admin's
+            // re-confirmation, so it reads 'Reconfirm' rather than 'Renewing'. The filter value stays 'renewing'.
+            renewing: 'Reconfirm',
             confirmed: 'Confirmed',
             // The accessible name of a tile pairs its label with its count, since the two are drawn apart.
             label: (label, count) => `${label}, ${count}`,
@@ -54,6 +56,11 @@ export default {
             // Prefixes its value on the line of facts, rather than heading a column, so it is as short as it
             // can be and still say what the value is.
             birthdate: 'Born',
+            // Labels for the type-specific facts that ride on their own line beneath the contact facts, so a bare
+            // student number or hospital service reads as what it is. Kept short - they prefix their value rather
+            // than heading a column.
+            studentNumber: 'Student no.',
+            service: 'Service',
             // The action that turns an application into an account. It reads 'Re-confirm' where the applicant
             // has been confirmed before, since confirming again is a different, deliberate thing to do.
             confirm: 'Confirm',
@@ -161,6 +168,10 @@ export default {
                 payment: 'Payment',
                 paymentAmount: 'Amount',
                 paymentReceipt: 'Receipt',
+                // The pricing code the application was lodged under, kept on the record beside the payment it
+                // drives. Shown read-only, as the old record view did, since it is set at submission and not
+                // something an admin corrects here.
+                paymentCode: 'Payment code',
                 paid: 'Paid',
                 paymentFailed: 'Failed',
                 // Stands in where a fact was never recorded, so the row reads as empty-but-present.
