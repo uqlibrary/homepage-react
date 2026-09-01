@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Route, Routes } from 'react-router';
+import { Route, Routes, useLocation } from 'react-router';
 import { routes } from 'config';
 import browserUpdate from 'browser-update';
 import { AccountContext } from 'context';
@@ -26,14 +26,69 @@ browserUpdate({
 });
 
 const isAdminPage = () => {
-    return window.location.pathname.startsWith('/admin/');
+    return window.location.pathname.startsWith('/admin/') || window.location.hash.startsWith('#/admin/');
+};
+
+const srOnlyAnnouncementStyle = {
+    position: 'absolute',
+    width: '1px',
+    height: '1px',
+    padding: 0,
+    margin: '-1px',
+    overflow: 'hidden',
+    clip: 'rect(0, 0, 0, 0)',
+    whiteSpace: 'nowrap',
+    border: 0,
+};
+
+const getPageAnnouncement = ({ pathname = '', hash = '' } = {}) => {
+    const currentPath = `${pathname}${hash}`;
+
+    let spokenContent = '';
+
+    if (currentPath === '/spaces' || currentPath === '/spaces/' || currentPath === '/#/spaces') {
+        spokenContent = 'Bookable Spaces.';
+    }
+
+    if (currentPath.startsWith('/spaces/results') || currentPath.includes('#/spaces/results')) {
+        spokenContent = 'Bookable Spaces search results.';
+    }
+
+    if (currentPath.startsWith('/spaces/mapresults') || currentPath.includes('#/spaces/mapresults')) {
+        spokenContent = 'Bookable Spaces map.';
+    }
+
+    if (currentPath.startsWith('/spaces/details/') || currentPath.startsWith('/spaces/detail/')) {
+        spokenContent = 'Space Details.';
+    }
+
+    if (currentPath.includes('#/spaces/details/') || currentPath.includes('#/spaces/detail/')) {
+        spokenContent = 'Space Details.';
+    }
+    // Announcements: Art trail
+    if (
+        currentPath.startsWith('/art-trail') ||
+        currentPath.startsWith('/art-trail/') ||
+        currentPath.includes('#/art-trail')
+    ) {
+        spokenContent = 'Indigenous Art and Discovery Trail.';
+    }
+
+    return `${spokenContent} Library. The University of Queensland.`;
 };
 
 export const App = ({ account, actions }) => {
+    const location = useLocation();
+    const [liveAnnouncement, setLiveAnnouncement] = useState('Library');
+
     useEffect(() => {
         actions.loadCurrentAccount();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        setLiveAnnouncement(getPageAnnouncement(location));
+    }, [location]);
 
     const routesConfig = routes.getRoutesConfig({
         components: pages,
@@ -65,7 +120,10 @@ export const App = ({ account, actions }) => {
             }}
         >
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
-                <uq-header hidelibrarymenuitem="true" />
+                <div aria-live="polite" aria-atomic="true" style={srOnlyAnnouncementStyle}>
+                    {liveAnnouncement}
+                </div>
+                <uq-header hidelibrarymenuitem="true" skipnavid="content" />
                 <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink}>
                     <span slot="site-utilities">
                         <auth-button />
@@ -77,22 +135,23 @@ export const App = ({ account, actions }) => {
                 </div>
                 <cultural-advice />
                 <div style={{ flexGrow: 1 }}>
-                    <a name="content" />
-                    <AccountContext.Provider
-                        value={{
-                            account: {
-                                ...account,
-                            },
-                        }}
-                    >
-                        <React.Suspense fallback={<ContentLoader message="Loading" />}>
-                            <Routes>
-                                {routesConfig.map((route, index) => (
-                                    <Route key={`route_${index}`} {...route} />
-                                ))}
-                            </Routes>
-                        </React.Suspense>
-                    </AccountContext.Provider>
+                    <main id="content" tabIndex="-1">
+                        <AccountContext.Provider
+                            value={{
+                                account: {
+                                    ...account,
+                                },
+                            }}
+                        >
+                            <React.Suspense fallback={<ContentLoader message="Loading" />}>
+                                <Routes>
+                                    {routesConfig.map((route, index) => (
+                                        <Route key={`route_${index}`} {...route} />
+                                    ))}
+                                </Routes>
+                            </React.Suspense>
+                        </AccountContext.Provider>
+                    </main>
                 </div>
                 <div id="full-footer-block" style={{ marginTop: '50px' }}>
                     <uq-footer />
