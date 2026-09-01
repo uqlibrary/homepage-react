@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useLayoutEffect, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
 import { useTheme, styled } from '@mui/material/styles';
@@ -138,7 +138,7 @@ const ArtTrailApp = () => {
         () => Cookies.get(CULTURAL_DISCLAIMER_COOKIE) !== 'true',
     );
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         document.title = 'The University of Queensland Indigenous Art and Library Discovery Trail';
     }, []);
 
@@ -147,16 +147,6 @@ const ArtTrailApp = () => {
     const activeTabConfig = useMemo(() => tabs.find(tab => tab.id === activeTab) ?? tabs[0], [activeTab]);
     const activeTabPages = getTabPages(activeTabConfig);
     const activeState = tabState[activeTabConfig.id];
-    const stepCount = activeTabPages.length;
-    const showStepper = stepCount > 1;
-    const isTrailTab = activeTabConfig.id === 'trail';
-    const isTrailWelcomeStep = isTrailTab && activeState.stepIndex === 0;
-    const visibleStepperSteps = isTrailTab && activeState.stepIndex > 0 ? stepCount - 1 : stepCount;
-    const visibleActiveStep =
-        isTrailTab && activeState.stepIndex > 0 ? activeState.stepIndex - 1 : activeState.stepIndex;
-    const footerHeight = showStepper ? '112px' : '64px';
-    const activePageTitle = activeTabPages[activeState.stepIndex].pageTitle;
-    const announcement = stripHtml(activePageTitle);
 
     const { trackPageView } = useGoogleAnalytics();
     const lastTrackedPageRef = useRef(null);
@@ -173,6 +163,17 @@ const ArtTrailApp = () => {
             page_title: activeTabPages[activeState.stepIndex].pageTitle,
         });
     }, [activeState.stepIndex, activeTabConfig.id, activeTabPages, pageKey, trackPageView]);
+
+    const stepCount = activeTabPages.length;
+    const showStepper = stepCount > 1;
+    const isTrailTab = activeTabConfig.id === 'trail';
+    const isTrailWelcomeStep = isTrailTab && activeState.stepIndex === 0;
+    const visibleStepperSteps = isTrailTab && activeState.stepIndex > 0 ? stepCount - 1 : stepCount;
+    const visibleActiveStep =
+        isTrailTab && activeState.stepIndex > 0 ? activeState.stepIndex - 1 : activeState.stepIndex;
+    const footerHeight = showStepper ? '112px' : '64px';
+    const activePageTitle = activeTabPages[activeState.stepIndex].pageTitle;
+    const announcement = stripHtml(activePageTitle);
 
     const handleMenuClose = () => setMenuAnchor(null);
 
@@ -479,4 +480,4 @@ const ArtTrailApp = () => {
     );
 };
 
-export default ArtTrailApp;
+export default React.memo(ArtTrailApp);
