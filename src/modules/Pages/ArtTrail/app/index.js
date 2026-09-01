@@ -140,11 +140,6 @@ const ArtTrailApp = () => {
         document.title = 'The University of Queensland Indigenous Art and Library Discovery Trail';
     }, []);
 
-    useEffect(() => {
-        const activePanel = document.getElementById(`art-trail-tabpanel-${activeTab}`);
-        activePanel?.querySelector('h1')?.focus({ preventScroll: true });
-    }, [activeTab]);
-
     useDocumentScrollLock();
 
     const activeTabConfig = useMemo(() => tabs.find(tab => tab.id === activeTab) ?? tabs[0], [activeTab]);
