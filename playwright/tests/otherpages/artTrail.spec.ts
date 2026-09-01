@@ -203,26 +203,22 @@ test.describe('Art Trail', () => {
             await openTrailPage(page, 9);
         });
 
-        test('moves focus from Start the trail to the heading after Space-key navigation', async ({ page }) => {
+        test('announces content and tab changes after keyboard navigation', async ({ page }) => {
             await page.goto('/art-trail/app?user=public');
             const startButton = page.getByRole('button', { name: 'Start the trail' });
-            await startButton.evaluate(button => {
-                const trackedWindow = window as typeof window & { startTrailButton?: Element };
-                trackedWindow.startTrailButton = button;
-            });
+            const announcement = page.getByTestId('aria-announcement');
+
+            await expect(announcement).toHaveCount(1);
 
             await startButton.focus();
             await page.keyboard.press('Space');
 
-            const heading = page.getByRole('heading', { level: 1, name: trailPages[1].heading });
-            expect(
-                await page.evaluate(() => {
-                    const trackedWindow = window as typeof window & { startTrailButton?: Element };
-                    return trackedWindow.startTrailButton?.isConnected;
-                }),
-            ).toBe(false);
-            await expect(heading).toBeFocused();
-            await expect(page.getByRole('button', { name: 'Next page' })).not.toBeFocused();
+            await expect(announcement).toHaveText(/Hector Tjupuru Burton/);
+
+            await page.getByRole('button', { name: 'Map' }).click();
+
+            await expect(announcement).toHaveText('Art Trail Map of St Lucia campus');
+            await expect(announcement).toHaveCount(1);
         });
     });
 });

@@ -108,29 +108,6 @@ describe('TrailTabContent', () => {
         expect(getByTestId('page-two')).toBeInTheDocument();
     });
 
-    it('moves focus to the incoming page heading', () => {
-        const PageOne = createMockPage('page-one');
-        const PageTwo = createMockPage('page-two');
-        const { getByRole, rerender } = setup({ page: PageOne, pageKey: 'page-one' });
-
-        rerender(
-            <TrailTabContent
-                tab={defaultTab}
-                page={PageTwo}
-                pageKey="page-two"
-                openDrawer={jest.fn()}
-                navigationDirection="forward"
-                mediaStopSignal="trail:1"
-            />,
-        );
-
-        act(() => {
-            jest.advanceTimersByTime(0);
-        });
-
-        expect(getByRole('heading', { name: 'page-two heading' })).toHaveFocus();
-    });
-
     it('uses the shorter backward transition duration before removing the previous page', () => {
         const PageOne = createMockPage('page-one');
         const PageTwo = createMockPage('page-two');

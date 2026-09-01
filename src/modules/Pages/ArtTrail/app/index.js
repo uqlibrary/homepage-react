@@ -27,10 +27,12 @@ import Toolbar from '@mui/material/Toolbar';
 
 import uqHeaderLogo from '../../../../../public/images/artTrail/uq-logo--reversed.svg';
 
+import AriaAnnounce from './SharedComponents/AriaAnnounce';
 import CulturalDisclaimer from './SharedComponents/CulturalDisclaimer';
 import MapTabContent from './MapTabContent';
 import { trailPages } from './pages';
 import TrailTabContent from './TrailTabContent';
+import { stripHtml } from './utils/mapUtils';
 import {
     CONTENT_HEIGHT_SX,
     createAppRootSx,
@@ -153,6 +155,8 @@ const ArtTrailApp = () => {
     const visibleActiveStep =
         isTrailTab && activeState.stepIndex > 0 ? activeState.stepIndex - 1 : activeState.stepIndex;
     const footerHeight = showStepper ? '112px' : '64px';
+    const activePageTitle = activeTabPages[activeState.stepIndex].pageTitle;
+    const announcement = stripHtml(activePageTitle);
 
     const { trackPageView } = useGoogleAnalytics();
     const lastTrackedPageRef = useRef(null);
@@ -271,6 +275,7 @@ const ArtTrailApp = () => {
 
     return (
         <Box data-testid="art-trail-app" sx={createAppRootSx(appTheme, footerHeight)}>
+            <AriaAnnounce message={announcement} />
             <GlobalStyles styles={createGlobalStyles(appTheme)} />
             <AppBar
                 position="fixed"

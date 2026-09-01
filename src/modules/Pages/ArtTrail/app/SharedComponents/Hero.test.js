@@ -21,15 +21,11 @@ describe('Hero', () => {
 
     it('renders HTML in a string title', () => {
         const title = 'Hector Tjupuru Burton, <em>Punu Tjukurpa</em>, 2013';
-        const { getByRole, getByTestId } = setup({ title, subtitle: undefined });
+        const { getByRole } = setup({ title, subtitle: undefined });
 
         const heading = getByRole('heading', { level: 1 });
         expect(heading).toHaveTextContent('Hector Tjupuru Burton, Punu Tjukurpa, 2013');
         expect(heading.querySelector('em')).toHaveTextContent('Punu Tjukurpa');
-
-        const announcement = getByTestId('aria-announcement');
-        expect(announcement).toHaveTextContent('Hector Tjupuru Burton, Punu Tjukurpa, 2013');
-        expect(announcement.querySelector('em')).not.toBeInTheDocument();
     });
 
     it('renders the configured HTML title for an artwork ID', () => {

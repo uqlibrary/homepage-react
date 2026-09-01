@@ -6,8 +6,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 
 import { getArtworkPoiById } from '../config/mapPois';
-import { stripHtml } from '../utils/mapUtils';
-import AriaAnnounce from './AriaAnnounce';
 import wholeArtworkImage from '../../../../../../public/images/artTrail/UQRAP_River-Artwork-RGB.jpg';
 
 const StyledHeading = styled('h1')(({ theme }) => ({
@@ -33,10 +31,8 @@ const StyledSubheading = styled('div')(({ theme }) => ({
 
 const Hero = ({ id, title, subtitle, sx }) => {
     const _titleText = title || getArtworkPoiById(id)?.tableLinkText;
-    const cleanTitle = stripHtml(_titleText);
     return (
         <Grid sx={sx}>
-            <AriaAnnounce message={cleanTitle} />
             <Box
                 data-testid="pageHero"
                 sx={{
