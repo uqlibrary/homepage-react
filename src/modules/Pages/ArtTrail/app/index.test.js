@@ -1,5 +1,5 @@
 import React from 'react';
-import { rtlRender, userEvent } from 'test-utils';
+import { rtlRender, userEvent, waitFor } from 'test-utils';
 import Cookies from 'js-cookie';
 
 import ArtTrailApp from './index';
@@ -69,6 +69,22 @@ describe('ArtTrailApp', () => {
         expect(getByRole('button', { name: 'Start the trail' })).toBeEnabled();
         expect(queryByText(`Page 1 of ${totalPages}`)).not.toBeInTheDocument();
         expect(document.title).toBe('The University of Queensland Indigenous Art and Library Discovery Trail');
+    });
+
+    it('focuses the initial heading and announces subsequent navigation', async () => {
+        const { getByRole, getByTestId } = setup();
+        const announcement = getByTestId('aria-announcement');
+
+        expect(announcement).toBeEmptyDOMElement();
+        await waitFor(() =>
+            expect(
+                getByRole('heading', { level: 1, name: 'Indigenous art and Library discovery trail' }),
+            ).toHaveFocus(),
+        );
+
+        await userEvent.click(getByRole('button', { name: 'Start the trail' }));
+
+        await waitFor(() => expect(announcement).toHaveTextContent(/Hector Tjupuru Burton/));
     });
 
     it('opens the menu and preserves the Trail page state across tab switches', async () => {

@@ -203,17 +203,24 @@ test.describe('Art Trail', () => {
             await openTrailPage(page, 9);
         });
 
-        test('announces content and tab changes after keyboard navigation', async ({ page }) => {
+        test('focuses the initial heading and announces later navigation', async ({ page }) => {
             await page.goto('/art-trail/app?user=public');
             const startButton = page.getByRole('button', { name: 'Start the trail' });
             const announcement = page.getByTestId('aria-announcement');
+            const initialHeading = page.getByRole('heading', {
+                level: 1,
+                name: trailPages[0].heading,
+            });
 
             await expect(announcement).toHaveCount(1);
+            await expect(announcement).toBeEmpty();
+            await expect(initialHeading).toBeFocused();
 
             await startButton.focus();
             await page.keyboard.press('Space');
 
             await expect(announcement).toHaveText(/Hector Tjupuru Burton/);
+            await expect(page.getByRole('heading', { level: 1, name: trailPages[1].heading })).not.toBeFocused();
 
             await page.getByRole('button', { name: 'Map' }).click();
 
