@@ -47,26 +47,30 @@ const getPageAnnouncement = ({ pathname = '', hash = '' } = {}) => {
     let spokenContent = '';
 
     if (currentPath === '/spaces' || currentPath === '/spaces/' || currentPath === '/#/spaces') {
-        spokenContent = 'Bookable Spaces';
+        spokenContent = 'Bookable Spaces.';
     }
 
     if (currentPath.startsWith('/spaces/results') || currentPath.includes('#/spaces/results')) {
-        spokenContent = 'Bookable Spaces search results';
+        spokenContent = 'Bookable Spaces search results.';
     }
 
     if (currentPath.startsWith('/spaces/mapresults') || currentPath.includes('#/spaces/mapresults')) {
-        spokenContent = 'Bookable Spaces map';
+        spokenContent = 'Bookable Spaces map.';
     }
 
     if (currentPath.startsWith('/spaces/details/') || currentPath.startsWith('/spaces/detail/')) {
-        spokenContent = 'Space Details';
+        spokenContent = 'Space Details.';
     }
 
     if (currentPath.includes('#/spaces/details/') || currentPath.includes('#/spaces/detail/')) {
-        spokenContent = 'Space Details';
+        spokenContent = 'Space Details.';
+    }
+    // Announcements: Art trail
+    if (currentPath === '/art-trail' || currentPath === '/art-trail/' || currentPath === '/#/art-trail') {
+        spokenContent = 'Indigenous Art and Discovery Trail.';
     }
 
-    return `${spokenContent}. Library. The University of Queensland.`;
+    return `${spokenContent} Library. The University of Queensland.`;
 };
 
 const isStandaloneRoute = (pathname, routesConfig) => {
