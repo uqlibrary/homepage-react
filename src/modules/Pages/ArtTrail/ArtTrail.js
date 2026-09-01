@@ -34,7 +34,7 @@ export const ArtTrail = () => {
                     <Box
                         component="img"
                         src={artwork}
-                        alt="Indigenous Art and Library Discovery Trail "
+                        alt="An illustration of the Indigenous Art and Library Discovery Trail on a mobile device"
                         sx={{
                             width: '20%',
                             height: 'auto',
@@ -84,4 +84,4 @@ export const ArtTrail = () => {
     );
 };
 
-export default ArtTrail;
+export default React.memo(ArtTrail);
