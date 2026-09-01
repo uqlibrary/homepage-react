@@ -40,11 +40,27 @@ export const ArtTrail = () => {
                             height: 'auto',
                             justifySelf: 'flex-start',
                             aspectRatio: '456 / 914',
-                            display: { xs: 'none', sm: 'block' },
+                            display: { xs: 'none', md: 'block' },
                         }}
                     />
                     <Box sx={{ justifySelf: 'flex-end', px: 2, py: { xs: 4, sm: 1 } }}>
-                        <Box component="h1" sx={{ mt: 0 }}>
+                        <Box
+                            component="h1"
+                            sx={{
+                                mt: 0,
+                                fontWeight: 300,
+                                color: '#51247A',
+                                overflowWrap: 'break-word!important',
+                                maxWidth: '1200px',
+                                width: '90%',
+                                marginTop: '12px',
+                                marginBottom: '0',
+                                padding: '0',
+                                fontSize: '2.125rem',
+                                lineHeight: 1.235,
+                                letterSpacing: '0.00735em',
+                            }}
+                        >
                             Welcome to the Indigenous Art and Library Discovery Trail at the University of Queensland
                             Library.
                         </Box>
