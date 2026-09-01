@@ -66,7 +66,11 @@ const getPageAnnouncement = ({ pathname = '', hash = '' } = {}) => {
         spokenContent = 'Space Details.';
     }
     // Announcements: Art trail
-    if (currentPath === '/art-trail' || currentPath === '/art-trail/' || currentPath === '/#/art-trail') {
+    if (
+        currentPath.startsWith('/art-trail') ||
+        currentPath.startsWith('/art-trail/') ||
+        currentPath.includes('#/art-trail')
+    ) {
         spokenContent = 'Indigenous Art and Discovery Trail.';
     }
 
