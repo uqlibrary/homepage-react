@@ -1345,8 +1345,9 @@ export const BookableSpacesList = ({
     }, [sortedSpaceLocations, expandedSpaceId, useJourneyExperience, isMapReady, handleSpaceSelect]);
 
     const handleMarkerClick = (e, space) => {
-        // Stop the click from opening the popup
-        e?.originalEvent?.stopPropagation();
+        const eventToStop = e?.originalEvent ?? e;
+        eventToStop?.stopPropagation?.();
+        eventToStop?.preventDefault?.();
 
         // scroll the spaces sidebar to the relevant space
         const spaceElement = document.getElementById(`space-${space?.space_id}`);

@@ -170,9 +170,11 @@ describe('BookableSpacesMap', () => {
         latestPopupInstance = null;
 
         class MockPopup {
-            constructor() {
+            constructor(options = {}) {
                 latestPopupInstance = this;
                 this.listeners = {};
+                this.options = options;
+                this.remove = jest.fn();
             }
             setLngLat() {
                 return this;
@@ -185,9 +187,6 @@ describe('BookableSpacesMap', () => {
             }
             on(eventName, callback) {
                 this.listeners[eventName] = callback;
-                return this;
-            }
-            remove() {
                 return this;
             }
         }
@@ -317,6 +316,7 @@ describe('BookableSpacesMap', () => {
 
         expect(onMarkerClick).toHaveBeenCalled();
         expect(latestPopupInstance).not.toBeNull();
+        expect(latestPopupInstance.options.closeOnClick).toBe(false);
     });
 
     it('reports the live map centre when the map moves', async () => {
