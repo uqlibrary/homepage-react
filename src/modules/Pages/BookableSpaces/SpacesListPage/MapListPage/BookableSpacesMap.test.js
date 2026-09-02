@@ -233,7 +233,7 @@ describe('BookableSpacesMap', () => {
                 setZLevel() {}
                 flyTo() {}
                 getCenter() {
-                    return { lng: 153.0, lat: -27.47 };
+                    return { lng: this.center.lng, lat: this.center.lat };
                 }
                 remove() {
                     this.wasRemoved = true;
@@ -317,6 +317,41 @@ describe('BookableSpacesMap', () => {
 
         expect(onMarkerClick).toHaveBeenCalled();
         expect(latestPopupInstance).not.toBeNull();
+    });
+
+    it('reports the live map centre when the map moves', async () => {
+        const onMapCenterChange = jest.fn();
+
+        rtlRender(
+            <WithRouter>
+                <BookableSpacesMap
+                    sortedSpaceLocations={[]}
+                    spacesFavouritesList={[]}
+                    onMarkerClick={jest.fn()}
+                    onMapCenterChange={onMapCenterChange}
+                    centreLatLong={{
+                        space_latitude: -27.47,
+                        space_longitude: 153.0,
+                        space_campus_name: 'St Lucia',
+                        space_zlevel: 1,
+                    }}
+                />
+            </WithRouter>,
+        );
+
+        const scriptElement = document.querySelector('script[src*="mazemap.min.js"]');
+        act(() => {
+            scriptElement.onload();
+        });
+
+        await waitFor(() => expect(latestMockMapInstance).not.toBeNull());
+        act(() => {
+            latestMockMapInstance.center = { lng: 153.12, lat: -27.52 };
+            latestMockMapInstance.listeners.load();
+            latestMockMapInstance.listeners.moveend();
+        });
+
+        expect(onMapCenterChange).toHaveBeenCalledWith({ space_longitude: 153.12, space_latitude: -27.52 });
     });
 
     it('renders a reset button when the map has moved from the initial center', async () => {
