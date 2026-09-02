@@ -76,7 +76,7 @@ const LocationDrawerContent = () => {
     );
 };
 
-const Page = ({ openDrawer }) => {
+const Page = ({ openInformationDrawer, openLocationDrawer }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero id="artwork-punu-tjukurpa" sx={{ pb: 0 }} />
@@ -89,8 +89,14 @@ const Page = ({ openDrawer }) => {
                             intrinsicWidth={2548}
                             intrinsicHeight={2532}
                         />
-                        <InformationButton onClick={() => openDrawer(ArtDrawerContent)} />
-                        <LocationButton onClick={() => openDrawer(LocationDrawerContent)} />
+                        <InformationButton
+                            title="Punu Tjukurpa"
+                            onClick={() => openInformationDrawer(ArtDrawerContent, 'Punu Tjukurpa')}
+                        />
+                        <LocationButton
+                            title="Punu Tjukurpa"
+                            onClick={() => openLocationDrawer(LocationDrawerContent, 'Punu Tjukurpa')}
+                        />
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>
@@ -213,7 +219,8 @@ const Page = ({ openDrawer }) => {
 };
 
 Page.propTypes = {
-    openDrawer: PropTypes.func.isRequired,
+    openInformationDrawer: PropTypes.func.isRequired,
+    openLocationDrawer: PropTypes.func.isRequired,
 };
 
 export default Page;

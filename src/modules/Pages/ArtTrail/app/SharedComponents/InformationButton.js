@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 
-const InformationButton = ({ onClick, sx, ...props }) => {
+const InformationButton = ({ title, onClick, sx, ...props }) => {
+    const ariaLabel = `More information about ${title}`;
     return (
         <IconButton
             size="large"
-            aria-label="More information about this artwork"
             onClick={onClick}
+            aria-label={ariaLabel}
             sx={{
                 position: 'absolute',
                 top: '8px',
@@ -32,6 +33,7 @@ const InformationButton = ({ onClick, sx, ...props }) => {
     );
 };
 InformationButton.propTypes = {
+    title: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
     sx: PropTypes.object,
 };

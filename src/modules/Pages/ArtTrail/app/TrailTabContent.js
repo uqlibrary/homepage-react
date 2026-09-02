@@ -38,7 +38,16 @@ const createTransitionState = ({ page, pageKey, exitingPage = null }) => ({
     exitingPage,
 });
 
-const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection, mediaStopSignal }) => {
+const TrailTabContent = ({
+    tab,
+    page,
+    pageKey,
+    openInformationDrawer,
+    openLocationDrawer,
+    navigationDirection,
+    mediaStopSignal,
+    handleMediaEvent,
+}) => {
     const [transitionState, setTransitionState] = useState(() => createTransitionState({ page, pageKey }));
     const [isAnimating, setIsAnimating] = useState(false);
     const animationFrameRef = useRef(null);
@@ -114,7 +123,13 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection, 
                         willChange: 'transform',
                     }}
                 >
-                    <ExitingPageComponent tab={tab} openDrawer={openDrawer} mediaStopSignal={mediaStopSignal} />
+                    <ExitingPageComponent
+                        tab={tab}
+                        openInformationDrawer={openInformationDrawer}
+                        openLocationDrawer={openLocationDrawer}
+                        mediaStopSignal={mediaStopSignal}
+                        handleMediaEvent={handleMediaEvent}
+                    />
                 </Box>
             ) : null}
             <Box
@@ -132,7 +147,13 @@ const TrailTabContent = ({ tab, page, pageKey, openDrawer, navigationDirection, 
                     willChange: showTransition ? 'transform, box-shadow' : 'auto',
                 }}
             >
-                <PageComponent tab={tab} openDrawer={openDrawer} mediaStopSignal={mediaStopSignal} />
+                <PageComponent
+                    tab={tab}
+                    openInformationDrawer={openInformationDrawer}
+                    openLocationDrawer={openLocationDrawer}
+                    mediaStopSignal={mediaStopSignal}
+                    handleMediaEvent={handleMediaEvent}
+                />
             </Box>
         </Box>
     );
@@ -147,7 +168,9 @@ TrailTabContent.propTypes = {
         subtitle: PropTypes.string,
     }).isRequired,
     page: PropTypes.elementType.isRequired,
-    openDrawer: PropTypes.func.isRequired,
+    openInformationDrawer: PropTypes.func.isRequired,
+    openLocationDrawer: PropTypes.func.isRequired,
+    handleMediaEvent: PropTypes.func.isRequired,
 };
 
 export default TrailTabContent;

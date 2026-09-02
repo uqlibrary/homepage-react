@@ -111,6 +111,36 @@ describe('TrailAudioPlayer', () => {
         expect(getByRole('button', { name: 'Replay Listen to this page' })).toBeDisabled();
     });
 
+    it('calls playback callbacks for their corresponding media actions', async () => {
+        const onStartPlaying = jest.fn();
+        const onStopPlaying = jest.fn();
+        const onReset = jest.fn();
+        const onComplete = jest.fn();
+        const { container, getByRole } = setup({ onStartPlaying, onStopPlaying, onReset, onComplete });
+        const audioElement = container.querySelector('audio');
+
+        Object.defineProperty(audioElement, 'currentTime', {
+            configurable: true,
+            writable: true,
+            value: 0,
+        });
+
+        fireEvent.play(audioElement);
+        expect(onStartPlaying).toHaveBeenCalledTimes(1);
+
+        audioElement.currentTime = 9;
+        fireEvent.timeUpdate(audioElement);
+        await userEvent.click(getByRole('button', { name: 'Stop Listen to this page' }));
+        expect(onStopPlaying).toHaveBeenCalledTimes(1);
+
+        await userEvent.click(getByRole('button', { name: 'Replay Listen to this page' }));
+        expect(onReset).toHaveBeenCalledTimes(1);
+        expect(onStopPlaying).toHaveBeenCalledTimes(1);
+
+        fireEvent.ended(audioElement);
+        expect(onComplete).toHaveBeenCalledTimes(1);
+    });
+
     it('uses singular minute and second units in the spoken progress text', () => {
         const { container, getByText } = setup();
         const audioElement = container.querySelector('audio');

@@ -31,5 +31,5 @@ export const trailPages = [
     { component: Pikkuw, pageTitle: 'Craig Koomeeta, Pikkuw (Saltwater crocodile) 2008' },
     { component: Whispers, pageTitle: 'Megan Cope, Whispers (Poles) 2023' },
     { component: Warual, pageTitle: 'Brian Robinson, Warual III (Green Turtle) 2015' },
-    { component: ContinueJourney, pageTitle: 'Exploring Aboriginal and Torres Strait Islander stories' },
+    { component: ContinueJourney, pageTitle: 'Continue your journey' },
 ];

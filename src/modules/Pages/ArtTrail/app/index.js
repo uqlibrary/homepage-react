@@ -62,6 +62,7 @@ import {
 } from './appShellStyles';
 import { tabs, menuItems } from './config';
 import { useDocumentScrollLock, useGoogleAnalytics } from './hooks';
+import { action, analyticsId } from './config/trackingEvents';
 import { GlobalStyles } from '@mui/material';
 
 const CULTURAL_DISCLAIMER_COOKIE = 'ART_TRAIL_CULTURAL_DISCLAIMER_SEEN';
@@ -148,7 +149,14 @@ const ArtTrailApp = () => {
     const activeTabPages = getTabPages(activeTabConfig);
     const activeState = tabState[activeTabConfig.id];
 
-    const { trackPageView } = useGoogleAnalytics();
+    const {
+        trackPageView,
+        trackNavigationClick,
+        trackInformationDrawerClick,
+        trackAudioPlayerClick,
+        trackAudioPlayerComplete,
+    } = useGoogleAnalytics();
+
     const lastTrackedPageRef = useRef(null);
     const pageKey = `${activeTabConfig.id}-${activeState.stepIndex}`;
     const previousPageKeyRef = useRef(pageKey);
@@ -177,10 +185,7 @@ const ArtTrailApp = () => {
         }
 
         lastTrackedPageRef.current = pageKey;
-
-        trackPageView({
-            page_title: activeTabPages[activeState.stepIndex].pageTitle,
-        });
+        trackPageView(activeTabPages[activeState.stepIndex].pageTitle, activeState.stepIndex);
     }, [activeState.stepIndex, activeTabConfig.id, activeTabPages, pageKey, trackPageView]);
 
     const stepCount = activeTabPages.length;
@@ -196,7 +201,14 @@ const ArtTrailApp = () => {
 
     const handleDrawerClose = () => setDrawerContent(null);
 
-    const handleOpenDrawer = DrawerContentComponent => {
+    const handleOpenDrawer = type => (DrawerContentComponent, label) => {
+        const classLabel =
+            type === 'information' ? `More information about ${label}` : `Location information for ${label}`;
+        const clickClass = type === 'information' ? analyticsId.information : analyticsId.location;
+        trackInformationDrawerClick({
+            click_label: classLabel,
+            click_class: clickClass,
+        });
         setDrawerContent(() => DrawerContentComponent);
     };
 
@@ -263,7 +275,29 @@ const ArtTrailApp = () => {
         handleMenuClose();
 
         if (typeof menuItem.trailStepIndex === 'number') {
+            trackNavigationClick({
+                click_label: menuItem.ariaLabel, // label without markup
+                click_class: analyticsId.menuItem,
+            });
             handleSelectTrailPage(menuItem.trailStepIndex);
+        }
+    };
+
+    const handleMediaEvent = event => {
+        switch (event) {
+            case 'complete': {
+                trackAudioPlayerComplete({
+                    click_class: analyticsId[event],
+                });
+                break;
+            }
+            default: {
+                trackAudioPlayerClick({
+                    click_label: 'Listen to this page',
+                    click_class: analyticsId[event],
+                });
+                break;
+            }
         }
     };
 
@@ -280,13 +314,24 @@ const ArtTrailApp = () => {
                 tab={tab}
                 page={PanelPageComponent}
                 pageKey={`${tab.id}-${panelState.stepIndex}`}
-                openDrawer={handleOpenDrawer}
+                openInformationDrawer={handleOpenDrawer('information')}
+                openLocationDrawer={handleOpenDrawer('location')}
                 active={tab.id === activeTab}
                 navigationDirection={tab.id === 'trail' ? trailNavigationDirection : 'forward'}
                 mediaStopSignal={mediaStopSignal}
+                handleMediaEvent={handleMediaEvent}
                 onSelectTrailPage={handleSelectTrailPage}
             />
         );
+    };
+
+    const handleHamburgerMenuClick = event => {
+        trackNavigationClick({
+            click_action: menuAnchor ? action.CLOSE : action.OPEN,
+            click_label: 'Menu',
+            click_class: menuAnchor ? analyticsId.menuClose : analyticsId.menuOpen,
+        });
+        setMenuAnchor(currentAnchor => (currentAnchor ? null : event.currentTarget));
     };
 
     const DrawerContentComponent = drawerContent;
@@ -313,9 +358,8 @@ const ArtTrailApp = () => {
                                 edge="start"
                                 aria-label="open navigation menu"
                                 sx={ICON_BUTTON_SX}
-                                onClick={event =>
-                                    setMenuAnchor(currentAnchor => (currentAnchor ? null : event.currentTarget))
-                                }
+                                onClick={handleHamburgerMenuClick}
+                                data-testid="artTrailHamburgerMenu"
                             >
                                 {menuAnchor ? <CloseIcon /> : <MenuIcon />}
                             </IconButton>
@@ -338,12 +382,13 @@ const ArtTrailApp = () => {
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 slotProps={createMenuSlotProps()}
             >
-                {menuItems.map(menuItem => (
+                {menuItems.map((menuItem, index) => (
                     <MenuItem
                         key={menuItem.id}
                         aria-label={menuItem.ariaLabel || menuItem.label}
                         onClick={() => handleMenuItemClick(menuItem)}
                         sx={createMenuItemSx(Boolean(menuItem.thumbnailSrc))}
+                        data-testid={`artTrailMenuItem${index}`}
                     >
                         {menuItem.thumbnailSrc ? (
                             <Box

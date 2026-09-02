@@ -11,7 +11,7 @@ import Hero from '../SharedComponents/Hero';
 import { StyledAudioPlayer, StyledAccordionGrid, StyledAccordion, StyledAccordionDetails } from '../SharedComponents';
 import WelcomeAudio from '../../../../../../public/audio/artTrail/welcome.mp3';
 
-const WelcomePage = ({ mediaStopSignal }) => {
+const WelcomePage = ({ mediaStopSignal, handleMediaEvent }) => {
     const theme = useTheme();
 
     return (
@@ -22,7 +22,16 @@ const WelcomePage = ({ mediaStopSignal }) => {
             />
             <StyledAccordionGrid container direction="column" data-testid="pageContent">
                 <Grid>
-                    <StyledAudioPlayer title="Listen to this page" src={WelcomeAudio} stopSignal={mediaStopSignal} />
+                    <StyledAudioPlayer
+                        title="Listen to this page"
+                        src={WelcomeAudio}
+                        stopSignal={mediaStopSignal}
+                        data-testid="audioPlayer"
+                        onPlay={() => handleMediaEvent('play')}
+                        onStop={() => handleMediaEvent('stop')}
+                        onReset={() => handleMediaEvent('reset')}
+                        onComplete={() => handleMediaEvent('complete')}
+                    />
                 </Grid>
                 <Grid container>
                     <Grid xs>
@@ -78,7 +87,7 @@ const WelcomePage = ({ mediaStopSignal }) => {
 
 WelcomePage.propTypes = {
     mediaStopSignal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    openDrawer: PropTypes.func.isRequired,
+    handleMediaEvent: PropTypes.func.isRequired,
 };
 
 export default WelcomePage;

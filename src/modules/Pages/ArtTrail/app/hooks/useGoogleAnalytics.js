@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
 
-import trackingEvents from '../config/trackingEvents';
+import { event, category, action } from '../config/trackingEvents';
 
 const useGoogleAnalytics = () => {
     const _track = useCallback((...args) => {
+        console.log('Tracking event:', ...args);
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push(...args);
     }, []);
@@ -21,8 +22,8 @@ const useGoogleAnalytics = () => {
     /* convenience methods */
 
     const trackButtonClick = useCallback(
-        (event = trackingEvents.ART_TRAIL_BUTTON_CLICK, /* istanbul ignore next */ parameters = {}) => {
-            trackEvent(event, {
+        (/* istanbul ignore next */ parameters = {}) => {
+            trackEvent(event.CLICK, {
                 ...parameters,
             });
         },
@@ -31,7 +32,20 @@ const useGoogleAnalytics = () => {
 
     const trackAccordionExpand = useCallback(
         (/* istanbul ignore next */ parameters = {}) => {
-            trackEvent(trackingEvents.ART_TRAIL_ACCORDION_EXPAND, {
+            trackEvent(event.CLICK, {
+                click_category: category.ACCORDION,
+                click_action: action.EXPAND,
+                ...parameters,
+            });
+        },
+        [trackEvent],
+    );
+
+    const trackNavigationClick = useCallback(
+        (/* istanbul ignore next */ parameters = {}) => {
+            trackEvent(event.CLICK, {
+                click_category: category.NAVIGATION,
+                click_action: action.CLICK,
                 ...parameters,
             });
         },
@@ -40,7 +54,43 @@ const useGoogleAnalytics = () => {
 
     const trackMapPoiClick = useCallback(
         (/* istanbul ignore next */ parameters = {}) => {
-            trackEvent(trackingEvents.ART_TRAIL_MAP_POI_CLICK, {
+            trackEvent(event.CLICK, {
+                click_category: category.MAP_POI,
+                click_action: action.OPEN,
+                ...parameters,
+            });
+        },
+        [trackEvent],
+    );
+
+    const trackAudioPlayerClick = useCallback(
+        (/* istanbul ignore next */ parameters = {}) => {
+            trackEvent(event.CLICK, {
+                click_category: category.AUDIO_PLAYER,
+                click_action: action.CLICK,
+                ...parameters,
+            });
+        },
+        [trackEvent],
+    );
+
+    const trackAudioPlayerComplete = useCallback(
+        (/* istanbul ignore next */ parameters = {}) => {
+            trackEvent(event.CLICK, {
+                click_category: category.AUDIO_PLAYER,
+                click_action: action.COMPLETE,
+                click_label: 'listen to this page',
+                ...parameters,
+            });
+        },
+        [trackEvent],
+    );
+
+    const trackInformationDrawerClick = useCallback(
+        (/* istanbul ignore next */ parameters = {}) => {
+            trackEvent(event.CLICK, {
+                click_category: category.INFORMATION,
+                click_action: action.CLICK,
                 ...parameters,
             });
         },
@@ -48,13 +98,26 @@ const useGoogleAnalytics = () => {
     );
 
     const trackPageView = useCallback(
-        (/* istanbul ignore next */ parameters = {}) => {
-            trackEvent(trackingEvents.ART_TRAIL_PAGE_VIEW, parameters);
+        (pageTitle, pageNumber) => {
+            trackEvent(event.PAGE_VIEW, {
+                page_title: pageTitle,
+                page_number: pageNumber,
+            });
         },
         [trackEvent],
     );
 
-    return { trackEvent, trackButtonClick, trackAccordionExpand, trackMapPoiClick, trackPageView };
+    return {
+        trackEvent,
+        trackButtonClick,
+        trackAccordionExpand,
+        trackNavigationClick,
+        trackMapPoiClick,
+        trackAudioPlayerClick,
+        trackAudioPlayerComplete,
+        trackInformationDrawerClick,
+        trackPageView,
+    };
 };
 
 export default useGoogleAnalytics;
