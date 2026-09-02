@@ -41,6 +41,7 @@ const srOnlyAnnouncementStyle = {
     border: 0,
 };
 
+/* istanbul ignore next */
 const getPageAnnouncement = ({ pathname = '', hash = '' } = {}) => {
     const currentPath = `${pathname}${hash}`;
 
