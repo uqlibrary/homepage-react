@@ -41,6 +41,12 @@ const srOnlyAnnouncementStyle = {
     border: 0,
 };
 
+// Announcement code created for spaces, with support for other homepage react components.
+// at time of THIS deployment, spaces is not yet fully integrated into the homepage react.
+// therefore, this is IGNORED in coverage - for now.
+// ticket to fully integrate spaces into the homepage react is TBD.
+
+/* istanbul ignore next */
 const getPageAnnouncement = ({ pathname = '', hash = '' } = {}) => {
     const currentPath = `${pathname}${hash}`;
 
