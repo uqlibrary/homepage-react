@@ -69,7 +69,7 @@ const LocationDrawerContent = () => {
     );
 };
 
-const Page = ({ openDrawer }) => {
+const Page = ({ openInformationDrawer, openLocationDrawer, handleAccordionChange }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero id="artwork-devil-mountain-lizard-dreaming" sx={{ pb: 0 }} />
@@ -83,8 +83,14 @@ const Page = ({ openDrawer }) => {
                             intrinsicHeight={464}
                         />
 
-                        <InformationButton onClick={() => openDrawer(ArtDrawerContent)} />
-                        <LocationButton onClick={() => openDrawer(LocationDrawerContent)} />
+                        <InformationButton
+                            title="Devil Mountain Lizard Dreaming"
+                            onClick={() => openInformationDrawer(ArtDrawerContent, 'Devil Mountain Lizard Dreaming')}
+                        />
+                        <LocationButton
+                            title="Devil Mountain Lizard Dreaming"
+                            onClick={() => openLocationDrawer(LocationDrawerContent, 'Devil Mountain Lizard Dreaming')}
+                        />
                     </Box>
                 </Grid>
                 <StyledAccordionGrid>
@@ -109,8 +115,9 @@ const Page = ({ openDrawer }) => {
                                 future generations.
                             </Box>
                         }
+                        onExpand={handleAccordionChange}
                     />
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artists-content"
@@ -125,7 +132,7 @@ const Page = ({ openDrawer }) => {
                             </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="connection-to-country-content"
@@ -185,7 +192,9 @@ const Page = ({ openDrawer }) => {
 };
 
 Page.propTypes = {
-    openDrawer: PropTypes.func.isRequired,
+    openInformationDrawer: PropTypes.func.isRequired,
+    openLocationDrawer: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
 };
 
 export default Page;

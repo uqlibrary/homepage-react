@@ -22,7 +22,7 @@ const mapTableRows = ART_TRAIL_MAP_POIS.filter(
     (poi, index, pois) => pois.findIndex(candidate => candidate.trailStepIndex === poi.trailStepIndex) === index,
 );
 
-const MapTabContent = ({ active, onSelectTrailPage }) => {
+const MapTabContent = ({ active, onSelectTrailPage, handleMapEvent }) => {
     const [mapUnavailable, setMapUnavailable] = useState(false);
     const mapContainerRef = useRef(null);
     const artworkTableRef = useRef(null);
@@ -50,9 +50,10 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
 
         setMapUnavailable(false);
 
-        const handleSelectTrailPageFromMap = stepIndex => {
+        const handleSelectTrailPageFromMap = (stepIndex, label) => {
             closeActivePopup();
             onSelectTrailPage?.(stepIndex);
+            handleMapEvent?.(label, 'mapLink');
         };
 
         if (mapInstanceRef.current) {
@@ -87,6 +88,7 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
                     Mazemap,
                     map: mapInstanceRef.current,
                     onSelectTrailPage: handleSelectTrailPageFromMap,
+                    handleMapEvent,
                     activePopupRef,
                     markerClassNames,
                     popupClassNames,
@@ -114,7 +116,7 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
             });
 
         return cancelInitialization;
-    }, [active, onSelectTrailPage]);
+    }, [active, handleMapEvent, onSelectTrailPage]);
 
     useEffect(() => {
         return () => {
@@ -176,6 +178,7 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
                             <Box
                                 ref={mapContainerRef}
                                 data-testid="mazemap-container"
+                                role="region"
                                 aria-label="MazeMaps campus map"
                                 sx={{ position: 'absolute', inset: 0, height: '100%', width: '100%' }}
                             />
@@ -231,6 +234,7 @@ const MapTabContent = ({ active, onSelectTrailPage }) => {
 MapTabContent.propTypes = {
     active: PropTypes.bool,
     onSelectTrailPage: PropTypes.func,
+    handleMapEvent: PropTypes.func,
 };
 
 export default MapTabContent;

@@ -78,7 +78,7 @@ const LocationDrawerContent = () => {
     );
 };
 
-const Page = ({ openDrawer }) => {
+const Page = ({ openInformationDrawer, openLocationDrawer, handleAccordionChange }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero id="artwork-whispers" sx={{ pb: 0 }} />
@@ -92,11 +92,17 @@ const Page = ({ openDrawer }) => {
                             intrinsicHeight={2500}
                         />
 
-                        <InformationButton onClick={() => openDrawer(ArtDrawerContent)} />
-                        <LocationButton onClick={() => openDrawer(LocationDrawerContent)} />
+                        <InformationButton
+                            title="Whispers (Poles)"
+                            onClick={() => openInformationDrawer(ArtDrawerContent, 'Whispers (Poles)')}
+                        />
+                        <LocationButton
+                            title="Whispers (Poles)"
+                            onClick={() => openLocationDrawer(LocationDrawerContent, 'Whispers (Poles)')}
+                        />
                     </Box>
                 </Grid>
-                <StyledAccordionGrid>
+                <StyledAccordionGrid onChange={handleAccordionChange}>
                     <DisclosureSection
                         heading={
                             <StyledHeading variant="h6" component="h2">
@@ -138,9 +144,10 @@ const Page = ({ openDrawer }) => {
                                 </Box>
                             </>
                         }
+                        onExpand={handleAccordionChange}
                     />
 
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="reflect-content"
@@ -156,7 +163,7 @@ const Page = ({ openDrawer }) => {
                             </StyledUl>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artists-content"
@@ -178,7 +185,7 @@ const Page = ({ openDrawer }) => {
                             </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="connection-to-country-content"
@@ -241,7 +248,7 @@ const Page = ({ openDrawer }) => {
                             <StyledImageCaption>North Stradbroke Island @Kevin stock.adobe.com.</StyledImageCaption>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="stories-from-the-collection-content"
@@ -288,7 +295,9 @@ const Page = ({ openDrawer }) => {
 };
 
 Page.propTypes = {
-    openDrawer: PropTypes.func.isRequired,
+    openInformationDrawer: PropTypes.func.isRequired,
+    openLocationDrawer: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
 };
 
 export default Page;

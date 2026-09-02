@@ -3,15 +3,16 @@ import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
-const LocationButton = ({ onClick, sx, ...props }) => {
+const LocationButton = ({ title, onClick, sx, ...props }) => {
+    const ariaLabel = `Location information about ${title}`;
     return (
         <IconButton
             size="large"
-            aria-label="Location information about this artwork"
+            aria-label={ariaLabel}
             onClick={onClick}
             sx={{
                 position: 'absolute',
-                bottom: '8px',
+                bottom: '16px',
                 right: '8px',
                 padding: 0,
                 ...sx,
@@ -32,6 +33,7 @@ const LocationButton = ({ onClick, sx, ...props }) => {
     );
 };
 LocationButton.propTypes = {
+    title: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
     sx: PropTypes.object,
 };

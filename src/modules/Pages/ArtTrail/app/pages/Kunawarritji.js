@@ -94,7 +94,7 @@ const LocationDrawerContent = () => {
     );
 };
 
-const Page = ({ openDrawer }) => {
+const Page = ({ openInformationDrawer, openLocationDrawer, handleAccordionChange }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero id="artwork-nora-wompi-nungurrayi" sx={{ pb: 0 }} />
@@ -108,8 +108,14 @@ const Page = ({ openDrawer }) => {
                             intrinsicHeight={3096}
                         />
 
-                        <InformationButton onClick={() => openDrawer(Art1DrawerContent)} />
-                        <LocationButton onClick={() => openDrawer(LocationDrawerContent)} />
+                        <InformationButton
+                            title="Kunawarritji 1"
+                            onClick={() => openInformationDrawer(Art1DrawerContent, 'Kunawarritji 1')}
+                        />
+                        <LocationButton
+                            title="Kunawarritji 1"
+                            onClick={() => openLocationDrawer(LocationDrawerContent, 'Kunawarritji 1')}
+                        />
                     </Box>
                     <Box position="relative">
                         <StyledImage
@@ -119,11 +125,17 @@ const Page = ({ openDrawer }) => {
                             intrinsicHeight={2043}
                         />
 
-                        <InformationButton onClick={() => openDrawer(Art2DrawerContent)} />
-                        <LocationButton onClick={() => openDrawer(LocationDrawerContent)} />
+                        <InformationButton
+                            title="Kunawarritji 2"
+                            onClick={() => openInformationDrawer(Art2DrawerContent, 'Kunawarritji 2')}
+                        />
+                        <LocationButton
+                            title="Kunawarritji 2"
+                            onClick={() => openLocationDrawer(LocationDrawerContent, 'Kunawarritji 2')}
+                        />
                     </Box>
                 </Grid>
-                <StyledAccordionGrid>
+                <StyledAccordionGrid onChange={handleAccordionChange}>
                     <DisclosureSection
                         heading={
                             <StyledHeading variant="h6" component="h2">
@@ -147,9 +159,10 @@ const Page = ({ openDrawer }) => {
                                 the underlaid paint, the ochre tones showing through the lighter layers.
                             </Box>
                         }
+                        onExpand={handleAccordionChange}
                     />
 
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="reflect-content"
@@ -170,7 +183,7 @@ const Page = ({ openDrawer }) => {
                             </StyledUl>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artists-content"
@@ -200,7 +213,7 @@ const Page = ({ openDrawer }) => {
                             </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="connection-to-country-content"
@@ -253,7 +266,9 @@ const Page = ({ openDrawer }) => {
 };
 
 Page.propTypes = {
-    openDrawer: PropTypes.func.isRequired,
+    openInformationDrawer: PropTypes.func.isRequired,
+    openLocationDrawer: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
 };
 
 export default Page;

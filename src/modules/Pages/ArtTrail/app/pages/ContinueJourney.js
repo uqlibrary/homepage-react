@@ -21,7 +21,7 @@ import Book3Image from '../../../../../../public/images/artTrail/Guide_LanguageR
 
 import ContinueJourneyAudio from '../../../../../../public/audio/artTrail/continuejourney.mp3';
 
-const ContinueJourney = ({ mediaStopSignal }) => {
+const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionChange }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="Continue your journey" />
@@ -31,6 +31,11 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                         title="Listen to this page"
                         src={ContinueJourneyAudio}
                         stopSignal={mediaStopSignal}
+                        data-testid="audioPlayer"
+                        onPlay={() => handleMediaEvent('play')}
+                        onStop={() => handleMediaEvent('stop')}
+                        onReset={() => handleMediaEvent('reset')}
+                        onComplete={() => handleMediaEvent('complete')}
                     />
                 </Grid>
                 <Grid container wrap="nowrap" justifyContent="space-between" alignItems="flex-start" columnSpacing={1}>
@@ -51,7 +56,7 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                     </Grid>
                 </Grid>
                 <Grid>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="transcript-content"
@@ -75,7 +80,7 @@ const ContinueJourney = ({ mediaStopSignal }) => {
                             </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="resources-content"
@@ -201,7 +206,8 @@ const ContinueJourney = ({ mediaStopSignal }) => {
 
 ContinueJourney.propTypes = {
     mediaStopSignal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    openDrawer: PropTypes.func.isRequired,
+    handleMediaEvent: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
 };
 
 export default ContinueJourney;

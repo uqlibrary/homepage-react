@@ -1,5 +1,5 @@
 import React from 'react';
-import { rtlRender, userEvent } from 'test-utils';
+import { fireEvent, rtlRender, userEvent } from 'test-utils';
 
 import ContinueJourney from './ContinueJourney';
 import DevilMountainLizard from './DevilMountainLizard';
@@ -15,30 +15,30 @@ const expandablePageCases = [
     {
         name: 'SandHills',
         PageComponent: SandHills,
+        artworkTitles: ['Sand Hills'],
         detailsTextPattern: /Despite her reductive palette, Napangardi imbues these works with movement/i,
         infoButtonCount: 1,
         locationButtonCount: 1,
-        uniqueDrawerCount: 2,
         artDrawerTextPatterns: [/Lily Kelly Napangardi.*Sand Hills.*2007/i],
         locationDrawerTextPattern: /Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
     },
     {
         name: 'DevilMountainLizard',
         PageComponent: DevilMountainLizard,
+        artworkTitles: ['Devil Mountain Lizard Dreaming'],
         detailsTextPattern: /The artist's work demonstrates a deep connection with Country/i,
         infoButtonCount: 1,
         locationButtonCount: 1,
-        uniqueDrawerCount: 2,
         artDrawerTextPatterns: [/Gloria Tamerre Petyarre.*Devil Mountain Lizard Dreaming.*1997/i],
         locationDrawerTextPattern: /Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
     },
     {
         name: 'Kunawarritji',
         PageComponent: Kunawarritji,
+        artworkTitles: ['Kunawarritji 1', 'Kunawarritji 2'],
         detailsTextPattern: /You can see the expressive brushstrokes within each of these works/i,
         infoButtonCount: 2,
         locationButtonCount: 2,
-        uniqueDrawerCount: 3,
         artDrawerTextPatterns: [
             /Nora Wompi Nungurrayi.*Kunawarritji 1.*2012/i,
             /Nora Wompi Nungurrayi.*Kunawarritji 2.*2012/i,
@@ -48,58 +48,78 @@ const expandablePageCases = [
     {
         name: 'PenuTjukurpa',
         PageComponent: PenuTjukurpa,
+        artworkTitles: ['Punu Tjukurpa'],
         detailsTextPattern: /For Anangu communities, the tree is a significant motif for ancestry and family\./i,
         infoButtonCount: 1,
         locationButtonCount: 1,
-        uniqueDrawerCount: 2,
         artDrawerTextPatterns: [/Hector Tjupuru Burton.*Punu Tjukurpa.*2013/i],
         locationDrawerTextPattern: /Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
     },
     {
         name: 'Pikkuw',
         PageComponent: Pikkuw,
+        artworkTitles: ['Pikkuw (Saltwater crocodile)'],
         detailsTextPattern: /The carving is of a male saltwater crocodile named Pikkuw/i,
         infoButtonCount: 1,
         locationButtonCount: 1,
-        uniqueDrawerCount: 2,
         artDrawerTextPatterns: [/Craig Koomeeta.*Pikkuw \(Saltwater crocodile\).*2008/i],
         locationDrawerTextPattern: /Near the AskUs desk on Level 1, Central Library \(Building 12\), St Lucia campus/i,
     },
     {
         name: 'Whispers',
         PageComponent: Whispers,
+        artworkTitles: ['Whispers (Poles)'],
         detailsTextPattern: /Cope's recent practice is informed by her cultural relationships/i,
         infoButtonCount: 1,
         locationButtonCount: 1,
-        uniqueDrawerCount: 2,
         artDrawerTextPatterns: [/Megan Cope.*Whispers \(Poles\).*2023/i],
         locationDrawerTextPattern: /On Level 1, Central Library \(Building 12\), St Lucia campus.*near the AskUs desk/i,
     },
     {
         name: 'Warual',
         PageComponent: Warual,
+        artworkTitles: ['Warual III (Green Turtle)'],
         detailsTextPattern: /Brian is a multi-skilled contemporary artist and is internationally recognised/i,
         infoButtonCount: 1,
         locationButtonCount: 1,
-        uniqueDrawerCount: 2,
         artDrawerTextPatterns: [/Brian Robinson.*Warual III \(Green Turtle\).*2015/i],
         locationDrawerTextPattern: /Near the kitchen and exit on Level 2, Central Library \(Building 12\)/i,
     },
     {
         name: 'Tingari',
         PageComponent: Tingari,
+        artworkTitles: ['Tingari ceremonies at Wilkinkarra'],
         detailsTextPattern: /This work considers migration and movements across long expanses of Country/i,
         infoButtonCount: 1,
         locationButtonCount: 1,
-        uniqueDrawerCount: 2,
         artDrawerTextPatterns: [/Johnny Yungut Tjupurrula.*Tingari ceremonies at Wilkinkarra.*2003/i],
         locationDrawerTextPattern: /Level 1, Duhig Tower \(Building 2\), St Lucia campus/i,
     },
 ];
 
-const setup = (PageComponent, { openDrawer = jest.fn(), ...props } = {}) => ({
-    openDrawer,
-    ...rtlRender(<PageComponent openDrawer={openDrawer} {...props} />),
+const setup = (
+    PageComponent,
+    {
+        openInformationDrawer = jest.fn(),
+        openLocationDrawer = jest.fn(),
+        handleAccordionChange = jest.fn(),
+        handleMediaEvent = jest.fn(),
+        ...props
+    } = {},
+) => ({
+    openInformationDrawer,
+    openLocationDrawer,
+    handleAccordionChange,
+    handleMediaEvent,
+    ...rtlRender(
+        <PageComponent
+            openInformationDrawer={openInformationDrawer}
+            openLocationDrawer={openLocationDrawer}
+            handleAccordionChange={handleAccordionChange}
+            handleMediaEvent={handleMediaEvent}
+            {...props}
+        />,
+    ),
 });
 
 describe('Artwork pages', () => {
@@ -107,49 +127,52 @@ describe('Artwork pages', () => {
         '$name',
         ({
             PageComponent,
+            artworkTitles,
             detailsTextPattern,
             infoButtonCount,
             locationButtonCount,
-            uniqueDrawerCount,
             artDrawerTextPatterns,
             locationDrawerTextPattern,
         }) => {
-            it('wires the artwork and location overlay buttons to openDrawer', async () => {
-                const openDrawer = jest.fn();
-                const { getAllByRole } = setup(PageComponent, { openDrawer });
+            it('wires artwork overlay buttons to openInformationDrawer', async () => {
+                const { getAllByRole, openInformationDrawer } = setup(PageComponent);
 
-                const infoButtons = getAllByRole('button', { name: 'More information about this artwork' });
-                const locationButtons = getAllByRole('button', {
-                    name: 'Location information about this artwork',
-                });
+                const infoButtons = getAllByRole('button', { name: /^More information about / });
 
                 expect(infoButtons).toHaveLength(infoButtonCount);
-                expect(locationButtons).toHaveLength(locationButtonCount);
 
                 for (const button of infoButtons) {
                     await userEvent.click(button);
                 }
 
+                expect(openInformationDrawer).toHaveBeenCalledTimes(infoButtonCount);
+                for (const [index, [DrawerContentComponent, title]] of openInformationDrawer.mock.calls.entries()) {
+                    expect(DrawerContentComponent).toEqual(expect.any(Function));
+                    expect(title).toBe(artworkTitles[index]);
+                }
+            });
+
+            it('wires location overlay buttons to openLocationDrawer', async () => {
+                const { getAllByRole, openLocationDrawer } = setup(PageComponent);
+                const locationButtons = getAllByRole('button', { name: /^Location information about / });
+
+                expect(locationButtons).toHaveLength(locationButtonCount);
+
                 for (const button of locationButtons) {
                     await userEvent.click(button);
                 }
 
-                expect(openDrawer).toHaveBeenCalledTimes(infoButtonCount + locationButtonCount);
-                for (const [DrawerContentComponent] of openDrawer.mock.calls) {
+                expect(openLocationDrawer).toHaveBeenCalledTimes(locationButtonCount);
+                for (const [index, [DrawerContentComponent, title]] of openLocationDrawer.mock.calls.entries()) {
                     expect(DrawerContentComponent).toEqual(expect.any(Function));
+                    expect(title).toBe(artworkTitles[index]);
                 }
-                expect(
-                    new Set(openDrawer.mock.calls.map(([DrawerContentComponent]) => DrawerContentComponent)).size,
-                ).toBe(uniqueDrawerCount);
             });
 
             it('renders the expected artwork and location drawer content', async () => {
-                const openDrawer = jest.fn();
-                const { getAllByRole, unmount } = setup(PageComponent, { openDrawer });
-                const infoButtons = getAllByRole('button', { name: 'More information about this artwork' });
-                const locationButtons = getAllByRole('button', {
-                    name: 'Location information about this artwork',
-                });
+                const { getAllByRole, openInformationDrawer, openLocationDrawer, unmount } = setup(PageComponent);
+                const infoButtons = getAllByRole('button', { name: /^More information about / });
+                const locationButtons = getAllByRole('button', { name: /^Location information about / });
 
                 for (const button of infoButtons) {
                     await userEvent.click(button);
@@ -158,14 +181,14 @@ describe('Artwork pages', () => {
                 unmount();
 
                 for (const [index, artDrawerTextPattern] of artDrawerTextPatterns.entries()) {
-                    const ArtDrawerContent = openDrawer.mock.calls[index][0];
+                    const ArtDrawerContent = openInformationDrawer.mock.calls[index][0];
                     const renderedDrawer = rtlRender(<ArtDrawerContent />);
 
                     expect(renderedDrawer.container).toHaveTextContent(artDrawerTextPattern);
                     renderedDrawer.unmount();
                 }
 
-                const LocationDrawerContent = openDrawer.mock.calls[infoButtonCount][0];
+                const LocationDrawerContent = openLocationDrawer.mock.calls[0][0];
                 const renderedLocationDrawer = rtlRender(<LocationDrawerContent />);
 
                 expect(renderedLocationDrawer.getByRole('heading', { name: 'Artwork location' })).toBeInTheDocument();
@@ -174,9 +197,7 @@ describe('Artwork pages', () => {
 
             it('moves focus from the final location button to the artwork heading', async () => {
                 const { getAllByRole, getByRole } = setup(PageComponent);
-                const locationButtons = getAllByRole('button', {
-                    name: 'Location information about this artwork',
-                });
+                const locationButtons = getAllByRole('button', { name: /^Location information about / });
                 const artworkHeading = getByRole('heading', { name: 'About the artwork' });
 
                 locationButtons[locationButtons.length - 1].focus();
@@ -206,8 +227,57 @@ describe('Artwork pages', () => {
 
                 expect(queryByText(detailsTextPattern)).not.toBeInTheDocument();
             });
+
+            it('wires accordion expansion to handleAccordionChange', async () => {
+                const { getByRole, handleAccordionChange } = setup(PageComponent);
+                const accordionButton = getByRole('button', {
+                    name: PageComponent === Tingari ? 'About the artist' : 'View more',
+                });
+
+                await userEvent.click(accordionButton);
+
+                if (PageComponent === Tingari) {
+                    expect(handleAccordionChange).toHaveBeenCalledWith(expect.any(Object), true);
+                } else {
+                    expect(handleAccordionChange).toHaveBeenCalledWith('View more', true);
+                }
+            });
         },
     );
+
+    it('wires Continue Journey audio controls to handleMediaEvent', async () => {
+        const play = jest.spyOn(window.HTMLMediaElement.prototype, 'play').mockResolvedValue();
+        const pause = jest.spyOn(window.HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
+        const { container, getByRole, handleMediaEvent } = setup(ContinueJourney, { mediaStopSignal: 'trail:9' });
+        const audioElement = container.querySelector('audio');
+
+        Object.defineProperty(audioElement, 'currentTime', {
+            configurable: true,
+            writable: true,
+            value: 0,
+        });
+
+        await userEvent.click(getByRole('button', { name: 'Play audio' }));
+        fireEvent.play(audioElement);
+        audioElement.currentTime = 5;
+        fireEvent.timeUpdate(audioElement);
+        await userEvent.click(getByRole('button', { name: 'Stop audio playback' }));
+        await userEvent.click(getByRole('button', { name: 'Reset audio playback' }));
+        fireEvent.ended(audioElement);
+
+        expect(handleMediaEvent.mock.calls).toEqual([['play'], ['stop'], ['reset'], ['complete']]);
+
+        play.mockRestore();
+        pause.mockRestore();
+    });
+
+    it('wires Continue Journey accordions to handleAccordionChange', async () => {
+        const { getByRole, handleAccordionChange } = setup(ContinueJourney, { mediaStopSignal: 'trail:9' });
+
+        await userEvent.click(getByRole('button', { name: 'Audio transcript' }));
+
+        expect(handleAccordionChange).toHaveBeenCalledWith(expect.any(Object), true);
+    });
 
     it('renders Continue Journey resources, transcript, and audio content', async () => {
         const { getByRole, getByText } = setup(ContinueJourney, { mediaStopSignal: 'trail:9' });

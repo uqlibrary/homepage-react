@@ -39,10 +39,10 @@ describe('MapTabContent', () => {
     });
 
     it('renders the map container and skips MazeMaps initialization while inactive', () => {
-        const { getByLabelText, getByTestId } = setup();
+        const { getByRole, getByTestId } = setup();
 
         expect(getByTestId('pageContent')).toBeInTheDocument();
-        expect(getByLabelText('MazeMaps campus map')).toBeInTheDocument();
+        expect(getByRole('region', { name: 'MazeMaps campus map' })).toBeInTheDocument();
         expect(loadMazemapAssets).not.toHaveBeenCalled();
     });
 
@@ -84,6 +84,7 @@ describe('MapTabContent', () => {
         setNavigatorUserAgent('Mozilla/5.0');
 
         const onSelectTrailPage = jest.fn();
+        const handleMapEvent = jest.fn();
         const addControl = jest.fn();
         const mapInstance = {
             addControl,
@@ -102,7 +103,7 @@ describe('MapTabContent', () => {
         });
         createUserLocationControl.mockReturnValue(geolocateControl);
 
-        const { getByTestId } = setup({ active: true, onSelectTrailPage });
+        const { getByTestId } = setup({ active: true, onSelectTrailPage, handleMapEvent });
 
         await waitFor(() => {
             expect(loadMazemapAssets).toHaveBeenCalledTimes(1);
@@ -128,6 +129,7 @@ describe('MapTabContent', () => {
                 markerClassNames,
                 popupClassNames,
                 onSelectTrailPage: expect.any(Function),
+                handleMapEvent,
             }),
         );
         expect(addControl).toHaveBeenCalledWith(geolocateControl, 'top-right');
@@ -141,9 +143,10 @@ describe('MapTabContent', () => {
 
         const handleSelectTrailPageFromMap = createMazemapPoiMarkers.mock.calls[0][0].onSelectTrailPage;
 
-        handleSelectTrailPageFromMap(3);
+        handleSelectTrailPageFromMap(3, 'Punu Tjukurpa');
 
         expect(onSelectTrailPage).toHaveBeenCalledWith(3);
+        expect(handleMapEvent).toHaveBeenCalledWith('Punu Tjukurpa', 'mapLink');
     });
 
     it('shows an unavailable message when MazeMaps fails to load', async () => {

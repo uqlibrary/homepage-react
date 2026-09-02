@@ -62,4 +62,21 @@ describe('DisclosureSection', () => {
         expect(queryByText(detailsText)).not.toBeInTheDocument();
         expect(getByRole('button', { name: 'View more' })).toBeInTheDocument();
     });
+
+    it('reports expansion', async () => {
+        const onExpand = jest.fn();
+        const { getByRole } = setup({ onExpand });
+
+        await userEvent.click(getByRole('button', { name: 'View more' }));
+
+        expect(onExpand).toHaveBeenCalledWith('View more', true);
+    });
+
+    it('supports forced-expanded content', () => {
+        const { getByRole, getByText, queryByRole } = setup({ forceExpanded: true });
+
+        expect(getByRole('heading', { name: 'About the artwork' })).toBeInTheDocument();
+        expect(getByText(detailsText)).toBeInTheDocument();
+        expect(queryByRole('button', { name: 'View less' })).not.toBeInTheDocument();
+    });
 });

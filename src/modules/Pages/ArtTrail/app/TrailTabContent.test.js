@@ -13,14 +13,17 @@ const defaultTab = {
 };
 
 const createMockPage = testId => {
-    const MockPage = ({ tab, openDrawer, mediaStopSignal }) => (
+    const MockPage = ({ tab, openInformationDrawer, openLocationDrawer, mediaStopSignal }) => (
         <div data-testid={testId}>
             <h1 tabIndex={-1}>{testId} heading</h1>
             <div>{tab.label}</div>
             <div>{tab.subtitle}</div>
             <div>{mediaStopSignal}</div>
-            <button onClick={() => openDrawer(testId)} type="button">
-                Open drawer for {testId}
+            <button onClick={() => openInformationDrawer(testId)} type="button">
+                Open information drawer for {testId}
+            </button>
+            <button onClick={() => openLocationDrawer(testId)} type="button">
+                Open location drawer for {testId}
             </button>
         </div>
     );
@@ -36,9 +39,12 @@ const setup = (props = {}) =>
             tab={defaultTab}
             page={createMockPage('page-one')}
             pageKey="page-one"
-            openDrawer={jest.fn()}
+            openInformationDrawer={jest.fn()}
+            openLocationDrawer={jest.fn()}
             navigationDirection="forward"
             mediaStopSignal="trail:0"
+            handleMediaEvent={jest.fn()}
+            handleAccordionChange={jest.fn()}
             {...props}
         />,
     );
@@ -61,17 +67,24 @@ describe('TrailTabContent', () => {
     });
 
     it('renders the active page and passes through tab, drawer, and media props', () => {
-        const openDrawer = jest.fn();
-        const { getByRole, getByTestId, getByText } = setup({ openDrawer, mediaStopSignal: 'trail:5' });
+        const openInformationDrawer = jest.fn();
+        const openLocationDrawer = jest.fn();
+        const { getByRole, getByTestId, getByText } = setup({
+            openInformationDrawer,
+            openLocationDrawer,
+            mediaStopSignal: 'trail:5',
+        });
 
         expect(getByTestId('page-one')).toBeInTheDocument();
         expect(getByText(defaultTab.label)).toBeInTheDocument();
         expect(getByText(defaultTab.subtitle)).toBeInTheDocument();
         expect(getByText('trail:5')).toBeInTheDocument();
 
-        fireEvent.click(getByRole('button', { name: 'Open drawer for page-one' }));
+        fireEvent.click(getByRole('button', { name: 'Open information drawer for page-one' }));
+        fireEvent.click(getByRole('button', { name: 'Open location drawer for page-one' }));
 
-        expect(openDrawer).toHaveBeenCalledWith('page-one');
+        expect(openInformationDrawer).toHaveBeenCalledWith('page-one');
+        expect(openLocationDrawer).toHaveBeenCalledWith('page-one');
     });
 
     it('keeps the previous page mounted during a forward transition and removes it after completion', () => {
@@ -84,9 +97,12 @@ describe('TrailTabContent', () => {
                 tab={defaultTab}
                 page={PageTwo}
                 pageKey="page-two"
-                openDrawer={jest.fn()}
+                openInformationDrawer={jest.fn()}
+                openLocationDrawer={jest.fn()}
                 navigationDirection="forward"
                 mediaStopSignal="trail:0"
+                handleMediaEvent={jest.fn()}
+                handleAccordionChange={jest.fn()}
             />,
         );
 
@@ -118,9 +134,12 @@ describe('TrailTabContent', () => {
                 tab={defaultTab}
                 page={PageTwo}
                 pageKey="page-two"
-                openDrawer={jest.fn()}
+                openInformationDrawer={jest.fn()}
+                openLocationDrawer={jest.fn()}
                 navigationDirection="backward"
                 mediaStopSignal="trail:0"
+                handleMediaEvent={jest.fn()}
+                handleAccordionChange={jest.fn()}
             />,
         );
 

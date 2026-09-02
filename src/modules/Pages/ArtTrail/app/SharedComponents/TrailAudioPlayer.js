@@ -38,7 +38,18 @@ const formatSpokenTime = value => {
     return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ${seconds} ${seconds === 1 ? 'second' : 'seconds'}`;
 };
 
-const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) => {
+const TrailAudioPlayer = ({
+    className,
+    description,
+    src,
+    stopSignal,
+    title,
+    onPlay,
+    onStop,
+    onReset,
+    onComplete,
+    ...props
+}) => {
     const audioRef = useRef(null);
     const playButtonRef = useRef(null);
     const stopButtonRef = useRef(null);
@@ -132,6 +143,12 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
         setCurrentTime(0);
         setPlaybackState(PLAYBACK_STATES.IDLE);
         setPlaybackError(false);
+        onReset?.();
+    };
+
+    const handleStop = () => {
+        stopPlayback({ resetToStart: false, nextState: PLAYBACK_STATES.STOPPED });
+        onStop?.();
     };
 
     useEffect(() => {
@@ -179,6 +196,7 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
             }}
         >
             <audio
+                {...props}
                 ref={audioRef}
                 preload="metadata"
                 src={src}
@@ -191,6 +209,7 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                 }}
                 onPlay={() => {
                     setPlaybackState(PLAYBACK_STATES.PLAYING);
+                    onPlay?.();
                 }}
                 onPause={() => {
                     setPlaybackState(currentState =>
@@ -199,6 +218,7 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                 }}
                 onEnded={() => {
                     resetPlaybackState();
+                    onComplete?.();
                 }}
                 onError={() => {
                     setPlaybackState(PLAYBACK_STATES.IDLE);
@@ -250,7 +270,7 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                     }}
                 >
                     <IconButton
-                        aria-label={`Replay ${title}`}
+                        aria-label={`Reset audio playback`}
                         onClick={handleReplay}
                         disabled={!canReplay}
                         color="primary"
@@ -261,8 +281,8 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                     {isPlaying ? (
                         <IconButton
                             ref={stopButtonRef}
-                            aria-label={`Stop ${title}`}
-                            onClick={() => stopPlayback({ resetToStart: false, nextState: PLAYBACK_STATES.STOPPED })}
+                            aria-label="Stop audio playback"
+                            onClick={handleStop}
                             color="primary"
                             size="large"
                         >
@@ -271,7 +291,7 @@ const TrailAudioPlayer = ({ className, description, src, stopSignal, title }) =>
                     ) : (
                         <IconButton
                             ref={playButtonRef}
-                            aria-label={`Play ${title}`}
+                            aria-label="Play audio"
                             onClick={() => startPlayback()}
                             color="primary"
                             size="large"
@@ -310,6 +330,10 @@ TrailAudioPlayer.propTypes = {
     src: PropTypes.string.isRequired,
     stopSignal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     title: PropTypes.string.isRequired,
+    onPlay: PropTypes.func,
+    onStop: PropTypes.func,
+    onReset: PropTypes.func,
+    onComplete: PropTypes.func,
 };
 
 export default TrailAudioPlayer;

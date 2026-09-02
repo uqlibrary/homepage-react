@@ -47,6 +47,7 @@ const menuItems = [
     {
         id: 'trail-overview',
         label: 'Indigenous art and Library discovery trail',
+        ariaLabel: 'Indigenous art and Library discovery trail',
         thumbnailSrc: DefaultArtwork,
         thumbnailAlt: 'Continue your journey thumbnail',
         trailStepIndex: 0,
@@ -54,6 +55,7 @@ const menuItems = [
     ...menuArtworkItems,
     {
         id: 'continue-your-journey',
+        ariaLabel: 'Continue your journey',
         label: 'Continue your journey',
         thumbnailSrc: DefaultArtwork,
         thumbnailAlt: 'Continue your journey thumbnail',
