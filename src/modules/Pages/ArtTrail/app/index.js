@@ -305,11 +305,12 @@ const ArtTrailApp = () => {
     const handleMediaEvent = event => {
         if (event === 'complete') {
             trackAudioPlayerComplete({
+                click_label: 'Listen to this page',
                 click_class: analyticsId[event],
             });
         } else {
             trackAudioPlayerClick({
-                click_label: 'Listen to this page',
+                click_label: event,
                 click_class: analyticsId[event],
             });
         }

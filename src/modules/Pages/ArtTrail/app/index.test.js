@@ -148,7 +148,7 @@ describe('ArtTrailApp', () => {
         await userEvent.click(getByRole('button', { name: 'Play audio' }));
         fireEvent.play(audioElement);
         expect(mockTrackAudioPlayerClick).toHaveBeenLastCalledWith({
-            click_label: 'Listen to this page',
+            click_label: 'play',
             click_class: analyticsId.play,
         });
 
@@ -156,13 +156,13 @@ describe('ArtTrailApp', () => {
         fireEvent.timeUpdate(audioElement);
         await userEvent.click(getByRole('button', { name: 'Stop audio playback' }));
         expect(mockTrackAudioPlayerClick).toHaveBeenLastCalledWith({
-            click_label: 'Listen to this page',
+            click_label: 'stop',
             click_class: analyticsId.stop,
         });
 
         await userEvent.click(getByRole('button', { name: 'Reset audio playback' }));
         expect(mockTrackAudioPlayerClick).toHaveBeenLastCalledWith({
-            click_label: 'Listen to this page',
+            click_label: 'reset',
             click_class: analyticsId.reset,
         });
 
@@ -177,6 +177,7 @@ describe('ArtTrailApp', () => {
 
         fireEvent.ended(audioElement);
         expect(mockTrackAudioPlayerComplete).toHaveBeenCalledWith({
+            click_label: 'Listen to this page',
             click_class: analyticsId.complete,
         });
 
