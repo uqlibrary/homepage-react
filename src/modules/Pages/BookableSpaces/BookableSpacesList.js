@@ -626,19 +626,23 @@ export const BookableSpacesList = ({
         if (
             !bookableSpacesRoomListError &&
             !bookableSpacesRoomListLoading &&
-            !!bookableSpacesRoomList?.data?.locations
+            Array.isArray(bookableSpacesRoomList?.data?.locations) &&
+            bookableSpacesRoomList.data.locations.length > 0
         ) {
             // the space with the highest capacity
-            const spaceMaxCapacity = bookableSpacesRoomList?.data?.locations?.reduce(
-                function findMax(highestCapacity, current) {
-                    return highestCapacity &&
-                        typeof current.space_capacity === 'number' &&
-                        highestCapacity.space_capacity < current.space_capacity
-                        ? current
-                        : highestCapacity;
-                },
-            );
-            const calculatedMaxCapaity = !!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity;
+            const spaceMaxCapacity = bookableSpacesRoomList.data.locations.reduce(function findMax(
+                highestCapacity,
+                current,
+            ) {
+                if (
+                    typeof current.space_capacity !== 'number' ||
+                    (highestCapacity && highestCapacity.space_capacity >= current.space_capacity)
+                ) {
+                    return highestCapacity;
+                }
+                return current;
+            }, null);
+            const calculatedMaxCapaity = spaceMaxCapacity?.space_capacity ?? minimumSpaceCapacity;
             setMaximumSpaceCapacity(calculatedMaxCapaity);
             if (!Array.isArray(capacityFilterValue) || capacityFilterValue.length === 0) {
                 setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
@@ -1146,23 +1150,45 @@ export const BookableSpacesList = ({
         const campusId = correctedCampusId(selectedCampus);
 
         if (campusId === ALL_CAMPUSES_ID) {
-            if (!liveMapCentre) {
-                const defaultCampusCentre = getLatLngCentreOfCampus(
-                    bookableSpacesRoomList?.data?.locations,
-                    FIRST_CAMPUS_ID,
-                );
-                if (defaultCampusCentre) {
-                    setLiveMapCentre(defaultCampusCentre);
-                }
+            const defaultCampusCentre = getLatLngCentreOfCampus(
+                bookableSpacesRoomList?.data?.locations,
+                FIRST_CAMPUS_ID,
+            );
+            if (!defaultCampusCentre) {
+                return;
             }
+
+            setLiveMapCentre(current => {
+                if (
+                    current &&
+                    Number(current.space_latitude) === Number(defaultCampusCentre.space_latitude) &&
+                    Number(current.space_longitude) === Number(defaultCampusCentre.space_longitude) &&
+                    Number(current.space_campus_id) === Number(defaultCampusCentre.space_campus_id)
+                ) {
+                    return current;
+                }
+                return defaultCampusCentre;
+            });
             return;
         }
 
         const currentCampusCentre = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
-        if (currentCampusCentre) {
-            setLiveMapCentre(currentCampusCentre);
+        if (!currentCampusCentre) {
+            return;
         }
-    }, [bookableSpacesRoomList?.data?.locations, correctedCampusId, selectedCampus, liveMapCentre]);
+
+        setLiveMapCentre(current => {
+            if (
+                current &&
+                Number(current.space_latitude) === Number(currentCampusCentre.space_latitude) &&
+                Number(current.space_longitude) === Number(currentCampusCentre.space_longitude) &&
+                Number(current.space_campus_id) === Number(currentCampusCentre.space_campus_id)
+            ) {
+                return current;
+            }
+            return currentCampusCentre;
+        });
+    }, [bookableSpacesRoomList?.data?.locations, correctedCampusId, selectedCampus]);
 
     const activeMapCentre = liveMapCentre;
 
