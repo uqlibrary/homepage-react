@@ -291,6 +291,19 @@ export const createGlobalStyles = appTheme => ({
         },
         textDecoration: 'underline',
     },
+    '[data-testid="art-trail-information-drawer"] a': {
+        color: appTheme.palette.primary.main,
+        '&:hover': {
+            color: appTheme.palette.primary.main,
+        },
+        '&:active': {
+            color: appTheme.palette.primary.main,
+        },
+        '&:visited': {
+            color: appTheme.palette.primary.main,
+        },
+        textDecoration: 'underline',
+    },
     ...createMapGlobalStyles(appTheme),
 });
 

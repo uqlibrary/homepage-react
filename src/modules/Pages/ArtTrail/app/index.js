@@ -413,6 +413,7 @@ const ArtTrailApp = () => {
                 anchorReference="none"
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 slotProps={createMenuSlotProps()}
+                data-testid="artTrailMenu"
             >
                 {menuItems.map((menuItem, index) => (
                     <MenuItem
@@ -563,6 +564,7 @@ const ArtTrailApp = () => {
                 ModalProps={{
                     keepMounted: true,
                 }}
+                data-testid="art-trail-information-drawer"
                 sx={createDrawerSx(appTheme)}
             >
                 <Box data-testid="art-trail-drawer-puller" sx={DRAWER_PULLER_SX}>

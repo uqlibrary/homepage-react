@@ -270,7 +270,7 @@ const TrailAudioPlayer = ({
                     }}
                 >
                     <IconButton
-                        aria-label={`Replay ${title}`}
+                        aria-label={`Reset audio playback`}
                         onClick={handleReplay}
                         disabled={!canReplay}
                         color="primary"
@@ -281,7 +281,7 @@ const TrailAudioPlayer = ({
                     {isPlaying ? (
                         <IconButton
                             ref={stopButtonRef}
-                            aria-label={`Stop ${title}`}
+                            aria-label="Stop audio playback"
                             onClick={handleStop}
                             color="primary"
                             size="large"
@@ -291,7 +291,7 @@ const TrailAudioPlayer = ({
                     ) : (
                         <IconButton
                             ref={playButtonRef}
-                            aria-label={`Play ${title}`}
+                            aria-label="Play audio"
                             onClick={() => startPlayback()}
                             color="primary"
                             size="large"

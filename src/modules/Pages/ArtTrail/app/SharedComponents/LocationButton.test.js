@@ -3,7 +3,7 @@ import { rtlRender, userEvent } from 'test-utils';
 
 import LocationButton from './LocationButton';
 
-const setup = (props = {}) => rtlRender(<LocationButton onClick={jest.fn()} {...props} />);
+const setup = (props = {}) => rtlRender(<LocationButton title="this artwork" onClick={jest.fn()} {...props} />);
 
 describe('LocationButton', () => {
     it('renders an accessible button and handles clicks', async () => {

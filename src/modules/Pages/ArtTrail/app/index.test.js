@@ -1,13 +1,54 @@
 import React from 'react';
-import { rtlRender, userEvent, waitFor } from 'test-utils';
+import { fireEvent, rtlRender, userEvent, waitFor } from 'test-utils';
 import Cookies from 'js-cookie';
 
 import ArtTrailApp from './index';
-import { ART_TRAIL_MAP_POIS } from './config/mapPois';
 import { trailPages } from './pages';
-import { markerClassNames, popupClassNames } from './appShellStyles';
-import trackingEvents from './config/trackingEvents';
-import { createMazemapPoiMarkers } from './utils/mapUtils';
+import { action, analyticsId } from './config/trackingEvents';
+
+const mockTrackPageView = jest.fn();
+const mockTrackNavigationClick = jest.fn();
+const mockTrackInformationDrawerClick = jest.fn();
+const mockTrackAudioPlayerClick = jest.fn();
+const mockTrackAudioPlayerComplete = jest.fn();
+const mockTrackAccordionExpand = jest.fn();
+const mockTrackMapPoiClick = jest.fn();
+
+jest.mock('./hooks', () => ({
+    ...jest.requireActual('./hooks'),
+    useGoogleAnalytics: () => ({
+        trackPageView: mockTrackPageView,
+        trackNavigationClick: mockTrackNavigationClick,
+        trackInformationDrawerClick: mockTrackInformationDrawerClick,
+        trackAudioPlayerClick: mockTrackAudioPlayerClick,
+        trackAudioPlayerComplete: mockTrackAudioPlayerComplete,
+        trackAccordionExpand: mockTrackAccordionExpand,
+        trackMapPoiClick: mockTrackMapPoiClick,
+    }),
+}));
+
+jest.mock('./MapTabContent', () => {
+    const React = jest.requireActual('react');
+    const PropTypes = jest.requireActual('prop-types');
+    const ActualMapTabContent = jest.requireActual('./MapTabContent').default;
+
+    const MockMapTabContent = props => {
+        return (
+            <>
+                <ActualMapTabContent {...props} />
+                <button type="button" onClick={() => props.handleMapEvent('Punu Tjukurpa', 'mapMarker')}>
+                    Track map marker
+                </button>
+            </>
+        );
+    };
+
+    MockMapTabContent.propTypes = {
+        handleMapEvent: PropTypes.func.isRequired,
+    };
+
+    return MockMapTabContent;
+});
 
 jest.mock('js-cookie', () => ({
     get: jest.fn(),
@@ -23,7 +64,7 @@ const setup = () => rtlRender(<ArtTrailApp />);
 
 describe('ArtTrailApp', () => {
     beforeEach(() => {
-        delete window.dataLayer;
+        jest.clearAllMocks();
         Cookies.get.mockReset();
         Cookies.set.mockReset();
         Cookies.get.mockReturnValue(undefined);
@@ -32,30 +73,138 @@ describe('ArtTrailApp', () => {
     it('tracks each selected Trail and Map page by title', async () => {
         const { getByRole } = setup();
 
-        expect(window.dataLayer).toEqual([
-            {
-                event: trackingEvents.ART_TRAIL_PAGE_VIEW,
-                page_title: trailPages[0].pageTitle,
-            },
-        ]);
+        expect(mockTrackPageView).toHaveBeenCalledWith(trailPages[0].pageTitle, 0);
 
         await userEvent.click(getByRole('button', { name: 'Start the trail' }));
         await userEvent.click(getByRole('button', { name: 'Art Trail by location on a map' }));
 
-        expect(window.dataLayer).toEqual([
-            {
-                event: trackingEvents.ART_TRAIL_PAGE_VIEW,
-                page_title: trailPages[0].pageTitle,
-            },
-            {
-                event: trackingEvents.ART_TRAIL_PAGE_VIEW,
-                page_title: trailPages[1].pageTitle,
-            },
-            {
-                event: trackingEvents.ART_TRAIL_PAGE_VIEW,
-                page_title: 'Art Trail Map of St Lucia campus',
-            },
-        ]);
+        expect(mockTrackPageView).toHaveBeenNthCalledWith(2, trailPages[1].pageTitle, 1);
+        expect(mockTrackPageView).toHaveBeenNthCalledWith(3, 'Art Trail Map of St Lucia campus', 10);
+    });
+
+    it('tracks stepper navigation controls', async () => {
+        const { getByRole } = setup();
+
+        await userEvent.click(getByRole('button', { name: 'Start the trail' }));
+        expect(mockTrackNavigationClick).toHaveBeenLastCalledWith({
+            click_label: 'Start the trail',
+            click_class: analyticsId.start,
+        });
+
+        await userEvent.click(getByRole('button', { name: 'Next page' }));
+        expect(mockTrackNavigationClick).toHaveBeenLastCalledWith({
+            click_label: 'Next',
+            click_class: analyticsId.next,
+        });
+
+        await userEvent.click(getByRole('button', { name: 'Previous page' }));
+        expect(mockTrackNavigationClick).toHaveBeenLastCalledWith({
+            click_label: 'Prev',
+            click_class: analyticsId.prev,
+        });
+    });
+
+    it('tracks tab navigation controls', async () => {
+        const { getByRole } = setup();
+
+        await userEvent.click(getByRole('button', { name: 'Art Trail by location on a map' }));
+        expect(mockTrackNavigationClick).toHaveBeenLastCalledWith({
+            click_label: 'Map',
+            click_class: analyticsId.map,
+        });
+    });
+
+    it('tracks menu open and close controls', async () => {
+        const { getByRole } = setup();
+        const menuButton = getByRole('button', { name: 'open navigation menu' });
+
+        await userEvent.click(menuButton);
+        expect(mockTrackNavigationClick).toHaveBeenLastCalledWith({
+            click_action: action.OPEN,
+            click_label: 'Menu',
+            click_class: analyticsId.menuOpen,
+        });
+
+        await userEvent.click(menuButton);
+        expect(mockTrackNavigationClick).toHaveBeenLastCalledWith({
+            click_action: action.CLOSE,
+            click_label: 'Menu',
+            click_class: analyticsId.menuClose,
+        });
+    });
+
+    it('tracks audio play, stop, and reset controls', async () => {
+        const play = jest.spyOn(window.HTMLMediaElement.prototype, 'play').mockResolvedValue();
+        const pause = jest.spyOn(window.HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
+        const { container, getByRole } = setup();
+        const audioElement = container.querySelector('audio');
+
+        Object.defineProperty(audioElement, 'currentTime', {
+            configurable: true,
+            writable: true,
+            value: 0,
+        });
+
+        await userEvent.click(getByRole('button', { name: 'Play audio' }));
+        fireEvent.play(audioElement);
+        expect(mockTrackAudioPlayerClick).toHaveBeenLastCalledWith({
+            click_label: 'Listen to this page',
+            click_class: analyticsId.play,
+        });
+
+        audioElement.currentTime = 5;
+        fireEvent.timeUpdate(audioElement);
+        await userEvent.click(getByRole('button', { name: 'Stop audio playback' }));
+        expect(mockTrackAudioPlayerClick).toHaveBeenLastCalledWith({
+            click_label: 'Listen to this page',
+            click_class: analyticsId.stop,
+        });
+
+        await userEvent.click(getByRole('button', { name: 'Reset audio playback' }));
+        expect(mockTrackAudioPlayerClick).toHaveBeenLastCalledWith({
+            click_label: 'Listen to this page',
+            click_class: analyticsId.reset,
+        });
+
+        play.mockRestore();
+        pause.mockRestore();
+    });
+
+    it('tracks audio completion', () => {
+        const pause = jest.spyOn(window.HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
+        const { container } = setup();
+        const audioElement = container.querySelector('audio');
+
+        fireEvent.ended(audioElement);
+        expect(mockTrackAudioPlayerComplete).toHaveBeenCalledWith({
+            click_class: analyticsId.complete,
+        });
+
+        pause.mockRestore();
+    });
+
+    it('tracks accordion expansion', async () => {
+        const { getByRole } = setup();
+
+        await userEvent.click(getByRole('button', { name: 'Start the trail' }));
+        await userEvent.click(getByRole('button', { name: 'View more' }));
+
+        expect(mockTrackAccordionExpand).toHaveBeenCalledWith({
+            click_label: 'View more',
+            click_class: analyticsId.expandAccordion,
+        });
+    });
+
+    it('tracks map marker interactions', async () => {
+        const { getByRole } = setup();
+
+        await userEvent.click(getByRole('button', { name: 'Art Trail by location on a map' }));
+        await userEvent.click(getByRole('button', { name: 'Track map marker' }));
+
+        expect(mockTrackMapPoiClick).toHaveBeenCalledWith({
+            click_label: 'Punu Tjukurpa',
+            click_class: analyticsId.mapMarker,
+        });
     });
 
     it('renders the fixed app shell and sets the document title', () => {
@@ -122,7 +271,12 @@ describe('ArtTrailApp', () => {
         const { getByRole, getByText, queryByText } = setup();
 
         await userEvent.click(getByRole('button', { name: 'Start the trail' }));
-        await userEvent.click(getByRole('button', { name: 'More information about this artwork' }));
+        await userEvent.click(getByRole('button', { name: 'More information about Punu Tjukurpa' }));
+
+        expect(mockTrackInformationDrawerClick).toHaveBeenCalledWith({
+            click_label: 'More information about Punu Tjukurpa',
+            click_class: analyticsId.information,
+        });
 
         expect(getByRole('heading', { name: /Hector Tjupuru Burton/i })).toBeInTheDocument();
         expect(getByText(/synthetic polymer paint on linen/i)).toBeInTheDocument();
@@ -130,6 +284,12 @@ describe('ArtTrailApp', () => {
         await userEvent.keyboard('{Escape}');
 
         expect(queryByText(/synthetic polymer paint on linen/i)).not.toBeInTheDocument();
+
+        await userEvent.click(getByRole('button', { name: 'Location information about Punu Tjukurpa' }));
+        expect(mockTrackInformationDrawerClick).toHaveBeenLastCalledWith({
+            click_label: 'Location information for Punu Tjukurpa',
+            click_class: analyticsId.location,
+        });
     });
 
     it('resets the scroll position when changing Trail pages', async () => {
@@ -172,86 +332,5 @@ describe('ArtTrailApp', () => {
         const { queryByText } = setup();
 
         expect(queryByText(culturalDisclaimerText)).not.toBeInTheDocument();
-    });
-
-    it('creates a marker for each hardcoded map POI', () => {
-        const onSelectTrailPage = jest.fn();
-        const activePopupRef = { current: null };
-        const addTo = jest.fn(function addTo(map) {
-            this.map = map;
-            return this;
-        });
-        const setLngLat = jest.fn(function setLngLat(lngLat) {
-            this.lngLat = lngLat;
-            return this;
-        });
-        const setPopup = jest.fn(function setPopup(popup) {
-            this.popup = popup;
-            return this;
-        });
-        const markerConstructor = jest.fn(function ZLevelMarker(element, options) {
-            this.element = element;
-            this.options = options;
-            this.setLngLat = setLngLat;
-            this.setPopup = setPopup;
-            this.addTo = addTo;
-        });
-        const popupSetDOMContent = jest.fn(function setDOMContent(content) {
-            this.content = content;
-            return this;
-        });
-        const popupRemove = jest.fn(function remove() {
-            return this;
-        });
-        const popupIsOpen = jest.fn(() => true);
-        const popupConstructor = jest.fn(function Popup() {
-            this.setDOMContent = popupSetDOMContent;
-            this.remove = popupRemove;
-            this.isOpen = popupIsOpen;
-        });
-        const map = { id: 'mock-map' };
-
-        const markers = createMazemapPoiMarkers({
-            Mazemap: {
-                ZLevelMarker: markerConstructor,
-                Popup: popupConstructor,
-            },
-            map,
-            onSelectTrailPage,
-            activePopupRef,
-            markerClassNames,
-            popupClassNames,
-        });
-
-        expect(markers).toHaveLength(ART_TRAIL_MAP_POIS.length);
-        expect(markerConstructor).toHaveBeenCalledTimes(ART_TRAIL_MAP_POIS.length);
-        expect(markerConstructor).toHaveBeenNthCalledWith(
-            1,
-            expect.any(HTMLElement),
-            expect.objectContaining({ zLevel: ART_TRAIL_MAP_POIS[0].zLevel, offset: [0, -9] }),
-        );
-        expect(markerConstructor.mock.calls[0][0].textContent).toBe(`${ART_TRAIL_MAP_POIS[0].trailStepIndex}`);
-        expect(markerConstructor.mock.calls[0][0].className).toContain('artTrailMapMarker');
-        expect(markerConstructor.mock.calls[0][0].style.getPropertyValue('--art-trail-marker-color')).toBe(
-            ART_TRAIL_MAP_POIS[0].color,
-        );
-        expect(setLngLat).toHaveBeenNthCalledWith(1, [ART_TRAIL_MAP_POIS[0].lng, ART_TRAIL_MAP_POIS[0].lat]);
-        expect(addTo).toHaveBeenCalledTimes(ART_TRAIL_MAP_POIS.length);
-        expect(addTo).toHaveBeenCalledWith(map);
-        expect(popupSetDOMContent).toHaveBeenNthCalledWith(1, expect.any(HTMLElement));
-        expect(popupSetDOMContent.mock.calls[0][0].querySelector('img').getAttribute('src')).toBe(
-            ART_TRAIL_MAP_POIS[0].popupThumbnailSrc,
-        );
-        expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain(ART_TRAIL_MAP_POIS[0].menuTitle);
-        expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain('Punu Tjukurpa 2013');
-        expect(popupSetDOMContent.mock.calls[0][0].textContent).toContain(ART_TRAIL_MAP_POIS[0].popupLevelLabel);
-        expect(popupSetDOMContent.mock.calls[0][0].querySelector(`.${'artTrailMapPopupDescription'}`).innerHTML).toBe(
-            ART_TRAIL_MAP_POIS[0].popupDescription,
-        );
-        markerConstructor.mock.calls[0][0].click();
-        markerConstructor.mock.calls[1][0].click();
-        expect(popupConstructor.mock.instances[0].remove).toHaveBeenCalledTimes(1);
-        popupSetDOMContent.mock.calls[0][0].querySelector('a').click();
-        expect(onSelectTrailPage).toHaveBeenCalledWith(ART_TRAIL_MAP_POIS[0].trailStepIndex);
     });
 });

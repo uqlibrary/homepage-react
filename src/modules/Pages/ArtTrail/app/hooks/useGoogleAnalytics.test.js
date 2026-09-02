@@ -1,6 +1,6 @@
 import { act, renderHook } from 'test-utils';
 
-import trackingEvents from '../config/trackingEvents';
+import { action, category, event } from '../config/trackingEvents';
 import useGoogleAnalytics from './useGoogleAnalytics';
 
 describe('useGoogleAnalytics', () => {
@@ -40,30 +40,13 @@ describe('useGoogleAnalytics', () => {
         const { result } = renderHook(() => useGoogleAnalytics());
 
         act(() => {
-            result.current.trackButtonClick(undefined, { button_text: 'Start the trail' });
+            result.current.trackButtonClick({ button_text: 'Start the trail' });
         });
 
         expect(window.dataLayer).toEqual([
             {
-                event: trackingEvents.ART_TRAIL_BUTTON_CLICK,
+                event: event.CLICK,
                 button_text: 'Start the trail',
-            },
-        ]);
-    });
-
-    it('tracks button clicks with a supplied event', () => {
-        const { result } = renderHook(() => useGoogleAnalytics());
-
-        act(() => {
-            result.current.trackButtonClick(trackingEvents.ART_TRAIL_AUDIOPLAYER_PLAY, {
-                button_text: 'Play',
-            });
-        });
-
-        expect(window.dataLayer).toEqual([
-            {
-                event: trackingEvents.ART_TRAIL_AUDIOPLAYER_PLAY,
-                button_text: 'Play',
             },
         ]);
     });
@@ -77,7 +60,9 @@ describe('useGoogleAnalytics', () => {
 
         expect(window.dataLayer).toEqual([
             {
-                event: trackingEvents.ART_TRAIL_ACCORDION_EXPAND,
+                event: event.CLICK,
+                click_category: category.ACCORDION,
+                click_action: action.EXPAND,
                 accordion_title: 'About the artwork',
             },
         ]);
@@ -92,8 +77,49 @@ describe('useGoogleAnalytics', () => {
 
         expect(window.dataLayer).toEqual([
             {
-                event: trackingEvents.ART_TRAIL_MAP_POI_CLICK,
+                event: event.CLICK,
+                click_category: category.MAP_POI,
+                click_action: action.CLICK,
                 poi_title: 'Punu Tjukurpa',
+            },
+        ]);
+    });
+
+    it('tracks navigation, audio, and information interactions', () => {
+        const { result } = renderHook(() => useGoogleAnalytics());
+
+        act(() => {
+            result.current.trackNavigationClick({ click_label: 'Next' });
+            result.current.trackAudioPlayerClick({ click_label: 'Listen to this page' });
+            result.current.trackAudioPlayerComplete({ click_class: 'AudioComplete' });
+            result.current.trackInformationDrawerClick({ click_label: 'More information' });
+        });
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: event.CLICK,
+                click_category: category.NAVIGATION,
+                click_action: action.CLICK,
+                click_label: 'Next',
+            },
+            {
+                event: event.CLICK,
+                click_category: category.AUDIO_PLAYER,
+                click_action: action.CLICK,
+                click_label: 'Listen to this page',
+            },
+            {
+                event: event.CLICK,
+                click_category: category.AUDIO_PLAYER,
+                click_action: action.COMPLETE,
+                click_label: 'listen to this page',
+                click_class: 'AudioComplete',
+            },
+            {
+                event: event.CLICK,
+                click_category: category.INFORMATION,
+                click_action: action.CLICK,
+                click_label: 'More information',
             },
         ]);
     });
@@ -102,14 +128,14 @@ describe('useGoogleAnalytics', () => {
         const { result } = renderHook(() => useGoogleAnalytics());
 
         act(() => {
-            result.current.trackPageView({ page_type: 'art-trail', page_title: 'Artwork title' });
+            result.current.trackPageView('Artwork title', 4);
         });
 
         expect(window.dataLayer).toEqual([
             {
-                event: trackingEvents.ART_TRAIL_PAGE_VIEW,
+                event: event.PAGE_VIEW,
                 page_title: 'Artwork title',
-                page_type: 'art-trail',
+                page_number: 4,
             },
         ]);
     });

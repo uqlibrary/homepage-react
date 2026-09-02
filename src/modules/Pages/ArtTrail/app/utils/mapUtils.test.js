@@ -33,6 +33,7 @@ const samplePoi = {
     popupThumbnailAlt: 'Punu Tjukurpa artwork thumbnail',
     popupThumbnailSrc: '/images/artwork-thumb.jpg',
     popupTitle: 'Hector Tjupuru Burton, Ray Ken, Mick Wikilyiri & Brenton Ken,',
+    rawLabel: 'Punu Tjukurpa',
     tableLinkText: 'Hector Tjupuru Burton, Ray Ken, Mick Wikilyiri and Brenton Ken, <em>Punu Tjukurpa</em>, 2013',
     title: 'Punu Tjukurpa',
     trailStepIndex: 1,
@@ -226,7 +227,7 @@ describe('mapUtils', () => {
 
         titleLink.dispatchEvent(clickEvent);
 
-        expect(onSelectTrailPage).toHaveBeenCalledWith(samplePoi.trailStepIndex);
+        expect(onSelectTrailPage).toHaveBeenCalledWith(samplePoi.trailStepIndex, samplePoi.rawLabel);
         expect(clickEvent.defaultPrevented).toBe(true);
         expect(stopPropagation).toHaveBeenCalledTimes(1);
 
@@ -377,8 +378,16 @@ describe('mapUtils', () => {
         });
 
         expect(markers).toHaveLength(2);
-        expect(Popup).toHaveBeenNthCalledWith(1, { offset: 12, maxWidth: MAP_POPUP_MAX_WIDTH });
-        expect(Popup).toHaveBeenNthCalledWith(2, { offset: 12, maxWidth: MAP_POPUP_MAX_WIDTH });
+        expect(Popup).toHaveBeenNthCalledWith(1, {
+            offset: 12,
+            maxWidth: MAP_POPUP_MAX_WIDTH,
+            label: 'undefined',
+        });
+        expect(Popup).toHaveBeenNthCalledWith(2, {
+            offset: 12,
+            maxWidth: MAP_POPUP_MAX_WIDTH,
+            label: 'undefined',
+        });
         expect(setText).toHaveBeenNthCalledWith(1, 'First stop');
         expect(setText).toHaveBeenNthCalledWith(2, 'Second stop');
 
@@ -510,7 +519,14 @@ describe('mapUtils', () => {
         popupEventHandlers.open();
 
         expect(activePopupRef.current).toBe(popup);
+        expect(markerElement).toHaveAttribute('inert');
         const popupLink = popupElement.querySelector(`.${popupClassNames.titleLink}`);
+        expect(popupLink).toHaveFocus();
+
+        popupLink.dispatchEvent(
+            new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Tab', shiftKey: true }),
+        );
+
         expect(popupLink).toHaveFocus();
 
         popupLink.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Tab' }));
@@ -518,6 +534,10 @@ describe('mapUtils', () => {
         expect(closeButton).toHaveFocus();
 
         markerElement.focus();
+        markerElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' }));
+
+        expect(markerElement).toHaveFocus();
+
         markerElement.dispatchEvent(
             new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Tab', shiftKey: true }),
         );
@@ -529,6 +549,7 @@ describe('mapUtils', () => {
 
         expect(popup.remove).toHaveBeenCalledTimes(1);
         expect(activePopupRef.current).toBeNull();
+        expect(markerElement).not.toHaveAttribute('inert');
         expect(markerElement).toHaveFocus();
 
         document.body.appendChild(popupElement);
@@ -536,5 +557,12 @@ describe('mapUtils', () => {
 
         expect(activePopupRef.current).toBe(popup);
         expect(popupElement.querySelector(`.${popupClassNames.titleLink}`)).toHaveFocus();
+
+        const newerPopup = { id: 'newer-popup' };
+        activePopupRef.current = newerPopup;
+        popupEventHandlers.close();
+
+        expect(activePopupRef.current).toBe(newerPopup);
+        expect(markerElement).toHaveAttribute('inert');
     });
 });

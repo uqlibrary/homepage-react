@@ -178,6 +178,7 @@ const MapTabContent = ({ active, onSelectTrailPage, handleMapEvent }) => {
                             <Box
                                 ref={mapContainerRef}
                                 data-testid="mazemap-container"
+                                role="region"
                                 aria-label="MazeMaps campus map"
                                 sx={{ position: 'absolute', inset: 0, height: '100%', width: '100%' }}
                             />

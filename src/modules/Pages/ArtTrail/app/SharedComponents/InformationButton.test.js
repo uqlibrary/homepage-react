@@ -3,7 +3,7 @@ import { rtlRender, userEvent } from 'test-utils';
 
 import InformationButton from './InformationButton';
 
-const setup = (props = {}) => rtlRender(<InformationButton onClick={jest.fn()} {...props} />);
+const setup = (props = {}) => rtlRender(<InformationButton title="this artwork" onClick={jest.fn()} {...props} />);
 
 describe('InformationButton', () => {
     it('renders an accessible button and handles clicks', async () => {

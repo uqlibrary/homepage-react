@@ -160,11 +160,14 @@ export const createMazemapPoiMarkers = ({
         return [];
     }
 
+    const markerElements = [];
+
     return pois.map(poi => {
         const popup = Mazemap.Popup
             ? new Mazemap.Popup({ offset: 12, maxWidth: MAP_POPUP_MAX_WIDTH, label: `${poi.trailStepIndex}` })
             : /* istanbul ignore next */ null;
         const markerElement = createPoiMarkerElement(poi, markerClassNames);
+        markerElements.push(markerElement);
         const marker = new Mazemap.ZLevelMarker(markerElement, {
             zLevel: poi.zLevel,
             offset: [0, -9],
@@ -227,6 +230,9 @@ export const createMazemapPoiMarkers = ({
                     previousPopup.remove?.();
                 }
 
+                // WGAG 2.2 by disablign other markers when a popup is open we can avoid an error
+                // with other markers being active but too small to tap due to being obscured
+                markerElements.forEach(element => element.setAttribute('inert', ''));
                 document.addEventListener('keydown', handleEscapeKeyDown);
                 popupLink?.addEventListener('keydown', handlePopupLinkKeyDown);
                 popupLink?.focus();
@@ -242,6 +248,7 @@ export const createMazemapPoiMarkers = ({
 
                 if (shouldRestoreMarkerFocus) {
                     activePopupRef.current = null;
+                    markerElements.forEach(element => element.removeAttribute('inert'));
                     markerElement.focus();
                 }
             };
