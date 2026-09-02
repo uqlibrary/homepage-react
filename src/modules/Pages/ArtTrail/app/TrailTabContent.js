@@ -47,6 +47,7 @@ const TrailTabContent = ({
     navigationDirection,
     mediaStopSignal,
     handleMediaEvent,
+    handleAccordionChange,
 }) => {
     const [transitionState, setTransitionState] = useState(() => createTransitionState({ page, pageKey }));
     const [isAnimating, setIsAnimating] = useState(false);
@@ -129,6 +130,7 @@ const TrailTabContent = ({
                         openLocationDrawer={openLocationDrawer}
                         mediaStopSignal={mediaStopSignal}
                         handleMediaEvent={handleMediaEvent}
+                        handleAccordionChange={handleAccordionChange}
                     />
                 </Box>
             ) : null}
@@ -153,6 +155,7 @@ const TrailTabContent = ({
                     openLocationDrawer={openLocationDrawer}
                     mediaStopSignal={mediaStopSignal}
                     handleMediaEvent={handleMediaEvent}
+                    handleAccordionChange={handleAccordionChange}
                 />
             </Box>
         </Box>
@@ -171,6 +174,7 @@ TrailTabContent.propTypes = {
     openInformationDrawer: PropTypes.func.isRequired,
     openLocationDrawer: PropTypes.func.isRequired,
     handleMediaEvent: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
 };
 
 export default TrailTabContent;

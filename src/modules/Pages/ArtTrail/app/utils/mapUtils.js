@@ -111,7 +111,7 @@ export const createPoiPopupContent = (poi, onSelectTrailPage, popupClassNames) =
         const selectTrailPage = event => {
             event.preventDefault();
             event.stopPropagation();
-            onSelectTrailPage(poi.trailStepIndex);
+            onSelectTrailPage(poi.trailStepIndex, poi.rawLabel);
         };
         title.href = '#';
         title.title = linkLabel;
@@ -154,6 +154,7 @@ export const createMazemapPoiMarkers = ({
     activePopupRef,
     markerClassNames,
     popupClassNames,
+    handleMapEvent,
 }) => {
     if (!Mazemap?.ZLevelMarker || !map) {
         return [];
@@ -161,7 +162,7 @@ export const createMazemapPoiMarkers = ({
 
     return pois.map(poi => {
         const popup = Mazemap.Popup
-            ? new Mazemap.Popup({ offset: 12, maxWidth: MAP_POPUP_MAX_WIDTH })
+            ? new Mazemap.Popup({ offset: 12, maxWidth: MAP_POPUP_MAX_WIDTH, label: `${poi.trailStepIndex}` })
             : /* istanbul ignore next */ null;
         const markerElement = createPoiMarkerElement(poi, markerClassNames);
         const marker = new Mazemap.ZLevelMarker(markerElement, {
@@ -229,6 +230,7 @@ export const createMazemapPoiMarkers = ({
                 document.addEventListener('keydown', handleEscapeKeyDown);
                 popupLink?.addEventListener('keydown', handlePopupLinkKeyDown);
                 popupLink?.focus();
+                handleMapEvent?.(popup.options.label, 'mapMarker');
             };
             const handlePopupClose = () => {
                 document.removeEventListener('keydown', handleEscapeKeyDown);

@@ -68,7 +68,7 @@ const LocationDrawerContent = () => {
     );
 };
 
-const Page = ({ openInformationDrawer, openLocationDrawer }) => {
+const Page = ({ openInformationDrawer, openLocationDrawer, handleAccordionChange }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero id="artwork-sand-hills" sx={{ pb: 0 }} />
@@ -92,7 +92,7 @@ const Page = ({ openInformationDrawer, openLocationDrawer }) => {
                         />
                     </Box>
                 </Grid>
-                <StyledAccordionGrid>
+                <StyledAccordionGrid onChange={handleAccordionChange}>
                     <DisclosureSection
                         heading={
                             <StyledHeading variant="h6" component="h2">
@@ -118,9 +118,10 @@ const Page = ({ openInformationDrawer, openLocationDrawer }) => {
                                 assert her people's connection to the land.
                             </Box>
                         }
+                        onExpand={handleAccordionChange}
                     />
 
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="reflect-content"
@@ -144,7 +145,7 @@ const Page = ({ openInformationDrawer, openLocationDrawer }) => {
                             </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artists-content"
@@ -165,7 +166,7 @@ const Page = ({ openInformationDrawer, openLocationDrawer }) => {
                             </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="connection-to-country-content"
@@ -220,6 +221,7 @@ const Page = ({ openInformationDrawer, openLocationDrawer }) => {
 Page.propTypes = {
     openInformationDrawer: PropTypes.func.isRequired,
     openLocationDrawer: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
 };
 
 export default Page;

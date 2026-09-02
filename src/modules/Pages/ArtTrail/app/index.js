@@ -155,6 +155,8 @@ const ArtTrailApp = () => {
         trackInformationDrawerClick,
         trackAudioPlayerClick,
         trackAudioPlayerComplete,
+        trackAccordionExpand,
+        trackMapPoiClick,
     } = useGoogleAnalytics();
 
     const lastTrackedPageRef = useRef(null);
@@ -185,7 +187,9 @@ const ArtTrailApp = () => {
         }
 
         lastTrackedPageRef.current = pageKey;
-        trackPageView(activeTabPages[activeState.stepIndex].pageTitle, activeState.stepIndex);
+        // for tracking only, force the pageNumber for Map tab to be 10
+        const pageNumber = activeTabConfig.id === 'trail' ? activeState.stepIndex : 10;
+        trackPageView(activeTabPages[activeState.stepIndex].pageTitle, pageNumber);
     }, [activeState.stepIndex, activeTabConfig.id, activeTabPages, pageKey, trackPageView]);
 
     const stepCount = activeTabPages.length;
@@ -251,6 +255,21 @@ const ArtTrailApp = () => {
 
         if (activeTabConfig.id === 'trail') {
             setTrailNavigationDirection(direction < 0 ? 'backward' : 'forward');
+            let clickLabel = 'Next';
+            let clickClass = analyticsId.next;
+
+            if (direction < 0) {
+                clickLabel = 'Prev';
+                clickClass = analyticsId.prev;
+            } else if (isTrailWelcomeStep) {
+                clickLabel = 'Start the trail';
+                clickClass = analyticsId.start;
+            }
+
+            trackNavigationClick({
+                click_label: clickLabel,
+                click_class: clickClass,
+            });
         }
 
         updateTabState(activeTabConfig.id, currentTabState => ({
@@ -284,21 +303,32 @@ const ArtTrailApp = () => {
     };
 
     const handleMediaEvent = event => {
-        switch (event) {
-            case 'complete': {
-                trackAudioPlayerComplete({
-                    click_class: analyticsId[event],
-                });
-                break;
-            }
-            default: {
-                trackAudioPlayerClick({
-                    click_label: 'Listen to this page',
-                    click_class: analyticsId[event],
-                });
-                break;
-            }
+        if (event === 'complete') {
+            trackAudioPlayerComplete({
+                click_class: analyticsId[event],
+            });
+        } else {
+            trackAudioPlayerClick({
+                click_label: 'Listen to this page',
+                click_class: analyticsId[event],
+            });
         }
+    };
+
+    const handleAccordionChange = (event, expanded) => {
+        if (expanded) {
+            trackAccordionExpand({
+                click_label: event?.target?.textContent || event,
+                click_class: analyticsId.expandAccordion,
+            });
+        }
+    };
+
+    const handleMapEvent = (label, type) => {
+        trackMapPoiClick({
+            click_label: label,
+            click_class: analyticsId[type],
+        });
     };
 
     const renderTabContent = tab => {
@@ -320,6 +350,8 @@ const ArtTrailApp = () => {
                 navigationDirection={tab.id === 'trail' ? trailNavigationDirection : 'forward'}
                 mediaStopSignal={mediaStopSignal}
                 handleMediaEvent={handleMediaEvent}
+                handleAccordionChange={handleAccordionChange}
+                handleMapEvent={handleMapEvent}
                 onSelectTrailPage={handleSelectTrailPage}
             />
         );
@@ -498,6 +530,10 @@ const ArtTrailApp = () => {
                             onChange={(event, nextTab) => {
                                 handleDrawerClose();
                                 setActiveTab(nextTab);
+                                trackNavigationClick({
+                                    click_label: nextTab.charAt(0).toUpperCase() + nextTab.slice(1),
+                                    click_class: analyticsId[nextTab],
+                                });
                             }}
                             sx={FOOTER_NAV_SX}
                         >

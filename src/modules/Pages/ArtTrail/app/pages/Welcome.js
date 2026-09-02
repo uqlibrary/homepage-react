@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -11,9 +10,7 @@ import Hero from '../SharedComponents/Hero';
 import { StyledAudioPlayer, StyledAccordionGrid, StyledAccordion, StyledAccordionDetails } from '../SharedComponents';
 import WelcomeAudio from '../../../../../../public/audio/artTrail/welcome.mp3';
 
-const WelcomePage = ({ mediaStopSignal, handleMediaEvent }) => {
-    const theme = useTheme();
-
+const WelcomePage = ({ mediaStopSignal, handleMediaEvent, handleAccordionChange }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero
@@ -45,7 +42,7 @@ const WelcomePage = ({ mediaStopSignal, handleMediaEvent }) => {
                     </Grid>
                 </Grid>
                 <Grid>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="transcript-content"
@@ -76,9 +73,9 @@ const WelcomePage = ({ mediaStopSignal, handleMediaEvent }) => {
                         </StyledAccordionDetails>
                     </StyledAccordion>
                 </Grid>
-                <Box sx={{ mb: 2, p: 2, backgroundColor: theme.palette.designSystem.warningYellow }}>
-                    Brisbane River pattern from A Guidance Through Time by Quandamooka artists Casey Coolwell and Kyra
-                    Mancktelow.
+                <Box sx={{ mb: 2 }}>
+                    Brisbane River pattern from <em>A Guidance Through Time</em> by Quandamooka artists Casey Coolwell
+                    and Kyra Mancktelow.
                 </Box>
             </StyledAccordionGrid>
         </Grid>
@@ -88,6 +85,7 @@ const WelcomePage = ({ mediaStopSignal, handleMediaEvent }) => {
 WelcomePage.propTypes = {
     mediaStopSignal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     handleMediaEvent: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
 };
 
 export default WelcomePage;

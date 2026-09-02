@@ -56,7 +56,7 @@ const useGoogleAnalytics = () => {
         (/* istanbul ignore next */ parameters = {}) => {
             trackEvent(event.CLICK, {
                 click_category: category.MAP_POI,
-                click_action: action.OPEN,
+                click_action: action.CLICK,
                 ...parameters,
             });
         },

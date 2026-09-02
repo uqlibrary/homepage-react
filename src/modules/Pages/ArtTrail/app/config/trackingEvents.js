@@ -29,10 +29,14 @@ const analyticsId = {
     menuOpen: 'MenuIcon',
     menuClose: 'CloseIcon',
     menuItem: 'MenuItem',
-    back: 'ChevronLeftIcon',
+    prev: 'ChevronLeftIcon',
     next: 'ChevronRightIcon',
-    tabTrail: 'RouteOutlinedIcon',
-    tabMap: 'MapOutlinedIcon',
+    start: 'StartTrail',
+    trail: 'RouteOutlinedIcon',
+    map: 'MapOutlinedIcon',
+    mapMarker: 'artTrailMapMarker',
+    mapLink: 'artTrailMapPopupTitleLink',
+    expandAccordion: 'ExpandMoreIcon',
 };
 
 export { event, category, action, analyticsId };

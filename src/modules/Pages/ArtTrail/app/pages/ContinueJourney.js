@@ -21,7 +21,7 @@ import Book3Image from '../../../../../../public/images/artTrail/Guide_LanguageR
 
 import ContinueJourneyAudio from '../../../../../../public/audio/artTrail/continuejourney.mp3';
 
-const ContinueJourney = ({ mediaStopSignal, handleMediaEvent }) => {
+const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionChange }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero title="Continue your journey" />
@@ -56,7 +56,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent }) => {
                     </Grid>
                 </Grid>
                 <Grid>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="transcript-content"
@@ -80,7 +80,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent }) => {
                             </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="resources-content"
@@ -207,6 +207,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent }) => {
 ContinueJourney.propTypes = {
     mediaStopSignal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     handleMediaEvent: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
 };
 
 export default ContinueJourney;

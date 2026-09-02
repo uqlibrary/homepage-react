@@ -59,6 +59,7 @@ const DisclosureSection = ({
     collapsedLabel = 'View more',
     expandedLabel = 'View less',
     forceExpanded = false,
+    onExpand,
 }) => {
     const [isExpanded, setIsExpanded] = React.useState(forceExpanded);
     const expandedContentId = React.useId();
@@ -72,7 +73,10 @@ const DisclosureSection = ({
                     <Button
                         type="button"
                         variant="text"
-                        onClick={() => setIsExpanded(true)}
+                        onClick={() => {
+                            setIsExpanded(true);
+                            onExpand?.('View more', true);
+                        }}
                         aria-expanded={isExpanded}
                         aria-controls={expandedContentId}
                         endIcon={<ExpandMoreIcon sx={getExpandIconSx(isExpanded)} />}
@@ -110,6 +114,7 @@ DisclosureSection.propTypes = {
     heading: PropTypes.node,
     summary: PropTypes.node.isRequired,
     forceExpanded: PropTypes.bool,
+    onExpand: PropTypes.func,
 };
 
 export default DisclosureSection;
