@@ -75,5 +75,11 @@ export default {
         pastExamPaperList: {
             title: 'View exam papers',
         },
+        artTrailLanding: {
+            title: 'Art Trail Welcome',
+        },
+        artTrail: {
+            title: 'Art Trail',
+        },
     },
 };
