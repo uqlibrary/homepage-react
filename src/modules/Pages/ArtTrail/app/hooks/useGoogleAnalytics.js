@@ -4,7 +4,6 @@ import { event, category, action } from '../config/trackingEvents';
 
 const useGoogleAnalytics = () => {
     const _track = useCallback((...args) => {
-        console.log('Tracking event:', ...args);
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push(...args);
     }, []);
