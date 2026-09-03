@@ -1,0 +1,183 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Unstable_Grid2';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Tjupurrula_2014_40_WEB.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/Tingari.jpg';
+
+import Hero from '../SharedComponents/Hero';
+import InformationButton from '../SharedComponents/InformationButton';
+import LocationButton from '../SharedComponents/LocationButton';
+import {
+    DisclosureSection,
+    StyledHeading,
+    StyledAccordion,
+    StyledAccordionDetails,
+    StyledAccordionGrid,
+    StyledDrawerHeader,
+    StyledTrailImage,
+    StyledUl,
+    StyledImage,
+} from '../SharedComponents';
+
+const ArtDrawerContent = () => {
+    return (
+        <Grid container direction="column" rowSpacing={1.5}>
+            <Grid>
+                <StyledDrawerHeader variant="h3">Johnny Yungut Tjupurrula </StyledDrawerHeader>
+            </Grid>
+            <Grid>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
+                    <em>Tingari ceremonies at Wilkinkarra</em> 2003
+                    <br />
+                    synthetic polymer paint on linen
+                    <br />
+                    182.5 x 152 cm
+                    <br />
+                    Collection of The University of Queensland. Gift of Christopher Thomas and Mark Alexander through
+                    the Australian Government's Cultural Gifts Program, 2014.
+                    <br />
+                    Reproduced courtesy of the artist © licensed by Aboriginal Artists Agency Ltd.
+                    <br />
+                    Photo: Carl Warner.
+                </Box>
+            </Grid>
+        </Grid>
+    );
+};
+const LocationDrawerContent = () => {
+    return (
+        <Grid container direction="column" rowSpacing={1.5}>
+            <Grid>
+                <StyledDrawerHeader variant="h3">Artwork location</StyledDrawerHeader>
+            </Grid>
+            <Grid>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
+                    Level 1,{' '}
+                    <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
+                        Duhig Tower
+                    </a>{' '}
+                    (Building 2), St Lucia campus.
+                </Box>
+            </Grid>
+        </Grid>
+    );
+};
+
+const Page = ({ openInformationDrawer, openLocationDrawer, handleAccordionChange }) => {
+    return (
+        <Grid container direction="column" rowSpacing={2.5}>
+            <Hero id="artwork-tingari-ceremonies" sx={{ pb: 0 }} />
+            <Grid container direction="column" data-testid="pageContent" pt={0}>
+                <Grid>
+                    <Box position="relative">
+                        <StyledTrailImage
+                            src={ArtworkImage}
+                            alt="'Tingari ceremonies at Wilkinkarra' 2003 artwork."
+                            intrinsicWidth={709}
+                            intrinsicHeight={841}
+                        />
+
+                        <InformationButton
+                            title="Tingari ceremonies at Wilkinkarra"
+                            onClick={() => openInformationDrawer(ArtDrawerContent, 'Tingari ceremonies at Wilkinkarra')}
+                        />
+                        <LocationButton
+                            title="Tingari ceremonies at Wilkinkarra"
+                            onClick={() =>
+                                openLocationDrawer(LocationDrawerContent, 'Tingari ceremonies at Wilkinkarra')
+                            }
+                        />
+                    </Box>
+                </Grid>
+                <StyledAccordionGrid onChange={handleAccordionChange}>
+                    <DisclosureSection
+                        forceExpanded
+                        heading={
+                            <StyledHeading variant="h6" component="h2">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
+                            <Box component="p">
+                                This work considers migration and movements across long expanses of Country which are
+                                significant for Tingari Dreaming Stories. Note the intricate lines, patterns, and
+                                colour, which the artist has used to create the illusion of movement.
+                            </Box>
+                        }
+                    />
+
+                    <StyledAccordion onChange={handleAccordionChange}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="about-the-artists-content"
+                            id="about-the-artists-header"
+                        >
+                            About the artist
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="about-the-artists-content">
+                            <Box component="p">
+                                The artist was born c. 1930 near Tjungimanta, Kiwirrkurra in the Northern Territory.
+                            </Box>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="connection-to-country-content"
+                            id="connection-to-country-header"
+                        >
+                            Connection to Country
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="connection-to-country-content">
+                            <Box component="p" sx={{ paddingBottom: '1rem' }}>
+                                Learn more about{' '}
+                                <a
+                                    href="https://www.ngaanyatjarra.org.au/communities/kiwirrkurra/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Kiwirrkurra
+                                </a>
+                                .
+                            </Box>
+
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with the south west region of Northern Territory highlighted, showing the location of Kiwirrkurra."
+                                loading="lazy"
+                            />
+                            <StyledUl>
+                                <li>
+                                    <a
+                                        href="https://www.abc.net.au/news/2025-03-16/pintupi-nine-aboriginal-family-40-years-after-leaving-wa-desert/104824250"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        From the sands of time, the Pintupi Nine were thrust into the glare of the
+                                        modern world{' '}
+                                    </a>
+                                    <br /> Kiwirrkurra is home to people from the Pintupi, Manyjilyjarra and Kukatja
+                                    language groups. Read more about the Pintupi people and Kiwirrkurra in this ABC News
+                                    article.
+                                </li>
+                            </StyledUl>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                </StyledAccordionGrid>
+            </Grid>
+        </Grid>
+    );
+};
+
+Page.propTypes = {
+    openInformationDrawer: PropTypes.func.isRequired,
+    openLocationDrawer: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
+};
+
+export default Page;
