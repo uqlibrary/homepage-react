@@ -319,7 +319,7 @@ const ArtTrailApp = () => {
     const handleAccordionChange = (event, expanded) => {
         if (expanded) {
             trackAccordionExpand({
-                click_label: event?.target?.textContent || event,
+                click_label: event?.currentTarget?.textContent || event,
                 click_class: analyticsId.expandAccordion,
             });
         }
