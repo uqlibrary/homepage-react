@@ -87,5 +87,11 @@ export default {
         bookablespacetypes: {
             title: 'Space Types',
         },
+        artTrailLanding: {
+            title: 'Art Trail Welcome',
+        },
+        artTrail: {
+            title: 'Art Trail',
+        },
     },
 };

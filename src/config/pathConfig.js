@@ -68,4 +68,6 @@ export const pathConfig = {
     bookablespaces: '/spaces',
     bookablespacesDetail: spaceUuid => `/spaces/detail/${spaceUuid}`,
     dlorDashboard: '/digital-learning-hub/dashboard',
+    artTrailLanding: '/art-trail',
+    artTrailApp: '/art-trail/app',
 };
