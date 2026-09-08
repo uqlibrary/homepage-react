@@ -1,27 +1,10 @@
-.idea/workspace.xml
-.idea/preferred-vcs.xml
-.idea/watcherTasks.xml
-.idea/composerJson.xml
-.idea/dataSources.local.xml
-.idea/esline.xml
-.idea/php.xml
-.idea/markdown-navigator*
-.idea/markdown-exported-files.xml
-.idea/dbnavigator.xml
-.idea/markdown-navigator.xml
-.idea/shelf/
-.idea/jsLinters/
-.idea/prettier.xml
-.idea/sonarlint/*
-.idea/snyk.project.settings.xml
-.idea/misc.xml
-.idea/GitLink.xml
+.idea
 node_modules
 dist
 npm-debug.log*
 .DS_Store
 
-#ignore .env files
+# ignore .env files
 .env*
 
 e2eTestLog
@@ -29,7 +12,7 @@ chromedriver.log
 /coverage
 yarn.lock
 frontend.json
-# ignore js bungle analyser files
+# ignore js bundle analyser files
 assets
 bundle.js
 bundle.js.map
@@ -40,10 +23,18 @@ stats.json
 # ignore wasm files
 *.wasm
 
+# Code Coverage checker temp dir
+.nyc_output
+
 # Playwright
 /playwright/.results
 /playwright/.cache
 
-# Code Coverage checker temp dir
-.nyc_output
+# AI
+CLAUDE.md
+.claude/
+src/.mcp.json
+src/boost.json
+
+# Misc
 .github/skills

@@ -447,6 +447,20 @@ test.describe('Spaces Admin - manage locations', () => {
 
             await expect(dialog).not.toBeVisible();
         });
+        test('reopening the add library dialog clears stale form values', async ({ page }) => {
+            await assertCanOpenAddLibraryDialog(page);
+            const dialog = page.getByTestId('main-dialog');
+
+            await dialog.getByTestId('library-name').locator('input').fill('stale library');
+            await dialog.getByTestId('building-name').locator('input').fill('stale building');
+            await dialog.getByTestId('building-number').locator('input').fill('9999');
+            await dialog.getByTestId('dialog-cancel-button').click();
+
+            await assertCanOpenAddLibraryDialog(page);
+            await expect(dialog.getByTestId('library-name').locator('input')).toHaveValue('');
+            await expect(dialog.getByTestId('building-name').locator('input')).toHaveValue('');
+            await expect(dialog.getByTestId('building-number').locator('input')).toHaveValue('');
+        });
     });
 
     async function assertCanOpenEditLibraryDialog(page: Page, libraryId: number) {

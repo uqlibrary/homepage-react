@@ -1,0 +1,291 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Unstable_Grid2';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+import ArtworkImage from '../../../../../../public/images/artTrail/artwork/UQAM_20241219_CampusArtwork_046.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/Pikkuw.jpg';
+
+import Hero from '../SharedComponents/Hero';
+import InformationButton from '../SharedComponents/InformationButton';
+import LocationButton from '../SharedComponents/LocationButton';
+import {
+    DisclosureSection,
+    StyledHeading,
+    StyledAccordion,
+    StyledAccordionDetails,
+    StyledAccordionGrid,
+    StyledDrawerHeader,
+    StyledTrailImage,
+    StyledUl,
+    StyledImage,
+} from '../SharedComponents';
+
+const ArtDrawerContent = () => {
+    return (
+        <Grid container direction="column" rowSpacing={1.5}>
+            <Grid>
+                <StyledDrawerHeader variant="h3">Craig Koomeeta</StyledDrawerHeader>
+            </Grid>
+            <Grid>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
+                    <em>Pikkuw (Saltwater crocodile)</em> 2008
+                    <br />
+                    natural ochres with synthetic polymer binder on milkwood
+                    <br />
+                    32 x 241 x 75 cm
+                    <br />
+                    Collection of The University of Queensland, purchased with the assistance of an anonymous donor to
+                    commemorate the University's Centenary, 2010.
+                    <br />
+                    Reproduced courtesy of the artist © and Wik & Kugu Art Centre, Aurukun.
+                    <br />
+                    Installation view, UQ Library.
+                    <br />
+                    Photo: Joe Ruckli
+                </Box>
+            </Grid>
+        </Grid>
+    );
+};
+const LocationDrawerContent = () => {
+    return (
+        <Grid container direction="column" rowSpacing={1.5}>
+            <Grid>
+                <StyledDrawerHeader variant="h3">Artwork location</StyledDrawerHeader>
+            </Grid>
+            <Grid>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
+                    Near the AskUs desk on Level 1,{' '}
+                    <a
+                        href="https://web.library.uq.edu.au/visit/central-library"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Central Library
+                    </a>{' '}
+                    (Building 12), St Lucia campus.
+                </Box>
+            </Grid>
+        </Grid>
+    );
+};
+
+const Page = ({ openInformationDrawer, openLocationDrawer, handleAccordionChange }) => {
+    return (
+        <Grid container direction="column" rowSpacing={2.5}>
+            <Hero id="artwork-pikkuw" sx={{ pb: 0 }} />
+            <Grid container direction="column" data-testid="pageContent" pt={0}>
+                <Grid>
+                    <Box position="relative">
+                        <StyledTrailImage
+                            src={ArtworkImage}
+                            alt="'Pikkuw (Saltwater crocodile)' 2008 artwork."
+                            intrinsicWidth={2500}
+                            intrinsicHeight={1667}
+                        />
+
+                        <InformationButton
+                            title="Pikkuw (Saltwater crocodile)"
+                            onClick={() => openInformationDrawer(ArtDrawerContent, 'Pikkuw (Saltwater crocodile)')}
+                        />
+                        <LocationButton
+                            title="Pikkuw (Saltwater crocodile)"
+                            onClick={() => openLocationDrawer(LocationDrawerContent, 'Pikkuw (Saltwater crocodile)')}
+                        />
+                    </Box>
+                </Grid>
+                <StyledAccordionGrid onChange={handleAccordionChange}>
+                    <DisclosureSection
+                        heading={
+                            <StyledHeading variant="h6" component="h2">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
+                            <Box component="p">
+                                <em>Pikkuw (Saltwater crocodile)</em> 2008, created by artist Craig Koomeeta, is a
+                                tribute to his mother's country as it refers to the relationships between different
+                                communities of Koomeeta's Apelech clan. It is also a testament to the stories of coastal
+                                saltwater clans.
+                            </Box>
+                        }
+                        details={
+                            <>
+                                <Box component="p">
+                                    The carving is of a male saltwater crocodile named Pikkuw. According to Koomeeta's
+                                    cultural lore, Pikkuw eloped with a female freshwater crocodile from Kencherang
+                                    Lagoon, a large freshwater lagoon north of Aurukun. Min Kena, a big freshwater male
+                                    crocodile from Kencherang Lagoon, was deeply angered by the elopement and attacked
+                                    Pikkuw. Pikkuw bit Min Kena on the tail, giving him a noticeably shorter tail.
+                                    Unfortunately for Pikkuw, Min Kena bit him back on the snout. This is why, as you
+                                    can see in this carving, Pikkuw's snout is shorter than his tail. During the
+                                    colossal fight Pikkuw's saltwater family heard him cry out and proceeded to search
+                                    for him. When they found him, he was injured and bleeding, so they made a stretcher
+                                    and took him back to the beach where he slept for many nights. When he awoke, the
+                                    saltwater crocodile family sang many songs.
+                                </Box>
+                                <Box component="p">
+                                    Pikkuw is decorated here in rich ochre colours and Apelech clan paint up designs,
+                                    representing the salt water coastal kin of these countries.
+                                </Box>
+                                <Box component="p">
+                                    This work by Koomeeta remembers the strength of Ancestors and the importance of
+                                    continuing practices during times of colonial violence. Koomeeta also considers the
+                                    wisdom and foresight of Elders to pass on cultural knowledge and the visions of
+                                    community to foster self-determining ways that regenerate cultural expression for
+                                    future generations.
+                                </Box>
+                            </>
+                        }
+                        onExpand={handleAccordionChange}
+                    />
+
+                    <StyledAccordion onChange={handleAccordionChange}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="reflect-content"
+                            id="reflect-header"
+                        >
+                            Reflect
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="reflect-content">
+                            <StyledUl style={{ marginTop: 0 }}>
+                                <li>What different materials can you see in this work?</li>
+                                <li>
+                                    Look closely at how the artist's hand is visible (or invisible) in each different
+                                    material of the crocodile - can you identify any areas where evidence of the
+                                    artist's hand is visible?
+                                </li>
+                            </StyledUl>
+                            <Box component="p">
+                                Take a moment to reflect on the amount of care and patience that assembling this
+                                significant piece would have taken.
+                            </Box>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="about-the-artists-content"
+                            id="about-the-artists-header"
+                        >
+                            About the artist
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="about-the-artists-content">
+                            <Box component="p">
+                                Born in 1977, Craig Koomeeta is from the Wik Alkan language group and hails from lands
+                                encompassing the Western Cape York Peninsula.
+                            </Box>
+                            <Box component="p">
+                                He is a senior Apelech man with a strong family history and is heavily involved within
+                                his community in Aurukun.
+                            </Box>
+                            <Box component="p">
+                                Koomeeta began refining his cultural practice at 14-years-old. His Uncle Ronald
+                                Toilkalkin taught him the art of carving, a central practice for many Aurukun artists.
+                                In Aurukun, carving evolved from early clay-based moulding and sculptural techniques.
+                                Following Australia's invasion, colonisers introduced tools and assimilatory practices
+                                which led to an increased use of timber carving.
+                            </Box>
+                            <Box component="p">
+                                The traditional stories of Koomeeta's Apelech Ancestors, the creation brothers and
+                                spiritual beings, whose journeys shaped Aurukun and the five clans, inform Koomeeta's
+                                artworks.
+                            </Box>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="connection-to-country-content"
+                            id="connection-to-country-header"
+                        >
+                            Connection to Country
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="connection-to-country-content">
+                            <Box sx={{ paddingBottom: '1rem' }}>
+                                Learn more about{' '}
+                                <a
+                                    href="https://aiatsis.gov.au/explore/map-indigenous-australia"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Wik Country
+                                </a>
+                                .
+                            </Box>
+
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with the northern Queensland highlighted, showing the location of Wik Country."
+                                loading="lazy"
+                            />
+                            <Box sx={{ paddingBottom: '1rem' }}>
+                                In this video{' '}
+                                <a
+                                    href="https://youtu.be/QB14YlFEPiQ?si=LAtIOW3WVV3h3FWT"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Craig Koomeeta discusses his traditional stories (YouTube, 4m 10s)
+                                </a>
+                            </Box>
+                            <iframe
+                                width="560"
+                                height="315"
+                                src="https://www.youtube.com/embed/QB14YlFEPiQ?si=gjn0ckh-eJ1KyTQE"
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                                allowFullScreen
+                                style={{ width: '100%', height: 'auto', aspectRatio: '16/9' }}
+                            />
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="about-the-artists-content"
+                            id="about-the-artists-header"
+                        >
+                            Stories from the collection
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="about-the-artists-content">
+                            <Box component="p">
+                                Artist Craig Koomeeta's work draws upon the traditional stories of his Apelech Ancestors
+                                from the area around Aurukun. Following colonisation, this area became a mission under
+                                the control of the Presbyterian Church of Queensland.
+                            </Box>
+                            <Box component="p">
+                                In 1936, the Church commissioned Norman F Nelson to conduct an inspection and evaluation
+                                of the work and properties of four missions in North Queensland, including Aurukun. The
+                                resulting{' '}
+                                <a
+                                    href="https://manuscripts.library.uq.edu.au/index.php/uqfl57"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    reports and photos
+                                </a>{' '}
+                                provide a record of the community and contribute to ongoing truth-telling.
+                            </Box>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
+                </StyledAccordionGrid>
+            </Grid>
+        </Grid>
+    );
+};
+
+Page.propTypes = {
+    openInformationDrawer: PropTypes.func.isRequired,
+    openLocationDrawer: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
+};
+
+export default Page;

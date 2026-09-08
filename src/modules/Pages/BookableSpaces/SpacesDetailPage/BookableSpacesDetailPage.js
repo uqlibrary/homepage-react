@@ -8,6 +8,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/JourneySpaceDetailsView';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { Grid } from '@mui/material';
+import { useTitle } from 'hooks';
 import JourneyBreadcrumbs from '../SpacesListPage/SimpleListPage/components/JourneyBreadcrumbs';
 
 export const BookableSpacesDetailPage = ({
@@ -35,6 +36,12 @@ export const BookableSpacesDetailPage = ({
 
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
+    const [pageAnnouncement, setPageAnnouncement] = React.useState('');
+    useTitle('Space Details - UQ Library');
+
+    React.useEffect(() => {
+        setPageAnnouncement('Space Details');
+    }, []);
 
     // React.useEffect(() => {
     //     console.log('BookableSpacesDetailPage start');
@@ -90,6 +97,11 @@ export const BookableSpacesDetailPage = ({
 
     return (
         <StandardPage>
+            {pageAnnouncement && (
+                <div aria-live="polite" aria-atomic="true" style={{ position: 'absolute', left: '-9999px' }}>
+                    {pageAnnouncement}
+                </div>
+            )}
             <Grid
                 container
                 spacing={4}

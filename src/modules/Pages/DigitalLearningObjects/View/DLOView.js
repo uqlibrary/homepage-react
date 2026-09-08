@@ -385,7 +385,7 @@ export const DLOView = ({
             actions.loadADLOR(dlorId, !!account?.id);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [account.id, accountLoading]);
+    }, [account.id, accountLoading, dlorId]);
 
     useEffect(() => {
         // Google Analytics to push pageView for object
@@ -720,6 +720,10 @@ export const DLOView = ({
             </StandardPage>
         );
     }
+
+    console.log('account is from reducer', account);
+
+    console.log('XXXdlorItem is from reducer', dlorItem);
 
     return (
         <StandardPage>

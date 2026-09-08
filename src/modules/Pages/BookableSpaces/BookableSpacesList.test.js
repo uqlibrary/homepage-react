@@ -17,6 +17,7 @@ const mockSetCookie = jest.fn();
 const mockRemoveCookie = jest.fn();
 const mockJourneyRender = jest.fn();
 const mockSidebarRender = jest.fn();
+const mockSidebarListRender = jest.fn();
 
 jest.mock('data/actions/drupalArticlesActions', () => ({
     loadDrupalArticles: () => ({ type: 'LOAD_DRUPAL_ARTICLES' }),
@@ -40,9 +41,12 @@ jest.mock('context', () => ({
 
 jest.mock('@mui/material/useMediaQuery', () => jest.fn(() => false));
 
-jest.mock('modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/SidebarSpacesList', () => () => (
-    <div data-testid="mock-spaces-list" />
-));
+jest.mock('modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/SidebarSpacesList', () => {
+    return function MockSidebarSpacesList(props) {
+        mockSidebarListRender(props);
+        return <div data-testid="mock-spaces-list" />;
+    };
+});
 jest.mock(
     'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper',
     () => props => {
@@ -198,6 +202,87 @@ describe('BookableSpacesList campus selection', () => {
         const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
 
         expect(latestSidebarProps.selectedCampus).toBe(0);
+    });
+
+    it('does not throw when the selected campus has no locations to centre on', () => {
+        expect(() =>
+            rtlRender(
+                <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                    <BookableSpacesList
+                        {...baseProps}
+                        bookableSpacesRoomList={{
+                            data: { locations: [] },
+                        }}
+                    />
+                </WithRouter>,
+            ),
+        ).not.toThrow();
+    });
+
+    it('orders all-campus map results by the map-centred campus priority', async () => {
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList
+                    {...baseProps}
+                    bookableSpacesRoomList={{
+                        data: {
+                            locations: [
+                                {
+                                    space_id: 301,
+                                    space_name: 'Gatton space',
+                                    space_campus_name: 'Gatton',
+                                    space_building_name: 'Building G',
+                                    space_building_number: '1',
+                                    space_latitude: -27.55,
+                                    space_longitude: 152.33,
+                                    space_campus_id: 2,
+                                },
+                                {
+                                    space_id: 302,
+                                    space_name: 'Dutton Park space',
+                                    space_campus_name: 'Dutton Park',
+                                    space_building_name: 'Building D',
+                                    space_building_number: '2',
+                                    space_latitude: -27.5,
+                                    space_longitude: 153.0,
+                                    space_campus_id: 4,
+                                },
+                                {
+                                    space_id: 303,
+                                    space_name: 'Herston space',
+                                    space_campus_name: 'Herston',
+                                    space_building_name: 'Building H',
+                                    space_building_number: '3',
+                                    space_latitude: -27.45,
+                                    space_longitude: 153.0,
+                                    space_campus_id: 3,
+                                },
+                                {
+                                    space_id: 304,
+                                    space_name: 'St Lucia space',
+                                    space_campus_name: 'St Lucia',
+                                    space_building_name: 'Building S',
+                                    space_building_number: '4',
+                                    space_latitude: -27.49,
+                                    space_longitude: 153.01,
+                                    space_campus_id: 1,
+                                },
+                            ],
+                        },
+                    }}
+                />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarListRender).toHaveBeenCalled());
+        const latestSidebarListProps = mockSidebarListRender.mock.calls[mockSidebarListRender.mock.calls.length - 1][0];
+
+        expect(latestSidebarListProps.filteredSpaceLocations.map(space => space.space_campus_name)).toEqual([
+            'St Lucia',
+            'Dutton Park',
+            'Herston',
+            'Gatton',
+        ]);
     });
 
     it('flies to selected campus when campus value is received as a string', async () => {

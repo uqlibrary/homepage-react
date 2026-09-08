@@ -198,6 +198,11 @@ export const isSpacesAdminUser = account =>
 export const isAlertsAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
+// The same group the API gates the membership back-office on - see the `lib_libapi_MembershipAdmins` route
+// group in packages/uqlibrary/membership/routes.php, which covers every endpoint these pages call.
+export const isMembershipAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_MembershipAdmins', account);
+
 export const isDlorAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_dlor_admins', account) && !!!account?.masqueradingId;
 

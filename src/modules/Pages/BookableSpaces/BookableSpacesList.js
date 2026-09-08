@@ -41,6 +41,7 @@ import {
     getFlatFacilityTypeList,
     isBookable,
     JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
+    matchesCapacityFilter,
     normalizeFilterDisplayOn,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { CAMPUS_DUTTON_PARK } from 'config/locale';
@@ -404,39 +405,39 @@ export const BookableSpacesList = ({
             normalizedSelectedCampusId === ALL_CAMPUSES_ID ? FIRST_CAMPUS_ID : normalizedSelectedCampusId;
         const spacesListForCampus = spacesList?.filter(s => s.space_campus_id === fallbackCampusId);
 
-        const buildingsOnCampus =
-            !!spacesListForCampus &&
-            Object.values(
-                // just get one location per building, to stop reweighting of space locations
-                spacesListForCampus?.reduce(
-                    (
-                        acc,
-                        {
-                            space_building_name: spaceBuildingName,
-                            space_building_number: spaceBuildingNumber,
-                            space_latitude: spaceLatitude,
-                            space_longitude: spaceLongitude,
-                            space_campus_id: spaceCampusId,
-                            space_campus_name: spaceCampusName,
-                        },
-                    ) => {
-                        if (!acc[spaceBuildingNumber]) {
-                            acc[spaceBuildingNumber] = {
-                                building_number: spaceBuildingNumber,
-                                building_name: spaceBuildingName,
-                                building_latitude: spaceLatitude,
-                                building_longitude: spaceLongitude,
-                                building_campus_id: spaceCampusId,
-                                building_campus_name: spaceCampusName,
-                            };
-                        }
-                        return acc;
-                    },
-                    {},
-                ),
-            );
+        const buildingsOnCampus = Array.isArray(spacesListForCampus)
+            ? Object.values(
+                  // just get one location per building, to stop reweighting of space locations
+                  spacesListForCampus.reduce(
+                      (
+                          acc,
+                          {
+                              space_building_name: spaceBuildingName,
+                              space_building_number: spaceBuildingNumber,
+                              space_latitude: spaceLatitude,
+                              space_longitude: spaceLongitude,
+                              space_campus_id: spaceCampusId,
+                              space_campus_name: spaceCampusName,
+                          },
+                      ) => {
+                          if (!acc[spaceBuildingNumber]) {
+                              acc[spaceBuildingNumber] = {
+                                  building_number: spaceBuildingNumber,
+                                  building_name: spaceBuildingName,
+                                  building_latitude: spaceLatitude,
+                                  building_longitude: spaceLongitude,
+                                  building_campus_id: spaceCampusId,
+                                  building_campus_name: spaceCampusName,
+                              };
+                          }
+                          return acc;
+                      },
+                      {},
+                  ),
+              )
+            : [];
 
-        if (buildingsOnCampus.length === 0) {
+        if (!Array.isArray(buildingsOnCampus) || buildingsOnCampus.length === 0) {
             // this is probably unreachable - there cant be no buildings at this point
             return null;
         }
@@ -531,7 +532,10 @@ export const BookableSpacesList = ({
         persistCampusPreference(campusId);
 
         const locationOfCentreOfCampus = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
-        !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
+        if (locationOfCentreOfCampus) {
+            setLiveMapCentre(locationOfCentreOfCampus);
+            mapRef.current?.flyToSpace(locationOfCentreOfCampus);
+        }
     };
 
     const handleLibrarySelection = e => {
@@ -622,19 +626,23 @@ export const BookableSpacesList = ({
         if (
             !bookableSpacesRoomListError &&
             !bookableSpacesRoomListLoading &&
-            !!bookableSpacesRoomList?.data?.locations
+            Array.isArray(bookableSpacesRoomList?.data?.locations) &&
+            bookableSpacesRoomList.data.locations.length > 0
         ) {
             // the space with the highest capacity
-            const spaceMaxCapacity = bookableSpacesRoomList?.data?.locations?.reduce(
-                function findMax(highestCapacity, current) {
-                    return highestCapacity &&
-                        typeof current.space_capacity === 'number' &&
-                        highestCapacity.space_capacity < current.space_capacity
-                        ? current
-                        : highestCapacity;
-                },
-            );
-            const calculatedMaxCapaity = !!bookableSpacesRoomList?.data?.locations && spaceMaxCapacity?.space_capacity;
+            const spaceMaxCapacity = bookableSpacesRoomList.data.locations.reduce(function findMax(
+                highestCapacity,
+                current,
+            ) {
+                if (
+                    typeof current.space_capacity !== 'number' ||
+                    (highestCapacity && highestCapacity.space_capacity >= current.space_capacity)
+                ) {
+                    return highestCapacity;
+                }
+                return current;
+            }, null);
+            const calculatedMaxCapaity = spaceMaxCapacity?.space_capacity ?? minimumSpaceCapacity;
             setMaximumSpaceCapacity(calculatedMaxCapaity);
             if (!Array.isArray(capacityFilterValue) || capacityFilterValue.length === 0) {
                 setCapacityFilterValue([minimumSpaceCapacity, calculatedMaxCapaity]);
@@ -797,27 +805,36 @@ export const BookableSpacesList = ({
         const rejectedFilters = [];
 
         selectedFacilityTypes?.forEach(filter => {
-            if (filter?.selected) {
-                const groupId = facilityTypeToGroup[filter?.facility_type_id] ?? filter?.facility_type_group_id;
-                if (groupId !== null && groupId !== undefined) {
-                    if (!selectedFiltersByGroup[groupId]) {
-                        selectedFiltersByGroup[groupId] = [];
-                    }
-                    selectedFiltersByGroup[groupId].push(filter?.facility_type_id);
+            if (!filter?.selected) {
+                if (filter?.unselected) {
+                    rejectedFilters?.push(filter?.facility_type_id);
                 }
+                return;
             }
 
-            // Collect rejected facility types
-            if (filter?.unselected) {
-                rejectedFilters?.push(filter?.facility_type_id);
+            const isSpecialFilter =
+                Number(filter?.facility_type_id) === FILTER_BOOKABLE_TYPE_ID ||
+                Number(filter?.facility_type_id) === FILTER_CAPACITY_TYPE_ID ||
+                filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME ||
+                filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME ||
+                filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME;
+
+            if (isSpecialFilter) {
+                return;
+            }
+
+            const groupId = facilityTypeToGroup[filter?.facility_type_id] ?? filter?.facility_type_group_id;
+            if (groupId !== null && groupId !== undefined) {
+                if (!selectedFiltersByGroup[groupId]) {
+                    selectedFiltersByGroup[groupId] = [];
+                }
+                selectedFiltersByGroup[groupId].push(filter?.facility_type_id);
             }
         });
 
         // check if space should be excluded due to rejected facility types
         if (rejectedFilters?.length > 0) {
             const hasRejectedFacility = rejectedFilters?.some(rejectedId => {
-                // we have no "don't include" for currently-open
-                // we have no "don't include" for capacity
                 return spaceFacilityTypes?.includes(rejectedId);
             });
             if (hasRejectedFacility) {
@@ -825,16 +842,6 @@ export const BookableSpacesList = ({
             }
         }
 
-        // If no inclusion filters are selected, show all spaces (that haven't been rejected)
-        if (Object.keys(selectedFiltersByGroup)?.length === 0) {
-            return true;
-        }
-
-        const hasActiveCapacityRange =
-            Array.isArray(capacityFilterValue) &&
-            capacityFilterValue.length >= 2 &&
-            (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
-                Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
         const hasBookableFilterSelected = (selectedFacilityTypes || []).some(filter => {
             if (!filter?.selected) {
                 return false;
@@ -845,41 +852,52 @@ export const BookableSpacesList = ({
                 filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME
             );
         });
+        const hasCapacityFilterSelected = (selectedFacilityTypes || []).some(filter => {
+            if (!filter?.selected) {
+                return false;
+            }
+
+            return (
+                Number(filter?.facility_type_id) === FILTER_CAPACITY_TYPE_ID ||
+                filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME
+            );
+        });
+
+        if (hasBookableFilterSelected && !isBookable(space)) {
+            return false;
+        }
+
+        if (hasCapacityFilterSelected) {
+            const capacityMatches = matchesCapacityFilter({
+                space,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                hasBookableFilterSelected,
+            });
+            if (!capacityMatches) {
+                return false;
+            }
+        }
+
+        // If no inclusion filters are selected, show all spaces (that haven't been rejected)
+        if (Object.keys(selectedFiltersByGroup)?.length === 0) {
+            return true;
+        }
 
         // AND between groups
         for (const groupId in selectedFiltersByGroup) {
             if (Object.hasOwn(selectedFiltersByGroup, groupId)) {
                 const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
-                // OR within group
                 const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
                     const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
                     if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
                         return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
-                    } else if (
-                        (filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME ||
-                            (hasActiveCapacityRange && hasBookableFilterSelected)) &&
-                        (selectedFiltersInGroup.includes(FILTER_BOOKABLE_TYPE_ID) || hasBookableFilterSelected)
-                    ) {
-                        return (
-                            isBookable(space) &&
-                            !!space?.space_capacity &&
-                            space?.space_capacity >= Number(capacityFilterValue?.[0] ?? minimumSpaceCapacity) &&
-                            space?.space_capacity <= Number(capacityFilterValue?.[1] ?? maximumSpaceCapacity)
-                        );
-                    } else if (
-                        filter?.facility_special_action === FILTER_BOOKABLE_ACTION_NAME &&
-                        !selectedFiltersInGroup.includes(FILTER_CAPACITY_TYPE_ID)
-                    ) {
-                        // we only check the bookable action on its own if we aren't checking the capacity action
-                        return isBookable(space);
-                    } else {
-                        // We could specifically exclude FILTER_BOOKABLE_ACTION_NAME here, but we don't need to because
-                        // it doesn't have a matching filter.
-                        // regular checkbox from admin-managed facility-types
-                        return spaceFacilityTypes?.includes(filterId);
                     }
+                    return spaceFacilityTypes?.includes(filterId);
                 });
+
                 if (!hasMatchInGroup) {
                     return false;
                 }
@@ -1124,6 +1142,110 @@ export const BookableSpacesList = ({
         setShowSpacesSelectorPopup(!showSpacesSelectorPopup);
     };
 
+    const [liveMapCentre, setLiveMapCentre] = React.useState(() =>
+        getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, correctedCampusId(selectedCampus)),
+    );
+
+    React.useEffect(() => {
+        const campusId = correctedCampusId(selectedCampus);
+
+        if (campusId === ALL_CAMPUSES_ID) {
+            const defaultCampusCentre = getLatLngCentreOfCampus(
+                bookableSpacesRoomList?.data?.locations,
+                FIRST_CAMPUS_ID,
+            );
+            if (!defaultCampusCentre) {
+                return;
+            }
+
+            setLiveMapCentre(current => {
+                if (
+                    current &&
+                    Number(current.space_latitude) === Number(defaultCampusCentre.space_latitude) &&
+                    Number(current.space_longitude) === Number(defaultCampusCentre.space_longitude) &&
+                    Number(current.space_campus_id) === Number(defaultCampusCentre.space_campus_id)
+                ) {
+                    return current;
+                }
+                return defaultCampusCentre;
+            });
+            return;
+        }
+
+        const currentCampusCentre = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
+        if (!currentCampusCentre) {
+            return;
+        }
+
+        setLiveMapCentre(current => {
+            if (
+                current &&
+                Number(current.space_latitude) === Number(currentCampusCentre.space_latitude) &&
+                Number(current.space_longitude) === Number(currentCampusCentre.space_longitude) &&
+                Number(current.space_campus_id) === Number(currentCampusCentre.space_campus_id)
+            ) {
+                return current;
+            }
+            return currentCampusCentre;
+        });
+    }, [bookableSpacesRoomList?.data?.locations, correctedCampusId, selectedCampus]);
+
+    const activeMapCentre = liveMapCentre;
+
+    const campusDistanceLookup = React.useMemo(() => {
+        const campusCoordinates = {};
+        (bookableSpacesRoomList?.data?.locations || []).forEach(space => {
+            const campusName = space?.space_campus_name;
+            const latitude = Number(space?.space_latitude);
+            const longitude = Number(space?.space_longitude);
+            if (!campusName || !Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+                return;
+            }
+            if (!campusCoordinates[campusName]) {
+                campusCoordinates[campusName] = { latitudeTotal: 0, longitudeTotal: 0, count: 0 };
+            }
+            campusCoordinates[campusName].latitudeTotal += latitude;
+            campusCoordinates[campusName].longitudeTotal += longitude;
+            campusCoordinates[campusName].count += 1;
+        });
+
+        return Object.fromEntries(
+            Object.entries(campusCoordinates).map(([campusName, values]) => [
+                campusName,
+                {
+                    space_latitude: values.latitudeTotal / values.count,
+                    space_longitude: values.longitudeTotal / values.count,
+                },
+            ]),
+        );
+    }, [bookableSpacesRoomList?.data?.locations]);
+
+    const getCampusDistanceKm = React.useCallback(
+        (campusName, referencePoint) => {
+            if (!referencePoint) {
+                return Number.MAX_SAFE_INTEGER;
+            }
+
+            const campusPoint = campusDistanceLookup[campusName];
+            if (!campusPoint) {
+                return Number.MAX_SAFE_INTEGER;
+            }
+
+            const toRadians = degrees => (degrees * Math.PI) / 180;
+            const latDelta = toRadians(campusPoint.space_latitude - referencePoint.space_latitude);
+            const lonDelta = toRadians(campusPoint.space_longitude - referencePoint.space_longitude);
+            const a =
+                Math.sin(latDelta / 2) * Math.sin(latDelta / 2) +
+                Math.cos(toRadians(referencePoint.space_latitude)) *
+                    Math.cos(toRadians(campusPoint.space_latitude)) *
+                    Math.sin(lonDelta / 2) *
+                    Math.sin(lonDelta / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return 6371 * c;
+        },
+        [campusDistanceLookup],
+    );
+
     // Memoize so that MazeMaps state changes (isMazeMapScriptReady, isMazeMapReady, mapContainer)
     // don't cause SidebarSpacesList to receive a new array reference and re-render unnecessarily.
     const sortedSpaceLocations = React.useMemo(() => {
@@ -1145,7 +1267,28 @@ export const BookableSpacesList = ({
             if (aFav && !bFav) return -1;
             /* istanbul ignore next */
             if (!aFav && bFav) return 1;
-            return 0;
+
+            const fallbackCampusPriority = {
+                'St Lucia': 0,
+                'Dutton Park': 1,
+                Herston: 2,
+                Gatton: 3,
+            };
+
+            const aCampusDistance = getCampusDistanceKm(a?.space_campus_name, activeMapCentre);
+            const bCampusDistance = getCampusDistanceKm(b?.space_campus_name, activeMapCentre);
+
+            const aCampusOrder = fallbackCampusPriority[a?.space_campus_name] ?? Number.MAX_SAFE_INTEGER;
+            const bCampusOrder = fallbackCampusPriority[b?.space_campus_name] ?? Number.MAX_SAFE_INTEGER;
+
+            const aSortValue = Number.isFinite(aCampusDistance) ? aCampusDistance : aCampusOrder;
+            const bSortValue = Number.isFinite(bCampusDistance) ? bCampusDistance : bCampusOrder;
+
+            if (aSortValue !== bSortValue) {
+                return aSortValue - bSortValue;
+            }
+
+            return aCampusOrder - bCampusOrder;
         });
         // capacityFilterValue is read inside showSpace via closure; include it so the list
         // recomputes when the slider changes even though it is not a direct parameter.
@@ -1160,6 +1303,8 @@ export const BookableSpacesList = ({
         selectedLibrary,
         showFavouriteSpacesOnly,
         isLoggedIn,
+        activeMapCentre,
+        getCampusDistanceKm,
     ]);
     // const visibleSpacesCountBadge = () => {
     //     return sortedSpaceLocations?.length > 0 &&
@@ -1200,8 +1345,9 @@ export const BookableSpacesList = ({
     }, [sortedSpaceLocations, expandedSpaceId, useJourneyExperience, isMapReady, handleSpaceSelect]);
 
     const handleMarkerClick = (e, space) => {
-        // Stop the click from opening the popup
-        e?.originalEvent?.stopPropagation();
+        const eventToStop = e?.originalEvent ?? e;
+        eventToStop?.stopPropagation?.();
+        eventToStop?.preventDefault?.();
 
         // scroll the spaces sidebar to the relevant space
         const spaceElement = document.getElementById(`space-${space?.space_id}`);
@@ -1223,8 +1369,13 @@ export const BookableSpacesList = ({
         capacityFilterValue.length === 2 &&
         (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
             Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
+    const activeSelectedFacilityTypes = (getActiveSelectedFacilityTypes(selectedFacilityTypes) || []).filter(
+        filter =>
+            Number(filter?.facility_type_id) !== FILTER_CAPACITY_TYPE_ID &&
+            filter?.facility_special_action !== FILTER_SPACE_CAPACITY_ACTION_NAME,
+    );
     const activeFilterCount =
-        (getActiveSelectedFacilityTypes(selectedFacilityTypes)?.length || 0) +
+        (activeSelectedFacilityTypes?.length || 0) +
         (showFavouriteSpacesOnly ? 1 : 0) +
         (hasActiveCapacityFilter ? 1 : 0);
     const hasActiveFilters = (activeFilterCount || 0) > 0;
@@ -1451,11 +1602,17 @@ export const BookableSpacesList = ({
                                     sortedSpaceLocations={sortedSpaceLocations}
                                     spacesFavouritesList={spacesFavouritesList}
                                     onMarkerClick={handleMarkerClick}
-                                    centreLatLong={getLatLngCentreOfCampus(
-                                        bookableSpacesRoomList?.data?.locations,
-                                        correctedCampusId(selectedCampus),
-                                    )}
+                                    centreLatLong={activeMapCentre}
                                     onMapReady={setIsMapReady}
+                                    onMapCenterChange={nextCenter => {
+                                        if (
+                                            nextCenter &&
+                                            Number.isFinite(nextCenter.space_latitude) &&
+                                            Number.isFinite(nextCenter.space_longitude)
+                                        ) {
+                                            setLiveMapCentre(nextCenter);
+                                        }
+                                    }}
                                 />
                             </div>
                         </StyledLayoutWrapper>

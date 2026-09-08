@@ -5,6 +5,7 @@ import {
     isAlertsAdminUser,
     isDlorAdminUser,
     isSpacesAdminUser,
+    isMembershipAdminUser,
     isTestTagUser,
 } from 'helpers/access';
 import { pathConfig } from './pathConfig';
@@ -31,6 +32,8 @@ export const flattedPathConfigExact = [
     '/admin/dlor/schedule',
     '/admin/masquerade',
     '/admin/masquerade/',
+    '/admin/membership',
+    '/admin/membership/settings',
     '/admin/testntag',
     '/admin/testntag/manage/users',
     '/admin/testntag/manage/teams',
@@ -85,24 +88,77 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     const confirmationId = ':confirmationId';
     const spaceUuid = ':spaceUuid';
 
+    // A standalone section with its own look and feel — App renders it without the shared chrome.
+    const publicStandalonePages = [
+        {
+            path: pathConfig.artTrailApp,
+            element: <components.ArtTrailApp />,
+            pageTitle: 'Indigenous art and Library discovery trail',
+            standalone: true,
+        },
+    ];
+
     const publicPages = [
         {
             path: pathConfig.index,
             element: <components.Index />,
-            exact: true,
             pageTitle: locale.pages.index.title,
         },
         {
             path: pathConfig.paymentReceipt,
             element: <components.PaymentReceipt />,
-            exact: true,
             pageTitle: locale.pages.paymentReceipt.title,
         },
         {
             path: pathConfig.bookExamBooth,
             element: <components.BookExamBooth />,
-            exact: false,
             pageTitle: locale.pages.bookExamBooth.title,
+        },
+        {
+            path: pathConfig.membership,
+            element: <components.MembershipLanding />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            path: pathConfig.membershipForm(':type'),
+            element: <components.MembershipForm />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            // The shape renewal emails sent over the years carry, so it has to keep working.
+            path: pathConfig.membershipRenewal(':type', ':id', ':code'),
+            element: <components.MembershipForm />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            path: pathConfig.membershipReceived(':id'),
+            element: <components.MembershipReceived />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            // Nothing in the app routes here — a renewal goes to the received page — but the route existed and
+            // links to it may still be in circulation.
+            path: pathConfig.membershipRenewed(':id'),
+            element: <components.MembershipReceived />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            path: pathConfig.membershipRenewedIndex,
+            element: <components.MembershipRenewed />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
+        },
+        {
+            // Where the payment gateway sends the applicant back to.
+            path: pathConfig.membershipPaymentConfirmation,
+            element: <components.MembershipPaymentConfirmation />,
+            exact: true,
+            pageTitle: locale.pages.membership.title,
         },
         {
             path: pathConfig.dlorView(dlorId),
@@ -112,25 +168,22 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.dlorHome,
             element: <components.DLOList />,
-            exact: true,
             pageTitle: 'Digital Learning Object Repository',
         },
         {
             path: pathConfig.dlorViewSeries(seriesId),
             element: <components.SeriesView />,
-            exact: true,
             pageTitle: 'Digital Learning Object Repository - View Series',
         },
         {
             path: pathConfig.dlorSubscriptionConfirmation(confirmationId),
             element: <components.DLOConfirmSubscription />,
-            // exact: true,
             pageTitle: 'Digital Learning Object Repository - Confirm Subscription request',
         },
         {
             path: pathConfig.dlorUnsubscribe(confirmationId),
             element: <components.DLOConfirmUnsubscription />,
-            // exact: true,
+
             pageTitle: 'Digital Learning Object Repository - Confirm Unsubscription request',
         },
         {
@@ -141,19 +194,16 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.pastExamPaperSearch,
             element: <components.PastExamPaperSearch />,
-            exact: false,
             pageTitle: locale.pages.pastExamPaperSearch.title,
         },
         {
             path: pathConfig.dlorSubmit,
             element: <components.DLONew />,
-            exact: false,
             pageTitle: 'Submit request for new object',
         },
         {
             path: pathConfig.dlorOwnObjectEdit(dlorId),
             element: <components.DLOOwnEdit />,
-            exact: false,
             pageTitle: 'Edit details of your object',
         },
         {
@@ -191,13 +241,17 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: 'Library spaces',
         },
+        {
+            path: pathConfig.artTrailLanding,
+            element: <components.ArtTrail />,
+            pageTitle: 'Landing page for the Indigenous art and Library discovery trail',
+        },
     ];
 
     const courseResourcesDisplay = [
         {
             path: pathConfig.learningresources,
             element: <components.LearningResources />,
-            exact: true,
             pageTitle: locale.pages.learningresources.title,
         },
     ];
@@ -207,13 +261,11 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.alerts,
             element: <components.AlertsList />,
-            exact: true,
             pageTitle: locale.pages.admin.alerts.title,
         },
         {
             path: pathConfig.admin.alertsadd,
             element: <components.AlertsAdd />,
-            exact: true,
             pageTitle: locale.pages.admin.alerts.form.add.title,
         },
         {
@@ -237,8 +289,24 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.masquerade,
             element: <components.Masquerade />,
-            exact: true,
             pageTitle: locale.pages.admin.masquerade.title,
+        },
+    ];
+
+    // Gated on the same AD group the API gates these endpoints on - see isMembershipAdminUser. Every page in
+    // this section goes in here, so the gate covers the section rather than a page of it.
+    const membershipAdminDisplay = [
+        {
+            path: pathConfig.admin.membership,
+            element: <components.MembershipAdminList />,
+            exact: true,
+            pageTitle: locale.pages.admin.membership.title,
+        },
+        {
+            path: pathConfig.admin.membershipsettings,
+            element: <components.MembershipAdminSettings />,
+            exact: true,
+            pageTitle: locale.pages.admin.membershipsettings.title,
         },
     ];
 
@@ -248,73 +316,61 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.dloradmin,
             element: <components.DLOAdminHomepage />,
-            exact: true,
             pageTitle: 'Manage the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dloradd,
             element: <components.DLOAdd />,
-            exact: true,
             pageTitle: 'Create a new Object',
         },
         {
             path: pathConfig.admin.dloredit(dlorId),
             element: <components.DLOEdit />,
-            exact: true,
             pageTitle: 'Edit an Object',
         },
         {
             path: pathConfig.admin.dlorteammanage,
             element: <components.DLOTeamList />,
-            exact: true,
             pageTitle: 'Manage Teams for the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dlorteamedit(dlorTeamId),
             element: <components.DLOTeamEdit />,
-            exact: true,
             pageTitle: 'Edit a Team for the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dlorteamadd,
             element: <components.DLOTeamAdd />,
-            exact: true,
             pageTitle: 'Create a new Team',
         },
         {
             path: pathConfig.admin.dlorseriesmanage,
             element: <components.DLOSeriesList />,
-            exact: true,
             pageTitle: 'Manage Series for the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dlorseriesedit(dlorSeriesId),
             element: <components.DLOSeriesEdit />,
-            exact: true,
             pageTitle: 'Edit a Series for the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dlorseriesadd,
             element: <components.DLOSeriesAdd />,
-            exact: true,
             pageTitle: 'Create a new Series',
         },
         {
             path: pathConfig.admin.dlorfiltersmanage,
             element: <components.DLOFilterManage />,
-            exact: true,
             pageTitle: 'Manage Filters',
         },
         {
             path: pathConfig.admin.dlorvocabularymanage,
             element: <components.DLOVocabularyManage />,
-            exact: true,
             pageTitle: 'Manage Vocabulary',
         },
         {
             path: pathConfig.admin.dlorScheduler,
             element: <components.DLOBulkSchedule />,
-            exact: true,
             pageTitle: 'Manage feature schedules',
         },
     ];
@@ -322,7 +378,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.dlorProtected,
             element: <components.DLOList />,
-            exact: true,
             pageTitle: 'Digital Learning Object Repository',
         },
         {
@@ -333,7 +388,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.dlorDashboard,
             element: <components.DLODashboard />,
-            exact: true,
             pageTitle: 'Digital Learning Object Repository - Dashboard',
         },
     ];
@@ -342,7 +396,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.dlorOwnTeamList,
             element: <components.DLOOwnTeamList />,
-            exact: true,
             pageTitle: 'Digital Learning Object Repository - Team Management',
         },
         {
@@ -356,85 +409,71 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.testntagdashboard,
             element: <components.TestTagDashboard />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntaginspect,
             element: <components.TestTagInspection />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageassettypes,
             element: <components.TestTagManageAssetTypes />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanagelocations,
             element: <components.TestTagManageLocations />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageinspectiondevices,
             element: <components.TestTagManageInspectionDevices />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanagebulkassetupdate,
             element: <components.TestTagManageBulkAssetUpdate />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageinspectiondetails,
             element: <components.TestTagManageInspectionDetails />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagreportrecalibrationssdue,
             element: <components.TestTagReportRecalibrationsDue />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagreportinspectionsdue,
             element: <components.TestTagReportInspectionsDue />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
             element: <components.TestTagReportInspectionsByLicencedUser />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagreportassetsbyfilters,
             element: <components.TestTagAssetReportByFilters />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageusers,
             element: <components.TestTagManageUsers />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageteams,
             element: <components.TestTagManageTeams />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageprintertemplates,
             element: <components.TestTagManagePrinterTemplates />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
     ];
@@ -480,11 +519,13 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     ];
 
     return [
+        ...publicStandalonePages,
         ...publicPages,
         ...(account && canSeeLearningResourcesPage(account) ? courseResourcesDisplay : []),
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
+        ...(account && isMembershipAdminUser(account) ? membershipAdminDisplay : []),
         ...(account && isTestTagUser(account) ? testntagDisplay : []),
         ...(account ? dlorTeamAdminDisplay : []),
         ...(account ? authenticatedDlorDisplay : []),
@@ -497,7 +538,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 };
 
 // the top level link that appears in the page breadcrumb
-// call with use effect on eveyer page that should have a 3rd level breadcrumb
+// call with use effect on every page that should have a 3rd level breadcrumb
 export const breadcrumbs = {
     alertsadmin: { pathname: '/admin/alerts', title: 'Alerts admin' },
     dloradmin: { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
@@ -509,4 +550,7 @@ export const breadcrumbs = {
     learningresources: { pathname: '/learning-resources', title: 'Learning resources' },
     paymentreceipt: { pathname: '/payment-receipt', title: 'Payment receipt' },
     bookablespaces: { pathname: '/spaces', title: 'Spaces' },
+    membership: { pathname: '/membership', title: 'Membership' },
+    membershipadmin: { pathname: '/admin/membership', title: 'Membership admin' },
+    membershipadminsettings: { pathname: '/admin/membership/settings', title: 'Membership expiry settings' },
 };

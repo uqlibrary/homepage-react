@@ -122,6 +122,10 @@ module.exports = {
                 test: /\.(jpe?g|png|gif|svg)$/i,
                 type: 'asset/resource',
             },
+            {
+                test: /\.(mp3|wav|ogg|m4a)$/i,
+                type: 'asset/resource',
+            },
         ],
     },
     plugins: [
