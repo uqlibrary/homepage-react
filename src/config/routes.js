@@ -240,6 +240,8 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.BookableSpacesDetailPage />,
             exact: true,
             pageTitle: 'Library spaces',
+        },
+        {
             path: pathConfig.artTrailLanding,
             element: <components.ArtTrail />,
             pageTitle: 'Landing page for the Indigenous art and Library discovery trail',
