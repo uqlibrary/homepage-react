@@ -519,6 +519,34 @@ export const SidebarFilters = ({
         !!topOfSidebar && topOfSidebar?.focus();
     };
 
+    const clearPersistedCapacityFilterValue = () => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return;
+        }
+
+        try {
+            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            if (!rawState) {
+                return;
+            }
+
+            const parsedState = JSON.parse(rawState);
+            if (!parsedState || !Object.prototype.hasOwnProperty.call(parsedState, 'capacityFilterValue')) {
+                return;
+            }
+
+            delete parsedState.capacityFilterValue;
+            if (Object.keys(parsedState).length === 0) {
+                window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+                return;
+            }
+
+            window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(parsedState));
+        } catch {
+            // Ignore malformed session state.
+        }
+    };
+
     const clearJourneyIntentId = () => {
         if (typeof window === 'undefined' || !window.sessionStorage) {
             return;
@@ -537,6 +565,8 @@ export const SidebarFilters = ({
         } catch {
             // Ignore malformed session state.
         }
+
+        clearPersistedCapacityFilterValue();
     };
 
     const clearSpecialFilter = (facilityTypeId, facilitySpecialAction) => {
@@ -578,6 +608,7 @@ export const SidebarFilters = ({
 
         if (!isCapacityFilterSelection && isChecked) {
             setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
+            clearPersistedCapacityFilterValue();
         }
 
         showHideActiveFilterListItems(facilityTypeId, isChecked);
@@ -716,9 +747,12 @@ export const SidebarFilters = ({
     const deSelectAll = () => {
         clearJourneyIntentId();
         if (typeof onResetAllFilters === 'function') {
+            clearPersistedCapacityFilterValue();
             onResetAllFilters();
             return;
         }
+
+        clearPersistedCapacityFilterValue();
 
         // reset the facility types to all false - the render will clear the buttons and checkboxes for us!
         const newFacilityTypes = selectedFacilityTypes?.map(ft => {

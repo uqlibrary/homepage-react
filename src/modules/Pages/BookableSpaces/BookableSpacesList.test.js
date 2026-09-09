@@ -422,6 +422,43 @@ describe('BookableSpacesList campus selection', () => {
         });
     });
 
+    it('removes a stale capacityFilterValue from session storage when the default range is restored', async () => {
+        window.history.replaceState({}, '', '/spaces/results/');
+        window.sessionStorage.setItem(
+            JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
+            JSON.stringify({
+                selectedFacilityTypes: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_id: 11,
+                        selected: true,
+                        unselected: false,
+                        facility_special_action: null,
+                    },
+                ],
+                capacityFilterValue: [4, 8],
+            }),
+        );
+
+        rtlRender(
+            <WithRouter route="/spaces/results/" initialEntries={['/spaces/results/']}>
+                <BookableSpacesList {...baseProps} forceAdvanced={false} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestJourneyProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+
+        act(() => {
+            latestJourneyProps.setCapacityFilterValue([1, 6]);
+        });
+
+        await waitFor(() => {
+            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            expect(rawState).not.toContain('capacityFilterValue');
+        });
+    });
+
     it('restores live filter state from session storage on refresh of results route', async () => {
         window.history.replaceState({}, '', '/spaces/results/');
 

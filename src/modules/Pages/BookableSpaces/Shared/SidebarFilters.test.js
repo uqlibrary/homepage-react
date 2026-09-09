@@ -364,11 +364,22 @@ describe('SidebarFilters campus selector', () => {
             ],
         };
 
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyLiveFilterState',
+            JSON.stringify({
+                capacityFilterValue: [4, 8],
+                selectedFacilityTypes: [{ facility_type_id: 9003, selected: true }],
+            }),
+        );
+
         renderWithTheme(props);
 
         fireEvent.click(screen.getByTestId('filtertype-57'));
 
         expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
+        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).not.toContain(
+            'capacityFilterValue',
+        );
     });
 
     it('opens the parent group for journey intent preselected filters', async () => {

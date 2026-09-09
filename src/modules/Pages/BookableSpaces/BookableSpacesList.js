@@ -1049,13 +1049,32 @@ export const BookableSpacesList = ({
 
             const hasAppliedFavouriteFilter = Boolean(showFavouriteSpacesOnly);
 
-            const statePayload = {
+            let statePayload = {
                 ...(appliedFacilityFilters.length > 0 ? { selectedFacilityTypes: appliedFacilityFilters } : {}),
                 ...(hasAppliedCampusFilter ? { selectedCampus: normalizedCampusId } : {}),
                 ...(hasAppliedLibraryFilter ? { selectedLibrary: normalizedLibraryId } : {}),
                 ...(persistedCapacityFilterValue ? { capacityFilterValue: persistedCapacityFilterValue } : {}),
                 ...(hasAppliedFavouriteFilter ? { showFavouriteSpacesOnly: true } : {}),
             };
+
+            const rawExistingState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            if (!hasAppliedCapacityFilter && rawExistingState) {
+                try {
+                    const parsedExistingState = JSON.parse(rawExistingState);
+                    if (
+                        parsedExistingState &&
+                        Object.prototype.hasOwnProperty.call(parsedExistingState, 'capacityFilterValue')
+                    ) {
+                        delete parsedExistingState.capacityFilterValue;
+                        statePayload = {
+                            ...parsedExistingState,
+                            ...statePayload,
+                        };
+                    }
+                } catch (error) {
+                    // Ignore malformed state and continue with the plain payload.
+                }
+            }
 
             if (Object.keys(statePayload).length === 0) {
                 window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
