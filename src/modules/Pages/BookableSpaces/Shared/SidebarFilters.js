@@ -279,8 +279,7 @@ const StyledCartoucheList = styled('ul')(({ theme }) => ({
 }));
 const StyledCapacityLabelTypography = styled(Typography)(() => ({
     fontSize: '1.17em',
-    margin: '0 0 0.75rem 1rem',
-    paddingTop: '1rem',
+    margin: '0.75rem 0 0.5rem 1rem',
     lineHeight: 1.3,
 }));
 
