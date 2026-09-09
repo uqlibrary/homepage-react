@@ -31,11 +31,12 @@ import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
 const StyledSlider = styled(Slider)(() => ({
     marginTop: '1rem', // space for tooltips to appear in
+    overflow: 'visible',
     '& .MuiSlider-track': {
         marginLeft: '0.2rem', // don't let the range bar peek out to the left
     },
     '& [data-index="0"]': {
-        marginLeft: '0.6rem', // shift the minimum dot a little to the right so it's all visible
+        marginLeft: '0.7rem', // shift the minimum dot a little to the right so it's fully visible at the minimum value
     },
     '& [data-index="1"]': {
         marginLeft: '-0.6rem !important', // shift the maximum dot a little to the left so it's all visible
@@ -169,6 +170,10 @@ const StyledFacilityGroup = styled('div')(({ theme }) => ({
     '& ul': {
         marginBottom: 0,
     },
+    // the group containing the capacity slider doesn't need the trailing divider
+    '&.hasCapacityFilter': {
+        borderBottom: 'none',
+    },
 }));
 const StyledFavouriteFilterGroup = styled('div')(({ theme }) => ({
     borderBottom: theme.palette.designSystem.border,
@@ -274,7 +279,9 @@ const StyledCartoucheList = styled('ul')(({ theme }) => ({
 }));
 const StyledCapacityLabelTypography = styled(Typography)(() => ({
     fontSize: '1.17em',
-    marginLeft: '1rem',
+    margin: '0 0 0.75rem 1rem',
+    paddingTop: '1rem',
+    lineHeight: 1.3,
 }));
 
 export const SidebarFilters = ({
@@ -562,11 +569,7 @@ export const SidebarFilters = ({
     const handleFilterSelection = (isChecked, facilityType) => {
         clearJourneyIntentId();
         const resolvedFacilityType =
-            facilityType ||
-            resolveFacilityType(
-                facilityType?.facility_type_id,
-                facilityType?.facility_special_action,
-            );
+            facilityType || resolveFacilityType(facilityType?.facility_type_id, facilityType?.facility_special_action);
         const facilityTypeId = resolvedFacilityType?.facility_type_id;
         const facilitySpecialAction = resolvedFacilityType?.facility_special_action;
 
@@ -599,16 +602,24 @@ export const SidebarFilters = ({
               })
             : normaliseCapacityValue(newValue, previousMin);
 
-        const sanitizedValue = safeValue?.length >= 2
-            ? [
-                  Math.min(Math.max(Number(safeValue[0]), Number(minimumSpaceCapacity)), Number(maximumSpaceCapacity)),
-                  Math.max(Math.min(Number(safeValue[1]), Number(maximumSpaceCapacity)), Number(minimumSpaceCapacity)),
-              ]
-            : safeValue;
+        const sanitizedValue =
+            safeValue?.length >= 2
+                ? [
+                      Math.min(
+                          Math.max(Number(safeValue[0]), Number(minimumSpaceCapacity)),
+                          Number(maximumSpaceCapacity),
+                      ),
+                      Math.max(
+                          Math.min(Number(safeValue[1]), Number(maximumSpaceCapacity)),
+                          Number(minimumSpaceCapacity),
+                      ),
+                  ]
+                : safeValue;
 
-        const normalizedValue = Array.isArray(sanitizedValue) && sanitizedValue.length === 2
-            ? [Math.min(sanitizedValue[0], sanitizedValue[1]), Math.max(sanitizedValue[0], sanitizedValue[1])]
-            : sanitizedValue;
+        const normalizedValue =
+            Array.isArray(sanitizedValue) && sanitizedValue.length === 2
+                ? [Math.min(sanitizedValue[0], sanitizedValue[1]), Math.max(sanitizedValue[0], sanitizedValue[1])]
+                : sanitizedValue;
 
         setCapacityFilterValue(normalizedValue);
 
@@ -744,7 +755,7 @@ export const SidebarFilters = ({
                     htmlFor={`filtertype-${facilityType?.facility_type_id}`}
                     id={`filtertype-${facilityType?.facility_type_id}-label`}
                     className="selectedFilterTypeLabel"
-                    style={{ marginLeft: '1rem' }}
+                    style={{ marginLeft: '1rem', textDecoration: 'none' }}
                 >
                     <StyledSliderInput
                         className="rightSlider"
@@ -1132,10 +1143,14 @@ export const SidebarFilters = ({
                             (ftf?.selected || ftf?.unselected) &&
                             Number(ftf?.facility_type_id) !== FILTER_CAPACITY_TYPE_ID,
                     ).length;
+                    const hasCapacityFilter = group?.facility_type_children?.some(
+                        child => Number(child?.facility_type_id) === FILTER_CAPACITY_TYPE_ID,
+                    );
                     return (
                         <StyledFacilityGroup
                             key={`facility-group-${filterGroupId}`}
                             data-testid={`filter-group-block-${filterGroupId}`}
+                            className={hasCapacityFilter ? 'hasCapacityFilter' : undefined}
                         >
                             {showFilterGroupHeading(group, isGroupExpanded, numberChecked, filterGroupId, groupLength)}
                             {!!group?.facility_type_group_help && (

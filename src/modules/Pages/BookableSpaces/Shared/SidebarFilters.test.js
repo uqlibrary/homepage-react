@@ -149,6 +149,47 @@ describe('SidebarFilters campus selector', () => {
         expect(screen.getAllByRole('slider').length).toBeGreaterThan(0);
     });
 
+    it('allows the left handle to render fully at the minimum value without clipping', () => {
+        const capacityGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: capacityGroupFixture,
+            filteredFacilityTypeList: capacityGroupFixture,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+            ],
+            capacityFilterValue: [1, 50],
+        });
+
+        const firstHandle = document.querySelector('.MuiSlider-thumb[data-index="0"]');
+        expect(firstHandle).not.toBeNull();
+        expect(getComputedStyle(firstHandle).marginLeft).toBe('0.7rem');
+    });
+
     it('creates a selected capacity filter when the slider is changed before the filter exists in state', () => {
         const setSelectedFacilityTypes = jest.fn();
         const capacityGroupFixture = {
