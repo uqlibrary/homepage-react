@@ -328,6 +328,49 @@ describe('SidebarFilters campus selector', () => {
         expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
     });
 
+    it('resets the capacity range when a different space type is selected', () => {
+        const setCapacityFilterValue = jest.fn();
+        const facilityList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [
+                            { facility_type_id: 57, facility_type_name: 'Natural light' },
+                            { facility_type_id: 9003, facility_type_name: 'Space capacity' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        const props = {
+            ...baseProps,
+            facilityTypeList: facilityList,
+            capacityFilterValue: [4, 8],
+            setCapacityFilterValue,
+            filteredFacilityTypeList: facilityList,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+            ],
+        };
+
+        renderWithTheme(props);
+
+        fireEvent.click(screen.getByTestId('filtertype-57'));
+
+        expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
+    });
+
     it('opens the parent group for journey intent preselected filters', async () => {
         renderWithTheme({
             ...baseProps,

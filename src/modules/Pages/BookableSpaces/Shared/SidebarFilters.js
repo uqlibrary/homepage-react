@@ -572,6 +572,14 @@ export const SidebarFilters = ({
         const facilityTypeId = resolvedFacilityType?.facility_type_id;
         const facilitySpecialAction = resolvedFacilityType?.facility_special_action;
 
+        const isCapacityFilterSelection =
+            Number(facilityTypeId) === FILTER_CAPACITY_TYPE_ID ||
+            facilitySpecialAction === FILTER_SPACE_CAPACITY_ACTION_NAME;
+
+        if (!isCapacityFilterSelection && isChecked) {
+            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
+        }
+
         showHideActiveFilterListItems(facilityTypeId, isChecked);
         setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
         // scrollToTopOfContent();
