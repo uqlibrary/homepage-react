@@ -78,7 +78,13 @@ const intentDefinitions = [
         icon: TvIcon,
         IconSvg:
             'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-miterlimit=%278%27 stroke-width=%27.75%27%3e%3cpath d=%27M14.11 10.69H2.17a.45.45 0 0 1-.46-.46c0-.06 0-.12.06-.17l2.29-4.97h8.11l2.29 4.97c.11.23 0 .46-.23.57 0 .06-.06.06-.12.06zm0 0%27%3e%3c/path%3e%3cpath d=%27m3.03 14.52 1.26-3.9 1.25 3.9m5.2 0 1.26-3.9 1.26 3.9m-2.8-5.55L9.6 6.8H6.63l-.86 2.17m6.4-3.83V3.43c0-.97-.74-1.72-1.71-1.72h-3.2c-.46 0-.86.4-.86.86v.86h3.43V1.71%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")',
-        matchers: [/Low light/i, /Desk lamps/i, /USB-C large device charging/i, /USB-C small device charging/i],
+        matchers: [
+            /Low light/i,
+            /Desk lamps/i,
+            /USB-C large device charging/i,
+            /USB-C small device charging/i,
+            /Power points/i,
+        ],
     },
 ];
 
