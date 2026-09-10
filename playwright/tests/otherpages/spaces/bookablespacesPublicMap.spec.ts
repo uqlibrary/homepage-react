@@ -540,7 +540,7 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-summary-hours`)).not.toBeVisible();
     });
-    test('can open a space detail page from a panel', async ({ page, context }) => {
+    test('can open a space detail page from a panel in the same window', async ({ page }) => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces/mapresults');
@@ -552,18 +552,15 @@ test.describe('Spaces', () => {
         // expand the panel
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
 
-        // click "open in new window"
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-new-window`)).toBeVisible();
-        const [newPage] = await Promise.all([
-            context.waitForEvent('page'),
-            page.getByTestId(`${ARCH_REFERENCE}-new-window`).click(),
-        ]);
+        // click the details action and stay in the same browser tab
+        const detailsButton = page.getByTestId(`${ARCH_REFERENCE}-details`);
+        await expect(detailsButton).toBeVisible();
+        await detailsButton.click();
 
-        // new window has correct page
-        await newPage.waitForLoadState();
-        await expect(newPage).toHaveURL(/\/spaces\/detail\/a00de3d4-7e11-47eb-8079-532bdef80def/);
-        await expect(newPage.getByTestId(`${ARCH_REFERENCE}-details-name`)).toBeVisible();
-        await expect(newPage.getByTestId(`${ARCH_REFERENCE}-details-name`)).toContainText('354');
+        await page.waitForURL(/\/spaces\/detail\/a00de3d4-7e11-47eb-8079-532bdef80def/);
+        await expect(page).toHaveURL(/\/spaces\/detail\/a00de3d4-7e11-47eb-8079-532bdef80def/);
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-details-name`)).toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-details-name`)).toContainText('354');
     });
 
     test.describe('filtering', () => {
