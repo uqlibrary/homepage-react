@@ -938,12 +938,12 @@ export const SidebarFilters = ({
                     aria-expanded={!!isGroupExpanded ? 'true' : 'false'}
                     aria-controls={`filter-group-list-${filterGroupId}`}
                 >
-                    <KeyboardArrowDownIcon
+                    <KeyboardArrowUpIcon
                         style={{ display: !!isGroupExpanded ? 'block' : 'none' }}
                         className="expandedGroup"
                         data-testid={`facility-type-group-${filterGroupId}-open`}
                     />
-                    <KeyboardArrowUpIcon
+                    <KeyboardArrowDownIcon
                         style={{ display: !!isGroupExpanded ? 'none' : 'block' }}
                         className="collapsedGroup"
                         data-testid={`facility-type-group-${filterGroupId}-collapsed`}
