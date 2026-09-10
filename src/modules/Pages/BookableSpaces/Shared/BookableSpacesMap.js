@@ -22,7 +22,7 @@ const StyledMapWrapperDiv = styled('div')(() => ({
     flexDirection: 'row',
     flexGrow: 0,
     '& .selected-marker svg path, & .selected-marker svg polygon': {
-        fill: '#e2b400',
+        fill: '#0d6dcd',
     },
     '& .selected-marker.star-marker-el svg': {
         transform: 'scale(1.2)',
