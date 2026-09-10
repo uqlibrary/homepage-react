@@ -20,7 +20,7 @@ const StyledTooltip = styled(Tooltip)(() => ({
     padding: '0.25rem',
 }));
 
-export const OpenSpaceNewWindowButton = ({ spaceDetails }) => {
+export const OpenSpaceDetailsButton = ({ spaceDetails }) => {
     const detailUrl = React.useMemo(
         () =>
             serialiseJourneyUrl({
@@ -33,12 +33,10 @@ export const OpenSpaceNewWindowButton = ({ spaceDetails }) => {
     return (
         <StyledAnchor
             href={detailUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Open Space ${spaceDetails?.space_name} in a new window`}
-            data-testid={`space-${spaceDetails.space_id}-new-window`}
+            aria-label={`Open Space ${spaceDetails?.space_name} details`}
+            data-testid={`space-${spaceDetails.space_id}-details`}
         >
-            <StyledTooltip title="Open this space in a new window" arrow>
+            <StyledTooltip title="Open this space details" arrow>
                 <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" height="20" width="20">
                     <path
                         d="m6.743 9.257-2.514 2.514-2.515 2.515M14.286 5.486V1.714h-3.772"
@@ -59,8 +57,8 @@ export const OpenSpaceNewWindowButton = ({ spaceDetails }) => {
         </StyledAnchor>
     );
 };
-OpenSpaceNewWindowButton.propTypes = {
+OpenSpaceDetailsButton.propTypes = {
     spaceDetails: PropTypes.object,
 };
 
-export default OpenSpaceNewWindowButton;
+export default OpenSpaceDetailsButton;

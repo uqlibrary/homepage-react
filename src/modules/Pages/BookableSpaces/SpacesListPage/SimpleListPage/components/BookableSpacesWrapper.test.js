@@ -27,7 +27,7 @@ import BookableSpacesWrapper from 'modules/Pages/BookableSpaces/SpacesListPage/S
 import { buildLegacyBrowseNavigationUrl } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
 import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
 
-import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceNewWindowButton';
+import OpenSpaceDetailsButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceDetailsButton';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
 import {
@@ -1011,7 +1011,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         rtlRender(
             <WithRouter>
-                <OpenSpaceNewWindowButton spaceDetails={baseSpace} />
+                <OpenSpaceDetailsButton spaceDetails={baseSpace} />
             </WithRouter>,
         );
 
