@@ -291,7 +291,26 @@ export const BookableSpacesList = ({
         mapRef.current?.flyToSpace(space, ZOOM_IN_TO_LIBRARY);
     }, []);
 
-    const [selectedLibrary, setSelectedLibrary] = React.useState(ALL_LIBRARIES_ID);
+    const getPersistedJourneyLiveFilterState = React.useCallback(() => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return null;
+        }
+
+        try {
+            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            return rawState ? JSON.parse(rawState) : null;
+        } catch {
+            return null;
+        }
+    }, []);
+
+    const [selectedLibrary, setSelectedLibrary] = React.useState(() => {
+        const persistedLiveState = getPersistedJourneyLiveFilterState();
+        const persistedLibraryId = Number(persistedLiveState?.selectedLibrary);
+        return Number.isFinite(persistedLibraryId) && persistedLibraryId !== ALL_LIBRARIES_ID
+            ? persistedLibraryId
+            : ALL_LIBRARIES_ID;
+    });
 
     const handleSpaceToggle = useCallback(
         (space, shouldExpand) => {
@@ -354,16 +373,22 @@ export const BookableSpacesList = ({
         [campusList],
     );
     const getCampusInitialState = React.useCallback(() => {
+        const persistedLiveState = getPersistedJourneyLiveFilterState();
+        const persistedCampusId = Number(persistedLiveState?.selectedCampus);
+        if (Number.isFinite(persistedCampusId) && persistedCampusId !== ALL_CAMPUSES_ID) {
+            return correctedCampusId(persistedCampusId);
+        }
+
         const spacesPreferredCampus = getCampusCookieValue();
         if (typeof spacesPreferredCampus === 'string' && spacesPreferredCampus.trim() !== '') {
             const parsedCampusId = Number.parseInt(spacesPreferredCampus, 10);
             if (Number.isNaN(parsedCampusId) || parsedCampusId === ALL_CAMPUSES_ID) {
                 return ALL_CAMPUSES_ID;
             }
-            return parsedCampusId;
+            return correctedCampusId(parsedCampusId);
         }
         return ALL_CAMPUSES_ID;
-    }, [getCampusCookieValue]);
+    }, [correctedCampusId, getCampusCookieValue, getPersistedJourneyLiveFilterState]);
     const [selectedCampus, setSelectedCampus] = React.useState(() => getCampusInitialState());
     const hasInitialisedCampusFromCookie = React.useRef(false);
 
@@ -576,14 +601,53 @@ export const BookableSpacesList = ({
         setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
         setShowFavouriteSpacesOnly(false);
 
-        if (typeof window !== 'undefined') {
-            window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        if (typeof window !== 'undefined' && window.sessionStorage) {
+            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            const nextPersistedState = rawState
+                ? JSON.parse(rawState)
+                : {
+                      ...(Number(selectedCampus) !== 0 ? { selectedCampus } : {}),
+                      ...(Number(selectedLibrary) !== 0 ? { selectedLibrary } : {}),
+                  };
+
+            if (nextPersistedState && typeof nextPersistedState === 'object') {
+                delete nextPersistedState.capacityFilterValue;
+                delete nextPersistedState.selectedFacilityTypes;
+                delete nextPersistedState.showFavouriteSpacesOnly;
+
+                const nextState = {
+                    ...(Number(selectedCampus) !== 0 ? { selectedCampus } : {}),
+                    ...(Number(selectedLibrary) !== 0 ? { selectedLibrary } : {}),
+                };
+
+                const persistedState = {
+                    ...nextPersistedState,
+                    ...nextState,
+                };
+
+                if (Object.keys(persistedState).length === 0) {
+                    window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+                } else {
+                    window.sessionStorage.setItem(
+                        JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
+                        JSON.stringify(persistedState),
+                    );
+                }
+            }
+
             window.sessionStorage.setItem(
                 JOURNEY_VIEW_STATE_STORAGE_KEY,
                 JSON.stringify({ view: 'results', intentId: null, spaceId: null }),
             );
         }
-    }, [maximumSpaceCapacity, minimumSpaceCapacity, selectedFacilityTypes, setSelectedFacilityTypes]);
+    }, [
+        maximumSpaceCapacity,
+        minimumSpaceCapacity,
+        selectedCampus,
+        selectedLibrary,
+        selectedFacilityTypes,
+        setSelectedFacilityTypes,
+    ]);
 
     const goToJourney = () => {
         const nextUrl = buildJourneyNavigationUrl({
@@ -1107,18 +1171,26 @@ export const BookableSpacesList = ({
         }
 
         const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
-        if (!flatFacilityTypeList?.length) {
-            return;
-        }
 
         try {
             const parsedState = JSON.parse(rawState);
+
+            if (Number.isFinite(Number(parsedState?.selectedCampus))) {
+                setSelectedCampus(Number(parsedState.selectedCampus));
+            }
+            if (Number.isFinite(Number(parsedState?.selectedLibrary))) {
+                setSelectedLibrary(Number(parsedState.selectedLibrary));
+            }
 
             const appliedFacilityFilters = Array.isArray(parsedState?.selectedFacilityTypes)
                 ? parsedState.selectedFacilityTypes.filter(filter => filter?.selected)
                 : [];
 
-            if (appliedFacilityFilters.length > 0) {
+            if (
+                appliedFacilityFilters.length > 0 &&
+                Array.isArray(flatFacilityTypeList) &&
+                flatFacilityTypeList.length > 0
+            ) {
                 setSelectedFacilityTypes(appliedFacilityFilters);
             }
             if (Array.isArray(parsedState?.capacityFilterValue) && parsedState.capacityFilterValue.length > 0) {

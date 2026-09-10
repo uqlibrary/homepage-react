@@ -352,6 +352,48 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(JSON.parse(storedState)).toEqual({ view: 'results', intentId: 'quiet', spaceId: null });
     });
 
+    it('keeps the selected campus and library when capacity is reset after choosing a different intent', () => {
+        const facilityTypeList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Acceptable noise',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Low noise level' }],
+                    },
+                ],
+            },
+        };
+
+        const defaultSessionState = {
+            selectedFacilityTypes: [{ facility_type_id: 11, selected: true, unselected: false }],
+            selectedCampus: 2,
+            selectedLibrary: 7,
+            capacityFilterValue: [4, 8],
+        };
+
+        window.sessionStorage.setItem('bookableSpacesJourneyLiveFilterState', JSON.stringify(defaultSessionState));
+        window.history.replaceState({}, '', '/spaces');
+
+        renderJourney({
+            ...defaultProps,
+            selectedCampus: 2,
+            selectedLibrary: 7,
+            filteredFacilityTypeList: facilityTypeList,
+            facilityTypeList,
+            selectedFacilityTypes: defaultSessionState.selectedFacilityTypes,
+        });
+
+        fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
+
+        const storedState = JSON.parse(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState'));
+        expect(storedState.selectedCampus).toBe(2);
+        expect(storedState.selectedLibrary).toBe(7);
+        expect(storedState.capacityFilterValue).toBeUndefined();
+    });
+
     it('restores results and selected intent from session state', () => {
         window.sessionStorage.setItem(
             'bookableSpacesJourneyViewState',

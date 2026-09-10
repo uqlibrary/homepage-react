@@ -554,9 +554,6 @@ const BookableSpacesWrapper = ({
         latestIntentIdRef.current = nextIntentId;
         setSelectedIntentId(nextIntentId);
         setSelectedSpace(null);
-        if (typeof window !== 'undefined' && window.sessionStorage) {
-            window.sessionStorage.removeItem('bookableSpacesJourneyLiveFilterState');
-        }
         resetCapacityFilterValue();
         persistJourneyViewState({ view: 'results', intentId: nextIntentId, spaceId: null });
         if (nextIntentId === favouriteIntentDefinition.id) {
@@ -580,9 +577,6 @@ const BookableSpacesWrapper = ({
         latestIntentIdRef.current = favouriteIntentDefinition.id;
         setSelectedIntentId(favouriteIntentDefinition.id);
         setSelectedSpace(null);
-        if (typeof window !== 'undefined' && window.sessionStorage) {
-            window.sessionStorage.removeItem('bookableSpacesJourneyLiveFilterState');
-        }
         resetCapacityFilterValue();
         persistJourneyViewState({ view: 'results', intentId: favouriteIntentDefinition.id, spaceId: null });
         lastAppliedIntentIdRef.current = null;
@@ -593,7 +587,6 @@ const BookableSpacesWrapper = ({
         onResetAllFilters?.();
         resetCapacityFilterValue();
         if (typeof window !== 'undefined' && window.sessionStorage) {
-            window.sessionStorage.removeItem('bookableSpacesJourneyLiveFilterState');
             persistJourneyViewState({
                 view: view === 'landing' ? 'landing' : 'results',
                 intentId: null,
@@ -610,9 +603,6 @@ const BookableSpacesWrapper = ({
 
     const handleSeeAllSpaces = React.useCallback(() => {
         handleClearJourneyFilters();
-        if (typeof window !== 'undefined' && window.sessionStorage) {
-            window.sessionStorage.removeItem('bookableSpacesJourneyLiveFilterState');
-        }
     }, [handleClearJourneyFilters]);
 
     const getIntentLandingUrl = React.useCallback(() => '/spaces/results', []);

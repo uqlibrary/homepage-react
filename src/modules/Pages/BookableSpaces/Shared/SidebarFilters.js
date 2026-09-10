@@ -94,6 +94,7 @@ const StyledSidebarDiv = styled('div')(({ theme }) => ({
     position: 'relative',
     height: '100%',
     overflowY: 'auto',
+    overflowX: 'hidden',
 
     paddingTop: '0.5rem',
     paddingRight: 0,
@@ -169,10 +170,6 @@ const StyledFacilityGroup = styled('div')(({ theme }) => ({
     },
     '& ul': {
         marginBottom: 0,
-    },
-    // the group containing the capacity slider doesn't need the trailing divider
-    '&.hasCapacityFilter': {
-        borderBottom: 'none',
     },
 }));
 const StyledFavouriteFilterGroup = styled('div')(({ theme }) => ({
@@ -279,7 +276,7 @@ const StyledCartoucheList = styled('ul')(({ theme }) => ({
 }));
 const StyledCapacityLabelTypography = styled(Typography)(() => ({
     fontSize: '1.17em',
-    margin: '0.75rem 0 0.5rem 1rem',
+    margin: '0.75rem 0 0 1rem',
     lineHeight: 1.3,
 }));
 

@@ -473,6 +473,8 @@ describe('BookableSpacesList campus selection', () => {
                     facility_special_action: null,
                 },
             ],
+            selectedCampus: 2,
+            selectedLibrary: 7,
             capacityFilterValue: [4, 8],
             showFavouriteSpacesOnly: true,
             createdAt: Date.now(),
@@ -498,6 +500,8 @@ describe('BookableSpacesList campus selection', () => {
                 }),
             ]),
         );
+        expect(latestJourneyProps.selectedCampus).toBe(2);
+        expect(latestJourneyProps.selectedLibrary).toBe(7);
         expect(latestJourneyProps.capacityFilterValue).toEqual([4, 8]);
         expect(latestJourneyProps.showFavouriteSpacesOnly).toBe(true);
     });

@@ -1419,7 +1419,7 @@ test.describe('Spaces', () => {
             await expect(spacePanelWrapper).toHaveCount(all + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
         });
 
-        test('an invalid library cookie will not cause an error and the first campus+first library will be used', async ({
+        test('an invalid library cookie will not cause an error and the current library selection is retained', async ({
             page,
             context,
         }) => {
@@ -1432,7 +1432,7 @@ test.describe('Spaces', () => {
                 .getByTestId('filter-by-library')
                 .locator('[tabindex="0"]');
 
-            // on inital load, it honours the non-default campus cookie
+            // initial load defaults to the global all-campus/all-library state
             await page.goto('spaces/mapresults');
             await expect(selectedCampusNameElement).toContainText('All campuses');
             await expect(selectLibraryNameElement).toContainText('All libraries');
@@ -1449,10 +1449,10 @@ test.describe('Spaces', () => {
                 { name: 'UQLspacesPreferredLibrary', value: '999', domain: 'localhost', path: '/' },
             ]);
 
-            // reload the page - now the library cookie has an invalid value, it ignores the cookie value and uses the default
+            // reload the page - invalid cookies are ignored and the current selection remains in effect
             await page.goto('spaces/mapresults');
             await expect(selectedCampusNameElement).toContainText('All campuses');
-            await expect(selectLibraryNameElement).toContainText('All libraries');
+            await expect(selectLibraryNameElement).toContainText('Architecture and Music Library');
         });
     });
     test.describe('Can change campuses', () => {
@@ -1606,11 +1606,11 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
         });
 
-        test('an invalid campus cookie will not cause an error and the first campus will be used', async ({
+        test('an invalid campus cookie will not cause an error and the current campus selection is retained', async ({
             page,
             context,
         }) => {
-            // on inital load, it honours the non-default campus cookie
+            // on initial load, it honours the non-default campus cookie
             await page.goto('spaces/mapresults');
             await expect(
                 page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').locator('[tabindex="0"]'),
@@ -1620,11 +1620,11 @@ test.describe('Spaces', () => {
                 { name: 'UQLspacesPreferredCampus', value: '999', domain: 'localhost', path: '/' },
             ]);
 
-            // after resetting the cookie invalidly, it ignores campus cookie and uses the default
+            // after resetting the cookie invalidly, it ignores the cookie and keeps the current campus selection
             await page.goto('spaces/mapresults'); // reload page after campus change in before
             await expect(
                 page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').locator('[tabindex="0"]'),
-            ).toContainText('All campuses');
+            ).toContainText('Dutton Park');
         });
 
         test('each campus loads correctly', async ({ page }) => {
