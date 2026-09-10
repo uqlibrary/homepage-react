@@ -1015,7 +1015,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             </WithRouter>,
         );
 
-        expect(screen.getByRole('link', { name: /open space Space999 in a new window/i })).toHaveAttribute(
+        expect(screen.getByRole('link', { name: /open space Space999 details/i })).toHaveAttribute(
             'href',
             '#/spaces/detail/test-space-uuid-1234',
         );
