@@ -159,14 +159,11 @@ const BookableSpacesMap = React.forwardRef(
             return _campusName === CAMPUS_ST_LUCIA ? ZOOM_CAMPUS_MANY_BUILDINGS : ZOOM_CAMPUS_ONE_BUILDING;
         };
 
-        const clearActivePopup = ({ preserveSelectedSpaceId = false } = {}) => {
+        const clearActivePopup = () => {
             const popupRoot = activePopupRootRef.current;
             const popupInstance = activePopupRef.current;
             activePopupRootRef.current = null;
             activePopupRef.current = null;
-            if (!preserveSelectedSpaceId) {
-                selectedSpaceIdRef.current = null;
-            }
             popupRoot?.unmount?.();
             popupInstance?.remove();
         };
@@ -216,6 +213,7 @@ const BookableSpacesMap = React.forwardRef(
 
         const setSelectedMarker = (markerEl, space) => {
             const nextSelectedSpaceId = space?.space_id ?? null;
+            selectedSpaceIdRef.current = nextSelectedSpaceId;
 
             if (selectedMarkerElRef.current && selectedMarkerElRef.current !== markerEl) {
                 removeClass(selectedMarkerElRef.current, 'selected-marker');
@@ -226,7 +224,6 @@ const BookableSpacesMap = React.forwardRef(
                 markerEl.style.zIndex = '10';
             }
             selectedMarkerElRef.current = markerEl ?? null;
-            selectedSpaceIdRef.current = nextSelectedSpaceId;
 
             clearActivePopup({ preserveSelectedSpaceId: true });
 
@@ -258,9 +255,6 @@ const BookableSpacesMap = React.forwardRef(
                     const popupRootToUnmount = activePopupRootRef.current;
                     activePopupRootRef.current = null;
                     activePopupRef.current = null;
-                    if (selectedSpaceIdRef.current === nextSelectedSpaceId) {
-                        selectedSpaceIdRef.current = null;
-                    }
                     popupRootToUnmount?.unmount?.();
                 });
             }
@@ -391,17 +385,17 @@ const BookableSpacesMap = React.forwardRef(
         React.useEffect(() => {
             if (!isMazeMapReady || !mazeMapInstanceRef.current) return;
 
-            const previouslySelectedSpaceId = selectedSpaceIdRef.current;
+            const activeSelectedSpaceId = selectedSpaceIdRef.current;
             const shouldKeepSelectedPopup =
-                !!previouslySelectedSpaceId &&
-                sortedSpaceLocations?.some(space => Number(space?.space_id) === Number(previouslySelectedSpaceId));
+                !!activeSelectedSpaceId &&
+                sortedSpaceLocations?.some(space => Number(space?.space_id) === Number(activeSelectedSpaceId));
 
             mazeMarkersRef.current.forEach(({ marker }) => marker.remove());
             mazeMarkersRef.current = new Map();
             selectedMarkerElRef.current = null;
 
             if (!shouldKeepSelectedPopup) {
-                clearActivePopup();
+                clearActivePopup({ preserveSelectedSpaceId: false });
             }
 
             sortedSpaceLocations
@@ -476,7 +470,7 @@ const BookableSpacesMap = React.forwardRef(
                         onMarkerClick(e, mapPoint, markerEl);
                     });
 
-                    if (shouldKeepSelectedPopup && Number(mapPoint.space_id) === Number(previouslySelectedSpaceId)) {
+                    if (shouldKeepSelectedPopup && Number(mapPoint.space_id) === Number(activeSelectedSpaceId)) {
                         setSelectedMarker(markerEl, mapPoint);
                     }
 

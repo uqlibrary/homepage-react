@@ -267,7 +267,24 @@ export const BookableSpacesList = ({
     }, []);
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
-    const [expandedSpaceId, setExpandedSpaceId] = useState(null);
+    const BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY = 'bookableSpacesSelectedSpaceId';
+    const [expandedSpaceId, setExpandedSpaceId] = useState(() => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return null;
+        }
+
+        try {
+            const rawSelectedSpaceId = window.sessionStorage.getItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            if (!rawSelectedSpaceId) {
+                return null;
+            }
+
+            const normalizedSelectedSpaceId = Number(rawSelectedSpaceId);
+            return Number.isFinite(normalizedSelectedSpaceId) ? normalizedSelectedSpaceId : null;
+        } catch {
+            return null;
+        }
+    });
     const [showFavouriteSpacesOnly, setShowFavouriteSpacesOnly] = useState(false);
     const [isMapReady, setIsMapReady] = useState(false);
     const useJourneyExperience = React.useMemo(() => !forceAdvanced, [forceAdvanced]);
@@ -284,12 +301,97 @@ export const BookableSpacesList = ({
         }, 3000);
     };
 
-    const handleSpaceSelect = useCallback(space => {
-        highlightPanel(space);
+    const scrollSelectedSpaceIntoView = useCallback(space => {
+        if (!space?.space_id || typeof document === 'undefined') {
+            return;
+        }
 
-        // show space's location on the map
-        mapRef.current?.flyToSpace(space, ZOOM_IN_TO_LIBRARY);
+        const spaceElement = document.getElementById(`space-${space.space_id}`);
+        if (!spaceElement) {
+            return;
+        }
+
+        const scrollContainer = spaceElement.closest('#space-wrapper') || document.getElementById('space-wrapper');
+        if (
+            scrollContainer &&
+            scrollContainer.contains(spaceElement) &&
+            typeof scrollContainer.scrollTo === 'function'
+        ) {
+            const containerRect = scrollContainer.getBoundingClientRect();
+            const spaceRect = spaceElement.getBoundingClientRect();
+            const nextTop = Math.max(0, scrollContainer.scrollTop + (spaceRect.top - containerRect.top) - 12);
+            scrollContainer.scrollTo({ top: nextTop, behavior: 'smooth' });
+            return;
+        }
+
+        const contentMain = document.getElementById('content') || document.querySelector('main');
+        if (contentMain && contentMain.contains(spaceElement) && typeof contentMain.scrollTo === 'function') {
+            const mainRect = contentMain.getBoundingClientRect();
+            const spaceRect = spaceElement.getBoundingClientRect();
+            const nextTop = Math.max(0, contentMain.scrollTop + (spaceRect.top - mainRect.top) - 12);
+            contentMain.scrollTo({ top: nextTop, behavior: 'smooth' });
+            return;
+        }
+
+        if (typeof spaceElement.scrollIntoView === 'function') {
+            spaceElement.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+        }
     }, []);
+
+    const persistSelectedSpaceId = useCallback(
+        spaceId => {
+            if (!Number.isFinite(Number(spaceId))) {
+                return;
+            }
+
+            if (typeof window !== 'undefined' && window.sessionStorage) {
+                window.sessionStorage.setItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, String(Number(spaceId)));
+            }
+        },
+        [BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY],
+    );
+
+    const selectSpace = useCallback(
+        space => {
+            highlightPanel(space);
+            if (space?.space_id) {
+                const normalizedSpaceId = Number(space.space_id);
+                setExpandedSpaceId(normalizedSpaceId);
+                persistSelectedSpaceId(normalizedSpaceId);
+            }
+
+            scrollSelectedSpaceIntoView(space);
+        },
+        [persistSelectedSpaceId, scrollSelectedSpaceIntoView],
+    );
+
+    const handleSpaceSelect = useCallback(
+        space => {
+            selectSpace(space);
+
+            // show space's location on the map
+            mapRef.current?.flyToSpace(space, ZOOM_IN_TO_LIBRARY);
+        },
+        [selectSpace],
+    );
+
+    const getPersistedSelectedSpaceId = React.useCallback(() => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return null;
+        }
+
+        try {
+            const rawSelectedSpaceId = window.sessionStorage.getItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            if (!rawSelectedSpaceId) {
+                return null;
+            }
+
+            const normalizedSelectedSpaceId = Number(rawSelectedSpaceId);
+            return Number.isFinite(normalizedSelectedSpaceId) ? normalizedSelectedSpaceId : null;
+        } catch {
+            return null;
+        }
+    }, [BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY]);
 
     const getPersistedJourneyLiveFilterState = React.useCallback(() => {
         if (typeof window === 'undefined' || !window.sessionStorage) {
@@ -326,10 +428,62 @@ export const BookableSpacesList = ({
 
             if (expandedSpaceId === space.space_id) {
                 setExpandedSpaceId(null);
+                if (typeof window !== 'undefined' && window.sessionStorage) {
+                    window.sessionStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+                }
             }
         },
-        [expandedSpaceId, handleSpaceSelect],
+        [BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, expandedSpaceId, handleSpaceSelect],
     );
+
+    React.useEffect(() => {
+        if (useJourneyExperience || typeof window === 'undefined' || !window.sessionStorage) {
+            return;
+        }
+
+        if (expandedSpaceId === null || expandedSpaceId === undefined) {
+            window.sessionStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            return;
+        }
+
+        window.sessionStorage.setItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, String(expandedSpaceId));
+    }, [BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, expandedSpaceId, useJourneyExperience]);
+
+    React.useEffect(() => {
+        if (useJourneyExperience || !isMapReady || !sortedSpaceLocations?.length) {
+            return;
+        }
+
+        const savedSelectedSpaceId = getPersistedSelectedSpaceId();
+        if (savedSelectedSpaceId === null) {
+            return;
+        }
+
+        const selectedSpace = sortedSpaceLocations.find(
+            space => Number(space?.space_id) === Number(savedSelectedSpaceId),
+        );
+
+        if (!selectedSpace) {
+            if (typeof window !== 'undefined' && window.sessionStorage) {
+                window.sessionStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            }
+            setExpandedSpaceId(null);
+            return;
+        }
+
+        if (Number(expandedSpaceId) !== Number(savedSelectedSpaceId)) {
+            setExpandedSpaceId(Number(savedSelectedSpaceId));
+        }
+
+        mapRef.current?.flyToSpace(selectedSpace, ZOOM_IN_TO_LIBRARY);
+    }, [
+        BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY,
+        expandedSpaceId,
+        getPersistedSelectedSpaceId,
+        isMapReady,
+        sortedSpaceLocations,
+        useJourneyExperience,
+    ]);
 
     const [cookies, setCookie, removeCookie] = useCookies();
 
@@ -1440,19 +1594,10 @@ export const BookableSpacesList = ({
         eventToStop?.stopPropagation?.();
         eventToStop?.preventDefault?.();
 
-        // scroll the spaces sidebar to the relevant space
+        selectSpace(space);
+
         const spaceElement = document.getElementById(`space-${space?.space_id}`);
-        !!spaceElement &&
-            typeof spaceElement?.scrollIntoView === 'function' &&
-            spaceElement?.scrollIntoView({
-                behavior: 'smooth',
-            });
-
-        highlightPanel(space);
-
         !!spaceElement && spaceElement?.focus();
-
-        setExpandedSpaceId(space?.space_id ?? null);
     };
 
     const hasActiveCapacityFilter =

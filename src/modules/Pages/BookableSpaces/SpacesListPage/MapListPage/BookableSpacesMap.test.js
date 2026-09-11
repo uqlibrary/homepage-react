@@ -319,6 +319,69 @@ describe('BookableSpacesMap', () => {
         expect(latestPopupInstance.options.closeOnClick).toBe(false);
     });
 
+    it('keeps the selected marker active when the map moves', async () => {
+        rtlRender(
+            <WithRouter>
+                <BookableSpacesMap
+                    sortedSpaceLocations={[
+                        {
+                            space_id: 100,
+                            space_name: 'First room',
+                            space_latitude: '-27.47',
+                            space_longitude: '153.0',
+                            space_campus_name: 'St Lucia',
+                            space_zlevel: 1,
+                        },
+                        {
+                            space_id: 200,
+                            space_name: 'Second room',
+                            space_latitude: '-27.48',
+                            space_longitude: '153.01',
+                            space_campus_name: 'St Lucia',
+                            space_zlevel: 1,
+                        },
+                    ]}
+                    spacesFavouritesList={[]}
+                    onMarkerClick={jest.fn()}
+                    centreLatLong={{
+                        space_latitude: -27.47,
+                        space_longitude: 153.0,
+                        space_campus_name: 'St Lucia',
+                        space_zlevel: 1,
+                    }}
+                />
+            </WithRouter>,
+        );
+
+        const scriptElement = document.querySelector('script[src*="mazemap.min.js"]');
+        act(() => {
+            scriptElement.onload();
+        });
+
+        await waitFor(() => expect(latestMockMapInstance).not.toBeNull());
+        act(() => {
+            latestMockMapInstance.listeners.load();
+        });
+
+        const markerEls = () => Array.from(document.querySelectorAll('[role="img"]'));
+        await waitFor(() => expect(markerEls()).toHaveLength(3));
+
+        act(() => {
+            markerEls()[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        });
+
+        await waitFor(() => {
+            expect(document.querySelector('.selected-marker')).toBe(markerEls()[0]);
+        });
+
+        act(() => {
+            latestMockMapInstance.center = { lng: 153.02, lat: -27.48 };
+            latestMockMapInstance.listeners.moveend();
+        });
+
+        expect(document.querySelector('.selected-marker')).toBe(markerEls()[0]);
+    });
+
     it('reports the live map centre when the map moves', async () => {
         const onMapCenterChange = jest.fn();
 
