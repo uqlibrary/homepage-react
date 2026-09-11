@@ -78,6 +78,21 @@ describe('SidebarFilters campus selector', () => {
         },
     ];
 
+    it('puts the reset filters control in the sidebar header and removes the legacy remove-all button', () => {
+        renderWithTheme({
+            ...baseProps,
+            onResetAllFilters: jest.fn(),
+            activeFilterCount: 1,
+            selectedFacilityTypes: selectedNaturalLightFilter,
+            filteredFacilityTypeList: facilityGroupFixture,
+            facilityTypeList: facilityGroupFixture,
+        });
+
+        expect(screen.getByText('Filter Spaces')).toBeInTheDocument();
+        expect(screen.getByTestId('reset-filters-button')).toHaveTextContent('Reset filters');
+        expect(screen.queryByRole('button', { name: /remove all filters/i })).not.toBeInTheDocument();
+    });
+
     it('offers an all-campuses option in the campus selector', async () => {
         renderWithTheme(baseProps);
 

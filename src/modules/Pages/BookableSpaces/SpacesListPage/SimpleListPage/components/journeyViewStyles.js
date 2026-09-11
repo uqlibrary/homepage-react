@@ -134,25 +134,6 @@ export const StyledListItemStack = styled(Stack)(({ theme }) => ({
     },
 }));
 
-export const StyledResetButton = styled(Button)(({ theme }) => ({
-    [theme.breakpoints.up('md')]: {
-        display: 'none',
-    },
-    textTransform: 'initial',
-    textDecoration: 'underline',
-    padding: 0,
-    marginLeft: '0.5rem',
-    marginRight: '1rem',
-    borderRadius: 0,
-    lineHeight: 1.2,
-    fontSize: '1rem',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-        backgroundColor: theme.palette.primary.main,
-        color: '#fff',
-    },
-}));
-
 export const StyledSelectorWrapperDiv = styled('div')(({ theme }) => ({
     [theme.breakpoints.up('md')]: {
         display: 'none',

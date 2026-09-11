@@ -20,7 +20,6 @@ import {
     StyledListItemStack,
     StyledJourneyPanelSection,
     StyledResultsSidebarPanelDiv,
-    StyledResetButton,
     StyledResultsSplitLayoutDiv,
     StyledSelectorWrapperDiv,
 } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
@@ -31,7 +30,6 @@ export const JourneyResultsView = ({
     actions,
     intentSpaceLocations,
     totalSpaceCount,
-    handleClearJourneyFilters,
     onResetAllFilters,
     goToLegacyBrowse,
     selectedFacilityTypes,
@@ -102,9 +100,6 @@ export const JourneyResultsView = ({
                         <Typography component="h1" variant="h5">
                             <span style={{ whiteSpace: 'nowrap' }}>Search results</span>
                         </Typography>
-                        <StyledResetButton data-testid="reset-filters-button" onClick={handleClearJourneyFilters}>
-                            <span style={{ whiteSpace: 'nowrap' }}>Reset</span>
-                        </StyledResetButton>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', marginRight: '1rem' }}>
                         <Typography component={'h2'} data-testid="spaces-results-summary">
@@ -307,7 +302,6 @@ JourneyResultsView.propTypes = {
     actions: PropTypes.any,
     intentSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
-    handleClearJourneyFilters: PropTypes.func,
     onResetAllFilters: PropTypes.func,
     goToLegacyBrowse: PropTypes.func,
     selectedFacilityTypes: PropTypes.array,

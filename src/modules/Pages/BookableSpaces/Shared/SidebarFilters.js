@@ -770,6 +770,9 @@ export const SidebarFilters = ({
         handleLibrarySelection?.({ target: { value: 0 } });
         handleCampusSelection?.({ target: { value: 0 } });
     };
+    const handleResetFiltersButtonClick = () => {
+        deSelectAll();
+    };
     const ValueLabelComponent = ({ children, value }) => {
         return (
             <Tooltip enterTouchDelay={0} placement="top" title={value}>
@@ -1027,75 +1030,7 @@ export const SidebarFilters = ({
         if (!hasActiveFilters) return null;
         if (suppliedClassName?.includes('journey') && !isMobileView) return null;
 
-        const wrapperStyles = isBottom
-            ? {
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  flexWrap: 'wrap',
-                  marginTop: '1rem',
-                  paddingTop: '1rem',
-                  borderTop: '1px solid rgba(0, 0, 0, 0.12)',
-              }
-            : {
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  flexWrap: 'wrap',
-              };
-
-        return !!onApplyAllFilters ? (
-            <div style={wrapperStyles}>
-                <StyledPrimaryButton
-                    id={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    data-testid={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    onClick={deSelectAll}
-                    style={{
-                        padding: '0.5rem 1rem',
-                        margin: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        columnGap: '0.5rem',
-                    }}
-                >
-                    <ReplayIcon style={{ fontSize: '16px' }} />
-                    <span>Remove all filters</span>
-                </StyledPrimaryButton>
-                <StyledPrimaryButton
-                    onClick={onApplyAllFilters}
-                    style={{
-                        padding: '0.5rem 1rem',
-                        margin: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        columnGap: '0.5rem',
-                    }}
-                >
-                    <span>Apply all filters</span>
-                </StyledPrimaryButton>
-            </div>
-        ) : (
-            <div style={wrapperStyles}>
-                <StyledPrimaryButton
-                    id={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    data-testid={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    onClick={deSelectAll}
-                    style={{
-                        padding: '0.5rem 1rem',
-                        marginRight: 'auto',
-                        marginLeft: 'auto',
-                        display: 'flex',
-                        alignItems: 'center',
-                        columnGap: '0.5rem',
-                    }}
-                >
-                    <ReplayIcon style={{ fontSize: '16px' }} />
-                    <span>Remove all filters</span>
-                </StyledPrimaryButton>
-            </div>
-        );
+        return null;
     };
 
     const isJourneyView = suppliedClassName?.includes('journey');
@@ -1117,9 +1052,52 @@ export const SidebarFilters = ({
                         Skip to list of Spaces
                     </StyledSkipLinkAnchor>
                 )}
-                <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
-                    Filter Spaces
-                </Typography>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        columnGap: '1rem',
+                        marginBottom: '0.5rem',
+                    }}
+                >
+                    <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
+                        Filter Spaces
+                    </Typography>
+                    <Button
+                        type="button"
+                        data-testid="reset-filters-button"
+                        onClick={handleResetFiltersButtonClick}
+                        variant="text"
+                        sx={{
+                            ml: 'auto',
+                            mr: 0,
+                            p: 0,
+                            minWidth: 0,
+                            borderRadius: 0,
+                            border: 'none',
+                            boxShadow: 'none',
+                            textTransform: 'none',
+                            textDecoration: 'underline',
+                            whiteSpace: 'nowrap',
+                            cursor: 'pointer',
+                            color: theme.palette.primary.main,
+                            transition: 'background-color 0.2s ease, color 0.2s ease',
+                            [theme.breakpoints.down('md')]: {
+                                mr: '30px',
+                                ml: '0.25rem',
+                            },
+                            '&:hover, &:focus': {
+                                backgroundColor: theme.palette.primary.main,
+                                color: '#fff',
+                                textDecoration: 'underline',
+                                boxShadow: 'none',
+                            },
+                        }}
+                    >
+                        Reset filters
+                    </Button>
+                </div>
                 {!!hasActiveFilters && (
                     <>
                         <Typography component={'h3'} variant={'h6'} data-testid="space-filter-count">

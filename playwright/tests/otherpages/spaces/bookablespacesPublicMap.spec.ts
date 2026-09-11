@@ -850,9 +850,9 @@ test.describe('Spaces', () => {
                 8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
-            // click deselect-all-cartouches
-            await expect(page.getByTestId('button-deselect-all-filters')).toBeVisible();
-            await page.getByTestId('button-deselect-all-filters').click();
+            // click reset filters from the header of the filter panel
+            await expect(page.getByTestId('reset-filters-button')).toBeVisible();
+            await page.getByTestId('reset-filters-button').click();
 
             // all panels visible
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
@@ -896,7 +896,7 @@ test.describe('Spaces', () => {
             const filterCount = page.getByTestId('space-filter-count').locator('span');
             const spacesCount = page.getByTestId('space-space-count');
             const cartoucheList = page.getByTestId('button-deselect-list');
-            const deselectAllFiltersButton = page.getByTestId('button-deselect-all-filters');
+            const deselectAllFiltersButton = page.getByTestId('reset-filters-button');
             const minimumCapacityField = page.getByTestId('capacitySlider-inputRight');
             const maximumCapacityField = page.getByTestId('capacitySlider-inputLeft');
 
@@ -908,7 +908,7 @@ test.describe('Spaces', () => {
             await expect(filterCount).not.toBeVisible();
             await expect(cartoucheList).not.toBeVisible();
             await expect(spacesCount).not.toBeVisible();
-            await expect(deselectAllFiltersButton).not.toBeVisible();
+            await expect(deselectAllFiltersButton).toBeVisible();
 
             // the capacity slider is available even when bookable is not checked
             await expect(minimumCapacityField).toBeVisible();
@@ -955,14 +955,14 @@ test.describe('Spaces', () => {
             );
             await expect(filterCount).not.toBeVisible();
             await expect(cartoucheList.locator(':scope > *')).toHaveCount(0);
-            await expect(deselectAllFiltersButton).not.toBeVisible();
+            await expect(deselectAllFiltersButton).toBeVisible();
             await expect(spacesCount).not.toBeVisible();
         });
         test('can use special filter: capacity and clear all', async ({ page }) => {
             const filterCount = page.getByTestId('space-filter-count').locator('span');
             const spacesCount = page.getByTestId('space-space-count');
             const cartoucheList = page.getByTestId('button-deselect-list'); // buttons at top of the filters to turn them off
-            const deselectAllFiltersButton = page.getByTestId('button-deselect-all-filters');
+            const deselectAllFiltersButton = page.getByTestId('reset-filters-button');
             const minimumCapacityField = page.getByTestId('capacitySlider-inputRight');
             const maximumCapacityField = page.getByTestId('capacitySlider-inputLeft');
 
@@ -974,7 +974,7 @@ test.describe('Spaces', () => {
             await expect(filterCount).not.toBeVisible();
             await expect(cartoucheList).not.toBeVisible();
             await expect(spacesCount).not.toBeVisible();
-            await expect(deselectAllFiltersButton).not.toBeVisible();
+            await expect(deselectAllFiltersButton).toBeVisible();
 
             // first, check the bookable checkbox - this makes the capacity widget visible
             const bookableId = 9002;
@@ -1017,7 +1017,7 @@ test.describe('Spaces', () => {
             );
 
             // clear the capacity filters
-            await page.getByTestId('button-deselect-all-filters').click();
+            await page.getByTestId('reset-filters-button').click();
 
             // the page is reset
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
@@ -1026,7 +1026,7 @@ test.describe('Spaces', () => {
             await expect(filterCount).not.toBeVisible();
             await expect(spacesCount).not.toBeVisible();
             await expect(cartoucheList).not.toBeVisible();
-            await expect(deselectAllFiltersButton).not.toBeVisible();
+            await expect(page.getByTestId('reset-filters-button')).toBeVisible();
         });
     });
     test.describe('sidebar filter type group can open-collapse', () => {
