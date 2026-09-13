@@ -174,10 +174,19 @@ export const SpaceOutagePanel = ({
                 value = momentValue.format('YYYY-MM-DDTHH:mm');
             }
         }
+
         const newDraft = {
             ...draft,
             [fieldName]: value,
         };
+
+        if (fieldName === 'space_outage_start' && value && !draft?.space_outage_end) {
+            const [datePart] = value.split('T');
+            if (datePart) {
+                newDraft.space_outage_end = `${datePart}T23:59`;
+            }
+        }
+
         setDraft(newDraft);
         if (validationErrors.length > 0) {
             setValidationErrors(validateSpaceOutageDraft(newDraft, outages, editingOutageId).errors);

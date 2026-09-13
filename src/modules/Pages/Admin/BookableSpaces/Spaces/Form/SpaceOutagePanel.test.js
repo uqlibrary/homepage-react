@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { fireEvent, waitFor } from '@testing-library/react';
 
 import { rtlRender, screen } from 'test-utils';
@@ -6,6 +7,14 @@ import { rtlRender, screen } from 'test-utils';
 import SpaceOutagePanel from './SpaceOutagePanel';
 
 describe('SpaceOutagePanel', () => {
+    const getFutureDateTime = (hour, dayOffset = 365, minute = 0) =>
+        moment()
+            .add(dayOffset, 'days')
+            .hours(hour)
+            .minutes(minute)
+            .seconds(0)
+            .format('YYYY-MM-DDTHH:mm');
+
     const defaultProps = {
         actions: {
             loadBookableSpaceOutages: jest.fn(),
@@ -34,20 +43,23 @@ describe('SpaceOutagePanel', () => {
     });
 
     it('locks past outages from edit and delete actions', () => {
+        const pastStart = moment().subtract(2, 'years').format('YYYY-MM-DD HH:mm:ss');
+        const futureStart = moment().add(1, 'year').format('YYYY-MM-DD HH:mm:ss');
+
         rtlRender(
             <SpaceOutagePanel
                 {...defaultProps}
                 spaceOutageList={[
                     {
                         space_outage_id: 1,
-                        space_outage_start: '2000-01-01 09:00:00',
-                        space_outage_end: '2000-01-01 10:00:00',
+                        space_outage_start: pastStart,
+                        space_outage_end: moment(pastStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
                         space_outage_reason: 'Past outage',
                     },
                     {
                         space_outage_id: 2,
-                        space_outage_start: '2999-01-01 09:00:00',
-                        space_outage_end: '2999-01-01 10:00:00',
+                        space_outage_start: futureStart,
+                        space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
                         space_outage_reason: 'Upcoming outage',
                     },
                 ]}
@@ -62,6 +74,17 @@ describe('SpaceOutagePanel', () => {
 
         expect(screen.getByTestId('space-outage-edit-2')).not.toBeDisabled();
         expect(screen.getByTestId('space-outage-delete-2')).not.toBeDisabled();
+    });
+
+    it('defaults the end to 11:59pm on the same day when the start is set and no end is already set', () => {
+        const futureStart = getFutureDateTime(8);
+        const expectedEnd = `${futureStart.slice(0, 10)}T23:59`;
+
+        rtlRender(<SpaceOutagePanel {...defaultProps} spaceOutageList={[]} />);
+
+        fireEvent.change(screen.getByTestId('space-outage-start'), { target: { value: futureStart } });
+
+        expect(screen.getByTestId('space-outage-end')).toHaveValue(expectedEnd);
     });
 
     it('saves space_outage_show_time_public from the admin checkbox', async () => {
@@ -94,11 +117,13 @@ describe('SpaceOutagePanel', () => {
             ...defaultProps,
             spaceOutageList: [],
         };
+        const futureStart = getFutureDateTime(18);
+        const earlierEnd = getFutureDateTime(12);
 
         rtlRender(<SpaceOutagePanel {...props} />);
 
-        fireEvent.change(screen.getByTestId('space-outage-start'), { target: { value: '2026-04-24T18:00' } });
-        fireEvent.change(screen.getByTestId('space-outage-end'), { target: { value: '2026-04-24T12:00' } });
+        fireEvent.change(screen.getByTestId('space-outage-start'), { target: { value: futureStart } });
+        fireEvent.change(screen.getByTestId('space-outage-end'), { target: { value: earlierEnd } });
         fireEvent.change(screen.getByTestId('space-outage-reason'), { target: { value: 'Repair work' } });
         fireEvent.click(screen.getByTestId('space-outage-save-button'));
 
@@ -115,22 +140,24 @@ describe('SpaceOutagePanel', () => {
             campusId: null,
             spaceOutageList: [],
         };
+        const bulkStart = getFutureDateTime(9);
+        const bulkEnd = getFutureDateTime(17);
         props.actions.createBookableBulkOutage.mockResolvedValue({ status: 'OK' });
         props.actions.loadBookableSpaceOutages.mockResolvedValue({ status: 'OK' });
 
         rtlRender(<SpaceOutagePanel {...props} />);
 
         fireEvent.click(screen.getByTestId('space-outage-scope-floor'));
-        fireEvent.change(screen.getByTestId('space-outage-start'), { target: { value: '2026-05-01T09:00' } });
-        fireEvent.change(screen.getByTestId('space-outage-end'), { target: { value: '2026-05-01T17:00' } });
+        fireEvent.change(screen.getByTestId('space-outage-start'), { target: { value: bulkStart } });
+        fireEvent.change(screen.getByTestId('space-outage-end'), { target: { value: bulkEnd } });
         fireEvent.change(screen.getByTestId('space-outage-reason'), { target: { value: 'Floor maintenance' } });
         fireEvent.click(screen.getByTestId('space-outage-save-button'));
 
         await waitFor(() => {
             expect(props.actions.createBookableBulkOutage).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    space_outage_start: '2026-05-01 09:00:00',
-                    space_outage_end: '2026-05-01 17:00:00',
+                    space_outage_start: `${bulkStart.slice(0, 10)} 09:00:00`,
+                    space_outage_end: `${bulkEnd.slice(0, 10)} 17:00:00`,
                     space_outage_reason: 'Floor maintenance',
                 }),
                 'floor',
@@ -140,13 +167,15 @@ describe('SpaceOutagePanel', () => {
     });
 
     it('updates an existing outage when the user edits it', async () => {
+        const startDate = moment().add(200, 'days').hours(9).minutes(0).seconds(0).format('YYYY-MM-DD HH:mm:ss');
+        const endDate = moment().add(200, 'days').hours(12).minutes(0).seconds(0).format('YYYY-MM-DD HH:mm:ss');
         const props = {
             ...defaultProps,
             spaceOutageList: [
                 {
                     space_outage_id: 12,
-                    space_outage_start: '2026-06-01 09:00:00',
-                    space_outage_end: '2026-06-01 12:00:00',
+                    space_outage_start: startDate,
+                    space_outage_end: endDate,
                     space_outage_reason: 'Original reason',
                     space_outage_show_time_public: true,
                 },
@@ -173,19 +202,21 @@ describe('SpaceOutagePanel', () => {
     });
 
     it('prevents deleting a past outage and confirms deletions for active ones', async () => {
+        const pastStart = moment().subtract(2, 'years').format('YYYY-MM-DD HH:mm:ss');
+        const futureStart = moment().add(1, 'year').format('YYYY-MM-DD HH:mm:ss');
         const props = {
             ...defaultProps,
             spaceOutageList: [
                 {
                     space_outage_id: 2,
-                    space_outage_start: '2000-01-01 09:00:00',
-                    space_outage_end: '2000-01-01 10:00:00',
+                    space_outage_start: pastStart,
+                    space_outage_end: moment(pastStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
                     space_outage_reason: 'Past outage',
                 },
                 {
                     space_outage_id: 3,
-                    space_outage_start: '2999-01-01 09:00:00',
-                    space_outage_end: '2999-01-01 10:00:00',
+                    space_outage_start: futureStart,
+                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
                     space_outage_reason: 'Future outage',
                 },
             ],
