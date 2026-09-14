@@ -6,8 +6,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+// Fast Refresh is also disabled under Playwright (PW_IS_RUNNING): its overlay iframe can intercept
+// clicks and cause flaky e2e timeouts, and the dev server does not need HMR while tests drive it.
 const enableFastRefresh =
-    process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'cc' && process.env.NODE_ENV !== 'production';
+    process.env.NODE_ENV !== 'test' &&
+    process.env.NODE_ENV !== 'cc' &&
+    process.env.NODE_ENV !== 'production' &&
+    !process.env.PW_IS_RUNNING;
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 
 const port = 2020;
@@ -18,7 +23,9 @@ const publicPath = '';
 module.exports = {
     mode: 'development',
     context: resolve(__dirname),
-    devtool: 'source-map',
+    // Source maps off under e2e (PW_IS_RUNNING) to save dev-server memory and build time; istanbul maps
+    // coverage to source via the instrumentation itself, so no webpack source map is needed under cc.
+    devtool: process.env.PW_IS_RUNNING ? false : 'source-map',
     entry: {
         browserUpdate: join(__dirname, 'public', 'browser-update.js'),
         webpackDevClient: `webpack-dev-server/client?http://${url}:${port}`,

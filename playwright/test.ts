@@ -1,6 +1,6 @@
 import { test as base } from '@playwright/test';
 import { collectCoverageAsync } from '@uq/pw/lib/coverage/istanbul/collectCoverageAsync';
-import { istanbulReportPartialsDir } from '@uq/pw/lib/constants';
+import { istanbulReportPartialsDir, istanbulStructureDir } from '@uq/pw/lib/constants';
 
 export * from '@playwright/test';
 
@@ -36,7 +36,7 @@ test = test.extend({
 if (process?.env?.NODE_ENV === 'cc') {
     test = test.extend({
         context: async ({ context }, use) => {
-            await collectCoverageAsync(context, use, istanbulReportPartialsDir);
+            await collectCoverageAsync(context, use, istanbulReportPartialsDir, istanbulStructureDir);
         },
     });
 }
