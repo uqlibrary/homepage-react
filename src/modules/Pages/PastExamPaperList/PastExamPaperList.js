@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 
 import { useTitle } from 'hooks';
 
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';

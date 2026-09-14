@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FlashlightOff, FlashlightOn, QrCodeScanner, VolumeOff, VolumeUp } from '@mui/icons-material';
+import FlashlightOff from '@mui/icons-material/FlashlightOff';
+import FlashlightOn from '@mui/icons-material/FlashlightOn';
+import QrCodeScanner from '@mui/icons-material/QrCodeScanner';
+import VolumeOff from '@mui/icons-material/VolumeOff';
+import VolumeUp from '@mui/icons-material/VolumeUp';
 import IconButton from '@mui/material/IconButton';
 import { Scanner, useDevices, prepareZXingModule } from '@yudiel/react-qr-scanner';
 import Dialog from '@mui/material/Dialog';

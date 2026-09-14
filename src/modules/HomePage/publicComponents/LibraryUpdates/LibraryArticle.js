@@ -9,7 +9,9 @@ import { styled } from '@mui/material/styles';
 import { Link } from 'react-router';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import Box from '@mui/material/Box';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 const fallBackImage = require('../../../../../public/images/article_placeholder.jpg');
 

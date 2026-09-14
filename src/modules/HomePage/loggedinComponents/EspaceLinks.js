@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router';
 
 import Grid from '@mui/material/Grid';
-import { Link as MuiLink } from '@mui/material';
+import MuiLink from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 import { useTitle } from 'hooks';
 
-import { Grid, TextField } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Typography from '@mui/material/Typography';

@@ -23,7 +23,11 @@ import { useConfirmationState } from 'hooks';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { pluralise } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
-import { Button, FormControl, Input, InputLabel, Modal } from '@mui/material';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import Modal from '@mui/material/Modal';
 import { set } from 'js-cookie';
 import { setIn } from 'immutable';
 

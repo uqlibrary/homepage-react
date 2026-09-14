@@ -35,7 +35,7 @@
         "test:e2e:cc": "cross-env NODE_ENV=cc npm run test:e2e",
         "posttest:e2e:cc": "rm -rf .nyc_output",
         "test:unit": "cross-env NODE_ENV=test FULL_PATH=http://localhost jest",
-        "test:unit:ci": "npm run test:unit -- --ci --silent --no-warnings --maxWorkers=4 --testPathIgnorePatterns=\"$(node -p \"require('./package.json').jest.testPathIgnorePatterns.join('|')\")\"",
+        "test:unit:ci": "npm run test:unit -- --ci --silent --no-warnings --maxWorkers=4 --workerIdleMemoryLimit=1024MB --testPathIgnorePatterns=\"$(node -p \"require('./package.json').jest.testPathIgnorePatterns.join('|')\")\"",
         "test:unit:ci:nocoverage": "npm run test:unit:ci -- --no-coverage",
         "test:unit:ci1:skipcoverage": "npm run test:unit -- --ci --runInBand --no-coverage --testPathIgnorePatterns=SharedComponents",
         "test:unit:ci2:skipcoverage": "npm run test:unit -- --ci --runInBand --no-coverage --passWithNoTests SharedComponents",
