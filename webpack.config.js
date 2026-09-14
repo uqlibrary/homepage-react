@@ -40,9 +40,13 @@ module.exports = {
         // assetModuleFilename: 'images/[hash][ext][query]' // TBD
     },
     devServer: {
-        // client: {
-        //     logging: 'info',
-        // },
+        client: {
+            logging: 'info',
+            // No dev-server error overlay under e2e (PW_IS_RUNNING): its iframe can intercept clicks and
+            // cause flaky timeouts. The overlay is a dev convenience only; a real build error still fails
+            // the tests because the app never loads.
+            overlay: !process.env.PW_IS_RUNNING,
+        },
         compress: true,
         // contentBase: __dirname,
         // devMiddleware: {
