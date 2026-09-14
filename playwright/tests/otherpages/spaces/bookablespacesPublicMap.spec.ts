@@ -540,7 +540,7 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-summary-hours`)).not.toBeVisible();
     });
-    test('can open a space detail page from a panel', async ({ page, context }) => {
+    test('can open a space detail page from a panel in the same window', async ({ page }) => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces/mapresults');
@@ -552,18 +552,15 @@ test.describe('Spaces', () => {
         // expand the panel
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
 
-        // click "open in new window"
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-new-window`)).toBeVisible();
-        const [newPage] = await Promise.all([
-            context.waitForEvent('page'),
-            page.getByTestId(`${ARCH_REFERENCE}-new-window`).click(),
-        ]);
+        // click the details action and stay in the same browser tab
+        const detailsButton = page.getByTestId(`${ARCH_REFERENCE}-details`);
+        await expect(detailsButton).toBeVisible();
+        await detailsButton.click();
 
-        // new window has correct page
-        await newPage.waitForLoadState();
-        await expect(newPage).toHaveURL(/\/spaces\/detail\/a00de3d4-7e11-47eb-8079-532bdef80def/);
-        await expect(newPage.getByTestId(`${ARCH_REFERENCE}-details-name`)).toBeVisible();
-        await expect(newPage.getByTestId(`${ARCH_REFERENCE}-details-name`)).toContainText('354');
+        await page.waitForURL(/\/spaces\/detail\/a00de3d4-7e11-47eb-8079-532bdef80def/);
+        await expect(page).toHaveURL(/\/spaces\/detail\/a00de3d4-7e11-47eb-8079-532bdef80def/);
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-details-name`)).toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-details-name`)).toContainText('354');
     });
 
     test.describe('filtering', () => {
@@ -853,9 +850,9 @@ test.describe('Spaces', () => {
                 8 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
 
-            // click deselect-all-cartouches
-            await expect(page.getByTestId('button-deselect-all-filters')).toBeVisible();
-            await page.getByTestId('button-deselect-all-filters').click();
+            // click reset filters from the header of the filter panel
+            await expect(page.getByTestId('reset-filters-button')).toBeVisible();
+            await page.getByTestId('reset-filters-button').click();
 
             // all panels visible
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
@@ -899,7 +896,7 @@ test.describe('Spaces', () => {
             const filterCount = page.getByTestId('space-filter-count').locator('span');
             const spacesCount = page.getByTestId('space-space-count');
             const cartoucheList = page.getByTestId('button-deselect-list');
-            const deselectAllFiltersButton = page.getByTestId('button-deselect-all-filters');
+            const deselectAllFiltersButton = page.getByTestId('reset-filters-button');
             const minimumCapacityField = page.getByTestId('capacitySlider-inputRight');
             const maximumCapacityField = page.getByTestId('capacitySlider-inputLeft');
 
@@ -911,7 +908,7 @@ test.describe('Spaces', () => {
             await expect(filterCount).not.toBeVisible();
             await expect(cartoucheList).not.toBeVisible();
             await expect(spacesCount).not.toBeVisible();
-            await expect(deselectAllFiltersButton).not.toBeVisible();
+            await expect(deselectAllFiltersButton).toBeVisible();
 
             // the capacity slider is available even when bookable is not checked
             await expect(minimumCapacityField).toBeVisible();
@@ -958,14 +955,14 @@ test.describe('Spaces', () => {
             );
             await expect(filterCount).not.toBeVisible();
             await expect(cartoucheList.locator(':scope > *')).toHaveCount(0);
-            await expect(deselectAllFiltersButton).not.toBeVisible();
+            await expect(deselectAllFiltersButton).toBeVisible();
             await expect(spacesCount).not.toBeVisible();
         });
         test('can use special filter: capacity and clear all', async ({ page }) => {
             const filterCount = page.getByTestId('space-filter-count').locator('span');
             const spacesCount = page.getByTestId('space-space-count');
             const cartoucheList = page.getByTestId('button-deselect-list'); // buttons at top of the filters to turn them off
-            const deselectAllFiltersButton = page.getByTestId('button-deselect-all-filters');
+            const deselectAllFiltersButton = page.getByTestId('reset-filters-button');
             const minimumCapacityField = page.getByTestId('capacitySlider-inputRight');
             const maximumCapacityField = page.getByTestId('capacitySlider-inputLeft');
 
@@ -977,7 +974,7 @@ test.describe('Spaces', () => {
             await expect(filterCount).not.toBeVisible();
             await expect(cartoucheList).not.toBeVisible();
             await expect(spacesCount).not.toBeVisible();
-            await expect(deselectAllFiltersButton).not.toBeVisible();
+            await expect(deselectAllFiltersButton).toBeVisible();
 
             // first, check the bookable checkbox - this makes the capacity widget visible
             const bookableId = 9002;
@@ -1020,7 +1017,7 @@ test.describe('Spaces', () => {
             );
 
             // clear the capacity filters
-            await page.getByTestId('button-deselect-all-filters').click();
+            await page.getByTestId('reset-filters-button').click();
 
             // the page is reset
             await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(
@@ -1029,7 +1026,7 @@ test.describe('Spaces', () => {
             await expect(filterCount).not.toBeVisible();
             await expect(spacesCount).not.toBeVisible();
             await expect(cartoucheList).not.toBeVisible();
-            await expect(deselectAllFiltersButton).not.toBeVisible();
+            await expect(page.getByTestId('reset-filters-button')).toBeVisible();
         });
     });
     test.describe('sidebar filter type group can open-collapse', () => {
@@ -1419,7 +1416,7 @@ test.describe('Spaces', () => {
             await expect(spacePanelWrapper).toHaveCount(all + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
         });
 
-        test('an invalid library cookie will not cause an error and the first campus+first library will be used', async ({
+        test('an invalid library cookie will not cause an error and the current library selection is retained', async ({
             page,
             context,
         }) => {
@@ -1432,7 +1429,7 @@ test.describe('Spaces', () => {
                 .getByTestId('filter-by-library')
                 .locator('[tabindex="0"]');
 
-            // on inital load, it honours the non-default campus cookie
+            // initial load defaults to the global all-campus/all-library state
             await page.goto('spaces/mapresults');
             await expect(selectedCampusNameElement).toContainText('All campuses');
             await expect(selectLibraryNameElement).toContainText('All libraries');
@@ -1449,10 +1446,10 @@ test.describe('Spaces', () => {
                 { name: 'UQLspacesPreferredLibrary', value: '999', domain: 'localhost', path: '/' },
             ]);
 
-            // reload the page - now the library cookie has an invalid value, it ignores the cookie value and uses the default
+            // reload the page - invalid cookies are ignored and the current selection remains in effect
             await page.goto('spaces/mapresults');
             await expect(selectedCampusNameElement).toContainText('All campuses');
-            await expect(selectLibraryNameElement).toContainText('All libraries');
+            await expect(selectLibraryNameElement).toContainText('Architecture and Music Library');
         });
     });
     test.describe('Can change campuses', () => {
@@ -1606,11 +1603,11 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
         });
 
-        test('an invalid campus cookie will not cause an error and the first campus will be used', async ({
+        test('an invalid campus cookie will not cause an error and the current campus selection is retained', async ({
             page,
             context,
         }) => {
-            // on inital load, it honours the non-default campus cookie
+            // on initial load, it honours the non-default campus cookie
             await page.goto('spaces/mapresults');
             await expect(
                 page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').locator('[tabindex="0"]'),
@@ -1620,11 +1617,11 @@ test.describe('Spaces', () => {
                 { name: 'UQLspacesPreferredCampus', value: '999', domain: 'localhost', path: '/' },
             ]);
 
-            // after resetting the cookie invalidly, it ignores campus cookie and uses the default
+            // after resetting the cookie invalidly, it ignores the cookie and keeps the current campus selection
             await page.goto('spaces/mapresults'); // reload page after campus change in before
             await expect(
                 page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').locator('[tabindex="0"]'),
-            ).toContainText('All campuses');
+            ).toContainText('Dutton Park');
         });
 
         test('each campus loads correctly', async ({ page }) => {

@@ -148,12 +148,13 @@ test.describe('Spaces Journey Result page', () => {
         const sidebarCampusDropdown = page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus');
         await expect(sidebarCampusDropdown).not.toBeVisible();
 
-        // because we are in mobile view, the "clear filters" button appears within the search results list
-        await expect(page.getByTestId('reset-filters-button')).toBeVisible();
+        // because we are in mobile view, the reset link lives in the filter panel header when the panel is open
+        await expect(page.getByTestId('reset-filters-button')).not.toBeVisible();
 
         // SHOW filters by toggling show-hide-filters button
         await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
         await page.getByTestId('spaces-filter-show-hide-button').click();
+        await expect(page.getByTestId('reset-filters-button')).toBeVisible();
 
         // results off page, filter block visible
         await expect(page.locator('body').getByText(/Search results/)).toBeVisible(); // but below page viewport
@@ -162,6 +163,7 @@ test.describe('Spaces Journey Result page', () => {
         // HIDE filters by toggling show-hide-filters button
         await expect(page.getByTestId('spaces-filter-show-hide-button')).toBeVisible();
         await page.getByTestId('spaces-filter-show-hide-button').click();
+        await expect(page.getByTestId('reset-filters-button')).not.toBeVisible();
 
         // results on page again, filter block hidden again
         await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
@@ -192,7 +194,8 @@ test.describe('Spaces Journey Result page', () => {
         // filter label has updated
         await expect(page.getByTestId('spaces-results-summary')).toContainText('4 of 16 spaces');
 
-        // click the 'clear filters' button
+        // open the filter panel and click the header reset link
+        await page.getByTestId('spaces-filter-show-hide-button').click();
         await expect(page.getByTestId('reset-filters-button')).toBeVisible();
         await page.getByTestId('reset-filters-button').click();
 

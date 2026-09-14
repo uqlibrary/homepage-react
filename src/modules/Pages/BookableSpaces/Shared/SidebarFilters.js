@@ -31,11 +31,12 @@ import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
 const StyledSlider = styled(Slider)(() => ({
     marginTop: '1rem', // space for tooltips to appear in
+    overflow: 'visible',
     '& .MuiSlider-track': {
         marginLeft: '0.2rem', // don't let the range bar peek out to the left
     },
     '& [data-index="0"]': {
-        marginLeft: '0.6rem', // shift the minimum dot a little to the right so it's all visible
+        marginLeft: '0.7rem', // shift the minimum dot a little to the right so it's fully visible at the minimum value
     },
     '& [data-index="1"]': {
         marginLeft: '-0.6rem !important', // shift the maximum dot a little to the left so it's all visible
@@ -93,6 +94,7 @@ const StyledSidebarDiv = styled('div')(({ theme }) => ({
     position: 'relative',
     height: '100%',
     overflowY: 'auto',
+    overflowX: 'hidden',
 
     paddingTop: '0.5rem',
     paddingRight: 0,
@@ -274,7 +276,8 @@ const StyledCartoucheList = styled('ul')(({ theme }) => ({
 }));
 const StyledCapacityLabelTypography = styled(Typography)(() => ({
     fontSize: '1.17em',
-    marginLeft: '1rem',
+    margin: '0.75rem 0 0 1rem',
+    lineHeight: 1.3,
 }));
 
 export const SidebarFilters = ({
@@ -513,6 +516,34 @@ export const SidebarFilters = ({
         !!topOfSidebar && topOfSidebar?.focus();
     };
 
+    const clearPersistedCapacityFilterValue = () => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return;
+        }
+
+        try {
+            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            if (!rawState) {
+                return;
+            }
+
+            const parsedState = JSON.parse(rawState);
+            if (!parsedState || !Object.prototype.hasOwnProperty.call(parsedState, 'capacityFilterValue')) {
+                return;
+            }
+
+            delete parsedState.capacityFilterValue;
+            if (Object.keys(parsedState).length === 0) {
+                window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+                return;
+            }
+
+            window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(parsedState));
+        } catch {
+            // Ignore malformed session state.
+        }
+    };
+
     const clearJourneyIntentId = () => {
         if (typeof window === 'undefined' || !window.sessionStorage) {
             return;
@@ -531,6 +562,8 @@ export const SidebarFilters = ({
         } catch {
             // Ignore malformed session state.
         }
+
+        clearPersistedCapacityFilterValue();
     };
 
     const clearSpecialFilter = (facilityTypeId, facilitySpecialAction) => {
@@ -562,13 +595,18 @@ export const SidebarFilters = ({
     const handleFilterSelection = (isChecked, facilityType) => {
         clearJourneyIntentId();
         const resolvedFacilityType =
-            facilityType ||
-            resolveFacilityType(
-                facilityType?.facility_type_id,
-                facilityType?.facility_special_action,
-            );
+            facilityType || resolveFacilityType(facilityType?.facility_type_id, facilityType?.facility_special_action);
         const facilityTypeId = resolvedFacilityType?.facility_type_id;
         const facilitySpecialAction = resolvedFacilityType?.facility_special_action;
+
+        const isCapacityFilterSelection =
+            Number(facilityTypeId) === FILTER_CAPACITY_TYPE_ID ||
+            facilitySpecialAction === FILTER_SPACE_CAPACITY_ACTION_NAME;
+
+        if (!isCapacityFilterSelection && isChecked) {
+            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
+            clearPersistedCapacityFilterValue();
+        }
 
         showHideActiveFilterListItems(facilityTypeId, isChecked);
         setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
@@ -599,16 +637,24 @@ export const SidebarFilters = ({
               })
             : normaliseCapacityValue(newValue, previousMin);
 
-        const sanitizedValue = safeValue?.length >= 2
-            ? [
-                  Math.min(Math.max(Number(safeValue[0]), Number(minimumSpaceCapacity)), Number(maximumSpaceCapacity)),
-                  Math.max(Math.min(Number(safeValue[1]), Number(maximumSpaceCapacity)), Number(minimumSpaceCapacity)),
-              ]
-            : safeValue;
+        const sanitizedValue =
+            safeValue?.length >= 2
+                ? [
+                      Math.min(
+                          Math.max(Number(safeValue[0]), Number(minimumSpaceCapacity)),
+                          Number(maximumSpaceCapacity),
+                      ),
+                      Math.max(
+                          Math.min(Number(safeValue[1]), Number(maximumSpaceCapacity)),
+                          Number(minimumSpaceCapacity),
+                      ),
+                  ]
+                : safeValue;
 
-        const normalizedValue = Array.isArray(sanitizedValue) && sanitizedValue.length === 2
-            ? [Math.min(sanitizedValue[0], sanitizedValue[1]), Math.max(sanitizedValue[0], sanitizedValue[1])]
-            : sanitizedValue;
+        const normalizedValue =
+            Array.isArray(sanitizedValue) && sanitizedValue.length === 2
+                ? [Math.min(sanitizedValue[0], sanitizedValue[1]), Math.max(sanitizedValue[0], sanitizedValue[1])]
+                : sanitizedValue;
 
         setCapacityFilterValue(normalizedValue);
 
@@ -698,9 +744,12 @@ export const SidebarFilters = ({
     const deSelectAll = () => {
         clearJourneyIntentId();
         if (typeof onResetAllFilters === 'function') {
+            clearPersistedCapacityFilterValue();
             onResetAllFilters();
             return;
         }
+
+        clearPersistedCapacityFilterValue();
 
         // reset the facility types to all false - the render will clear the buttons and checkboxes for us!
         const newFacilityTypes = selectedFacilityTypes?.map(ft => {
@@ -720,6 +769,9 @@ export const SidebarFilters = ({
         // Fall back to existing handlers when no explicit reset callback is provided.
         handleLibrarySelection?.({ target: { value: 0 } });
         handleCampusSelection?.({ target: { value: 0 } });
+    };
+    const handleResetFiltersButtonClick = () => {
+        deSelectAll();
     };
     const ValueLabelComponent = ({ children, value }) => {
         return (
@@ -744,7 +796,7 @@ export const SidebarFilters = ({
                     htmlFor={`filtertype-${facilityType?.facility_type_id}`}
                     id={`filtertype-${facilityType?.facility_type_id}-label`}
                     className="selectedFilterTypeLabel"
-                    style={{ marginLeft: '1rem' }}
+                    style={{ marginLeft: '1rem', textDecoration: 'none' }}
                 >
                     <StyledSliderInput
                         className="rightSlider"
@@ -889,12 +941,12 @@ export const SidebarFilters = ({
                     aria-expanded={!!isGroupExpanded ? 'true' : 'false'}
                     aria-controls={`filter-group-list-${filterGroupId}`}
                 >
-                    <KeyboardArrowDownIcon
+                    <KeyboardArrowUpIcon
                         style={{ display: !!isGroupExpanded ? 'block' : 'none' }}
                         className="expandedGroup"
                         data-testid={`facility-type-group-${filterGroupId}-open`}
                     />
-                    <KeyboardArrowUpIcon
+                    <KeyboardArrowDownIcon
                         style={{ display: !!isGroupExpanded ? 'none' : 'block' }}
                         className="collapsedGroup"
                         data-testid={`facility-type-group-${filterGroupId}-collapsed`}
@@ -978,75 +1030,7 @@ export const SidebarFilters = ({
         if (!hasActiveFilters) return null;
         if (suppliedClassName?.includes('journey') && !isMobileView) return null;
 
-        const wrapperStyles = isBottom
-            ? {
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  flexWrap: 'wrap',
-                  marginTop: '1rem',
-                  paddingTop: '1rem',
-                  borderTop: '1px solid rgba(0, 0, 0, 0.12)',
-              }
-            : {
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  flexWrap: 'wrap',
-              };
-
-        return !!onApplyAllFilters ? (
-            <div style={wrapperStyles}>
-                <StyledPrimaryButton
-                    id={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    data-testid={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    onClick={deSelectAll}
-                    style={{
-                        padding: '0.5rem 1rem',
-                        margin: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        columnGap: '0.5rem',
-                    }}
-                >
-                    <ReplayIcon style={{ fontSize: '16px' }} />
-                    <span>Remove all filters</span>
-                </StyledPrimaryButton>
-                <StyledPrimaryButton
-                    onClick={onApplyAllFilters}
-                    style={{
-                        padding: '0.5rem 1rem',
-                        margin: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        columnGap: '0.5rem',
-                    }}
-                >
-                    <span>Apply all filters</span>
-                </StyledPrimaryButton>
-            </div>
-        ) : (
-            <div style={wrapperStyles}>
-                <StyledPrimaryButton
-                    id={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    data-testid={isBottom ? 'button-deselect-all-filters-bottom' : 'button-deselect-all-filters'}
-                    onClick={deSelectAll}
-                    style={{
-                        padding: '0.5rem 1rem',
-                        marginRight: 'auto',
-                        marginLeft: 'auto',
-                        display: 'flex',
-                        alignItems: 'center',
-                        columnGap: '0.5rem',
-                    }}
-                >
-                    <ReplayIcon style={{ fontSize: '16px' }} />
-                    <span>Remove all filters</span>
-                </StyledPrimaryButton>
-            </div>
-        );
+        return null;
     };
 
     const isJourneyView = suppliedClassName?.includes('journey');
@@ -1068,9 +1052,52 @@ export const SidebarFilters = ({
                         Skip to list of Spaces
                     </StyledSkipLinkAnchor>
                 )}
-                <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
-                    Filter Spaces
-                </Typography>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        columnGap: '1rem',
+                        marginBottom: '0.5rem',
+                    }}
+                >
+                    <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
+                        Filter Spaces
+                    </Typography>
+                    <Button
+                        type="button"
+                        data-testid="reset-filters-button"
+                        onClick={handleResetFiltersButtonClick}
+                        variant="text"
+                        sx={{
+                            ml: 'auto',
+                            mr: 0,
+                            p: 0,
+                            minWidth: 0,
+                            borderRadius: 0,
+                            border: 'none',
+                            boxShadow: 'none',
+                            textTransform: 'none',
+                            textDecoration: 'underline',
+                            whiteSpace: 'nowrap',
+                            cursor: 'pointer',
+                            color: theme.palette.primary.main,
+                            transition: 'background-color 0.2s ease, color 0.2s ease',
+                            [theme.breakpoints.down('md')]: {
+                                mr: '30px',
+                                ml: '0.25rem',
+                            },
+                            '&:hover, &:focus': {
+                                backgroundColor: theme.palette.primary.main,
+                                color: '#fff',
+                                textDecoration: 'underline',
+                                boxShadow: 'none',
+                            },
+                        }}
+                    >
+                        Reset filters
+                    </Button>
+                </div>
                 {!!hasActiveFilters && (
                     <>
                         <Typography component={'h3'} variant={'h6'} data-testid="space-filter-count">
@@ -1132,10 +1159,14 @@ export const SidebarFilters = ({
                             (ftf?.selected || ftf?.unselected) &&
                             Number(ftf?.facility_type_id) !== FILTER_CAPACITY_TYPE_ID,
                     ).length;
+                    const hasCapacityFilter = group?.facility_type_children?.some(
+                        child => Number(child?.facility_type_id) === FILTER_CAPACITY_TYPE_ID,
+                    );
                     return (
                         <StyledFacilityGroup
                             key={`facility-group-${filterGroupId}`}
                             data-testid={`filter-group-block-${filterGroupId}`}
+                            className={hasCapacityFilter ? 'hasCapacityFilter' : undefined}
                         >
                             {showFilterGroupHeading(group, isGroupExpanded, numberChecked, filterGroupId, groupLength)}
                             {!!group?.facility_type_group_help && (

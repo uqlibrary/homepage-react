@@ -267,7 +267,24 @@ export const BookableSpacesList = ({
     }, []);
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
-    const [expandedSpaceId, setExpandedSpaceId] = useState(null);
+    const BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY = 'bookableSpacesSelectedSpaceId';
+    const [expandedSpaceId, setExpandedSpaceId] = useState(() => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return null;
+        }
+
+        try {
+            const rawSelectedSpaceId = window.sessionStorage.getItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            if (!rawSelectedSpaceId) {
+                return null;
+            }
+
+            const normalizedSelectedSpaceId = Number(rawSelectedSpaceId);
+            return Number.isFinite(normalizedSelectedSpaceId) ? normalizedSelectedSpaceId : null;
+        } catch {
+            return null;
+        }
+    });
     const [showFavouriteSpacesOnly, setShowFavouriteSpacesOnly] = useState(false);
     const [isMapReady, setIsMapReady] = useState(false);
     const useJourneyExperience = React.useMemo(() => !forceAdvanced, [forceAdvanced]);
@@ -284,14 +301,118 @@ export const BookableSpacesList = ({
         }, 3000);
     };
 
-    const handleSpaceSelect = useCallback(space => {
-        highlightPanel(space);
+    const scrollSelectedSpaceIntoView = useCallback(space => {
+        if (!space?.space_id || typeof document === 'undefined') {
+            return;
+        }
 
-        // show space's location on the map
-        mapRef.current?.flyToSpace(space, ZOOM_IN_TO_LIBRARY);
+        const spaceElement = document.getElementById(`space-${space.space_id}`);
+        if (!spaceElement) {
+            return;
+        }
+
+        const scrollContainer = spaceElement.closest('#space-wrapper') || document.getElementById('space-wrapper');
+        if (
+            scrollContainer &&
+            scrollContainer.contains(spaceElement) &&
+            typeof scrollContainer.scrollTo === 'function'
+        ) {
+            const containerRect = scrollContainer.getBoundingClientRect();
+            const spaceRect = spaceElement.getBoundingClientRect();
+            const nextTop = Math.max(0, scrollContainer.scrollTop + (spaceRect.top - containerRect.top) - 12);
+            scrollContainer.scrollTo({ top: nextTop, behavior: 'smooth' });
+            return;
+        }
+
+        const contentMain = document.getElementById('content') || document.querySelector('main');
+        if (contentMain && contentMain.contains(spaceElement) && typeof contentMain.scrollTo === 'function') {
+            const mainRect = contentMain.getBoundingClientRect();
+            const spaceRect = spaceElement.getBoundingClientRect();
+            const nextTop = Math.max(0, contentMain.scrollTop + (spaceRect.top - mainRect.top) - 12);
+            contentMain.scrollTo({ top: nextTop, behavior: 'smooth' });
+            return;
+        }
+
+        if (typeof spaceElement.scrollIntoView === 'function') {
+            spaceElement.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+        }
     }, []);
 
-    const [selectedLibrary, setSelectedLibrary] = React.useState(ALL_LIBRARIES_ID);
+    const persistSelectedSpaceId = useCallback(
+        spaceId => {
+            if (!Number.isFinite(Number(spaceId))) {
+                return;
+            }
+
+            if (typeof window !== 'undefined' && window.sessionStorage) {
+                window.sessionStorage.setItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, String(Number(spaceId)));
+            }
+        },
+        [BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY],
+    );
+
+    const selectSpace = useCallback(
+        space => {
+            highlightPanel(space);
+            if (space?.space_id) {
+                const normalizedSpaceId = Number(space.space_id);
+                setExpandedSpaceId(normalizedSpaceId);
+                persistSelectedSpaceId(normalizedSpaceId);
+            }
+
+            scrollSelectedSpaceIntoView(space);
+        },
+        [persistSelectedSpaceId, scrollSelectedSpaceIntoView],
+    );
+
+    const handleSpaceSelect = useCallback(
+        space => {
+            selectSpace(space);
+
+            // show space's location on the map
+            mapRef.current?.flyToSpace(space, ZOOM_IN_TO_LIBRARY);
+        },
+        [selectSpace],
+    );
+
+    const getPersistedSelectedSpaceId = React.useCallback(() => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return null;
+        }
+
+        try {
+            const rawSelectedSpaceId = window.sessionStorage.getItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            if (!rawSelectedSpaceId) {
+                return null;
+            }
+
+            const normalizedSelectedSpaceId = Number(rawSelectedSpaceId);
+            return Number.isFinite(normalizedSelectedSpaceId) ? normalizedSelectedSpaceId : null;
+        } catch {
+            return null;
+        }
+    }, [BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY]);
+
+    const getPersistedJourneyLiveFilterState = React.useCallback(() => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return null;
+        }
+
+        try {
+            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            return rawState ? JSON.parse(rawState) : null;
+        } catch {
+            return null;
+        }
+    }, []);
+
+    const [selectedLibrary, setSelectedLibrary] = React.useState(() => {
+        const persistedLiveState = getPersistedJourneyLiveFilterState();
+        const persistedLibraryId = Number(persistedLiveState?.selectedLibrary);
+        return Number.isFinite(persistedLibraryId) && persistedLibraryId !== ALL_LIBRARIES_ID
+            ? persistedLibraryId
+            : ALL_LIBRARIES_ID;
+    });
 
     const handleSpaceToggle = useCallback(
         (space, shouldExpand) => {
@@ -307,10 +428,62 @@ export const BookableSpacesList = ({
 
             if (expandedSpaceId === space.space_id) {
                 setExpandedSpaceId(null);
+                if (typeof window !== 'undefined' && window.sessionStorage) {
+                    window.sessionStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+                }
             }
         },
-        [expandedSpaceId, handleSpaceSelect],
+        [BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, expandedSpaceId, handleSpaceSelect],
     );
+
+    React.useEffect(() => {
+        if (useJourneyExperience || typeof window === 'undefined' || !window.sessionStorage) {
+            return;
+        }
+
+        if (expandedSpaceId === null || expandedSpaceId === undefined) {
+            window.sessionStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            return;
+        }
+
+        window.sessionStorage.setItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, String(expandedSpaceId));
+    }, [BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, expandedSpaceId, useJourneyExperience]);
+
+    React.useEffect(() => {
+        if (useJourneyExperience || !isMapReady || !sortedSpaceLocations?.length) {
+            return;
+        }
+
+        const savedSelectedSpaceId = getPersistedSelectedSpaceId();
+        if (savedSelectedSpaceId === null) {
+            return;
+        }
+
+        const selectedSpace = sortedSpaceLocations.find(
+            space => Number(space?.space_id) === Number(savedSelectedSpaceId),
+        );
+
+        if (!selectedSpace) {
+            if (typeof window !== 'undefined' && window.sessionStorage) {
+                window.sessionStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            }
+            setExpandedSpaceId(null);
+            return;
+        }
+
+        if (Number(expandedSpaceId) !== Number(savedSelectedSpaceId)) {
+            setExpandedSpaceId(Number(savedSelectedSpaceId));
+        }
+
+        mapRef.current?.flyToSpace(selectedSpace, ZOOM_IN_TO_LIBRARY);
+    }, [
+        BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY,
+        expandedSpaceId,
+        getPersistedSelectedSpaceId,
+        isMapReady,
+        sortedSpaceLocations,
+        useJourneyExperience,
+    ]);
 
     const [cookies, setCookie, removeCookie] = useCookies();
 
@@ -354,16 +527,22 @@ export const BookableSpacesList = ({
         [campusList],
     );
     const getCampusInitialState = React.useCallback(() => {
+        const persistedLiveState = getPersistedJourneyLiveFilterState();
+        const persistedCampusId = Number(persistedLiveState?.selectedCampus);
+        if (Number.isFinite(persistedCampusId) && persistedCampusId !== ALL_CAMPUSES_ID) {
+            return correctedCampusId(persistedCampusId);
+        }
+
         const spacesPreferredCampus = getCampusCookieValue();
         if (typeof spacesPreferredCampus === 'string' && spacesPreferredCampus.trim() !== '') {
             const parsedCampusId = Number.parseInt(spacesPreferredCampus, 10);
             if (Number.isNaN(parsedCampusId) || parsedCampusId === ALL_CAMPUSES_ID) {
                 return ALL_CAMPUSES_ID;
             }
-            return parsedCampusId;
+            return correctedCampusId(parsedCampusId);
         }
         return ALL_CAMPUSES_ID;
-    }, [getCampusCookieValue]);
+    }, [correctedCampusId, getCampusCookieValue, getPersistedJourneyLiveFilterState]);
     const [selectedCampus, setSelectedCampus] = React.useState(() => getCampusInitialState());
     const hasInitialisedCampusFromCookie = React.useRef(false);
 
@@ -576,14 +755,53 @@ export const BookableSpacesList = ({
         setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
         setShowFavouriteSpacesOnly(false);
 
-        if (typeof window !== 'undefined') {
-            window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        if (typeof window !== 'undefined' && window.sessionStorage) {
+            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            const nextPersistedState = rawState
+                ? JSON.parse(rawState)
+                : {
+                      ...(Number(selectedCampus) !== 0 ? { selectedCampus } : {}),
+                      ...(Number(selectedLibrary) !== 0 ? { selectedLibrary } : {}),
+                  };
+
+            if (nextPersistedState && typeof nextPersistedState === 'object') {
+                delete nextPersistedState.capacityFilterValue;
+                delete nextPersistedState.selectedFacilityTypes;
+                delete nextPersistedState.showFavouriteSpacesOnly;
+
+                const nextState = {
+                    ...(Number(selectedCampus) !== 0 ? { selectedCampus } : {}),
+                    ...(Number(selectedLibrary) !== 0 ? { selectedLibrary } : {}),
+                };
+
+                const persistedState = {
+                    ...nextPersistedState,
+                    ...nextState,
+                };
+
+                if (Object.keys(persistedState).length === 0) {
+                    window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+                } else {
+                    window.sessionStorage.setItem(
+                        JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
+                        JSON.stringify(persistedState),
+                    );
+                }
+            }
+
             window.sessionStorage.setItem(
                 JOURNEY_VIEW_STATE_STORAGE_KEY,
                 JSON.stringify({ view: 'results', intentId: null, spaceId: null }),
             );
         }
-    }, [maximumSpaceCapacity, minimumSpaceCapacity, selectedFacilityTypes, setSelectedFacilityTypes]);
+    }, [
+        maximumSpaceCapacity,
+        minimumSpaceCapacity,
+        selectedCampus,
+        selectedLibrary,
+        selectedFacilityTypes,
+        setSelectedFacilityTypes,
+    ]);
 
     const goToJourney = () => {
         const nextUrl = buildJourneyNavigationUrl({
@@ -1049,13 +1267,32 @@ export const BookableSpacesList = ({
 
             const hasAppliedFavouriteFilter = Boolean(showFavouriteSpacesOnly);
 
-            const statePayload = {
+            let statePayload = {
                 ...(appliedFacilityFilters.length > 0 ? { selectedFacilityTypes: appliedFacilityFilters } : {}),
                 ...(hasAppliedCampusFilter ? { selectedCampus: normalizedCampusId } : {}),
                 ...(hasAppliedLibraryFilter ? { selectedLibrary: normalizedLibraryId } : {}),
                 ...(persistedCapacityFilterValue ? { capacityFilterValue: persistedCapacityFilterValue } : {}),
                 ...(hasAppliedFavouriteFilter ? { showFavouriteSpacesOnly: true } : {}),
             };
+
+            const rawExistingState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            if (!hasAppliedCapacityFilter && rawExistingState) {
+                try {
+                    const parsedExistingState = JSON.parse(rawExistingState);
+                    if (
+                        parsedExistingState &&
+                        Object.prototype.hasOwnProperty.call(parsedExistingState, 'capacityFilterValue')
+                    ) {
+                        delete parsedExistingState.capacityFilterValue;
+                        statePayload = {
+                            ...parsedExistingState,
+                            ...statePayload,
+                        };
+                    }
+                } catch (error) {
+                    // Ignore malformed state and continue with the plain payload.
+                }
+            }
 
             if (Object.keys(statePayload).length === 0) {
                 window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
@@ -1088,18 +1325,26 @@ export const BookableSpacesList = ({
         }
 
         const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
-        if (!flatFacilityTypeList?.length) {
-            return;
-        }
 
         try {
             const parsedState = JSON.parse(rawState);
+
+            if (Number.isFinite(Number(parsedState?.selectedCampus))) {
+                setSelectedCampus(Number(parsedState.selectedCampus));
+            }
+            if (Number.isFinite(Number(parsedState?.selectedLibrary))) {
+                setSelectedLibrary(Number(parsedState.selectedLibrary));
+            }
 
             const appliedFacilityFilters = Array.isArray(parsedState?.selectedFacilityTypes)
                 ? parsedState.selectedFacilityTypes.filter(filter => filter?.selected)
                 : [];
 
-            if (appliedFacilityFilters.length > 0) {
+            if (
+                appliedFacilityFilters.length > 0 &&
+                Array.isArray(flatFacilityTypeList) &&
+                flatFacilityTypeList.length > 0
+            ) {
                 setSelectedFacilityTypes(appliedFacilityFilters);
             }
             if (Array.isArray(parsedState?.capacityFilterValue) && parsedState.capacityFilterValue.length > 0) {
@@ -1349,19 +1594,10 @@ export const BookableSpacesList = ({
         eventToStop?.stopPropagation?.();
         eventToStop?.preventDefault?.();
 
-        // scroll the spaces sidebar to the relevant space
+        selectSpace(space);
+
         const spaceElement = document.getElementById(`space-${space?.space_id}`);
-        !!spaceElement &&
-            typeof spaceElement?.scrollIntoView === 'function' &&
-            spaceElement?.scrollIntoView({
-                behavior: 'smooth',
-            });
-
-        highlightPanel(space);
-
         !!spaceElement && spaceElement?.focus();
-
-        setExpandedSpaceId(space?.space_id ?? null);
     };
 
     const hasActiveCapacityFilter =

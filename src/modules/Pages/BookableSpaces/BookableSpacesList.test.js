@@ -18,6 +18,7 @@ const mockRemoveCookie = jest.fn();
 const mockJourneyRender = jest.fn();
 const mockSidebarRender = jest.fn();
 const mockSidebarListRender = jest.fn();
+const mockMapRender = jest.fn();
 
 jest.mock('data/actions/drupalArticlesActions', () => ({
     loadDrupalArticles: () => ({ type: 'LOAD_DRUPAL_ARTICLES' }),
@@ -84,6 +85,7 @@ jest.mock('modules/Pages/BookableSpaces/Shared/BookableSpacesMap', () => {
     const ReactModule = jest.requireActual('react');
 
     return ReactModule.forwardRef(function MockBookableSpacesMap(props, ref) {
+        mockMapRender(props);
         ReactModule.useImperativeHandle(ref, () => ({
             flyToSpace: mockFlyToSpace,
         }));
@@ -202,6 +204,79 @@ describe('BookableSpacesList campus selection', () => {
         const latestSidebarProps = mockSidebarRender.mock.calls[mockSidebarRender.mock.calls.length - 1][0];
 
         expect(latestSidebarProps.selectedCampus).toBe(0);
+    });
+
+    it('scrolls the selected space to the top of the right-hand list when it is chosen', () => {
+        const spaceWrapper = document.createElement('div');
+        spaceWrapper.id = 'space-wrapper';
+        spaceWrapper.scrollTo = jest.fn();
+        spaceWrapper.scrollTop = 120;
+
+        const spaceElement = document.createElement('div');
+        spaceElement.id = 'space-101';
+        Object.defineProperty(spaceElement, 'getBoundingClientRect', {
+            value: () => ({ top: 40, left: 0, right: 0, bottom: 0, width: 0, height: 0 }),
+        });
+        spaceWrapper.appendChild(spaceElement);
+        document.body.appendChild(spaceWrapper);
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        const latestSidebarListProps = mockSidebarListRender.mock.calls.at(-1)[0];
+        act(() => {
+            latestSidebarListProps.onSpaceSelect(baseProps.bookableSpacesRoomList.data.locations[0]);
+        });
+
+        expect(spaceWrapper.scrollTo).toHaveBeenCalledWith({
+            top: expect.any(Number),
+            behavior: 'smooth',
+        });
+
+        document.body.removeChild(spaceWrapper);
+    });
+
+    it('keeps the most recently selected map pin active instead of restoring the stale session value', async () => {
+        window.sessionStorage.setItem('bookableSpacesSelectedSpaceId', '101');
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockMapRender).toHaveBeenCalled());
+        const latestMapProps = mockMapRender.mock.calls.at(-1)[0];
+
+        act(() => {
+            latestMapProps.onMarkerClick(
+                { originalEvent: { stopPropagation: jest.fn(), preventDefault: jest.fn() } },
+                baseProps.bookableSpacesRoomList.data.locations[1],
+            );
+        });
+
+        await waitFor(() => expect(window.sessionStorage.getItem('bookableSpacesSelectedSpaceId')).toBe('201'));
+
+        const latestSidebarListProps = mockSidebarListRender.mock.calls.at(-1)[0];
+        expect(latestSidebarListProps.expandedSpaceId).toBe(201);
+    });
+
+    it('restores the previously selected space from session storage on the map view', async () => {
+        window.sessionStorage.setItem('bookableSpacesSelectedSpaceId', '201');
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarListRender).toHaveBeenCalled());
+        const latestSidebarListProps = mockSidebarListRender.mock.calls.at(-1)[0];
+
+        expect(latestSidebarListProps.expandedSpaceId).toBe(201);
     });
 
     it('does not throw when the selected campus has no locations to centre on', () => {
@@ -422,6 +497,43 @@ describe('BookableSpacesList campus selection', () => {
         });
     });
 
+    it('removes a stale capacityFilterValue from session storage when the default range is restored', async () => {
+        window.history.replaceState({}, '', '/spaces/results/');
+        window.sessionStorage.setItem(
+            JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
+            JSON.stringify({
+                selectedFacilityTypes: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_id: 11,
+                        selected: true,
+                        unselected: false,
+                        facility_special_action: null,
+                    },
+                ],
+                capacityFilterValue: [4, 8],
+            }),
+        );
+
+        rtlRender(
+            <WithRouter route="/spaces/results/" initialEntries={['/spaces/results/']}>
+                <BookableSpacesList {...baseProps} forceAdvanced={false} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockJourneyRender).toHaveBeenCalled());
+        const latestJourneyProps = mockJourneyRender.mock.calls[mockJourneyRender.mock.calls.length - 1][0];
+
+        act(() => {
+            latestJourneyProps.setCapacityFilterValue([1, 6]);
+        });
+
+        await waitFor(() => {
+            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            expect(rawState).not.toContain('capacityFilterValue');
+        });
+    });
+
     it('restores live filter state from session storage on refresh of results route', async () => {
         window.history.replaceState({}, '', '/spaces/results/');
 
@@ -436,6 +548,8 @@ describe('BookableSpacesList campus selection', () => {
                     facility_special_action: null,
                 },
             ],
+            selectedCampus: 2,
+            selectedLibrary: 7,
             capacityFilterValue: [4, 8],
             showFavouriteSpacesOnly: true,
             createdAt: Date.now(),
@@ -461,6 +575,8 @@ describe('BookableSpacesList campus selection', () => {
                 }),
             ]),
         );
+        expect(latestJourneyProps.selectedCampus).toBe(2);
+        expect(latestJourneyProps.selectedLibrary).toBe(7);
         expect(latestJourneyProps.capacityFilterValue).toEqual([4, 8]);
         expect(latestJourneyProps.showFavouriteSpacesOnly).toBe(true);
     });

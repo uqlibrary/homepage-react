@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import OpenSpaceNewWindowButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceNewWindowButton';
+import OpenSpaceDetailsButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceDetailsButton';
 import MapSpaceDetails from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/MapSpaceDetails';
 
 import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
@@ -117,7 +117,7 @@ const SidebarSpacesList = ({
                                         </span>
                                         {isExpanded && (
                                             <span className="openNewWrapper" style={{ paddingBlock: '0.2rem' }}>
-                                                <OpenSpaceNewWindowButton spaceDetails={bookableSpace} />
+                                                <OpenSpaceDetailsButton spaceDetails={bookableSpace} />
                                             </span>
                                         )}
                                     </StyledHeadingWrapperSpan>

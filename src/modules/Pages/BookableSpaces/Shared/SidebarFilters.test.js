@@ -78,6 +78,21 @@ describe('SidebarFilters campus selector', () => {
         },
     ];
 
+    it('puts the reset filters control in the sidebar header and removes the legacy remove-all button', () => {
+        renderWithTheme({
+            ...baseProps,
+            onResetAllFilters: jest.fn(),
+            activeFilterCount: 1,
+            selectedFacilityTypes: selectedNaturalLightFilter,
+            filteredFacilityTypeList: facilityGroupFixture,
+            facilityTypeList: facilityGroupFixture,
+        });
+
+        expect(screen.getByText('Filter Spaces')).toBeInTheDocument();
+        expect(screen.getByTestId('reset-filters-button')).toHaveTextContent('Reset filters');
+        expect(screen.queryByRole('button', { name: /remove all filters/i })).not.toBeInTheDocument();
+    });
+
     it('offers an all-campuses option in the campus selector', async () => {
         renderWithTheme(baseProps);
 
@@ -147,6 +162,47 @@ describe('SidebarFilters campus selector', () => {
 
         expect(screen.getByText('Space capacity')).toBeInTheDocument();
         expect(screen.getAllByRole('slider').length).toBeGreaterThan(0);
+    });
+
+    it('allows the left handle to render fully at the minimum value without clipping', () => {
+        const capacityGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: capacityGroupFixture,
+            filteredFacilityTypeList: capacityGroupFixture,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+            ],
+            capacityFilterValue: [1, 50],
+        });
+
+        const firstHandle = document.querySelector('.MuiSlider-thumb[data-index="0"]');
+        expect(firstHandle).not.toBeNull();
+        expect(getComputedStyle(firstHandle).marginLeft).toBe('0.7rem');
     });
 
     it('creates a selected capacity filter when the slider is changed before the filter exists in state', () => {
@@ -285,6 +341,60 @@ describe('SidebarFilters campus selector', () => {
         expect(latestState.find(f => f.facility_type_id === 9003)).toMatchObject({ selected: false });
         expect(latestState.find(f => f.facility_type_id === 57)).toMatchObject({ selected: true });
         expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
+    });
+
+    it('resets the capacity range when a different space type is selected', () => {
+        const setCapacityFilterValue = jest.fn();
+        const facilityList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [
+                            { facility_type_id: 57, facility_type_name: 'Natural light' },
+                            { facility_type_id: 9003, facility_type_name: 'Space capacity' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        const props = {
+            ...baseProps,
+            facilityTypeList: facilityList,
+            capacityFilterValue: [4, 8],
+            setCapacityFilterValue,
+            filteredFacilityTypeList: facilityList,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+            ],
+        };
+
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyLiveFilterState',
+            JSON.stringify({
+                capacityFilterValue: [4, 8],
+                selectedFacilityTypes: [{ facility_type_id: 9003, selected: true }],
+            }),
+        );
+
+        renderWithTheme(props);
+
+        fireEvent.click(screen.getByTestId('filtertype-57'));
+
+        expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
+        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).not.toContain(
+            'capacityFilterValue',
+        );
     });
 
     it('opens the parent group for journey intent preselected filters', async () => {

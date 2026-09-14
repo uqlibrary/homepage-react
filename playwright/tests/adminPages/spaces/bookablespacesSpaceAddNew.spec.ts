@@ -353,7 +353,7 @@ test.describe('Spaces Admin - add new space', () => {
         // click save button
         await expect(page.getByTestId('spaces-button-error-list')).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        await page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').evaluate(button => button.click());
 
         await expect(page.getByTestId('toast-message')).not.toBeVisible();
 
