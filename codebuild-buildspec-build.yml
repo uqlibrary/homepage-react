@@ -28,9 +28,6 @@ phases:
       - set
       - npm run build
       - ls dist
-  post_build:
-    commands:
-      if [ -f ./scripts/releaseNotes.sh ]; then ./scripts/releaseNotes.sh; fi
 artifacts:
   files:
     - '**/*'

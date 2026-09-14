@@ -85,20 +85,10 @@ function fix_coverage_report_paths() {
     sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' "$1"
 }
 
-function install_pw_deps() {
-    printf "\n--- \e[INSTALLING PW DEPS [STARTING AT $(date)] 1\e[0m ---\n"
-        sed -i 's|http://archive.ubuntu.com/ubuntu|http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
-        sed -i 's|http://security.ubuntu.com/ubuntu|http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
-        apt-get clean
-        apt-get update
-        npx playwright install chromium-headless-shell
-        npx playwright install-deps chromium-headless-shell
-        printf "\n--- \e[ENDED INSTALLING PW DEPS AT $(date)] 1\e[0m ---\n"
-}
-
 function run_pw_test_shard() {
     set -e
-    install_pw_deps
+    # Playwright and the chromium browser + its OS deps ship in the official Playwright CI image, so there
+    # is nothing to install here.
     export PW_SHARD_INDEX="$1"
 
     printf "\n--- \e[1mRUNNING E2E TESTS GROUP #${PW_SHARD_INDEX} [STARTING AT $(date)] 2\e[0m ---\n"
