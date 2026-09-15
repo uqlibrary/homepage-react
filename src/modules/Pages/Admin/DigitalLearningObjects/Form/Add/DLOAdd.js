@@ -77,6 +77,7 @@ export const DLOAdd = ({
         object_is_featured: 0,
         object_cultural_advice: 0,
         notificationText: '',
+        team_admin_username: '',
     };
 
     console.log('Form Defaults', formDefaults);

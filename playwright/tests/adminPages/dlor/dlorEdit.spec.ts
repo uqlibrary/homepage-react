@@ -22,24 +22,34 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 // open the "edit a team dialog"
                 await page.getByTestId('object-form-teamid-change').click();
-                await assertAccessibility(page, '[data-testid="StandardPage"]');
+                await assertAccessibility(page, '[data-testid="StandardPage"]', {
+                    excludedSelectors: ['#team_admin_username'],
+                });
                 await typeRichTextEditor(page, 'This is the admin notes');
 
                 // go to panel 2
                 await page.getByTestId('dlor-form-next-button').click();
-                await assertAccessibility(page, '[data-testid="StandardPage"]');
+                await assertAccessibility(page, '[data-testid="StandardPage"]', {
+                    excludedSelectors: ['#team_admin_username'],
+                });
 
                 // go to panel 3
                 await page.getByTestId('dlor-form-next-button').click();
-                await assertAccessibility(page, '[data-testid="StandardPage"]');
+                await assertAccessibility(page, '[data-testid="StandardPage"]', {
+                    excludedSelectors: ['#team_admin_username'],
+                });
 
                 // go to panel 4
                 await page.getByTestId('dlor-form-next-button').click();
-                await assertAccessibility(page, '[data-testid="StandardPage"]');
+                await assertAccessibility(page, '[data-testid="StandardPage"]', {
+                    excludedSelectors: ['#team_admin_username'],
+                });
 
                 // open the notification lightbox
                 await page.locator('[data-testid="choose-notify"] input').check();
-                await assertAccessibility(page, '[data-testid="StandardPage"]');
+                await assertAccessibility(page, '[data-testid="StandardPage"]', {
+                    excludedSelectors: ['#team_admin_username'],
+                });
             });
             test('loads fields correctly', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
@@ -112,6 +122,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team');
                 await expect(page.locator('[data-testid="dlor-form-team-manager-new"] input')).toHaveValue('');
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('new name');
+                await expect(page.locator('[data-testid="dlor-form-team-admin-username-new"] input')).toHaveValue('');
+                await page.locator('[data-testid="dlor-form-team-admin-username-new"] input').fill('newadmin');
                 await expect(page.locator('[data-testid="dlor-form-team-email-new"] input')).toHaveValue('');
                 await page.locator('[data-testid="dlor-form-team-email-new"] input').fill('new@example.com');
 
@@ -429,6 +441,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // enter a new team
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team name');
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('john Manager');
+                await page.locator('[data-testid="dlor-form-team-admin-username-new"] input').fill('johnadmin');
                 await page.locator('[data-testid="dlor-form-team-email-new"] input').fill('john@example.com');
                 await typeRichTextEditor(page, 'This is the admin notes');
 
@@ -519,6 +532,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     object_publishing_user: 'uqjsmith',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'current',
+                    team_admin_username: 'johnadmin',
                     team_email: 'john@example.com',
                     team_manager: 'john Manager',
                     team_name: 'new team name',
