@@ -88,7 +88,7 @@ describe('SidebarFilters campus selector', () => {
             facilityTypeList: facilityGroupFixture,
         });
 
-        expect(screen.getByText('Filter Spaces')).toBeInTheDocument();
+        expect(screen.getByText('Filter spaces')).toBeInTheDocument();
         expect(screen.getByTestId('reset-filters-button')).toHaveTextContent('Reset filters');
         expect(screen.queryByRole('button', { name: /remove all filters/i })).not.toBeInTheDocument();
     });

@@ -42,7 +42,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
+            await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter spaces');
 
             // all space panels load visible (using filters changes which appear)
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
@@ -415,7 +415,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
             await assertAccessibility(page, '[data-testid="library-spaces"]');
         });
@@ -423,7 +423,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
             const panelOpenerButton = `${ARCH_REFERENCE}-toggle-panel-button`;
             await expect(page.getByTestId(panelOpenerButton)).toBeVisible();
@@ -444,7 +444,7 @@ test.describe('Spaces', () => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces/mapresults');
-        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
         await expect(page.getByTestId(`${ARCH_REFERENCE}`).locator('h3')).toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel')).toBeVisible();
@@ -518,7 +518,7 @@ test.describe('Spaces', () => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await page.goto('spaces/mapresults');
-        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute(
@@ -544,7 +544,7 @@ test.describe('Spaces', () => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces/mapresults');
-        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
         await expect(page.getByTestId(`${ARCH_REFERENCE}`).locator('h3')).toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel')).toBeVisible();
@@ -570,7 +570,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
         });
 
         test('can filter with sidebar checkboxes', async ({ page }) => {
@@ -872,7 +872,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
             const currentlyOpenCheckbox = page.getByTestId('facility-type-listitem-9001');
 
@@ -1048,13 +1048,13 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
         });
 
         test('sidebar filter type group open-collapse loads correctly', async ({ page }) => {
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             // ON THIS FLOOR LOADS CLOSED
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)).toBeVisible();
@@ -1106,7 +1106,7 @@ test.describe('Spaces', () => {
         test('collapsing an open sidebar filter type group shows correctly', async ({ page }) => {
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             await expect(filterGroup(FILTER_GROUP_LIGHTING, page)).toBeVisible();
             await expect(
@@ -1159,7 +1159,7 @@ test.describe('Spaces', () => {
             // "on this floor" loads collapsed. Confirm we can open it
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             // the group loads collapsed, as expected
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)).toBeVisible();
@@ -1213,7 +1213,7 @@ test.describe('Spaces', () => {
         test('multiple open-collapse sidebar filter type group shows correctly', async ({ page }) => {
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             // sidebar filter types group load open-collapsedness as expected
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
@@ -1273,7 +1273,7 @@ test.describe('Spaces', () => {
         test('sidebar filter type groups show count when selected and collapsed', async ({ page }) => {
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             const openCountTestId = (groupId: number) => `facility-type-group-${groupId}-expanded-count`;
 
@@ -1323,7 +1323,7 @@ test.describe('Spaces', () => {
         }) => {
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             const openCountTestId = (groupId: number) => `facility-type-group-${groupId}-expanded-count`;
 
@@ -1387,7 +1387,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
             // all space panels load visible (using filters changes which appear)
             await expect(spacePanelWrapper).toHaveCount(all + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
@@ -1460,7 +1460,7 @@ test.describe('Spaces', () => {
             await disableMazeMapAssets(page);
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
             // all space panels load visible (using filters changes which appear)
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
@@ -1739,7 +1739,7 @@ test.describe('Spaces errors', () => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces/mapresults?responseType=weeklyHoursError');
-        await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
+        await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter spaces');
 
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-weekly-hours-error`)).toBeVisible();
