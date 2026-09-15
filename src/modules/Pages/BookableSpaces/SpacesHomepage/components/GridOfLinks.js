@@ -28,9 +28,6 @@ const StyledListItem = styled('div')(({ theme }) => ({
     minHeight: '4rem',
     display: 'flex',
     alignItems: 'stretch',
-    '&:last-of-type': {
-        borderBottom: 0,
-    },
 }));
 
 const linkStyles = ({ theme }) => ({
@@ -40,7 +37,7 @@ const linkStyles = ({ theme }) => ({
     width: '100%',
     gap: '1rem',
     color: theme.palette.primary.main,
-    fontSize: '1.05rem',
+    fontSize: '16px',
     lineHeight: 1.3,
     fontWeight: 500,
     textDecoration: 'none',
@@ -54,7 +51,6 @@ const linkStyles = ({ theme }) => ({
     },
     '& span:first-of-type': {
         display: 'inline-block',
-        paddingLeft: '0.25rem',
         overflowWrap: 'anywhere',
         textDecoration: 'none',
         transition: 'background-color 200ms ease-out, color 200ms ease-out, text-decoration 200ms ease-out',
@@ -69,6 +65,7 @@ const linkStyles = ({ theme }) => ({
         lineHeight: 1,
         marginLeft: 'auto',
         transform: 'translateY(-0.04em)',
+        fontWeight: 300,
         textDecoration: 'none !important',
         color: 'inherit',
         backgroundColor: 'transparent',
