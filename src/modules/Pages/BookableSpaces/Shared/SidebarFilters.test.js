@@ -332,7 +332,7 @@ describe('SidebarFilters campus selector', () => {
 
         renderWithTheme(props);
 
-        expect(screen.getByTestId('space-filter-count')).toHaveTextContent('Active filters 1');
+        expect(screen.getByTestId('space-filter-count')).toHaveTextContent('Active filters: 1');
         expect(screen.queryByTestId('button-deselect-selected-capacity')).not.toBeInTheDocument();
         fireEvent.click(screen.getByTestId('button-deselect-selected-9003'));
 

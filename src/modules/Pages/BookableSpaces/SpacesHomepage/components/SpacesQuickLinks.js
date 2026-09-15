@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 
 import SingleLinkCard from 'modules/HomePage/publicComponents/HelpNavigation/SingleLinkCard';
 
+import GridOfLinks from 'modules/Pages/BookableSpaces/SpacesHomepage/components/GridOfLinks';
 import { StyledHeaderWithLinkToAllGridItem } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomepageStyles';
 import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
@@ -17,12 +18,12 @@ const StyledBrowseAllSpacesCard = styled('section')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     rowGap: '0.5rem',
-    marginTop: '2rem',
+    marginTop: 'calc(2rem + 8px)',
     backgroundColor: '#f3f3f5',
     borderRadius: '4px',
     padding: '1.5rem',
     [theme.breakpoints.down('sm')]: {
-        marginTop: '1.5rem',
+        marginTop: 'calc(1.5rem + 8px)',
         padding: '1.25rem',
     },
     '& h3': {
@@ -153,6 +154,37 @@ export const SpacesQuickLinks = ({
                     </Link>
                 </div>
             </StyledBrowseAllSpacesCard>
+
+            <GridOfLinks
+                title="Using library spaces"
+                links={[
+                    {
+                        key: 'book-space',
+                        label: 'Book a library study space',
+                        href: 'https://web.library.uq.edu.au/visit/using-library-study-spaces#bookings',
+                    },
+                    {
+                        key: 'using-spaces',
+                        label: 'Using library spaces',
+                        href: 'https://web.library.uq.edu.au/visit/using-library-study-spaces',
+                    },
+                    {
+                        key: 'opening-hours',
+                        label: 'Opening hours',
+                        href: 'https://web.library.uq.edu.au/visit/all-opening-hours',
+                    },
+                    {
+                        key: 'about-facilities',
+                        label: 'About our facilities',
+                        href: 'https://web.library.uq.edu.au/visit/library-facilities',
+                    },
+                    {
+                        key: 'support-accessibility',
+                        label: 'Support for clients with disability',
+                        href: 'https://web.library.uq.edu.au/study-and-learning-support/support-clients-disability',
+                    },
+                ]}
+            />
         </Box>
     );
 };
