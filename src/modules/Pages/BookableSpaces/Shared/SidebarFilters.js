@@ -1073,7 +1073,7 @@ export const SidebarFilters = ({
                         disableFocusRipple
                         sx={{
                             ml: 'auto',
-                            mr: 0,
+                            mr: '5px',
                             px: 0,
                             py: 0,
                             minWidth: 0,
