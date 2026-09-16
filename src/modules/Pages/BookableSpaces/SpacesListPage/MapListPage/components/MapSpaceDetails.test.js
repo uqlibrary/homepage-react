@@ -14,6 +14,32 @@ jest.mock(
     () => 'mock-journey-detail-image',
 );
 
+describe('MapSpaceDetails collapsed summary', () => {
+    it('matches the content shown in a journey result', () => {
+        rtlRender(
+            <MapSpaceDetails
+                weeklyHours={[]}
+                weeklyHoursLoading={false}
+                weeklyHoursError={null}
+                collapsed
+                bookableSpace={{
+                    space_id: 42,
+                    space_name: 'Window seat',
+                    space_library_name: 'Central Library',
+                    space_type_details: { space_type_description: 'Individual study space' },
+                    space_description: '<p>Quiet area near the windows.</p>',
+                    space_external_book_url: 'https://example.com/book',
+                }}
+            />,
+        );
+
+        expect(screen.getByText('Central Library')).toBeInTheDocument();
+        expect(screen.getByText('Individual study space')).toBeInTheDocument();
+        expect(screen.getByTestId('space-42-description')).toHaveTextContent('Quiet area near the windows.');
+        expect(screen.getByRole('link', { name: /book this space/i })).toBeInTheDocument();
+    });
+});
+
 describe('MapSpaceDetails outage notices', () => {
     afterEach(() => {
         MockDate.reset();
@@ -52,6 +78,7 @@ describe('MapSpaceDetails outage notices', () => {
         );
 
         expect(screen.getByText('Current closure')).toBeInTheDocument();
+        expect(screen.queryByText('Currently closed')).not.toBeInTheDocument();
         expect(screen.getByTestId('space-123-outage-message')).toHaveTextContent(
             'Currently unavailable until 10:00am 1 January 2999.',
         );
