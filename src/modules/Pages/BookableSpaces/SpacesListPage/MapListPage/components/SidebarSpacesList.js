@@ -15,7 +15,7 @@ const StyledHeadingWrapperSpan = styled(Grid)(() => ({
     alignItems: 'center',
     paddingRight: '1rem',
     '& .spaceTitle': {
-        paddingLeft: '6px',
+        paddingLeft: 0,
         paddingRight: '15px',
     },
     '&:has(.openNewWrapper)': {
