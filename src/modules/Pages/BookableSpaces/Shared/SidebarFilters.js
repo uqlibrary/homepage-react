@@ -1063,13 +1063,21 @@ export const SidebarFilters = ({
                     <Button
                         type="button"
                         data-testid="reset-filters-button"
-                        onClick={handleResetFiltersButtonClick}
+                        onMouseDown={event => event.preventDefault()}
+                        onClick={event => {
+                            event.currentTarget.blur();
+                            handleResetFiltersButtonClick();
+                        }}
                         variant="text"
+                        disableRipple
+                        disableFocusRipple
                         sx={{
                             ml: 'auto',
                             mr: 0,
-                            p: 0,
+                            px: 0,
+                            py: 0,
                             minWidth: 0,
+                            lineHeight: 1,
                             borderRadius: 0,
                             border: 'none',
                             boxShadow: 'none',
@@ -1083,11 +1091,19 @@ export const SidebarFilters = ({
                                 mr: '30px',
                                 ml: '0.25rem',
                             },
-                            '&:hover, &:focus': {
+                            '&:hover': {
                                 backgroundColor: theme.palette.primary.main,
                                 color: '#fff',
                                 textDecoration: 'underline',
                                 boxShadow: 'none',
+                                py: '1px',
+                            },
+                            '&:focus, &:focus-visible, &:active': {
+                                backgroundColor: 'transparent',
+                                color: theme.palette.primary.main,
+                                textDecoration: 'underline',
+                                boxShadow: 'none',
+                                outline: 'none',
                             },
                         }}
                     >
