@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 import UqDsExclamationCircle from '../Icons/UqDsExclamationCircle';
 
 const StyledAttentionDiv = styled('div', {
-    shouldForwardProp: prop => !['tone', 'variant'].includes(prop),
-})(({ theme, tone, variant }) => {
+    shouldForwardProp: prop => !['tone', 'variant', 'hasTitle'].includes(prop),
+})(({ theme, tone, variant, hasTitle }) => {
     if (variant === 'aligned') {
         return {
             backgroundColor:
@@ -22,7 +22,10 @@ const StyledAttentionDiv = styled('div', {
                 alignItems: 'start',
             },
             '& .uq-userattention-icon': {
-                marginTop: '2px',
+                marginTop: hasTitle ? '2px' : 0,
+                display: 'flex',
+                alignItems: 'flex-start',
+                alignSelf: 'flex-start',
                 '& svg': {
                     height: '22px',
                     width: '22px',
@@ -42,8 +45,11 @@ const StyledAttentionDiv = styled('div', {
             },
             '& .uq-userattention-content p': {
                 color: theme.palette.designSystem.headingColor,
-                marginTop: '0.5rem',
+                marginTop: hasTitle ? '0.5rem' : 0,
                 marginBottom: 0,
+            },
+            '& .uq-userattention-content > p:first-child': {
+                marginTop: 0,
             },
         };
     }
@@ -66,16 +72,25 @@ const StyledAttentionDiv = styled('div', {
     };
 });
 
-const UserAttention = ({ titleText, children, tone = 'warning', variant = 'legacy', headingLevel = 'h4' }) => {
+const UserAttention = ({
+    titleText,
+    children,
+    tone = 'warning',
+    variant = 'legacy',
+    headingLevel = 'h4',
+    hasTitle = true,
+}) => {
+    const shouldRenderTitle = hasTitle && Boolean(titleText);
+
     if (variant === 'aligned') {
         return (
-            <StyledAttentionDiv tone={tone} variant={variant}>
+            <StyledAttentionDiv tone={tone} variant={variant} hasTitle={shouldRenderTitle}>
                 <div className="uq-userattention-row">
                     <div className="uq-userattention-icon" aria-hidden="true">
                         <UqDsExclamationCircle />
                     </div>
                     <div className="uq-userattention-content">
-                        <Typography component={headingLevel}>{titleText}</Typography>
+                        {shouldRenderTitle && <Typography component={headingLevel}>{titleText}</Typography>}
                         {children}
                     </div>
                 </div>
@@ -84,11 +99,13 @@ const UserAttention = ({ titleText, children, tone = 'warning', variant = 'legac
     }
 
     return (
-        <StyledAttentionDiv tone={tone} variant={variant}>
-            <Typography component={'h4'}>
-                <UqDsExclamationCircle />
-                <span>{titleText}</span>
-            </Typography>
+        <StyledAttentionDiv tone={tone} variant={variant} hasTitle={shouldRenderTitle}>
+            {shouldRenderTitle && (
+                <Typography component={'h4'}>
+                    <UqDsExclamationCircle />
+                    <span>{titleText}</span>
+                </Typography>
+            )}
             {children}
         </StyledAttentionDiv>
     );
@@ -100,6 +117,7 @@ UserAttention.propTypes = {
     tone: PropTypes.oneOf(['warning', 'error']),
     variant: PropTypes.oneOf(['legacy', 'aligned']),
     headingLevel: PropTypes.string,
+    hasTitle: PropTypes.bool,
 };
 
 export default UserAttention;

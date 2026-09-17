@@ -16,8 +16,33 @@ const StyledOutageNotice = styled('div')(() => ({
     marginBlock: '0.5rem',
     '& p': {
         marginTop: '0.5rem',
+        marginBottom: 0,
     },
 }));
+
+const StatusText = styled('span')(({ theme }) => ({
+    fontWeight: 700,
+    color: theme.palette.designSystem.headingColor,
+}));
+
+const MONTH_SHORT_LABELS = {
+    Jan: 'Jan.',
+    Feb: 'Feb.',
+    Mar: 'Mar.',
+    Apr: 'Apr.',
+    May: 'May',
+    Jun: 'Jun.',
+    Jul: 'Jul.',
+    Aug: 'Aug.',
+    Sep: 'Sept.',
+    Oct: 'Oct.',
+    Nov: 'Nov.',
+    Dec: 'Dec.',
+};
+
+const formatShortMonth = date => MONTH_SHORT_LABELS[date.format('MMM')] || date.format('MMM');
+
+const formatShortMonthDate = date => `${date.format('D')} ${formatShortMonth(date)} ${date.format('YYYY')}`;
 
 export const formatSpaceOutageDateTimeForPublicNotice = value => {
     const parsedDate = parseSpaceOutageDate(value);
@@ -41,25 +66,25 @@ export const formatSpaceOutageRangeForPublicNotice = (startValue, endValue, show
 
     if (!showTimePublic) {
         if (startDate.isSame(endDate, 'day')) {
-            return startDate.format('D MMMM YYYY');
+            return formatShortMonthDate(startDate);
         }
 
         if (sameYear) {
-            return `${startDate.format('D MMMM')} to ${endDate.format('D MMMM YYYY')}`;
+            return `${startDate.format('D')} ${formatShortMonth(startDate)} to ${endDate.format('D')} ${formatShortMonth(endDate)} ${endDate.format('YYYY')}`;
         }
 
-        return `${startDate.format('D MMMM YYYY')} to ${endDate.format('D MMMM YYYY')}`;
+        return `${formatShortMonthDate(startDate)} to ${formatShortMonthDate(endDate)}`;
     }
 
     if (startDate.isSame(endDate, 'day')) {
-        return `${startDate.format('h:mma')} to ${endDate.format('h:mma')} on ${startDate.format('D MMMM YYYY')}`;
+        return `${startDate.format('h:mma')} to ${endDate.format('h:mma')} on ${formatShortMonthDate(startDate)}`;
     }
 
     if (sameYear) {
-        return `${startDate.format('h:mma D MMMM')} to ${endDate.format('h:mma D MMMM YYYY')}`;
+        return `${startDate.format('h:mma')} ${startDate.format('D')} ${formatShortMonth(startDate)} to ${endDate.format('h:mma')} ${endDate.format('D')} ${formatShortMonth(endDate)} ${endDate.format('YYYY')}`;
     }
 
-    return `${startDate.format('h:mma D MMMM YYYY')} to ${endDate.format('h:mma D MMMM YYYY')}`;
+    return `${startDate.format('h:mma')} ${formatShortMonthDate(startDate)} to ${endDate.format('h:mma')} ${formatShortMonthDate(endDate)}`;
 };
 export const formatSpaceOutageUntilForPublicNotice = (endValue, currentTime, showTimePublic = true) => {
     const endDate = parseSpaceOutageDate(endValue);
@@ -68,15 +93,15 @@ export const formatSpaceOutageUntilForPublicNotice = (endValue, currentTime, sho
     }
 
     if (!showTimePublic) {
-        return endDate.format('D MMMM YYYY');
+        return formatShortMonthDate(endDate);
     }
 
     const now = currentTime ? moment(currentTime) : moment();
     if (endDate.isSame(now, 'day')) {
-        return `${endDate.format('h:mma')} on ${endDate.format('D MMMM YYYY')}`;
+        return `${endDate.format('h:mma')} on ${formatShortMonthDate(endDate)}`;
     }
 
-    return endDate.format('h:mma D MMMM YYYY');
+    return `${endDate.format('h:mma')} ${formatShortMonthDate(endDate)}`;
 };
 
 export const SpacesOutageNotice = ({ bookableSpace, visibleOutage, hideReason }) => {
@@ -87,23 +112,31 @@ export const SpacesOutageNotice = ({ bookableSpace, visibleOutage, hideReason })
         // -notice
         <StyledOutageNotice data-testid={`space-${bookableSpace?.space_id}-outage`}>
             <UserAttention
-                titleText={visibleOutage.status === 'Current' ? 'Current closure' : 'Upcoming closure'}
+                hasTitle={false}
                 tone={visibleOutage.tone}
                 variant="aligned"
                 testId={`space-${bookableSpace?.space_id}-outage-wrapper`}
             >
                 <Typography variant="body2" data-testid={`space-${bookableSpace?.space_id}-outage-message`}>
-                    {visibleOutage.status === 'Current'
-                        ? `Currently unavailable until ${formatSpaceOutageUntilForPublicNotice(
-                              visibleOutage.outage?.space_outage_end,
-                              undefined,
-                              getSpaceOutageShowTimePublic(visibleOutage.outage),
-                          )}.`
-                        : `Closed ${formatSpaceOutageRangeForPublicNotice(
-                              visibleOutage.outage?.space_outage_start,
-                              visibleOutage.outage?.space_outage_end,
-                              getSpaceOutageShowTimePublic(visibleOutage.outage),
-                          )}.`}
+                    {visibleOutage.status === 'Current' ? (
+                        <>
+                            <StatusText>Currently unavailable</StatusText>
+                            {` until ${formatSpaceOutageUntilForPublicNotice(
+                                visibleOutage.outage?.space_outage_end,
+                                undefined,
+                                getSpaceOutageShowTimePublic(visibleOutage.outage),
+                            )}.`}
+                        </>
+                    ) : (
+                        <>
+                            <StatusText>Unavailable</StatusText>
+                            {` ${formatSpaceOutageRangeForPublicNotice(
+                                visibleOutage.outage?.space_outage_start,
+                                visibleOutage.outage?.space_outage_end,
+                                getSpaceOutageShowTimePublic(visibleOutage.outage),
+                            )}.`}
+                        </>
+                    )}
                 </Typography>
                 {!hideReason && !!visibleOutage.reason && (
                     <Typography variant="body2" data-testid={`space-${bookableSpace?.space_id}-outage-reason`}>

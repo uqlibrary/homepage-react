@@ -10,9 +10,12 @@ import { StyledSkipLinkAnchor, StyledSecondaryButton } from 'helpers/general';
 import BookingLink from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
+import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
 import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPagination';
 import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import SpaceOpenStatusChip from 'modules/Pages/BookableSpaces/Shared/SpaceOpenStatusChip';
+
+import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
 import {
     StyledButtonWrapperStack,
@@ -145,6 +148,7 @@ export const JourneyResultsView = ({
                                     view: 'details',
                                     spaceId: space?.space_uuid || space?.space_id || null,
                                 });
+                                const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
                                 return (
                                     <StyledListItemStack key={detailId || space?.space_id} spacing={1}>
                                         <Button
@@ -172,14 +176,22 @@ export const JourneyResultsView = ({
                                                     {space?.space_library_name}
                                                 </Typography>
                                                 <Box sx={{ mt: 0.75, mb: 1 }}>
-                                                    <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
-                                                        <SpaceOpenStatusChip
-                                                            space={space}
-                                                            weeklyHours={weeklyHours}
-                                                            weeklyHoursLoading={weeklyHoursLoading}
-                                                            weeklyHoursError={weeklyHoursError}
+                                                    {visibleOutage ? (
+                                                        <SpacesOutageNotice
+                                                            bookableSpace={space}
+                                                            visibleOutage={visibleOutage}
+                                                            hideReason
                                                         />
-                                                    </Stack>
+                                                    ) : (
+                                                        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                                                            <SpaceOpenStatusChip
+                                                                space={space}
+                                                                weeklyHours={weeklyHours}
+                                                                weeklyHoursLoading={weeklyHoursLoading}
+                                                                weeklyHoursError={weeklyHoursError}
+                                                            />
+                                                        </Stack>
+                                                    )}
                                                 </Box>
                                                 {!!space?.space_type_details?.space_type_description && (
                                                     <Typography

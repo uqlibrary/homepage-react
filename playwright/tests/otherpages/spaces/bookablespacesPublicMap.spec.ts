@@ -152,7 +152,7 @@ test.describe('Spaces', () => {
                 'background-color',
                 COLOR_UQ_ERROR_50,
             );
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage`).locator('h4')).toContainText('Current closure');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toBeVisible();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toContainText(
                 'Currently unavailable until',
@@ -167,7 +167,7 @@ test.describe('Spaces', () => {
                 'background-color',
                 COLOR_UQ_ERROR_50,
             );
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage`).locator('h4')).toContainText('Current closure');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toBeVisible();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toContainText(
                 'Currently unavailable until',
@@ -186,9 +186,7 @@ test.describe('Spaces', () => {
                 'background-color',
                 COLOUR_UQ_WARNING_50,
             );
-            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage`).locator('h4')).toContainText(
-                'Upcoming closure',
-            );
+            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toBeVisible();
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toContainText('Closed');
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-reason`)).not.toBeVisible();
@@ -201,9 +199,7 @@ test.describe('Spaces', () => {
                 'background-color',
                 COLOUR_UQ_WARNING_50,
             );
-            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage`).locator('h4')).toContainText(
-                'Upcoming closure',
-            );
+            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toBeVisible();
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toContainText('Closed');
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-reason`)).toBeVisible();

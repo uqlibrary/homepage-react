@@ -215,7 +215,7 @@ export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, we
         return openNowMessage();
     }
     if (status === 'closing-soon') {
-        return closingSoonMessage;
+        return closingSoonMessage();
     }
     if (status === 'closed') {
         return closedNowMessage();

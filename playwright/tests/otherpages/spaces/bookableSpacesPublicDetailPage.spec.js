@@ -86,7 +86,7 @@ test.describe('Spaces Detail page', () => {
                 'background-color',
                 COLOUR_UQ_WARNING_50,
             );
-            await expect(page.getByTestId(`space-${SPACE_ID}-outage`).locator('h4')).toContainText('Upcoming closure');
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`space-${SPACE_ID}-outage-message`)).toBeVisible();
             await expect(page.getByTestId(`space-${SPACE_ID}-outage-message`)).toContainText('Closed');
             await expect(page.getByTestId(`space-${SPACE_ID}-outage-reason`)).toBeVisible();

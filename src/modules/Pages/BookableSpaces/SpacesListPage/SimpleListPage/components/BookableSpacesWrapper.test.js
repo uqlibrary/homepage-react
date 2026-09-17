@@ -1,4 +1,5 @@
 import React from 'react';
+import MockDate from 'mockdate';
 
 import { waitFor } from '@testing-library/react';
 
@@ -107,6 +108,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     };
 
     beforeEach(() => {
+        MockDate.reset();
         window.history.replaceState({}, '', '/#/spaces');
         window.sessionStorage.clear();
     });
@@ -1065,6 +1067,81 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             'href',
             '#/spaces/detail/test-space-uuid-1234',
         );
+    });
+
+    it('shows outage notices for current and upcoming closures in the journey results list', () => {
+        MockDate.set('2026-04-24T10:00:00');
+
+        const currentOutageSpace = {
+            ...baseSpace,
+            space_id: 102,
+            space_uuid: 'current-outage-space-uuid',
+            space_name: 'Current outage space',
+            space_outages: [
+                {
+                    space_outage_id: 1,
+                    space_outage_start: '2026-04-24 09:00:00',
+                    space_outage_end: '2026-04-24 18:00:00',
+                    space_outage_reason: 'Maintenance',
+                },
+            ],
+        };
+        const upcomingOutageSpace = {
+            ...baseSpace,
+            space_id: 103,
+            space_uuid: 'upcoming-outage-space-uuid',
+            space_name: 'Upcoming outage space',
+            space_outages: [
+                {
+                    space_outage_id: 2,
+                    space_outage_start: '2026-04-30 09:00:00',
+                    space_outage_end: '2026-04-30 17:00:00',
+                    space_outage_reason: 'Lift works',
+                },
+            ],
+        };
+
+        rtlRender(
+            <WithRouter>
+                <JourneyResultsView
+                    intentSpaceLocations={[currentOutageSpace, upcomingOutageSpace]}
+                    totalSpaceCount={2}
+                    handleClearJourneyFilters={jest.fn()}
+                    goToLegacyBrowse={jest.fn()}
+                    selectedFacilityTypes={[]}
+                    setSelectedFacilityTypes={jest.fn()}
+                    filteredFacilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeListLoading={false}
+                    facilityTypeListError={null}
+                    minimumSpaceCapacity={1}
+                    maximumSpaceCapacity={20}
+                    capacityFilterValue={[1, 20]}
+                    setCapacityFilterValue={jest.fn()}
+                    campusList={[]}
+                    selectedCampus={1}
+                    handleCampusSelection={jest.fn()}
+                    activeFilterCount={0}
+                    librariesForCampus={[]}
+                    selectedLibrary={1}
+                    handleLibrarySelection={jest.fn()}
+                    shouldShowAdvancedFilters={false}
+                    isDesktopResultsLayout
+                    setShowAdvancedFilters={jest.fn()}
+                    weeklyHours={null}
+                    weeklyHoursLoading={false}
+                    weeklyHoursError={null}
+                    isFavouriteActionInProgress={false}
+                    onFavouriteToggle={jest.fn()}
+                    spacesFavouritesList={[]}
+                />
+            </WithRouter>,
+        );
+
+        expect(screen.queryByText('Current closure')).not.toBeInTheDocument();
+        expect(screen.queryByText('Upcoming closure')).not.toBeInTheDocument();
+        expect(screen.getByTestId('space-102-outage-message')).toHaveTextContent('Currently unavailable');
+        expect(screen.getByTestId('space-103-outage-message')).toHaveTextContent('Unavailable 9:00am to 5:00pm');
     });
 
     it('paginates long spaces lists in the journey results view', () => {

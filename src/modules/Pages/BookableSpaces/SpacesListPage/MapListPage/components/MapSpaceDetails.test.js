@@ -77,10 +77,10 @@ describe('MapSpaceDetails outage notices', () => {
             />,
         );
 
-        expect(screen.getByText('Current closure')).toBeInTheDocument();
+        expect(screen.queryByText('Current closure')).not.toBeInTheDocument();
         expect(screen.queryByText('Currently closed')).not.toBeInTheDocument();
         expect(screen.getByTestId('space-123-outage-message')).toHaveTextContent(
-            'Currently unavailable until 10:00am 1 January 2999.',
+            'Currently unavailable until 10:00am 1 Jan. 2999.',
         );
         expect(screen.getByTestId('space-123-outage-reason')).toHaveTextContent('Electrical maintenance');
         expect(screen.getByRole('link', { name: /book this space/i })).toBeInTheDocument();
@@ -110,7 +110,7 @@ describe('MapSpaceDetails outage notices', () => {
         );
 
         expect(screen.getByTestId('space-124-outage-message')).toHaveTextContent(
-            'Currently unavailable until 1:00pm on 24 April 2026.',
+            'Currently unavailable until 1:00pm on 24 Apr. 2026.',
         );
     });
 
@@ -137,9 +137,9 @@ describe('MapSpaceDetails outage notices', () => {
             />,
         );
 
-        expect(screen.getByText('Upcoming closure')).toBeInTheDocument();
+        expect(screen.queryByText('Upcoming closure')).not.toBeInTheDocument();
         expect(screen.getByTestId('space-456-outage-message')).toHaveTextContent(
-            'Closed 9:00am to 5:00pm on 30 April 2026.',
+            'Unavailable 9:00am to 5:00pm on 30 Apr. 2026.',
         );
         expect(screen.getByTestId('space-456-outage-reason')).toHaveTextContent('Air conditioning works');
         expect(screen.getByRole('link', { name: /book this space/i })).toBeInTheDocument();
@@ -169,7 +169,7 @@ describe('MapSpaceDetails outage notices', () => {
             />,
         );
 
-        expect(screen.getByTestId('space-457-outage-message')).toHaveTextContent('Closed 26 April to 5 May 2026.');
+        expect(screen.getByTestId('space-457-outage-message')).toHaveTextContent('Unavailable 26 Apr. to 5 May 2026.');
         expect(screen.getByTestId('space-457-outage-reason')).toHaveTextContent('Replacing carpet');
     });
 });
