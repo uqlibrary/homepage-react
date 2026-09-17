@@ -9,7 +9,7 @@ export const closingSoonMessage = (message = 'Closing soon') => {
     // https://www.streamlinehq.com/icons/download/technology-device-wearable-smart-watch-circle-app-1--27614
     return (
         <StyledIconWordWrapperDiv data-testid={'spaces-journey-open-status-chip-closing-soon'}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" width="24">
+            {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" width="24">
                 <path
                     stroke="#51247a"
                     strokeLinecap="round"
@@ -62,7 +62,7 @@ export const closingSoonMessage = (message = 'Closing soon') => {
                     d="M17.725 9.02502c0.7375 0.91208 1.1399 2.04948 1.1399 3.22248s-0.4024 2.3104 -1.1399 3.2225"
                     strokeWidth="1.5"
                 />
-            </svg>
+            </svg> */}
             <span>{message}</span>
         </StyledIconWordWrapperDiv>
     );
@@ -70,11 +70,11 @@ export const closingSoonMessage = (message = 'Closing soon') => {
 const closedNowMessage = (message = 'Currently closed') => {
     return (
         <StyledIconWordWrapperDiv data-testid={'spaces-journey-open-status-chip-closed'}>
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="css-1m01c8l">
+            {/* <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="css-1m01c8l">
                 <circle cx="12" cy="12" r="9.25" stroke="#51247A" strokeWidth="1.5" />
                 <path d="M12 7.8v4" stroke="#51247A" strokeWidth="1.5" strokeLinecap="round" />
                 <circle cx="11.9" cy="15.6" r=".6" fill="#000" stroke="#51247A" />
-            </svg>
+            </svg> */}
             <span>{message}</span>
         </StyledIconWordWrapperDiv>
     );
