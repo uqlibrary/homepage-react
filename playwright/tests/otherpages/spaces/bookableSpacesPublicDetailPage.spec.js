@@ -88,7 +88,7 @@ test.describe('Spaces Detail page', () => {
             );
             await expect(page.getByTestId(`space-${SPACE_ID}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`space-${SPACE_ID}-outage-message`)).toBeVisible();
-            await expect(page.getByTestId(`space-${SPACE_ID}-outage-message`)).toContainText('Closed');
+            await expect(page.getByTestId(`space-${SPACE_ID}-outage-message`)).toContainText(/Unavailable/);
             await expect(page.getByTestId(`space-${SPACE_ID}-outage-reason`)).toBeVisible();
             await expect(page.getByTestId(`space-${SPACE_ID}-outage-reason`)).toContainText(
                 'Reason: Air conditioning maintenance',

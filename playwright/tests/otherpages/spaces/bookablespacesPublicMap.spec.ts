@@ -188,7 +188,7 @@ test.describe('Spaces', () => {
             );
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toBeVisible();
-            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toContainText('Closed');
+            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toContainText(/Unavailable/);
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-reason`)).not.toBeVisible();
 
             // expand the space panel to show the reason
@@ -201,7 +201,7 @@ test.describe('Spaces', () => {
             );
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toBeVisible();
-            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toContainText('Closed');
+            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toContainText(/Unavailable/);
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-reason`)).toBeVisible();
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-reason`)).toContainText(
                 'Reason: Air conditioning maintenance',
