@@ -26,13 +26,7 @@ const StyledSpaceDiv = styled('div')(({ theme }) => ({
     },
 }));
 
-const CollapsedSection = ({
-    bookableSpace,
-    visibleOutage,
-    weeklyHoursLoading,
-    weeklyHoursError,
-    weeklyHours,
-}) => {
+const CollapsedSection = ({ bookableSpace, visibleOutage, weeklyHoursLoading, weeklyHoursError, weeklyHours }) => {
     return (
         <Stack spacing={1}>
             <Typography sx={{ color: 'designSystem.bodyCopy' }}>{bookableSpace?.space_library_name}</Typography>

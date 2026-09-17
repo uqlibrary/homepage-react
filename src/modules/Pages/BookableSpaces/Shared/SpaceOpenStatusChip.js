@@ -83,7 +83,7 @@ const openNowMessage = (message = 'Open now') => {
     // https://www.streamlinehq.com/icons/download/shop-sign-open--27633
     return (
         <StyledIconWordWrapperDiv data-testid={'spaces-journey-open-status-chip-open'}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" width="24">
+            {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" width="24">
                 <path
                     stroke="#51247a"
                     strokeLinecap="round"
@@ -147,7 +147,7 @@ const openNowMessage = (message = 'Open now') => {
                     d="M19.5 19.749v-7.5l3 7.5v-7.5"
                     strokeWidth="1.5"
                 />
-            </svg>
+            </svg> */}
             <span>{message}</span>
         </StyledIconWordWrapperDiv>
     );
