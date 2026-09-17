@@ -1,4 +1,5 @@
 import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { IS_LOCAL_DEV, IS_TEST, STAGING_URL } from '../../../config/general';
 
 export const getYoutubeUrlForPreviewEmbed = testUrlIn => {
     let testUrl;
@@ -91,9 +92,10 @@ export function getFileSizeString(fileSize, type) {
     let size = fileSize;
 
     while (size >= 1000 && unitIndex < validFileSizeUnits.length - 1) {
-        size = (size / 1000).toFixed(1);
+        size = size / 1000;
         unitIndex++;
     }
+    size = size.toFixed(1);
     if (type === 'unit') {
         return validFileSizeUnits[unitIndex];
     } else if (type === 'amount') {
@@ -147,9 +149,15 @@ export const toTitleCase = str => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
 
-export const getDlorViewPageUrl = uuid => {
+export const getDlorViewPageUrl = uri => {
     const userString = getUserPostfix();
-    return `/digital-learning-hub/view/${uuid}${userString}`;
+    return `/digital-learning-hub/view/${uri}${userString}`;
+};
+
+export const getDlorFileViewPageUrl = object => {
+    // use staging for local dev when not running tests
+    const appUrl = IS_LOCAL_DEV && !IS_TEST ? STAGING_URL.replace(/\/$/, '') : '';
+    return `${appUrl}${getDlorViewPageUrl(`${object.object_id}/file/${object.object_file_name}?version=${object.object_file_version}`)}`;
 };
 
 export const isValidUrl = testUrl => {
