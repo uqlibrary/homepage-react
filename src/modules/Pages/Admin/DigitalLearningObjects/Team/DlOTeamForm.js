@@ -58,6 +58,7 @@ export const DLOTeamForm = ({
     const [formValues, setFormValues] = useState({
         team_name: '',
         team_manager: '',
+        team_admin_username: '',
         team_email: '',
     });
     const [confirmationOpen, setConfirmationOpen] = useState(false);
@@ -83,6 +84,7 @@ export const DLOTeamForm = ({
             setFormValues({
                 team_name: formDefaults?.team_name,
                 team_manager: formDefaults?.team_manager,
+                team_admin_username: formDefaults?.team_admin_username || formDefaults?.team_members?.[0]?.team_admin_username || '',
                 team_email: formDefaults?.team_email,
             });
         }
@@ -136,12 +138,20 @@ export const DLOTeamForm = ({
         return (mode === 'edit' && teamName === formDefaults?.team_name) || teamName?.trim() !== '';
     };
 
+    const isValidTeamAdminUsername = username => {
+        return (mode === 'edit' && username === formDefaults?.team_admin_username) || username?.trim() !== '';
+    };
+
     const isValidEmailLocal = emailAddress => {
         return (emailAddress === formDefaults?.team_email || emailAddress?.trim() !== '') && isValidEmail(emailAddress);
     };
 
     const validateValues = currentValues => {
-        return isValidTeamName(currentValues?.team_name) && isValidEmailLocal(currentValues?.team_email);
+        return (
+            isValidTeamName(currentValues?.team_name) &&
+            isValidTeamAdminUsername(currentValues?.team_admin_username) &&
+            isValidEmailLocal(currentValues?.team_email)
+        );
     };
 
     const handleChange = prop => e => {
@@ -158,7 +168,12 @@ export const DLOTeamForm = ({
             setCookie('CYPRESS_DATA_SAVED', formValues);
         }
 
-        return mode === 'add' ? actions.createDlorTeam(formValues) : actions.updateDlorTeam(dlorTeamId, formValues);
+        const payload = {
+            ...formValues,
+            team_admin_username: formValues.team_admin_username,
+        };
+
+        return mode === 'add' ? actions.createDlorTeam(payload) : actions.updateDlorTeam(dlorTeamId, payload);
     };
 
     const handleEditTeamMember = (member, idx) => {
@@ -299,6 +314,30 @@ export const DLOTeamForm = ({
                                                     value={formValues?.team_manager || ''}
                                                     onChange={handleChange('team_manager')}
                                                 />
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <FormControl variant="standard" fullWidth>
+                                                <InputLabel htmlFor="team_admin_username">Team admin username *</InputLabel>
+                                                <Input
+                                                    id="team_admin_username"
+                                                    data-testid="admin-dlor-team-form-team-admin-username"
+                                                    value={formValues?.team_admin_username || ''}
+                                                    onChange={handleChange('team_admin_username')}
+                                                    error={!isValidTeamAdminUsername(formValues?.team_admin_username)}
+                                                />
+                                                {!isValidTeamAdminUsername(formValues?.team_admin_username) && (
+                                                    <Box
+                                                        sx={{
+                                                            color: '#d62929',
+                                                            fontSize: '0.8em',
+                                                            marginTop: 2,
+                                                        }}
+                                                        data-testid="admin-dlor-team-form-error-message-team-admin-username"
+                                                    >
+                                                        Team admin username is required.
+                                                    </Box>
+                                                )}
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12}>
