@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 
-import { useTheme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 

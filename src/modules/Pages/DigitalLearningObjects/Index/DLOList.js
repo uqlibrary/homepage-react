@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 
 import Box from '@mui/material/Box';
-import { Grid, Pagination } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Pagination from '@mui/material/Pagination';
 import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
@@ -16,7 +17,7 @@ import { styled } from '@mui/material/styles';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { Divider } from '@mui/material';
+import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import { useSearchParams } from 'react-router';
 
@@ -50,7 +51,7 @@ import { isEscapeKeyPressed, isReturnKeyPressed, slugifyName } from 'helpers/gen
 import { breadcrumbs } from 'config/routes';
 import { isDlorAdminUser, isLibraryStaff, isUQOnlyUser, isStaff, isADlorTeamMember } from 'helpers/access';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { LocalFireDepartment } from '@mui/icons-material';
+import LocalFireDepartment from '@mui/icons-material/LocalFireDepartment';
 
 import { exportDLORDataToCSV } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 

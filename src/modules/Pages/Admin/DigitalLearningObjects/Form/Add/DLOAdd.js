@@ -7,7 +7,7 @@ import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { isDlorAdminUser } from 'helpers/access';
 import InformationBox from 'modules/Pages/DigitalLearningObjects/SharedComponents/InformationBox';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { useAccountContext } from 'context';
 const moment = require('moment-timezone');
 

@@ -22,8 +22,12 @@ import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearning
 import { scrollToTopOfPage } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 import { useAccountContext } from 'context';
-import { Accordion, AccordionDetails, AccordionSummary, Checkbox, TableContainer } from '@mui/material';
-import { ExpandMore } from '@mui/icons-material';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Checkbox from '@mui/material/Checkbox';
+import TableContainer from '@mui/material/TableContainer';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';

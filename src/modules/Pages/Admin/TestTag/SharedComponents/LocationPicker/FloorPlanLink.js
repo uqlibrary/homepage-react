@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import MapIcon from '@mui/icons-material/Map';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import { Tooltip } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
 
 const FloorPlanLink = props => {
     const { url, ...rest } = props;

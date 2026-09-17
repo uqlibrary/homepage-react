@@ -7,8 +7,8 @@ import TextField from '@mui/material/TextField';
 
 import { isEmptyStr } from '../../../helpers/helpers';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import { WarningOutlined } from '@mui/icons-material';
-import { Tooltip } from '@mui/material';
+import WarningOutlined from '@mui/icons-material/WarningOutlined';
+import Tooltip from '@mui/material/Tooltip';
 const dateFormat = locale.config.format.dateFormatNoTime;
 
 /**

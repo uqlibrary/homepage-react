@@ -1,8 +1,12 @@
 // istanbul ignore file
 import React, { useEffect } from 'react';
-import { Grid, Box, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import { StandardPage } from '../../../App/components/pages';

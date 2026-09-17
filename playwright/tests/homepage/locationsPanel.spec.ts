@@ -15,8 +15,10 @@ const openCloseWorks = async () => {
                 ).toBeVisible({ timeout: 2000 });
             }).toPass();
 
-            // click elsewhere on the screen
-            await page.locator('body').click();
+            // click elsewhere on the screen, in the empty left margin outside the page content, to close
+            // the dialog via its click-away listener. (A plain body-centre click can land on a homepage
+            // link and navigate away instead.)
+            await page.mouse.click(10, 300);
             // dialog is closed
             await expect(page.getByTestId('locations-wrapper')).toHaveAttribute('aria-live', 'off');
         });
@@ -541,10 +543,7 @@ test.describe('Locations Panel', () => {
 
             await expect(page.locator('[data-testid="hours-item-fryer"] > div:first-child')).toBeVisible();
             await expect(
-                page
-                    .locator('[data-testid="hours-item-fryer"] > div:first-child')
-                    .getByText(/Fryer/)
-                    .first(),
+                page.locator('[data-testid="hours-item-fryer"] > div:first-child').getByText(/Fryer/).first(),
             ).toBeVisible();
             await expect(page.locator('[data-testid="hours-item-fryer"] > div:first-child a')).toHaveAttribute(
                 'aria-label',
