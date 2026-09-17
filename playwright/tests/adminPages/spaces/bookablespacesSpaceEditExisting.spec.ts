@@ -992,10 +992,9 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('spaces-journey-open-status-chip-closing-soon')).not.toBeVisible();
         await expect(page.getByTestId('spaces-journey-open-status-chip-closed')).not.toBeVisible();
 
-        await expect(page.getByTestId('space-123456-outage').locator('h4')).toBeVisible();
-        await expect(page.getByTestId('space-123456-outage').locator('h4')).toContainText('Upcoming closure');
+        await expect(page.getByTestId('space-123456-outage').locator('h4')).not.toBeVisible();
         await expect(page.getByTestId('space-123456-outage-message')).toBeVisible();
-        await expect(page.getByTestId('space-123456-outage-message')).toContainText('Closed'); // time and date varies
+        await expect(page.getByTestId('space-123456-outage-message')).toContainText(/Unavailable/);
         await expect(page.getByTestId('space-123456-outage-reason')).toBeVisible();
         await expect(page.getByTestId('space-123456-outage-reason')).toContainText('Reason: Deep cleaning');
 

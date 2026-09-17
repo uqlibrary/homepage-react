@@ -14,8 +14,9 @@ const StyledHeadingWrapperSpan = styled(Grid)(() => ({
     display: 'inline-flex',
     alignItems: 'center',
     paddingRight: '1rem',
-    span: {
-        paddingLeft: '6px',
+    '& .spaceTitle': {
+        paddingLeft: 0,
+        paddingRight: '15px',
     },
     '&:has(.openNewWrapper)': {
         paddingRight: '2rem',
@@ -106,6 +107,7 @@ const SidebarSpacesList = ({
                                             )}
                                         />
                                         <span
+                                            className="spaceTitle"
                                             onClick={() => onSpaceSelect?.(bookableSpace)}
                                             onKeyDown={() => onSpaceSelect?.(bookableSpace)}
                                             style={onSpaceSelect ? { cursor: 'pointer' } : undefined}

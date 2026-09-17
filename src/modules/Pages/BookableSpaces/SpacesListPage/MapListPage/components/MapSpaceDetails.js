@@ -1,152 +1,84 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import parse from 'html-react-parser';
 
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-
-import { pluralise } from 'helpers/general';
 
 import JourneySpaceDetailsView from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/JourneySpaceDetailsView';
 
 import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
-import { getFriendlyLocationDescription, isBookable } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
-import { OpeningHoursShort } from 'modules/Pages/BookableSpaces/Shared/OpeningHoursShort';
+import SpaceOpenStatusChip from 'modules/Pages/BookableSpaces/Shared/SpaceOpenStatusChip';
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 
-const StyledFriendlyLocationDiv = styled('div')(() => ({
-    marginTop: '5px',
-    '& .location-space': {
-        lineHeight: 1.25,
-    },
-    '& .location-floor': {
-        fontWeight: 'bold',
-        whiteSpace: 'nowrap',
-    },
-}));
 const StyledSpaceDiv = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         overflow: 'auto',
         maxWidth: '80%',
     },
 }));
-const StyleCapacityDiv = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: '0.5rem',
-    '& svg': {
-        color: theme.palette.primary.main,
-    },
-}));
-const StyledDescriptionDiv = styled('div')(() => ({
-    '&.truncated p': {
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-    },
-    '&.hasMinWidth': {
-        minWidth: '400px',
-    },
-    '&.hasMaxHeight': {
-        maxHeight: '4rem',
-        overflow: 'auto',
-        marginBottom: '1rem',
-    },
-}));
-const StyledCollapsableSection = styled('div')(({ theme }) => ({
-    transition: 'opacity 0.3s ease-in-out, height 0.3s ease-in-out',
-    '&.hiddenSection': {
-        visibility: 'hidden',
-        height: 0,
-        opacity: 0,
-        overflow: 'hidden',
-    },
-    'ul.facilityTypeList li': {
-        [theme.breakpoints.down('sm')]: {
-            display: 'inline',
-            '&::after': {
-                content: '", "',
-            },
-            '&:last-child::after': {
-                content: '""',
-            },
-        },
-    },
-}));
 
 const CollapsedSection = ({
     bookableSpace,
     visibleOutage,
-    getDescriptionClassName,
-    getFirstParagraph,
-    summaryPanelElementId,
     weeklyHoursLoading,
     weeklyHoursError,
     weeklyHours,
 }) => {
     return (
-        <>
-            <StyledFriendlyLocationDiv data-testid={`space-${bookableSpace?.space_id}-friendly-location-collapsed`}>
-                {getFriendlyLocationDescription(bookableSpace, true)}
-            </StyledFriendlyLocationDiv>
+        <Stack spacing={1}>
+            <Typography sx={{ color: 'designSystem.bodyCopy' }}>{bookableSpace?.space_library_name}</Typography>
+            {!visibleOutage && (
+                <Box>
+                    <SpaceOpenStatusChip
+                        space={bookableSpace}
+                        weeklyHours={weeklyHours}
+                        weeklyHoursLoading={weeklyHoursLoading}
+                        weeklyHoursError={weeklyHoursError}
+                    />
+                </Box>
+            )}
             {!!visibleOutage && (
                 <SpacesOutageNotice bookableSpace={bookableSpace} visibleOutage={visibleOutage} hideReason />
             )}
-            <BookingLink bookableSpace={bookableSpace} />
-            {isBookable(bookableSpace) && !!bookableSpace?.space_capacity && bookableSpace?.space_capacity > 0 && (
-                <StyleCapacityDiv data-testid={`space-${bookableSpace?.space_id}-capacity`}>
-                    <PeopleOutlineIcon />
-                    {`Space for ${bookableSpace?.space_capacity} ${pluralise(
-                        'person',
-                        bookableSpace?.space_capacity,
-                        'people',
-                    )}.`}
-                </StyleCapacityDiv>
+            {!!bookableSpace?.space_type_details?.space_type_description && (
+                <Typography variant="body2" sx={{ color: 'designSystem.bodyCopy' }}>
+                    {bookableSpace.space_type_details.space_type_description}
+                </Typography>
             )}
-            <Typography variant="body2">{bookableSpace?.space_type_details?.space_type_description}</Typography>
-            {bookableSpace?.space_description?.length > 0 && (
-                <StyledDescriptionDiv
-                    id={`space-description-${bookableSpace?.space_id}`}
+            {!!bookableSpace?.space_description && (
+                <Typography
+                    variant="body2"
                     data-testid={`space-${bookableSpace?.space_id}-description`}
-                    className={getDescriptionClassName()}
+                    sx={{ color: 'designSystem.bodyCopy', fontStyle: 'italic' }}
                 >
-                    {parse(getFirstParagraph(bookableSpace?.space_description))}
-                </StyledDescriptionDiv>
+                    {String(bookableSpace.space_description)
+                        .replace(/<[^>]*>/g, ' ')
+                        .trim()}
+                </Typography>
             )}
-            <StyledCollapsableSection
-                // loads open
-                id={summaryPanelElementId(bookableSpace?.space_id)}
-                data-testid={`space-${bookableSpace?.space_id}-summary-hours`}
-                style={{ display: null }}
-            >
-                <OpeningHoursShort
-                    weeklyHoursLoading={weeklyHoursLoading}
-                    weeklyHoursError={weeklyHoursError}
-                    weeklyHours={weeklyHours}
-                    bookableSpace={bookableSpace}
-                />
-            </StyledCollapsableSection>
-        </>
+            {!!bookableSpace?.space_external_book_url && (
+                <Box sx={{ pt: 0.5 }}>
+                    <BookingLink bookableSpace={bookableSpace} hideNoBookingRequired />
+                </Box>
+            )}
+        </Stack>
     );
 };
 CollapsedSection.propTypes = {
     bookableSpace: PropTypes.any,
     visibleOutage: PropTypes.any,
-    getDescriptionClassName: PropTypes.any,
-    getFirstParagraph: PropTypes.any,
-    summaryPanelElementId: PropTypes.any,
     weeklyHoursLoading: PropTypes.any,
     weeklyHoursError: PropTypes.any,
     weeklyHours: PropTypes.any,
-    isMobileView: PropTypes.any,
 };
 
 const MapSpaceDetails = ({
@@ -176,8 +108,6 @@ const MapSpaceDetails = ({
         [bookableSpace?.space_outages],
     );
 
-    const summaryPanelElementId = spaceId => `summary-info-${spaceId}`;
-
     const showHideSpacePanel = bookableSpace => {
         const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
         const togglePanelButtonElementId = spaceId => `toggle-panel-button-space-${spaceId}`;
@@ -204,29 +134,6 @@ const MapSpaceDetails = ({
         );
     };
 
-    const getDescriptionClassName = () => {
-        if (!!isMobileView) {
-            return 'hasMaxHeight'; // on mobile we make the description scrollable, in a desperate attempt to keep the popup height reasonable
-        }
-        if (isCollapsed) {
-            return 'truncated'; // main view can be shortened
-        }
-        // return 'hasMinWidth';
-        return '';
-    };
-    const getFirstParagraph = htmlString => {
-        if (!htmlString) {
-            return htmlString;
-        }
-
-        // find the string before the second html tag in the supplied string
-        const lookForString = '<';
-        const instanceInString = 3; // #3 is <p></p> here -> <p>
-        return htmlString?.split(lookForString, instanceInString)?.join(lookForString);
-    };
-    // taken from uqbookit sidenav for the page these land on
-
-    const isBookable = !!bookableSpace?.space_external_book_url;
     return (
         <div id="SpaceDetailsTemp">
             <StyledSpaceDiv>
@@ -239,14 +146,9 @@ const MapSpaceDetails = ({
                     <CollapsedSection
                         bookableSpace={bookableSpace}
                         visibleOutage={visibleOutage}
-                        isBookable={isBookable}
-                        getDescriptionClassName={getDescriptionClassName}
-                        getFirstParagraph={getFirstParagraph}
-                        summaryPanelElementId={summaryPanelElementId}
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
                         weeklyHours={weeklyHours}
-                        isMobileView={isMobileView}
                     />
                 )}
                 {!isCollapsed && (

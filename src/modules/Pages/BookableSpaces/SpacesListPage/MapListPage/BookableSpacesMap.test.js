@@ -39,9 +39,9 @@ describe('BookableSpacesMapPopupContent', () => {
 
         expect(screen.getByTestId('space-100-map-popup')).toBeInTheDocument();
         expect(screen.getByTestId('space-100-outage')).toBeInTheDocument();
-        expect(screen.getByText('Current closure')).toBeInTheDocument();
+        expect(screen.queryByText('Current closure')).not.toBeInTheDocument();
         expect(screen.getByTestId('space-100-outage-message')).toHaveTextContent(
-            'Currently unavailable until 12:00pm 1 January 2999.',
+            'Currently unavailable until 12:00pm 1 Jan. 2999.',
         );
         expect(screen.getByTestId('space-100-outage-reason')).toHaveTextContent('Electrical maintenance');
 
@@ -80,7 +80,7 @@ describe('BookableSpacesMapPopupContent', () => {
         );
 
         expect(screen.getByTestId('space-102-outage-message')).toHaveTextContent(
-            'Currently unavailable until 1:00pm on 24 April 2026.',
+            'Currently unavailable until 1:00pm on 24 Apr. 2026.',
         );
     });
 
@@ -107,9 +107,9 @@ describe('BookableSpacesMapPopupContent', () => {
             </WithRouter>,
         );
 
-        expect(screen.getByText('Upcoming closure')).toBeInTheDocument();
+        expect(screen.queryByText('Upcoming closure')).not.toBeInTheDocument();
         expect(screen.getByTestId('space-101-outage-message')).toHaveTextContent(
-            'Closed 9:00am to 12:00pm on 30 April 2026.',
+            'Unavailable 9:00am to 12:00pm on 30 Apr. 2026.',
         );
         expect(screen.getByTestId('space-101-outage-reason')).toHaveTextContent('Lift works');
     });
@@ -138,7 +138,7 @@ describe('BookableSpacesMapPopupContent', () => {
             </WithRouter>,
         );
 
-        expect(screen.getByTestId('space-103-outage-message')).toHaveTextContent('Closed 26 April to 5 May 2026.');
+        expect(screen.getByTestId('space-103-outage-message')).toHaveTextContent('Unavailable 26 Apr. to 5 May 2026.');
         expect(screen.getByTestId('space-103-outage-reason')).toHaveTextContent('Replacing carpet');
     });
 

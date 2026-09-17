@@ -88,7 +88,7 @@ describe('SidebarFilters campus selector', () => {
             facilityTypeList: facilityGroupFixture,
         });
 
-        expect(screen.getByText('Filter Spaces')).toBeInTheDocument();
+        expect(screen.getByText('Filter spaces')).toBeInTheDocument();
         expect(screen.getByTestId('reset-filters-button')).toHaveTextContent('Reset filters');
         expect(screen.queryByRole('button', { name: /remove all filters/i })).not.toBeInTheDocument();
     });
@@ -332,7 +332,7 @@ describe('SidebarFilters campus selector', () => {
 
         renderWithTheme(props);
 
-        expect(screen.getByTestId('space-filter-count')).toHaveTextContent('Active filters 1');
+        expect(screen.getByTestId('space-filter-count')).toHaveTextContent('Active filters: 1');
         expect(screen.queryByTestId('button-deselect-selected-capacity')).not.toBeInTheDocument();
         fireEvent.click(screen.getByTestId('button-deselect-selected-9003'));
 

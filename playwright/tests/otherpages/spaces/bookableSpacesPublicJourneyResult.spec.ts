@@ -55,7 +55,7 @@ test.describe('Spaces Journey Result page', () => {
             await expect(skipToFilters).toBeFocused();
             await page.keyboard.press('Enter');
 
-            await expect(sidebarHeading).toContainText('Filter Spaces');
+            await expect(sidebarHeading).toContainText('Filter spaces');
             await expect(campusDropdown).toBeVisible();
         });
     });

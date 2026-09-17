@@ -153,11 +153,7 @@ const StyledSidebarDiv = styled('div')(({ theme }) => ({
     flexDirection: 'row',
     flexGrow: 0,
 }));
-const StyledSidebarSubDiv = styled('div')(({ theme }) => ({
-    '& > div:first-of-type': {
-        borderTop: theme.palette.designSystem.border,
-        marginTop: '16px',
-    },
+const StyledSidebarSubDiv = styled('div')(() => ({
     '& .hiddenFilters': {
         display: 'none',
     },
@@ -1062,18 +1058,26 @@ export const SidebarFilters = ({
                     }}
                 >
                     <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
-                        Filter Spaces
+                        Filter spaces
                     </Typography>
                     <Button
                         type="button"
                         data-testid="reset-filters-button"
-                        onClick={handleResetFiltersButtonClick}
+                        onMouseDown={event => event.preventDefault()}
+                        onClick={event => {
+                            event.currentTarget.blur();
+                            handleResetFiltersButtonClick();
+                        }}
                         variant="text"
+                        disableRipple
+                        disableFocusRipple
                         sx={{
                             ml: 'auto',
-                            mr: 0,
-                            p: 0,
+                            mr: '5px',
+                            px: 0,
+                            py: 0,
                             minWidth: 0,
+                            lineHeight: 1,
                             borderRadius: 0,
                             border: 'none',
                             boxShadow: 'none',
@@ -1087,11 +1091,19 @@ export const SidebarFilters = ({
                                 mr: '30px',
                                 ml: '0.25rem',
                             },
-                            '&:hover, &:focus': {
+                            '&:hover': {
                                 backgroundColor: theme.palette.primary.main,
                                 color: '#fff',
                                 textDecoration: 'underline',
                                 boxShadow: 'none',
+                                py: '1px',
+                            },
+                            '&:focus, &:focus-visible, &:active': {
+                                backgroundColor: 'transparent',
+                                color: theme.palette.primary.main,
+                                textDecoration: 'underline',
+                                boxShadow: 'none',
+                                outline: 'none',
                             },
                         }}
                     >
@@ -1100,8 +1112,13 @@ export const SidebarFilters = ({
                 </div>
                 {!!hasActiveFilters && (
                     <>
-                        <Typography component={'h3'} variant={'h6'} data-testid="space-filter-count">
-                            Active filters <span>{activeFilterCount}</span>
+                        <Typography
+                            component={'h3'}
+                            variant={'subtitle1'}
+                            sx={{ fontSize: '1rem', lineHeight: 1.3, fontWeight: 500, marginBottom: '0.5rem' }}
+                            data-testid="space-filter-count"
+                        >
+                            Active filters: <span>{activeFilterCount}</span>
                         </Typography>
                         {!!(checkFiltersList?.length || hasActiveCapacityFilter) && (
                             <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
@@ -1112,7 +1129,7 @@ export const SidebarFilters = ({
                     </>
                 )}
                 {campusList?.length > 0 && (
-                    <StyledCampusWrapperDiv>
+                    <StyledCampusWrapperDiv sx={{ borderTop: '1px solid rgba(0, 0, 0, 0.12)' }}>
                         <ChooseCampus
                             selectedCampusValue={selectedCampusValue}
                             campusList={campusList}

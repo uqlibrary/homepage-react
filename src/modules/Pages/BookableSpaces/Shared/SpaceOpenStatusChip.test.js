@@ -139,11 +139,11 @@ describe('SpaceOpenStatusChip', () => {
         expect(screen.getByTestId('spaces-journey-open-status-chip-closed')).toHaveTextContent('Currently closed');
     });
 
-    it('covers the closing-soon status branch and reports the current warning behavior', () => {
+    it('renders the closing-soon status branch without emitting a React child error', () => {
         jest.useFakeTimers().setSystemTime(new Date(2026, 3, 24, 16, 30, 0, 0).getTime());
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-        const { container } = rtlRender(
+        rtlRender(
             <SpaceOpenStatusChip
                 space={{ space_outages: [], space_opening_hours_id: 77 }}
                 weeklyHours={buildWeeklyHoursForDay('Friday', new Date(2026, 3, 24), '15:30:00', '17:00:00')}
@@ -152,11 +152,8 @@ describe('SpaceOpenStatusChip', () => {
             />,
         );
 
-        expect(container).toBeEmptyDOMElement();
-        expect(consoleErrorSpy).toHaveBeenCalledWith(
-            expect.stringContaining('Functions are not valid as a React child'),
-            expect.anything(),
-        );
+        expect(screen.getByTestId('spaces-journey-open-status-chip-closing-soon')).toHaveTextContent('Closing soon');
+        expect(consoleErrorSpy).not.toHaveBeenCalled();
         consoleErrorSpy.mockRestore();
     });
 });

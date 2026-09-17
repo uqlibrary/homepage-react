@@ -42,7 +42,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
+            await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter spaces');
 
             // all space panels load visible (using filters changes which appear)
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
@@ -51,38 +51,12 @@ test.describe('Spaces', () => {
             );
         });
 
-        test('friendly location displays correctly on load', async ({ page }) => {
-            // public Architecture and Music Library example
-            await expect(page.getByTestId(`${ARCH_REFERENCE}-friendly-location-collapsed`)).toBeVisible();
-            await expect(
-                page.getByTestId(`${ARCH_REFERENCE}-friendly-location-collapsed`).locator('.location-library'),
-            ).toContainText('Architecture and Music Library');
-            await expect(
-                page.getByTestId(`${ARCH_REFERENCE}-friendly-location`).locator('.location-precise'),
-            ).not.toBeVisible();
-            await expect(
-                page.getByTestId(`${ARCH_REFERENCE}-friendly-location`).locator('.location-floor'),
-            ).not.toBeVisible();
-            await expect(
-                page.getByTestId(`${ARCH_REFERENCE}-friendly-location`).locator('.location-library'),
-            ).not.toBeVisible();
-            await expect(
-                page.getByTestId(`${ARCH_REFERENCE}-friendly-location`).locator('.location-building'),
-            ).not.toBeVisible();
-            await expect(
-                page.getByTestId(`${ARCH_REFERENCE}-friendly-location`).locator('.location-campus'),
-            ).not.toBeVisible();
+        test('collapsed map cards show library names and summary content', async ({ page }) => {
+            await expect(page.getByTestId(`${ARCH_REFERENCE}`)).toContainText('Architecture and Music Library');
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toBeVisible();
 
-            // third panel
-            await expect(page.getByTestId(`${LIV}-friendly-location-collapsed`)).toBeVisible();
-            await expect(
-                page.getByTestId(`${LIV}-friendly-location-collapsed`).locator('.location-library'),
-            ).toContainText('imaginary Liveris Library');
-            await expect(page.getByTestId(`${LIV}-friendly-location`).locator('.location-precise')).not.toBeVisible();
-            await expect(page.getByTestId(`${LIV}-friendly-location`).locator('.location-floor')).not.toBeVisible();
-            await expect(page.getByTestId(`${LIV}-friendly-location`).locator('.location-library')).not.toBeVisible();
-            await expect(page.getByTestId(`${LIV}-friendly-location`).locator('.location-building')).not.toBeVisible();
-            await expect(page.getByTestId(`${LIV}-friendly-location`).locator('.location-campus')).not.toBeVisible();
+            await expect(page.getByTestId(`${LIV}`)).toContainText('imaginary Liveris Library');
+            await expect(page.getByTestId(`${LIV}-description`)).toBeVisible();
         });
 
         // test('help me find a space opens journey at space type step', async ({ page }) => {
@@ -148,20 +122,15 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-not-bookable`)).toContainText('No booking required.');
         });
 
-        test('capacity loads correctly', async ({ page }) => {
-            // public Architecture and Music Library example
+        test('collapsed map cards do not show summary capacity in the preview list', async ({ page }) => {
             await expect(page.getByTestId(`${ARCH_REFERENCE}-capacity`)).not.toBeVisible();
-
-            // second panel
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-capacity`)).toContainText('Space for 8 people.');
-
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-capacity`)).not.toBeVisible();
             await expect(page.getByTestId(`${LIV}-capacity`)).not.toBeVisible();
-
             await expect(page.getByTestId(`${ARCH_PANEL_5}-capacity`)).not.toBeVisible();
-            await expect(page.getByTestId(`${ARCH_PANEL_6}-capacity`)).toContainText('Space for 20 people.');
-            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-capacity`)).toContainText('Space for 1 person.');
+            await expect(page.getByTestId(`${ARCH_PANEL_6}-capacity`)).not.toBeVisible();
+            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-capacity`)).not.toBeVisible();
             await expect(page.getByTestId(`${ARCH_PANEL_8}-capacity`)).not.toBeVisible();
-            await expect(page.getByTestId(`${ARCH_PANEL_9}-capacity`)).toContainText('Space for 22 people.');
+            await expect(page.getByTestId(`${ARCH_PANEL_9}-capacity`)).not.toBeVisible();
         });
 
         test('description loads correctly', async ({ page }) => {
@@ -183,7 +152,7 @@ test.describe('Spaces', () => {
                 'background-color',
                 COLOR_UQ_ERROR_50,
             );
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage`).locator('h4')).toContainText('Current closure');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toBeVisible();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toContainText(
                 'Currently unavailable until',
@@ -198,7 +167,7 @@ test.describe('Spaces', () => {
                 'background-color',
                 COLOR_UQ_ERROR_50,
             );
-            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage`).locator('h4')).toContainText('Current closure');
+            await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toBeVisible();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-outage-message`)).toContainText(
                 'Currently unavailable until',
@@ -217,11 +186,9 @@ test.describe('Spaces', () => {
                 'background-color',
                 COLOUR_UQ_WARNING_50,
             );
-            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage`).locator('h4')).toContainText(
-                'Upcoming closure',
-            );
+            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toBeVisible();
-            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toContainText('Closed');
+            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toContainText(/Unavailable/);
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-reason`)).not.toBeVisible();
 
             // expand the space panel to show the reason
@@ -232,54 +199,19 @@ test.describe('Spaces', () => {
                 'background-color',
                 COLOUR_UQ_WARNING_50,
             );
-            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage`).locator('h4')).toContainText(
-                'Upcoming closure',
-            );
+            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage`).locator('h4')).not.toBeVisible();
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toBeVisible();
-            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toContainText('Closed');
+            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-message`)).toContainText(/Unavailable/);
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-reason`)).toBeVisible();
             await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-outage-reason`)).toContainText(
                 'Reason: Air conditioning maintenance',
             );
         });
 
-        test('opening hours appear correct on load', async ({ page }) => {
-            const OPENING_HOURS_FORMAT =
-                /Opening hours Today:\s*(?:\d{1,2}(?::\d{2})?(?:am|pm)\s*-\s*\d{1,2}(?::\d{2})?(?:am|pm)|24 Hours|Closed)/i;
-
-            // public Architecture and Music Library example
-            await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toContainText(OPENING_HOURS_FORMAT);
-            const armusHoursText = (await page.getByTestId(`${ARCH_REFERENCE}-summary-hours`).innerText()).trim();
-
-            // second panel
-            await expect(page.getByTestId(`${LIV}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${LIV}-summary-hours`)).toHaveText(armusHoursText);
-
+        test('collapsed preview cards hide opening hours', async ({ page }) => {
+            await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).not.toBeVisible();
+            await expect(page.getByTestId(`${LIV}-summary-hours`)).not.toBeVisible();
             await expect(page.getByTestId(`${ARCH_PANEL_5}-summary-hours`)).not.toBeVisible();
-
-            // the spaces below these have the correct details
-
-            await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toHaveText(armusHoursText);
-
-            await expect(page.getByTestId(`${ARCH_PANEL_5}-summary-hours`)).not.toBeVisible();
-
-            await expect(page.getByTestId(`${ARCH_PANEL_6}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${ARCH_PANEL_6}-summary-hours`)).toHaveText(armusHoursText);
-
-            await expect(page.getByTestId(`${PANEL_UPCOMING_OUTAGE}-summary-hours`)).not.toBeVisible();
-
-            await expect(page.getByTestId(`${ARCH_PANEL_8}-summary-hours`)).not.toBeVisible();
-
-            await expect(page.getByTestId(`${ARCH_PANEL_9}-summary-hours`)).not.toBeVisible();
-
-            await expect(page.getByTestId(`${CENTRAL_PANEL_ONE}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${CENTRAL_PANEL_ONE}-summary-hours`)).toContainText(OPENING_HOURS_FORMAT);
-            const centralHoursText = (await page.getByTestId(`${CENTRAL_PANEL_ONE}-summary-hours`).innerText()).trim();
-
-            await expect(page.getByTestId(`${CENTRAL_PANEL_TWO}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${CENTRAL_PANEL_TWO}-summary-hours`)).toHaveText(centralHoursText);
         });
 
         test('facilities appear correctly', async ({ page }) => {
@@ -415,7 +347,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
             await assertAccessibility(page, '[data-testid="library-spaces"]');
         });
@@ -423,7 +355,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
             const panelOpenerButton = `${ARCH_REFERENCE}-toggle-panel-button`;
             await expect(page.getByTestId(panelOpenerButton)).toBeVisible();
@@ -442,75 +374,41 @@ test.describe('Spaces', () => {
     });
     test('can expand-collapse sub-panels', async ({ page }) => {
         await page.goto('');
-        await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
+        await page.setViewportSize({ width: 1300, height: 1000 });
         await page.goto('spaces/mapresults');
-        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
         await expect(page.getByTestId(`${ARCH_REFERENCE}`).locator('h3')).toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel')).toBeVisible();
-        await expect(
-            page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.openPanel'),
-        ).not.toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute(
-            'aria-expanded',
-            'false',
-        );
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.openPanel')).not.toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute('aria-expanded', 'false');
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute(
             'aria-label',
             'Show more information about 354',
         );
 
-        // initially the lower sub-panel is hidden
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).not.toBeVisible();
-        await expect(page.getByTestId(`${ARCH_PANEL_4}-facility`)).not.toBeVisible();
-
-        // and the summary shows
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toBeVisible();
-        await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toBeVisible();
-
-        // and description is truncated
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).not.toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toHaveClass(/truncated/);
 
-        // expand the bottom sub-panel
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
 
-        // the lower sub-panel is visible
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).toBeVisible();
-        // the other blocks have not appeared (are unaffected by this button click)
-        await expect(page.getByTestId(`${ARCH_PANEL_4}-facility`)).not.toBeVisible();
-        // and description is no longer truncated
         await expect(page.getByTestId(`${ARCH_REFERENCE}-details-description`)).toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-details-description`)).not.toHaveClass(/truncated/);
-        // and the controls have swapped
-        await expect(
-            page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel'),
-        ).not.toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel')).not.toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.openPanel')).toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute(
-            'aria-expanded',
-            'true',
-        );
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute('aria-expanded', 'true');
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute(
             'aria-label',
             'Show fewer details for 354',
         );
 
-        // the summary sub-panel is hidden for the single panel
         await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).not.toBeVisible();
-        await expect(page.getByTestId(`${ARCH_PANEL_4}-summary-hours`)).toBeVisible();
 
-        // collapse the bottom sub-panel
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
 
-        // and the lower sub-panel details are hidden again
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).not.toBeVisible();
-        // the other blocks have not appeared (button only affects one space)
-        await expect(page.getByTestId(`${ARCH_PANEL_4}-facility`)).not.toBeVisible();
-        // and description is truncated
         await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-description`)).toHaveClass(/truncated/);
-        // and the controls have swapped
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-collapse-button`)).not.toBeVisible();
     });
@@ -518,7 +416,7 @@ test.describe('Spaces', () => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await page.goto('spaces/mapresults');
-        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute(
@@ -534,7 +432,7 @@ test.describe('Spaces', () => {
             'false',
         );
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).not.toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).not.toBeVisible();
 
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-toggle-panel-button`)).toHaveAttribute('aria-expanded', 'true');
         await expect(page.getByTestId(`${ARCH_BOOKABLE}-facility`)).toBeVisible();
@@ -544,7 +442,7 @@ test.describe('Spaces', () => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces/mapresults');
-        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
         await expect(page.getByTestId(`${ARCH_REFERENCE}`).locator('h3')).toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel')).toBeVisible();
@@ -570,7 +468,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
         });
 
         test('can filter with sidebar checkboxes', async ({ page }) => {
@@ -872,7 +770,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
             const currentlyOpenCheckbox = page.getByTestId('facility-type-listitem-9001');
 
@@ -1048,13 +946,13 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
         });
 
         test('sidebar filter type group open-collapse loads correctly', async ({ page }) => {
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             // ON THIS FLOOR LOADS CLOSED
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)).toBeVisible();
@@ -1106,7 +1004,7 @@ test.describe('Spaces', () => {
         test('collapsing an open sidebar filter type group shows correctly', async ({ page }) => {
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             await expect(filterGroup(FILTER_GROUP_LIGHTING, page)).toBeVisible();
             await expect(
@@ -1159,7 +1057,7 @@ test.describe('Spaces', () => {
             // "on this floor" loads collapsed. Confirm we can open it
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             // the group loads collapsed, as expected
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)).toBeVisible();
@@ -1213,7 +1111,7 @@ test.describe('Spaces', () => {
         test('multiple open-collapse sidebar filter type group shows correctly', async ({ page }) => {
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             // sidebar filter types group load open-collapsedness as expected
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
@@ -1273,7 +1171,7 @@ test.describe('Spaces', () => {
         test('sidebar filter type groups show count when selected and collapsed', async ({ page }) => {
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             const openCountTestId = (groupId: number) => `facility-type-group-${groupId}-expanded-count`;
 
@@ -1323,7 +1221,7 @@ test.describe('Spaces', () => {
         }) => {
             await page.goto('spaces/mapresults');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter spaces/)).toBeVisible();
 
             const openCountTestId = (groupId: number) => `facility-type-group-${groupId}-expanded-count`;
 
@@ -1387,7 +1285,7 @@ test.describe('Spaces', () => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
             // all space panels load visible (using filters changes which appear)
             await expect(spacePanelWrapper).toHaveCount(all + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
@@ -1460,7 +1358,7 @@ test.describe('Spaces', () => {
             await disableMazeMapAssets(page);
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
             await page.goto('spaces/mapresults');
-            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter spaces/)).toBeVisible();
 
             // all space panels load visible (using filters changes which appear)
             await expect(page.getByTestId('space-space-count')).not.toBeVisible();
@@ -1472,24 +1370,13 @@ test.describe('Spaces', () => {
             await page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus').click(); // open drop down
             await page.getByTestId('campus-3').click(); // choose dutton park
             await expect(page.getByTestId('space-1234544')).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location-collapsed`)).toContainText(
-                'Dutton Park Health Sciences',
-            );
+            await expect(page.getByTestId(`${PACE}`)).toContainText('Dutton Park Health Sciences');
         });
 
-        test('friendly location displays correctly on load on change of campus', async ({ page }) => {
-            // non PACE spaces are not visible
-            await expect(page.getByTestId(`${ARCH_REFERENCE}-friendly-location-collapsed`)).not.toBeVisible();
-
-            await expect(page.getByTestId(`${PACE}-friendly-location-collapsed`)).toBeVisible();
-            // await expect(
-            //     page.getByTestId(`${PACE}-friendly-location-collapsed`).locator('.location-library'),
-            // ).toContainText('Dutton Park Health Sciences');
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-building')).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-campus')).not.toBeVisible();
+        test('collapsed campus cards show the selected library name', async ({ page }) => {
+            await expect(page.getByTestId(`${ARCH_REFERENCE}`)).not.toBeVisible();
+            await expect(page.getByTestId(`${PACE}`)).toContainText('Dutton Park Health Sciences');
+            await expect(page.getByTestId(`${PACE}-description`)).toBeVisible();
         });
 
         test('it remembers the changed campus', async ({ page }) => {
@@ -1513,11 +1400,9 @@ test.describe('Spaces', () => {
             );
         });
 
-        test('capacity loads correctly on change of campus', async ({ page }) => {
-            // non PACE spaces are not visible
+        test('capacity is hidden in the collapsed campus preview', async ({ page }) => {
             await expect(page.getByTestId(`${ARCH_REFERENCE}-capacity`)).not.toBeVisible();
-
-            await expect(page.getByTestId(`${PACE}-capacity`)).toContainText('Space for 5 people.');
+            await expect(page.getByTestId(`${PACE}-capacity`)).not.toBeVisible();
         });
 
         test('description loads correctly on change of campus', async ({ page }) => {
@@ -1527,15 +1412,9 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${PACE}-description`)).toHaveCount(1);
         });
 
-        test('opening hours appear correct on load on change of campus', async ({ page }) => {
-            const OPENING_HOURS_FORMAT =
-                /Opening hours Today:\s*(?:\d{1,2}(?::\d{2})?(?:am|pm)\s*-\s*\d{1,2}(?::\d{2})?(?:am|pm)|24 Hours|Closed)/i;
-
-            // non PACE spaces are not visible
+        test('opening hours are hidden in the collapsed campus preview', async ({ page }) => {
             await expect(page.getByTestId(`${ARCH_REFERENCE}-summary-hours`)).not.toBeVisible();
-
-            await expect(page.getByTestId(`${PACE}-summary-hours`)).toBeVisible();
-            await expect(page.getByTestId(`${PACE}-summary-hours`)).toContainText(OPENING_HOURS_FORMAT);
+            await expect(page.getByTestId(`${PACE}-summary-hours`)).not.toBeVisible();
         });
 
         test('facilities are hidden on opening on change of campus', async ({ page }) => {
@@ -1546,15 +1425,12 @@ test.describe('Spaces', () => {
         });
 
         test('friendly location appears correctly when panel expands on change of campus', async ({ page }) => {
-            // non PACE spaces are not visible
             await expect(page.getByTestId(`${ARCH_REFERENCE}-friendly-location`)).not.toBeVisible();
 
             await page.getByTestId(`${PACE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${PACE}-friendly-location`).first()).toBeVisible();
             await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).toContainText(
-                'Level 6',
-            );
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).toContainText('Level 6');
             await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).toContainText(
                 'Dutton Park Health Sciences',
             );
@@ -1567,7 +1443,7 @@ test.describe('Spaces', () => {
         });
 
         test('opening hours appear correct when panel expands on change of campus', async ({ page }) => {
-            await expect(page.getByTestId(`${PACE}-summary-hours`)).toBeVisible();
+            await expect(page.getByTestId(`${PACE}-summary-hours`)).not.toBeVisible();
             await expect(page.getByTestId(`${PACE}-openingHours-0`)).not.toBeVisible();
 
             await page.getByTestId(`${PACE}-toggle-panel-button`).click();
@@ -1626,8 +1502,7 @@ test.describe('Spaces', () => {
 
         test('each campus loads correctly', async ({ page }) => {
             const spacePanelWrapper = page.getByTestId('space-wrapper').locator(':scope > *');
-            const panelLabel = (panelId: string) =>
-                page.getByTestId(`${panelId}-friendly-location-collapsed`).locator('div');
+            const panelLabel = (panelId: string) => page.getByTestId(panelId);
             const changeCampusButton = page.getByTestId('sidebarCheckboxes').getByTestId('filter-by-campus');
             const librarySelector = page
                 .getByTestId('sidebarCheckboxes')
@@ -1639,7 +1514,6 @@ test.describe('Spaces', () => {
             const CAMPUS_ID_GATTON = '2';
             const CAMPUS_ID_DUTTON_PARK = '3';
 
-            // on inital load, it honours the non-default campus cookie
             await page.goto('spaces/mapresults');
             await expect(changeCampusButton.locator('[tabindex="0"]')).toContainText('Dutton Park');
 
@@ -1647,34 +1521,28 @@ test.describe('Spaces', () => {
             await expect(spacePanelWrapper).toHaveCount(1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
             await expect(librarySelector).not.toBeVisible();
 
-            // CHANGE CAMPUS TO GATTON
-            await changeCampusButton.click(); // open drop down
-            await campusChooser(CAMPUS_ID_GATTON).click(); // choose gatton
+            await changeCampusButton.click();
+            await campusChooser(CAMPUS_ID_GATTON).click();
             await expect(panelLabel(GATTON_PANEL_ONE)).toContainText('J.K. Murray Library');
             await expect(spacePanelWrapper).toHaveCount(4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
             await expect(librarySelector).not.toBeVisible();
 
-            // CHANGE CAMPUS TO ST LUCIA
-            await changeCampusButton.click(); // open drop down
-            await campusChooser(CAMPUS_ID_ST_LUCIA).click(); // choose st lucia
+            await changeCampusButton.click();
+            await campusChooser(CAMPUS_ID_ST_LUCIA).click();
             await expect(panelLabel(ARCH_REFERENCE)).toContainText('Architecture and Music Library');
             await expect(spacePanelWrapper).toHaveCount(
                 VISIBLE_SPACES_ST_LUCIA_ALL + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST,
             );
             await expect(librarySelector).toContainText('All libraries');
 
-            // and circle around, to be sure!
-
-            // CHANGE CAMPUS TO DUTTON PARK
-            await changeCampusButton.click(); // open drop down
-            await campusChooser(CAMPUS_ID_DUTTON_PARK).click(); // choose dutton park
+            await changeCampusButton.click();
+            await campusChooser(CAMPUS_ID_DUTTON_PARK).click();
             await expect(panelLabel(PACE)).toContainText('Dutton Park Health Sciences');
             await expect(spacePanelWrapper).toHaveCount(1 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
             await expect(librarySelector).not.toBeVisible();
 
-            // CHANGE CAMPUS TO GATTON
-            await changeCampusButton.click(); // open drop down
-            await campusChooser(CAMPUS_ID_GATTON).click(); // choose gatton
+            await changeCampusButton.click();
+            await campusChooser(CAMPUS_ID_GATTON).click();
             await expect(panelLabel(GATTON_PANEL_ONE)).toContainText('J.K. Murray Library');
             await expect(spacePanelWrapper).toHaveCount(4 + NUMBER_EXTRA_ELEMENTS_IN_SPACE_LIST);
             await expect(librarySelector).not.toBeVisible();
@@ -1739,7 +1607,7 @@ test.describe('Spaces errors', () => {
         await page.goto('');
         await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
         await page.goto('spaces/mapresults?responseType=weeklyHoursError');
-        await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
+        await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter spaces');
 
         await page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).click();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-weekly-hours-error`)).toBeVisible();

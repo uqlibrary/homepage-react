@@ -46,7 +46,7 @@ const intentDefinitions = [
     },
     {
         id: 'food',
-        label: 'Near kitchens or cafés',
+        label: 'Near kitchens or cafes',
         description: 'Close to food options or places to eat.',
         icon: FoodIcon,
         IconSvg:

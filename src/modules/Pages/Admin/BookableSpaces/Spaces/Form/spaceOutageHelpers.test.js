@@ -48,30 +48,30 @@ describe('spaceOutageHelpers', () => {
 
     it('formats outage ranges for public notices', () => {
         expect(formatSpaceOutageRangeForPublicNotice('2026-12-25 08:00:00', '2026-12-25 13:00:00')).toEqual(
-            '8:00am to 1:00pm on 25 December 2026',
+            '8:00am to 1:00pm on 25 Dec. 2026',
         );
 
         expect(formatSpaceOutageRangeForPublicNotice('2026-12-25 13:00:00', '2026-12-26 17:00:00')).toEqual(
-            '1:00pm 25 December to 5:00pm 26 December 2026',
+            '1:00pm 25 Dec. to 5:00pm 26 Dec. 2026',
         );
 
         expect(formatSpaceOutageRangeForPublicNotice('2026-04-24 08:00:00', '2026-05-05 14:00:00', false)).toEqual(
-            '24 April to 5 May 2026',
+            '24 Apr. to 5 May 2026',
         );
     });
 
     it('formats current outage until wording for public notices', () => {
         expect(formatSpaceOutageUntilForPublicNotice('2026-12-25 13:00:00', new Date('2026-12-25T09:00:00'))).toEqual(
-            '1:00pm on 25 December 2026',
+            '1:00pm on 25 Dec. 2026',
         );
 
         expect(formatSpaceOutageUntilForPublicNotice('2026-12-26 17:00:00', new Date('2026-12-25T09:00:00'))).toEqual(
-            '5:00pm 26 December 2026',
+            '5:00pm 26 Dec. 2026',
         );
 
         expect(
             formatSpaceOutageUntilForPublicNotice('2026-12-26 17:00:00', new Date('2026-12-25T09:00:00'), false),
-        ).toEqual('26 December 2026');
+        ).toEqual('26 Dec. 2026');
     });
 
     it('parses space_outage_show_time_public from mixed values', () => {
