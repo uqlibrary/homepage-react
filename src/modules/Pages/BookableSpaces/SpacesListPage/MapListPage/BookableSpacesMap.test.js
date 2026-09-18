@@ -50,7 +50,7 @@ describe('BookableSpacesMapPopupContent', () => {
             'https://uqbookit.uq.edu.au/#/app/booking-types/100',
         );
 
-        const popupTitleLink = screen.getByText('Meeting room Popup room').closest('a');
+        const popupTitleLink = screen.getByRole('link', { name: /Meeting room/i }).closest('a');
         expect(popupTitleLink).toHaveAttribute('href', '/spaces/detail/100');
         expect(screen.getByText('Forgan Smith Building')).toBeInTheDocument();
         expect(screen.getByTestId('space-100-favourite-message')).toHaveTextContent('One of your favourite spaces');

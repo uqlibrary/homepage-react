@@ -74,6 +74,9 @@ const StyledPopupTitleLink = styled(Link)(({ theme }) => ({
         },
     },
 }));
+const StyledPopupRoomName = styled('span')(() => ({
+    whiteSpace: 'nowrap',
+}));
 
 const StyledFavouriteNote = styled('em')(() => ({
     display: 'block',
@@ -94,12 +97,11 @@ export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) =>
         spaceId: space?.space_uuid || space?.space_id || null,
     });
 
-    const popupTitleText = [spaceTypeName, space?.space_name ?? ''].filter(Boolean).join(' ');
-
     return (
         <StyledPopupContent data-testid={`space-${space?.space_id}-map-popup`}>
             <StyledPopupTitleLink to={detailUrl} reloadDocument>
-                <span>{popupTitleText}</span>
+                {!!spaceTypeName && <span>{spaceTypeName}</span>}
+                {!!space?.space_name && <StyledPopupRoomName> {space.space_name}</StyledPopupRoomName>}
             </StyledPopupTitleLink>
 
             {!!space?.space_building_name && (
