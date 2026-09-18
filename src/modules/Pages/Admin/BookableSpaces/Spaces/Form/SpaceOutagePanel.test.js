@@ -76,15 +76,23 @@ describe('SpaceOutagePanel', () => {
         expect(screen.getByTestId('space-outage-delete-2')).not.toBeDisabled();
     });
 
-    it('defaults the end to 11:59pm on the same day when the start is set and no end is already set', () => {
+    it('does not auto-fill the end date when the start is set and no end is already set', () => {
         const futureStart = getFutureDateTime(8);
-        const expectedEnd = `${futureStart.slice(0, 10)}T23:59`;
 
         rtlRender(<SpaceOutagePanel {...defaultProps} spaceOutageList={[]} />);
 
         fireEvent.change(screen.getByTestId('space-outage-start'), { target: { value: futureStart } });
 
-        expect(screen.getByTestId('space-outage-end')).toHaveValue(expectedEnd);
+        expect(screen.getByTestId('space-outage-end')).toHaveValue('');
+    });
+
+    it('shows the invalid-date warning immediately when the start is after the end', () => {
+        rtlRender(<SpaceOutagePanel {...defaultProps} spaceOutageList={[]} />);
+
+        fireEvent.change(screen.getByTestId('space-outage-start'), { target: { value: '2026-04-24T18:00' } });
+        fireEvent.change(screen.getByTestId('space-outage-end'), { target: { value: '2026-04-24T12:00' } });
+
+        expect(screen.getByText('The end date and time must be after the start.')).toBeInTheDocument();
     });
 
     it('saves space_outage_show_time_public from the admin checkbox', async () => {

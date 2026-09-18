@@ -117,7 +117,6 @@ export const SpaceOutagePanel = ({
     const [draft, setDraft] = useState(emptySpaceOutageDraft);
     const [outageScope, setOutageScope] = useState('space');
     const [editingOutageId, setEditingOutageId] = useState(null);
-    const [validationErrors, setValidationErrors] = useState([]);
     const [isSaving, setIsSaving] = useState(false);
     const [deletingOutageId, setDeletingOutageId] = useState(null);
 
@@ -152,7 +151,6 @@ export const SpaceOutagePanel = ({
     const resetDraft = () => {
         setDraft(emptySpaceOutageDraft);
         setEditingOutageId(null);
-        setValidationErrors([]);
     };
 
     const refreshOutages = async () => {
@@ -175,30 +173,17 @@ export const SpaceOutagePanel = ({
             }
         }
 
-        const newDraft = {
+        setDraft({
             ...draft,
             [fieldName]: value,
-        };
-
-        if (fieldName === 'space_outage_start' && value && !draft?.space_outage_end) {
-            const [datePart] = value.split('T');
-            if (datePart) {
-                newDraft.space_outage_end = `${datePart}T23:59`;
-            }
-        }
-
-        setDraft(newDraft);
-        if (validationErrors.length > 0) {
-            setValidationErrors(validateSpaceOutageDraft(newDraft, outages, editingOutageId).errors);
-        }
+        });
     };
 
-    const getFieldError = fieldName => validationErrors.find(error => error.field === fieldName)?.message || '';
+    const getFieldError = fieldName => validation.errors.find(error => error.field === fieldName)?.message || '';
 
     const handleSave = async () => {
         const currentValidation = validateSpaceOutageDraft(draft, outages, editingOutageId);
         if (currentValidation.errors.length > 0) {
-            setValidationErrors(currentValidation.errors);
             displayToastErrorMessage(
                 `<p>These errors occurred:</p><ul>${currentValidation.errors
                     .map(error => `<li>${error.message}</li>`)
@@ -273,7 +258,6 @@ export const SpaceOutagePanel = ({
         }
 
         setEditingOutageId(outage?.space_outage_id);
-        setValidationErrors([]);
         setDraft({
             space_outage_start: formatSpaceOutageDateTimeForInput(outage?.space_outage_start),
             space_outage_end: formatSpaceOutageDateTimeForInput(outage?.space_outage_end),
