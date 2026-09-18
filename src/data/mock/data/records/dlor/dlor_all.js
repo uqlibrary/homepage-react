@@ -229,7 +229,7 @@ export default {
             'object_summary': 'summary',
             'object_review_date_next': '2050-01-01',
             'object_status': 'submitted',
-            'object_owning_team_id': 3,
+            'object_owning_team_id': 2,
             'object_download_instructions': 'some download instructions',
             'object_link_url_id': 16,
             'object_link_url_parent': 31,
