@@ -1614,8 +1614,7 @@ export const BookableSpacesList = ({
         (activeSelectedFacilityTypes?.length || 0) +
         (showFavouriteSpacesOnly ? 1 : 0) +
         (hasActiveCapacityFilter ? 1 : 0);
-    const hasActiveFilters = (activeFilterCount || 0) > 0;
-    const mapViewToggleLabel = hasActiveFilters ? 'Hide map' : 'Help me find a space';
+    const mapViewToggleLabel = 'Help me find a space';
     const highlightedSpace = React.useMemo(() => {
         const validHighlightedSpaces =
             bookableSpacesRoomList?.data?.locations?.filter(
