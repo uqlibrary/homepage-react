@@ -21,9 +21,9 @@ describe('ObjectFileDownloadButton', () => {
             className: 'test',
         });
 
-        expect(getByTestId('dlor-view-object-download-file-button')).toHaveTextContent('ACCESS THE OBJECT');
-        expect(getByTestId('dlor-view-object-download-file-button')).not.toHaveTextContent('()');
-        expect(getByTestId('dlor-view-object-download-file-button')).toHaveClass('test');
+        expect(getByTestId('dlor-view-object-file-download-button')).toHaveTextContent('ACCESS THE OBJECT');
+        expect(getByTestId('dlor-view-object-file-download-button')).not.toHaveTextContent('()');
+        expect(getByTestId('dlor-view-object-file-download-button')).toHaveClass('test');
     });
 
     it('should render the file type', () => {
@@ -31,8 +31,8 @@ describe('ObjectFileDownloadButton', () => {
             object: { object_file_name: 'document.pdf' },
         });
 
-        expect(getByTestId('dlor-view-object-download-file-button')).toHaveTextContent('ACCESS THE OBJECT');
-        expect(getByTestId('dlor-view-object-download-file-button')).toHaveTextContent('(PDF)');
+        expect(getByTestId('dlor-view-object-file-download-button')).toHaveTextContent('ACCESS THE OBJECT');
+        expect(getByTestId('dlor-view-object-file-download-button')).toHaveTextContent('(PDF)');
     });
 
     it('should render the formatted file size', () => {
@@ -43,18 +43,18 @@ describe('ObjectFileDownloadButton', () => {
             },
         });
 
-        expect(getByTestId('dlor-view-object-download-file-button')).toHaveTextContent('(1.0 MB)');
+        expect(getByTestId('dlor-view-object-file-download-button')).toHaveTextContent('(1 MB)');
     });
 
     it('should render the file type and formatted file size', () => {
         const { getByTestId } = setup({
             object: {
                 object_file_name: 'document.pdf',
-                object_file_size: 1000000,
+                object_file_size: 100000,
             },
         });
 
-        expect(getByTestId('dlor-view-object-download-file-button')).toHaveTextContent('(PDF 1.0 MB)');
+        expect(getByTestId('dlor-view-object-file-download-button')).toHaveTextContent('(PDF 100 KB)');
     });
 
     it('should not render the size when file size is zero', () => {
@@ -65,7 +65,7 @@ describe('ObjectFileDownloadButton', () => {
             },
         });
 
-        expect(getByTestId('dlor-view-object-download-file-button')).toHaveTextContent('(PDF)');
+        expect(getByTestId('dlor-view-object-file-download-button')).toHaveTextContent('(PDF)');
     });
 
     it('should open the object file in a new tab', async () => {
@@ -76,7 +76,7 @@ describe('ObjectFileDownloadButton', () => {
         };
 
         const { getByTestId } = setup({ object });
-        await userEvent.click(getByTestId('dlor-view-object-download-file-button'));
+        await userEvent.click(getByTestId('dlor-view-object-file-download-button'));
 
         expect(window.open).toHaveBeenCalledWith(getDlorFileViewPageUrl(object), '_blank', 'noopener,noreferrer');
     });

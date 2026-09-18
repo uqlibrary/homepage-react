@@ -95,7 +95,7 @@ export function getFileSizeString(fileSize, type) {
         size = size / 1000;
         unitIndex++;
     }
-    size = size.toFixed(1);
+    size = String(Number(size.toFixed(1)));
     if (type === 'unit') {
         return validFileSizeUnits[unitIndex];
     } else if (type === 'amount') {

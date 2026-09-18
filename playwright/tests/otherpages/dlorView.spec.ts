@@ -507,6 +507,16 @@ test.describe('Digital Learning Hub View page', () => {
 
             await expect(page.getByTestId('detailpage-clicklink')).toHaveText('Access the object');
         });
+
+        test('An object with a file shows the download button', async ({ page }) => {
+            await page.goto('digital-learning-hub/view/object-with-file');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+
+            await expect(page.getByTestId('detailpage-clicklink')).not.toBeVisible();
+            await expect(page.getByTestId('dlor-view-object-file-download-button')).toHaveText(
+                'ACCESS THE OBJECT (ZIP 49.7 KB)',
+            );
+        });
     });
     test.describe('user-level privilege', () => {
         test('the non-logged in user is prompted to login', async ({ page }) => {

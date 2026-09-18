@@ -13,9 +13,9 @@ const ObjectFileDownloadButton = ({ object, ...buttonProps }) => {
             {...buttonProps}
             onClick={onClick}
             aria-label="Click to access the object"
-            data-testid="dlor-view-object-download-file-button"
+            data-testid="dlor-view-object-file-download-button"
         >
-            ACCESS THE OBJECT
+            ACCESS THE OBJECT{' '}
             {(type || size) && (
                 <>
                     <br />({`${type} ${size}`.trim()})
