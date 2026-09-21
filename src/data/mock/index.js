@@ -104,6 +104,13 @@ const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
 export const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
 
+const buildMockSpaceFavourites = () => {
+    if (user === 'vanilla') {
+        return [];
+    }
+    return spaces_favourites.data;
+};
+
 const queryString = new URLSearchParams(window.location.search);
 let user = !!queryString
     ? queryString.get('user')
@@ -2071,20 +2078,21 @@ mock.onGet('exams/course/FREN1010/summary')
     // SPACES_FAVOURITES_API
     .onGet('bookable_spaces/favourites')
     .reply(() => {
-        return [200, spaces_favourites];
+        return [200, { data: buildMockSpaceFavourites() }];
     })
     .onPost('bookable_spaces/favourites')
     .reply(config => {
         const body = JSON.parse(config.data);
+        const favouriteList = buildMockSpaceFavourites();
         return [
             200,
             {
                 data: [
-                    ...spaces_favourites.data.filter(favourite => favourite.space_id !== body.space_id),
+                    ...favouriteList.filter(favourite => favourite.space_id !== body.space_id),
                     {
-                        favourite_id: spaces_favourites.data.length + 1,
+                        favourite_id: favouriteList.length + 1,
                         space_id: body.space_id,
-                        favourite_username: 'libSpaces',
+                        favourite_username: user || 'vanilla',
                     },
                 ],
             },
@@ -2093,10 +2101,11 @@ mock.onGet('exams/course/FREN1010/summary')
     .onDelete('bookable_spaces/favourites')
     .reply(config => {
         const body = JSON.parse(config.data);
+        const favouriteList = buildMockSpaceFavourites();
         return [
             200,
             {
-                data: [...spaces_favourites.data.filter(favourite => favourite.space_id !== body.space_id)],
+                data: [...favouriteList.filter(favourite => favourite.space_id !== body.space_id)],
             },
         ];
     })

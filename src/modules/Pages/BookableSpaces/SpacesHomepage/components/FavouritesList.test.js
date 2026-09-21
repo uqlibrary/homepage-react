@@ -63,6 +63,14 @@ describe('FavouritesList', () => {
         expect(props.activateFavouritesResults).toHaveBeenCalledTimes(1);
     });
 
+    it('renders a plain-text empty-state prompt when no favourites are saved', () => {
+        renderWithProviders(<FavouritesList {...defaultProps} spacesFavouritesList={[]} />);
+
+        expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
+        expect(screen.getByText("Click the star icon next to a space's name to add to your favourites")).toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-homepage-favourites-all-link')).not.toBeInTheDocument();
+    });
+
     it('shows up to three deduplicated favourites and navigates to details when a space matches', () => {
         const setSelectedSpace = jest.fn();
         const navigateToView = jest.fn();

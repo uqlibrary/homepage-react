@@ -10,6 +10,7 @@ import { getSpaceIdentifier, findSpaceById } from 'modules/Pages/BookableSpaces/
 import { useTitle } from 'hooks';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 
 const journeyFallbackImage = require('../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
@@ -173,9 +174,15 @@ export const SpacesHomePage = ({
                     </StyledLandingHeroLayout>
                 </StyledLandingHeroInner>
             </StyledLandingHeroShell>
-            <div style={{ paddingTop: '64px' }}>
+            <div style={{ paddingTop: '20px' }}>
                 <StandardPage standardPageId="spaces-journey-content-standard-page">
-                    {isLoggedIn && (spacesFavouritesList || []).length > 0 && (
+                    <LoginPrompt
+                        isLoggedIn={isLoggedIn}
+                        prompt="to save your favourite study spaces"
+                        helpUrl=""
+                        helpAriaLabel="Learn more about bookable spaces"
+                    />
+                    {isLoggedIn && (
                         <FavouritesList
                             actions={actions}
                             favouriteIntentDefinition={favouriteIntentDefinition}

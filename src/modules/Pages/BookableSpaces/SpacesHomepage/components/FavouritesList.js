@@ -45,53 +45,84 @@ export const FavouritesList = ({
     findSpaceById,
     getSpaceIdentifier,
 }) => {
+    const fullSpaceLookup = [
+        ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : []),
+        ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
+        ...(highlightedSpace ? [highlightedSpace] : []),
+    ];
+    const uniq = new Map();
+    (spacesFavouritesList || []).forEach(f => {
+        const candidateId = f?.space_id || f?.favourite_id || null;
+        if (!candidateId) {
+            return;
+        }
+        const resolved = findSpaceById(fullSpaceLookup, candidateId);
+        if (!resolved) {
+            return;
+        }
+        if (!uniq.has(String(resolved.space_id))) {
+            uniq.set(String(resolved.space_id), f);
+        }
+    });
+    const favouritesToShow = Array.from(uniq.values()).slice(0, 3);
+    const hasFavourites = favouritesToShow.length > 0;
+
     return (
         <Box className="spaces-journey-favourites" sx={{ mb: 3 }}>
-            <StyledHeaderWithLinkToAllGridItem item xs={12}>
+            <StyledHeaderWithLinkToAllGridItem
+                item
+                xs={12}
+                sx={
+                    !hasFavourites
+                        ? {
+                              paddingBottom: '14px',
+                          }
+                        : undefined
+                }
+            >
                 <Typography component={'h2'}>Your favourite spaces</Typography>
-                <Link
-                    data-testid="spaces-homepage-favourites-all-link"
-                    to={serialiseJourneyUrl({
-                        view: 'results',
-                        intentId: favouriteIntentDefinition.id,
-                    })}
-                    onClick={e => {
-                        e.preventDefault();
-                        setSelectedIntentId(favouriteIntentDefinition.id);
-                        activateFavouritesResults();
+                {hasFavourites && (
+                    <Link
+                        data-testid="spaces-homepage-favourites-all-link"
+                        to={serialiseJourneyUrl({
+                            view: 'results',
+                            intentId: favouriteIntentDefinition.id,
+                        })}
+                        onClick={e => {
+                            e.preventDefault();
+                            setSelectedIntentId(favouriteIntentDefinition.id);
+                            activateFavouritesResults();
+                        }}
+                    >
+                        See all favourites
+                    </Link>
+                )}
+            </StyledHeaderWithLinkToAllGridItem>
+            {!hasFavourites && (
+                <Typography
+                    data-testid="spaces-homepage-favourites-empty-state"
+                    variant="body1"
+                    sx={{
+                        mt: 0,
+                        mb: 0,
+                        pt: 0,
+                        pb: 0,
+                        color: 'text.primary',
+                        fontSize: '1rem',
+                        lineHeight: 1.6,
                     }}
                 >
-                    See all favourites
-                </Link>
-            </StyledHeaderWithLinkToAllGridItem>
-            <StyledFavouritesContainerGrid
-                component={'ul'}
-                container
-                spacing={3}
-                data-testid="spaces-homepage-favourites-block"
-            >
-                {(() => {
-                    const fullSpaceLookup = [
-                        ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : []),
-                        ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
-                        ...(highlightedSpace ? [highlightedSpace] : []),
-                    ];
-                    const uniq = new Map();
-                    (spacesFavouritesList || []).forEach(f => {
-                        const candidateId = f?.space_id || f?.favourite_id || null;
-                        if (!candidateId) {
-                            return;
-                        }
-                        const resolved = findSpaceById(fullSpaceLookup, candidateId);
-                        if (!resolved) {
-                            return;
-                        }
-                        if (!uniq.has(String(resolved.space_id))) {
-                            uniq.set(String(resolved.space_id), f);
-                        }
-                    });
-                    const favouritesToShow = Array.from(uniq.values()).slice(0, 3);
-                    return favouritesToShow.map((fav, idx) => {
+                    Click the star icon next to a space&apos;s name to add to your favourites
+                </Typography>
+            )}
+            {hasFavourites && (
+                <StyledFavouritesContainerGrid
+                    component={'ul'}
+                    container
+                    spacing={3}
+                    data-testid="spaces-homepage-favourites-block"
+                >
+                    {favouritesToShow.map((fav, idx) => {
                         const space = findSpaceById(fullSpaceLookup, fav?.space_id) || null;
                         const landingSpaceId = space?.space_id || fav?.space_id;
                         const landingUrl = serialiseJourneyUrl({
@@ -101,9 +132,8 @@ export const FavouritesList = ({
                         });
                         const displayedSpaceName = `${space?.space_type_details?.space_type_name} ${space?.space_name || fav?.label || String(fav?.space_id)}`;
                         return (
-                            <>
+                            <React.Fragment key={`fav-${fav?.space_id || idx}`}>
                                 <SingleLinkCard
-                                    key={`fav-${fav?.space_id || idx}`}
                                     testId={`spaces-journey-favourite-card-${idx + 1}`}
                                     cardHeading={displayedSpaceName}
                                     sx={{
@@ -151,11 +181,11 @@ export const FavouritesList = ({
                                         />
                                     }
                                 />
-                            </>
+                            </React.Fragment>
                         );
-                    });
-                })()}
-            </StyledFavouritesContainerGrid>
+                    })}
+                </StyledFavouritesContainerGrid>
+            )}
         </Box>
     );
 };
