@@ -74,6 +74,8 @@ export const LIB_HOURS_API = () => ({
 // file uploading apis
 export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 
+export const FILE_UPLOAD_PRESIGNED = () => ({ apiUrl: 'file/upload/presigned' });
+
 export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keyword });
 
 export const LEARNING_RESOURCES_EXAMS_API = ({ keyword }) => ({ apiUrl: `exams/course/${keyword}/summary` });
@@ -262,11 +264,12 @@ export const DLOR_DEMOGRAPHICS_SAVE_API = () => ({ apiUrl: 'dlor/auth/demographi
 export const DLOR_REQUEST_API = () => ({ apiUrl: 'dlor/auth/object' });
 // dlor admin routes
 export const DLOR_CREATE_API = () => ({ apiUrl: 'dlor/admin/object' });
-
 export const DLOR_UPDATE_API = id => ({ apiUrl: `dlor/admin/object/${id}` });
-export const DLOR_OWNED_UPDATE_API = id => ({ apiUrl: `dlor/auth/object/${id}` });
-
 export const DLOR_DESTROY_API = ({ id }) => ({ apiUrl: `dlor/admin/object/${id}` });
+export const DLOR_OBJECT_FILE_DESTROY_API = ({ id, filename }) => ({
+    apiUrl: `dlor/auth/object/${id}/file/${filename}`,
+});
+export const DLOR_OWNED_UPDATE_API = id => ({ apiUrl: `dlor/auth/object/${id}` });
 export const DLOR_TEAM_DELETE_API = id => ({ apiUrl: `dlor/admin/team/${id}` });
 export const DLOR_TEAM_SINGLE_GET_API = ({ id }) => ({ apiUrl: `dlor/auth/team/${id}` });
 

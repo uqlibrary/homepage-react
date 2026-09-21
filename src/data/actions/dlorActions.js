@@ -43,6 +43,8 @@ import {
     DLOR_SCHEDULE_UPDATE_API,
     DLOR_REQUEST_KEYWORD_API,
     DLOR_DASHBOARD_API,
+    DLOR_OBJECT_FILE_DESTROY_API,
+    FILE_UPLOAD_PRESIGNED,
 } from 'repositories/routes';
 import { checkExpireSession } from './actionhelpers';
 
@@ -205,6 +207,66 @@ export const deleteDlor = dlorId => {
         }
     };
 };
+
+export function uploadObjectFile(id, filename, onProgress) {
+    return async dispatch => {
+        dispatch({ type: actions.DLOR_UPLOAD_OBJET_FILE_LOADING });
+        let presignedUrls;
+        try {
+            presignedUrls = await post(FILE_UPLOAD_PRESIGNED(), {
+                Key: `dlor/frontend/admin/objects/files/uploader/${id}/${filename}`,
+            });
+        } catch (error) {
+            dispatch({
+                type: actions.DLOR_UPLOAD_OBJET_FILE_FAILED,
+            });
+            checkExpireSession(dispatch, error);
+            return;
+        }
+
+        return put({
+            apiUrl: presignedUrls[0],
+            options: {
+                onUploadProgress: progressEvent => {
+                    const { loaded, total } = progressEvent;
+                    const percentage = Math.floor((loaded * 100) / total);
+                    onProgress?.(percentage);
+                },
+            },
+        })
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_UPLOAD_OBJET_FILE_SUCCESS,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_UPLOAD_OBJET_FILE_FAILED,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function deleteObjectFile(id, filename) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_DELETE_OBJET_FILE_LOADING });
+        return destroy(DLOR_OBJECT_FILE_DESTROY_API({ id, filename }))
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_DELETE_OBJET_FILE_SUCCESS,
+                });
+                return true;
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_DELETE_OBJET_FILE_FAILED,
+                });
+                checkExpireSession(dispatch, error);
+                return false;
+            });
+    };
+}
 
 export function loadOwningTeams() {
     return dispatch => {
