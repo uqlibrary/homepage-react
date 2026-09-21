@@ -75,6 +75,7 @@ import {
     getFlatFacilityTypeList,
     getFriendlyLocationDescription,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { getBookitUrlQueryParamError } from './bookitUrlValidation';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
@@ -499,6 +500,15 @@ export const EditSpaceForm = ({
                 message: 'Provide the booking link, or uncheck the checkbox.',
             });
         }
+
+        const bookitUrlValidationError = getBookitUrlQueryParamError(currentValues?.space_external_book_url);
+        if (bookitUrlValidationError) {
+            errorMessages.push({
+                field: 'space_external_book_url',
+                message: bookitUrlValidationError,
+            });
+        }
+
         if (
             (!!currentValues.isBookableCheckbox || !!currentValues.space_external_book_url) &&
             (!currentValues?.space_capacity || Number(currentValues?.space_capacity) < 1)
@@ -694,31 +704,7 @@ export const EditSpaceForm = ({
     };
 
     const getBookingUrlQuerystringWarning = spaceExternalBookUrl => {
-        if (!spaceExternalBookUrl) {
-            return null;
-        }
-
-        try {
-            const parsedUrl = new URL(spaceExternalBookUrl);
-            const isUqBookitDomain = parsedUrl?.hostname?.toLowerCase() === 'uqbookit.uq.edu.au';
-            const hasStandardQueryString = !!parsedUrl?.search && parsedUrl?.search !== '?';
-
-            // UQ Bookit routes commonly use hash fragments (e.g. #/app/booking-types/111?x=y).
-            // In those cases, URL.search is empty, so we also inspect the fragment for query params.
-            const hashValue = parsedUrl?.hash || '';
-            const hashWithoutPrefix = hashValue.startsWith('#') ? hashValue.slice(1) : hashValue;
-            const hasHashQueryString = hashWithoutPrefix.includes('?') && !hashWithoutPrefix.endsWith('?');
-
-            const hasQueryString = hasStandardQueryString || hasHashQueryString;
-
-            if (isUqBookitDomain && hasQueryString) {
-                return 'For uqbookit.uq.edu.au links, remove query string parameters (everything after "?").';
-            }
-        } catch {
-            // Ignore invalid URLs here; this is only a domain-specific warning.
-        }
-
-        return null;
+        return getBookitUrlQueryParamError(spaceExternalBookUrl);
     };
 
     function findCampusById(campusId) {
