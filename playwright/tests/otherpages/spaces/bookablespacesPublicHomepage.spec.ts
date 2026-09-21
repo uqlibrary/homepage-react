@@ -27,7 +27,7 @@ test.describe('Spaces Homepage', () => {
         const favBlock = page.getByTestId('spaces-homepage-favourites-block');
 
         // load the spaces homepage
-        await page.goto('/spaces');
+        await page.goto('/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
         // show the favourites block has the correct contents
@@ -53,7 +53,7 @@ test.describe('Spaces Homepage', () => {
     test.describe('Favourites', () => {
         test.beforeEach(async ({ page }) => {
             // load the spaces homepage
-            await page.goto('/spaces');
+            await page.goto('/spaces?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
         });
         test('clicking all Favourites link lands on the Results page', async ({ page }) => {
@@ -115,7 +115,7 @@ test.describe('Spaces Homepage', () => {
 
     test('spaces homepage can navigate to list view without filters', async ({ page }) => {
         // load the spaces homepage
-        await page.goto('/spaces');
+        await page.goto('/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
         // click the "See all spaces" link (to load the results page without anything selected)
@@ -131,7 +131,7 @@ test.describe('Spaces Homepage', () => {
     });
 
     test('intent click preselects filters in the current session but not via copied URL', async ({ page, browser }) => {
-        await page.goto('/spaces');
+        await page.goto('/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
         await page.getByTestId('spaces-journey-intent-card-postgrad').click();
@@ -165,7 +165,7 @@ test.describe('Spaces Homepage', () => {
     });
 
     test('intent selection persists across refresh in the same session and can be deselected', async ({ page }) => {
-        await page.goto('/spaces');
+        await page.goto('/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
         await page.getByTestId('spaces-journey-intent-card-postgrad').click();

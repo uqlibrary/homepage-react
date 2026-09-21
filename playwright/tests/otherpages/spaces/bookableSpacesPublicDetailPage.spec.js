@@ -97,7 +97,7 @@ test.describe('Spaces Detail page', () => {
     });
     test.describe('Favourites', () => {
         test('spaces detail page can UNfavourite', async ({ page }) => {
-            await page.goto('/spaces/detail/a00de3d4-7e11-47eb-8079-532bdef80def');
+            await page.goto('/spaces/detail/a00de3d4-7e11-47eb-8079-532bdef80def?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
 
             // page has loaded
@@ -116,7 +116,7 @@ test.describe('Spaces Detail page', () => {
             await expect(page.getByTestId('space-1-detail-unfavourite')).not.toBeVisible();
         });
         test('spaces detail page can favourite', async ({ page }) => {
-            await page.goto('/spaces/detail/97fd5_nm39_gh29');
+            await page.goto('/spaces/detail/97fd5_nm39_gh29?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
 
             // page has loaded

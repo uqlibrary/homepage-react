@@ -1552,7 +1552,7 @@ test.describe('Spaces', () => {
         test('can UNfavourite a space on the map page', async ({ page }) => {
             await page.goto('');
             await page.setViewportSize({ width: 1300, height: 1000 }); // set size before loading page
-            await page.goto('spaces/mapresults');
+            await page.goto('spaces/mapresults?user=libSpaces');
 
             // the space is currently favourited
             await expect(page.getByTestId('space-1-detail-unfavourite')).toBeVisible();
