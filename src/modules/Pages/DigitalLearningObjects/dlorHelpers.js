@@ -79,6 +79,7 @@ export function convertFileSizeToKb(fileSize, units) {
     return sizeInKb.toString();
 }
 export function getFileSizeString(fileSize, type) {
+    if (!Number.isFinite(fileSize)) return '';
     if (fileSize === 0) {
         if (type === 'unit') {
             return validFileSizeUnits[0];
