@@ -223,22 +223,6 @@ const StyledErrorCountBadge = styled(Badge)(() => ({
         right: -12,
     },
 }));
-const StyledWarningListBox = styled('div')(({ theme }) => ({
-    marginTop: '0.75rem',
-    padding: '0.75rem',
-    borderRadius: '4px',
-    backgroundColor: '#fffde7',
-    border: `1px solid ${theme.palette.warning.light}`,
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: '0.5rem',
-    '& p': {
-        margin: 0,
-    },
-    '& svg': {
-        flexShrink: 0,
-    },
-}));
 const StyledErrorSummaryBox = styled('div')(({ theme }) => ({
     marginTop: '0.75rem',
     padding: '0.7rem 0.9rem',
@@ -1560,7 +1544,6 @@ export const EditSpaceForm = ({
         );
     };
     const aboutPanel = () => {
-        const bookingUrlQuerystringWarning = getBookingUrlQuerystringWarning(formValues?.space_external_book_url);
         // const selectedFacilityTypes = formValues?.facility_types || [];
         // const selectedFacilityTypeIds = selectedFacilityTypes
         //     .map(ft => ft?.facility_type_id)
@@ -1724,12 +1707,6 @@ export const EditSpaceForm = ({
                                         {reportErrorMessage('space_external_book_url')}
                                     </StyledErrorMessageTypography>
                                 </FormControl>
-                                {!!bookingUrlQuerystringWarning && (
-                                    <StyledWarningListBox data-testid="spaces-booking-url-warning-list">
-                                        <WarningAmberIcon style={{ color: theme?.palette.warning.dark }} />
-                                        <p>{bookingUrlQuerystringWarning}</p>
-                                    </StyledWarningListBox>
-                                )}
                             </div>
                         )}
                     </StyledHighlightedGrid>
