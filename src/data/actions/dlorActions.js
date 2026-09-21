@@ -141,13 +141,14 @@ export function createDlor(request, isDlorAdminUser = true) {
         dispatch({ type: actions.DLOR_CREATING });
         console.log('POINT CHECK');
         return post(isDlorAdminUser ? DLOR_CREATE_API() : DLOR_REQUEST_API(), request)
-            .then(data => {
+            .then(response => {
                 dispatch({
                     type: actions.DLOR_CREATED,
-                    payload: data,
+                    payload: response,
                 });
                 // refresh the list after change, only if the user is an admin
                 !!isDlorAdminUser && dispatch(loadAllDLORs());
+                return response?.data?.object_id;
             })
             .catch(error => {
                 dispatch({
@@ -170,6 +171,7 @@ export function updateDlor(dlorId, request, isDlorAdminUser = true) {
                 });
                 // refresh the list after change
                 !!isDlorAdminUser && dispatch(loadAllDLORs());
+                return response?.data?.object_id;
             })
             .catch(error => {
                 dispatch({
@@ -692,12 +694,10 @@ export function loadDlorAdminNotes(uuid) {
     };
 }
 
-// eslint-disable-next-line camelcase
 export function saveDlorAdminNote(uuid, object_admin_note_content) {
     return dispatch => {
         dispatch({ type: actions.DLOR_ADMIN_NOTES_LOADING });
         return post(DLOR_ADMIN_NOTES_API(uuid), {
-            // eslint-disable-next-line camelcase
             object_admin_note_content,
         })
             .then(response => {
