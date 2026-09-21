@@ -3,16 +3,24 @@ import Box from '@mui/material/Box';
 import { getFileSizeString } from '../../../../DigitalLearningObjects/dlorHelpers';
 import Close from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import { Tooltip } from '@mui/material';
 
 const List = ({ onClear, file }) => {
     return (
-        <Box sx={{ my: 3 }}>
-            <>
-                {file.name} {getFileSizeString(file.size / 1000)}{' '}
+        <Box sx={{ my: 3, display: 'flex', alignItems: 'center' }}>
+            {file.name} {getFileSizeString(file.size / 1000)}{' '}
+            <Tooltip
+                componentsProps={{
+                    tooltip: {
+                        sx: { maxWidth: 200, textAlign: 'center' },
+                    },
+                }}
+                title="Click to remove file. The file will be deleted upon submitting the form."
+            >
                 <IconButton onClick={onClear}>
                     <Close fontSize="small" />
                 </IconButton>
-            </>
+            </Tooltip>
         </Box>
     );
 };
