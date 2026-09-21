@@ -98,11 +98,57 @@ const SpacesPagination = ({ page, count, onPageChange, totalItems, itemsPerPage 
 
     const visibleItems = buildVisibleItems(page, count);
 
+    const scrollListToTop = () => {
+        if (typeof document === 'undefined') {
+            return;
+        }
+
+        const scrollTarget =
+            document.querySelector('[data-testid="bookable-spaces-journey-results-view"]') ||
+            document.getElementById('space-wrapper') ||
+            document.getElementById('content') ||
+            document.querySelector('main');
+
+        if (scrollTarget) {
+            if (typeof scrollTarget.scrollIntoView === 'function') {
+                try {
+                    scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    return;
+                } catch {
+                    // Fall through to the manual scroll options below.
+                }
+            }
+
+            if (typeof scrollTarget.scrollTo === 'function') {
+                try {
+                    scrollTarget.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                    scrollTarget.scrollTop = 0;
+                    return;
+                } catch {
+                    // Fall through to the window fallback below.
+                }
+            }
+        }
+
+        if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+            try {
+                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+            } catch {
+                try {
+                    window.scrollTo(0, 0);
+                } catch {
+                    // Ignore browsers and test runners that do not implement scrollTo.
+                }
+            }
+        }
+    };
+
     const handlePageSelect = nextPage => {
         if (nextPage === page || nextPage < 1 || nextPage > count) {
             return;
         }
 
+        scrollListToTop();
         onPageChange?.(nextPage);
     };
 

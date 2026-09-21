@@ -74,4 +74,25 @@ describe('SpacesPagination', () => {
         expect(onPageChange).toHaveBeenNthCalledWith(1, 3);
         expect(onPageChange).toHaveBeenNthCalledWith(2, 9);
     });
+
+    it('scrolls the results list back to the top when page changes', () => {
+        const onPageChange = jest.fn();
+        const scrollToMock = jest.fn();
+        Object.defineProperty(window, 'scrollTo', { value: scrollToMock, writable: true, configurable: true });
+
+        const resultsView = document.createElement('section');
+        resultsView.setAttribute('data-testid', 'bookable-spaces-journey-results-view');
+        resultsView.scrollIntoView = jest.fn();
+        document.body.appendChild(resultsView);
+
+        renderPagination({ page: 1, count: 4, totalItems: 40, itemsPerPage: 10, onPageChange });
+
+        fireEvent.click(screen.getByRole('button', { name: 'Page 2' }));
+
+        expect(resultsView.scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+        expect(scrollToMock).not.toHaveBeenCalled();
+        expect(onPageChange).toHaveBeenCalledWith(2);
+
+        document.body.removeChild(resultsView);
+    });
 });
