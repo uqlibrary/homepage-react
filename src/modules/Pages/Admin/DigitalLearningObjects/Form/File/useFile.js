@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 const useFile = ({ mode, dlorItem }) => {
     const [existingFile, setExistingFile] = useState();
     const [fileToBeUploaded, setFileToBeUploaded] = useState();
+    const [uploadProgress, setUploadProgress] = useState(0);
     const hasFile = Boolean(fileToBeUploaded || (existingFile && !existingFile?.markedForDeletion));
 
     // propagate dlorItem file data to local state file
@@ -31,7 +32,7 @@ const useFile = ({ mode, dlorItem }) => {
         setExistingFile(prev => prev && { ...prev, markedForDeletion: true });
     }, [fileToBeUploaded]);
 
-    return [hasFile, existingFile, fileToBeUploaded, onFileChange, onClearFile];
+    return [hasFile, existingFile, fileToBeUploaded, uploadProgress, setUploadProgress, onFileChange, onClearFile];
 };
 
 export default useFile;

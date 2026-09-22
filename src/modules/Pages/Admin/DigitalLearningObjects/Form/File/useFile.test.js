@@ -4,11 +4,12 @@ import useFile from './useFile';
 describe('useFile', () => {
     it('should return default state when no dlorItem is provided', () => {
         const { result } = renderHook(() => useFile({ mode: 'create', dlorItem: null }));
-        const [hasFile, existingFile, fileToBeUploaded] = result.current;
+        const [hasFile, existingFile, fileToBeUploaded, uploadProgress] = result.current;
 
         expect(hasFile).toBe(false);
         expect(existingFile).toEqual(undefined);
         expect(fileToBeUploaded).toBeUndefined();
+        expect(uploadProgress).toEqual(0);
     });
 
     it('should propagate dlorItem file data to existingFile in edit mode', () => {
@@ -49,7 +50,7 @@ describe('useFile', () => {
         const { result } = renderHook(() => useFile({ mode: 'create', dlorItem: null }));
 
         act(() => {
-            const [, , , onFileChange] = result.current;
+            const [, , , , , onFileChange] = result.current;
             onFileChange({ name: 'new.pdf', size: 500 });
         });
 
@@ -62,12 +63,12 @@ describe('useFile', () => {
         const { result } = renderHook(() => useFile({ mode: 'create', dlorItem: null }));
 
         act(() => {
-            const [, , , onFileChange] = result.current;
+            const [, , , , , onFileChange] = result.current;
             onFileChange({ name: 'new.pdf', size: 500 });
         });
 
         act(() => {
-            const [, , , , onClearFile] = result.current;
+            const [, , , , , , onClearFile] = result.current;
             onClearFile();
         });
 
@@ -81,7 +82,7 @@ describe('useFile', () => {
         const { result } = renderHook(() => useFile({ mode: 'edit', dlorItem }));
 
         act(() => {
-            const [, , , , onClearFile] = result.current;
+            const [, , , , , , onClearFile] = result.current;
             onClearFile();
         });
 
@@ -97,7 +98,7 @@ describe('useFile', () => {
         });
 
         act(() => {
-            const [, , , , onClearFile] = result.current;
+            const [, , , , , , onClearFile] = result.current;
             onClearFile();
         });
 
