@@ -3,7 +3,10 @@ import React from 'react';
 import { fireEvent, rtlRender, screen, waitFor } from 'test-utils';
 import { useCookies } from 'react-cookie';
 
-import { displayToastErrorMessage, displayToastMessage } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
+import {
+    displayToastErrorMessage,
+    displayToastMessage,
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import BookableSpacesManageSpaceTypes, {
     getBookableSpaceTypeRows,
     getKnownSpaceTypes,
@@ -151,18 +154,28 @@ describe('BookableSpacesManageSpaceTypes', () => {
         expect(getKnownSpaceTypes(undefined)).toEqual([]);
         expect(getKnownSpaceTypes({ data: {} })).toEqual([]);
         expect(getSpaceRowsByPagination(undefined, 0, 5)).toEqual([]);
-        expect(getSpaceRowsByPagination({ data: { locations: [{ space_id: 1 }, { space_id: 2 }, { space_id: 3 }] } }, 0, 2)).toEqual([
+        expect(
+            getSpaceRowsByPagination(
+                { data: { locations: [{ space_id: 1 }, { space_id: 2 }, { space_id: 3 }] } },
+                0,
+                2,
+            ),
+        ).toEqual([
             { spaceId: 1, showSpace: true },
             { spaceId: 2, showSpace: true },
             { spaceId: 3, showSpace: false },
         ]);
         expect(showSpaceByPagination(0, 0, 5)).toBe(true);
         expect(showSpaceByPagination(10, 1, 5)).toBe(false);
-        expect(getBookableSpaceTypeRows({
-            data: {
-                known_space_types: [{ space_type_id: 9, space_type_name: 'No count', space_type_description: 'Missing count' }],
-            },
-        })).toEqual([
+        expect(
+            getBookableSpaceTypeRows({
+                data: {
+                    known_space_types: [
+                        { space_type_id: 9, space_type_name: 'No count', space_type_description: 'Missing count' },
+                    ],
+                },
+            }),
+        ).toEqual([
             {
                 spaceTypeId: 9,
                 spaceTypeName: 'No count',
@@ -441,7 +454,9 @@ describe('BookableSpacesManageSpaceTypes', () => {
         expect(actions.createBookableSpaceType).not.toHaveBeenCalled();
 
         fireEvent.change(getInput('space-types-add-name-input'), { target: { value: '   Lecture room  ' } });
-        fireEvent.change(getInput('space-types-add-description-input'), { target: { value: '  Shared teaching room  ' } });
+        fireEvent.change(getInput('space-types-add-description-input'), {
+            target: { value: '  Shared teaching room  ' },
+        });
         fireEvent.click(screen.getByTestId('space-types-add-ok-button'));
 
         await waitFor(() => {
