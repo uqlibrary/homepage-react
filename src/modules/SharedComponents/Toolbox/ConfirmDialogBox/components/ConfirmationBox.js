@@ -33,6 +33,7 @@ export const ConfirmationBox = ({
     noMinContentWidth = false,
     disableButtonsWhenBusy = false,
     isBusy = false,
+    contentProps = {},
     actionProps = {},
     altActionProps = {},
     cancelProps = {},
@@ -55,7 +56,7 @@ export const ConfirmationBox = ({
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${confirmationBoxId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
-            <DialogContent style={{ minWidth: !noMinContentWidth ? 400 : 'auto' }}>
+            <DialogContent style={{ minWidth: !noMinContentWidth ? 400 : 'auto' }} {...contentProps}>
                 <DialogContentText data-testid="message-content" component="div">
                     {locale.confirmationMessage}
                 </DialogContentText>
@@ -135,6 +136,7 @@ ConfirmationBox.propTypes = {
     additionalInformation: PropTypes.string,
     showAdditionalInformation: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
+    contentProps: PropTypes.object,
     actionProps: PropTypes.object,
     altActionProps: PropTypes.object,
     cancelProps: PropTypes.object,

@@ -6,6 +6,7 @@ const Dialog = ({ title, text }) => (
         actionButtonColor="primary"
         actionButtonVariant="contained"
         confirmationBoxId="dlor-object-file-dialog"
+        contentProps={{ sx: { textAlign: 'center' } }}
         hideActionButton
         hideCancelButton
         isOpen
@@ -40,7 +41,8 @@ const Dialogs = ({
                 title="Error"
                 text={
                     <>
-                        Error while deleting file <b>{existingFile.name}</b>.<br />
+                        Error while deleting file <b>{existingFile.name}</b>
+                        <br />
                         Please refresh the page and try again.
                     </>
                 }
@@ -63,7 +65,8 @@ const Dialogs = ({
                 title="Error"
                 text={
                     <>
-                        Error while uploading file <b>{fileToBeUploaded.name}</b>.<br />
+                        Error while uploading file <b>{fileToBeUploaded.name}</b>
+                        <br />
                         Please refresh the page and try again.
                     </>
                 }
