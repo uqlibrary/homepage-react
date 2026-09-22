@@ -107,6 +107,12 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         weeklyHoursError: null,
     };
 
+    const mockUsers = {
+        loggedOut: { id: null, label: 'Guest' },
+        noFavourites: { id: 101, label: 'No favourites user' },
+        withFavourites: { id: 202, label: 'Favourite user' },
+    };
+
     beforeEach(() => {
         MockDate.reset();
         window.history.replaceState({}, '', '/#/spaces');
@@ -124,6 +130,59 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             </WithRouter>,
         );
     };
+
+    const mockUserScenarios = [
+        {
+            name: 'logged out user',
+            state: { isLoggedIn: false, spacesFavouritesList: [] },
+            expectHeading: false,
+            expectEmptyState: false,
+            expectFavouriteCard: false,
+        },
+        {
+            name: 'logged in user with no favourites',
+            state: { isLoggedIn: true, spacesFavouritesList: [] },
+            expectHeading: true,
+            expectEmptyState: true,
+            expectFavouriteCard: false,
+        },
+        {
+            name: 'logged in user with favourites',
+            state: {
+                isLoggedIn: true,
+                spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+                filteredSpaceLocations: [baseSpace],
+                allSpaceLocations: [baseSpace],
+                highlightedSpace: baseSpace,
+            },
+            expectHeading: true,
+            expectEmptyState: false,
+            expectFavouriteCard: true,
+        },
+    ];
+
+    it.each(mockUserScenarios)('renders the landing state for a $name', ({ state, expectHeading, expectEmptyState, expectFavouriteCard }) => {
+        renderJourney({
+            ...defaultProps,
+            ...state,
+        });
+
+        expect(screen.getByText('Find library study spaces')).toBeInTheDocument();
+
+        if (expectHeading) {
+            expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
+        } else {
+            expect(screen.queryByText('Your favourite spaces')).not.toBeInTheDocument();
+        }
+
+        if (expectEmptyState) {
+            expect(screen.getByTestId('spaces-homepage-favourites-empty-state')).toBeInTheDocument();
+        }
+
+        if (expectFavouriteCard) {
+            expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
+        }
+    });
 
     const renderSidebarFilters = props =>
         rtlRender(
@@ -276,6 +335,292 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         await waitFor(() => {
             expect(scrollToMock).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'auto' });
         });
+    });
+
+    it('renders the empty favourites state for a logged-in user with no favourites', () => {
+        const user = mockUsers.noFavourites;
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: !!user.id,
+            spacesFavouritesList: [],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+        });
+
+        expect(screen.getByText(/Click the star icon next to a space/i)).toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-homepage-favourites-all-link')).not.toBeInTheDocument();
+    });
+
+    it('renders the favourites block for a logged-in user with saved spaces', () => {
+        const user = mockUsers.withFavourites;
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: !!user.id,
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+        });
+
+        expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
+        expect(screen.getByTestId('spaces-homepage-favourites-all-link')).toBeInTheDocument();
+    });
+
+    it('does not render the favourites UI for a logged-out user', () => {
+        const user = mockUsers.loggedOut;
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: !!user.id,
+            spacesFavouritesList: [],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+        });
+
+        expect(screen.queryByText('Your favourite spaces')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-homepage-favourites-empty-state')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-homepage-favourites-all-link')).not.toBeInTheDocument();
+    });
+
+    it('keeps the original results list when there are no valid campus assignments', () => {
+        window.history.replaceState({}, '', '/#/spaces/results');
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+            campusList: [
+                { campus_id: null, campus_name: 'Missing id', campus_space_count: 5 },
+                { campus_id: 300, campus_name: '', campus_space_count: 5 },
+            ],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+        });
+
+        expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
+    });
+
+    it('ignores restored intent filters when the facility groups list is empty', async () => {
+        const setSelectedFacilityTypes = jest.fn();
+
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
+
+        renderJourney({
+            ...defaultProps,
+            setSelectedFacilityTypes,
+            selectedFacilityTypes: [],
+            filteredFacilityTypeList: { data: { facility_type_groups: [] } },
+            facilityTypeList: { data: { facility_type_groups: [] } },
+        });
+
+        await waitFor(() => {
+            expect(setSelectedFacilityTypes).not.toHaveBeenCalled();
+        });
+    });
+
+    it('does not apply any intent filters when the available facility ids are invalid', async () => {
+        const setSelectedFacilityTypes = jest.fn();
+
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
+
+        renderJourney({
+            ...defaultProps,
+            setSelectedFacilityTypes,
+            selectedFacilityTypes: [],
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: null, facility_type_name: 'Low noise level' }],
+                        },
+                    ],
+                },
+            },
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: null, facility_type_name: 'Low noise level' }],
+                        },
+                    ],
+                },
+            },
+        });
+
+        await waitFor(() => {
+            expect(setSelectedFacilityTypes).not.toHaveBeenCalled();
+        });
+    });
+
+    it('leaves filters unselected when the restored intent matches no facility names', async () => {
+        const setSelectedFacilityTypes = jest.fn();
+
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
+
+        renderJourney({
+            ...defaultProps,
+            setSelectedFacilityTypes,
+            selectedFacilityTypes: [],
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Power points' }],
+                        },
+                    ],
+                },
+            },
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Power points' }],
+                        },
+                    ],
+                },
+            },
+        });
+
+        await waitFor(() => {
+            expect(setSelectedFacilityTypes).toHaveBeenCalledWith(
+                expect.arrayContaining([
+                    expect.objectContaining({ facility_type_id: 11, selected: false, unselected: false }),
+                ]),
+            );
+        });
+    });
+
+    it('ignores malformed persisted journey state instead of crashing', () => {
+        window.sessionStorage.setItem('bookableSpacesJourneyViewState', '{not valid json');
+        window.history.replaceState({}, '', '/#/spaces/results');
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+            filteredSpaceLocations: [baseSpace],
+        });
+
+        expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
+    });
+
+    it('uses the controlled favourite filter prop without mutating local state', () => {
+        const setControlledShowFavouriteSpacesOnly = jest.fn();
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+            isLoggedIn: true,
+            showFavouriteSpacesOnly: true,
+            setShowFavouriteSpacesOnly: setControlledShowFavouriteSpacesOnly,
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+        });
+
+        fireEvent.click(screen.getByRole('checkbox', { name: /your favourites/i }));
+
+        expect(setControlledShowFavouriteSpacesOnly).toHaveBeenCalledWith(false);
+    });
+
+    it('does not reset scroll state when the current route is outside the journey', () => {
+        const scrollToMock = jest.fn();
+        window.scrollTo = scrollToMock;
+
+        rtlRender(
+            <WithRouter route="*" initialEntries={['/library']}>
+                <BookableSpacesWrapper {...defaultProps} />
+            </WithRouter>,
+        );
+
+        expect(scrollToMock).not.toHaveBeenCalled();
+    });
+
+    it('activates the favourites-only flow when the favourite intent is selected', () => {
+        const setSelectedFacilityTypes = jest.fn();
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: true,
+            setSelectedFacilityTypes,
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Low noise level' }],
+                        },
+                    ],
+                },
+            },
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Low noise level' }],
+                        },
+                    ],
+                },
+            },
+        });
+
+        fireEvent.click(screen.getByTestId('spaces-homepage-favourites-all-link'));
+
+        expect(screen.getByTestId('bookable-spaces-journey-results-view')).toBeInTheDocument();
+        const favouritesToggle = screen.getByRole('checkbox', { name: /your favourites/i });
+        expect(favouritesToggle).toBeChecked();
+    });
+
+    it('clears the journey state when the user chooses see all spaces from the landing page', () => {
+        const onResetAllFilters = jest.fn();
+
+        renderJourney({
+            ...defaultProps,
+            onResetAllFilters,
+            isLoggedIn: true,
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+        });
+
+        fireEvent.click(screen.getByRole('link', { name: /see all spaces/i }));
+
+        expect(onResetAllFilters).toHaveBeenCalled();
     });
 
     it('uses a simple results link for the landing card without encoding intent in the URL', () => {

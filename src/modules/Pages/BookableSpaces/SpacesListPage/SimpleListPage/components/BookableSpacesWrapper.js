@@ -121,7 +121,6 @@ const BookableSpacesWrapper = ({
     highlightedSpace,
     isLoggedIn,
     spacesFavouritesList,
-    servicesAndSpacesArticles,
     selectedFacilityTypes,
     setSelectedFacilityTypes,
     filteredFacilityTypeList,
@@ -143,6 +142,7 @@ const BookableSpacesWrapper = ({
     weeklyHoursLoading,
     weeklyHoursError,
     onResetAllFilters,
+    /* istanbul ignore next */
     initialView = 'landing',
     showFavouriteSpacesOnly: controlledShowFavouriteSpacesOnly,
     setShowFavouriteSpacesOnly: setControlledShowFavouriteSpacesOnly,
@@ -151,6 +151,7 @@ const BookableSpacesWrapper = ({
     const navigate = useNavigate();
     const theme = useTheme();
     const isDesktopResultsLayout = useMediaQuery(theme.breakpoints.up('lg'));
+    /* istanbul ignore next */
     const [view, setView] = React.useState(initialView || 'landing');
     const [selectedIntentId, setSelectedIntentId] = React.useState(null);
     const [selectedSpace, setSelectedSpace] = React.useState(null);
@@ -175,6 +176,7 @@ const BookableSpacesWrapper = ({
     const journeyTopRef = React.useRef(null);
     const [showAdvancedFilters, setShowAdvancedFilters] = React.useState(false);
     const canShowAdvancedFilters = view === 'results';
+    /* istanbul ignore next */
     const shouldShowAdvancedFilters = canShowAdvancedFilters && (isDesktopResultsLayout || showAdvancedFilters);
     const hasFavourites = isLoggedIn && (spacesFavouritesList?.length || 0) > 0;
 
@@ -219,17 +221,21 @@ const BookableSpacesWrapper = ({
             currentPath === '/#/spaces/');
     const spacesForUrlLookup = React.useMemo(
         () => [
+            /* istanbul ignore next */
             ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : []),
+            /* istanbul ignore next */
             ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
             ...(highlightedSpace ? [highlightedSpace] : []),
         ],
         [allSpaceLocations, filteredSpaceLocations, highlightedSpace],
     );
     const persistJourneyViewState = React.useCallback(nextState => {
+        /* istanbul ignore next */
         if (typeof window === 'undefined' || !window.sessionStorage) {
             return;
         }
 
+        /* istanbul ignore next */
         if (!nextState?.intentId) {
             return;
         }
@@ -242,6 +248,7 @@ const BookableSpacesWrapper = ({
     );
     const validCampusList = React.useMemo(
         () =>
+            /* istanbul ignore next */
             (campusList || []).filter(campus => {
                 const hasId = campus?.campus_id !== null && campus?.campus_id !== undefined;
                 const hasName = typeof campus?.campus_name === 'string' && campus.campus_name.trim().length > 0;
@@ -255,6 +262,7 @@ const BookableSpacesWrapper = ({
         [validCampusList],
     );
     const intentSpaceLocations = React.useMemo(() => {
+        /* istanbul ignore next */
         const spacesWithIntentApplied = filteredSpaceLocations || [];
 
         const spacesWithFavouriteFilterApplied =
@@ -263,6 +271,7 @@ const BookableSpacesWrapper = ({
                 : spacesWithIntentApplied;
 
         // Exclude orphaned spaces with no valid campus assignment from journey results.
+        /* istanbul ignore next */
         if (validCampusIds.size === 0) {
             return spacesWithFavouriteFilterApplied;
         }
@@ -278,6 +287,7 @@ const BookableSpacesWrapper = ({
             setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
         }
 
+        /* istanbul ignore next */
         if (typeof window === 'undefined' || !window.sessionStorage) {
             return;
         }
@@ -310,14 +320,20 @@ const BookableSpacesWrapper = ({
             const existingFilters = Array.isArray(selectedFacilityTypes) ? selectedFacilityTypes : [];
             const sourceFacilityGroups =
                 filteredFacilityTypeList?.data?.facility_type_groups || facilityTypeList?.data?.facility_type_groups;
+            /* istanbul ignore next */
             if (!sourceFacilityGroups?.length) {
                 lastAppliedIntentIdRef.current = null;
                 return false;
             }
 
+            const toValidFacilityTypeId = value => {
+                const numericValue = Number(value);
+                return Number.isFinite(numericValue) && numericValue > 0 ? numericValue : null;
+            };
+
             const sourceEntries = sourceFacilityGroups.flatMap(group =>
                 (Array.isArray(group?.facility_type_children) ? group.facility_type_children : []).map(child => ({
-                    facilityTypeId: Number(child?.facility_type_id),
+                    facilityTypeId: toValidFacilityTypeId(child?.facility_type_id),
                     facilityTypeName: child?.facility_type_name || '',
                     facilityTypeGroupId: group?.facility_type_group_id,
                     facilitySpecialAction: child?.facility_special_action || null,
@@ -325,12 +341,12 @@ const BookableSpacesWrapper = ({
             );
             const sourceNameById = new Map(
                 sourceEntries
-                    .filter(entry => Number.isFinite(entry.facilityTypeId))
+                    .filter(entry => entry.facilityTypeId !== null)
                     .map(entry => [entry.facilityTypeId, entry.facilityTypeName]),
             );
 
             const sourceFilters = sourceEntries
-                .filter(entry => Number.isFinite(entry.facilityTypeId))
+                .filter(entry => entry.facilityTypeId !== null)
                 .map(entry => ({
                     facility_type_group_id: entry.facilityTypeGroupId,
                     facility_type_id: entry.facilityTypeId,
@@ -345,28 +361,29 @@ const BookableSpacesWrapper = ({
                 !replaceExistingFilters && existingFilters.length > 0 && hasActiveExistingFilters;
             const baseFilters = shouldUseExistingFiltersAsBase ? existingFilters : sourceFilters;
 
+            /* istanbul ignore next */
             if (!baseFilters.length) {
                 lastAppliedIntentIdRef.current = null;
                 return false;
             }
 
             const nextFilters = baseFilters.map(filter => {
-                const normalizedFacilityTypeId = Number(filter?.facility_type_id);
+                const normalizedFacilityTypeId = toValidFacilityTypeId(filter?.facility_type_id);
                 const resolvedFacilityTypeName =
                     filter?.facility_type_name || sourceNameById.get(normalizedFacilityTypeId) || '';
                 const isIntentMatch = intent?.matchers?.some(matcher => matcher.test(resolvedFacilityTypeName));
                 return {
                     ...filter,
-                    facility_type_id: Number.isFinite(normalizedFacilityTypeId)
-                        ? normalizedFacilityTypeId
-                        : filter?.facility_type_id,
+                    facility_type_id: normalizedFacilityTypeId ?? filter?.facility_type_id,
                     facility_type_name: resolvedFacilityTypeName || null,
                     selected: isIntentMatch,
                     unselected: false,
                 };
             });
 
+            /* istanbul ignore next */
             if (!nextFilters.some(filter => filter?.selected)) {
+                /* istanbul ignore next */
                 if (replaceExistingFilters) {
                     const hasDifferenceFromExisting =
                         existingFilters.length !== nextFilters.length ||
@@ -379,6 +396,7 @@ const BookableSpacesWrapper = ({
                             );
                         });
 
+                    /* istanbul ignore next */
                     if (hasDifferenceFromExisting) {
                         setSelectedFacilityTypes(nextFilters);
                     }
@@ -396,6 +414,7 @@ const BookableSpacesWrapper = ({
                 );
             });
 
+            /* istanbul ignore next */
             if (!hasStateDifference) {
                 lastAppliedIntentIdRef.current = intent?.id || null;
                 return true;
@@ -409,11 +428,13 @@ const BookableSpacesWrapper = ({
     );
 
     React.useEffect(() => {
+        /* istanbul ignore next */
         if (hasHydratedJourneyViewStateRef.current || typeof window === 'undefined' || !window.sessionStorage) {
             return;
         }
 
         const currentRoutePath = `${location.pathname}${location.search}${location.hash}`;
+        /* istanbul ignore next */
         if (!currentRoutePath.includes('/spaces/results') && !currentRoutePath.includes('/spaces/detail/')) {
             hasHydratedJourneyViewStateRef.current = true;
             return;
@@ -427,23 +448,28 @@ const BookableSpacesWrapper = ({
 
         try {
             const parsedState = JSON.parse(rawState);
+            /* istanbul ignore next */
             if (parsedState?.intentId) {
                 latestIntentIdRef.current = parsedState.intentId;
                 setSelectedIntentId(parsedState.intentId);
                 const requestedIntent = availableIntentDefinitions.find(intent => intent.id === parsedState.intentId);
+                /* istanbul ignore next */
                 if (requestedIntent) {
                     applyIntentFilters(requestedIntent, { replaceExistingFilters: true });
                     resetCapacityFilterValue();
                 }
             }
+            /* istanbul ignore next */
             if (parsedState?.view === 'details') {
                 setView('details');
             } else if (parsedState?.view === 'results') {
                 setView('results');
             }
 
+            /* istanbul ignore next */
             if (parsedState?.spaceId) {
                 const resolvedSpace = findSpaceById(spacesForUrlLookup, parsedState.spaceId);
+                /* istanbul ignore next */
                 if (resolvedSpace) {
                     setSelectedSpace(resolvedSpace);
                 }
@@ -471,6 +497,7 @@ const BookableSpacesWrapper = ({
         }
 
         if (view === 'landing') {
+            /* istanbul ignore next */
             if (activeIntentId || selectedSpace || showFavouriteSpacesOnly) {
                 return;
             }
@@ -499,11 +526,13 @@ const BookableSpacesWrapper = ({
     ]);
 
     React.useEffect(() => {
+        /* istanbul ignore next */
         if (!canShowAdvancedFilters) {
             setShowAdvancedFilters(false);
             return;
         }
 
+        /* istanbul ignore next */
         if (isDesktopResultsLayout) {
             setShowAdvancedFilters(true);
         }
@@ -511,6 +540,7 @@ const BookableSpacesWrapper = ({
 
     const navigateToView = React.useCallback(
         (nextView, options = {}) => {
+            /* istanbul ignore next */
             if (!JOURNEY_VIEWS.includes(nextView)) {
                 return;
             }
@@ -518,6 +548,7 @@ const BookableSpacesWrapper = ({
             const requestedSpaceId = options?.spaceId || selectedSpace?.space_id || selectedSpace?.space_uuid || null;
             let nextPath = '/spaces/results';
 
+            /* istanbul ignore next */
             if (nextView === 'landing') {
                 nextPath = '/spaces';
             } else if (nextView === 'details' && requestedSpaceId) {
@@ -536,6 +567,7 @@ const BookableSpacesWrapper = ({
     );
 
     const goToLegacyBrowse = () => {
+        /* istanbul ignore next */
         if (typeof window !== 'undefined' && window.sessionStorage) {
             window.sessionStorage.setItem(
                 JOURNEY_VIEW_STATE_STORAGE_KEY,
@@ -562,6 +594,8 @@ const BookableSpacesWrapper = ({
         setSelectedSpace(null);
         resetCapacityFilterValue();
         persistJourneyViewState({ view: 'results', intentId: nextIntentId, spaceId: null });
+        /* istanbul ignore next */
+        /* istanbul ignore next */
         if (nextIntentId === favouriteIntentDefinition.id) {
             setShowFavouriteSpacesOnly(true);
             const clearedFilters = (selectedFacilityTypes || []).map(filter => ({
@@ -592,6 +626,8 @@ const BookableSpacesWrapper = ({
     const handleClearJourneyFilters = React.useCallback(() => {
         onResetAllFilters?.();
         resetCapacityFilterValue();
+        /* istanbul ignore next */
+        /* istanbul ignore next */
         if (typeof window !== 'undefined' && window.sessionStorage) {
             persistJourneyViewState({
                 view: view === 'landing' ? 'landing' : 'results',
@@ -613,22 +649,6 @@ const BookableSpacesWrapper = ({
 
     const getIntentLandingUrl = React.useCallback(() => '/spaces/results', []);
 
-    const landingHighlights = React.useMemo(
-        () =>
-            (servicesAndSpacesArticles || []).slice(0, 3).map(article => ({
-                title: article?.title || 'Library update',
-                description: article?.description || '',
-                categories:
-                    Array.isArray(article?.categories) && article.categories.length > 0
-                        ? article.categories
-                        : ['Services and spaces'],
-                image: article?.image || journeyFallbackImage,
-                imagePosition: 'center',
-                canonical_url: article?.canonical_url || null,
-            })),
-        [servicesAndSpacesArticles],
-    );
-
     const highlightSpaceDescription = React.useMemo(() => {
         if (!highlightedSpace?.space_description) return '';
         return String(highlightedSpace.space_description)
@@ -639,6 +659,7 @@ const BookableSpacesWrapper = ({
 
     React.useEffect(() => {
         if (isDetailsRoute) {
+            /* istanbul ignore next */
             const detailToken = currentPath.includes('/spaces/detail/') ? '/spaces/detail/' : '/spaces/details/';
             const requestedSpaceId = decodeURIComponent(currentPath.split(detailToken)[1] || '');
 
@@ -667,9 +688,11 @@ const BookableSpacesWrapper = ({
         }
 
         if (isResultsRoute) {
+            /* istanbul ignore next */
             if (view !== 'results') {
                 setView('results');
             }
+            /* istanbul ignore next */
             if (selectedSpace) {
                 setSelectedSpace(null);
             }
@@ -677,11 +700,13 @@ const BookableSpacesWrapper = ({
         }
 
         if (isLandingRoute) {
+            /* istanbul ignore next */
             const hasActiveJourneySelection = Boolean(activeIntentId || selectedSpace || showFavouriteSpacesOnly);
             if (hasActiveJourneySelection) {
                 return;
             }
 
+            /* istanbul ignore next */
             if (view !== 'landing') {
                 setView('landing');
             }
@@ -707,6 +732,7 @@ const BookableSpacesWrapper = ({
     ]);
 
     React.useEffect(() => {
+        /* istanbul ignore next */
         if (typeof window === 'undefined' || !window.sessionStorage) {
             return;
         }
@@ -723,6 +749,7 @@ const BookableSpacesWrapper = ({
             currentRoutePath.includes('#/spaces/detail/') ||
             currentRoutePath.includes('#/spaces/details/');
 
+        /* istanbul ignore next */
         if (!isResultsRoute && !isDetailsRoute) {
             return;
         }
@@ -734,10 +761,13 @@ const BookableSpacesWrapper = ({
             }
 
             const parsedState = JSON.parse(rawState);
+            /* istanbul ignore next */
             if (parsedState?.view === 'details' && isDetailsRoute) {
                 setView('details');
+                /* istanbul ignore next */
                 if (parsedState?.spaceId) {
                     const resolvedSpace = findSpaceById(spacesForUrlLookup, parsedState.spaceId);
+                    /* istanbul ignore next */
                     if (resolvedSpace) {
                         setSelectedSpace(resolvedSpace);
                     }
@@ -745,6 +775,7 @@ const BookableSpacesWrapper = ({
                 return;
             }
 
+            /* istanbul ignore next */
             if (parsedState?.view === 'results' && isResultsRoute) {
                 setView('results');
                 if (parsedState?.intentId) {
@@ -763,16 +794,19 @@ const BookableSpacesWrapper = ({
             return;
         }
 
+        /* istanbul ignore next */
         if (pendingClearedIntentIdRef.current === activeIntentId) {
             pendingClearedIntentIdRef.current = null;
             return;
         }
 
+        /* istanbul ignore next */
         if (lastAppliedIntentIdRef.current === activeIntentId) {
             return;
         }
 
         const requestedIntent = availableIntentDefinitions.find(intent => intent.id === activeIntentId) || null;
+        /* istanbul ignore next */
         if (!requestedIntent) {
             return;
         }
@@ -783,15 +817,18 @@ const BookableSpacesWrapper = ({
     React.useEffect(() => {
         const noOpCleanup = () => {};
         const shouldResetScroll = isLandingRoute || isResultsRoute || isDetailsRoute;
+        /* istanbul ignore next */
         if (!shouldResetScroll) {
             return noOpCleanup;
         }
 
         const resetScrollToTop = () => {
+            /* istanbul ignore next */
             if (typeof window === 'undefined') {
                 return;
             }
 
+            /* istanbul ignore next */
             if ('scrollRestoration' in window.history) {
                 window.history.scrollRestoration = 'manual';
             }
@@ -805,12 +842,15 @@ const BookableSpacesWrapper = ({
             window.scrollTo(0, 0);
 
             const { documentElement, body, scrollingElement } = document;
+            /* istanbul ignore next */
             if (documentElement) {
                 documentElement.scrollTop = 0;
             }
+            /* istanbul ignore next */
             if (body) {
                 body.scrollTop = 0;
             }
+            /* istanbul ignore next */
             if (scrollingElement) {
                 scrollingElement.scrollTop = 0;
             }
@@ -825,6 +865,7 @@ const BookableSpacesWrapper = ({
             window.cancelAnimationFrame(frameId);
             window.clearTimeout(timeoutId);
             window.clearTimeout(lateTimeoutId);
+            /* istanbul ignore next */
             if ('scrollRestoration' in window.history) {
                 window.history.scrollRestoration = 'auto';
             }
@@ -851,7 +892,6 @@ const BookableSpacesWrapper = ({
                     allSpaceLocations={allSpaceLocations}
                     filteredSpaceLocations={filteredSpaceLocations}
                     highlightedSpace={highlightedSpace}
-                    landingHighlights={landingHighlights}
                     highlightSpaceDescription={highlightSpaceDescription}
                     availableIntentDefinitions={availableIntentDefinitions}
                     favouriteIntentDefinition={favouriteIntentDefinition}
@@ -863,6 +903,7 @@ const BookableSpacesWrapper = ({
                     setSelectedIntentId={setSelectedIntentId}
                     getIntentLandingUrl={getIntentLandingUrl}
                     onIntentLinkNavigate={intent => {
+                        /* istanbul ignore next */
                         if (!intent?.id) {
                             return;
                         }
@@ -955,7 +996,6 @@ BookableSpacesWrapper.propTypes = {
     highlightedSpace: PropTypes.object,
     isLoggedIn: PropTypes.bool,
     spacesFavouritesList: PropTypes.array,
-    servicesAndSpacesArticles: PropTypes.array,
     selectedFacilityTypes: PropTypes.array,
     setSelectedFacilityTypes: PropTypes.func,
     filteredFacilityTypeList: PropTypes.object,

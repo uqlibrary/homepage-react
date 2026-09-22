@@ -222,7 +222,6 @@ SpacesHomePage.propTypes = {
     allSpaceLocations: PropTypes.array,
     filteredSpaceLocations: PropTypes.array,
     highlightedSpace: PropTypes.object,
-    landingHighlights: PropTypes.array,
     highlightSpaceDescription: PropTypes.string,
     availableIntentDefinitions: PropTypes.array,
     favouriteIntentDefinition: PropTypes.object,
