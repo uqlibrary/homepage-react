@@ -4,6 +4,7 @@ import { getFileSizeString } from '../../../../DigitalLearningObjects/dlorHelper
 import Close from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { Tooltip } from '@mui/material';
+import PropTypes from 'prop-types';
 
 const List = ({ onClear, file }) => (
     <Box sx={{ my: 3, display: 'flex', alignItems: 'center' }}>
@@ -22,5 +23,10 @@ const List = ({ onClear, file }) => (
         </Tooltip>
     </Box>
 );
+
+List.prototype = {
+    onClear: PropTypes.func.isRequired,
+    file: PropTypes.object,
+};
 
 export default React.memo(List);

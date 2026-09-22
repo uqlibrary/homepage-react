@@ -1,5 +1,6 @@
 import React from 'react';
 import { ConfirmationBox } from '../../../../../SharedComponents/Toolbox/ConfirmDialogBox';
+import PropTypes from 'prop-types';
 
 const Dialog = ({ title, text }) => (
     <ConfirmationBox
@@ -74,5 +75,15 @@ const Dialogs = ({
         )}
     </>
 );
+
+Dialogs.prototype = {
+    existingFile: PropTypes.object,
+    fileToBeUploaded: PropTypes.object,
+    uploadProgress: PropTypes.number,
+    deleting: PropTypes.bool,
+    deleteError: PropTypes.bool,
+    uploading: PropTypes.bool,
+    uploadError: PropTypes.bool,
+};
 
 export default React.memo(Dialogs);

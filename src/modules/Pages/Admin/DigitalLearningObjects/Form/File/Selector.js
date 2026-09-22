@@ -2,6 +2,7 @@ import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import PropTypes from 'prop-types';
 
 const StyledDropzone = styled('div')(({ theme, isDragActive, isDragAccept, isDragReject }) => ({
     display: 'flex',
@@ -30,7 +31,7 @@ const Selector = ({ onChange }) => {
     const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
         accept: { 'image/jpeg': [], 'image/png': [] },
         multiple: false,
-        onDrop: files => !!files.length && onChange(files[0]),
+        onDrop: files => !!files.length && onChange?.(files[0]),
     });
 
     return (
@@ -47,6 +48,10 @@ const Selector = ({ onChange }) => {
             </StyledDropzone>
         </Box>
     );
+};
+
+Selector.prototype = {
+    onChange: PropTypes.func.isRequired,
 };
 
 export default React.memo(Selector);
