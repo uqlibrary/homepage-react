@@ -18,10 +18,10 @@ const Dialogs = ({
     existingFile,
     fileToBeUploaded,
     uploadProgress = 0,
-    deleting,
-    deleteError,
-    uploading,
-    uploadError,
+    deleting = false,
+    deleteError = false,
+    uploading = false,
+    uploadError = false,
 }) => (
     <>
         {deleting && (
