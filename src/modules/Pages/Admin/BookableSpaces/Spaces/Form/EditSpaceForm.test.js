@@ -47,12 +47,7 @@ jest.mock('modules/Pages/Admin/BookableSpaces/Spaces/Form/SpaceOutagePanel', () 
 
 jest.mock('modules/SharedComponents/RichTextEditor', () => ({
     RichTextEditor: ({ id, testId, value = '', onChange }) => (
-        <textarea
-            id={id}
-            data-testid={testId}
-            value={value}
-            onChange={event => onChange(event.target.value)}
-        />
+        <textarea id={id} data-testid={testId} value={value} onChange={event => onChange(event.target.value)} />
     ),
 }));
 
@@ -361,7 +356,154 @@ describe('EditSpaceForm', () => {
 
         fireEvent.click(screen.getByTestId('clear-image-button'));
         expect(setFormValues).toHaveBeenCalled();
+    });
 
+    it('renders empty facility groups and archibus error states in the edit tabs', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        facilityTypeList: { data: { facility_type_groups: [] } },
+                        bookableSpacesArchibusTreeError: 'Archibus unavailable',
+                        formValues: {
+                            ...validFormValues,
+                            space_id: 888,
+                            space_uuid: 'arch-888',
+                            campus_id: 1,
+                            library_id: 2,
+                            floor_id: 3,
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('tab-facility-types'));
+        expect(screen.getByText('No filter types in system.')).toBeInTheDocument();
+
+        fireEvent.click(screen.getByTestId('tab-about'));
+        expect(screen.getByText(/Archibus room data could not be loaded/i)).toBeInTheDocument();
+    });
+
+    it('clears the booking URL when the bookable checkbox is turned off', () => {
+        const setFormValues = jest.fn();
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        setFormValues,
+                        formValues: {
+                            ...validFormValues,
+                            isBookableCheckbox: true,
+                            space_external_book_url: 'https://example.com/book',
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('space-can-book'));
+
+        expect(setFormValues).toHaveBeenCalled();
+        expect(setFormValues.mock.calls.at(-1)[0]).toMatchObject({
+            isBookableCheckbox: false,
+            space_external_book_url: false,
+        });
+    });
+
+    it('shows current outage notices and renders note tables with date fallback and parsed content', () => {
+        const loadBookableSpaceNotes = jest.fn();
+        const pad = value => String(value).padStart(2, '0');
+        const formatLocalDateTime = date =>
+            `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+        const currentStart = formatLocalDateTime(new Date(Date.now() - 60 * 60 * 1000));
+        const currentEnd = formatLocalDateTime(new Date(Date.now() + 60 * 60 * 1000));
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        actions: {
+                            ...buildProps().actions,
+                            loadBookableSpaceNotes,
+                        },
+                        formValues: {
+                            ...validFormValues,
+                            space_id: 777,
+                            space_uuid: 'notes-777',
+                            space_deleted: false,
+                        },
+                        spaceOutageList: [
+                            {
+                                space_outage_id: 9,
+                                space_outage_start: currentStart,
+                                space_outage_end: currentEnd,
+                                space_outage_reason: 'Current closure',
+                            },
+                        ],
+                        spaceNotesList: [
+                            {
+                                space_note_id: 12,
+                                space_note_created_at: 'not-a-date',
+                                space_note_user: 'uqtest1',
+                                space_note_note: '<strong>Follow up</strong>',
+                            },
+                        ],
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByTestId('space-outage-current-notice')).toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('tab-notes'));
+        expect(screen.getByTestId('space-notes-table')).toBeInTheDocument();
+        expect(screen.getByText('not-a-date')).toBeInTheDocument();
+        expect(screen.getByText('Follow up')).toBeInTheDocument();
+    });
+
+    it('shows the default library about link and image cleanup path in the imagery panel', () => {
+        const setFormValues = jest.fn();
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        setFormValues,
+                        formValues: {
+                            ...validFormValues,
+                            space_id: 333,
+                            space_uuid: 'library-333',
+                            uploadedFile: [{ preview: 'blob:preview' }],
+                            space_photo_url: '',
+                        },
+                        currentCampusList: [
+                            {
+                                campus_id: 1,
+                                campus_name: 'St Lucia',
+                                libraries: [
+                                    {
+                                        library_id: 2,
+                                        library_name: 'Central Library',
+                                        building_name: 'Central Library',
+                                        library_about_page_default: 'https://example.com/library-info',
+                                        floors: [{ floor_id: 3, floor_name: 'Level 3' }],
+                                    },
+                                ],
+                            },
+                        ],
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('tab-location-hours'));
+        expect(screen.getByTestId('add-space-about-page')).toHaveAttribute('href', 'https://example.com/library-info');
+
+        fireEvent.click(screen.getByTestId('tab-imagery'));
+        fireEvent.click(screen.getByTestId('clear-image-button'));
+        expect(setFormValues).toHaveBeenCalled();
     });
 
     it('shows invalid page validation in add mode and blocks the save', () => {

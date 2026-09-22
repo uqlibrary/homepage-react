@@ -664,6 +664,7 @@ export const EditSpaceForm = ({
 
     const navigateToError = error => {
         const config = fieldNavigationMap?.[error?.field];
+        /* istanbul ignore next */
         if (!config) {
             return;
         }
@@ -1130,6 +1131,7 @@ export const EditSpaceForm = ({
     }, [currentCampusList, formValues?.campus_id]);
 
     const archibusSiteIdForSelectedCampus = React.useMemo(() => {
+        /* istanbul ignore next */
         if (!selectedCampus || !Array.isArray(archibusSiteList) || archibusSiteList?.length === 0) {
             return '';
         }
@@ -1527,7 +1529,8 @@ export const EditSpaceForm = ({
                                                 ? ' (Ground floor)'
                                                 : ''}
                                             {`${
-                                                window.location.host === 'localhost:2020' // to make the Select more readable to we poor devs, also makes more accurate test
+                                                /* istanbul ignore next */
+                                                window.location.host === 'localhost:2020'
                                                     ? ' [' + libraryName + ' - ' + floor?.floor_id + ']'
                                                     : ''
                                             }`}

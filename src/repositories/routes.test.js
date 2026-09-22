@@ -157,9 +157,38 @@ describe('Backend routes method', () => {
         MockDate.reset();
     });
 
+    it('should construct url for SPACES_ADMIN_ALL_API with and without parameters', () => {
+        const MockDate = require('mockdate');
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+
+        expect(routes.SPACES_ADMIN_ALL_API()).toEqual({
+            apiUrl: 'bookable_spaces/admin/spaces/all',
+            options: { params: { ts: '1577836800000' } },
+        });
+
+        expect(routes.SPACES_ADMIN_ALL_API({ includeDrafts: true, includeDeleted: true })).toEqual({
+            apiUrl: 'bookable_spaces/admin/spaces/all',
+            options: { params: { include_drafts: true, include_deleted: true, ts: '1577836800000' } },
+        });
+
+        MockDate.reset();
+    });
+
     it('should construct url for SPACES_OUTAGES_API', () => {
         expect(routes.SPACES_OUTAGES_API({ spaceId: 123 })).toEqual({
             apiUrl: 'bookable_spaces/space/123/outages',
+        });
+    });
+
+    it('should construct url for floor, library and campus outages APIs', () => {
+        expect(routes.SPACES_FLOOR_OUTAGES_API({ floorId: 12 })).toEqual({
+            apiUrl: 'bookable_spaces/floor/12/outages',
+        });
+        expect(routes.SPACES_LIBRARY_OUTAGES_API({ libraryId: 34 })).toEqual({
+            apiUrl: 'bookable_spaces/library/34/outages',
+        });
+        expect(routes.SPACES_CAMPUS_OUTAGES_API({ campusId: 56 })).toEqual({
+            apiUrl: 'bookable_spaces/campus/56/outages',
         });
     });
 
@@ -387,6 +416,27 @@ describe('Backend routes method', () => {
             });
 
             expect(routes.DLOR_DEMOGRAPHICS_SAVE_API()).toEqual({ apiUrl: 'dlor/auth/demographics' });
+            expect(routes.DLOR_AUTHENTICATED_GET_BY_ID_API({ id: 100 })).toEqual({ apiUrl: 'dlor/auth/find/100' });
+            expect(routes.DLOR_OWNED_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/auth/object/100' });
+            expect(routes.DLOR_SERIES_LOAD_API(100)).toEqual({ apiUrl: 'dlor/public/series/find/100' });
+            expect(routes.DLOR_FAVOURITES_API()).toEqual({ apiUrl: 'dlor/auth/favourites' });
+            expect(routes.DLOR_CREATE_FACET_API()).toEqual({ apiUrl: 'dlor/admin/facet' });
+            expect(routes.DLOR_UPDATE_FACET_API(100)).toEqual({ apiUrl: 'dlor/admin/facet/100' });
+            expect(routes.DLOR_DELETE_FACET_API(100)).toEqual({ apiUrl: 'dlor/admin/facet/100' });
+            expect(routes.DLOR_DEMOGRAPHICS_REPORT_API()).toEqual({ apiUrl: 'dlor/admin/demographics/all' });
+            expect(routes.DLOR_FAVOURITES_REPORT_API()).toEqual({ apiUrl: 'dlor/admin/favourites' });
+            expect(routes.DLOR_ADMIN_NOTES_API('uuid-123')).toEqual({ apiUrl: 'dlor/admin/object/notes/uuid-123' });
+            expect(routes.DLOR_CREATE_TEAM_ADMIN_API()).toEqual({ apiUrl: 'dlor/auth/teammember' });
+            expect(routes.DLOR_EDIT_TEAM_ADMIN_API(100)).toEqual({ apiUrl: 'dlor/auth/teammember/100' });
+            expect(routes.DLOR_DELETE_TEAM_ADMIN_API(100)).toEqual({ apiUrl: 'dlor/auth/teammember/100' });
+            expect(routes.DLOR_KEYWORDS_API()).toEqual({ apiUrl: 'dlor/public/keywords/list' });
+            expect(routes.DLOR_KEYWORDS_UPDATE_API()).toEqual({ apiUrl: 'dlor/admin/keywords' });
+            expect(routes.DLOR_KEYWORDS_DESTROY_API()).toEqual({ apiUrl: 'dlor/admin/keywords/delete' });
+            expect(routes.DLOR_STATISTICS_API()).toEqual({ apiUrl: 'dlor/auth/stats' });
+            expect(routes.DLOR_SCHEDULE_API()).toEqual({ apiUrl: 'dlor/admin/schedule' });
+            expect(routes.DLOR_SCHEDULE_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/admin/schedule/100' });
+            expect(routes.DLOR_REQUEST_KEYWORD_API()).toEqual({ apiUrl: 'dlor/auth/keywords/request' });
+            expect(routes.DLOR_DASHBOARD_API()).toEqual({ apiUrl: 'dlor/auth/dashboard' });
 
             expect(routes.DLOR_CREATE_API()).toEqual({ apiUrl: 'dlor/admin/object' });
             expect(routes.DLOR_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/admin/object/100' });
