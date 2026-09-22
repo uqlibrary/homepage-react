@@ -143,6 +143,19 @@ describe('ArticleCard', () => {
         expect(screen.queryByText('Secondary description')).not.toBeInTheDocument();
     });
 
+    it('keeps the featured anchor fallback when the canonical URL is missing', () => {
+        renderCard({
+            article: { ...baseArticle, canonical_url: null },
+            articleindex: 1,
+            enableFeaturedLayout: true,
+            useRouterLink: false,
+        });
+
+        const link = screen.getByTestId('article-link');
+        expect(link).toHaveAttribute('data-analyticsid', 'article-analytics');
+        expect(link.getAttribute('href')).toBeNull();
+    });
+
     it('renders the featured layout with image-first ordering when the first item is not on desktop', () => {
         useMediaQuery.mockImplementation(() => false);
 
@@ -165,6 +178,7 @@ describe('ArticleCard', () => {
         expect(shouldRenderTextFirst({ articleindex: 0, isSmUp: true, isSm: false })).toBe(true);
         expect(shouldRenderTextFirst({ articleindex: 1, isSmUp: false, isSm: true })).toBe(true);
         expect(shouldRenderTextFirst({ articleindex: 0, isSmUp: false, isSm: false })).toBe(false);
+        expect(shouldRenderTextFirst({ articleindex: 1, isSmUp: false, isSm: false })).toBe(false);
 
         expect(shouldUseRouterLink(true, '/news/example')).toBe(true);
         expect(shouldUseRouterLink(false, '/news/example')).toBe(false);

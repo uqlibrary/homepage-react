@@ -93,9 +93,9 @@ const StyledBookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
         },
     },
 }));
-const StyledBookableSpaceGridItem = styled(Grid)(() => ({
+const StyledBookableSpaceGridItem = styled(Grid)({
     marginTop: '12px',
-}));
+});
 
 const StyledLayoutWrapper = styled('div')(() => ({
     position: 'relative',
@@ -1080,6 +1080,13 @@ export const BookableSpacesList = ({
                 filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME
             );
         });
+        const hasCurrentlyOpenFilterSelected = (selectedFacilityTypes || []).some(filter => {
+            if (!filter?.selected) {
+                return false;
+            }
+
+            return filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME;
+        });
 
         if (hasBookableFilterSelected && !isBookable(space)) {
             return false;
@@ -1098,6 +1105,10 @@ export const BookableSpacesList = ({
             }
         }
 
+        if (hasCurrentlyOpenFilterSelected && !isLocationOpen(space?.space_opening_hours_id, weeklyHours)) {
+            return false;
+        }
+
         // If no inclusion filters are selected, show all spaces (that haven't been rejected)
         if (Object.keys(selectedFiltersByGroup)?.length === 0) {
             return true;
@@ -1108,13 +1119,9 @@ export const BookableSpacesList = ({
             if (Object.hasOwn(selectedFiltersByGroup, groupId)) {
                 const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
-                const hasMatchInGroup = selectedFiltersInGroup?.some(filterId => {
-                    const filter = selectedFacilityTypes?.find(f => f?.facility_type_id === filterId);
-                    if (filter?.facility_special_action === FILTER_CURRENTLY_OPEN_ACTION_NAME) {
-                        return isLocationOpen(space?.space_opening_hours_id, weeklyHours);
-                    }
-                    return spaceFacilityTypes?.includes(filterId);
-                });
+                const hasMatchInGroup = selectedFiltersInGroup?.some(filterId =>
+                    spaceFacilityTypes?.includes(filterId),
+                );
 
                 if (!hasMatchInGroup) {
                     return false;
@@ -1510,7 +1517,6 @@ export const BookableSpacesList = ({
             const aFav = spacesFavouritesList?.some(fav => fav.space_id === a?.space_id);
             const bFav = spacesFavouritesList?.some(fav => fav.space_id === b?.space_id);
             if (aFav && !bFav) return -1;
-            /* istanbul ignore next */
             if (!aFav && bFav) return 1;
 
             const fallbackCampusPriority = {
