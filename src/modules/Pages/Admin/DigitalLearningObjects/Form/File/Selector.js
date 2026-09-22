@@ -41,6 +41,7 @@ const Selector = ({ onChange }) => {
                 isDragActive={isDragActive}
                 isDragAccept={isDragAccept}
                 isDragReject={isDragReject}
+                data-testid="dlor-object-file-selector"
             >
                 <input {...getInputProps()} />
                 <p>Drag 'n' drop some files here, or click to select files</p>

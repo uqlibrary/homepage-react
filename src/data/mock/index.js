@@ -88,23 +88,20 @@ import { vemcountData } from './data/vemcount';
 import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
 import dlor_keywords from './data/records/dlor/dlor_keywords';
 import { dlorDashboardSiteUsage } from './data/dlor/dlorDashboardSiteUsage';
+import qs from 'qs';
 
 const moment = require('moment');
 
 const mock = new MockAdapter(api, { delayResponse: 1000 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
-export const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
+export const escapeRegExp = input => input.replaceAll('.\\*', '.*').replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
 
-const queryString = new URLSearchParams(window.location.search);
-let user = !!queryString
-    ? queryString.get('user')
-    : window.location.hash.substring(window.location.hash.indexOf('?')).user;
-user = user || 'vanilla';
-let responseType = !!queryString
-    ? queryString.get('responseType')
-    : window.location.hash.substring(window.location.hash.indexOf('?')).responseType;
-responseType = responseType || 'ok';
+const search = window.location.search.slice(1) || window.location.hash.split('?')[1] || '';
+const queryString = new URLSearchParams(search);
+const parsedQueryString = qs.parse(search);
+const user = queryString.get('user') || 'vanilla';
+const responseType = queryString.get('responseType') || 'ok';
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -564,6 +561,16 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
         name: 'name',
         size: 9999,
     },
+]);
+
+mock.onPost(new RegExp(escapeRegExp(routes.FILE_UPLOAD_PRESIGNED().apiUrl))).reply(() => [
+    parsedQueryString?.responseStatus?.presigned || 200,
+    [parsedQueryString?.responseBody?.presigned || ''],
+]);
+
+mock.onPut(/.*s3.*.amazonaws.com\/.*/).reply(() => [
+    parsedQueryString?.responseStatus?.s3 || 200,
+    parsedQueryString?.responseBody?.s3,
 ]);
 
 function getSpecificTeam(teamId) {

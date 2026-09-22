@@ -1859,7 +1859,11 @@ export const DlorForm = ({
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+            setCookie('CYPRESS_DATA_SAVED', {
+                ...valuesToSend,
+                ...(existingFile?.markedForDeletion ? { deleteExistingFile: true } : {}),
+                ...(fileToBeUploaded ? { newFile: fileToBeUploaded } : {}),
+            });
         }
 
         let objectId;

@@ -8,7 +8,9 @@ import PropTypes from 'prop-types';
 
 const List = ({ onClear, file }) => (
     <Box sx={{ my: 3, display: 'flex', alignItems: 'center' }}>
-        {file.name} {getFileSizeString(file.size / 1000)}{' '}
+        <span data-testid="dlor-object-file-list-filename">
+            {file.name} {getFileSizeString(file.size / 1000)}
+        </span>{' '}
         <Tooltip
             componentsProps={{
                 tooltip: {
@@ -17,7 +19,7 @@ const List = ({ onClear, file }) => (
             }}
             title="Click to remove file. The file will be deleted upon submitting the form."
         >
-            <IconButton onClick={onClear}>
+            <IconButton onClick={onClear} data-testid="dlor-object-file-list-clear">
                 <Close fontSize="small" />
             </IconButton>
         </Tooltip>

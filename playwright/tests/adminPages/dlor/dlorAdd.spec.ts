@@ -3,11 +3,33 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
 import { typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 import moment from 'moment-timezone';
+import { BrowserContext, Page } from '@playwright/test';
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 const REQUIRED_LENGTH_SUMMARY = 20;
 const REQUIRED_LENGTH_KEYWORDS = 4;
 test.describe('Add an object to the Digital Learning Hub', () => {
+    const notAllowedFile = {
+        name: 'app.bin',
+        mimeType: 'application/octet-stream',
+        buffer: Buffer.from(''),
+    };
+    const image = {
+        name: 'image.gif',
+        mimeType: 'image/png',
+        buffer: Buffer.from('a'.repeat(1000)),
+    };
+
+    const assertHasLinkFileTabError = async (page: Page) =>
+        await expect(page.getByTestId('dlor-panel-validity-indicator-2').locator('.MuiBadge-badge')).toHaveText('1');
+
+    const assertMissingLinkFileTabError = async (page: Page) =>
+        await expect(page.getByTestId('dlor-panel-validity-indicator-2').locator('.MuiBadge-badge')).not.toBeVisible();
+
+    const selectFileForUpload = async (page: Page, file: object) =>
+        // @ts-expect-error TODO fix when setInputFiles has importable type
+        await page.getByTestId('dlor-object-file-selector').locator('input[type="file"]').setInputFiles(file);
+
     test.describe('adding a new object', () => {
         test.describe('successfully', () => {
             test.beforeEach(async ({ page }) => {
@@ -440,8 +462,157 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                         url: 'http://localhost:2020',
                     },
                 ]);
-                await page.goto(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
+                await page.goto(
+                    `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseBody[presigned]=s3.amazonaws.com/object/123/image.png`,
+                );
                 await page.setViewportSize({ width: 1300, height: 1000 });
+            });
+
+            test('with file upload', async ({ page }) => {
+                const cookie = await page.context().cookies();
+                expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
+
+                // go to the second panel, Description
+                await page.getByTestId('dlor-form-next-button').click();
+
+                await page.locator('[data-testid="object-title"] input').fill('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                await typeRichTextEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await page
+                    .locator('[data-testid="object-summary"] textarea:first-child')
+                    .fill('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+
+                // go to the third panel, Link
+                await page.getByTestId('dlor-form-next-button').click();
+
+                // file upload
+                // invalid file
+                await assertHasLinkFileTabError(page);
+                await selectFileForUpload(page, notAllowedFile);
+                await expect(page.getByTestId('dlor-object-file-list-filename')).not.toBeVisible();
+                await assertHasLinkFileTabError(page);
+
+                // valid file
+                await selectFileForUpload(page, image);
+                await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(`${image.name} 1 KB`);
+                await assertMissingLinkFileTabError(page);
+                // clear
+                await page.getByTestId('dlor-object-file-list-clear').click();
+                await assertHasLinkFileTabError(page);
+                // re-add
+                await selectFileForUpload(page, image);
+                await assertMissingLinkFileTabError(page);
+
+                // go to the fourth panel, Filtering
+                await page.getByTestId('dlor-form-next-button').click();
+
+                await page.locator('[data-testid="filter-topic-aboriginal-and-torres-strait-islander"] input').check();
+                await page.locator('[data-testid="filter-media-format-h5p"] input').check();
+                await page.locator('[data-testid="filter-subject-business-economics"] input').check();
+                await page.locator('[data-testid="filter-item-type-interactive"] input').check();
+                await page.locator('[data-testid="filter-licence-cc-by-nc-attribution-noncommercial"] input').check();
+                // select a keyword so we can save
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
+
+                // save new dlor
+                await page.getByTestId('admin-dlor-save-button-submit').click();
+                // assert progress message
+                await page.getByText(`Uploading file ${image.name}`);
+
+                // confirm save happened
+                await expect(
+                    page
+                        .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                        .getByText('The object has been created'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                ).toBeVisible();
+
+                // check the data we pretended to send to the server matches what we expect
+                // acts as check of what we sent to api
+                const expectedValues = {
+                    object_title: 'xxxxxxxx',
+                    object_description:
+                        '<p>new descriptionxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>',
+                    object_summary: 'new summary xxxxxxxx',
+                    object_link_interaction_type: 'none',
+                    object_link_url: '',
+                    object_download_instructions: 'Add this object to your course.',
+                    object_is_featured: 0,
+                    object_cultural_advice: 0,
+                    object_publishing_user: 'dloradmn',
+                    object_review_date_next: '2025-03-26T00:01',
+                    object_status: 'new',
+                    object_restrict_to: 'none',
+                    object_owning_team_id: 1,
+                    object_keywords: ['Research Skills'],
+                    object_keyword_ids: [3],
+                    facets: [
+                        1, // aboriginal_and_torres_strait_islander
+                        24, // media_h5p
+                        35, // business_economics
+                        17, // type_interactive_activity
+                        45, // cc_by_nc_attribution_noncommercial
+                    ],
+                    newFile: {
+                        path: './image.gif',
+                        relativePath: './image.gif',
+                    },
+                };
+                {
+                    const cookieValue = await page.evaluate(() => {
+                        return document.cookie
+                            .split('; ')
+                            .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
+                            ?.split('=')[1];
+                    });
+                    expect(cookieValue).toBeDefined();
+                    const decodedValue = decodeURIComponent(cookieValue);
+                    const sentValues = JSON.parse(decodedValue);
+
+                    // had trouble comparing the entire structure
+                    const sentFacets = sentValues.facets;
+                    const expectedFacets = expectedValues.facets;
+                    const sentKeywords = sentValues.object_keywords;
+                    const expectedKeywords = expectedValues.object_keywords;
+                    delete sentValues.facets;
+                    delete expectedValues.facets;
+                    // delete sentValues.object_description;
+                    // delete expectedValues.object_description;
+                    delete sentValues.object_keywords;
+                    delete expectedValues.object_keywords;
+                    delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
+                    delete expectedValues.object_review_date_next;
+
+                    expect(sentValues).toEqual(expectedValues);
+                    expect(sentFacets).toEqual(expectedFacets);
+                    expect(sentKeywords).toEqual(expectedKeywords);
+                }
+
+                // confirm save happened
+                await expect(
+                    page
+                        .getByTestId('dialogbox-dlor-save-outcome')
+                        .locator('h2')
+                        .getByText('The object has been created'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                ).toBeVisible();
+
+                // and navigate back to the list page
+                await page.getByTestId('confirm-dlor-save-outcome').click();
+                await expect(page).toHaveURL(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+                await expect(
+                    page.getByTestId('StandardPage-title').getByText('Digital Learning Hub Management'),
+                ).toBeVisible();
             });
 
             test('when the admin changes their mind about a new team, an old team is saved', async ({ page }) => {
@@ -1251,6 +1422,79 @@ test.describe('Add an object to the Digital Learning Hub', () => {
             });
         });
         test.describe('fails correctly', () => {
+            test.describe('file upload', () => {
+                const runTest = async (page: Page, context: BrowserContext, uriSuffix: string = '') => {
+                    await context.addCookies([
+                        {
+                            name: 'CYPRESS_TEST_DATA',
+                            value: 'active',
+                            url: 'http://localhost:2020',
+                        },
+                    ]);
+                    await page.goto(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&${uriSuffix}`);
+                    await page.setViewportSize({ width: 1300, height: 1000 });
+
+                    // go to the second panel, Description
+                    await page.getByTestId('dlor-form-next-button').click();
+
+                    await page
+                        .locator('[data-testid="object-title"] input')
+                        .fill('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                    await typeRichTextEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                    await page
+                        .locator('[data-testid="object-summary"] textarea:first-child')
+                        .fill('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+
+                    // go to the third panel, Link
+                    await page.getByTestId('dlor-form-next-button').click();
+
+                    // file upload
+                    // invalid file
+                    await assertHasLinkFileTabError(page);
+                    await selectFileForUpload(page, notAllowedFile);
+                    await expect(page.getByTestId('dlor-object-file-list-filename')).not.toBeVisible();
+                    await assertHasLinkFileTabError(page);
+                    // valid file
+                    await selectFileForUpload(page, image);
+                    await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(`${image.name} 1 KB`);
+                    await assertMissingLinkFileTabError(page);
+
+                    // go to the fourth panel, Filtering
+                    await page.getByTestId('dlor-form-next-button').click();
+
+                    await page
+                        .locator('[data-testid="filter-topic-aboriginal-and-torres-strait-islander"] input')
+                        .check();
+                    await page.locator('[data-testid="filter-media-format-h5p"] input').check();
+                    await page.locator('[data-testid="filter-subject-business-economics"] input').check();
+                    await page.locator('[data-testid="filter-item-type-interactive"] input').check();
+                    await page
+                        .locator('[data-testid="filter-licence-cc-by-nc-attribution-noncommercial"] input')
+                        .check();
+                    // select a keyword so we can save
+                    await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                    await page.locator('#fuzzy-search-option-3').click();
+
+                    // save new dlor
+                    await page.getByTestId('admin-dlor-save-button-submit').click();
+                    // assert progress message
+                    await expect(page.getByText(`Uploading file ${image.name}`)).toBeVisible();
+                    // assert error message
+                    await expect(page.getByText(`Error while uploading file ${image.name}`)).toBeVisible();
+                };
+
+                test('pre-signed url failure', async ({ page, context }) => {
+                    await runTest(page, context, 'responseStatus[presigned]=500');
+                });
+
+                test('S3 failure', async ({ page, context }) => {
+                    await runTest(
+                        page,
+                        context,
+                        'responseBody[presigned]=s3.amazonaws.com/object/123/image.png&responseStatus[s3]=500',
+                    );
+                });
+            });
             test('admin gets an error when Teams list api doesnt load', async ({ page }) => {
                 await page.goto(
                     `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseType=teamsLoadError`,
