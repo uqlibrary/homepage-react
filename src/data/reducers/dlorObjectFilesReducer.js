@@ -1,12 +1,12 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
-    dlorObjectFileDeleting: null,
-    dlorObjectFileDeleted: null,
-    dlorObjectFileDeleteError: null,
-    dlorObjectFileUploading: null,
-    dlorObjectFileUploaded: null,
-    dlorObjectFileUploadError: null,
+    dlorObjectFileDeleting: false,
+    dlorObjectFileDeleted: false,
+    dlorObjectFileDeleteError: false,
+    dlorObjectFileUploading: false,
+    dlorObjectFileUploaded: false,
+    dlorObjectFileUploadError: false,
 };
 
 const handlers = {

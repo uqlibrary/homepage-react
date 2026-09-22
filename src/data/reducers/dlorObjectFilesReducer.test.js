@@ -12,7 +12,14 @@ describe('dlorObjectFilesReducer', () => {
 
     it('should return initial state for unknown action', () => {
         const test = dlorObjectFilesReducer(emptyState, { type: 'UNKNOWN' });
-        expect(test).toEqual(emptyState);
+        expect(test).toEqual({
+            dlorObjectFileDeleting: false,
+            dlorObjectFileDeleted: false,
+            dlorObjectFileDeleteError: false,
+            dlorObjectFileUploading: false,
+            dlorObjectFileUploaded: false,
+            dlorObjectFileUploadError: false,
+        });
     });
 
     it('should handle DLOR_DELETE_OBJET_FILE_LOADING', () => {
