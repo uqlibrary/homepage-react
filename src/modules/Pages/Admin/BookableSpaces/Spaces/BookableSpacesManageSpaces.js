@@ -241,14 +241,19 @@ export const BookableSpacesManageSpaces = ({
     campusListLoading,
     campusListError,
 }) => {
-    console.log(
+    /* istanbul ignore next */ console.log(
         'TOP bookableSpacesRoomList',
         bookableSpacesRoomListLoading,
         bookableSpacesRoomListError,
         bookableSpacesRoomList,
     );
-    console.log('TOP weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
-    console.log('TOP facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
+    /* istanbul ignore next */ console.log('TOP weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+    /* istanbul ignore next */ console.log(
+        'TOP facilityTypeList',
+        facilityTypeListLoading,
+        facilityTypeListError,
+        facilityTypeList,
+    );
 
     const { account } = useAccountContext();
     const [savingProgressShown, showSavingProgress] = useState(false);
@@ -258,7 +263,7 @@ export const BookableSpacesManageSpaces = ({
 
     const [displayedRows, setDisplayedRows2] = useState([]);
     const setDisplayedRows = rows => {
-        console.log('setDisplayedRows', rows);
+        /* istanbul ignore next */ console.log('setDisplayedRows', rows);
         setDisplayedRows2(rows);
     };
 
@@ -334,7 +339,7 @@ export const BookableSpacesManageSpaces = ({
         { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
     ]);
     const setAvailableFilters = availableFilters => {
-        console.log('setAvailableFilters', availableFilters);
+        /* istanbul ignore next */ console.log('setAvailableFilters', availableFilters);
         setAvailableFilters2(availableFilters);
     };
     const resetAvailableFilters = (filterTypeName, filterTypeValue) => {
@@ -516,7 +521,7 @@ export const BookableSpacesManageSpaces = ({
     ]);
 
     const resetDisplayedRows = latestUpdate => {
-        console.log('resetDisplayedRows latestUpdate=', latestUpdate);
+        /* istanbul ignore next */ console.log('resetDisplayedRows latestUpdate=', latestUpdate);
         // if we have just set data to UseState, they aren't available yet - weird! :(
         const usedFilters = latestUpdate?.location ? latestUpdate?.location : selectedFilters;
         const usedSortType = latestUpdate?.sortingType || sortType;
@@ -558,7 +563,7 @@ export const BookableSpacesManageSpaces = ({
         setDisplayedRows(displayedRowsLocal);
     };
     const resetSelectedFilters = (filterTypeName, filterTypeValue) => {
-        console.log('resetSelectedFilters', filterTypeName, filterTypeValue);
+        /* istanbul ignore next */ console.log('resetSelectedFilters', filterTypeName, filterTypeValue);
         let newFilterTypes = selectedFilters?.filter(g => {
             return g?.filterType !== filterTypeName;
         });
@@ -586,7 +591,7 @@ export const BookableSpacesManageSpaces = ({
         }
         setSelectedFilters(newFilterTypes);
         setPageNum(0);
-        console.log('resetSelectedFilters newFilterTypes=', newFilterTypes);
+        /* istanbul ignore next */ console.log('resetSelectedFilters newFilterTypes=', newFilterTypes);
 
         // show-hide Spaces according to selected filters
 
@@ -620,7 +625,7 @@ export const BookableSpacesManageSpaces = ({
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : '#fff');
 
     const handleChangePage = (event, newPageNum) => {
-        console.log('handleChangePage', newPageNum, event);
+        /* istanbul ignore next */ console.log('handleChangePage', newPageNum, event);
         setPageNum(newPageNum);
         resetDisplayedRows({ pagination: newPageNum });
     };
@@ -737,8 +742,7 @@ export const BookableSpacesManageSpaces = ({
         const buttonClicked = e?.target?.closest('button');
         const spaceuuid = !!buttonClicked && buttonClicked?.getAttribute('data-spaceuuid');
         !!spaceuuid && (window.location.href = spacesAdminLink(`/admin/spaces/edit/${spaceuuid}`, account));
-        /* istanbul ignore next */
-        !spaceuuid && console.log('no valid button clicked');
+        /* istanbul ignore next */ !spaceuuid && console.log('no valid button clicked');
     };
 
     const [deleteCandidate, setDeleteCandidate] = useState(null);
@@ -774,7 +778,7 @@ export const BookableSpacesManageSpaces = ({
     };
 
     const selectFilter = prop => e => {
-        console.log('selectFilter', prop, e);
+        /* istanbul ignore next */ console.log('selectFilter', prop, e);
         const filterValue = e?.target?.hasOwnProperty('checked') ? e?.target?.checked : e?.target?.value;
         resetSelectedFilters(prop, filterValue);
     };

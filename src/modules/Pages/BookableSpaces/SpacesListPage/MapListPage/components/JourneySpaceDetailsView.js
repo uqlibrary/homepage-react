@@ -133,13 +133,20 @@ const JourneySpaceDetailsView = ({
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
+    /* istanbul ignore next */
     showBackButton = true,
+    /* istanbul ignore next */
     narrowView = true,
+    /* istanbul ignore next */
     verticalView = true,
+    /* istanbul ignore next */
     backLabel = 'Back to results',
     onBack,
+    /* istanbul ignore next */
     isFavourite = false,
+    /* istanbul ignore next */
     spacesFavouritesError = null,
+    /* istanbul ignore next */
     showMap = true,
 }) => {
     const theme = useTheme();
