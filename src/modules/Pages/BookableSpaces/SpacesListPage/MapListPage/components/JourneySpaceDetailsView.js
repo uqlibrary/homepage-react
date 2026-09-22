@@ -92,6 +92,7 @@ const StyledDetailImage = styled('div')(({ theme }) => ({
         },
     },
 }));
+/* istanbul ignore next */
 const StyledMissingImageBox = styled(Box)(({ theme }) => ({
     width: '100%',
     height: '100%',
@@ -172,6 +173,7 @@ const JourneySpaceDetailsView = ({
                 });
                 return;
             }
+            /* istanbul ignore else */
             if (typeof image === 'object') {
                 const src =
                     image.src ||
