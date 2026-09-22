@@ -22,6 +22,7 @@ describe('helpers', () => {
 
         expect(getFileSizeString(0)).toEqual('');
         expect(getFileSizeString(324)).toEqual('324 KB');
+        expect(getFileSizeString('324')).toEqual('324 KB');
         expect(getFileSizeString(4543)).toEqual('4.5 MB');
         expect(getFileSizeString(54412)).toEqual('54.4 MB');
         expect(getFileSizeString(324126)).toEqual('324.1 MB');

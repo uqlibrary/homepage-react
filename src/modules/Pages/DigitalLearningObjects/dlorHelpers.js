@@ -79,7 +79,7 @@ export function convertFileSizeToKb(fileSize, units) {
     return sizeInKb.toString();
 }
 export function getFileSizeString(fileSize, type) {
-    if (!Number.isFinite(fileSize)) return '';
+    if (!/^\d+$/.test(String(fileSize))) return '';
     if (fileSize === 0) {
         if (type === 'unit') {
             return validFileSizeUnits[0];
@@ -90,7 +90,7 @@ export function getFileSizeString(fileSize, type) {
         }
     }
     let unitIndex = 0;
-    let size = fileSize;
+    let size = Number(fileSize);
 
     while (size >= 1000 && unitIndex < validFileSizeUnits.length - 1) {
         size = size / 1000;
