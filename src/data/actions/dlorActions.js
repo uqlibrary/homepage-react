@@ -208,13 +208,13 @@ export const deleteDlor = dlorId => {
     };
 };
 
-export function uploadObjectFile(id, filename, onProgress) {
+export function uploadObjectFile(id, file, onProgress) {
     return async dispatch => {
         dispatch({ type: actions.DLOR_UPLOAD_OBJET_FILE_LOADING });
         let presignedUrls;
         try {
             presignedUrls = await post(FILE_UPLOAD_PRESIGNED(), {
-                Key: `dlor/frontend/admin/objects/files/uploader/${id}/${filename}`,
+                Key: `dlor/frontend/admin/objects/files/uploader/${id}/${file.name}`,
             });
         } catch (error) {
             dispatch({
@@ -224,16 +224,19 @@ export function uploadObjectFile(id, filename, onProgress) {
             return;
         }
 
-        return put({
-            apiUrl: presignedUrls[0],
-            options: {
-                onUploadProgress: progressEvent => {
-                    const { loaded, total } = progressEvent;
-                    const percentage = Math.floor((loaded * 100) / total);
-                    onProgress?.(percentage);
+        return put(
+            {
+                apiUrl: presignedUrls[0],
+                options: {
+                    onUploadProgress: progressEvent => {
+                        const { loaded, total } = progressEvent;
+                        const percentage = Math.floor((loaded * 100) / total);
+                        onProgress?.(percentage);
+                    },
                 },
             },
-        })
+            file,
+        )
             .then(response => {
                 dispatch({
                     type: actions.DLOR_UPLOAD_OBJET_FILE_SUCCESS,

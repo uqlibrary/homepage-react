@@ -257,7 +257,7 @@ describe('Digital Learning Hub actions', () => {
                     actions.DLOR_UPLOAD_OBJET_FILE_FAILED,
                 ];
 
-                const result = await mockActionsStore.dispatch(uploadObjectFile(1, 'file.pdf'));
+                const result = await mockActionsStore.dispatch(uploadObjectFile(1, { name: 'file.pdf' }));
                 expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
                 expect(result).toBeUndefined();
             });
@@ -272,20 +272,21 @@ describe('Digital Learning Hub actions', () => {
                     actions.DLOR_UPLOAD_OBJET_FILE_FAILED,
                 ];
 
-                await mockActionsStore.dispatch(uploadObjectFile(1, 'file.pdf'));
+                await mockActionsStore.dispatch(uploadObjectFile(1, { name: 'file.pdf' }));
                 expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
             });
 
             it('dispatches expected actions when upload succeeds', async () => {
+                const file = { name: 'file.pdf' };
                 mockApi.onPost(FILE_UPLOAD_PRESIGNED().apiUrl).reply(200, ['https://presigned.url/upload']);
-                mockApi.onPut('https://presigned.url/upload').reply(200);
+                mockApi.onPut('https://presigned.url/upload', file).reply(200);
 
                 const expectedActions = [
                     actions.DLOR_UPLOAD_OBJET_FILE_LOADING,
                     actions.DLOR_UPLOAD_OBJET_FILE_SUCCESS,
                 ];
 
-                await mockActionsStore.dispatch(uploadObjectFile(1, 'file.pdf'));
+                await mockActionsStore.dispatch(uploadObjectFile(1, file));
                 expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
             });
 
@@ -297,7 +298,7 @@ describe('Digital Learning Hub actions', () => {
                 });
 
                 const onProgress = jest.fn();
-                await mockActionsStore.dispatch(uploadObjectFile(1, 'file.pdf', onProgress));
+                await mockActionsStore.dispatch(uploadObjectFile(1, { name: 'file.pdf' }, onProgress));
                 expect(onProgress).toHaveBeenCalledWith(50);
             });
         });
