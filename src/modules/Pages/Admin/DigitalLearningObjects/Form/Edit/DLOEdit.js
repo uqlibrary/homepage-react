@@ -34,6 +34,12 @@ export const DLOEdit = ({
     dlorAdminNotesLoaded,
     dlorAdminNotesLoadError,
     dlorAdminNotes,
+    dlorObjectFileUploading,
+    dlorObjectFileUploaded,
+    dlorObjectFileUploadError,
+    dlorObjectFileDeleting,
+    dlorObjectFileDeleted,
+    dlorObjectFileDeleteError,
     dlorKeywords,
     dlorKeywordsLoading,
     dlorKeywordsError,
@@ -159,6 +165,12 @@ export const DLOEdit = ({
                         dlorAdminNotesLoaded={dlorAdminNotesLoaded}
                         dlorAdminNotesLoadError={dlorAdminNotesLoadError}
                         dlorAdminNotes={dlorAdminNotes}
+                        dlorObjectFileUploading={dlorObjectFileUploading}
+                        dlorObjectFileUploaded={dlorObjectFileUploaded}
+                        dlorObjectFileUploadError={dlorObjectFileUploadError}
+                        dlorObjectFileDeleting={dlorObjectFileDeleting}
+                        dlorObjectFileDeleted={dlorObjectFileDeleted}
+                        dlorObjectFileDeleteError={dlorObjectFileDeleteError}
                         dlorKeywords={dlorKeywords}
                         formDefaults={formDefaults}
                         mode="edit"
