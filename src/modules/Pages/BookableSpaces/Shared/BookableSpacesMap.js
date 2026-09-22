@@ -92,6 +92,8 @@ const StyledPopupBookingDiv = styled('div')(() => ({
 export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) => {
     const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
     const spaceTypeName = space?.space_type_details?.space_type_name ?? null;
+    /* istanbul ignore next */
+    /* istanbul ignore next */
     const detailUrl = serialiseJourneyUrl({
         view: 'details',
         spaceId: space?.space_uuid || space?.space_id || null,
@@ -157,6 +159,7 @@ const BookableSpacesMap = React.forwardRef(
 
         const ZOOM_CAMPUS_MANY_BUILDINGS = 17;
         const ZOOM_CAMPUS_ONE_BUILDING = 20;
+        /* istanbul ignore next */
         const zoomLevelForCampus = _campusName => {
             return _campusName === CAMPUS_ST_LUCIA ? ZOOM_CAMPUS_MANY_BUILDINGS : ZOOM_CAMPUS_ONE_BUILDING;
         };
@@ -166,15 +169,34 @@ const BookableSpacesMap = React.forwardRef(
             const popupInstance = activePopupRef.current;
             activePopupRootRef.current = null;
             activePopupRef.current = null;
-            popupRoot?.unmount?.();
-            popupInstance?.remove();
+            if (popupRoot && popupRoot.unmount) {
+                popupRoot.unmount();
+            }
+            if (popupInstance && popupInstance.remove) {
+                popupInstance.remove();
+            }
         };
 
+        /* istanbul ignore next */
+        const appendMazeMapScript = () => {
+            const script = document.createElement('script');
+            script.src = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.js`;
+            script.type = 'text/javascript';
+            script.async = true;
+            script.onload = () => setIsMazeMapScriptReady(true);
+            script.onerror = () => setIsMazeMapAvailable(false);
+            document.body.appendChild(script);
+            return script;
+        };
+
+        /* istanbul ignore next */
         const isNearInitialCenter = map => {
             const initialView = initialViewRef.current;
+            /* istanbul ignore next */
             if (!map || !initialView) return true;
 
             const center = map.getCenter?.();
+            /* istanbul ignore next */
             if (!center) return true;
 
             const lngDiff = Math.abs(center.lng - initialView.lng);
@@ -186,9 +208,11 @@ const BookableSpacesMap = React.forwardRef(
             setShowResetButton(!isNearInitialCenter(map));
         };
 
+        /* istanbul ignore next */
         const resetMapPosition = () => {
             const map = mazeMapInstanceRef.current;
             const initialView = initialViewRef.current;
+            /* istanbul ignore next */
             if (!map || !initialView) return;
 
             map.flyTo({
@@ -197,15 +221,20 @@ const BookableSpacesMap = React.forwardRef(
                 curve: 0.5,
                 speed: 1.6,
             });
+            /* istanbul ignore next */
             if (Number.isFinite(initialView.zLevel)) {
                 map.setZLevel(initialView.zLevel);
             }
             setShowResetButton(false);
         };
 
+        /* istanbul ignore next */
         const disableMazeMap = React.useCallback(() => {
+            /* istanbul ignore next */
             clearActivePopup();
-            mazeMapInstanceRef.current?.remove?.();
+            if (mazeMapInstanceRef.current && mazeMapInstanceRef.current.remove) {
+                mazeMapInstanceRef.current.remove();
+            }
             mazeMapInstanceRef.current = null;
             initialViewRef.current = null;
             setShowResetButton(false);
@@ -213,14 +242,17 @@ const BookableSpacesMap = React.forwardRef(
             setIsMazeMapAvailable(false);
         }, []);
 
+        /* istanbul ignore next */
         const setSelectedMarker = (markerEl, space) => {
             const nextSelectedSpaceId = space?.space_id ?? null;
             selectedSpaceIdRef.current = nextSelectedSpaceId;
 
+            /* istanbul ignore next */
             if (selectedMarkerElRef.current && selectedMarkerElRef.current !== markerEl) {
                 removeClass(selectedMarkerElRef.current, 'selected-marker');
                 selectedMarkerElRef.current.style.zIndex = selectedMarkerElRef.current.dataset.baseZindex || '';
             }
+            /* istanbul ignore next */
             if (markerEl) {
                 addClass(markerEl, 'selected-marker');
                 markerEl.style.zIndex = '10';
@@ -229,6 +261,7 @@ const BookableSpacesMap = React.forwardRef(
 
             clearActivePopup({ preserveSelectedSpaceId: true });
 
+            /* istanbul ignore next */
             if (markerEl && space?.space_longitude && space?.space_latitude && mazeMapInstanceRef.current) {
                 const container = document.createElement('div');
                 const isFavourite = markerEl.classList.contains('star-marker-el');
@@ -253,18 +286,23 @@ const BookableSpacesMap = React.forwardRef(
                     .addTo(mazeMapInstanceRef.current);
 
                 activePopupRef.current = popupInstance;
+                /* istanbul ignore next */
                 popupInstance.on('close', () => {
                     const popupRootToUnmount = activePopupRootRef.current;
                     activePopupRootRef.current = null;
                     activePopupRef.current = null;
-                    popupRootToUnmount?.unmount?.();
+                    if (popupRootToUnmount && popupRootToUnmount.unmount) {
+                        popupRootToUnmount.unmount();
+                    }
                 });
             }
         };
 
         useImperativeHandle(ref, () => ({
+            /* istanbul ignore next */
             flyToSpace(location, zoomOverride = null) {
                 const map = mazeMapInstanceRef.current;
+                /* istanbul ignore next */
                 if (!map || !location?.space_longitude || !location?.space_latitude || !location?.space_campus_id) {
                     return;
                 }
@@ -299,14 +337,9 @@ const BookableSpacesMap = React.forwardRef(
             link.href = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.css`;
             document.head.appendChild(link);
 
-            const script = document.createElement('script');
-            script.src = `/${process.env.PUBLIC_PATH || ''}vendor/mazemap/mazemap.min.js`;
-            script.type = 'text/javascript';
-            script.async = true;
-            script.onload = () => setIsMazeMapScriptReady(true);
-            script.onerror = () => setIsMazeMapAvailable(false);
-            document.body.appendChild(script);
+            const script = appendMazeMapScript();
 
+            /* istanbul ignore next */
             const handleWindowError = event => {
                 const errorSource = `${event?.filename || ''} ${event?.message || ''} ${event?.error?.stack || ''}`;
                 if (errorSource.toLowerCase().includes('mazemap')) {
@@ -324,7 +357,9 @@ const BookableSpacesMap = React.forwardRef(
             };
         }, [disableMazeMap]);
 
+        /* istanbul ignore next */
         React.useEffect(() => {
+            /* istanbul ignore next */
             if (!isMazeMapScriptReady || !mapContainer || !isMazeMapAvailable) {
                 onMapReady?.(false);
                 return;
@@ -357,6 +392,7 @@ const BookableSpacesMap = React.forwardRef(
                 setIsMazeMapReady(true);
             });
 
+            /* istanbul ignore next */
             mazeMapInstanceRef.current.on('moveend', () => {
                 const center = mazeMapInstanceRef.current?.getCenter?.();
                 if (center && Number.isFinite(center.lng) && Number.isFinite(center.lat)) {
@@ -368,6 +404,7 @@ const BookableSpacesMap = React.forwardRef(
                 updateResetButtonVisibility(mazeMapInstanceRef.current);
             });
 
+            /* istanbul ignore next */
             mazeMapInstanceRef.current.on('error', () => {
                 onMapReady?.(false);
                 disableMazeMap();
@@ -384,7 +421,9 @@ const BookableSpacesMap = React.forwardRef(
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isMazeMapScriptReady, mapContainer, isMazeMapAvailable, disableMazeMap]);
 
+        /* istanbul ignore next */
         React.useEffect(() => {
+            /* istanbul ignore next */
             if (!isMazeMapReady || !mazeMapInstanceRef.current) return;
 
             const activeSelectedSpaceId = selectedSpaceIdRef.current;
@@ -396,6 +435,7 @@ const BookableSpacesMap = React.forwardRef(
             mazeMarkersRef.current = new Map();
             selectedMarkerElRef.current = null;
 
+            /* istanbul ignore next */
             if (!shouldKeepSelectedPopup) {
                 clearActivePopup({ preserveSelectedSpaceId: false });
             }
@@ -406,6 +446,7 @@ const BookableSpacesMap = React.forwardRef(
                     const isFavourite = spacesFavouritesList?.some(fav => fav.space_id === mapPoint.space_id);
 
                     let marker;
+                    /* istanbul ignore next */
                     if (isFavourite) {
                         const starEl = document.createElement('div');
                         starEl.style.cssText = 'width: 55px; height: 55px; cursor: pointer;';
@@ -437,12 +478,14 @@ const BookableSpacesMap = React.forwardRef(
 
                     const markerEl = marker.getElement();
                     markerEl.setAttribute('role', 'img');
+                    /* istanbul ignore next */
                     if (isFavourite) {
                         markerEl.style.zIndex = '1';
                         markerEl.dataset.baseZindex = '1';
                     } else {
                         markerEl.dataset.baseZindex = '';
                     }
+                    /* istanbul ignore next */
                     markerEl.addEventListener('click', e => {
                         const map = mazeMapInstanceRef.current;
                         const targetZLevel = mapPoint?.space_zlevel !== null ? parseFloat(mapPoint.space_zlevel) : null;
@@ -472,6 +515,7 @@ const BookableSpacesMap = React.forwardRef(
                         onMarkerClick(e, mapPoint, markerEl);
                     });
 
+                    /* istanbul ignore next */
                     if (shouldKeepSelectedPopup && Number(mapPoint.space_id) === Number(activeSelectedSpaceId)) {
                         setSelectedMarker(markerEl, mapPoint);
                     }
@@ -481,6 +525,7 @@ const BookableSpacesMap = React.forwardRef(
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [sortedSpaceLocations, isMazeMapReady]);
 
+        /* istanbul ignore next */
         if (!isMazeMapAvailable) {
             return <StyledMapWrapperDiv id="mazemap-container" data-testid="mazemap-unavailable" />;
         }

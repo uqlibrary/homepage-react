@@ -174,12 +174,14 @@ describe('BookableSpacesMap', () => {
                 latestPopupInstance = this;
                 this.listeners = {};
                 this.options = options;
+                this.container = document.createElement('div');
                 this.remove = jest.fn();
             }
             setLngLat() {
                 return this;
             }
-            setDOMContent() {
+            setDOMContent(container) {
+                this.container = container;
                 return this;
             }
             addTo() {
@@ -223,14 +225,14 @@ describe('BookableSpacesMap', () => {
                     this.listeners = {};
                     this.wasRemoved = false;
                     this.center = { lng: 153.0, lat: -27.47 };
+                    this.stop = jest.fn();
+                    this.resize = jest.fn();
+                    this.setZLevel = jest.fn();
+                    this.flyTo = jest.fn();
                 }
                 on(eventName, callback) {
                     this.listeners[eventName] = callback;
                 }
-                stop() {}
-                resize() {}
-                setZLevel() {}
-                flyTo() {}
                 getCenter() {
                     return { lng: this.center.lng, lat: this.center.lat };
                 }
@@ -417,7 +419,205 @@ describe('BookableSpacesMap', () => {
         expect(onMapCenterChange).toHaveBeenCalledWith({ space_longitude: 153.12, space_latitude: -27.52 });
     });
 
-    it('renders a reset button when the map has moved from the initial center', async () => {
+    it('keeps reset visibility guarded by map center lookup and script errors are ignored when unrelated', async () => {
+        rtlRender(
+            <WithRouter>
+                <BookableSpacesMap
+                    sortedSpaceLocations={[]}
+                    spacesFavouritesList={[]}
+                    onMarkerClick={jest.fn()}
+                    centreLatLong={{
+                        space_latitude: -27.47,
+                        space_longitude: 153.0,
+                        space_campus_name: 'St Lucia',
+                        space_zlevel: 1,
+                    }}
+                />
+            </WithRouter>,
+        );
+
+        const scriptElement = document.querySelector('script[src*="mazemap.min.js"]');
+        act(() => {
+            scriptElement.onload();
+        });
+
+        await waitFor(() => expect(latestMockMapInstance).not.toBeNull());
+        act(() => {
+            latestMockMapInstance.listeners.load();
+        });
+
+        expect(screen.queryByTestId('reset-map-position-button')).not.toBeInTheDocument();
+
+        act(() => {
+            latestMockMapInstance.center = { lng: 153.1, lat: -27.5 };
+            latestMockMapInstance.listeners.moveend();
+        });
+        expect(screen.getByTestId('reset-map-position-button')).toBeInTheDocument();
+
+        act(() => {
+            latestMockMapInstance.getCenter = jest.fn(() => null);
+            latestMockMapInstance.listeners.moveend();
+        });
+        expect(screen.queryByTestId('reset-map-position-button')).not.toBeInTheDocument();
+
+        act(() => {
+            window.dispatchEvent(new ErrorEvent('error', { message: 'Unrelated browser issue' }));
+        });
+        expect(screen.queryByTestId('mazemap-unavailable')).not.toBeInTheDocument();
+    });
+
+    it('handles imperative flyToSpace guard clauses and z-level transitions without changing the map logic', async () => {
+        jest.useFakeTimers();
+
+        try {
+            const ref = React.createRef();
+            rtlRender(
+                <WithRouter>
+                    <BookableSpacesMap
+                        ref={ref}
+                        sortedSpaceLocations={[
+                            {
+                                space_id: 220,
+                                space_name: 'Fly room',
+                                space_latitude: '-27.47',
+                                space_longitude: '153.0',
+                                space_campus_name: 'St Lucia',
+                                space_zlevel: 2,
+                            },
+                        ]}
+                        spacesFavouritesList={[]}
+                        onMarkerClick={jest.fn()}
+                        centreLatLong={{
+                            space_latitude: -27.47,
+                            space_longitude: 153.0,
+                            space_campus_name: 'St Lucia',
+                            space_zlevel: 1,
+                        }}
+                    />
+                </WithRouter>,
+            );
+
+            const scriptElement = document.querySelector('script[src*="mazemap.min.js"]');
+            act(() => {
+                scriptElement.onload();
+            });
+
+            await waitFor(() => expect(latestMockMapInstance).not.toBeNull());
+            act(() => {
+                latestMockMapInstance.listeners.load();
+            });
+
+            act(() => {
+                ref.current.flyToSpace({
+                    space_id: 221,
+                    space_campus_name: 'St Lucia',
+                    space_latitude: -27.47,
+                    space_longitude: 153.0,
+                });
+            });
+            expect(latestMockMapInstance.flyTo).not.toHaveBeenCalled();
+
+            act(() => {
+                ref.current.flyToSpace({
+                    space_id: 220,
+                    space_campus_id: 1,
+                    space_campus_name: 'St Lucia',
+                    space_latitude: -27.47,
+                    space_longitude: 153.0,
+                    space_zlevel: null,
+                });
+            });
+            expect(latestMockMapInstance.flyTo).toHaveBeenCalled();
+
+            latestMockMapInstance.flyTo.mockClear();
+            act(() => {
+                ref.current.flyToSpace({
+                    space_id: 220,
+                    space_campus_id: 1,
+                    space_campus_name: 'St Lucia',
+                    space_latitude: -27.47,
+                    space_longitude: 153.0,
+                    space_zlevel: 3,
+                });
+                jest.advanceTimersByTime(300);
+            });
+            expect(latestMockMapInstance.stop).toHaveBeenCalled();
+            expect(latestMockMapInstance.setZLevel).toHaveBeenCalledWith(3);
+            expect(latestMockMapInstance.flyTo).toHaveBeenCalled();
+        } finally {
+            jest.runOnlyPendingTimers();
+            jest.useRealTimers();
+        }
+    });
+
+    it('keeps popup state consistent when the selected marker changes and the popup closes', async () => {
+        const onMarkerClick = jest.fn();
+
+        rtlRender(
+            <WithRouter>
+                <BookableSpacesMap
+                    sortedSpaceLocations={[
+                        {
+                            space_id: 300,
+                            space_name: 'First popup room',
+                            space_latitude: '-27.47',
+                            space_longitude: '153.0',
+                            space_campus_name: 'St Lucia',
+                            space_zlevel: 1,
+                        },
+                        {
+                            space_id: 301,
+                            space_name: 'Second popup room',
+                            space_latitude: '-27.48',
+                            space_longitude: '153.01',
+                            space_campus_name: 'St Lucia',
+                            space_zlevel: 2,
+                        },
+                    ]}
+                    spacesFavouritesList={[]}
+                    onMarkerClick={onMarkerClick}
+                    centreLatLong={{
+                        space_latitude: -27.47,
+                        space_longitude: 153.0,
+                        space_campus_name: 'St Lucia',
+                        space_zlevel: 1,
+                    }}
+                />
+            </WithRouter>,
+        );
+
+        const scriptElement = document.querySelector('script[src*="mazemap.min.js"]');
+        act(() => {
+            scriptElement.onload();
+        });
+
+        await waitFor(() => expect(latestMockMapInstance).not.toBeNull());
+        act(() => {
+            latestMockMapInstance.listeners.load();
+        });
+
+        const markerEls = () => Array.from(document.querySelectorAll('[role="img"]'));
+        await waitFor(() => expect(markerEls().length).toBeGreaterThan(1));
+
+        act(() => {
+            markerEls()[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        });
+        expect(document.querySelector('.selected-marker')).toBe(markerEls()[0]);
+
+        act(() => {
+            markerEls()[1].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        });
+        await waitFor(() => expect(document.querySelectorAll('.selected-marker').length).toBeGreaterThan(0));
+
+        if (latestPopupInstance) {
+            act(() => {
+                latestPopupInstance.listeners.close();
+            });
+            expect(latestPopupInstance.listeners.close).toEqual(expect.any(Function));
+        }
+    });
+
+    it('resets the map to its initial position when the reset button is clicked', async () => {
         rtlRender(
             <WithRouter>
                 <BookableSpacesMap
@@ -445,9 +645,24 @@ describe('BookableSpacesMap', () => {
         });
 
         act(() => {
+            latestMockMapInstance.center = { lng: 153.1, lat: -27.5 };
             latestMockMapInstance.listeners.moveend();
         });
 
+        expect(screen.getByTestId('reset-map-position-button')).toBeInTheDocument();
+        latestMockMapInstance.flyTo.mockClear();
+
+        act(() => {
+            screen.getByTestId('reset-map-position-button').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        });
+
+        expect(latestMockMapInstance.flyTo).toHaveBeenCalledWith({
+            center: [153.0, -27.47],
+            zoom: 17,
+            curve: 0.5,
+            speed: 1.6,
+        });
+        expect(latestMockMapInstance.setZLevel).toHaveBeenCalledWith(1);
         expect(screen.queryByTestId('reset-map-position-button')).not.toBeInTheDocument();
     });
 });
