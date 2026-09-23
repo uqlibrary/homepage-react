@@ -254,7 +254,7 @@ export function uploadObjectFile(id, file, onProgress) {
 export function deleteObjectFile(id, filename) {
     return dispatch => {
         dispatch({ type: actions.DLOR_DELETE_OBJET_FILE_LOADING });
-        return destroy(DLOR_OBJECT_FILE_DESTROY_API({ id, filename }))
+        return destroy(DLOR_OBJECT_FILE_DESTROY_API(id, filename))
             .then(response => {
                 dispatch({
                     type: actions.DLOR_DELETE_OBJET_FILE_SUCCESS,

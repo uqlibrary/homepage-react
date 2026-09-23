@@ -266,7 +266,7 @@ export const DLOR_REQUEST_API = () => ({ apiUrl: 'dlor/auth/object' });
 export const DLOR_CREATE_API = () => ({ apiUrl: 'dlor/admin/object' });
 export const DLOR_UPDATE_API = id => ({ apiUrl: `dlor/admin/object/${id}` });
 export const DLOR_DESTROY_API = ({ id }) => ({ apiUrl: `dlor/admin/object/${id}` });
-export const DLOR_OBJECT_FILE_DESTROY_API = ({ id, filename }) => ({
+export const DLOR_OBJECT_FILE_DESTROY_API = (id, filename) => ({
     apiUrl: `dlor/auth/object/${id}/file/${filename}`,
 });
 export const DLOR_OWNED_UPDATE_API = id => ({ apiUrl: `dlor/auth/object/${id}` });

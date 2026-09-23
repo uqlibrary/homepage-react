@@ -1288,6 +1288,7 @@ export const DlorForm = ({
                                             <StyledDurationSpan> and </StyledDurationSpan>
                                             <FormControl>
                                                 <Input
+                                                    disabled={hasFile}
                                                     id="object_link_duration_seconds"
                                                     aria-labelledby="object_link_duration-label object_link_duration_seconds-label"
                                                     data-testid="object-link-duration-seconds"

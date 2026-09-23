@@ -573,6 +573,12 @@ mock.onPut(/.*s3.*.amazonaws.com\/.*/).reply(() => [
     parsedQueryString?.responseBody?.s3,
 ]);
 
+// object files
+mock.onDelete(new RegExp(escapeRegExp(routes.DLOR_OBJECT_FILE_DESTROY_API('.*', '.*').apiUrl))).reply(() => [
+    parsedQueryString?.responseStatus?.dlorObjectFileDestroy || 200,
+    [parsedQueryString?.responseBody?.dlorObjectFileDestroy || ''],
+]);
+
 function getSpecificTeam(teamId) {
     return (
         !!dlor_team_list &&
@@ -592,7 +598,9 @@ function getSpecificDlorObject(dlorId) {
         singleRecord.owner.team_manager = currentTeamDetails.team_manager;
     }
 
-    return singleRecord === null ? [404, {}] : [200, { data: singleRecord }];
+    return singleRecord === null
+        ? [404, {}]
+        : [200, { data: { ...singleRecord, ...JSON.parse(parsedQueryString?.responseBody?.getDlorObject || '{}') } }];
 }
 
 mock.onGet(/dlor\/(public|auth)\/find\/.*/)

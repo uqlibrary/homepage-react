@@ -305,7 +305,7 @@ describe('Digital Learning Hub actions', () => {
 
         describe('deleteObjectFile', () => {
             it('dispatches expected actions and returns true when delete succeeds', async () => {
-                mockApi.onDelete(DLOR_OBJECT_FILE_DESTROY_API({ id: 1, filename: 'file.pdf' }).apiUrl).reply(200);
+                mockApi.onDelete(DLOR_OBJECT_FILE_DESTROY_API(1, 'file.pdf').apiUrl).reply(200);
 
                 const expectedActions = [
                     actions.DLOR_DELETE_OBJET_FILE_LOADING,
@@ -318,7 +318,7 @@ describe('Digital Learning Hub actions', () => {
             });
 
             it('dispatches expected actions and returns false when delete fails', async () => {
-                mockApi.onDelete(DLOR_OBJECT_FILE_DESTROY_API({ id: 1, filename: 'file.pdf' }).apiUrl).reply(500);
+                mockApi.onDelete(DLOR_OBJECT_FILE_DESTROY_API(1, 'file.pdf').apiUrl).reply(500);
 
                 const expectedActions = [
                     actions.DLOR_DELETE_OBJET_FILE_LOADING,
