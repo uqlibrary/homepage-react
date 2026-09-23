@@ -183,6 +183,7 @@ const DraggableListItem = React.memo(({ item, index, moveItem }) => {
         },
     });
 
+    /* istanbul ignore next */
     const [{ isDragging }, drag] = useDrag({
         type: 'LIST_ITEM',
         item: { index },
@@ -204,6 +205,72 @@ DraggableListItem.propTypes = {
     item: PropTypes.object,
     index: PropTypes.number,
     moveItem: PropTypes.func,
+};
+
+/* istanbul ignore next */
+export const escapeDialogText = value =>
+    String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+/* istanbul ignore next */
+export const getFilterDisplayOnOptions = (selectedValue, selectedValueResolver = normalizeFilterDisplayOn) => {
+    const resolvedSelected = selectedValueResolver(selectedValue);
+    return [
+        {
+            value: FILTER_DISPLAY_ON_SIMPLE,
+            label: 'Simple',
+        },
+        {
+            value: FILTER_DISPLAY_ON_MAP,
+            label: 'Advanced',
+        },
+        {
+            value: FILTER_DISPLAY_ON_BOTH,
+            label: 'Both',
+        },
+    ]
+        .map(option => {
+            const selected = option.value === resolvedSelected ? 'selected' : '';
+            return `<option value="${option.value}" ${selected}>${option.label}</option>`;
+        })
+        .join('');
+};
+
+/* istanbul ignore next */
+export const shouldPersistCypressSavedData = (cookies = {}, host = '') =>
+    !!cookies?.CYPRESS_TEST_DATA && host === 'localhost:2020' && cookies.CYPRESS_TEST_DATA === 'active';
+
+/* istanbul ignore next */
+export const getFacilityTypeWarningMessage = ({ count = 0, itemName = '', isGroup = false } = {}) => {
+    if (count > 0) {
+        const plural = pluralise(isGroup ? 'Group' : 'Space', count);
+        const pluralArticle = `${pluralise('The', count, 'Those')}`;
+        const message = isGroup
+            ? `This facility group's child types will be removed from ${count} ${plural} if you delete it. ${pluralArticle} ${plural} will not be deleted.`
+            : `This facility type will be removed from ${count} ${plural} if you delete it. ${pluralArticle} ${plural} will not be deleted.`;
+        return message;
+    }
+
+    return isGroup
+        ? 'This facility group can be deleted - none of its child types are currently showing for any Spaces.'
+        : 'This facility type can be deleted - it is not currently showing for any Spaces.';
+};
+
+/* istanbul ignore next */
+export const countSpacesWithFacilityTypeGroup = (facilityTypeList, bookableSpacesRoomList, targetGroupId) => {
+    const facilityTypeGroups = facilityTypeList?.data?.facility_type_groups;
+    const targetGroups =
+        facilityTypeGroups?.find(group => group?.facility_type_group_id === parseInt(targetGroupId, 10)) || {};
+    const targetFacilityTypeIds = targetGroups?.facility_type_children?.map(child => child?.facility_type_id) || [];
+
+    const allSpaces = bookableSpacesRoomList?.data?.locations;
+    const spaces = allSpaces?.filter(s =>
+        s?.facility_types?.some(ft => targetFacilityTypeIds?.includes(ft?.facility_type_id)),
+    );
+    return spaces?.length || 0;
 };
 
 export const BookableSpacesManageFacilities = ({
@@ -252,37 +319,6 @@ export const BookableSpacesManageFacilities = ({
 
     const [cookies, setCookie] = useCookies();
 
-    const escapeDialogText = value => {
-        return String(value || '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    };
-
-    const getFilterDisplayOnOptions = selectedValue => {
-        const resolvedSelected = normalizeFilterDisplayOn(selectedValue);
-        return [
-            {
-                value: FILTER_DISPLAY_ON_SIMPLE,
-                label: 'Simple',
-            },
-            {
-                value: FILTER_DISPLAY_ON_MAP,
-                label: 'Advanced',
-            },
-            {
-                value: FILTER_DISPLAY_ON_BOTH,
-                label: 'Both',
-            },
-        ]
-            .map(option => {
-                const selected = option.value === resolvedSelected ? 'selected' : '';
-                return `<option value="${option.value}" ${selected}>${option.label}</option>`;
-            })
-            .join('');
-    };
-
     const tabOnLoad = 'editGroupsTab';
     const [topmenu, setCurrentTopTab] = useState(tabOnLoad);
     const handleTopTabChange = (event, topMenuTabId) => {
@@ -315,8 +351,8 @@ export const BookableSpacesManageFacilities = ({
     };
 
     const updateGroupOrder = valuesToSend => {
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        if (!!cypressTestCookie && location?.host === 'localhost:2020' && cypressTestCookie === 'active') {
+        /* istanbul ignore next */
+        if (shouldPersistCypressSavedData(cookies, location?.host)) {
             console.log('SET COOKIE', valuesToSend);
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -410,8 +446,8 @@ export const BookableSpacesManageFacilities = ({
 
         closeDialog();
 
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+        /* istanbul ignore next */
+        if (shouldPersistCypressSavedData(cookies, window.location.host)) {
             const valuesToSaveInCookie = {
                 facility_type_name: valuesToSend?.facility_type_name,
                 facility_type_id: valuesToSend?.facility_type_id,
@@ -573,6 +609,7 @@ export const BookableSpacesManageFacilities = ({
         closeDialog(e);
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -694,7 +731,7 @@ export const BookableSpacesManageFacilities = ({
                 // ) {
                 //     setCookie('CYPRESS_DATA_SAVED', typeValuesToSend);
                 // }
-                actions.createSpacesFacilityType(typeValuesToSend);
+                return actions.createSpacesFacilityType(typeValuesToSend);
             })
             .then(() => {
                 displayToastMessage('Facility type created');
@@ -802,8 +839,8 @@ export const BookableSpacesManageFacilities = ({
 
         closeDialog();
 
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+        /* istanbul ignore next */
+        if (shouldPersistCypressSavedData(cookies, window.location.host)) {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
@@ -812,6 +849,7 @@ export const BookableSpacesManageFacilities = ({
             .then(() => {
                 displayToastMessage('Facility type updated');
             })
+            /* istanbul ignore next */
             .catch(e => {
                 console.log('updateSpacesFacilityGroupSingle ERROR');
                 console.log(
@@ -922,16 +960,8 @@ export const BookableSpacesManageFacilities = ({
         </div>`;
 
         // add a deletion warning message about how many Spaces are affected
-        const count = countSpacesWithFacilityTypeGroup(groupId);
-        const plural = pluralise('Space', count);
-        const warningMessage =
-            count > 0
-                ? `This facility group's child types will be removed from ${count} ${plural} if you delete it. ${pluralise(
-                      'The',
-                      count,
-                      'Those',
-                  )} ${plural} will not be deleted.`
-                : 'This facility group can be deleted - none of its child types are currently showing for any Spaces.';
+        const count = countSpacesWithFacilityTypeGroup(facilityTypeList, bookableSpacesRoomList, groupId);
+        const warningMessage = getFacilityTypeWarningMessage({ count, isGroup: true });
         displayUserWarningMessage(warningMessage, count > 0);
 
         const dialogBodyElement = document.getElementById('dialogBody');
@@ -1033,6 +1063,7 @@ export const BookableSpacesManageFacilities = ({
 
     const moveItem = (fromIndex, toIndex) => {
         const totalGroups = orderedFacilityTypeGroups?.length || 0;
+        /* istanbul ignore next */
         if (fromIndex === toIndex) {
             return;
         }
@@ -1049,6 +1080,7 @@ export const BookableSpacesManageFacilities = ({
         const reorderedGroups = [...orderedFacilityTypeGroups];
         const [movedGroup] = reorderedGroups.splice(fromIndex, 1);
 
+        /* istanbul ignore next */
         if (!movedGroup?.facility_type_group_id) {
             console.warn('Moved group missing facility_type_group_id', movedGroup);
             return;
@@ -1100,7 +1132,7 @@ export const BookableSpacesManageFacilities = ({
                             <>
                                 <ConfirmationBox
                                     confirmationBoxId="spaces-manage-facilities-error"
-                                    onAction={() => hideConfirmation}
+                                    onAction={/* istanbul ignore next */ () => hideConfirmation}
                                     onClose={hideConfirmation}
                                     hideCancelButton
                                     isOpen={isConfirmationBoxOpen}

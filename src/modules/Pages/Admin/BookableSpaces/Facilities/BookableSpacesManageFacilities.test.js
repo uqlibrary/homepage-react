@@ -17,7 +17,14 @@ jest.mock('react-dnd-html5-backend', () => ({
 import { act, fireEvent, rtlRender, screen, waitFor } from 'test-utils';
 import { getFlatFacilityTypeList } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { orderFacilityTypeGroups } from './facilityGroupOrderHelpers';
-import { BookableSpacesManageFacilities } from './BookableSpacesManageFacilities';
+import {
+    BookableSpacesManageFacilities,
+    countSpacesWithFacilityTypeGroup,
+    escapeDialogText,
+    getFacilityTypeWarningMessage,
+    getFilterDisplayOnOptions,
+    shouldPersistCypressSavedData,
+} from './BookableSpacesManageFacilities';
 
 describe('BookableSpacesManageFacilities', () => {
     const defaultProps = {
@@ -35,6 +42,7 @@ describe('BookableSpacesManageFacilities', () => {
                     {
                         facility_type_group_id: 1,
                         facility_type_group_name: 'Study spaces',
+                        facility_type_group_loads_open: 1,
                         facility_type_children: [
                             {
                                 facility_type_id: 101,
@@ -47,6 +55,7 @@ describe('BookableSpacesManageFacilities', () => {
                     {
                         facility_type_group_id: 2,
                         facility_type_group_name: 'Amenities',
+                        facility_type_group_loads_open: 0,
                         facility_type_children: [
                             {
                                 facility_type_id: 102,
@@ -81,6 +90,8 @@ describe('BookableSpacesManageFacilities', () => {
     });
 
     beforeEach(() => {
+        mockDndDrag.mockClear();
+        mockDndDrop.mockClear();
         mockDndDrag.mockImplementation(() => [{ isDragging: false }, jest.fn()]);
         mockDndDrop.mockImplementation(() => [{}, jest.fn()]);
         if (!HTMLDialogElement.prototype.showModal) {
@@ -123,6 +134,112 @@ describe('BookableSpacesManageFacilities', () => {
         );
 
         expect(screen.getByTestId('apiError')).toHaveTextContent('Something went wrong - please try again later.');
+    });
+
+    it('covers the helper-only branches for dialog escaping and warning text', () => {
+        expect(escapeDialogText('A&B <C> "D"')).toBe('A&amp;B &lt;C&gt; &quot;D&quot;');
+        expect(escapeDialogText(undefined)).toBe('');
+        expect(getFilterDisplayOnOptions(undefined)).toContain('value="both" selected');
+        expect(getFilterDisplayOnOptions('simple')).toContain('value="simple" selected');
+        expect(getFilterDisplayOnOptions('advanced')).toContain('value="advanced" selected');
+        expect(shouldPersistCypressSavedData({ CYPRESS_TEST_DATA: 'active' }, 'localhost:2020')).toBe(true);
+        expect(shouldPersistCypressSavedData({ CYPRESS_TEST_DATA: 'active' }, 'localhost:2021')).toBe(false);
+        expect(shouldPersistCypressSavedData({ CYPRESS_TEST_DATA: 'inactive' }, 'localhost:2020')).toBe(false);
+        expect(getFacilityTypeWarningMessage({ count: 2, isGroup: true })).toContain('will be removed from 2');
+        expect(getFacilityTypeWarningMessage({ count: 0, isGroup: true })).toContain('can be deleted');
+        expect(getFacilityTypeWarningMessage({ count: 2, isGroup: false })).toContain('will be removed from 2');
+        expect(getFacilityTypeWarningMessage({ count: 0, isGroup: false })).toContain('can be deleted');
+        expect(countSpacesWithFacilityTypeGroup(defaultProps.facilityTypeList, defaultProps.bookableSpacesRoomList, 1)).toBe(1);
+    });
+
+    it('shows the group reorder error popup when the API rejects', async () => {
+        jest.useFakeTimers();
+        const actions = {
+            ...defaultProps.actions,
+            updateSpacesFacilityGroupList: jest.fn().mockRejectedValue(new Error('bad request')),
+        };
+
+        mockDndDrop.mockImplementation(config => {
+            const props = { ...config };
+            return [
+                {},
+                ref => {
+                    if (ref && typeof props.drop === 'function') {
+                        ref.drop = props.drop;
+                    }
+                    return ref;
+                },
+            ];
+        });
+
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} actions={actions} />);
+        fireEvent.click(screen.getByTestId('facility-group-order'));
+
+        const dropConfig = mockDndDrop.mock.calls[0][0];
+        await act(async () => {
+            dropConfig.drop({ index: 1 });
+            jest.advanceTimersByTime(1000);
+        });
+
+        await waitFor(() => {
+            expect(screen.getByText(/Updating the Facility group order failed/i)).toBeInTheDocument();
+        });
+    });
+
+    it('opens the edit-group dialog with the correct open/collapsed radio state', () => {
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} />);
+
+        fireEvent.click(screen.getByTestId('edit-group-1-button'));
+        expect(document.getElementById('facility_type_group_loads_open-open')).toBeChecked();
+        expect(document.getElementById('facility_type_group_loads_open-collapsed')).not.toBeChecked();
+    });
+
+    it('validates required values before creating a new facility type', async () => {
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} />);
+
+        fireEvent.click(document.getElementById('add-group-1-button'));
+        fireEvent.click(document.getElementById('saveButton'));
+
+        await waitFor(() => {
+            expect(screen.getByText('Please enter a facility type name')).toBeInTheDocument();
+        });
+    });
+
+    it('shows the group creation error when the group is rejected', async () => {
+        const actions = {
+            ...defaultProps.actions,
+            createSpacesFacilityTypeGroup: jest.fn().mockRejectedValue(new Error('bad request')),
+        };
+
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} actions={actions} />);
+
+        fireEvent.click(screen.getByTestId('facility-group-add'));
+        fireEvent.change(document.getElementById('newGroupname'), { target: { value: 'My new group' } });
+        fireEvent.change(document.getElementById('firstGroupEntry'), { target: { value: 'My first type' } });
+        fireEvent.click(document.getElementById('saveButton'));
+
+        await waitFor(() => {
+            expect(screen.getByText(/facility group and type was not created/i)).toBeInTheDocument();
+        });
+    });
+
+    it('shows the group creation error when the child type is rejected after group creation', async () => {
+        const actions = {
+            ...defaultProps.actions,
+            createSpacesFacilityTypeGroup: jest.fn().mockResolvedValue({ data: { facility_type_group_id: 99 } }),
+            createSpacesFacilityType: jest.fn().mockRejectedValue(new Error('bad request')),
+        };
+
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} actions={actions} />);
+
+        fireEvent.click(screen.getByTestId('facility-group-add'));
+        fireEvent.change(document.getElementById('newGroupname'), { target: { value: 'My new group' } });
+        fireEvent.change(document.getElementById('firstGroupEntry'), { target: { value: 'My first type' } });
+        fireEvent.click(document.getElementById('saveButton'));
+
+        await waitFor(() => {
+            expect(screen.getByText(/facility type was not created/i)).toBeInTheDocument();
+        });
     });
 
     it('runs the DraggableListItem reorder logic when a list item is dropped onto a different index', async () => {
@@ -377,6 +494,115 @@ describe('BookableSpacesManageFacilities', () => {
 
         await waitFor(() => {
             expect(actions.deleteSpacesFacilityTypeGroup).toHaveBeenCalledWith(1);
+        });
+    });
+
+    it('validates required values before creating a new facility type group', async () => {
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} />);
+
+        fireEvent.click(screen.getByTestId('facility-group-add'));
+        fireEvent.click(document.getElementById('saveButton'));
+
+        await waitFor(() => {
+            expect(screen.getByText('Please enter both fields.')).toBeInTheDocument();
+        });
+    });
+
+    it('validates required values before updating a facility group', async () => {
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} />);
+
+        fireEvent.click(screen.getByTestId('edit-group-1-button'));
+        fireEvent.change(document.getElementById('facility_type_group_name'), { target: { value: '' } });
+        fireEvent.click(document.getElementById('saveButton'));
+
+        await waitFor(() => {
+            expect(screen.getByText('Please enter a facility group type name')).toBeInTheDocument();
+        });
+    });
+
+    it('shows the error message when creating a new facility type fails', async () => {
+        const actions = {
+            ...defaultProps.actions,
+            createSpacesFacilityType: jest.fn().mockRejectedValue(new Error('bad request')),
+        };
+
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} actions={actions} />);
+
+        fireEvent.click(document.getElementById('add-group-1-button'));
+        fireEvent.change(document.getElementById('newFacilityType'), { target: { value: 'Collaborative tables' } });
+        fireEvent.click(document.getElementById('saveButton'));
+
+        await waitFor(() => {
+            expect(screen.getByText(/facility type was not created/i)).toBeInTheDocument();
+        });
+    });
+
+    it('shows the error message when a facility type update fails', async () => {
+        const actions = {
+            ...defaultProps.actions,
+            updateSpacesFacilityType: jest.fn().mockRejectedValue(new Error('bad request')),
+        };
+
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} actions={actions} />);
+
+        fireEvent.click(screen.getByTestId('edit-facility-type-101-button'));
+        fireEvent.click(document.getElementById('saveButton'));
+
+        await waitFor(() => {
+            expect(screen.getByText(/Updating the Facility type failed/i)).toBeInTheDocument();
+        });
+    });
+
+    it('shows the error message when deleting a facility type fails', async () => {
+        const actions = {
+            ...defaultProps.actions,
+            deleteSpacesFacilityType: jest.fn().mockRejectedValue(new Error('bad request')),
+        };
+
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} actions={actions} />);
+
+        fireEvent.click(screen.getByTestId('edit-facility-type-101-button'));
+        fireEvent.click(document.getElementById('deleteButton'));
+        fireEvent.click(document.getElementById('confDialogOkButton'));
+
+        await waitFor(() => {
+            expect(screen.getByText(/facility type was not deleted/i)).toBeInTheDocument();
+        });
+    });
+
+    it('shows the error message when updating a facility group fails', async () => {
+        const actions = {
+            ...defaultProps.actions,
+            updateSpacesFacilityGroupSingle: jest.fn().mockRejectedValue(new Error('bad request')),
+        };
+
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} actions={actions} />);
+
+        fireEvent.click(screen.getByTestId('edit-group-1-button'));
+        fireEvent.change(document.getElementById('facility_type_group_name'), {
+            target: { value: 'Study spaces updated' },
+        });
+        fireEvent.click(document.getElementById('saveButton'));
+
+        await waitFor(() => {
+            expect(screen.getByText(/Updating the Facility type failed/i)).toBeInTheDocument();
+        });
+    });
+
+    it('shows the error message when deleting a facility group fails', async () => {
+        const actions = {
+            ...defaultProps.actions,
+            deleteSpacesFacilityTypeGroup: jest.fn().mockRejectedValue(new Error('bad request')),
+        };
+
+        rtlRender(<BookableSpacesManageFacilities {...defaultProps} actions={actions} />);
+
+        fireEvent.click(screen.getByTestId('edit-group-1-button'));
+        fireEvent.click(document.getElementById('deleteButton'));
+        fireEvent.click(document.getElementById('confDialogOkButton'));
+
+        await waitFor(() => {
+            expect(screen.getByText(/facility group was not deleted/i)).toBeInTheDocument();
         });
     });
 });
