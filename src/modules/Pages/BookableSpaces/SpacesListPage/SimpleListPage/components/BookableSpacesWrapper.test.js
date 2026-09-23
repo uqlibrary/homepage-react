@@ -26,7 +26,17 @@ jest.mock(
 
 import BookableSpacesWrapper from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
 import { buildLegacyBrowseNavigationUrl } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
-import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
+import {
+    JourneyResultsView,
+    applyJourneySidebarFilters,
+    clampJourneyPage,
+    getJourneyDetailUrl,
+    getJourneyResultSummary,
+    getJourneySpaceDetailId,
+    handleJourneySidebarToggle,
+    toggleJourneySidebarFilter,
+} from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
+import { StyledJourneyPanelSection } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
 
 import OpenSpaceDetailsButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceDetailsButton';
 
@@ -119,6 +129,43 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         window.sessionStorage.clear();
     });
 
+    it('covers the exported journey result helper branches', () => {
+        expect(clampJourneyPage(4, 3)).toBe(3);
+        expect(clampJourneyPage(2, 3)).toBe(2);
+
+        expect(getJourneyResultSummary(4, 10)).toBe('4 of 10');
+        expect(getJourneyResultSummary(4)).toBe('4');
+
+        expect(getJourneySpaceDetailId({ space_uuid: 'abc-123', space_id: 998 })).toBe('abc-123');
+        expect(getJourneySpaceDetailId({ space_id: 998 })).toBe('998');
+        expect(getJourneySpaceDetailId({})).toBe('');
+
+        expect(getJourneyDetailUrl({ space_uuid: 'abc-123' })).toContain('/spaces/detail/abc-123');
+        expect(getJourneyDetailUrl({ space_id: 998 })).toContain('/spaces/detail/998');
+
+        document.body.innerHTML = '<div id="filterSidebar" class="mobileHidden"></div>';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(true);
+        expect(document.getElementById('filterSidebar').classList.contains('mobileHidden')).toBe(false);
+
+        document.body.innerHTML = '<div id="filterSidebar"></div>';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(false);
+        expect(document.getElementById('filterSidebar').classList.contains('mobileHidden')).toBe(true);
+
+        document.body.innerHTML = '';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(false);
+
+        document.body.innerHTML = '<div id="filterSidebar" class="mobileHidden"></div>';
+        expect(handleJourneySidebarToggle()).toBe(true);
+        expect(document.getElementById('filterSidebar').classList.contains('mobileHidden')).toBe(false);
+
+        const setShowAdvancedFilters = jest.fn();
+        applyJourneySidebarFilters({ isDesktopResultsLayout: false, setShowAdvancedFilters });
+        expect(setShowAdvancedFilters).toHaveBeenCalledWith(false);
+
+        applyJourneySidebarFilters({ isDesktopResultsLayout: true, setShowAdvancedFilters });
+        expect(setShowAdvancedFilters).toHaveBeenCalledTimes(1);
+    });
+
     const renderJourney = props => {
         const currentHashRoute = window.location.hash.startsWith('#/') ? window.location.hash.slice(1) : '';
         const currentRoute = currentHashRoute || window.location.pathname || '/spaces';
@@ -130,6 +177,123 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             </WithRouter>,
         );
     };
+
+    it('renders the journey panel with and without top spacing', () => {
+        const { rerender } = rtlRender(
+            <StyledJourneyPanelSection data-testid="journey-panel-no-spacing" hasTopSpacing={false} />,
+        );
+        expect(screen.getByTestId('journey-panel-no-spacing')).toBeInTheDocument();
+
+        rerender(<StyledJourneyPanelSection data-testid="journey-panel-with-spacing" hasTopSpacing />);
+        expect(screen.getByTestId('journey-panel-with-spacing')).toBeInTheDocument();
+    });
+
+    it('renders fallback result content and the empty-state message for no results', () => {
+        const fallbackSpace = {
+            ...baseSpace,
+            space_name: '',
+            space_uuid: undefined,
+            space_description: '',
+            space_external_book_url: undefined,
+            space_type_details: {
+                space_type_name: 'Study space',
+                space_type_description: '',
+            },
+            space_outages: [],
+        };
+
+        const { rerender } = rtlRender(
+            <WithRouter>
+                <JourneyResultsView
+                    intentSpaceLocations={[fallbackSpace]}
+                    totalSpaceCount={1}
+                    handleClearJourneyFilters={jest.fn()}
+                    goToLegacyBrowse={jest.fn()}
+                    selectedFacilityTypes={[]}
+                    setSelectedFacilityTypes={jest.fn()}
+                    filteredFacilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeListLoading={false}
+                    facilityTypeListError={null}
+                    minimumSpaceCapacity={1}
+                    maximumSpaceCapacity={20}
+                    capacityFilterValue={[1, 20]}
+                    setCapacityFilterValue={jest.fn()}
+                    campusList={[]}
+                    selectedCampus={0}
+                    handleCampusSelection={jest.fn()}
+                    activeFilterCount={0}
+                    librariesForCampus={[]}
+                    selectedLibrary={0}
+                    handleLibrarySelection={jest.fn()}
+                    shouldShowAdvancedFilters={false}
+                    isDesktopResultsLayout={false}
+                    setShowAdvancedFilters={jest.fn()}
+                    weeklyHours={null}
+                    weeklyHoursLoading={false}
+                    weeklyHoursError={null}
+                    isFavouriteActionInProgress={false}
+                    onFavouriteToggle={jest.fn()}
+                    spacesFavouritesList={[]}
+                />
+            </WithRouter>,
+        );
+
+        expect(screen.getByText(/Unnamed space/i)).toBeInTheDocument();
+        expect(screen.queryByText('No results match your criteria')).not.toBeInTheDocument();
+
+        rerender(
+            <WithRouter>
+                <JourneyResultsView
+                    intentSpaceLocations={[]}
+                    totalSpaceCount={0}
+                    handleClearJourneyFilters={jest.fn()}
+                    goToLegacyBrowse={jest.fn()}
+                    selectedFacilityTypes={[]}
+                    setSelectedFacilityTypes={jest.fn()}
+                    filteredFacilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeListLoading={false}
+                    facilityTypeListError={null}
+                    minimumSpaceCapacity={1}
+                    maximumSpaceCapacity={20}
+                    capacityFilterValue={[1, 20]}
+                    setCapacityFilterValue={jest.fn()}
+                    campusList={[]}
+                    selectedCampus={0}
+                    handleCampusSelection={jest.fn()}
+                    activeFilterCount={0}
+                    librariesForCampus={[]}
+                    selectedLibrary={0}
+                    handleLibrarySelection={jest.fn()}
+                    shouldShowAdvancedFilters={false}
+                    isDesktopResultsLayout={false}
+                    setShowAdvancedFilters={jest.fn()}
+                    weeklyHours={null}
+                    weeklyHoursLoading={false}
+                    weeklyHoursError={null}
+                    isFavouriteActionInProgress={false}
+                    onFavouriteToggle={jest.fn()}
+                    spacesFavouritesList={[]}
+                />
+            </WithRouter>,
+        );
+
+        expect(screen.getByText('No results match your criteria')).toBeInTheDocument();
+    });
+
+    it('exercises the mobile sidebar toggle helper directly for hidden, shown, and missing sidebar states', () => {
+        document.body.innerHTML = '<div id="filterSidebar" class="mobileHidden"></div>';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(true);
+        expect(document.getElementById('filterSidebar').classList.contains('mobileHidden')).toBe(false);
+
+        document.body.innerHTML = '<div id="filterSidebar"></div>';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(false);
+        expect(document.getElementById('filterSidebar').classList.contains('mobileHidden')).toBe(true);
+
+        document.body.innerHTML = '';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(false);
+    });
 
     const mockUserScenarios = [
         {
@@ -161,28 +325,31 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         },
     ];
 
-    it.each(mockUserScenarios)('renders the landing state for a $name', ({ state, expectHeading, expectEmptyState, expectFavouriteCard }) => {
-        renderJourney({
-            ...defaultProps,
-            ...state,
-        });
+    it.each(mockUserScenarios)(
+        'renders the landing state for a $name',
+        ({ state, expectHeading, expectEmptyState, expectFavouriteCard }) => {
+            renderJourney({
+                ...defaultProps,
+                ...state,
+            });
 
-        expect(screen.getByText('Find library study spaces')).toBeInTheDocument();
+            expect(screen.getByText('Find library study spaces')).toBeInTheDocument();
 
-        if (expectHeading) {
-            expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
-        } else {
-            expect(screen.queryByText('Your favourite spaces')).not.toBeInTheDocument();
-        }
+            if (expectHeading) {
+                expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
+            } else {
+                expect(screen.queryByText('Your favourite spaces')).not.toBeInTheDocument();
+            }
 
-        if (expectEmptyState) {
-            expect(screen.getByTestId('spaces-homepage-favourites-empty-state')).toBeInTheDocument();
-        }
+            if (expectEmptyState) {
+                expect(screen.getByTestId('spaces-homepage-favourites-empty-state')).toBeInTheDocument();
+            }
 
-        if (expectFavouriteCard) {
-            expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
-        }
-    });
+            if (expectFavouriteCard) {
+                expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
+            }
+        },
+    );
 
     const renderSidebarFilters = props =>
         rtlRender(

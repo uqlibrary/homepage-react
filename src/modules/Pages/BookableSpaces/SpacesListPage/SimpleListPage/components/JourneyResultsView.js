@@ -29,6 +29,47 @@ import {
 import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
 import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
+export const clampJourneyPage = (page, totalPages) => Math.max(1, Math.min(page, totalPages));
+
+export const getJourneyResultSummary = (spacesLength, totalSpaceCount) => {
+    if (typeof totalSpaceCount === 'number') {
+        return `${spacesLength} of ${totalSpaceCount}`;
+    }
+    return String(spacesLength);
+};
+
+export const getJourneySpaceDetailId = space => String(space?.space_uuid || space?.space_id || '');
+
+export const getJourneyDetailUrl = space =>
+    serialiseJourneyUrl({
+        view: 'details',
+        spaceId: space?.space_uuid || space?.space_id || null,
+    });
+
+export const toggleJourneySidebarFilter = sidebarId => {
+    const sidebarBlock = document.getElementById(sidebarId);
+    if (!sidebarBlock) {
+        return false;
+    }
+
+    const shouldShow = sidebarBlock.classList.contains('mobileHidden');
+    if (shouldShow) {
+        sidebarBlock.classList.remove('mobileHidden');
+        return true;
+    }
+
+    sidebarBlock.classList.add('mobileHidden');
+    return false;
+};
+
+export const handleJourneySidebarToggle = () => toggleJourneySidebarFilter('filterSidebar');
+
+export const applyJourneySidebarFilters = ({ isDesktopResultsLayout, setShowAdvancedFilters }) => {
+    if (!isDesktopResultsLayout) {
+        setShowAdvancedFilters(false);
+    }
+};
+
 export const JourneyResultsView = ({
     actions,
     intentSpaceLocations,
@@ -79,22 +120,15 @@ export const JourneyResultsView = ({
     }, [page, spaces]);
 
     React.useEffect(() => {
-        setPage(prevPage => (prevPage > totalPages ? totalPages : prevPage));
+        setPage(prevPage => clampJourneyPage(prevPage, totalPages));
     }, [totalPages]);
-
-    const toggleSidebarFilter = () => {
-        const sidebarBlock = document.getElementById('filterSidebar');
-        if (!!sidebarBlock) {
-            // SidebarFilters.js has `mobileHidden` class applied onload
-            sidebarBlock.classList.contains('mobileHidden')
-                ? sidebarBlock.classList.remove('mobileHidden')
-                : sidebarBlock.classList.add('mobileHidden');
-        }
-    };
 
     return (
         <StyledJourneyPanelSection data-testid="bookable-spaces-journey-results-view" hasTopSpacing>
-            <StyledFilterShowHideButton onClick={toggleSidebarFilter} data-testid="spaces-filter-show-hide-button">
+            <StyledFilterShowHideButton
+                onClick={handleJourneySidebarToggle}
+                data-testid="spaces-filter-show-hide-button"
+            >
                 <TuneIcon />
             </StyledFilterShowHideButton>
             <StyledResultsSplitLayoutDiv>
@@ -108,7 +142,7 @@ export const JourneyResultsView = ({
                         <Typography component={'h2'} data-testid="spaces-results-summary">
                             Filtered:{' '}
                             <span style={{ whiteSpace: 'nowrap' }}>
-                                {spaces.length} {typeof totalSpaceCount === 'number' ? ` of ${totalSpaceCount}` : ''}
+                                {getJourneyResultSummary(spaces.length, totalSpaceCount)}
                             </span>{' '}
                             spaces
                         </Typography>
@@ -143,11 +177,8 @@ export const JourneyResultsView = ({
                     {spaces.length > 0 && (
                         <Stack spacing={4} sx={{ mt: 1.5 }}>
                             {visibleSpaces.map(space => {
-                                const detailId = String(space?.space_uuid || space?.space_id || '');
-                                const detailUrl = serialiseJourneyUrl({
-                                    view: 'details',
-                                    spaceId: space?.space_uuid || space?.space_id || null,
-                                });
+                                const detailId = getJourneySpaceDetailId(space);
+                                const detailUrl = getJourneyDetailUrl(space);
                                 const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
                                 return (
                                     <StyledListItemStack key={detailId || space?.space_id} spacing={1}>
@@ -291,11 +322,12 @@ export const JourneyResultsView = ({
                         librariesForCampus={librariesForCampus}
                         selectedLibrary={selectedLibrary}
                         handleLibrarySelection={handleLibrarySelection}
-                        onApplyAllFilters={() => {
-                            if (!isDesktopResultsLayout) {
-                                setShowAdvancedFilters(false);
-                            }
-                        }}
+                        onApplyAllFilters={() =>
+                            applyJourneySidebarFilters({
+                                isDesktopResultsLayout,
+                                setShowAdvancedFilters,
+                            })
+                        }
                         onResetAllFilters={onResetAllFilters}
                         showBottomActionButtons
                         showFavouriteSpacesOnly={showFavouriteSpacesOnly}
