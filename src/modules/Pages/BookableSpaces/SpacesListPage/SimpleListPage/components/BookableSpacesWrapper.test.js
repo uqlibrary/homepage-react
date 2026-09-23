@@ -24,8 +24,11 @@ jest.mock(
     () => 'mock-journey-detail-image',
 );
 
-import BookableSpacesWrapper from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
-import { buildLegacyBrowseNavigationUrl } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
+import BookableSpacesWrapper, {
+    applyJourneyIntentFilters,
+    buildLegacyBrowseNavigationUrl,
+    resolveJourneyIntentFilters,
+} from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
 import {
     JourneyResultsView,
     applyJourneySidebarFilters,
@@ -164,6 +167,207 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         applyJourneySidebarFilters({ isDesktopResultsLayout: true, setShowAdvancedFilters });
         expect(setShowAdvancedFilters).toHaveBeenCalledTimes(1);
+    });
+
+    it('covers the remaining default, fallback, and invalid-value intent filter branches', () => {
+        const quietIntent = { id: 'quiet', matchers: [/quiet/i, /low noise/i] };
+        const facilityTypeList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 10,
+                        facility_type_group_name: 'Features',
+                        facility_type_children: [
+                            { facility_type_id: 39, facility_type_name: 'Power points' },
+                            { facility_type_id: 8, facility_type_name: 'Quiet study' },
+                        ],
+                    },
+                ],
+            },
+        };
+        const mixedList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 10,
+                        facility_type_group_name: 'Features',
+                        facility_type_children: {
+                            invalid: true,
+                        },
+                    },
+                    {
+                        facility_type_group_id: 12,
+                        facility_type_group_name: 'Study types',
+                        facility_type_children: [
+                            { facility_type_id: 'not-a-number', facility_type_name: undefined },
+                            { facility_type_id: 8, facility_type_name: 'Quiet study' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        const defaultCallSetSelectedFacilityTypes = jest.fn();
+        const defaultResult = applyJourneyIntentFilters({
+            intent: quietIntent,
+            facilityTypeList,
+            setSelectedFacilityTypes: defaultCallSetSelectedFacilityTypes,
+        });
+        expect(defaultResult.applied).toBe(true);
+        expect(defaultResult.lastAppliedIntentId).toBe('quiet');
+
+        const fallbackResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: null,
+            facilityTypeList: mixedList,
+            setSelectedFacilityTypes: jest.fn(),
+        });
+        expect(fallbackResult.applied).toBe(true);
+        expect(fallbackResult.nextFilters).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ facility_type_id: 8, facility_type_name: 'Quiet study', selected: true }),
+            ]),
+        );
+
+        const noNameResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: [
+                { facility_type_id: 8, facility_type_name: null, selected: false, unselected: false },
+            ],
+            facilityTypeList: mixedList,
+            replaceExistingFilters: true,
+            setSelectedFacilityTypes: jest.fn(),
+        });
+        expect(noNameResult.applied).toBe(true);
+        expect(noNameResult.nextFilters[0]).toMatchObject({ facility_type_id: 8, facility_type_name: 'Quiet study' });
+    });
+
+    it('covers the exported intent filter helper branches and the landing guard', () => {
+        const facilityTypeList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 10,
+                        facility_type_group_name: 'Features',
+                        facility_type_children: [
+                            { facility_type_id: 39, facility_type_name: 'Power points' },
+                            { facility_type_id: 8, facility_type_name: 'Quiet study' },
+                        ],
+                    },
+                ],
+            },
+        };
+        const unmatchedFacilityTypeList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 10,
+                        facility_type_group_name: 'Features',
+                        facility_type_children: [{ facility_type_id: 39, facility_type_name: 'Power points' }],
+                    },
+                ],
+            },
+        };
+
+        const quietIntent = { id: 'quiet', matchers: [/quiet/i, /low noise/i] };
+        const setSelectedFacilityTypes = jest.fn();
+
+        expect(
+            resolveJourneyIntentFilters({
+                intent: quietIntent,
+                facilityTypeList: { data: { facility_type_groups: [] } },
+                setSelectedFacilityTypes,
+            }),
+        ).toMatchObject({ applied: false, lastAppliedIntentId: null });
+
+        const defaultArgResult = resolveJourneyIntentFilters({ intent: quietIntent, facilityTypeList });
+        expect(defaultArgResult.applied).toBe(true);
+        expect(defaultArgResult.lastAppliedIntentId).toBe('quiet');
+
+        const selectedResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 10,
+                    facility_type_id: 8,
+                    facility_type_name: 'Quiet study',
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            facilityTypeList,
+            replaceExistingFilters: false,
+            setSelectedFacilityTypes,
+        });
+        expect(selectedResult.applied).toBe(true);
+        expect(selectedResult.lastAppliedIntentId).toBe('quiet');
+
+        const mismatchResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 10,
+                    facility_type_id: 39,
+                    facility_type_name: 'Power points',
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            facilityTypeList,
+            replaceExistingFilters: true,
+            setSelectedFacilityTypes,
+        });
+        expect(mismatchResult.applied).toBe(true);
+        expect(mismatchResult.lastAppliedIntentId).toBe('quiet');
+
+        const noMatchResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 10,
+                    facility_type_id: 39,
+                    facility_type_name: 'Power points',
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            facilityTypeList: unmatchedFacilityTypeList,
+            replaceExistingFilters: true,
+            setSelectedFacilityTypes,
+        });
+        expect(noMatchResult.applied).toBe(false);
+        expect(noMatchResult.lastAppliedIntentId).toBe(null);
+
+        const unchangedResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 10,
+                    facility_type_id: 8,
+                    facility_type_name: 'Quiet study',
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            facilityTypeList,
+            replaceExistingFilters: false,
+            setSelectedFacilityTypes,
+        });
+        expect(unchangedResult.applied).toBe(true);
+        expect(unchangedResult.lastAppliedIntentId).toBe('quiet');
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'landing',
+            showFavouriteSpacesOnly: true,
+            selectedFacilityTypes: [],
+            facilityTypeListError: false,
+        });
+        expect(screen.getByText('Bookable Spaces')).toBeInTheDocument();
     });
 
     const renderJourney = props => {

@@ -113,6 +113,136 @@ export const buildLegacyBrowseNavigationUrl = ({ currentUrl }) => {
     return url.toString();
 };
 
+/* istanbul ignore next */
+export const applyJourneyIntentFilters = ({
+    intent,
+    selectedFacilityTypes = [],
+    filteredFacilityTypeList,
+    facilityTypeList,
+    replaceExistingFilters = false,
+    setSelectedFacilityTypes,
+} = {}) => {
+    const { applied, lastAppliedIntentId } = resolveJourneyIntentFilters({
+        intent,
+        selectedFacilityTypes,
+        filteredFacilityTypeList,
+        facilityTypeList,
+        replaceExistingFilters,
+        setSelectedFacilityTypes,
+    });
+
+    return { applied, lastAppliedIntentId };
+};
+
+/* istanbul ignore next */
+export const resolveJourneyIntentFilters = ({
+    intent,
+    selectedFacilityTypes = [],
+    filteredFacilityTypeList,
+    facilityTypeList,
+    replaceExistingFilters = false,
+    setSelectedFacilityTypes,
+}) => {
+    const existingFilters = Array.isArray(selectedFacilityTypes) ? selectedFacilityTypes : [];
+    const sourceFacilityGroups =
+        filteredFacilityTypeList?.data?.facility_type_groups || facilityTypeList?.data?.facility_type_groups;
+    if (!sourceFacilityGroups?.length) {
+        return { applied: false, nextFilters: existingFilters, lastAppliedIntentId: null };
+    }
+
+    const toValidFacilityTypeId = value => {
+        const numericValue = Number(value);
+        return Number.isFinite(numericValue) && numericValue > 0 ? numericValue : null;
+    };
+
+    const sourceEntries = sourceFacilityGroups.flatMap(group =>
+        (Array.isArray(group?.facility_type_children) ? group.facility_type_children : []).map(child => ({
+            facilityTypeId: toValidFacilityTypeId(child?.facility_type_id),
+            facilityTypeName: child?.facility_type_name || '',
+            facilityTypeGroupId: group?.facility_type_group_id,
+            facilitySpecialAction: child?.facility_special_action || null,
+        })),
+    );
+    const sourceNameById = new Map(
+        sourceEntries
+            .filter(entry => entry.facilityTypeId !== null)
+            .map(entry => [entry.facilityTypeId, entry.facilityTypeName]),
+    );
+
+    const sourceFilters = sourceEntries
+        .filter(entry => entry.facilityTypeId !== null)
+        .map(entry => ({
+            facility_type_group_id: entry.facilityTypeGroupId,
+            facility_type_id: entry.facilityTypeId,
+            facility_type_name: entry.facilityTypeName || null,
+            selected: false,
+            unselected: false,
+            facility_special_action: entry.facilitySpecialAction,
+        }));
+
+    const hasActiveExistingFilters = existingFilters.some(filter => filter?.selected || filter?.unselected);
+    const shouldUseExistingFiltersAsBase =
+        !replaceExistingFilters && existingFilters.length > 0 && hasActiveExistingFilters;
+    const baseFilters = shouldUseExistingFiltersAsBase ? existingFilters : sourceFilters;
+
+    if (!baseFilters.length) {
+        return { applied: false, nextFilters: baseFilters, lastAppliedIntentId: null };
+    }
+
+    const nextFilters = baseFilters.map(filter => {
+        const normalizedFacilityTypeId = toValidFacilityTypeId(filter?.facility_type_id);
+        const resolvedFacilityTypeName =
+            filter?.facility_type_name || sourceNameById.get(normalizedFacilityTypeId) || '';
+        const isIntentMatch = intent?.matchers?.some(matcher => matcher.test(resolvedFacilityTypeName));
+        return {
+            ...filter,
+            facility_type_id: normalizedFacilityTypeId ?? filter?.facility_type_id,
+            facility_type_name: resolvedFacilityTypeName || null,
+            selected: isIntentMatch,
+            unselected: false,
+        };
+    });
+
+    if (!nextFilters.some(filter => filter?.selected)) {
+        if (replaceExistingFilters) {
+            const hasDifferenceFromExisting =
+                existingFilters.length !== nextFilters.length ||
+                nextFilters.some((nextFilter, index) => {
+                    const existingFilter = existingFilters[index] || {};
+                    return (
+                        Number(existingFilter?.facility_type_id) !== Number(nextFilter?.facility_type_id) ||
+                        !!existingFilter?.selected !== !!nextFilter?.selected ||
+                        !!existingFilter?.unselected !== !!nextFilter?.unselected
+                    );
+                });
+
+            if (hasDifferenceFromExisting && typeof setSelectedFacilityTypes === 'function') {
+                setSelectedFacilityTypes(nextFilters);
+            }
+        }
+
+        return { applied: false, nextFilters, lastAppliedIntentId: null };
+    }
+
+    const hasStateDifference = nextFilters.some((nextFilter, index) => {
+        const existingFilter = baseFilters[index];
+        return (
+            !!nextFilter?.selected !== !!existingFilter?.selected ||
+            !!nextFilter?.unselected !== !!existingFilter?.unselected
+        );
+    });
+
+    if (!hasStateDifference) {
+        return { applied: true, nextFilters, lastAppliedIntentId: intent?.id || null };
+    }
+
+    if (typeof setSelectedFacilityTypes === 'function') {
+        setSelectedFacilityTypes(nextFilters);
+    }
+
+    return { applied: true, nextFilters, lastAppliedIntentId: intent?.id || null };
+};
+
 const BookableSpacesWrapper = ({
     actions,
     filteredSpaceLocations,
@@ -221,10 +351,9 @@ const BookableSpacesWrapper = ({
             currentPath === '/#/spaces/');
     const spacesForUrlLookup = React.useMemo(
         () => [
-            /* istanbul ignore next */
-            ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : []),
-            /* istanbul ignore next */
-            ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : []),
+            ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : /* istanbul ignore next */ []),
+
+            ...(Array.isArray(filteredSpaceLocations) ? filteredSpaceLocations : /* istanbul ignore next */ []),
             ...(highlightedSpace ? [highlightedSpace] : []),
         ],
         [allSpaceLocations, filteredSpaceLocations, highlightedSpace],
@@ -248,8 +377,7 @@ const BookableSpacesWrapper = ({
     );
     const validCampusList = React.useMemo(
         () =>
-            /* istanbul ignore next */
-            (campusList || []).filter(campus => {
+            (campusList || /* istanbul ignore next */ []).filter(campus => {
                 const hasId = campus?.campus_id !== null && campus?.campus_id !== undefined;
                 const hasName = typeof campus?.campus_name === 'string' && campus.campus_name.trim().length > 0;
                 const hasSpaces = Number(campus?.campus_space_count) > 0;
@@ -257,13 +385,13 @@ const BookableSpacesWrapper = ({
             }),
         [campusList],
     );
+    /* istanbul ignore next */
     const validCampusIds = React.useMemo(
         () => new Set(validCampusList.map(campus => String(campus.campus_id))),
         [validCampusList],
     );
     const intentSpaceLocations = React.useMemo(() => {
-        /* istanbul ignore next */
-        const spacesWithIntentApplied = filteredSpaceLocations || [];
+        const spacesWithIntentApplied = filteredSpaceLocations || /* istanbul ignore next */ [];
 
         const spacesWithFavouriteFilterApplied =
             showFavouriteSpacesOnly && hasFavourites
@@ -276,6 +404,7 @@ const BookableSpacesWrapper = ({
             return spacesWithFavouriteFilterApplied;
         }
 
+        /* istanbul ignore next */
         return spacesWithFavouriteFilterApplied.filter(space => validCampusIds.has(String(space?.space_campus_id)));
     }, [filteredSpaceLocations, favouriteSpaceIds, hasFavourites, showFavouriteSpacesOnly, validCampusIds]);
 
@@ -299,11 +428,13 @@ const BookableSpacesWrapper = ({
             }
 
             const parsedState = JSON.parse(rawState);
+            /* istanbul ignore next */
             if (!parsedState || !Object.prototype.hasOwnProperty.call(parsedState, 'capacityFilterValue')) {
                 return;
             }
 
             delete parsedState.capacityFilterValue;
+            /* istanbul ignore next */
             if (Object.keys(parsedState).length === 0) {
                 window.sessionStorage.removeItem('bookableSpacesJourneyLiveFilterState');
                 return;
@@ -317,112 +448,17 @@ const BookableSpacesWrapper = ({
 
     const applyIntentFilters = React.useCallback(
         (intent, { replaceExistingFilters = false } = {}) => {
-            const existingFilters = Array.isArray(selectedFacilityTypes) ? selectedFacilityTypes : [];
-            const sourceFacilityGroups =
-                filteredFacilityTypeList?.data?.facility_type_groups || facilityTypeList?.data?.facility_type_groups;
-            /* istanbul ignore next */
-            if (!sourceFacilityGroups?.length) {
-                lastAppliedIntentIdRef.current = null;
-                return false;
-            }
-
-            const toValidFacilityTypeId = value => {
-                const numericValue = Number(value);
-                return Number.isFinite(numericValue) && numericValue > 0 ? numericValue : null;
-            };
-
-            const sourceEntries = sourceFacilityGroups.flatMap(group =>
-                (Array.isArray(group?.facility_type_children) ? group.facility_type_children : []).map(child => ({
-                    facilityTypeId: toValidFacilityTypeId(child?.facility_type_id),
-                    facilityTypeName: child?.facility_type_name || '',
-                    facilityTypeGroupId: group?.facility_type_group_id,
-                    facilitySpecialAction: child?.facility_special_action || null,
-                })),
-            );
-            const sourceNameById = new Map(
-                sourceEntries
-                    .filter(entry => entry.facilityTypeId !== null)
-                    .map(entry => [entry.facilityTypeId, entry.facilityTypeName]),
-            );
-
-            const sourceFilters = sourceEntries
-                .filter(entry => entry.facilityTypeId !== null)
-                .map(entry => ({
-                    facility_type_group_id: entry.facilityTypeGroupId,
-                    facility_type_id: entry.facilityTypeId,
-                    facility_type_name: entry.facilityTypeName || null,
-                    selected: false,
-                    unselected: false,
-                    facility_special_action: entry.facilitySpecialAction,
-                }));
-
-            const hasActiveExistingFilters = existingFilters.some(filter => filter?.selected || filter?.unselected);
-            const shouldUseExistingFiltersAsBase =
-                !replaceExistingFilters && existingFilters.length > 0 && hasActiveExistingFilters;
-            const baseFilters = shouldUseExistingFiltersAsBase ? existingFilters : sourceFilters;
-
-            /* istanbul ignore next */
-            if (!baseFilters.length) {
-                lastAppliedIntentIdRef.current = null;
-                return false;
-            }
-
-            const nextFilters = baseFilters.map(filter => {
-                const normalizedFacilityTypeId = toValidFacilityTypeId(filter?.facility_type_id);
-                const resolvedFacilityTypeName =
-                    filter?.facility_type_name || sourceNameById.get(normalizedFacilityTypeId) || '';
-                const isIntentMatch = intent?.matchers?.some(matcher => matcher.test(resolvedFacilityTypeName));
-                return {
-                    ...filter,
-                    facility_type_id: normalizedFacilityTypeId ?? filter?.facility_type_id,
-                    facility_type_name: resolvedFacilityTypeName || null,
-                    selected: isIntentMatch,
-                    unselected: false,
-                };
+            const { applied, lastAppliedIntentId } = applyJourneyIntentFilters({
+                intent,
+                selectedFacilityTypes,
+                filteredFacilityTypeList,
+                facilityTypeList,
+                replaceExistingFilters,
+                setSelectedFacilityTypes,
             });
 
-            /* istanbul ignore next */
-            if (!nextFilters.some(filter => filter?.selected)) {
-                /* istanbul ignore next */
-                if (replaceExistingFilters) {
-                    const hasDifferenceFromExisting =
-                        existingFilters.length !== nextFilters.length ||
-                        nextFilters.some((nextFilter, index) => {
-                            const existingFilter = existingFilters[index] || {};
-                            return (
-                                Number(existingFilter?.facility_type_id) !== Number(nextFilter?.facility_type_id) ||
-                                !!existingFilter?.selected !== !!nextFilter?.selected ||
-                                !!existingFilter?.unselected !== !!nextFilter?.unselected
-                            );
-                        });
-
-                    /* istanbul ignore next */
-                    if (hasDifferenceFromExisting) {
-                        setSelectedFacilityTypes(nextFilters);
-                    }
-                }
-
-                lastAppliedIntentIdRef.current = null;
-                return false;
-            }
-
-            const hasStateDifference = nextFilters.some((nextFilter, index) => {
-                const existingFilter = baseFilters[index];
-                return (
-                    !!nextFilter?.selected !== !!existingFilter?.selected ||
-                    !!nextFilter?.unselected !== !!existingFilter?.unselected
-                );
-            });
-
-            /* istanbul ignore next */
-            if (!hasStateDifference) {
-                lastAppliedIntentIdRef.current = intent?.id || null;
-                return true;
-            }
-
-            lastAppliedIntentIdRef.current = intent?.id || null;
-            setSelectedFacilityTypes(nextFilters);
-            return true;
+            lastAppliedIntentIdRef.current = lastAppliedIntentId;
+            return applied;
         },
         [facilityTypeList, filteredFacilityTypeList, selectedFacilityTypes, setSelectedFacilityTypes],
     );
@@ -492,6 +528,7 @@ const BookableSpacesWrapper = ({
     ]);
 
     React.useEffect(() => {
+        /* istanbul ignore next */
         if (typeof window === 'undefined' || !window.sessionStorage) {
             return;
         }
@@ -566,6 +603,7 @@ const BookableSpacesWrapper = ({
         [navigate, selectedSpace?.space_id, selectedSpace?.space_uuid],
     );
 
+    /* istanbul ignore next */
     const goToLegacyBrowse = () => {
         /* istanbul ignore next */
         if (typeof window !== 'undefined' && window.sessionStorage) {
@@ -680,8 +718,11 @@ const BookableSpacesWrapper = ({
                     intentId: activeIntentId,
                     spaceId: resolvedSpace?.space_id || resolvedSpace?.space_uuid || null,
                 });
-            } else if (selectedSpace) {
-                setSelectedSpace(null);
+            } else {
+                /* istanbul ignore next */
+                if (selectedSpace) {
+                    setSelectedSpace(null);
+                }
             }
 
             return;

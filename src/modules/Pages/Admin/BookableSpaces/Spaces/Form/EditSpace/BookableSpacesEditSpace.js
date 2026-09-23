@@ -20,6 +20,56 @@ import {
     weeklyHoursLoaded,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
+export const buildEditSpaceFormValues = spaceDetails => {
+    if (!spaceDetails) {
+        return {};
+    }
+
+    return {
+        facility_types: spaceDetails?.facility_types,
+        building_name: spaceDetails?.space_building_name,
+        building_number: spaceDetails?.space_building_number,
+        library_name: spaceDetails?.space_library_name,
+        library_id: spaceDetails?.space_library_id,
+        floor_name: spaceDetails?.space_floor_name,
+        floor_id: spaceDetails?.space_floor_id,
+        campus_name: spaceDetails?.space_campus_name,
+        campus_id: spaceDetails?.space_campus_id,
+        space_description: spaceDetails?.space_description,
+        space_capacity: spaceDetails?.space_capacity || 0,
+        space_highlighted: !!spaceDetails?.space_highlighted,
+        space_draftmode: !!spaceDetails?.space_draftmode,
+        space_external_book_url: spaceDetails?.space_external_book_url,
+        space_id: spaceDetails?.space_id,
+        space_is_ground_floor: spaceDetails?.space_is_ground_floor,
+        space_latitude: spaceDetails?.space_latitude,
+        space_longitude: spaceDetails?.space_longitude,
+        space_zlevel: spaceDetails?.space_zlevel,
+        space_name: spaceDetails?.space_name,
+        space_opening_hours_id: spaceDetails?.space_opening_hours_id || -1,
+        space_photo_description: spaceDetails?.space_photo_description,
+        space_photo_url: spaceDetails?.space_photo_url,
+        space_precise: spaceDetails?.space_precise,
+        space_services_page: spaceDetails?.space_services_page,
+        archibus_room_id: spaceDetails?.archibus_room_id || null,
+        space_type: spaceDetails?.space_type_details?.space_type_name,
+        space_type_id: spaceDetails?.space_type_id,
+        space_uuid: spaceDetails?.space_uuid,
+        space_deleted: spaceDetails?.space_deleted || false,
+        space_deleted_at: spaceDetails?.space_deleted_at || null,
+    };
+};
+
+export const shouldPersistCypressSavedData = (cookies = {}, host = '') =>
+    !!cookies?.CYPRESS_TEST_DATA && host === 'localhost:2020' && cookies.CYPRESS_TEST_DATA === 'active';
+
+export const persistCypressSavedData = ({ cookies = {}, host = '', setCookie = () => {}, valuesToSend = null } = {}) => {
+    if (shouldPersistCypressSavedData(cookies, host)) {
+        setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+    }
+    return valuesToSend;
+};
+
 export const BookableSpacesEditSpace = ({
     actions,
     bookableSpacesRoomUpdating,
@@ -145,47 +195,12 @@ export const BookableSpacesEditSpace = ({
 
     useEffect(() => {
         if (bookableSpaceGetting === false && bookableSpaceGetError === false && !!bookableSpaceGetResult?.data) {
-            setFormValues({
-                facility_types: bookableSpaceGetResult?.data?.facility_types,
-                building_name: bookableSpaceGetResult?.data?.space_building_name,
-                building_number: bookableSpaceGetResult?.data?.space_building_number,
-                library_name: bookableSpaceGetResult?.data?.space_library_name,
-                library_id: bookableSpaceGetResult?.data?.space_library_id,
-                floor_name: bookableSpaceGetResult?.data?.space_floor_name,
-                floor_id: bookableSpaceGetResult?.data?.space_floor_id,
-                campus_name: bookableSpaceGetResult?.data?.space_campus_name,
-                campus_id: bookableSpaceGetResult?.data?.space_campus_id,
-                space_description: bookableSpaceGetResult?.data?.space_description,
-                space_capacity: bookableSpaceGetResult?.data?.space_capacity || 0,
-                space_highlighted: !!bookableSpaceGetResult?.data?.space_highlighted,
-                space_draftmode: !!bookableSpaceGetResult?.data?.space_draftmode,
-                space_external_book_url: bookableSpaceGetResult?.data?.space_external_book_url,
-                space_id: bookableSpaceGetResult?.data?.space_id,
-                space_is_ground_floor: bookableSpaceGetResult?.data?.space_is_ground_floor,
-                space_latitude: bookableSpaceGetResult?.data?.space_latitude,
-                space_longitude: bookableSpaceGetResult?.data?.space_longitude,
-                space_zlevel: bookableSpaceGetResult?.data?.space_zlevel,
-                space_name: bookableSpaceGetResult?.data?.space_name,
-                space_opening_hours_id: bookableSpaceGetResult?.data?.space_opening_hours_id || -1,
-                space_photo_description: bookableSpaceGetResult?.data?.space_photo_description,
-                space_photo_url: bookableSpaceGetResult?.data?.space_photo_url,
-                space_precise: bookableSpaceGetResult?.data?.space_precise,
-                space_services_page: bookableSpaceGetResult?.data?.space_services_page,
-                archibus_room_id: bookableSpaceGetResult?.data?.archibus_room_id || null,
-                space_type: bookableSpaceGetResult?.data?.space_type_details?.space_type_name,
-                space_type_id: bookableSpaceGetResult?.data?.space_type_id,
-                space_uuid: bookableSpaceGetResult?.data?.space_uuid,
-                space_deleted: bookableSpaceGetResult?.data?.space_deleted || false,
-                space_deleted_at: bookableSpaceGetResult?.data?.space_deleted_at || null,
-            });
+            setFormValues(buildEditSpaceFormValues(bookableSpaceGetResult.data));
         }
     }, [bookableSpaceGetting, bookableSpaceGetError, bookableSpaceGetResult]);
 
     const updateSpace = valuesToSend => {
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
-        }
+        persistCypressSavedData({ cookies, host: window.location.host, setCookie, valuesToSend });
         console.log('updateSpace valuesToSend=', valuesToSend);
 
         !!valuesToSend?.uploadedFile

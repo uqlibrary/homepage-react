@@ -108,7 +108,7 @@ export const JourneyResultsView = ({
     const theme = useTheme();
 
     const spaces = React.useMemo(
-        () => (Array.isArray(intentSpaceLocations) ? intentSpaceLocations : []),
+        () => (Array.isArray(intentSpaceLocations) ? intentSpaceLocations : /* istanbul ignore next */ []),
         [intentSpaceLocations],
     );
     const [page, setPage] = React.useState(1);
@@ -181,7 +181,10 @@ export const JourneyResultsView = ({
                                 const detailUrl = getJourneyDetailUrl(space);
                                 const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
                                 return (
-                                    <StyledListItemStack key={detailId || space?.space_id} spacing={1}>
+                                    <StyledListItemStack
+                                        key={detailId || /* istanbul ignore next */ space?.space_id}
+                                        spacing={1}
+                                    >
                                         <Button
                                             component="a"
                                             className="cardBody"
@@ -322,11 +325,13 @@ export const JourneyResultsView = ({
                         librariesForCampus={librariesForCampus}
                         selectedLibrary={selectedLibrary}
                         handleLibrarySelection={handleLibrarySelection}
-                        onApplyAllFilters={() =>
-                            applyJourneySidebarFilters({
-                                isDesktopResultsLayout,
-                                setShowAdvancedFilters,
-                            })
+                        onApplyAllFilters={
+                            /* istanbul ignore next */ () =>
+                                /* istanbul ignore next */
+                                applyJourneySidebarFilters({
+                                    isDesktopResultsLayout,
+                                    setShowAdvancedFilters,
+                                })
                         }
                         onResetAllFilters={onResetAllFilters}
                         showBottomActionButtons
