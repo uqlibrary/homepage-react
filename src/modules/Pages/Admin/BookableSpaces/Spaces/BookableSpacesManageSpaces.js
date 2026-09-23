@@ -226,6 +226,42 @@ const SPACE_SORT_UPDATED = 'updated';
 const SPACE_SORT_DIRECTION_ASC = 'asc';
 const SPACE_SORT_DIRECTION_DESC = 'desc';
 
+const getSafeSpaceName = space => {
+    if (!space?.space_name) {
+        /* istanbul ignore next */
+        return '';
+    }
+    return space.space_name;
+};
+const getSafeSpaceTypeName = space => {
+    if (!space?.space_type_details?.space_type_name) {
+        /* istanbul ignore next */
+        return '';
+    }
+    return space.space_type_details.space_type_name;
+};
+const getSafeLibraryName = library => {
+    if (!library?.library_name) {
+        /* istanbul ignore next */
+        return 'Show all libraries';
+    }
+    return library.library_name;
+};
+const getSafeFloorName = floor => {
+    if (!floor?.floor_name) {
+        /* istanbul ignore next */
+        return 'Show all levels';
+    }
+    return floor.floor_name;
+};
+const getSafeSpaceTypeLabel = spaceType => {
+    if (!spaceType?.label) {
+        /* istanbul ignore next */
+        return 'Show all space types';
+    }
+    return spaceType.label;
+};
+
 export const BookableSpacesManageSpaces = ({
     actions,
     bookableSpacesRoomList,
@@ -294,7 +330,7 @@ export const BookableSpacesManageSpaces = ({
 
     const getSortedSpaces = (spaces, sortingType = sortType, sortingDirection = sortDirection) => {
         const sourceSpaces = [...(spaces || [])];
-        const compareByName = (a, b) => (a?.space_name || '').localeCompare(b?.space_name || '');
+        const compareByName = (a, b) => getSafeSpaceName(a).localeCompare(getSafeSpaceName(b));
         const directionMultiplier = sortingDirection === SPACE_SORT_DIRECTION_DESC ? -1 : 1;
 
         if (sortingType === SPACE_SORT_CREATED) {
@@ -463,7 +499,7 @@ export const BookableSpacesManageSpaces = ({
                         if (String(spaceTypeId) !== String(f?.filterValue)) {
                             showSpaceByFilter = false;
                         }
-                    } else if (String(space?.space_type_details?.space_type_name || '') !== String(f?.filterValue)) {
+                    } else if (String(getSafeSpaceTypeName(space)) !== String(f?.filterValue)) {
                         showSpaceByFilter = false;
                     }
                 }
@@ -819,7 +855,7 @@ export const BookableSpacesManageSpaces = ({
                         const id = !!space?.space_type_id
                             ? String(space?.space_type_id)
                             : String(space?.space_type_details?.space_type_name || '');
-                        const label = space?.space_type_details?.space_type_name || id;
+                        const label = getSafeSpaceTypeName(space) || id;
                         return [id, { id, label }];
                     })
                     ?.filter(([id, spaceType]) => !!id && !!spaceType?.label),
@@ -983,10 +1019,10 @@ export const BookableSpacesManageSpaces = ({
                                         if (selectedValue === LIBRARY_ID_UNSELECTED) {
                                             return 'Show all libraries';
                                         }
-                                        return (
+                                        return getSafeLibraryName(
                                             selectedCampus?.libraries?.find(
                                                 library => String(library?.library_id) === String(selectedValue),
-                                            )?.library_name || 'Show all libraries'
+                                            ),
                                         );
                                     }}
                                     onChange={selectFilter('library')}
@@ -1035,7 +1071,7 @@ export const BookableSpacesManageSpaces = ({
                                         const selectedFloor = floorFilterTypes?.find(
                                             floor => String(floor?.floor_id) === String(selectedValue),
                                         );
-                                        return selectedFloor?.floor_name || 'Show all levels';
+                                        return getSafeFloorName(selectedFloor);
                                     }}
                                     onChange={selectFilter('floor')}
                                     inputProps={{
@@ -1070,10 +1106,10 @@ export const BookableSpacesManageSpaces = ({
                                         if (selectedValue === SPACE_TYPE_ID_UNSELECTED) {
                                             return 'Show all space types';
                                         }
-                                        return (
+                                        return getSafeSpaceTypeLabel(
                                             spaceTypeFilterTypes?.find(
                                                 spaceType => String(spaceType?.id) === String(selectedValue),
-                                            )?.label || 'Show all space types'
+                                            ),
                                         );
                                     }}
                                     onChange={selectFilter('spaceType')}

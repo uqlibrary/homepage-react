@@ -334,6 +334,87 @@ describe('BookableSpacesManageSpaces', () => {
         });
     });
 
+    it('covers edge-case space metadata, sort fallback paths, and draft/deleted filters', async () => {
+        const edgeCaseSpaces = [
+            buildSpace({
+                space_id: 103,
+                space_name: 'Gamma room',
+                space_type_id: null,
+                space_type_details: { space_type_name: 'Meeting room' },
+                space_draftmode: true,
+                space_deleted: 'true',
+                space_campus_id: 1,
+                space_library_id: 11,
+                space_floor_id: 2,
+                created_at: null,
+                updated_at: null,
+                space_outages: [
+                    {
+                        space_outage_start: '2026-09-23T10:00:00Z',
+                        space_outage_end: '2026-09-24T10:00:00Z',
+                    },
+                ],
+            }),
+            buildSpace({
+                space_id: 104,
+                space_name: 'Delta room',
+                space_type_id: null,
+                space_type_details: { space_type_name: 'Display wall' },
+                space_draftmode: false,
+                space_deleted: false,
+                created_at: '2024-02-01T00:00:00Z',
+                updated_at: '2024-02-03T00:00:00Z',
+                space_campus_id: 2,
+                space_library_id: 22,
+                space_floor_id: 3,
+            }),
+        ];
+
+        rtlRender(
+            <BookableSpacesManageSpaces
+                {...buildDefaultProps({
+                    bookableSpacesRoomList: {
+                        data: {
+                            locations: [...buildDefaultProps().bookableSpacesRoomList.data.locations, ...edgeCaseSpaces],
+                            known_space_types: [
+                                { space_type_id: 9, space_type_name: 'Meeting room' },
+                                { space_type_id: 4, space_type_name: 'Study room' },
+                            ],
+                        },
+                    },
+                })}
+            />,
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('space-101-name')).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByRole('checkbox', { name: /Show drafts only/i }));
+        fireEvent.click(screen.getByRole('checkbox', { name: /Show deleted spaces/i }));
+        fireEvent.change(document.getElementById('filter-by-space-type-input'), {
+            target: { value: 'Meeting room' },
+        });
+
+        await waitFor(() => {
+            expect(screen.getByTestId('space-103-name')).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByTestId('spaces-sort-button'));
+        fireEvent.click(screen.getByRole('menuitem', { name: /Sort by creation date/i }));
+        expect(screen.getByTestId('spaces-sort-button')).toHaveTextContent('Sort by creation date');
+
+        fireEvent.click(screen.getByTestId('spaces-sort-button'));
+        fireEvent.click(screen.getByRole('menuitem', { name: /Sort by last changed/i }));
+        expect(screen.getByTestId('spaces-sort-button')).toHaveTextContent('Sort by last changed');
+
+        expect(screen.getByTestId('space-103-deleted-chip')).toBeInTheDocument();
+        expect(screen.getByTestId('space-103-draftmode-icon')).toBeInTheDocument();
+
+        fireEvent.click(screen.getByTestId('space-103-expand-button'));
+        expect(document.getElementById('space-description-103')).toHaveStyle({ display: 'block' });
+    });
+
     it('opens the bulk facility edit workflow and saves a change', async () => {
         const actions = {
             ...buildDefaultProps().actions,
