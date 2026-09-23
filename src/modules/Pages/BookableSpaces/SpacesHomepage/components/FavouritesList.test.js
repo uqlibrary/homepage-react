@@ -63,12 +63,58 @@ describe('FavouritesList', () => {
         expect(props.activateFavouritesResults).toHaveBeenCalledTimes(1);
     });
 
-    it('renders a plain-text empty-state prompt when no favourites are saved', () => {
-        renderWithProviders(<FavouritesList {...defaultProps} spacesFavouritesList={[]} />);
+    it('renders a plain-text empty-state prompt when no favourites are saved or the list is null', () => {
+        renderWithProviders(<FavouritesList {...defaultProps} spacesFavouritesList={null} />);
 
         expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
-        expect(screen.getByText("Click the star icon next to a space's name to add to your favourites")).toBeInTheDocument();
+        expect(
+            screen.getByText("Click the star icon next to a space's name to add to your favourites"),
+        ).toBeInTheDocument();
         expect(screen.queryByTestId('spaces-homepage-favourites-all-link')).not.toBeInTheDocument();
+    });
+
+    it('ignores invalid item ids and handles favourite_id resolved values without changing output', () => {
+        const props = {
+            ...defaultProps,
+            allSpaceLocations: null,
+            filteredSpaceLocations: undefined,
+            highlightedSpace: {
+                space_id: 88,
+                space_name: 'Highlighted room',
+                space_type_details: { space_type_name: 'Pod' },
+                space_library_name: 'Library',
+            },
+            spacesFavouritesList: [
+                { label: 'No id favourite' },
+                { favourite_id: 40, label: undefined },
+                { favourite_id: 88, label: 'Highlighted room' },
+                { favourite_id: 999, label: 'Missing room' },
+                { space_id: 40, label: 'Duplicate room' },
+            ],
+            findSpaceById: (spaces, id) => {
+                if (String(id) === '40') {
+                    return {
+                        space_id: 40,
+                        space_library_name: 'Library',
+                    };
+                }
+                if (String(id) === '88') {
+                    return {
+                        space_id: 88,
+                        space_name: 'Highlighted room',
+                        space_type_details: { space_type_name: 'Pod' },
+                        space_library_name: 'Library',
+                    };
+                }
+                return null;
+            },
+        };
+
+        renderWithProviders(<FavouritesList {...props} />);
+
+        expect(screen.getByTestId('spaces-homepage-favourites-block')).toBeInTheDocument();
+        expect(screen.getByTestId('spaces-journey-favourite-card-1')).toHaveTextContent(/undefined/i);
+        expect(screen.getByTestId('spaces-journey-favourite-card-2')).toHaveTextContent(/Highlighted room/i);
     });
 
     it('shows up to three deduplicated favourites and navigates to details when a space matches', () => {
