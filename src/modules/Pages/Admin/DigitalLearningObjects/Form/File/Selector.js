@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
+import { allowedFileTypes } from './general';
 
 const StyledDropzone = styled('div')(({ theme, isDragActive, isDragAccept, isDragReject }) => ({
     display: 'flex',
@@ -29,7 +30,7 @@ const StyledDropzone = styled('div')(({ theme, isDragActive, isDragAccept, isDra
 
 const Selector = ({ onChange }) => {
     const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
-        accept: { 'image/jpeg': [], 'image/png': [] },
+        accept: allowedFileTypes,
         multiple: false,
         onDrop: files => !!files.length && onChange?.(files[0]),
     });

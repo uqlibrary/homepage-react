@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import Selector from './Selector';
 import { render } from '@testing-library/react';
 import { createTheme } from '@mui/material/styles';
+import { allowedFileTypes } from './general';
 
 jest.mock('react-dropzone', () => ({
     useDropzone: jest.fn(),
@@ -46,7 +47,7 @@ describe('Selector', () => {
 
         expect(useDropzone).toHaveBeenCalledWith(
             expect.objectContaining({
-                accept: { 'image/jpeg': [], 'image/png': [] },
+                accept: allowedFileTypes,
                 multiple: false,
             }),
         );
