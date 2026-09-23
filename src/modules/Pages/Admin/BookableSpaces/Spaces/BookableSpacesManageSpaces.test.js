@@ -5,7 +5,30 @@ import { useCookies } from 'react-cookie';
 import { useAccountContext } from 'context';
 
 import { spacesAdminLink } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
-import BookableSpacesManageSpaces from './BookableSpacesManageSpaces';
+import BookableSpacesManageSpaces, {
+    getSafeSpaceName,
+    getSafeSpaceTypeName,
+    getSafeLibraryName,
+    getSafeFloorName,
+    getSafeSpaceTypeLabel,
+    getSortedSpaces,
+    showSpaceByPagination,
+    isSpaceDeleted,
+    getDateEpoch,
+    doesSpaceShow,
+    getNextSelectedFilters,
+    prefilterFacilityData,
+    handleOpenEditSpacePage,
+    performDeleteSpaceAction,
+    hideConfirmationDialog,
+    closeDeleteDialog,
+    getFilterValue,
+    getLibraryFilterDisplayValue,
+    getLibraryFilterOptions,
+    getFloorFilterDisplayValue,
+    getFloorFilterOptions,
+    shouldSaveCypressBulkFilterTypeData,
+} from './BookableSpacesManageSpaces';
 
 jest.mock('react-cookie', () => ({
     useCookies: jest.fn(),
@@ -31,12 +54,309 @@ jest.mock('modules/SharedComponents/Toolbox/Loaders', () => ({
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/StandardCard', () => ({
-    StandardCard: ({ children, ...props }) => <div data-testid="standard-card" {...props}>{children}</div>,
+    StandardCard: ({ children, ...props }) => (
+        <div data-testid="standard-card" {...props}>
+            {children}
+        </div>
+    ),
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/ConfirmDialogBox', () => ({
-    ConfirmationBox: ({ isOpen, locale }) => (isOpen ? <div data-testid="confirmation-box">{locale?.confirmationTitle}</div> : null),
+    ConfirmationBox: ({ isOpen, locale, onAction, onClose }) =>
+        isOpen ? (
+            <div data-testid="confirmation-box">
+                <button type="button" data-testid="confirmation-box-action" onClick={onAction}>
+                    {locale?.confirmationTitle}
+                </button>
+                <button type="button" data-testid="confirmation-box-close" onClick={onClose}>
+                    {locale?.confirmButtonLabel || 'OK'}
+                </button>
+            </div>
+        ) : null,
 }));
+
+describe('BookableSpacesManageSpaces helper fallbacks', () => {
+    it('returns safe values for populated and missing metadata', () => {
+        expect(getSafeSpaceName({ space_name: 'Alpha room' })).toBe('Alpha room');
+        expect(getSafeSpaceName({})).toBe('');
+
+        expect(getSafeSpaceTypeName({ space_type_details: { space_type_name: 'Meeting room' } })).toBe('Meeting room');
+        expect(getSafeSpaceTypeName({})).toBe('');
+
+        expect(getSafeLibraryName({ library_name: 'Central Library' })).toBe('Central Library');
+        expect(getSafeLibraryName({})).toBe('Show all libraries');
+
+        expect(getSafeFloorName({ floor_name: 'Level 2' })).toBe('Level 2');
+        expect(getSafeFloorName({})).toBe('Show all levels');
+
+        expect(getSafeSpaceTypeLabel({ label: 'Study room' })).toBe('Study room');
+        expect(getSafeSpaceTypeLabel({})).toBe('Show all space types');
+    });
+});
+
+describe('BookableSpacesManageSpaces shared helper logic', () => {
+    it('calculates date epochs, pagination visibility, and sort order defaults', () => {
+        expect(getDateEpoch(null)).toBe(0);
+        expect(getDateEpoch('not-a-date')).toBe(0);
+        expect(getDateEpoch('2024-02-04T00:00:00Z')).toBeGreaterThan(0);
+
+        expect(showSpaceByPagination(0, 0, 5)).toBe(true);
+        expect(showSpaceByPagination(5, 0, 5)).toBe(false);
+        expect(showSpaceByPagination(6, 1, 5)).toBe(true);
+
+        const spaces = [
+            { space_name: 'Beta room', created_at: '2024-03-02T00:00:00Z', updated_at: '2024-03-03T00:00:00Z' },
+            { space_name: 'Alpha room', created_at: '2024-03-01T00:00:00Z', updated_at: '2024-03-04T00:00:00Z' },
+        ];
+        expect(getSortedSpaces(undefined).map(space => space.space_name)).toEqual([]);
+        expect(getSortedSpaces(spaces).map(space => space.space_name)).toEqual(['Alpha room', 'Beta room']);
+        expect(getSortedSpaces(spaces, 'created', 'desc').map(space => space.space_name)).toEqual([
+            'Beta room',
+            'Alpha room',
+        ]);
+        expect(getSortedSpaces(spaces, 'updated').map(space => space.space_name)).toEqual(['Beta room', 'Alpha room']);
+        expect(getFloorFilterOptions(undefined)).toEqual([]);
+    });
+
+    it('applies filter logic for campus, library, floor, space type, draft and deleted states', () => {
+        const space = {
+            space_id: 10,
+            space_name: 'Study nook',
+            space_campus_id: 2,
+            space_library_id: 22,
+            space_floor_id: 3,
+            space_type_id: 7,
+            space_type_details: { space_type_name: 'Study room' },
+            space_draftmode: true,
+            space_deleted: false,
+        };
+
+        expect(
+            doesSpaceShow(space, [
+                { filterType: 'campus', filterValue: 2 },
+                { filterType: 'library', filterValue: 22 },
+                { filterType: 'floor', filterValue: 3 },
+                { filterType: 'spaceType', filterValue: '7' },
+                { filterType: 'draftOnly', filterValue: true },
+                { filterType: 'showDeleted', filterValue: false },
+            ]),
+        ).toBe(true);
+
+        expect(
+            doesSpaceShow(space, [
+                { filterType: 'campus', filterValue: 1 },
+                { filterType: 'showDeleted', filterValue: false },
+            ]),
+        ).toBe(false);
+
+        expect(
+            doesSpaceShow({ ...space, space_type_id: null, space_type_details: { space_type_name: 'Meeting room' } }, [
+                { filterType: 'spaceType', filterValue: 'Meeting room' },
+            ]),
+        ).toBe(true);
+
+        expect(
+            doesSpaceShow({ ...space, space_draftmode: false }, [{ filterType: 'draftOnly', filterValue: true }]),
+        ).toBe(false);
+
+        expect(
+            doesSpaceShow({ ...space, space_deleted: 'true' }, [{ filterType: 'showDeleted', filterValue: false }]),
+        ).toBe(false);
+    });
+
+    it('resets selected filter types and orders facility groups consistently', () => {
+        const filters = [
+            { filterType: 'campus', filterValue: 2 },
+            { filterType: 'library', filterValue: 22 },
+            { filterType: 'floor', filterValue: 3 },
+            { filterType: 'spaceType', filterValue: 'Study room' },
+        ];
+
+        expect(getNextSelectedFilters(filters, 'campus', 2)).toEqual([
+            { filterType: 'spaceType', filterValue: 'Study room' },
+            { filterType: 'campus', filterValue: 2 },
+            { filterType: 'library', filterValue: '' },
+            { filterType: 'floor', filterValue: '' },
+        ]);
+
+        expect(
+            prefilterFacilityData({
+                facility_type_groups: [
+                    {
+                        facility_type_group_order: 2,
+                        facility_type_group_name: 'Later',
+                        facility_type_children: [
+                            { facility_type_id: 20, facility_type_name: 'Zoom' },
+                            { facility_type_id: 10, facility_type_name: 'Board' },
+                        ],
+                    },
+                    {
+                        facility_type_group_order: 1,
+                        facility_type_group_name: 'Earlier',
+                        facility_type_children: [{ facility_type_id: 30, facility_type_name: 'Audio' }],
+                    },
+                ],
+            }),
+        ).toEqual([
+            {
+                facility_type_group_name: 'Earlier',
+                facility_type_group_order: 1,
+                facility_type_children: [{ facility_type_id: 30, facility_type_name: 'Audio', overall_order: 1 }],
+            },
+            {
+                facility_type_group_name: 'Later',
+                facility_type_group_order: 2,
+                facility_type_children: [
+                    { facility_type_id: 10, facility_type_name: 'Board', overall_order: 2 },
+                    { facility_type_id: 20, facility_type_name: 'Zoom', overall_order: 3 },
+                ],
+            },
+        ]);
+    });
+
+    it('handles deleted-space detection and edit/delete helper flows', async () => {
+        expect(isSpaceDeleted({ space_deleted: true })).toBe(true);
+        expect(isSpaceDeleted({ space_deleted: 1 })).toBe(true);
+        expect(isSpaceDeleted({ space_deleted: '1' })).toBe(true);
+        expect(isSpaceDeleted({ space_deleted: 'true' })).toBe(true);
+        expect(isSpaceDeleted({ space_deleted: false })).toBe(false);
+
+        const hide = jest.fn();
+        hideConfirmationDialog(hide);
+        expect(hide).toHaveBeenCalledWith(0);
+
+        const setDelete = jest.fn();
+        closeDeleteDialog(setDelete);
+        expect(setDelete).toHaveBeenCalledWith(null);
+
+        expect(getFilterValue({ target: { checked: true } })).toBe(true);
+        expect(getFilterValue({ target: { value: '22' } })).toBe('22');
+
+        expect(
+            getLibraryFilterDisplayValue('', { libraries: [{ library_id: 11, library_name: 'Central Library' }] }),
+        ).toBe('Show all libraries');
+        expect(
+            getLibraryFilterDisplayValue('11', { libraries: [{ library_id: 11, library_name: 'Central Library' }] }),
+        ).toBe('Central Library');
+
+        expect(getFloorFilterDisplayValue('', [{ floor_id: 2, floor_name: 'Level 2' }])).toBe('Show all levels');
+        expect(getFloorFilterDisplayValue('2', [{ floor_id: 2, floor_name: 'Level 2' }])).toBe('Level 2');
+        expect(
+            getLibraryFilterOptions({
+                libraries: [
+                    { library_id: 99, library_name: 'B' },
+                    { library_id: 11, library_name: 'A' },
+                ],
+            }),
+        ).toEqual([
+            { library_id: 11, library_name: 'A' },
+            { library_id: 99, library_name: 'B' },
+        ]);
+        expect(
+            getFloorFilterOptions([
+                { floor_id: 2, floor_name: 'Level 2' },
+                { floor_id: 1, floor_name: 'Level 1' },
+            ]),
+        ).toEqual([
+            { floor_id: 1, floor_name: 'Level 1' },
+            { floor_id: 2, floor_name: 'Level 2' },
+        ]);
+
+        expect(shouldSaveCypressBulkFilterTypeData('active', 'localhost:2020', 'active')).toBe(true);
+        expect(shouldSaveCypressBulkFilterTypeData('active', 'localhost:3000', 'active')).toBe(false);
+        expect(shouldSaveCypressBulkFilterTypeData(null, 'localhost:2020', 'active')).toBe(false);
+
+        const actions = {
+            updateSpaceDeletedState: jest.fn().mockResolvedValue({}),
+            loadAllBookableSpacesRooms: jest.fn(),
+        };
+        const displayToastMessage = jest.fn();
+
+        await performDeleteSpaceAction({
+            deleteCandidate: { spaceId: 101 },
+            actions,
+            displayToastMessage,
+        });
+
+        expect(actions.updateSpaceDeletedState).toHaveBeenCalledWith(101, true);
+        expect(actions.loadAllBookableSpacesRooms).toHaveBeenCalledWith({
+            includeDrafts: true,
+            includeDeleted: true,
+            useAdminEndpoint: true,
+        });
+        expect(displayToastMessage).toHaveBeenCalledWith('Space has been deleted.', true, null);
+
+        const errorActions = {
+            updateSpaceDeletedState: jest.fn().mockRejectedValue(new Error('delete failed')),
+            loadAllBookableSpacesRooms: jest.fn(),
+        };
+        await performDeleteSpaceAction({
+            deleteCandidate: { spaceId: 404 },
+            actions: errorActions,
+            displayToastMessage,
+        });
+        expect(displayToastMessage).toHaveBeenLastCalledWith(
+            'Error deleting space. Please try again.',
+            false,
+            expect.any(Error),
+        );
+
+        await performDeleteSpaceAction({
+            deleteCandidate: null,
+            actions,
+            displayToastMessage,
+        });
+        expect(actions.updateSpaceDeletedState).toHaveBeenCalledTimes(1);
+
+        const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+        handleOpenEditSpacePage(
+            { target: { closest: jest.fn(() => ({ getAttribute: jest.fn(() => null) })) } },
+            { id: 42 },
+        );
+        expect(logSpy).toHaveBeenCalledWith('no valid button clicked');
+        logSpy.mockRestore();
+
+        const editEvent = {
+            target: {
+                closest: jest.fn(() => ({
+                    getAttribute: jest.fn(() => 'uuid-77'),
+                })),
+            },
+        };
+        handleOpenEditSpacePage(editEvent, { id: 42 });
+        expect(spacesAdminLink).toHaveBeenCalledWith('/admin/spaces/edit/uuid-77', { id: 42 });
+
+        const space = {
+            space_id: 12,
+            space_campus_id: 2,
+            space_library_id: 22,
+            space_floor_id: 4,
+            space_type_id: null,
+            space_type_details: { space_type_name: 'Study room' },
+            space_deleted: false,
+            space_draftmode: false,
+        };
+        expect(doesSpaceShow(space, [{ filterType: 'campus', filterValue: 9 }])).toBe(false);
+        expect(doesSpaceShow(space, [{ filterType: 'library', filterValue: 9 }])).toBe(false);
+        expect(doesSpaceShow(space, [{ filterType: 'floor', filterValue: 9 }])).toBe(false);
+        expect(doesSpaceShow(space, [{ filterType: 'spaceType', filterValue: 'Meeting room' }])).toBe(false);
+        expect(doesSpaceShow(space, [{ filterType: 'showDeleted', filterValue: false }])).toBe(true);
+        expect(
+            doesSpaceShow({ ...space, space_deleted: 'true' }, [{ filterType: 'showDeleted', filterValue: false }]),
+        ).toBe(false);
+
+        expect(getNextSelectedFilters([{ filterType: 'campus', filterValue: 2 }], 'library', 22)).toEqual([
+            { filterType: 'campus', filterValue: 2 },
+            { filterType: 'library', filterValue: 22 },
+            { filterType: 'floor', filterValue: '' },
+        ]);
+        expect(getNextSelectedFilters([{ filterType: 'campus', filterValue: 2 }], 'campus', 3)).toEqual([
+            { filterType: 'campus', filterValue: 3 },
+            { filterType: 'library', filterValue: '' },
+            { filterType: 'floor', filterValue: '' },
+        ]);
+    });
+});
 
 describe('BookableSpacesManageSpaces', () => {
     const setCookie = jest.fn();
@@ -198,7 +518,9 @@ describe('BookableSpacesManageSpaces', () => {
         expect(screen.getByTestId('inline-loader')).toHaveTextContent('Loading');
 
         rerender(
-            <BookableSpacesManageSpaces {...buildDefaultProps({ bookableSpacesRoomListError: true, facilityTypeListError: true })} />,
+            <BookableSpacesManageSpaces
+                {...buildDefaultProps({ bookableSpacesRoomListError: true, facilityTypeListError: true })}
+            />,
         );
         expect(screen.getByText('Something went wrong - please try again later.')).toBeInTheDocument();
 
@@ -249,12 +571,22 @@ describe('BookableSpacesManageSpaces', () => {
         fireEvent.click(screen.getByRole('menuitem', { name: /Sort by name/i }));
         expect(screen.getByTestId('spaces-sort-button')).toHaveTextContent('Sort by name');
 
+        fireEvent.click(screen.getByTestId('spaces-sort-button'));
+        fireEvent.click(screen.getByRole('menuitem', { name: /Sort by name/i }));
+        expect(screen.getByTestId('spaces-sort-button')).toHaveTextContent('Sort by name');
+
         const paginatorSelect = document.querySelector('[data-testid="admin-spaces-list-paginator-select"]');
         fireEvent.change(paginatorSelect, { target: { value: '10' } });
         expect(setCookie).toHaveBeenCalledWith('spaces-list-paginator', 10, expect.any(Object));
 
         fireEvent.change(paginatorSelect, { target: { value: '1' } });
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+
+        useCookies.mockReturnValue([{ 'spaces-list-paginator': '10' }, setCookie]);
+        rtlRender(<BookableSpacesManageSpaces {...buildDefaultProps()} />);
+        await waitFor(() => {
+            expect(screen.getByTestId('space-101-name')).toBeInTheDocument();
+        });
     });
 
     it('applies campus, library, level and space type filters and the draft/deleted toggles', async () => {
@@ -264,10 +596,14 @@ describe('BookableSpacesManageSpaces', () => {
             expect(screen.getByTestId('space-101-name')).toBeInTheDocument();
         });
 
-        fireEvent.change(document.getElementById('filter-by-campus-input'), { target: { value: '1' } });
-        fireEvent.change(document.getElementById('filter-by-library-input'), { target: { value: '11' } });
-        fireEvent.change(document.getElementById('filter-by-floor-input'), { target: { value: '2' } });
-        fireEvent.change(document.getElementById('filter-by-space-type-input'), { target: { value: '9' } });
+        fireEvent.mouseDown(document.getElementById('filter-by-campus'));
+        fireEvent.click(screen.getByRole('option', { name: 'St Lucia' }));
+        fireEvent.mouseDown(document.getElementById('filter-by-library'));
+        fireEvent.click(screen.getByRole('option', { name: 'Central Library' }));
+        fireEvent.mouseDown(document.getElementById('filter-by-floor'));
+        fireEvent.click(screen.getByRole('option', { name: 'Level 2' }));
+        fireEvent.mouseDown(document.getElementById('filter-by-space-type'));
+        fireEvent.click(screen.getByRole('option', { name: 'Meeting room' }));
 
         fireEvent.click(screen.getByRole('checkbox', { name: /Show drafts only/i }));
         expect(screen.getByRole('checkbox', { name: /Show drafts only/i })).toBeChecked();
@@ -320,9 +656,7 @@ describe('BookableSpacesManageSpaces', () => {
                     bookableSpacesRoomList: {
                         data: {
                             locations: [buildSpace({ space_id: 101, space_name: 'Alpha room' })],
-                            known_space_types: [
-                                { space_type_id: 9, space_type_name: 'Meeting room' },
-                            ],
+                            known_space_types: [{ space_type_id: 9, space_type_name: 'Meeting room' }],
                         },
                     },
                 })}
@@ -332,6 +666,41 @@ describe('BookableSpacesManageSpaces', () => {
         await waitFor(() => {
             expect(actions.loadBookableSpaceCampusChildren).toHaveBeenCalledTimes(1);
         });
+    });
+
+    it('renders a bookable-space tick and keeps the default no-campus state stable', async () => {
+        const actions = {
+            ...buildDefaultProps().actions,
+        };
+        const bookableSpace = buildSpace({
+            space_id: 105,
+            space_uuid: 'uuid-105',
+            space_name: 'Bookable room',
+            space_campus_id: 2,
+            space_library_id: 22,
+            space_floor_id: 3,
+            space_external_book_url: 'https://example.com/book',
+        });
+
+        rtlRender(
+            <BookableSpacesManageSpaces
+                {...buildDefaultProps({
+                    actions,
+                    bookableSpacesRoomList: {
+                        data: {
+                            locations: [bookableSpace],
+                            known_space_types: [{ space_type_id: 9, space_type_name: 'Meeting room' }],
+                        },
+                    },
+                })}
+            />,
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('space-105-name')).toBeInTheDocument();
+        });
+        expect(screen.getByTestId('tick-105-facilitytype-bookable')).toBeInTheDocument();
+        expect(document.getElementById('filter-by-campus')).toBeInTheDocument();
     });
 
     it('covers edge-case space metadata, sort fallback paths, and draft/deleted filters', async () => {
@@ -375,7 +744,10 @@ describe('BookableSpacesManageSpaces', () => {
                 {...buildDefaultProps({
                     bookableSpacesRoomList: {
                         data: {
-                            locations: [...buildDefaultProps().bookableSpacesRoomList.data.locations, ...edgeCaseSpaces],
+                            locations: [
+                                ...buildDefaultProps().bookableSpacesRoomList.data.locations,
+                                ...edgeCaseSpaces,
+                            ],
                             known_space_types: [
                                 { space_type_id: 9, space_type_name: 'Meeting room' },
                                 { space_type_id: 4, space_type_name: 'Study room' },
@@ -447,6 +819,27 @@ describe('BookableSpacesManageSpaces', () => {
         await waitFor(() => {
             expect(screen.getByTestId('confirmation-box')).toBeInTheDocument();
         });
+
+        fireEvent.click(screen.getByTestId('confirmation-box-action'));
+        await waitFor(() => {
+            expect(screen.queryByTestId('confirmation-box')).not.toBeInTheDocument();
+        });
+    });
+
+    it('shows the bulk save error dialog when the server returns a non-ok status', async () => {
+        const actions = {
+            ...buildDefaultProps().actions,
+            saveBulkFilterTypes: jest.fn().mockResolvedValue({ status: 'error', message: 'server rejected' }),
+        };
+
+        rtlRender(<BookableSpacesManageSpaces {...buildDefaultProps({ actions })} />);
+
+        fireEvent.click(screen.getByTestId('facility-type-column-edit-1'));
+        fireEvent.click(screen.getByTestId('facility-type-column-save-1'));
+
+        await waitFor(() => {
+            expect(screen.getByTestId('confirmation-box')).toBeInTheDocument();
+        });
     });
 
     it('opens and confirms the delete dialog', async () => {
@@ -460,10 +853,59 @@ describe('BookableSpacesManageSpaces', () => {
         fireEvent.click(screen.getByTestId('delete-space-101-button'));
         expect(screen.getByTestId('spaces-delete-dialog')).toBeInTheDocument();
 
+        fireEvent.click(screen.getByTestId('spaces-delete-cancel-button'));
+        await waitFor(() => {
+            expect(screen.queryByTestId('spaces-delete-dialog')).not.toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByTestId('delete-space-101-button'));
         fireEvent.click(screen.getByTestId('spaces-delete-confirm-button'));
 
         await waitFor(() => {
             expect(actions.updateSpaceDeletedState).toHaveBeenCalledWith(101, true);
+        });
+    });
+
+    it('saves bulk filter data and renders selected campus library and floor values', async () => {
+        const actions = {
+            ...buildDefaultProps().actions,
+            saveBulkFilterTypes: jest.fn().mockResolvedValue({ status: 'ok' }),
+        };
+        useCookies.mockReturnValue([{ CYPRESS_TEST_DATA: 'active' }, setCookie]);
+
+        rtlRender(<BookableSpacesManageSpaces {...buildDefaultProps({ actions })} />);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('space-101-name')).toBeInTheDocument();
+        });
+
+        fireEvent.mouseDown(document.getElementById('filter-by-campus'));
+        fireEvent.click(screen.getByRole('option', { name: 'St Lucia' }));
+
+        await waitFor(() => {
+            expect(screen.getByText('St Lucia')).toBeInTheDocument();
+        });
+
+        fireEvent.mouseDown(document.getElementById('filter-by-library'));
+        fireEvent.click(screen.getByRole('option', { name: 'Central Library' }));
+
+        await waitFor(() => {
+            expect(screen.getByText('Central Library')).toBeInTheDocument();
+        });
+
+        fireEvent.mouseDown(document.getElementById('filter-by-floor'));
+        fireEvent.click(screen.getByRole('option', { name: 'Level 2' }));
+
+        await waitFor(() => {
+            expect(screen.getByText('Level 2')).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByTestId('facility-type-column-edit-1'));
+        fireEvent.click(screen.getByTestId('facility-type-column-save-1'));
+
+        await waitFor(() => {
+            expect(actions.saveBulkFilterTypes).toHaveBeenCalledTimes(1);
+            expect(setCookie).not.toHaveBeenCalledWith('CYPRESS_DATA_SAVED', expect.any(Array));
         });
     });
 
