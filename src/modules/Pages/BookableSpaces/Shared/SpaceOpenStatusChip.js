@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import { StyledIconWordWrapperDiv } from 'modules/Pages/BookableSpaces/Shared/SharedStyles';
-import { spaceOpeningHours } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { getSpaceOpenStatus } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 export const closingSoonMessage = (message = 'Closing soon') => {
     // https://www.streamlinehq.com/icons/download/technology-device-wearable-smart-watch-circle-app-1--27614
@@ -153,46 +153,6 @@ const openNowMessage = (message = 'Open now') => {
     );
 };
 
-const getSpaceHoursStatus = (space, weeklyHours) => {
-    const days = spaceOpeningHours(space, weeklyHours);
-    if (!days || days.length === 0) {
-        console.log('getSpaceHoursStatus return null 1');
-        return null;
-    }
-    const today = days[0];
-    if (!today) {
-        console.log('getSpaceHoursStatus return null 2');
-        return null;
-    }
-
-    const status = today?.times?.status;
-    if (status === 'closed') return 'closed';
-    if (status === '24hours') return 'open';
-
-    const openStr = today?.open; // e.g. "07:30:00"
-    const closeStr = today?.close; // e.g. "19:30:00"
-
-    if (!openStr || !closeStr) {
-        console.log('getSpaceHoursStatus return null 3');
-        return null;
-    }
-
-    const now = new Date();
-    const [oh, om] = openStr.split(':').map(Number);
-    const [ch, cm] = closeStr.split(':').map(Number);
-
-    const openTime = new Date();
-    openTime.setHours(oh, om, 0, 0);
-    const closeTime = new Date();
-    closeTime.setHours(ch, cm, 0, 0);
-
-    if (now < openTime || now >= closeTime) return 'closed';
-
-    const minsUntilClose = (closeTime - now) / 60000;
-    if (minsUntilClose <= 60) return 'closing-soon';
-    return 'open';
-};
-
 export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHoursError }) => {
     const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
     if (visibleOutage?.status === 'Current') {
@@ -206,7 +166,7 @@ export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, we
         return null;
     }
 
-    const status = getSpaceHoursStatus(space, weeklyHours);
+    const status = getSpaceOpenStatus(space, weeklyHours);
     if (!status) {
         return null;
     }

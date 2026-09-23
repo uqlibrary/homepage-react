@@ -1789,6 +1789,146 @@ describe('BookableSpacesList campus selection', () => {
         jest.useRealTimers();
     });
 
+    it('includes a space when it is inside the opening time window even if the raw currently_open flag is false', async () => {
+        jest.useFakeTimers().setSystemTime(new Date(2026, 8, 22, 12, 0, 0, 0).getTime());
+
+        const props = {
+            ...baseProps,
+            weeklyHours: {
+                locations: [
+                    {
+                        lid: 11,
+                        departments: [
+                            {
+                                name: 'Study space',
+                                weeks: [{ Tuesday: { date: '2026-09-22', open: '09:00:00', close: '17:00:00' } }],
+                            },
+                        ],
+                    },
+                    {
+                        lid: 22,
+                        departments: [
+                            {
+                                name: 'Study space',
+                                weeks: [{ Tuesday: { date: '2026-09-22', open: '09:00:00', close: '11:00:00' } }],
+                            },
+                        ],
+                    },
+                ],
+            },
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[0],
+                            space_opening_hours_id: 11,
+                        },
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[1],
+                            space_opening_hours_id: 22,
+                        },
+                    ],
+                },
+            },
+        };
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls.at(-1)[0];
+
+        act(() => {
+            latestSidebarProps.setSelectedFacilityTypes([
+                {
+                    facility_type_group_id: 99,
+                    facility_type_id: 9001,
+                    selected: true,
+                    facility_special_action: 'open',
+                },
+            ]);
+        });
+
+        await waitFor(() => {
+            const visibleIds = mockSidebarListRender.mock.calls
+                .at(-1)[0]
+                .filteredSpaceLocations.map(space => space.space_id);
+            expect(visibleIds).toEqual([101]);
+        });
+
+        jest.useRealTimers();
+    });
+
+    it('excludes a space from the "currently open" filter when it is currently closed by an active outage', async () => {
+        jest.useFakeTimers().setSystemTime(new Date('2026-09-22T12:00:00.000Z').getTime());
+
+        const props = {
+            ...baseProps,
+            weeklyHours: {
+                locations: [
+                    {
+                        lid: 11,
+                        departments: [
+                            {
+                                name: 'Study space',
+                                weeks: [{ Tuesday: { date: '2026-09-22', open: '09:00:00', close: '17:00:00' } }],
+                            },
+                        ],
+                    },
+                ],
+            },
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [
+                        {
+                            ...baseProps.bookableSpacesRoomList.data.locations[0],
+                            space_opening_hours_id: 11,
+                            space_outages: [
+                                {
+                                    space_outage_start: '2026-09-22 11:00:00',
+                                    space_outage_end: '2026-09-22 14:00:00',
+                                    space_outage_reason: 'Maintenance',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+        };
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...props} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const latestSidebarProps = mockSidebarRender.mock.calls.at(-1)[0];
+
+        act(() => {
+            latestSidebarProps.setSelectedFacilityTypes([
+                {
+                    facility_type_group_id: 99,
+                    facility_type_id: 9001,
+                    selected: true,
+                    facility_special_action: 'open',
+                },
+            ]);
+        });
+
+        await waitFor(() => {
+            const visibleIds = mockSidebarListRender.mock.calls
+                .at(-1)[0]
+                .filteredSpaceLocations.map(space => space.space_id);
+            expect(visibleIds).toEqual([]);
+        });
+
+        jest.useRealTimers();
+    });
+
     it('excludes a space from the "currently open" filter when it has no opening-hours id', async () => {
         jest.useFakeTimers().setSystemTime(new Date('2026-09-22T00:00:00.000Z').getTime());
 

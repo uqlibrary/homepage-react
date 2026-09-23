@@ -166,20 +166,86 @@ function convertWeeksToDays(department) {
 }
 
 export const spaceOpeningHours = (bookableSpace, weeklyHours) => {
-    const details = weeklyHours?.locations?.filter(lib =>
-        lib?.departments.find(departments => departments?.lid === bookableSpace?.space_opening_hours_id),
-    );
-    if (!details) {
+    const targetId = bookableSpace?.space_opening_hours_id;
+    if (!targetId) {
         return [];
     }
-    const theLibrary = details?.at(0);
-    const department = theLibrary?.departments.filter(
-        departments => departments?.lid === bookableSpace?.space_opening_hours_id,
-    );
 
-    const relevantDepartment = department?.at(0);
+    const matchingLocation = weeklyHours?.locations?.find(location => {
+        if (Number(location?.lid) === Number(targetId)) {
+            return true;
+        }
+
+        return (location?.departments || []).some(department => Number(department?.lid) === Number(targetId));
+    });
+
+    if (!matchingLocation) {
+        return [];
+    }
+
+    const matchingDepartments = (matchingLocation?.departments || []).filter(department => {
+        return Number(department?.lid) === Number(targetId) || Number(matchingLocation?.lid) === Number(targetId);
+    });
+
+    const relevantDepartment = matchingDepartments?.[0] || matchingLocation?.departments?.[0];
     const openingDetails = convertWeeksToDays(relevantDepartment);
     return openingDetails?.next7days || [];
+};
+
+export const getSpaceOpenStatus = (bookableSpace, weeklyHours) => {
+    const days = spaceOpeningHours(bookableSpace, weeklyHours);
+    if (!days || days.length === 0) {
+        return null;
+    }
+
+    const today = days[0];
+    if (!today) {
+        return null;
+    }
+
+    const status = today?.times?.status;
+    if (status === 'closed') {
+        return 'closed';
+    }
+    if (status === '24hours') {
+        return 'open';
+    }
+
+    const openStr = today?.open;
+    const closeStr = today?.close;
+    if (openStr && closeStr) {
+        const now = new Date();
+        const [oh, om] = openStr.split(':').map(Number);
+        const [ch, cm] = closeStr.split(':').map(Number);
+
+        const openTime = new Date();
+        openTime.setHours(oh, om, 0, 0);
+        const closeTime = new Date();
+        closeTime.setHours(ch, cm, 0, 0);
+
+        if (now < openTime || now >= closeTime) {
+            return 'closed';
+        }
+
+        const minsUntilClose = (closeTime - now) / 60000;
+        if (minsUntilClose <= 60) {
+            return 'closing-soon';
+        }
+
+        return 'open';
+    }
+
+    const rawFlag = today?.times?.currently_open ?? today?.currently_open;
+    if (typeof rawFlag === 'boolean') {
+        return rawFlag ? 'open' : 'closed';
+    }
+
+    return null;
+};
+
+export const isSpaceCurrentlyOpen = (bookableSpace, weeklyHours) => {
+    const status = getSpaceOpenStatus(bookableSpace, weeklyHours);
+    return status === 'open' || status === 'closing-soon';
 };
 
 export const isBookable = space => {

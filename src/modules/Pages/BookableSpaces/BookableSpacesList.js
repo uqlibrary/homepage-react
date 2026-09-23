@@ -26,6 +26,7 @@ import SidebarSpacesList from 'modules/Pages/BookableSpaces/SpacesListPage/MapLi
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
+import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import {
     FACILITY_TYPE_CHECKBOX,
     FACILITY_TYPE_SLIDER,
@@ -40,6 +41,7 @@ import {
     getActiveSelectedFacilityTypes,
     getFlatFacilityTypeList,
     isBookable,
+    isSpaceCurrentlyOpen,
     JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
     matchesCapacityFilter,
     normalizeFilterDisplayOn,
@@ -974,64 +976,6 @@ export const BookableSpacesList = ({
         capacityFilterValue,
     ]);
 
-    function isLocationOpen(locationId, hoursData) {
-        if (!locationId) {
-            return false;
-            // this needs more work - see AD-797
-        }
-        function getDateStringInTimezone(offsetHours = 10) {
-            const date = new Date();
-            const offsetMs = offsetHours * 60 * 60 * 1000;
-            const localTime = new Date(date.getTime() + offsetMs);
-
-            const year = localTime.getUTCFullYear();
-            const month = String(localTime.getUTCMonth() + 1).padStart(2, '0');
-            const day = String(localTime.getUTCDate()).padStart(2, '0');
-
-            return `${year}-${month}-${day}`;
-        }
-        const currentDate = getDateStringInTimezone();
-
-        // Find matching location by lid (springshare library id)
-        const openingHoursLocationData = hoursData?.locations?.find(loc => loc?.lid === locationId) || {};
-
-        const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
-        if (!!openingHoursLocationData?.departments) {
-            const newdept = openingHoursLocationData?.departments?.filter(dept => {
-                return !!dept?.name ? displayedDepartments?.includes(dept?.name) : /* istanbul ignore next */ false;
-            });
-            openingHoursLocationData.departments = newdept;
-        } else {
-            openingHoursLocationData.departments = [];
-        }
-        // Guard clause for missing opening hours data
-        /* istanbul ignore next */
-        if (!openingHoursLocationData) {
-            return null;
-        }
-
-        // data is already stripped down to only the single department of interest
-        const department =
-            !!openingHoursLocationData?.departments && openingHoursLocationData?.departments.length > 0
-                ? openingHoursLocationData?.departments[0]
-                : null;
-        if (!department) {
-            return null;
-        }
-
-        for (const week of department?.weeks) {
-            for (const [, dayData] of Object.entries(week)) {
-                /* istanbul ignore else */
-                if (dayData?.date === currentDate) {
-                    return dayData?.times?.currently_open ?? /* istanbul ignore next */ null;
-                }
-            }
-        }
-        // should never be used - guard.
-        /* istanbul ignore next */
-        return null; // Date not found in data
-    }
-
     function showSpace(space, facilityTypeToGroup, selectedFacilityTypes, selectedCurrentCampus, selectedLibrary) {
         // Guard - space draft mode wont show a space.
         /* istanbul ignore next */
@@ -1148,8 +1092,14 @@ export const BookableSpacesList = ({
             }
         }
 
-        if (hasCurrentlyOpenFilterSelected && !isLocationOpen(space?.space_opening_hours_id, weeklyHours)) {
-            return false;
+        const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
+        if (hasCurrentlyOpenFilterSelected) {
+            if (visibleOutage?.status === 'Current') {
+                return false;
+            }
+            if (!isSpaceCurrentlyOpen(space, weeklyHours)) {
+                return false;
+            }
         }
 
         // If no inclusion filters are selected, show all spaces (that haven't been rejected)
