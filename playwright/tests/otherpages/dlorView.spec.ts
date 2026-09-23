@@ -509,12 +509,18 @@ test.describe('Digital Learning Hub View page', () => {
         });
 
         test('An object with a file shows the download button', async ({ page }) => {
-            await page.goto('digital-learning-hub/view/object-with-file');
+            const overwrites = {
+                object_file_name: 'test.zip',
+                object_file_size: 1000,
+            };
+            await page.goto(
+                `digital-learning-hub/view/98s0_dy5k3_98h4?responseBody[getDlorObject]=${JSON.stringify(overwrites)}`,
+            );
             await page.setViewportSize({ width: 1300, height: 1000 });
 
             await expect(page.getByTestId('detailpage-clicklink')).not.toBeVisible();
             await expect(page.getByTestId('dlor-view-object-file-download-button')).toHaveText(
-                'ACCESS THE OBJECT (ZIP 49.7 KB)',
+                'ACCESS THE OBJECT (ZIP 1 KB)',
             );
         });
     });
