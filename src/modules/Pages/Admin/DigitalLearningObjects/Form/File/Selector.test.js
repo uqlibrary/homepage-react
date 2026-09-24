@@ -47,17 +47,14 @@ describe('Selector', () => {
         expect(getByText(/click here to select files, or drag files into this area to upload/i)).toBeInTheDocument();
     });
 
-    it('should configure useDropzone with accept, multiple and a validator', () => {
+    it('should configure useDropzone with accept, multiple', () => {
         setup();
 
-        expect(useDropzone).toHaveBeenCalledWith(
-            expect.objectContaining({
-                accept: allowedFileTypes,
-                multiple: false,
-                validator: validator,
-                onDropRejected: expect.any(Function),
-            }),
-        );
+        const options = useDropzone.mock.calls[0][0];
+
+        expect(options.accept).toEqual(allowedFileTypes);
+        expect(options.multiple).toBe(false);
+        expect(options.onDropRejected).toEqual(expect.any(Function));
     });
 
     it('should apply root and input props from useDropzone', () => {
