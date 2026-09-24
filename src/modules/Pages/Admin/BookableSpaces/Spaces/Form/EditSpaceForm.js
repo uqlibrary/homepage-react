@@ -309,8 +309,7 @@ export const EditSpaceForm = ({
     bookableSpacesRoomListLoading,
     bookableSpacesRoomListError,
     facilityTypeList,
-    facilityTypeListLoading,
-    facilityTypeListError,
+
     formValues,
     setFormValues,
     saveToDb,
@@ -333,36 +332,6 @@ export const EditSpaceForm = ({
     bookableSpacesRoomUpdateResult,
     mode,
 }) => {
-    console.log(
-        'TOP EditSpaceForm bookableSpacesRoomAddResult',
-        bookableSpacesRoomAdding,
-        bookableSpacesRoomAddError,
-        bookableSpacesRoomAddResult,
-    );
-    console.log(
-        'TOP EditSpaceForm bookableSpacesRoomUpdateResult',
-        bookableSpacesRoomUpdating,
-        bookableSpacesRoomUpdateError,
-        bookableSpacesRoomUpdateResult,
-    );
-    console.log('TOP EditSpaceForm currentCampusList', currentCampusList);
-    console.log(
-        'TOP EditSpaceForm bookableSpacesArchibusTree',
-        bookableSpacesArchibusTreeLoading,
-        bookableSpacesArchibusTreeError,
-        bookableSpacesArchibusTree,
-    );
-    console.log('TOP EditSpaceForm formValues', Object.keys(formValues)?.length, formValues);
-    console.log(
-        'TOP EditSpaceForm bookableSpacesRoomList',
-        bookableSpacesRoomListLoading,
-        bookableSpacesRoomListError,
-        bookableSpacesRoomList,
-    );
-    console.log('TOP EditSpaceForm facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
-    console.log('TOP EditSpaceForm mode', mode);
-    console.log('TOP EditSpaceForm springshareList', springshareList);
-
     const { account } = useAccountContext();
     const theme = useTheme();
 
@@ -411,7 +380,6 @@ export const EditSpaceForm = ({
 
     const [isBookable, setIsBookable2] = useState();
     const setIsBookable = x => {
-        console.log('setIsBookable', x);
         setIsBookable2(x);
     };
     // const [hasCapacityLimit, setHasCapacityLimit] = useState();
@@ -465,7 +433,6 @@ export const EditSpaceForm = ({
     }, [mode, formValues?.space_description, formValues?.space_uuid]);
 
     const validatePanelAbout = (currentValues, errorMessages = []) => {
-        console.log('validatePanelAbout start currentValues=', currentValues);
         if (!currentValues?.space_name) {
             errorMessages?.push({ field: 'space_name', message: 'A Name is required.' });
         }
@@ -474,10 +441,6 @@ export const EditSpaceForm = ({
         }
         // spaces with a booking url must have capacity entered
 
-        console.log('validatePanelAbout currentValues.space_external_book_url=', currentValues.space_external_book_url);
-        console.log('validatePanelAbout currentValues.space_capacity=', currentValues.space_capacity);
-        console.log('validatePanelAbout currentValues.isBookableCheckbox=', currentValues.isBookableCheckbox);
-        console.log('validatePanelAbout isBookable=', isBookable);
         if (!!currentValues.isBookableCheckbox && !currentValues?.space_external_book_url) {
             errorMessages.push({
                 field: 'space_external_book_url',
@@ -502,7 +465,6 @@ export const EditSpaceForm = ({
                 message: 'Bookable spaces must have the Space capacity set.',
             });
         }
-        console.log('validatePanelAbout errorMessages=', errorMessages);
         return errorMessages;
     };
 
@@ -537,7 +499,6 @@ export const EditSpaceForm = ({
     }
 
     function validatePanelLocation(currentValues, errorMessages = []) {
-        console.log('validatePanelLocation currentValues=', currentValues);
         validatePanelLocationSelectors(currentValues, errorMessages);
         return validatePanelLocationDetails(currentValues, errorMessages);
     }
@@ -595,11 +556,7 @@ export const EditSpaceForm = ({
     };
 
     const validateForm = valuesToValidate => {
-        console.log('validateForm valuesToValidate=', valuesToValidate);
         const messages = collectValidationMessages(valuesToValidate);
-        console.log('validateForm messages=', messages);
-
-        console.log('validateForm errorMessages=', messages);
 
         setErrorMessages(messages);
 
@@ -620,9 +577,7 @@ export const EditSpaceForm = ({
         scrollToTopOfPage();
     };
 
-    const handleFieldCompletion = e => {
-        const target = e?.target;
-        console.log('handleFieldCompletion', target, formValues);
+    const handleFieldCompletion = () => {
         const validationResult = validateForm(formValues);
         if (validationResult !== true) {
             setErrorMessages(validationResult);
@@ -688,10 +643,6 @@ export const EditSpaceForm = ({
         }, 0);
     };
 
-    const getBookingUrlQuerystringWarning = spaceExternalBookUrl => {
-        return getBookitUrlQueryParamError(spaceExternalBookUrl);
-    };
-
     function findCampusById(campusId) {
         return currentCampusList?.find(campus => String(campus?.campus_id) === String(campusId)) || null;
     }
@@ -707,14 +658,12 @@ export const EditSpaceForm = ({
     const handleChange = _prop => e => {
         let theNewValue =
             e?.target?.hasOwnProperty('checked') && e?.target?.type !== 'radio' ? e?.target?.checked : e?.target?.value;
-        console.log('handleChange start ', _prop, theNewValue);
 
         const localFormValues = formValues;
 
         const updatedLocation = {};
         let prop = _prop;
         if (_prop === 'isBookableCheckbox') {
-            console.log('handleChange isBookableCheckbox=', theNewValue);
             setIsBookable(e?.target?.checked);
             if (theNewValue === false) {
                 // they have cleared the checkbox. Wipe the booking url
@@ -831,7 +780,6 @@ export const EditSpaceForm = ({
             ...newLocation,
             [prop]: theNewValue,
         };
-        console.log('handleChange newValues=', newValues);
 
         validateForm(newValues);
 
@@ -1312,7 +1260,6 @@ export const EditSpaceForm = ({
         valuesToSend.facility_types = formValues?.facility_types?.map(ft => ft?.facility_type_id);
         valuesToSend.space_id = formValues?.space_id;
         valuesToSend.uploadedFile = formValues.uploadedFile;
-        console.log('handleSaveClick valuesToSend=', valuesToSend);
 
         const validationResult = validateForm({
             ...valuesToSend,
@@ -1547,27 +1494,6 @@ export const EditSpaceForm = ({
         );
     };
     const aboutPanel = () => {
-        // const selectedFacilityTypes = formValues?.facility_types || [];
-        // const selectedFacilityTypeIds = selectedFacilityTypes
-        //     .map(ft => ft?.facility_type_id)
-        //     .filter(id => id !== null && id !== undefined);
-        // const selectedFacilityTypeIdsAsString = selectedFacilityTypeIds.map(id => String(id));
-        // const selectedFacilityTypeNames = selectedFacilityTypes
-        //     .map(ft => (ft?.facility_type_name || '').trim().toLowerCase())
-        //     .filter(Boolean);
-
-        // const knownBookableFacilityType = getFlatFacilityTypeList(facilityTypeList)?.find(
-        //     ft => (ft?.facility_type_name || '').trim().toLowerCase() === 'bookable',
-        // );
-        // const knownBookableFacilityTypeId =
-        //     knownBookableFacilityType?.facility_type_id !== null &&
-        //     knownBookableFacilityType?.facility_type_id !== undefined
-        //         ? String(knownBookableFacilityType?.facility_type_id)
-        //         : null;
-        // const isBookableFacilityTypeSelectedById =
-        //     !!knownBookableFacilityTypeId && selectedFacilityTypeIdsAsString.includes(knownBookableFacilityTypeId);
-        // const isBookableFacilityTypeSelectedByName = selectedFacilityTypeNames.includes('bookable');
-
         return (
             <Grid container spacing={3}>
                 <Grid item xs={12}>
@@ -1728,7 +1654,6 @@ export const EditSpaceForm = ({
                                 </span>
                             )}
                         </Typography>
-                        {console.log('formValues?.space_capacity=', formValues?.space_capacity)}
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="space-capacity">
                                 Enter the number of patrons who can make use of this Space
@@ -2260,7 +2185,6 @@ export const EditSpaceForm = ({
             const aboutErrorMessages = validatePanelAbout(formValues, []);
             const firstStepErrorMessages =
                 mode === 'add' ? validatePanelLocationSelectors(formValues, aboutErrorMessages) : aboutErrorMessages;
-            console.log('abouterrorcount=', firstStepErrorMessages);
             return firstStepErrorMessages?.length;
         } else if (tabId === secondTabId) {
             return validatePanelFacilityTypes(formValues)?.length;

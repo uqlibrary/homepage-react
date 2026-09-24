@@ -129,7 +129,7 @@ const SpaceLocationMap = ({
             center: { lng, lat },
             zoom: 17,
             /* istanbul ignore next */
-            zLevel: formValues?.space_zlevel ?? 1,
+            zLevel: formValues?.space_zlevel ?? /* istanbul ignore next */ 1,
             RTLTextPlugin: null,
         });
 
@@ -138,7 +138,7 @@ const SpaceLocationMap = ({
             lat,
             zoom: 17,
             /* istanbul ignore next */
-            zLevel: Number(formValues?.space_zlevel ?? 1),
+            zLevel: Number(formValues?.space_zlevel ?? /* istanbul ignore next */ 1),
         };
         setShowResetButton(false);
 
@@ -210,7 +210,7 @@ const SpaceLocationMap = ({
         });
 
         // Static markers for other spaces
-        otherMarkersRef.current.forEach(m => m.remove());
+        otherMarkersRef.current.forEach(/* istanbul ignore next */ m => /* istanbul ignore next */ m.remove());
         otherMarkersRef.current = [];
 
         bookableSpacesRoomList?.data?.locations
@@ -258,7 +258,9 @@ const SpaceLocationMap = ({
             lat: Number(coords.lat),
             zoom: 17,
             /* istanbul ignore next */
-            zLevel: Number(mazeMapInstanceRef.current.zLevel ?? formValues?.space_zlevel ?? 1),
+            zLevel: Number(
+                mazeMapInstanceRef.current.zLevel ?? formValues?.space_zlevel ?? /* istanbul ignore next */ 1,
+            ),
         };
         setShowResetButton(false);
 

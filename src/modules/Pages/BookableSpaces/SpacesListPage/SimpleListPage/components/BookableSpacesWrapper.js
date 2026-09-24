@@ -23,7 +23,7 @@ import { BookableSpacesJourneyView } from './BookableSpacesJourneyView';
 
 const JOURNEY_VIEW_STATE_STORAGE_KEY = 'bookableSpacesJourneyViewState';
 
-const journeyFallbackImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
+// const journeyFallbackImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
 const intentDefinitions = [
     {

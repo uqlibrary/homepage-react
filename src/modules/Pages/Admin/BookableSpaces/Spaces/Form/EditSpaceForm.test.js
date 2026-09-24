@@ -273,6 +273,36 @@ describe('EditSpaceForm', () => {
         expect(screen.getByTestId('spaces-button-error-list')).toBeInTheDocument();
     });
 
+    it('shows validation errors when the form has no previously valid data', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        formValues: {
+                            campus_id: '',
+                            library_id: '',
+                            floor_id: '',
+                            space_name: '',
+                            space_type_id: '',
+                            space_latitude: '',
+                            space_longitude: '',
+                            isBookableCheckbox: false,
+                            space_external_book_url: '',
+                            space_capacity: '',
+                            facility_types: [],
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByTestId('spaces-button-error-list')).toBeInTheDocument();
+        expect(screen.getAllByText('A campus is required.').length).toBeGreaterThan(0);
+        expect(screen.getAllByText('A library is required.').length).toBeGreaterThan(0);
+        expect(screen.getAllByText('A Name is required.').length).toBeGreaterThan(0);
+    });
+
     it('handles facility-type toggles, map updates, preview dialog, and form cleanup in edit mode', () => {
         const setFormValues = jest.fn();
         const clearABookableSpace = jest.fn();

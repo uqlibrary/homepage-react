@@ -246,7 +246,7 @@ export const shouldPersistCypressSavedData = (cookies = {}, host = '') =>
     !!cookies?.CYPRESS_TEST_DATA && host === 'localhost:2020' && cookies.CYPRESS_TEST_DATA === 'active';
 
 /* istanbul ignore next */
-export const getFacilityTypeWarningMessage = ({ count = 0, itemName = '', isGroup = false } = {}) => {
+export const getFacilityTypeWarningMessage = ({ count = 0, isGroup = false } = {}) => {
     if (count > 0) {
         const plural = pluralise(isGroup ? 'Group' : 'Space', count);
         const pluralArticle = `${pluralise('The', count, 'Those')}`;

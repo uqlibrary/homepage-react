@@ -24,7 +24,9 @@ jest.mock('modules/Pages/Admin/BookableSpaces/SpacesAdminPage', () => ({
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/Loaders', () => ({
-    InlineLoader: ({ message }) => <div data-testid="inline-loader">{message}</div>,
+    InlineLoader: Object.assign(({ message }) => <div data-testid="inline-loader">{message}</div>, {
+        propTypes: { message: require('prop-types').node },
+    }),
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/StandardCard', () => ({
