@@ -149,7 +149,9 @@ describe('BookableSpacesManageFacilities', () => {
         expect(getFacilityTypeWarningMessage({ count: 0, isGroup: true })).toContain('can be deleted');
         expect(getFacilityTypeWarningMessage({ count: 2, isGroup: false })).toContain('will be removed from 2');
         expect(getFacilityTypeWarningMessage({ count: 0, isGroup: false })).toContain('can be deleted');
-        expect(countSpacesWithFacilityTypeGroup(defaultProps.facilityTypeList, defaultProps.bookableSpacesRoomList, 1)).toBe(1);
+        expect(
+            countSpacesWithFacilityTypeGroup(defaultProps.facilityTypeList, defaultProps.bookableSpacesRoomList, 1),
+        ).toBe(1);
     });
 
     it('shows the group reorder error popup when the API rejects', async () => {

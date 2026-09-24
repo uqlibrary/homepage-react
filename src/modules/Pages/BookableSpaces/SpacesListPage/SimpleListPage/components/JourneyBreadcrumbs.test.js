@@ -26,10 +26,7 @@ describe('JourneyBreadcrumbs', () => {
     });
 
     it('builds breadcrumb html with and without hrefs and removes matching nodes safely', () => {
-        const items = [
-            { label: 'Results', href: '/spaces/results' },
-            { label: 'Space details' },
-        ];
+        const items = [{ label: 'Results', href: '/spaces/results' }, { label: 'Space details' }];
 
         const html = buildJourneyBreadcrumbHtml(items);
 
@@ -100,10 +97,7 @@ describe('JourneyBreadcrumbs', () => {
 
         const onClick = jest.fn();
         const result = syncJourneyBreadcrumbs({
-            items: [
-                { label: 'Results', href: '/spaces/results', onClick },
-                { label: 'Space details' },
-            ],
+            items: [{ label: 'Results', href: '/spaces/results', onClick }, { label: 'Space details' }],
             siteHeader: withNav,
         });
 
@@ -196,7 +190,12 @@ describe('JourneyBreadcrumbs', () => {
         const noShadowSiteHeader = document.createElement('uq-site-header');
         document.body.appendChild(noShadowSiteHeader);
 
-        expect(syncJourneyBreadcrumbs({ items: [{ label: 'Results', href: '/spaces/results' }], siteHeader: noShadowSiteHeader })).toBe(false);
+        expect(
+            syncJourneyBreadcrumbs({
+                items: [{ label: 'Results', href: '/spaces/results' }],
+                siteHeader: noShadowSiteHeader,
+            }),
+        ).toBe(false);
         expect(() =>
             cleanupJourneyBreadcrumbs({
                 siteHeader: noShadowSiteHeader,

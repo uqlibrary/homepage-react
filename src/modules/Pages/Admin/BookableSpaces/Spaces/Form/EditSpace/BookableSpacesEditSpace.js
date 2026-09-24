@@ -63,7 +63,12 @@ export const buildEditSpaceFormValues = spaceDetails => {
 export const shouldPersistCypressSavedData = (cookies = {}, host = '') =>
     !!cookies?.CYPRESS_TEST_DATA && host === 'localhost:2020' && cookies.CYPRESS_TEST_DATA === 'active';
 
-export const persistCypressSavedData = ({ cookies = {}, host = '', setCookie = () => {}, valuesToSend = null } = {}) => {
+export const persistCypressSavedData = ({
+    cookies = {},
+    host = '',
+    setCookie = () => {},
+    valuesToSend = null,
+} = {}) => {
     if (shouldPersistCypressSavedData(cookies, host)) {
         setCookie('CYPRESS_DATA_SAVED', valuesToSend);
     }

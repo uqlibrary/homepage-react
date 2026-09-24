@@ -72,9 +72,22 @@ describe('GridOfLinks', () => {
     });
 
     it('uses the fallback divider and empty label branch when a link is missing its label or theme divider', () => {
-        const router = createMemoryRouter([{ path: '/', element: <GridOfLinks title="Fallback paths" links={[{ key: 'blank', label: '', href: 'https://example.com/blank' }]} /> }], {
-            initialEntries: ['/'],
-        });
+        const router = createMemoryRouter(
+            [
+                {
+                    path: '/',
+                    element: (
+                        <GridOfLinks
+                            title="Fallback paths"
+                            links={[{ key: 'blank', label: '', href: 'https://example.com/blank' }]}
+                        />
+                    ),
+                },
+            ],
+            {
+                initialEntries: ['/'],
+            },
+        );
 
         render(
             <MuiThemeProvider theme={{ ...mui1theme, palette: { ...mui1theme.palette, divider: undefined } }}>

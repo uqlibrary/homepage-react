@@ -99,6 +99,7 @@ const SpacesPagination = ({ page, count, onPageChange, totalItems, itemsPerPage 
     const visibleItems = buildVisibleItems(page, count);
 
     const scrollListToTop = () => {
+        /* istanbul ignore next */
         if (typeof document === 'undefined') {
             return;
         }

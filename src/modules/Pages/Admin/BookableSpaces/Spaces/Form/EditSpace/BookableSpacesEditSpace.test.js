@@ -193,13 +193,15 @@ describe('BookableSpacesEditSpace', () => {
         rtlRender(
             <BookableSpacesEditSpace
                 {...defaultProps}
-                campusListError={true}
-                bookableSpaceGetError={true}
+                campusListError
+                bookableSpaceGetError
                 bookableSpaceGetResult={{ data: { space_id: 42 } }}
             />,
         );
 
-        expect(screen.getByTestId('load-space-form-error')).toHaveTextContent('Something went wrong - please try again later.');
+        expect(screen.getByTestId('load-space-form-error')).toHaveTextContent(
+            'Something went wrong - please try again later.',
+        );
         expect(screen.getByText('Campus-building data had a problem.')).toBeInTheDocument();
         expect(screen.getByText('Space details had a problem.')).toBeInTheDocument();
     });
@@ -246,9 +248,9 @@ describe('BookableSpacesEditSpace', () => {
         rtlRender(
             <BookableSpacesEditSpace
                 {...defaultProps}
-                bookableSpacesRoomListError={true}
-                facilityTypeListError={true}
-                weeklyHoursError={true}
+                bookableSpacesRoomListError
+                facilityTypeListError
+                weeklyHoursError
                 bookableSpaceGetResult={{ data: { space_id: 42, space_uuid: 'space-123' } }}
             />,
         );

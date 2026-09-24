@@ -58,9 +58,14 @@ const buildSpace = overrides => ({
     space_precise: 'Near the window',
     space_capacity: 4,
     space_photo_url: 'https://example.com/space-photo.jpg',
-    space_photo_urls: ['https://example.com/space-photo.jpg', { src: 'https://example.com/other-photo.jpg', alt: 'Other' }],
+    space_photo_urls: [
+        'https://example.com/space-photo.jpg',
+        { src: 'https://example.com/other-photo.jpg', alt: 'Other' },
+    ],
     space_photos: [{ src: 'https://example.com/space-photo.jpg', description: 'duplicate', alt: 'duplicate alt' }],
-    space_images: [{ src: 'https://example.com/space-photo.jpg', space_photo_url: 'https://example.com/space-photo.jpg' }],
+    space_images: [
+        { src: 'https://example.com/space-photo.jpg', space_photo_url: 'https://example.com/space-photo.jpg' },
+    ],
     facility_types: [
         { facility_type_id: 1, facility_type_name: 'Whiteboard' },
         { facility_type_id: 2, facility_type_name: 'TV' },

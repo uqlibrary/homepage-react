@@ -126,9 +126,7 @@ describe('SpaceLocationMap', () => {
         });
 
         const zLevelCallback = setFormValues.mock.calls.at(-1)[0];
-        expect(zLevelCallback({ space_id: 1, space_zlevel: 2 })).toEqual(
-            expect.objectContaining({ space_zlevel: 4 }),
-        );
+        expect(zLevelCallback({ space_id: 1, space_zlevel: 2 })).toEqual(expect.objectContaining({ space_zlevel: 4 }));
 
         const popupInstance = window.Mazemap.Popup.mock.results[0].value;
         const markerElement = window.Mazemap.ZLevelMarker.mock.calls[1][0];

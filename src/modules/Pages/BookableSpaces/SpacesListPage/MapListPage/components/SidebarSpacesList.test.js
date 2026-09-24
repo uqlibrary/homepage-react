@@ -70,12 +70,7 @@ describe('SidebarSpacesList', () => {
 
     it('renders the empty-state message when no spaces match the filters', () => {
         rtlRender(
-            <SidebarSpacesList
-                {...baseProps}
-                filteredSpaceLocations={[]}
-                totalSpaceCount={5}
-                activeFilterCount={2}
-            />,
+            <SidebarSpacesList {...baseProps} filteredSpaceLocations={[]} totalSpaceCount={5} activeFilterCount={2} />,
         );
 
         expect(screen.getByTestId('no-spaces-visible')).toBeInTheDocument();

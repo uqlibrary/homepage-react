@@ -9,12 +9,7 @@ import SpaceOutagePanel from './SpaceOutagePanel';
 
 describe('SpaceOutagePanel', () => {
     const getFutureDateTime = (hour, dayOffset = 365, minute = 0) =>
-        moment()
-            .add(dayOffset, 'days')
-            .hours(hour)
-            .minutes(minute)
-            .seconds(0)
-            .format('YYYY-MM-DDTHH:mm');
+        moment().add(dayOffset, 'days').hours(hour).minutes(minute).seconds(0).format('YYYY-MM-DDTHH:mm');
 
     const defaultProps = {
         actions: {
@@ -48,7 +43,7 @@ describe('SpaceOutagePanel', () => {
 
     it('shows the loading, error, and empty states for outage lists', () => {
         const { rerender } = rtlRender(
-            <SpaceOutagePanel {...defaultProps} spaceOutageList={[]} spaceOutageListLoading={true} />, 
+            <SpaceOutagePanel {...defaultProps} spaceOutageList={[]} spaceOutageListLoading />,
         );
 
         expect(screen.getByText('Loading closures')).toBeInTheDocument();
@@ -61,10 +56,17 @@ describe('SpaceOutagePanel', () => {
                 spaceOutageListError={new Error('Failed to load closures')}
             />,
         );
-        expect(screen.getByText('Unable to load space closures right now. Please try again later.')).toBeInTheDocument();
+        expect(
+            screen.getByText('Unable to load space closures right now. Please try again later.'),
+        ).toBeInTheDocument();
 
         rerender(
-            <SpaceOutagePanel {...defaultProps} spaceOutageList={[]} spaceOutageListLoading={false} spaceOutageListError={null} />,
+            <SpaceOutagePanel
+                {...defaultProps}
+                spaceOutageList={[]}
+                spaceOutageListLoading={false}
+                spaceOutageListError={null}
+            />,
         );
         expect(screen.getByText('No closures have been recorded for this space.')).toBeInTheDocument();
     });
@@ -96,7 +98,9 @@ describe('SpaceOutagePanel', () => {
         fireEvent.change(screen.getByTestId('space-outage-reason'), { target: { value: 'Planned upgrade' } });
 
         expect(screen.getByTestId('space-outage-warning')).toBeInTheDocument();
-        expect(screen.getByText('This closure overlaps another closure window already recorded for this space.')).toBeInTheDocument();
+        expect(
+            screen.getByText('This closure overlaps another closure window already recorded for this space.'),
+        ).toBeInTheDocument();
     });
 
     it('locks past outages from edit and delete actions', () => {
@@ -110,13 +114,17 @@ describe('SpaceOutagePanel', () => {
                     {
                         space_outage_id: 1,
                         space_outage_start: pastStart,
-                        space_outage_end: moment(pastStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                        space_outage_end: moment(pastStart, 'YYYY-MM-DD HH:mm:ss')
+                            .add(1, 'hour')
+                            .format('YYYY-MM-DD HH:mm:ss'),
                         space_outage_reason: 'Past outage',
                     },
                     {
                         space_outage_id: 2,
                         space_outage_start: futureStart,
-                        space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                        space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss')
+                            .add(1, 'hour')
+                            .format('YYYY-MM-DD HH:mm:ss'),
                         space_outage_reason: 'Upcoming outage',
                     },
                 ]}
@@ -312,7 +320,9 @@ describe('SpaceOutagePanel', () => {
                 {
                     space_outage_id: 3,
                     space_outage_start: futureStart,
-                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss')
+                        .add(1, 'hour')
+                        .format('YYYY-MM-DD HH:mm:ss'),
                     space_outage_reason: 'Future outage',
                 },
             ],
@@ -336,7 +346,9 @@ describe('SpaceOutagePanel', () => {
                 {
                     space_outage_id: 4,
                     space_outage_start: futureStart,
-                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss')
+                        .add(1, 'hour')
+                        .format('YYYY-MM-DD HH:mm:ss'),
                     space_outage_reason: 'Future outage',
                 },
             ],
@@ -348,7 +360,9 @@ describe('SpaceOutagePanel', () => {
         fireEvent.click(screen.getByTestId('space-outage-delete-4'));
 
         await waitFor(() => {
-            expect(adminHelpers.displayToastErrorMessage).toHaveBeenCalledWith(expect.stringContaining('Delete failed'));
+            expect(adminHelpers.displayToastErrorMessage).toHaveBeenCalledWith(
+                expect.stringContaining('Delete failed'),
+            );
         });
     });
 
@@ -360,7 +374,9 @@ describe('SpaceOutagePanel', () => {
                 {
                     space_outage_id: 5,
                     space_outage_start: futureStart,
-                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss')
+                        .add(1, 'hour')
+                        .format('YYYY-MM-DD HH:mm:ss'),
                     space_outage_reason: 'Future outage',
                 },
             ],
@@ -389,13 +405,17 @@ describe('SpaceOutagePanel', () => {
                 {
                     space_outage_id: 2,
                     space_outage_start: pastStart,
-                    space_outage_end: moment(pastStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                    space_outage_end: moment(pastStart, 'YYYY-MM-DD HH:mm:ss')
+                        .add(1, 'hour')
+                        .format('YYYY-MM-DD HH:mm:ss'),
                     space_outage_reason: 'Past outage',
                 },
                 {
                     space_outage_id: 3,
                     space_outage_start: futureStart,
-                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss')
+                        .add(1, 'hour')
+                        .format('YYYY-MM-DD HH:mm:ss'),
                     space_outage_reason: 'Future outage',
                 },
             ],

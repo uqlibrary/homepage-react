@@ -16,7 +16,7 @@ describe('OpeningHoursShort', () => {
     it('returns null while weekly hours are still loading', () => {
         const { container } = rtlRender(
             <OpeningHoursShort
-                weeklyHoursLoading={true}
+                weeklyHoursLoading
                 weeklyHoursError={false}
                 weeklyHours={{}}
                 bookableSpace={{ space_opening_hours_id: 77 }}

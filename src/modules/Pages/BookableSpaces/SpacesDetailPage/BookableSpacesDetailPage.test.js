@@ -207,5 +207,4 @@ describe('Spaces Detail', () => {
         unmount();
         expect(window.history.scrollRestoration).toBe('auto');
     });
-
 });

@@ -14,9 +14,7 @@ export const getBookitUrlQueryParamError = spaceExternalBookUrl => {
         const standardParamNames = Array.from(parsedUrl.searchParams.keys());
         const hashValue = parsedUrl?.hash || '';
         const hashWithoutPrefix = hashValue.startsWith('#') ? hashValue.slice(1) : hashValue;
-        const hashQueryString = hashWithoutPrefix.includes('?')
-            ? hashWithoutPrefix.split('?').slice(1).join('?')
-            : '';
+        const hashQueryString = hashWithoutPrefix.includes('?') ? hashWithoutPrefix.split('?').slice(1).join('?') : '';
         const hashParamNames = Array.from(new URLSearchParams(hashQueryString).keys());
         const allParamNames = [...standardParamNames, ...hashParamNames];
 

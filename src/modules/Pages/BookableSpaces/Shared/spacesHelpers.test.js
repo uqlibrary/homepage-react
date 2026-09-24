@@ -11,8 +11,10 @@ import {
     getJourneySearchParams,
     getOrdinalSuffixFor,
     getSpaceIdentifier,
+    getSpaceOpenStatus,
     isBookable,
     isInt,
+    isSpaceCurrentlyOpen,
     normalizeFilterDisplayOn,
     parseJourneyStateFromUrl,
     serialiseJourneyMapFilterState,
@@ -380,5 +382,343 @@ describe('spaces helpers', () => {
         expect(parseJourneyStateFromUrl([{ id: 'a123' }])).toMatchObject({ view: 'details', spaceId: '99' });
 
         expect(serialiseJourneyUrl({ view: 'details', spaceId: 99 })).toBe('/spaces/detail/99');
+    });
+
+    it('exercises the remaining helper branches for floor names, facility maps, and lifecycle guards', () => {
+        expect(getFriendlyFloorName({ space_floor_name: 'Level 4' })).toBe('Level 4');
+        expect(getFriendlyFloorName({ space_floor_name: '4', space_is_ground_floor: false })).toBe('Level 4');
+
+        const expanded = getFriendlyLocationDescription({
+            space_name: 'Room 1',
+            space_library_name: 'Library',
+            space_campus_name: 'St Lucia',
+            space_building_name: 'Building',
+            space_building_number: '42',
+            space_floor_name: '3',
+            space_precise: 'Near the west wall',
+        });
+        expect(expanded.props.children).toEqual(expect.arrayContaining([expect.anything()]));
+
+        const hiddenName = getFriendlyLocationDescription(
+            {
+                space_name: 'Room 6',
+                space_library_name: 'Library',
+                space_campus_name: 'St Lucia',
+                space_building_name: 'Building',
+                space_building_number: '42',
+                space_floor_name: '3',
+                space_precise: 'Near the west wall',
+            },
+            false,
+            { space_name: true },
+        );
+        expect(hiddenName.props.children).toEqual(expect.arrayContaining([expect.anything()]));
+
+        expect(getFlatFacilityTypeList(undefined)).toEqual([]);
+        expect(
+            getFlatFacilityTypeList({
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 10,
+                            facility_type_children: [
+                                { facility_type_id: 22, facility_type_name: 'TV', filter_display_on: 'invalid' },
+                            ],
+                        },
+                    ],
+                },
+            }),
+        ).toEqual([
+            {
+                facility_type_group_id: 10,
+                facility_type_id: 22,
+                facility_type_name: 'TV',
+                facility_special_action: undefined,
+                hide_in_public_filter_list: undefined,
+                filter_display_on: FILTER_DISPLAY_ON_BOTH,
+            },
+        ]);
+
+        expect(getActiveSelectedFacilityTypes([{ selected: true }, { selected: false }, undefined])).toEqual([
+            { selected: true },
+        ]);
+    });
+
+    it('covers the remaining opening-hours, status, filter, and journey branches', () => {
+        const MockDate = require('mockdate');
+        const fixedNow = new Date(2024, 1, 14, 12, 0, 0);
+        MockDate.set(fixedNow);
+
+        const formatDate = date =>
+            `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        const formatTime = date =>
+            `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:00`;
+        const buildOpenHours = ({
+            lid = 77,
+            dateOffset = 0,
+            status = null,
+            currentlyOpen = null,
+            open = null,
+            close = null,
+        }) => {
+            const day = new Date(fixedNow);
+            day.setDate(day.getDate() + dateOffset);
+            const dayName = day.toLocaleDateString('en-US', { weekday: 'long' });
+            const payload = {
+                date: formatDate(day),
+                ...(open ? { open } : {}),
+                ...(close ? { close } : {}),
+                ...(status ? { times: { status } } : {}),
+                ...(currentlyOpen !== null ? { currently_open: currentlyOpen } : {}),
+            };
+
+            return {
+                locations: [
+                    {
+                        lid,
+                        departments: [{ lid, weeks: [{ [dayName]: payload }] }],
+                    },
+                ],
+            };
+        };
+
+        try {
+            expect(
+                spaceOpeningHours(
+                    { space_opening_hours_id: 77 },
+                    buildOpenHours({ open: '09:00:00', close: '17:00:00' }),
+                ).length,
+            ).toBeGreaterThan(0);
+            expect(
+                spaceOpeningHours(
+                    { space_opening_hours_id: 88 },
+                    buildOpenHours({ lid: 77, open: '09:00:00', close: '17:00:00' }),
+                ).length,
+            ).toBe(0);
+            expect(
+                spaceOpeningHours(
+                    { space_opening_hours_id: null },
+                    buildOpenHours({ lid: 77, open: '09:00:00', close: '17:00:00' }),
+                ).length,
+            ).toBe(0);
+
+            const now = new Date();
+            const openTime = new Date(now);
+            openTime.setHours(now.getHours() - 1, now.getMinutes(), 0, 0);
+            const closeTime = new Date(now);
+            closeTime.setHours(now.getHours() + 2, now.getMinutes(), 0, 0);
+            expect(
+                getSpaceOpenStatus(
+                    { space_opening_hours_id: 77 },
+                    buildOpenHours({ open: formatTime(openTime), close: formatTime(closeTime) }),
+                ),
+            ).toBe('open');
+
+            const closingSoonOpen = new Date(now);
+            closingSoonOpen.setHours(now.getHours() - 2, now.getMinutes(), 0, 0);
+            const closingSoonClose = new Date(now);
+            closingSoonClose.setHours(now.getHours(), now.getMinutes() + 15, 0, 0);
+            expect(
+                getSpaceOpenStatus(
+                    { space_opening_hours_id: 77 },
+                    buildOpenHours({ open: formatTime(closingSoonOpen), close: formatTime(closingSoonClose) }),
+                ),
+            ).toBe('closing-soon');
+
+            const closedOpen = new Date(now);
+            closedOpen.setHours(now.getHours() - 2, now.getMinutes(), 0, 0);
+            const closedClose = new Date(now);
+            closedClose.setHours(now.getHours() - 1, now.getMinutes(), 0, 0);
+            expect(
+                getSpaceOpenStatus(
+                    { space_opening_hours_id: 77 },
+                    buildOpenHours({ open: formatTime(closedOpen), close: formatTime(closedClose) }),
+                ),
+            ).toBe('closed');
+
+            expect(getSpaceOpenStatus({ space_opening_hours_id: 77 }, buildOpenHours({ status: 'closed' }))).toBe(
+                'closed',
+            );
+            expect(getSpaceOpenStatus({ space_opening_hours_id: 77 }, buildOpenHours({ status: '24hours' }))).toBe(
+                'open',
+            );
+            expect(getSpaceOpenStatus({ space_opening_hours_id: 77 }, buildOpenHours({ status: 'open' }))).toBeNull();
+            expect(getSpaceOpenStatus({ space_opening_hours_id: 77 }, buildOpenHours({ currentlyOpen: true }))).toBe(
+                'open',
+            );
+            expect(getSpaceOpenStatus({ space_opening_hours_id: 77 }, buildOpenHours({ currentlyOpen: false }))).toBe(
+                'closed',
+            );
+            expect(getSpaceOpenStatus({ space_opening_hours_id: 77 }, { locations: [] })).toBeNull();
+            expect(isSpaceCurrentlyOpen({ space_opening_hours_id: 77 }, buildOpenHours({ status: '24hours' }))).toBe(
+                true,
+            );
+            expect(isSpaceCurrentlyOpen({ space_opening_hours_id: 77 }, buildOpenHours({ status: 'closed' }))).toBe(
+                false,
+            );
+
+            const url = new URL('https://example.com/#/spaces?journeyStep=results');
+            expect(getJourneySearchParams(url)).toMatchObject({ usesHashQuery: true, hashPath: '#/spaces' });
+
+            expect(getJourneySearchParams(new URL('https://example.com/route?journeyStep=results'))).toMatchObject({
+                usesHashQuery: false,
+            });
+
+            const originalJestWorkerId = process.env.JEST_WORKER_ID;
+            const originalBtoa = globalThis.btoa;
+            const originalAtob = globalThis.atob;
+
+            try {
+                delete process.env.JEST_WORKER_ID;
+                globalThis.btoa = undefined;
+                globalThis.atob = undefined;
+
+                expect(
+                    getJourneySearchParams(new URL('https://example.com/#/spaces?journeyStep=results')),
+                ).toMatchObject({
+                    usesHashQuery: true,
+                    hashPath: '#/spaces',
+                });
+                expect(getJourneySearchParams(new URL('https://example.com/#/spaces'))).toMatchObject({
+                    usesHashQuery: true,
+                    hashPath: '#/spaces',
+                });
+
+                const outOfBandState = serialiseJourneyMapFilterState({
+                    selectedFacilityTypes: [],
+                    selectedCampus: null,
+                    selectedLibrary: null,
+                    capacityFilterValue: [],
+                    showFavouriteSpacesOnly: false,
+                });
+                expect(outOfBandState).toContain('b64.');
+                expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: outOfBandState }))).toEqual({
+                    selectedFacilityTypes: [],
+                    selectedCampus: null,
+                    selectedLibrary: null,
+                    capacityFilterValue: null,
+                    showFavouriteSpacesOnly: false,
+                });
+                expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'b64.!' }))).toBeNull();
+                expect(
+                    deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'b64.YWJjZGFu' })),
+                ).toBeNull();
+            } finally {
+                if (originalJestWorkerId === undefined) {
+                    delete process.env.JEST_WORKER_ID;
+                } else {
+                    process.env.JEST_WORKER_ID = originalJestWorkerId;
+                }
+                globalThis.btoa = originalBtoa;
+                globalThis.atob = originalAtob;
+            }
+
+            const serializedFilters = serialiseJourneyMapFilterState({
+                selectedFacilityTypes: [
+                    { facility_type_id: 1, selected: true },
+                    { facility_type_id: 2, selected: false },
+                ],
+                selectedCampus: 'St Lucia',
+                selectedLibrary: 'Library',
+                capacityFilterValue: [4, 8],
+                showFavouriteSpacesOnly: true,
+            });
+            expect(serializedFilters).toContain('b64.');
+            expect(
+                deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: serializedFilters })),
+            ).toMatchObject({
+                selectedCampus: 'St Lucia',
+                selectedLibrary: 'Library',
+                capacityFilterValue: [4, 8],
+                showFavouriteSpacesOnly: true,
+            });
+
+            const rawLegacyFilters = new URLSearchParams({
+                mapFilters: encodeURIComponent(
+                    JSON.stringify({
+                        selectedFacilityTypes: [{ facility_type_id: 7, selected: true }],
+                        unselectedFacilityTypes: [{ facility_type_id: 7 }],
+                        selectedCampus: 'St Lucia',
+                        selectedLibrary: 'Library',
+                    }),
+                ),
+            });
+            expect(deserialiseJourneyMapFilterState(rawLegacyFilters)).toMatchObject({ selectedCampus: 'St Lucia' });
+            expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'not valid json' }))).toBeNull();
+
+            window.history.pushState({}, '', '/spaces/mapresults');
+            expect(parseJourneyStateFromUrl([{ id: 'a123' }])).toMatchObject({ view: 'results' });
+
+            window.history.pushState({}, '', '/spaces/results/filters=favourite');
+            expect(parseJourneyStateFromUrl([{ id: 'favourite' }])).toMatchObject({
+                view: 'results',
+                intentId: 'favourite',
+            });
+
+            window.history.pushState({}, '', '/spaces/results/unknown');
+            expect(parseJourneyStateFromUrl([{ id: 'favourite' }])).toMatchObject({ view: 'landing', intentId: null });
+
+            window.history.pushState({}, '', '/spaces/detail');
+            expect(parseJourneyStateFromUrl([{ id: 'a123' }])).toMatchObject({ view: 'details', spaceId: null });
+
+            window.history.pushState({}, '', '/spaces/details/88');
+            expect(parseJourneyStateFromUrl([{ id: 'a123' }])).toMatchObject({ view: 'details', spaceId: '88' });
+
+            window.history.pushState({}, '', '/branch#/spaces');
+            expect(serialiseJourneyUrl({ view: 'results' })).toBe('/branch/#/spaces/results');
+
+            const previousBuffer = globalThis.Buffer;
+            const previousBtoa = globalThis.btoa;
+            const previousAtob = globalThis.atob;
+            try {
+                Object.defineProperty(globalThis, 'btoa', { value: undefined, configurable: true, writable: true });
+                Object.defineProperty(globalThis, 'atob', { value: undefined, configurable: true, writable: true });
+                Object.defineProperty(globalThis, 'Buffer', { value: undefined, configurable: true, writable: true });
+                expect(
+                    serialiseJourneyMapFilterState({
+                        selectedFacilityTypes: [],
+                        selectedCampus: null,
+                        selectedLibrary: null,
+                        capacityFilterValue: [],
+                        showFavouriteSpacesOnly: false,
+                    }),
+                ).toContain('"selectedFacilityTypes":[]');
+                expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'b64.YWJj' }))).toBeNull();
+            } finally {
+                Object.defineProperty(globalThis, 'Buffer', {
+                    value: previousBuffer,
+                    configurable: true,
+                    writable: true,
+                });
+                Object.defineProperty(globalThis, 'btoa', { value: previousBtoa, configurable: true, writable: true });
+                Object.defineProperty(globalThis, 'atob', { value: previousAtob, configurable: true, writable: true });
+            }
+
+            Object.defineProperty(globalThis, 'btoa', { value: undefined, configurable: true, writable: true });
+            Object.defineProperty(globalThis, 'atob', { value: undefined, configurable: true, writable: true });
+            try {
+                const noJestUrl = new URL('https://example.com/#/spaces?journeyStep=results');
+                delete process.env.JEST_WORKER_ID;
+                expect(getJourneySearchParams(noJestUrl)).toMatchObject({ usesHashQuery: true, hashPath: '#/spaces' });
+                expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'b64.YWJj' }))).toBeNull();
+            } finally {
+                if (originalJestWorkerId === undefined) {
+                    delete process.env.JEST_WORKER_ID;
+                } else {
+                    process.env.JEST_WORKER_ID = originalJestWorkerId;
+                }
+                Object.defineProperty(globalThis, 'btoa', { value: previousBtoa, configurable: true, writable: true });
+                Object.defineProperty(globalThis, 'atob', { value: previousAtob, configurable: true, writable: true });
+            }
+
+            window.history.pushState({}, '', '/#/spaces');
+            expect(serialiseJourneyUrl({ view: 'results' })).toBe('#/spaces/results');
+            expect(serialiseJourneyUrl({ view: 'landing' })).toBe('#/spaces');
+
+            window.history.pushState({}, '', '/');
+            expect(serialiseJourneyUrl({ view: 'details', spaceId: 99 })).toBe('/spaces/detail/99');
+        } finally {
+            MockDate.reset();
+        }
     });
 });

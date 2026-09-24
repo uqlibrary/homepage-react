@@ -84,7 +84,11 @@ describe('ArticleCard', () => {
         const image = screen.getByRole('img', { name: 'Library update' });
         expect(image).toHaveAttribute('src', 'test-file-stub');
 
-        Object.defineProperty(image, 'src', { value: 'https://example.com/bad-image.jpg', writable: true, configurable: true });
+        Object.defineProperty(image, 'src', {
+            value: 'https://example.com/bad-image.jpg',
+            writable: true,
+            configurable: true,
+        });
         fireEvent.error(image);
         expect(image.getAttribute('src')).toBe('test-file-stub');
 

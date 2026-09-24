@@ -64,7 +64,10 @@ describe('bookableSpacesAdminHelpers toast helpers', () => {
 
     it('exposes the static admin locale values used by the BookableSpaces forms', () => {
         expect(locale.noSpringshareHoursLabel).toContain('No Springshare opening hours');
-        expect(locale.unselectedSpringshareOption).toMatchObject({ id: -1, display_name: locale.noSpringshareHoursLabel });
+        expect(locale.unselectedSpringshareOption).toMatchObject({
+            id: -1,
+            display_name: locale.noSpringshareHoursLabel,
+        });
         expect(locale.locations.greatCourtCoordinates).toEqual([-27.49751, 153.01329]);
         expect(locale.form.upload.maxRatio).toBe(2.8);
         expect(locale.form.upload.minRatio).toBe(2.55);
@@ -180,7 +183,9 @@ describe('bookableSpacesAdminHelpers toast helpers', () => {
 
     it('builds the initial springshare list with a placeholder option', () => {
         const locale = { unselectedSpringshareOption: { id: -1, display_name: 'No selection' } };
-        expect(initialisedSpringshareList(locale, { locations: [] })).toEqual([{ id: -1, display_name: 'No selection' }]);
+        expect(initialisedSpringshareList(locale, { locations: [] })).toEqual([
+            { id: -1, display_name: 'No selection' },
+        ]);
     });
 
     it('filters campus and library lists to only valid entries', () => {

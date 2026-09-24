@@ -190,7 +190,12 @@ describe('spaceOutageHelpers', () => {
         expect(getSpaceOutageStatus({ space_outage_start: 'not-a-date' }, new Date('2026-04-22T12:30:00'))).toEqual(
             'Invalid',
         );
-        expect(getSpaceOutageStatus({ space_outage_start: '2026-04-22 10:00:00', space_outage_end: '2026-04-22 09:00:00' }, new Date('2026-04-22T10:30:00'))).toEqual('Past');
+        expect(
+            getSpaceOutageStatus(
+                { space_outage_start: '2026-04-22 10:00:00', space_outage_end: '2026-04-22 09:00:00' },
+                new Date('2026-04-22T10:30:00'),
+            ),
+        ).toEqual('Past');
     });
 
     it('returns the current outage notice before upcoming ones', () => {
@@ -348,7 +353,10 @@ describe('spaceOutageHelpers', () => {
         );
         expect(invalidDateValidation.errors).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ field: 'space_outage_start', message: 'The start date and time is invalid.' }),
+                expect.objectContaining({
+                    field: 'space_outage_start',
+                    message: 'The start date and time is invalid.',
+                }),
                 expect.objectContaining({ field: 'space_outage_reason', message: 'A reason is required.' }),
             ]),
         );
