@@ -55,6 +55,7 @@ describe('Selector', () => {
                 accept: allowedFileTypes,
                 multiple: false,
                 validator: validator,
+                onDropRejected: expect.any(Function),
             }),
         );
     });
