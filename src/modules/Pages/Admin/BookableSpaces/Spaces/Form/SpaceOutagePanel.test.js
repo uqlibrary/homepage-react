@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import { fireEvent, waitFor } from '@testing-library/react';
 
+import * as adminHelpers from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { rtlRender, screen } from 'test-utils';
 
 import SpaceOutagePanel from './SpaceOutagePanel';
@@ -31,8 +32,11 @@ describe('SpaceOutagePanel', () => {
     };
 
     beforeEach(() => {
+        jest.restoreAllMocks();
         jest.clearAllMocks();
         window.confirm = jest.fn(() => true);
+        jest.spyOn(adminHelpers, 'displayToastMessage').mockImplementation(() => {});
+        jest.spyOn(adminHelpers, 'displayToastErrorMessage').mockImplementation(() => {});
     });
 
     it('shows the add-mode notice when the panel is used before a space record exists', () => {
@@ -40,6 +44,59 @@ describe('SpaceOutagePanel', () => {
 
         expect(screen.getByTestId('space-outage-add-mode-notice')).toBeInTheDocument();
         expect(screen.getByText(/Save this space first/i)).toBeInTheDocument();
+    });
+
+    it('shows the loading, error, and empty states for outage lists', () => {
+        const { rerender } = rtlRender(
+            <SpaceOutagePanel {...defaultProps} spaceOutageList={[]} spaceOutageListLoading={true} />, 
+        );
+
+        expect(screen.getByText('Loading closures')).toBeInTheDocument();
+
+        rerender(
+            <SpaceOutagePanel
+                {...defaultProps}
+                spaceOutageList={[]}
+                spaceOutageListLoading={false}
+                spaceOutageListError={new Error('Failed to load closures')}
+            />,
+        );
+        expect(screen.getByText('Unable to load space closures right now. Please try again later.')).toBeInTheDocument();
+
+        rerender(
+            <SpaceOutagePanel {...defaultProps} spaceOutageList={[]} spaceOutageListLoading={false} spaceOutageListError={null} />,
+        );
+        expect(screen.getByText('No closures have been recorded for this space.')).toBeInTheDocument();
+    });
+
+    it('shows a warning when the new draft overlaps an existing closure window', () => {
+        const existingStart = moment().add(10, 'days').hours(9).minutes(0).seconds(0).format('YYYY-MM-DD HH:mm:ss');
+        const existingEnd = moment().add(10, 'days').hours(13).minutes(0).seconds(0).format('YYYY-MM-DD HH:mm:ss');
+
+        rtlRender(
+            <SpaceOutagePanel
+                {...defaultProps}
+                spaceOutageList={[
+                    {
+                        space_outage_id: 7,
+                        space_outage_start: existingStart,
+                        space_outage_end: existingEnd,
+                        space_outage_reason: 'Existing closure',
+                    },
+                ]}
+            />,
+        );
+
+        fireEvent.change(screen.getByTestId('space-outage-start'), {
+            target: { value: moment().add(10, 'days').hours(10).minutes(0).format('YYYY-MM-DDTHH:mm') },
+        });
+        fireEvent.change(screen.getByTestId('space-outage-end'), {
+            target: { value: moment().add(10, 'days').hours(12).minutes(0).format('YYYY-MM-DDTHH:mm') },
+        });
+        fireEvent.change(screen.getByTestId('space-outage-reason'), { target: { value: 'Planned upgrade' } });
+
+        expect(screen.getByTestId('space-outage-warning')).toBeInTheDocument();
+        expect(screen.getByText('This closure overlaps another closure window already recorded for this space.')).toBeInTheDocument();
     });
 
     it('locks past outages from edit and delete actions', () => {
@@ -140,6 +197,44 @@ describe('SpaceOutagePanel', () => {
         });
     });
 
+    it('shows an error toast when the save API responds with an unsuccessful status', async () => {
+        const props = {
+            ...defaultProps,
+            spaceOutageList: [],
+        };
+        props.actions.createBookableSpaceOutage.mockResolvedValue({ status: 'ERROR', message: 'Save failed' });
+
+        rtlRender(<SpaceOutagePanel {...props} />);
+
+        fireEvent.change(screen.getByTestId('space-outage-start'), { target: { value: '2026-04-24T08:00' } });
+        fireEvent.change(screen.getByTestId('space-outage-end'), { target: { value: '2026-04-24T14:00' } });
+        fireEvent.change(screen.getByTestId('space-outage-reason'), { target: { value: 'Repair work' } });
+        fireEvent.click(screen.getByTestId('space-outage-save-button'));
+
+        await waitFor(() => {
+            expect(adminHelpers.displayToastErrorMessage).toHaveBeenCalledWith(expect.stringContaining('Save failed'));
+        });
+    });
+
+    it('shows an error toast when the save call throws', async () => {
+        const props = {
+            ...defaultProps,
+            spaceOutageList: [],
+        };
+        props.actions.createBookableSpaceOutage.mockRejectedValue(new Error('Save threw an error'));
+
+        rtlRender(<SpaceOutagePanel {...props} />);
+
+        fireEvent.change(screen.getByTestId('space-outage-start'), { target: { value: '2026-04-24T08:00' } });
+        fireEvent.change(screen.getByTestId('space-outage-end'), { target: { value: '2026-04-24T14:00' } });
+        fireEvent.change(screen.getByTestId('space-outage-reason'), { target: { value: 'Repair work' } });
+        fireEvent.click(screen.getByTestId('space-outage-save-button'));
+
+        await waitFor(() => {
+            expect(adminHelpers.displayToastErrorMessage).toHaveBeenCalledWith('Save threw an error');
+        });
+    });
+
     it('creates a bulk outage for the selected floor scope', async () => {
         const props = {
             ...defaultProps,
@@ -206,6 +301,82 @@ describe('SpaceOutagePanel', () => {
                 }),
                 12,
             );
+        });
+    });
+
+    it('stops the delete when the user cancels confirmation', async () => {
+        const futureStart = moment().add(1, 'year').format('YYYY-MM-DD HH:mm:ss');
+        const props = {
+            ...defaultProps,
+            spaceOutageList: [
+                {
+                    space_outage_id: 3,
+                    space_outage_start: futureStart,
+                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                    space_outage_reason: 'Future outage',
+                },
+            ],
+        };
+        window.confirm = jest.fn(() => false);
+
+        rtlRender(<SpaceOutagePanel {...props} />);
+
+        fireEvent.click(screen.getByTestId('space-outage-delete-3'));
+
+        await waitFor(() => {
+            expect(props.actions.deleteBookableSpaceOutage).not.toHaveBeenCalled();
+        });
+    });
+
+    it('shows an error toast when the delete API responds with an unsuccessful status', async () => {
+        const futureStart = moment().add(1, 'year').format('YYYY-MM-DD HH:mm:ss');
+        const props = {
+            ...defaultProps,
+            spaceOutageList: [
+                {
+                    space_outage_id: 4,
+                    space_outage_start: futureStart,
+                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                    space_outage_reason: 'Future outage',
+                },
+            ],
+        };
+        props.actions.deleteBookableSpaceOutage.mockResolvedValue({ status: 'ERROR', message: 'Delete failed' });
+
+        rtlRender(<SpaceOutagePanel {...props} />);
+
+        fireEvent.click(screen.getByTestId('space-outage-delete-4'));
+
+        await waitFor(() => {
+            expect(adminHelpers.displayToastErrorMessage).toHaveBeenCalledWith(expect.stringContaining('Delete failed'));
+        });
+    });
+
+    it('clears the edit state when the currently edited outage is deleted', async () => {
+        const futureStart = moment().add(1, 'year').format('YYYY-MM-DD HH:mm:ss');
+        const props = {
+            ...defaultProps,
+            spaceOutageList: [
+                {
+                    space_outage_id: 5,
+                    space_outage_start: futureStart,
+                    space_outage_end: moment(futureStart, 'YYYY-MM-DD HH:mm:ss').add(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
+                    space_outage_reason: 'Future outage',
+                },
+            ],
+        };
+        props.actions.deleteBookableSpaceOutage.mockResolvedValue({ status: 'OK' });
+        props.actions.loadBookableSpaceOutages.mockResolvedValue({ status: 'OK' });
+
+        rtlRender(<SpaceOutagePanel {...props} />);
+
+        fireEvent.click(screen.getByTestId('space-outage-edit-5'));
+        expect(screen.getByTestId('space-outage-cancel-button')).toHaveTextContent('Cancel edit');
+
+        fireEvent.click(screen.getByTestId('space-outage-delete-5'));
+
+        await waitFor(() => {
+            expect(screen.getByTestId('space-outage-cancel-button')).toHaveTextContent('Clear');
         });
     });
 
