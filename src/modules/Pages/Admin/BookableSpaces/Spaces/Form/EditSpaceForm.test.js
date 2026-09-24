@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { AccountContext } from 'context';
 import { rtlRender } from 'test-utils';
@@ -66,6 +66,9 @@ jest.mock('modules/Pages/Admin/BookableSpaces/Spaces/Form/ImageUploadDropzone', 
             />
             <button type="button" data-testid="clear-image-button" onClick={onClearFile}>
                 Clear file
+            </button>
+            <button type="button" data-testid="add-file-without-preview" onClick={() => onAddFile([{ name: 'raw-file' }])}>
+                Add raw file
             </button>
         </div>
     ),
@@ -705,5 +708,437 @@ describe('EditSpaceForm', () => {
 
         fireEvent.click(screen.getByTestId('tab-unavailability'));
         expect(screen.getByTestId('space-outage-panel')).toBeInTheDocument();
+    });
+
+    it('covers the remaining edit tabs, notices, and note states', async () => {
+        const createBookableSpaceNote = jest.fn(() => Promise.resolve());
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        actions: { ...buildProps().actions, createBookableSpaceNote },
+                        formValues: {
+                            ...validFormValues,
+                            space_id: 456,
+                            space_uuid: 'remaining-branches',
+                            space_draftmode: true,
+                            space_deleted: true,
+                        },
+                        spaceNotesList: [],
+                        spaceNotesListLoading: false,
+                        spaceNotesListError: false,
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByTestId('space-draftmode-notice')).toBeInTheDocument();
+        expect(screen.getByTestId('space-deleted-notice')).toBeInTheDocument();
+
+        fireEvent.click(screen.getByTestId('tab-notes'));
+        expect(screen.getByTestId('space-notes-empty-message')).toBeInTheDocument();
+        fireEvent.change(screen.getByTestId('space-note-rich-text'), { target: { value: '  Internal note  ' } });
+        fireEvent.click(screen.getByTestId('admin-spaces-add-note-button'));
+
+        await waitFor(() => {
+            expect(createBookableSpaceNote).toHaveBeenCalledWith(
+                456,
+                expect.objectContaining({ space_note_note: 'Internal note' }),
+            );
+        });
+
+        fireEvent.click(screen.getByTestId('tab-imagery'));
+        fireEvent.click(screen.getByTestId('admin-spaces-preview-button'));
+        fireEvent.click(screen.getByTestId('spaces-preview-dialog-close-button'));
+        fireEvent.click(screen.getByTestId('tab-facility-types'));
+        fireEvent.click(screen.getByTestId('filtertype-22'));
+        fireEvent.click(screen.getByTestId('tab-unavailability'));
+        expect(screen.getByTestId('space-outage-panel')).toBeInTheDocument();
+    });
+
+    it('renders loading and error states for notes', () => {
+        const { rerender } = rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        formValues: { ...validFormValues, space_id: 654, space_uuid: 'notes-loading' },
+                        spaceNotesListLoading: true,
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('tab-notes'));
+        expect(screen.getByText('Loading notes...')).toBeInTheDocument();
+
+        rerender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        formValues: { ...validFormValues, space_id: 654, space_uuid: 'notes-error' },
+                        spaceNotesListError: 'Notes unavailable',
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('tab-notes'));
+        expect(screen.getByText('Notes unavailable')).toBeInTheDocument();
+    });
+
+    it('renders and selects Archibus room mappings in add mode', () => {
+        const setFormValues = jest.fn();
+        const archibusTree = {
+            data: {
+                sites: [
+                    {
+                        siteId: 11,
+                        siteName: 'St Lucia',
+                        buildings: [
+                            {
+                                buildingId: 12,
+                                rooms: [
+                                    { id: 901, roomCode: 'ROOM-901' },
+                                    { roomDbId: 902, roomName: 'Room 902' },
+                                    { id: 901, roomCode: 'Duplicate room' },
+                                    { roomId: null, roomName: 'Ignored room' },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        setFormValues,
+                        bookableSpacesArchibusTree: archibusTree,
+                        formValues: { ...validFormValues, space_name: '' },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        const roomInput = screen.getByRole('combobox', { name: 'Room ID' });
+        fireEvent.change(roomInput, { target: { value: 'ROOM-901' } });
+        expect(screen.getByText('ROOM-901')).toBeInTheDocument();
+        fireEvent.click(screen.getByText('ROOM-901'));
+
+        expect(setFormValues).toHaveBeenCalledWith(
+            expect.objectContaining({ archibus_room_id: 901, space_name: 'ROOM-901' }),
+        );
+    });
+
+    it('covers Archibus fallback matching, existing room state, and empty tree data', () => {
+        const setFormValues = jest.fn();
+        const archibusTree = {
+            data: {
+                sites: [
+                    {
+                        siteId: 99,
+                        site_code: '99',
+                        buildings: [{ buildingId: 98, rooms: [{ room_id: 903, roomName: 'Room 903' }] }],
+                    },
+                ],
+            },
+        };
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        setFormValues,
+                        currentCampusList: [{ ...baseCampusList[0], campus_id: 99, campus_name: 'Unknown campus' }],
+                        bookableSpacesArchibusTree: archibusTree,
+                        formValues: { ...validFormValues, campus_id: 99, archibus_room_id: 903 },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByRole('combobox', { name: 'Room ID' })).toHaveValue('Room 903');
+
+        const { rerender } = rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm {...buildProps({ bookableSpacesArchibusTree: { data: {} } })} />
+            </AccountContext.Provider>,
+        );
+        rerender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm {...buildProps({ bookableSpacesArchibusTree: null })} />
+            </AccountContext.Provider>,
+        );
+    });
+
+    it('covers description toggling, back navigation, highlighted save state, and file cleanup', () => {
+        const setFormValues = jest.fn();
+        const saveToDb = jest.fn();
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'add',
+                        setFormValues,
+                        saveToDb,
+                        formValues: { ...validFormValues, space_description: '' },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('toggle-space-description-checkbox'));
+        expect(screen.getByTestId('add-space-description')).toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('toggle-space-description-checkbox'));
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('spaces-form-back-button'));
+
+        fireEvent.click(screen.getByTestId('space_highlighted'));
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('admin-spaces-save-button-submit'));
+
+        expect(saveToDb).toHaveBeenCalledWith(expect.objectContaining({ space_highlighted: false }));
+
+        fireEvent.click(screen.getByTestId('clear-image-button'));
+        const clearFileUpdate = setFormValues.mock.calls.at(-1)[0];
+        expect(clearFileUpdate({ space_photo_url: 'old-photo', uploadedFile: ['old'] })).toEqual({
+            space_photo_url: '',
+            uploadedFile: [],
+            hasImage: false,
+        });
+    });
+
+    it('shows and closes save outcome confirmation states', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        bookableSpacesRoomAddError: 'Unable to add space',
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByTestId('confirmation-box')).toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('confirmation-alt'));
+        expect(screen.queryByTestId('confirmation-box')).not.toBeInTheDocument();
+    });
+
+    it('covers Bookit URL validation, missing photo descriptions, and error summary navigation', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        formValues: {
+                            ...validFormValues,
+                            space_external_book_url: 'https://uqbookit.uq.edu.au/#/booking?invalid=true',
+                            space_photo_description: '',
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        const errorSummary = screen.getByTestId('spaces-button-error-list');
+        expect(errorSummary).toBeInTheDocument();
+        expect(screen.getAllByText(/only the lower-case "group" query parameter/i).length).toBeGreaterThan(0);
+        fireEvent.click(screen.getAllByRole('button', { name: /only the lower-case/i })[0]);
+    });
+
+    it('covers valid and empty note dates and ignores an empty note submission', async () => {
+        const createBookableSpaceNote = jest.fn(() => Promise.resolve());
+        const loadBookableSpaceNotes = jest.fn();
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: {} }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        actions: { ...buildProps().actions, createBookableSpaceNote, loadBookableSpaceNotes },
+                        formValues: { ...validFormValues, space_id: 789, space_uuid: 'note-date-branches' },
+                        spaceNotesList: [
+                            {
+                                space_note_id: 1,
+                                space_note_created_at: null,
+                                space_note_user: 'uqtest1',
+                                space_note_note: 'No date',
+                            },
+                            {
+                                space_note_id: 2,
+                                space_note_created_at: '2026-09-25T10:30:00.000Z',
+                                space_note_user: 'uqtest1',
+                                space_note_note: 'Valid date',
+                            },
+                        ],
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('tab-notes'));
+        expect(screen.getByTestId('space-note-date-0')).toBeEmptyDOMElement();
+        expect(screen.getByTestId('space-note-date-1')).not.toBeEmptyDOMElement();
+
+        fireEvent.click(screen.getByTestId('admin-spaces-add-note-button'));
+        expect(createBookableSpaceNote).not.toHaveBeenCalled();
+
+        fireEvent.change(screen.getByTestId('space-note-rich-text'), { target: { value: '   ' } });
+        const addNoteButton = screen.getByTestId('admin-spaces-add-note-button');
+        addNoteButton.disabled = false;
+        fireEvent.click(addNoteButton);
+        expect(createBookableSpaceNote).not.toHaveBeenCalled();
+        await waitFor(() => expect(loadBookableSpaceNotes).toHaveBeenCalledWith(789));
+    });
+
+    it('logs and stops when restoring a deleted space without an id', () => {
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        formValues: {
+                            ...validFormValues,
+                            space_id: null,
+                            space_uuid: 'deleted-without-id',
+                            space_deleted: true,
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('space-undelete-button'));
+        fireEvent.click(screen.getByTestId('spaces-undelete-confirm-button'));
+        expect(consoleError).toHaveBeenCalledWith('Space ID not found');
+        consoleError.mockRestore();
+    });
+
+    it('handles semantic campus, library, floor, space type, and opening-hours selections', () => {
+        const setFormValues = jest.fn();
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        setFormValues,
+                        bookableSpacesRoomList: {
+                            data: {
+                                known_space_types: [
+                                    { space_type_id: 10, space_type_name: 'Study room' },
+                                    { space_type_id: 11, space_type_name: 'Meeting room' },
+                                ],
+                                locations: [],
+                            },
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Campus *' }));
+        fireEvent.click(screen.getByRole('option', { name: 'St Lucia' }));
+
+        fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Library *' }));
+        fireEvent.click(screen.getByRole('option', { name: 'Central Library' }));
+
+        fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Level *' }));
+        fireEvent.click(screen.getByRole('option', { name: /Level 4/ }));
+
+        fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Choose an existing Space type *' }));
+        fireEvent.click(screen.getByRole('option', { name: 'Meeting room' }));
+
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.mouseDown(screen.getByRole('combobox', { name: /Choose the Springshare Library/ }));
+        fireEvent.click(screen.getByRole('option', { name: 'Library hours' }));
+
+        expect(setFormValues).toHaveBeenCalled();
+    });
+
+    it('covers description editing and generated preview URL cleanup', () => {
+        const setFormValuesMock = jest.fn();
+        const revokeObjectURL = jest.spyOn(URL, 'revokeObjectURL');
+        const StatefulForm = () => {
+            const [formState, setFormState] = React.useState({
+                ...validFormValues,
+                space_description: '',
+                space_photo_url: '',
+            });
+            const setFormValues = nextValues => {
+                setFormValuesMock(nextValues);
+                setFormState(previousValues =>
+                    typeof nextValues === 'function' ? nextValues(previousValues) : nextValues,
+                );
+            };
+
+            return (
+                <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                    <EditSpaceForm {...buildProps({ setFormValues, formValues: formState })} />
+                </AccountContext.Provider>
+            );
+        };
+
+        const { unmount } = rtlRender(<StatefulForm />);
+
+        fireEvent.click(screen.getByTestId('toggle-space-description-checkbox'));
+        fireEvent.change(screen.getByTestId('space-description-rich-text'), { target: { value: '<p>Edited</p>' } });
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('add-file-without-preview'));
+
+        expect(window.URL.createObjectURL).toHaveBeenCalled();
+        fireEvent.click(screen.getByTestId('clear-image-button'));
+        expect(setFormValuesMock).toHaveBeenCalled();
+        expect(revokeObjectURL).toHaveBeenCalled();
+
+        unmount();
+        revokeObjectURL.mockRestore();
+    });
+
+    it('exercises save confirmation action and add-mode cancel callbacks', async () => {
+        const clearABookableSpace = jest.fn();
+        const loadAllBookableSpacesRooms = jest.fn(() => Promise.resolve());
+        const actions = { ...buildProps().actions, clearABookableSpace, loadAllBookableSpacesRooms };
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        actions,
+                        bookableSpacesRoomAddResult: { ok: true },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('confirmation-action'));
+        await waitFor(() => expect(loadAllBookableSpacesRooms).toHaveBeenCalledWith({ includeDrafts: true }));
+        expect(clearABookableSpace).toHaveBeenCalled();
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        actions,
+                        bookableSpacesRoomAddError: 'Unable to add space',
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+        fireEvent.click(screen.getByTestId('confirmation-cancel'));
+        expect(clearABookableSpace).toHaveBeenCalled();
     });
 });

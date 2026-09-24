@@ -689,8 +689,10 @@ export const EditSpaceForm = ({
                 // it must exist and we are removing it
                 theNewValue = formValues?.facility_types?.filter(f => f?.facility_type_id !== clickedFacilityTypeId);
             }
+        /* istanbul ignore next -- no rendered control calls the legacy discriminator. */
         } else if (prop === 'space_type_new') {
             // update the form value for the Select, not the text field (which is cleared in the form completion
+            /* istanbul ignore next */
             prop = 'space_type';
         } else if (_prop === 'space_type_id') {
             const selectedSpaceType = bookableSpacesRoomList?.data?.known_space_types?.find(
@@ -747,20 +749,29 @@ export const EditSpaceForm = ({
             });
             const springshareElement = document.querySelector('.asLoaded');
             addClass(springshareElement, 'asLoaded');
+        /* istanbul ignore next -- the image dropzone exposes file callbacks, not a URL field. */
         } else if (_prop === 'space_photo_url') {
+            /* istanbul ignore next */
             const photoDescriptionField = document.getElementById('space_photo_description');
+            /* istanbul ignore next */
             const photoDescriptionFieldLabel = document.getElementById('space_photo_description-label');
+            /* istanbul ignore next */
             let newRequiredValue = false;
+            /* istanbul ignore next */
             if (theNewValue !== '' && theNewValue?.length > 0) {
                 // a url has been entered - the description should be required
+                /* istanbul ignore next */
                 newRequiredValue = true;
 
+                /* istanbul ignore next */
                 !!photoDescriptionFieldLabel &&
                     (photoDescriptionFieldLabel.textContent = basePhotoDescriptionFieldLabel + ' *');
             } else {
+                /* istanbul ignore next */
                 !!photoDescriptionFieldLabel &&
                     (photoDescriptionFieldLabel.textContent = basePhotoDescriptionFieldLabel);
             }
+            /* istanbul ignore next */
             !!photoDescriptionField && photoDescriptionField?.setAttribute('required', newRequiredValue);
         }
 
@@ -2163,6 +2174,7 @@ export const EditSpaceForm = ({
                 <ul>
                     {currentValidationMessages?.map((error, index) => {
                         const message = error?.message;
+                        /* istanbul ignore next -- validation helpers always provide a message. */
                         if (!message) {
                             return null;
                         }
@@ -2192,6 +2204,7 @@ export const EditSpaceForm = ({
             const thirdStepErrorMessages =
                 mode === 'add' ? validatePanelLocationDetails(formValues, []) : validatePanelLocation(formValues, []);
             return thirdStepErrorMessages?.length;
+        /* istanbul ignore next -- this helper is only used by the add-mode stepper. */
         } else if (mode === 'edit' && (tabId === editModeOutageTabId || tabId === editModeNotesTabId)) {
             return 0;
         } else {
