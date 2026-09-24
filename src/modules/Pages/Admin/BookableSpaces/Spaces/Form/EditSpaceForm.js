@@ -689,7 +689,7 @@ export const EditSpaceForm = ({
                 // it must exist and we are removing it
                 theNewValue = formValues?.facility_types?.filter(f => f?.facility_type_id !== clickedFacilityTypeId);
             }
-        /* istanbul ignore next -- no rendered control calls the legacy discriminator. */
+            /* istanbul ignore next -- no rendered control calls the legacy discriminator. */
         } else if (prop === 'space_type_new') {
             // update the form value for the Select, not the text field (which is cleared in the form completion
             /* istanbul ignore next */
@@ -749,7 +749,7 @@ export const EditSpaceForm = ({
             });
             const springshareElement = document.querySelector('.asLoaded');
             addClass(springshareElement, 'asLoaded');
-        /* istanbul ignore next -- the image dropzone exposes file callbacks, not a URL field. */
+            /* istanbul ignore next -- the image dropzone exposes file callbacks, not a URL field. */
         } else if (_prop === 'space_photo_url') {
             /* istanbul ignore next */
             const photoDescriptionField = document.getElementById('space_photo_description');
@@ -2204,7 +2204,7 @@ export const EditSpaceForm = ({
             const thirdStepErrorMessages =
                 mode === 'add' ? validatePanelLocationDetails(formValues, []) : validatePanelLocation(formValues, []);
             return thirdStepErrorMessages?.length;
-        /* istanbul ignore next -- this helper is only used by the add-mode stepper. */
+            /* istanbul ignore next -- this helper is only used by the add-mode stepper. */
         } else if (mode === 'edit' && (tabId === editModeOutageTabId || tabId === editModeNotesTabId)) {
             return 0;
         } else {

@@ -67,7 +67,11 @@ jest.mock('modules/Pages/Admin/BookableSpaces/Spaces/Form/ImageUploadDropzone', 
             <button type="button" data-testid="clear-image-button" onClick={onClearFile}>
                 Clear file
             </button>
-            <button type="button" data-testid="add-file-without-preview" onClick={() => onAddFile([{ name: 'raw-file' }])}>
+            <button
+                type="button"
+                data-testid="add-file-without-preview"
+                onClick={() => onAddFile([{ name: 'raw-file' }])}
+            >
                 Add raw file
             </button>
         </div>

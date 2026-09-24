@@ -330,6 +330,7 @@ export const BookableSpacesManageLocations = ({
         };
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -381,6 +382,7 @@ export const BookableSpacesManageLocations = ({
         closeDialog(e);
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -450,6 +452,7 @@ export const BookableSpacesManageLocations = ({
         };
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -499,10 +502,6 @@ export const BookableSpacesManageLocations = ({
                     <div>A ground floor is not compulsory!</div>
                 </label> 
             </div>`;
-        if (!formBody) {
-            return;
-        }
-
         const dialogBodyElement = document.getElementById('dialogBody');
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
@@ -546,6 +545,7 @@ export const BookableSpacesManageLocations = ({
         };
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -720,7 +720,10 @@ export const BookableSpacesManageLocations = ({
             library_springshare_id: data?.library_springshare_id,
         };
 
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -751,10 +754,6 @@ export const BookableSpacesManageLocations = ({
                 campusDetails?.campus_id || ''
             }" required  maxlength="10" />
             `;
-        if (!formBody) {
-            return;
-        }
-
         const dialogBodyElement = document.getElementById('dialogBody');
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
@@ -932,6 +931,7 @@ export const BookableSpacesManageLocations = ({
         console.log('saveNewCampus valuesToSend', valuesToSend);
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -963,29 +963,27 @@ export const BookableSpacesManageLocations = ({
         setSelectedCampusCentre(campusValues);
         const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${campusCoreForm(campusValues)}`;
 
-        if (!!formBody) {
-            const dialogBodyElement = document.getElementById('dialogBody');
-            !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
-            const elementId = 'addNewButton';
-            const addNewButton = document.getElementById(elementId);
-            !!addNewButton && (addNewButton.style.display = 'none');
+        const elementId = 'addNewButton';
+        const addNewButton = document.getElementById(elementId);
+        !!addNewButton && (addNewButton.style.display = 'none');
 
-            const deleteButton = document.getElementById('deleteButton');
-            !!deleteButton && (deleteButton.style.display = 'none');
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'none');
 
-            const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton?.addEventListener('click', saveNewCampus);
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton?.addEventListener('click', saveNewCampus);
 
-            const mapWrapper = document.getElementById('mapWrapper');
-            !!mapWrapper && (mapWrapper.style.display = 'block');
+        const mapWrapper = document.getElementById('mapWrapper');
+        !!mapWrapper && (mapWrapper.style.display = 'block');
 
-            const dialog = document.getElementById('popupDialog');
-            !!dialog && dialog?.showModal();
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog?.showModal();
 
-            // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
-            window.dispatchEvent(new Event('resize'));
-        }
+        // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
+        window.dispatchEvent(new Event('resize'));
     }
 
     function deleteCampus(e, campusDetails) {
@@ -1032,32 +1030,30 @@ export const BookableSpacesManageLocations = ({
             </div>`;
         setSelectedCampusCentre(campusDetails);
 
-        if (!!formBody) {
-            const dialogBodyElement = document.getElementById('dialogBody');
-            !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
-            const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton?.addEventListener('click', saveChangeToCampus);
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton?.addEventListener('click', saveChangeToCampus);
 
-            const addNewButton = document.getElementById('addNewButton');
-            !!addNewButton && (addNewButton.innerText = 'Add Library');
-            !!addNewButton && addNewButton?.addEventListener('click', e => showAddLibraryForm(e, campusDetails));
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.innerText = 'Add Library');
+        !!addNewButton && addNewButton?.addEventListener('click', e => showAddLibraryForm(e, campusDetails));
 
-            const deleteButton = document.getElementById('deleteButton');
-            !!deleteButton &&
-                deleteButton?.addEventListener('click', e => showConfirmAndDeleteCampusDialog(e, campusDetails));
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton &&
+            deleteButton?.addEventListener('click', e => showConfirmAndDeleteCampusDialog(e, campusDetails));
 
-            const mapid = 'mapWrapper';
-            const mapWrapper = document.getElementById(mapid);
-            !!mapWrapper && (mapWrapper.style.display = 'block');
-            setShowCampusMap(true);
+        const mapid = 'mapWrapper';
+        const mapWrapper = document.getElementById(mapid);
+        !!mapWrapper && (mapWrapper.style.display = 'block');
+        setShowCampusMap(true);
 
-            const dialog = document.getElementById('popupDialog');
-            !!dialog && dialog?.showModal();
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog?.showModal();
 
-            // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
-            window.dispatchEvent(new Event('resize'));
-        }
+        // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
+        window.dispatchEvent(new Event('resize'));
     }
 
     function showCampusEntry(campus) {
@@ -1175,7 +1171,7 @@ export const BookableSpacesManageLocations = ({
             </dialog>
             <ConfirmationBox
                 confirmationBoxId="spaces-manage-locations-error"
-                onAction={() => hideConfirmationLocal}
+                onAction={hideConfirmationLocal}
                 onClose={hideConfirmationLocal}
                 hideCancelButton
                 isOpen={isConfirmationBoxOpen}

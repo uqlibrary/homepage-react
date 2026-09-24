@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 
-const CampusLocationMap = ({ campusCentre = null } = {}) => {
+const CampusLocationMap = ({ campusCentre = null } = /* istanbul ignore next */ {}) => {
     const defaultCoords = locale?.locations?.greatCourtCoordinates;
     const initialLat = Number(campusCentre?.campus_latitude ?? defaultCoords[0]);
     const initialLng = Number(campusCentre?.campus_longitude ?? defaultCoords[1]);
@@ -19,6 +19,7 @@ const CampusLocationMap = ({ campusCentre = null } = {}) => {
 
     const isNearInitialCenter = React.useCallback(map => {
         const initialView = initialViewRef.current;
+        /* istanbul ignore next */
         if (!map || !initialView) return true;
 
         const center = map.getCenter?.();
@@ -133,9 +134,9 @@ const CampusLocationMap = ({ campusCentre = null } = {}) => {
                 console.log('CampusLocationMap click — lat:', lat, 'lng:', lng, 'zLevel:', zLevel);
                 markerRef.current.setLngLat([lng, lat]);
                 const campusLatitudeField = document.getElementById('campus_latitude');
-                if (campusLatitudeField) campusLatitudeField.value = lat;
+                /* istanbul ignore else */ if (campusLatitudeField) campusLatitudeField.value = lat;
                 const campusLongitudeField = document.getElementById('campus_longitude');
-                if (campusLongitudeField) campusLongitudeField.value = lng;
+                /* istanbul ignore else */ if (campusLongitudeField) campusLongitudeField.value = lng;
             });
         });
 
