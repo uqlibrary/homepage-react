@@ -881,6 +881,290 @@ describe('EditSpaceForm', () => {
         );
     });
 
+    it('matches the archibus site by code and falls back when the matched site has no buildings', () => {
+        const archibusTree = {
+            data: {
+                sites: [{ siteId: 1 }],
+            },
+        };
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        currentCampusList: [{ ...baseCampusList[0], campus_name: 'Zzz Campus' }],
+                        bookableSpacesArchibusTree: archibusTree,
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByRole('combobox', { name: 'Room ID' })).toBeInTheDocument();
+    });
+
+    it('renders when no archibus site matches the selected campus by name or code', () => {
+        const archibusTree = {
+            data: {
+                sites: [{ siteId: 1, siteName: 'St Lucia', site_code: '1' }],
+            },
+        };
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        currentCampusList: [{ ...baseCampusList[0], campus_id: 999, campus_name: 'No Match Campus' }],
+                        bookableSpacesArchibusTree: archibusTree,
+                        formValues: { ...validFormValues, campus_id: 999 },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByRole('combobox', { name: 'Room ID' })).toBeInTheDocument();
+    });
+
+    it('resolves an archibus room path in a different site/building and applies room-name fallbacks', () => {
+        const archibusTree = {
+            data: {
+                sites: [
+                    {
+                        siteId: 1,
+                        siteName: 'St Lucia',
+                        buildings: [{ buildingId: 10, rooms: [{ id: 5, roomCode: 'A-5' }] }, { buildingId: 11 }],
+                    },
+                    { siteId: 3 },
+                    {
+                        siteId: 2,
+                        siteName: 'Other',
+                        site_code: '2',
+                        buildings: [{ buildingId: 20, rooms: [{ id: 777, roomCode: 'B-777' }, { id: 778 }] }],
+                    },
+                ],
+            },
+        };
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        bookableSpacesArchibusTree: archibusTree,
+                        formValues: { ...validFormValues, archibus_room_id: 777 },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByRole('combobox', { name: 'Room ID' })).toHaveValue('B-777');
+    });
+
+    it('clears the selected archibus room when the autocomplete selection is cleared', () => {
+        const setFormValues = jest.fn();
+        const archibusTree = {
+            data: {
+                sites: [
+                    {
+                        siteId: 1,
+                        siteName: 'St Lucia',
+                        buildings: [{ buildingId: 10, rooms: [{ id: 5, roomCode: 'A-5' }] }],
+                    },
+                ],
+            },
+        };
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        setFormValues,
+                        bookableSpacesArchibusTree: archibusTree,
+                        formValues: { ...validFormValues, archibus_room_id: 5 },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        const roomInput = screen.getByRole('combobox', { name: 'Room ID' });
+        fireEvent.click(screen.getByTitle('Clear'));
+
+        expect(setFormValues).toHaveBeenCalledWith(expect.objectContaining({ archibus_room_id: null }));
+    });
+
+    it('saves a non-bookable space with zero capacity and clears the booking url', () => {
+        const saveToDb = jest.fn();
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        saveToDb,
+                        formValues: {
+                            ...validFormValues,
+                            isBookableCheckbox: false,
+                            space_external_book_url: '',
+                            space_capacity: 0,
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('admin-spaces-save-button-submit'));
+
+        expect(saveToDb).toHaveBeenCalledWith(
+            expect.objectContaining({ space_capacity: 0, space_external_book_url: null }),
+        );
+    });
+
+    it('saves without a description when the description checkbox is unchecked', () => {
+        const saveToDb = jest.fn();
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm {...buildProps({ mode: 'edit', saveToDb })} />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('toggle-space-description-checkbox'));
+        fireEvent.click(screen.getByTestId('admin-spaces-save-button-submit'));
+
+        expect(saveToDb).toHaveBeenCalledWith(expect.objectContaining({ space_description: null }));
+    });
+
+    it('saves with a selected archibus room id', () => {
+        const saveToDb = jest.fn();
+        const archibusTree = {
+            data: {
+                sites: [
+                    {
+                        siteId: 1,
+                        siteName: 'St Lucia',
+                        buildings: [{ buildingId: 10, rooms: [{ id: 5, roomCode: 'A-5' }] }],
+                    },
+                ],
+            },
+        };
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        saveToDb,
+                        bookableSpacesArchibusTree: archibusTree,
+                        formValues: { ...validFormValues, archibus_room_id: 5 },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('admin-spaces-save-button-submit'));
+
+        expect(saveToDb).toHaveBeenCalledWith(expect.objectContaining({ archibus_room_id: 5 }));
+    });
+
+    it('shows a message when a facility type group has no children', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        facilityTypeList: {
+                            data: {
+                                facility_type_groups: [
+                                    {
+                                        facility_type_group_id: 1,
+                                        facility_type_group_name: 'Empty group',
+                                        facility_type_children: [],
+                                    },
+                                ],
+                            },
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('tab-facility-types'));
+        expect(screen.getByText('No facility types available')).toBeInTheDocument();
+    });
+
+    it('adds a facility type when the form has no existing facility types', () => {
+        const setFormValues = jest.fn();
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        setFormValues,
+                        formValues: { ...validFormValues, facility_types: undefined },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('tab-facility-types'));
+        fireEvent.click(screen.getByTestId('filtertype-23'));
+
+        expect(setFormValues).toHaveBeenCalledWith(
+            expect.objectContaining({
+                facility_types: [{ facility_type_id: 23, facility_type_name: 'Group study' }],
+            }),
+        );
+    });
+
+    it('falls back to the building name when a library or floor library is missing its name', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'add',
+                        currentCampusList: [
+                            {
+                                ...baseCampusList[0],
+                                libraries: [
+                                    {
+                                        ...baseCampusList[0].libraries[0],
+                                        library_name: undefined,
+                                        building_name: 'Fallback Building',
+                                    },
+                                ],
+                            },
+                        ],
+                        formValues: { ...validFormValues, campus_id: 1, library_id: 2, floor_id: 3 },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getAllByText('Fallback Building').length).toBeGreaterThan(0);
+    });
+
+    it('defaults the note author to the fallback account id when none is provided', async () => {
+        const createBookableSpaceNote = jest.fn(() => Promise.resolve());
+        rtlRender(
+            <AccountContext.Provider value={{ account: {} }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        formValues: { ...validFormValues, space_id: 42, space_uuid: 'note-account-fallback' },
+                        actions: { ...buildProps().actions, createBookableSpaceNote },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('tab-notes'));
+        fireEvent.change(screen.getByTestId('space-note-rich-text'), { target: { value: 'A new note' } });
+        fireEvent.click(screen.getByTestId('admin-spaces-add-note-button'));
+
+        await waitFor(() =>
+            expect(createBookableSpaceNote).toHaveBeenCalledWith(
+                42,
+                expect.objectContaining({ space_note_user: 'uqtest1' }),
+            ),
+        );
+    });
+
     it('covers description toggling, back navigation, highlighted save state, and file cleanup', () => {
         const setFormValues = jest.fn();
         const saveToDb = jest.fn();
@@ -1144,5 +1428,501 @@ describe('EditSpaceForm', () => {
         );
         fireEvent.click(screen.getByTestId('confirmation-cancel'));
         expect(clearABookableSpace).toHaveBeenCalled();
+    });
+
+    it('shows the confirmation dialog when a room update result arrives', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        bookableSpacesRoomUpdateResult: { ok: true },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByTestId('confirmation-box')).toBeInTheDocument();
+    });
+
+    it('sets a field-level error message when an invalid field loses focus', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        formValues: { ...validFormValues, space_name: '' },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.blur(document.getElementById('space_name'));
+        expect(screen.getByText('A Name is required.')).toBeInTheDocument();
+    });
+
+    it('focuses and scrolls to the invalid field after navigating away from its tab', async () => {
+        const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView;
+        window.HTMLElement.prototype.scrollIntoView = jest.fn();
+        const saveToDb = jest.fn();
+        const StatefulForm = () => {
+            const [formState, setFormState] = React.useState({
+                ...validFormValues,
+                space_services_page: 'https://example.com/about',
+            });
+
+            return (
+                <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                    <EditSpaceForm
+                        {...buildProps({
+                            mode: 'add',
+                            saveToDb,
+                            formValues: formState,
+                            setFormValues: setFormState,
+                        })}
+                    />
+                </AccountContext.Provider>
+            );
+        };
+
+        rtlRender(<StatefulForm />);
+
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.change(document.getElementById('space_services_page'), { target: { value: 'bad-url' } });
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('admin-spaces-save-button-submit'));
+
+        await waitFor(() => expect(document.getElementById('space_services_page')).toHaveFocus());
+        expect(window.HTMLElement.prototype.scrollIntoView).toHaveBeenCalled();
+
+        window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
+    });
+
+    it('updates the springshare opening-hours selection and clears the loaded marker', () => {
+        const setFormValues = jest.fn();
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        setFormValues,
+                        springshareList: [
+                            { id: 7, display_name: 'Library hours' },
+                            { id: 9, display_name: 'Other hours' },
+                        ],
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+
+        fireEvent.mouseDown(screen.getByRole('combobox', { name: /Choose the Springshare Library/ }));
+        fireEvent.click(screen.getByRole('option', { name: 'Other hours' }));
+
+        expect(setFormValues).toHaveBeenCalledWith(expect.objectContaining({ space_opening_hours_id: 9 }));
+    });
+
+    it('cascades campus selection through to library and floor state', () => {
+        const setFormValues = jest.fn();
+        const multiCampusList = [
+            {
+                campus_id: 1,
+                campus_name: 'St Lucia',
+                libraries: [
+                    {
+                        library_id: 2,
+                        library_name: 'Central Library',
+                        building_name: 'Central Library',
+                        floors: [{ floor_id: 3, floor_name: 'Level 3' }],
+                    },
+                ],
+            },
+            {
+                campus_id: 5,
+                campus_name: 'Gatton',
+                libraries: [
+                    {
+                        library_id: 6,
+                        library_name: 'Gatton Library',
+                        building_name: 'Gatton Library',
+                        library_springshare_id: 30,
+                        floors: [{ floor_id: 7, floor_name: 'Level 1' }],
+                    },
+                ],
+            },
+        ];
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        setFormValues,
+                        currentCampusList: multiCampusList,
+                        formValues: { ...validFormValues, campus_id: 1, library_id: 2, floor_id: 3 },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Campus *' }));
+        fireEvent.click(screen.getByRole('option', { name: 'Gatton' }));
+
+        expect(setFormValues).toHaveBeenCalledWith(
+            expect.objectContaining({
+                campus_id: 5,
+                library_id: 6,
+                floor_id: 7,
+                space_opening_hours_id: 30,
+            }),
+        );
+    });
+
+    it('updates library and floor state when a different library is chosen directly', () => {
+        const setFormValues = jest.fn();
+        const multiLibraryCampusList = [
+            {
+                campus_id: 1,
+                campus_name: 'St Lucia',
+                libraries: [
+                    {
+                        library_id: 2,
+                        library_name: 'Central Library',
+                        building_name: 'Central Library',
+                        floors: [{ floor_id: 3, floor_name: 'Level 3' }],
+                    },
+                    {
+                        library_id: 8,
+                        library_name: 'West End Library',
+                        building_name: 'West End Library',
+                        floors: [{ floor_id: 9, floor_name: 'Level 1' }],
+                    },
+                ],
+            },
+        ];
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        setFormValues,
+                        currentCampusList: multiLibraryCampusList,
+                        formValues: { ...validFormValues, campus_id: 1, library_id: 2, floor_id: 3 },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Library *' }));
+        fireEvent.click(screen.getByRole('option', { name: 'West End Library' }));
+
+        expect(setFormValues).toHaveBeenCalledWith(expect.objectContaining({ library_id: 8, floor_id: 9 }));
+    });
+
+    it('clears the space-type validation error once a value is chosen directly', () => {
+        const setFormValues = jest.fn();
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        setFormValues,
+                        formValues: { ...validFormValues, space_name: '' },
+                        bookableSpacesRoomList: {
+                            data: {
+                                known_space_types: [
+                                    { space_type_id: 10, space_type_name: 'Study room' },
+                                    { space_type_id: 11, space_type_name: 'Meeting room' },
+                                ],
+                                locations: [],
+                            },
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Choose an existing Space type *' }));
+        fireEvent.click(screen.getByRole('option', { name: 'Meeting room' }));
+
+        expect(setFormValues).toHaveBeenCalledWith(
+            expect.objectContaining({ space_type_id: 11, space_type: 'Meeting room' }),
+        );
+    });
+
+    it('re-edits the record when cancelling the edit-mode confirmation', async () => {
+        const clearABookableSpace = jest.fn();
+        const loadAllBookableSpacesRooms = jest.fn(() => Promise.resolve());
+        const actions = { ...buildProps().actions, clearABookableSpace, loadAllBookableSpacesRooms };
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        actions,
+                        bookableSpacesRoomUpdateResult: { ok: true },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('confirmation-cancel'));
+
+        await waitFor(() => expect(loadAllBookableSpacesRooms).toHaveBeenCalledWith({ includeDrafts: true }));
+        expect(clearABookableSpace).toHaveBeenCalledTimes(2);
+    });
+
+    it('falls back to empty space-type lists while the room list is still loading', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        bookableSpacesRoomListLoading: true,
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByTestId('space-type')).toBeInTheDocument();
+    });
+
+    it('revokes a previously generated preview URL on repeated uploads and when a file already has a preview', () => {
+        const revokeObjectURL = jest.spyOn(URL, 'revokeObjectURL');
+        const setFormValuesMock = jest.fn();
+        const StatefulForm = () => {
+            const [formState, setFormState] = React.useState({
+                ...validFormValues,
+                space_id: 246,
+                space_uuid: 'preview-revoke',
+                space_photo_url: '',
+                uploadedFile: [],
+            });
+            const setFormValues = nextValues => {
+                setFormValuesMock(nextValues);
+                setFormState(previousValues =>
+                    typeof nextValues === 'function' ? nextValues(previousValues) : nextValues,
+                );
+            };
+
+            return (
+                <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                    <EditSpaceForm {...buildProps({ mode: 'edit', setFormValues, formValues: formState })} />
+                </AccountContext.Provider>
+            );
+        };
+
+        rtlRender(<StatefulForm />);
+
+        fireEvent.click(screen.getByTestId('tab-imagery'));
+        fireEvent.click(screen.getByTestId('add-file-without-preview'));
+        fireEvent.click(screen.getByTestId('add-file-without-preview'));
+        fireEvent.change(screen.getByTestId('image-upload-dropzone'), {
+            target: { files: [new File(['x'], 'photo.png', { type: 'image/png' })] },
+        });
+
+        expect(revokeObjectURL).toHaveBeenCalled();
+        revokeObjectURL.mockRestore();
+    });
+
+    it('revokes the generated preview URL when unmounting while a preview is active', () => {
+        const revokeObjectURL = jest.spyOn(URL, 'revokeObjectURL');
+
+        const { unmount } = rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        formValues: {
+                            ...validFormValues,
+                            space_id: 555,
+                            space_uuid: 'unmount-cleanup',
+                            space_photo_url: '',
+                            uploadedFile: [{ name: 'raw-file' }],
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(window.URL.createObjectURL).toHaveBeenCalled();
+        unmount();
+        expect(revokeObjectURL).toHaveBeenCalled();
+        revokeObjectURL.mockRestore();
+    });
+
+    it('does not update the archibus site or building when the selected room cannot be found anywhere', () => {
+        const archibusTree = {
+            data: {
+                sites: [
+                    {
+                        siteId: 1,
+                        siteName: 'St Lucia',
+                        buildings: [{ buildingId: 2, rooms: [{ id: 501, roomName: 'Existing Room' }] }],
+                    },
+                ],
+            },
+        };
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        bookableSpacesArchibusTree: archibusTree,
+                        formValues: { ...validFormValues, archibus_room_id: 999 },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByRole('combobox', { name: 'Room ID' })).toHaveValue('');
+    });
+
+    it('ignores adding a note when the trimmed draft is empty', () => {
+        const createBookableSpaceNote = jest.fn(() => Promise.resolve());
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        actions: { ...buildProps().actions, createBookableSpaceNote },
+                        formValues: { ...validFormValues, space_id: 4321, space_uuid: 'empty-note-guard' },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('tab-notes'));
+        const addNoteButton = screen.getByTestId('admin-spaces-add-note-button');
+        addNoteButton.disabled = false;
+        fireEvent.click(addNoteButton);
+
+        expect(createBookableSpaceNote).not.toHaveBeenCalled();
+    });
+
+    it('falls back to defaults in the preview payload when facility types and outages are missing', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        formValues: { ...validFormValues, facility_types: undefined },
+                        spaceOutageList: undefined,
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('admin-spaces-preview-button'));
+        expect(screen.getByTestId('spaces-preview-dialog')).toBeInTheDocument();
+    });
+
+    it('shows the draft-mode notice on the add-mode stepper', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'add',
+                        formValues: { ...validFormValues, space_draftmode: true },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.getByTestId('space-draftmode-notice')).toBeInTheDocument();
+    });
+
+    it('renders an empty booking-url value when the space is bookable without a saved link', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        formValues: {
+                            ...validFormValues,
+                            isBookableCheckbox: false,
+                            space_external_book_url: '',
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('space-can-book'));
+
+        expect(document.getElementById('space_external_book_url')).toHaveValue('');
+    });
+
+    it('shows the note-submission error message and falls back for notes missing an id or text', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        formValues: { ...validFormValues, space_id: 9911, space_uuid: 'note-fallbacks' },
+                        spaceNoteAddError: 'Could not save the note',
+                        spaceNotesList: [
+                            {
+                                space_note_id: null,
+                                space_note_created_at: '2026-01-01T00:00:00.000Z',
+                                space_note_user: 'uqtest1',
+                                space_note_note: '',
+                            },
+                        ],
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('tab-notes'));
+        expect(screen.getByText('Could not save the note')).toBeInTheDocument();
+        expect(screen.getByTestId('space-note-note-0')).toBeInTheDocument();
+    });
+
+    it('skips the outage lookup while the outage list is still loading', () => {
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        spaceOutageListLoading: true,
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        expect(screen.queryByTestId('space-outage-current-notice')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('space-outage-upcoming-notice')).not.toBeInTheDocument();
+    });
+
+    it('removes a facility type from the selection when its checkbox is unchecked', () => {
+        const setFormValues = jest.fn();
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        mode: 'edit',
+                        setFormValues,
+                        formValues: {
+                            ...validFormValues,
+                            facility_types: [
+                                { facility_type_id: 22, facility_type_name: 'Bookable' },
+                                { facility_type_id: 23, facility_type_name: 'Group study' },
+                            ],
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('tab-facility-types'));
+        fireEvent.click(screen.getByTestId('filtertype-22'));
+
+        expect(setFormValues).toHaveBeenCalledWith(
+            expect.objectContaining({
+                facility_types: [{ facility_type_id: 23, facility_type_name: 'Group study' }],
+            }),
+        );
     });
 });

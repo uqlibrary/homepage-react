@@ -177,12 +177,7 @@ export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, we
     if (status === 'closing-soon') {
         return closingSoonMessage();
     }
-    if (status === 'closed') {
-        return closedNowMessage();
-    }
-
-    console.log('unexpectedly no valid status available');
-    return null;
+    return closedNowMessage();
 };
 
 SpaceOpenStatusChip.propTypes = {

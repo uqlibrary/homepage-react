@@ -1,4 +1,6 @@
+import React from 'react';
 import moment from 'moment';
+import { rtlRender, screen } from 'test-utils';
 
 import {
     buildBulkOutagePayload,
@@ -19,6 +21,7 @@ import {
     formatSpaceOutageDateTimeForPublicNotice,
     formatSpaceOutageRangeForPublicNotice,
     formatSpaceOutageUntilForPublicNotice,
+    SpacesOutageNotice,
 } from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
 
 describe('spaceOutageHelpers', () => {
@@ -77,6 +80,25 @@ describe('spaceOutageHelpers', () => {
         expect(formatSpaceOutageRangeForPublicNotice('2026-04-24 08:00:00', '2026-05-05 14:00:00', false)).toEqual(
             '24 Apr. to 5 May 2026',
         );
+
+        expect(formatSpaceOutageRangeForPublicNotice('not-a-date', '2026-12-25 13:00:00')).toEqual(
+            'Not set to 25/12/2026 1:00pm',
+        );
+
+        expect(formatSpaceOutageRangeForPublicNotice('2026-12-25 08:00:00', '2026-12-25 13:00:00', false)).toEqual(
+            '25 Dec. 2026',
+        );
+
+        expect(formatSpaceOutageRangeForPublicNotice('2026-12-25 08:00:00', '2026-12-26 17:00:00', false)).toEqual(
+            '25 Dec. to 26 Dec. 2026',
+        );
+
+        expect(formatSpaceOutageRangeForPublicNotice('2026-12-25 08:00:00', '2027-01-10 17:00:00')).toEqual(
+            '8:00am 25 Dec. 2026 to 5:00pm 10 Jan. 2027',
+        );
+        expect(formatSpaceOutageRangeForPublicNotice('2026-12-25 08:00:00', '2027-01-10 17:00:00', false)).toEqual(
+            '25 Dec. 2026 to 10 Jan. 2027',
+        );
     });
 
     it('handles invalid or empty display values for outage dates', () => {
@@ -91,6 +113,11 @@ describe('spaceOutageHelpers', () => {
     });
 
     it('formats current outage until wording for public notices', () => {
+        jest.useFakeTimers().setSystemTime(new Date('2026-12-25T09:00:00').getTime());
+
+        expect(formatSpaceOutageUntilForPublicNotice('2026-12-25 13:00:00')).toEqual('1:00pm on 25 Dec. 2026');
+        expect(formatSpaceOutageUntilForPublicNotice('2026-12-26 17:00:00')).toEqual('5:00pm 26 Dec. 2026');
+
         expect(formatSpaceOutageUntilForPublicNotice('2026-12-25 13:00:00', new Date('2026-12-25T09:00:00'))).toEqual(
             '1:00pm on 25 Dec. 2026',
         );
@@ -102,6 +129,9 @@ describe('spaceOutageHelpers', () => {
         expect(
             formatSpaceOutageUntilForPublicNotice('2026-12-26 17:00:00', new Date('2026-12-25T09:00:00'), false),
         ).toEqual('26 Dec. 2026');
+
+        expect(formatSpaceOutageUntilForPublicNotice('not-a-date')).toEqual('Not set');
+        jest.useRealTimers();
     });
 
     it('parses space_outage_show_time_public from mixed values', () => {
@@ -112,6 +142,51 @@ describe('spaceOutageHelpers', () => {
         expect(getSpaceOutageShowTimePublic({ space_outage_show_time_public: 'no' })).toBe(false);
         expect(getSpaceOutageShowTimePublic({ space_outage_show_time_public: 'yes' })).toBe(true);
         expect(getSpaceOutageShowTimePublic({})).toBe(true);
+    });
+
+    it('renders outage notice states and omits hidden reasons when needed', () => {
+        const { container, rerender } = rtlRender(
+            <SpacesOutageNotice bookableSpace={{ space_id: 42 }} visibleOutage={null} />,
+        );
+
+        expect(container).toBeEmptyDOMElement();
+
+        rerender(
+            <SpacesOutageNotice
+                bookableSpace={{ space_id: 42 }}
+                visibleOutage={{
+                    status: 'Current',
+                    tone: 'error',
+                    outage: { space_outage_end: '2026-12-25 13:00:00', space_outage_show_time_public: false },
+                    reason: 'Lift works',
+                }}
+            />,
+        );
+
+        expect(screen.getByTestId('space-42-outage-message')).toHaveTextContent('Currently unavailable');
+        expect(screen.getByTestId('space-42-outage-message')).toHaveTextContent('25 Dec. 2026');
+        expect(screen.getByTestId('space-42-outage-reason')).toHaveTextContent('Reason: Lift works');
+
+        rerender(
+            <SpacesOutageNotice
+                bookableSpace={{ space_id: 99 }}
+                visibleOutage={{
+                    status: 'Upcoming',
+                    tone: 'warning',
+                    outage: {
+                        space_outage_start: '2026-12-25 08:00:00',
+                        space_outage_end: '2026-12-25 13:00:00',
+                        space_outage_show_time_public: true,
+                    },
+                    reason: 'Planned maintenance',
+                }}
+                hideReason
+            />,
+        );
+
+        expect(screen.getByTestId('space-99-outage-message')).toHaveTextContent('Unavailable');
+        expect(screen.getByTestId('space-99-outage-message')).toHaveTextContent('8:00am to 1:00pm on 25 Dec. 2026');
+        expect(screen.queryByTestId('space-99-outage-reason')).not.toBeInTheDocument();
     });
 
     it('sorts outages by start time', () => {
