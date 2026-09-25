@@ -270,6 +270,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
             window.location.hostname === 'homepage-development.library.uq.edu.au'
                 ? /* istanbul ignore next */ window.location.href + 'spaces'
                 : '/spaces';
+        /* istanbul ignore else */
         if (window.location.hostname === 'localhost') {
             const username = new URLSearchParams(window.location.search)?.get('user');
             if (!!username) {

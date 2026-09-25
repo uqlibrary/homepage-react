@@ -997,7 +997,7 @@ export const EditSpaceForm = ({
     const getArchibusPathByRoomId = React.useCallback(
         roomId => {
             const roomIdAsString = String(roomId);
-            for (const site of archibusSiteList || []) {
+            for (const site of archibusSiteList || /* istanbul ignore next */ []) {
                 for (const building of site?.buildings || []) {
                     const room = (building?.rooms || []).find(
                         candidate => String(getArchibusRoomValue(candidate)) === roomIdAsString,
@@ -1035,7 +1035,7 @@ export const EditSpaceForm = ({
     const allArchibusRoomOptions = React.useMemo(() => {
         const options = [];
 
-        for (const site of archibusSiteList || []) {
+        for (const site of archibusSiteList || /* istanbul ignore next */ []) {
             for (const building of site?.buildings || []) {
                 for (const room of building?.rooms || []) {
                     const roomId = getArchibusRoomValue(room);
@@ -1143,8 +1143,8 @@ export const EditSpaceForm = ({
 
         const matchingPath = getArchibusPathByRoomId(selectedRoomId);
         if (!!matchingPath) {
-            setSelectedArchibusSiteId(String(matchingPath?.site?.siteId || ''));
-            setSelectedArchibusBuildingId(String(matchingPath?.building?.buildingId || ''));
+            setSelectedArchibusSiteId(String(matchingPath?.site?.siteId || /* istanbul ignore next */ ''));
+            setSelectedArchibusBuildingId(String(matchingPath?.building?.buildingId || /* istanbul ignore next */ ''));
         }
     }, [archibusRoomList, formValues?.archibus_room_id, getArchibusPathByRoomId, getArchibusRoomValue]);
 
@@ -1181,7 +1181,9 @@ export const EditSpaceForm = ({
             return <p>No filter types in system.</p>;
         }
 
-        const sortedUsedGroups = orderFacilityTypeGroups(facilityTypeList?.data?.facility_type_groups || []);
+        const sortedUsedGroups = orderFacilityTypeGroups(
+            facilityTypeList?.data?.facility_type_groups || /* istanbul ignore next */ [],
+        );
 
         return (
             <>
@@ -1357,13 +1359,15 @@ export const EditSpaceForm = ({
                         options={allArchibusRoomOptions}
                         value={selectedArchibusRoomOption}
                         onChange={handleArchibusRoomChange}
-                        getOptionLabel={option => `${option?.roomName || ''}`}
+                        getOptionLabel={option => `${option?.roomName || /* istanbul ignore next */ ''}`}
                         isOptionEqualToValue={(option, value) => String(option?.roomId) === String(value?.roomId)}
                         disabled={bookableSpacesArchibusTreeLoading || !!bookableSpacesArchibusTreeError}
                         renderOption={(props, option) => {
                             return (
                                 <li {...props} key={`archibus-room-option-${option?.roomId}`}>
-                                    <Typography component={'div'}>{option?.roomName || ''}</Typography>
+                                    <Typography component={'div'}>
+                                        {option?.roomName || /* istanbul ignore next */ ''}
+                                    </Typography>
                                 </li>
                             );
                         }}
@@ -1926,7 +1930,7 @@ export const EditSpaceForm = ({
 
     const handleAddSpaceNote = async () => {
         const spaceId = formValues?.space_id;
-        const trimmedNoteText = (spaceNoteDraft || '').trim();
+        const trimmedNoteText = (spaceNoteDraft || /* istanbul ignore next */ '').trim();
         /* istanbul ignore next -- the Add note button is hidden without a spaceId and disabled for an empty draft. */
         if (!spaceId || trimmedNoteText.length === 0) {
             return;

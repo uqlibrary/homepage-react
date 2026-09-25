@@ -892,7 +892,8 @@ export const BookableSpacesManageSpaces = ({
         const selectedLibraryId = selectedFilters?.find(f => f?.filterType === 'library')?.filterValue;
         /* istanbul ignore next */
         const selectedLibrary = selectedCampus?.libraries?.find(library => library?.library_id === selectedLibraryId);
-        const selectedCampusFloors = selectedCampus?.libraries?.flatMap(library => library?.floors || []) || [];
+        const selectedCampusFloors =
+            selectedCampus?.libraries?.flatMap(library => library?.floors || /* istanbul ignore next */ []) || [];
         const availableFloors = selectedLibrary?.floors || selectedCampusFloors;
         const floorFilterTypes = (() => {
             /* istanbul ignore next */

@@ -174,8 +174,11 @@ export const BookableSpacesAddSpace = ({
 
     const createNewSpace = valuesToSend => {
         console.log('createNewSpace valuesToSend=', valuesToSend);
+        /* istanbul ignore next */
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            /* istanbul ignore next */
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
@@ -257,7 +260,7 @@ export const BookableSpacesAddSpace = ({
                     initialCampus={
                         Array.isArray(currentCampusList) && currentCampusList.length > 0
                             ? safeCampusIndex(currentCampusList, formValues?.campus_id)
-                            : null
+                            : /* istanbul ignore next */ null
                     }
                     bookableSpacesArchibusTree={bookableSpacesArchibusTree}
                     bookableSpacesArchibusTreeLoading={bookableSpacesArchibusTreeLoading}

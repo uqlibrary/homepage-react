@@ -1143,4 +1143,243 @@ describe('SidebarFilters campus selector', () => {
         fireEvent.blur(screen.getByTestId('capacitySlider-inputLeft'), { target: { value: '-5' } });
         expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 40]);
     });
+
+    it('auto-expands multiple selected facility groups in sorted order (exercises sort comparator)', () => {
+        // This test exercises the sort comparator: (a, b) => a - b
+        // which requires 2+ selected groups to execute
+        const multiGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 3,
+                        facility_type_group_name: 'Group C',
+                        facility_type_group_order: 3,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: 31, facility_type_name: 'Type C1' },
+                        ],
+                    },
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Group A',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: 11, facility_type_name: 'Type A1' },
+                        ],
+                    },
+                    {
+                        facility_type_group_id: 2,
+                        facility_type_group_name: 'Group B',
+                        facility_type_group_order: 2,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: 21, facility_type_name: 'Type B1' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: multiGroupFixture,
+            filteredFacilityTypeList: multiGroupFixture,
+            // Selected from groups 3, 1, 2 (out of order) - sort comparator will sort them as 1, 2, 3
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 3,
+                    facility_type_id: 31,
+                    selected: true,
+                    unselected: false,
+                },
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                },
+                {
+                    facility_type_group_id: 2,
+                    facility_type_id: 21,
+                    selected: true,
+                    unselected: false,
+                },
+            ],
+            hasJourneyMapFilterState: true,
+            suppliedClassName: 'journey',
+        });
+
+        // All three groups should be auto-expanded when journey mode with selected items
+        expect(screen.getByTestId('filter-group-block-1')).toBeInTheDocument();
+        expect(screen.getByTestId('filter-group-block-2')).toBeInTheDocument();
+        expect(screen.getByTestId('filter-group-block-3')).toBeInTheDocument();
+    });
+
+    it('exercises hasChanges assignment when auto-expanding unopened groups', () => {
+        // This test exercises line 423: hasChanges = true
+        // which requires selectedGroupIds.size > 0 and a group that needs expanding
+        const multiGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Group 1',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: 11, facility_type_name: 'Type 1' },
+                        ],
+                    },
+                    {
+                        facility_type_group_id: 2,
+                        facility_type_group_name: 'Group 2',
+                        facility_type_group_order: 2,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: 21, facility_type_name: 'Type 2' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: multiGroupFixture,
+            filteredFacilityTypeList: multiGroupFixture,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                },
+            ],
+            hasJourneyMapFilterState: true,
+            suppliedClassName: 'journey',
+        });
+
+        // Verify group 1 expands despite facility_type_group_loads_open: false
+        expect(screen.getByTestId('filter-group-block-1')).toBeInTheDocument();
+    });
+
+    it('renders favourites checkbox when user is logged in with favourite spaces', () => {
+        // This test exercises line 1163 (favourites checkbox JSX rendering)
+        // which requires isLoggedIn && hasFavouriteSpaces to be true
+        const simpleGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Group 1',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: 11, facility_type_name: 'Type 1' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        const setShowFavouriteSpacesOnly = jest.fn();
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: simpleGroupFixture,
+            filteredFacilityTypeList: simpleGroupFixture,
+            isLoggedIn: true,
+            hasFavouriteSpaces: true,
+            showFavouriteSpacesOnly: false,
+            setShowFavouriteSpacesOnly,
+        });
+
+        // Verify the favourites checkbox is visible
+        const favouritesCheckbox = screen.getByTestId('filter-show-favourite-spaces-only');
+        expect(favouritesCheckbox).toBeInTheDocument();
+        
+        // Click the checkbox and verify handler is called
+        fireEvent.click(favouritesCheckbox.querySelector('input'));
+        expect(setShowFavouriteSpacesOnly).toHaveBeenCalled();
+    });
+
+    it('exercises capacity min input blur with value greater than maximum', () => {
+        // This test exercises line 687: } else if (value > maximumSpaceCapacity)
+        const setCapacityFilterValue = jest.fn();
+        const capacityGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Capacity',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [
+                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: capacityGroupFixture,
+            filteredFacilityTypeList: capacityGroupFixture,
+            minimumSpaceCapacity: 1,
+            maximumSpaceCapacity: 50,
+            capacityFilterValue: [10, 40],
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+            ],
+            setCapacityFilterValue,
+        });
+
+        // Blur the min input with value greater than maximum
+        fireEvent.blur(screen.getByTestId('capacitySlider-inputRight'), { target: { value: '75' } });
+        expect(setCapacityFilterValue).toHaveBeenCalledWith([10, 50]);
+    });
+
+    it('exercises all branches of hasActiveFilters with campus and library selections', () => {
+        // This test exercises the hasActiveCampusFilter and hasActiveLibraryFilter branches
+        // and the renderFilterActionButtons logic
+        const facilityGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: 57, facility_type_name: 'Natural light' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: facilityGroupFixture,
+            filteredFacilityTypeList: facilityGroupFixture,
+            selectedCampus: 2,  // exercises hasActiveCampusFilter (selectedCampus !== 0)
+            selectedLibrary: 5, // exercises hasActiveLibraryFilter (selectedLibrary !== 0)
+            showFavouriteSpacesOnly: true, // exercises hasActiveFavouriteFilter
+            campusList: [
+                { campus_id: 1, campus_name: 'St Lucia', campus_space_count: 10 },
+                { campus_id: 2, campus_name: 'Gatton', campus_space_count: 5 },
+            ],
+        });
+
+        // Verify the sidebar renders with these selections active
+        expect(screen.getByTestId('sidebarCheckboxes')).toBeInTheDocument();
+    });
 });

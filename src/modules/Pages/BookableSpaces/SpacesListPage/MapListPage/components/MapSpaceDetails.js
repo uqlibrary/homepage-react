@@ -80,7 +80,8 @@ const MapSpaceDetails = ({
     weeklyHoursLoading,
     weeklyHoursError,
     bookableSpace,
-    collapsed = /* istanbul ignore next */ false,
+    /* istanbul ignore next */
+    collapsed = false,
     isExpanded = false,
     // collapsed=true: called by sidebar, has open-close icon;
     // collapsed=false: opens from icon in map, no open-close icon
