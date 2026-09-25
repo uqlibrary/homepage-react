@@ -64,7 +64,7 @@ export const OpeningHoursDown = ({
                                     gridTemplateColumns: '7.5rem 1fr',
                                     gap: '0.5rem',
                                     py: 0.75,
-                                    borderBottom: i < weeklyHours.length - 1 ? '1px solid #f0ecf7' : 'none',
+                                    borderBottom: i < displayList.length - 1 ? '1px solid #f0ecf7' : 'none',
                                     backgroundColor: isToday
                                         ? theme.palette.designSystem.purple.purple50
                                         : 'transparent',
