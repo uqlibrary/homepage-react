@@ -37,6 +37,11 @@ export const DLOTeamEdit = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorTeamId]);
 
+    const formDefaultsWithUsername = {
+        ...dlorTeam?.data,
+        team_admin_username: dlorTeam?.data?.team_admin_username || dlorTeam?.data?.team_members?.[0]?.team_admin_username || '',
+    };
+
     return (
         <StandardPage title="Digital Learning Hub - Edit Team">
             <DlorAdminBreadcrumbs
@@ -53,7 +58,7 @@ export const DLOTeamEdit = ({
             />
             <DlOTeamForm
                 actions={actions}
-                formDefaults={dlorTeam?.data}
+                formDefaults={formDefaultsWithUsername}
                 dlorTeamLoading={dlorTeamLoading}
                 dlorTeamError={dlorTeamError}
                 dlorTeamSaving={dlorItemUpdating}
