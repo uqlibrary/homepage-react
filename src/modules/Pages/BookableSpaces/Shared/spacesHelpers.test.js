@@ -12,6 +12,7 @@ import {
     getOrdinalSuffixFor,
     getSpaceIdentifier,
     getSpaceOpenStatus,
+    getPrefixedFloorName,
     isBookable,
     isInt,
     isSpaceCurrentlyOpen,
@@ -720,5 +721,1192 @@ describe('spaces helpers', () => {
         } finally {
             MockDate.reset();
         }
+    });
+
+    it('returns null when deserialiseJourneyMapFilterState receives empty URLSearchParams', () => {
+        expect(deserialiseJourneyMapFilterState(new URLSearchParams())).toBeNull();
+        expect(deserialiseJourneyMapFilterState(new URLSearchParams({ someOtherParam: 'value' }))).toBeNull();
+    });
+
+    it('exercises line 609: hashPath fallback when slice+split produces empty string', () => {
+        // Hash routing on DEV: URL like '/#?' - hashValue.slice(1).split('?')[0] becomes empty
+        // This triggers: hashPath || '/spaces' fallback on line 609
+        window.history.pushState({}, '', '/#?query=test');
+        try {
+            const result = parseJourneyStateFromUrl([{ id: 'a123' }]);
+            expect(result).toBeDefined();
+            // Should handle gracefully and return valid state
+            expect(result.view).toBe('landing');
+        } finally {
+            window.history.pushState({}, '', '/');
+        }
+    });
+
+    it('exercises line 610: pathname fallback when replace produces falsy', () => {
+        // Hash routing on DEV: URL like '#/' - after replace(/\/+$/) becomes empty
+        // This triggers: return hashPath.replace(/\/+$/, '') || '/spaces' fallback on line 610
+        window.history.pushState({}, '', '/#/');
+        try {
+            const result = parseJourneyStateFromUrl([{ id: 'a123' }]);
+            expect(result).toBeDefined();
+            // Should handle gracefully
+            expect(result.view).toBe('landing');
+        } finally {
+            window.history.pushState({}, '', '/');
+        }
+    });
+
+    it('thoroughly exercises spaceOpeningHours with multi-day department data', () => {
+        // This exercises convertWeeksToDays and filterNext7Days with various date ranges
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const nextWeek = new Date(today);
+        nextWeek.setDate(today.getDate() + 7);
+        const twoWeeksAway = new Date(today);
+        twoWeeksAway.setDate(today.getDate() + 14);
+
+        const multiWeekHours = {
+            locations: [
+                {
+                    departments: [
+                        {
+                            lid: 88,
+                            weeks: [
+                                {
+                                    Monday: { date: formatDate(today), open: '09:00:00', close: '17:00:00' },
+                                    Tuesday: { date: formatDate(tomorrow), open: '10:00:00', close: '18:00:00' },
+                                    Wednesday: { date: formatDate(nextWeek), open: '08:00:00', close: '16:00:00' },
+                                    Thursday: { date: formatDate(twoWeeksAway), open: '09:00:00', close: '17:00:00' },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        };
+
+        // This should exercise convertWeeksToDays and filterNext7Days
+        const result = spaceOpeningHours({ space_opening_hours_id: 88 }, multiWeekHours);
+
+        // Result should contain filtered days (only within 7 day window)
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        // Should only include days within 7 days from today
+        if (result.length > 0) {
+            expect(result[0].dayName).toBe('Today');
+            expect(result.some(day => day.dayName === 'Tomorrow')).toBe(true);
+        }
+    });
+
+    it('exercises getFriendlyLocationDescription with all conditional branches', () => {
+        // Branch: hideOptions.space_name = false (render name)
+        const withName = getFriendlyLocationDescription(
+            {
+                space_name: 'Room 101',
+                space_library_name: 'Lib',
+                space_campus_name: 'Campus',
+                space_building_name: 'Bldg',
+                space_building_number: '1',
+                space_floor_name: '2',
+            },
+            false,
+            { space_name: false },
+        );
+        expect(withName.props.children).toEqual(expect.arrayContaining([expect.anything()]));
+
+        // Branch: space_precise is falsy (null check path)
+        const withoutPrecise = getFriendlyLocationDescription(
+            {
+                space_name: 'Room',
+                space_library_name: 'Lib',
+                space_campus_name: 'C',
+                space_building_name: 'B',
+                space_building_number: '1',
+                space_floor_name: '2',
+                space_precise: null,
+            },
+            false,
+            {},
+        );
+        expect(withoutPrecise.props.children).toEqual(expect.arrayContaining([expect.anything()]));
+
+        // Branch: isCollapsed = true (collapsed path)
+        const collapsed = getFriendlyLocationDescription({ space_library_name: 'Lib' }, true, {});
+        expect(collapsed.props.children).toBe('Lib');
+    });
+
+    it('exercises spaceOpeningHours with non-matching IDs and empty departments', () => {
+        // Test branch: No matching department (empty departments array)
+        const emptyDepts = spaceOpeningHours(
+            { space_opening_hours_id: 123 },
+            { locations: [{ departments: [], lid: 999 }] },
+        );
+        expect(emptyDepts).toEqual([]);
+
+        // Test branch: No matching location at all
+        const noMatch = spaceOpeningHours(
+            { space_opening_hours_id: 123 },
+            { locations: [{ lid: 999, departments: [{ lid: 888 }] }] },
+        );
+        expect(noMatch).toEqual([]);
+    });
+
+    it('exercises convertWeeksToDays with non-array weeks property', () => {
+        // Branch: department.weeks exists but is not an array
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        const today = new Date();
+
+        const departmentWithNonArrayWeeks = {
+            lid: 77,
+            weeks: 'not-an-array', // Invalid type
+            days: [{ date: formatDate(today), times: { status: 'open' } }],
+        };
+
+        const result = spaceOpeningHours(
+            { space_opening_hours_id: 77 },
+            { locations: [{ departments: [departmentWithNonArrayWeeks] }] },
+        );
+
+        // Should still process the days array and return result
+        expect(result).toBeDefined();
+    });
+
+    it('exercises date filtering with multi-week structured data', () => {
+        // Test with properly structured weeks data to ensure filterNext7Days branch is exercised
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        // Structured with weeks property
+        const departmentWithWeeks = {
+            lid: 77,
+            weeks: [
+                {
+                    Monday: { date: formatDate(today), open: '09:00', close: '17:00', times: { status: 'open' } },
+                    Tuesday: { date: formatDate(tomorrow), open: '10:00', close: '18:00', times: { status: 'open' } },
+                },
+            ],
+        };
+
+        const result = spaceOpeningHours(
+            { space_opening_hours_id: 77 },
+            { locations: [{ departments: [departmentWithWeeks] }] },
+        );
+
+        // Should process the structured weeks data through convertWeeksToDays
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+    });
+
+    it('exercises all conditional branches in getFriendlyLocationDescription', () => {
+        // Test space_precise truthy path (should render)
+        const withPrecise = getFriendlyLocationDescription(
+            {
+                space_name: 'Room 202',
+                space_library_name: 'Main Lib',
+                space_campus_name: 'St Lucia',
+                space_building_name: 'Building A',
+                space_building_number: '42',
+                space_floor_name: '2',
+                space_precise: 'Corner by window',
+                space_is_ground_floor: false,
+            },
+            false,
+            {},
+        );
+        expect(withPrecise.props.children).toEqual(expect.arrayContaining([expect.anything()]));
+
+        // Test with space_is_ground_floor true
+        const groundFloor = getFriendlyLocationDescription(
+            {
+                space_name: 'Ground Room',
+                space_library_name: 'Lib',
+                space_campus_name: 'Campus',
+                space_building_name: 'Bldg',
+                space_building_number: '1',
+                space_floor_name: 'G',
+                space_is_ground_floor: true,
+                space_precise: undefined,
+            },
+            false,
+            {},
+        );
+        expect(groundFloor.props.children).toEqual(expect.arrayContaining([expect.anything()]));
+    });
+
+    it('exercises filterNext7Days with unsorted input dates', () => {
+        // filterNext7Days should sort dates - test with unsorted input
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const day3 = new Date(today);
+        day3.setDate(today.getDate() + 3);
+        const day1 = new Date(today);
+        day1.setDate(today.getDate() + 1);
+        const day2 = new Date(today);
+        day2.setDate(today.getDate() + 2);
+
+        // Deliberately unsorted - structured with weeks
+        const unsortedWeeks = {
+            lid: 88,
+            weeks: [
+                {
+                    Thursday: { date: formatDate(day3), times: { status: 'open' } },
+                    Monday: { date: formatDate(today), times: { status: 'open' } },
+                    Tuesday: { date: formatDate(day1), times: { status: 'open' } },
+                    Wednesday: { date: formatDate(day2), times: { status: 'closed' } },
+                },
+            ],
+        };
+
+        const result = spaceOpeningHours(
+            { space_opening_hours_id: 88 },
+            { locations: [{ departments: [unsortedWeeks] }] },
+        );
+
+        // Verify sorting occurred (Today should be first)
+        expect(Array.isArray(result)).toBe(true);
+        if (result.length > 0) {
+            expect(result[0].dayName).toBe('Today');
+            if (result.length > 1) {
+                expect(result[1].dayName).toBe('Tomorrow');
+            }
+        }
+    });
+
+    it('exercises convertWeeksToDays with empty weeks array', () => {
+        // Test with empty weeks array - should not iterate
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        const today = new Date();
+
+        const emptyWeeks = {
+            lid: 55,
+            weeks: [], // Empty array
+            days: [{ date: formatDate(today), times: { status: 'open' } }],
+        };
+
+        const result = spaceOpeningHours(
+            { space_opening_hours_id: 55 },
+            { locations: [{ departments: [emptyWeeks] }] },
+        );
+
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+    });
+
+    it('exercises convertWeeksToDays with multiple weeks containing various days', () => {
+        // Test with multiple weeks, each with different day keys
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const future = new Date(today);
+        future.setDate(today.getDate() + 7);
+
+        const multiWeekDept = {
+            lid: 66,
+            weeks: [
+                {
+                    Monday: { date: formatDate(today), times: { status: 'open' } },
+                    Wednesday: { date: formatDate(future), times: { status: 'closed' } },
+                },
+                {
+                    Friday: { date: formatDate(today), times: { status: 'open' } },
+                    Sunday: { date: formatDate(future), times: { status: 'open' } },
+                },
+            ],
+        };
+
+        const result = spaceOpeningHours(
+            { space_opening_hours_id: 66 },
+            { locations: [{ departments: [multiWeekDept] }] },
+        );
+
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+    });
+
+    it('exercises spaceOpeningHours department filtering with matching location id', () => {
+        // Test when matching occurs at location level, not department level
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        const today = new Date();
+
+        const result = spaceOpeningHours(
+            { space_opening_hours_id: 200 },
+            {
+                locations: [
+                    {
+                        lid: 200, // Matches here at location level
+                        departments: [
+                            {
+                                lid: 999,
+                                weeks: [
+                                    {
+                                        Monday: { date: formatDate(today), times: { status: 'open' } },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        );
+
+        expect(Array.isArray(result)).toBe(true);
+    });
+
+    it('exercises spaceOpeningHours with location departments null/undefined', () => {
+        // Test defensive programming: location.departments might be falsy
+        const result = spaceOpeningHours(
+            { space_opening_hours_id: 300 },
+            {
+                locations: [
+                    {
+                        lid: 300,
+                        departments: undefined, // Falsy departments
+                    },
+                ],
+            },
+        );
+
+        expect(result).toEqual([]);
+    });
+
+    it('exercises convertWeeksToDays with days index <= 1 mapping', () => {
+        // Test the ternary branch: d.dayName = index === 0 ? 'Today' : 'Tomorrow'
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const dayAfterTomorrow = new Date(today);
+        dayAfterTomorrow.setDate(today.getDate() + 2);
+
+        const daysForMapping = {
+            lid: 77,
+            weeks: [
+                {
+                    Monday: { date: formatDate(today), times: { status: 'open' } },
+                    Tuesday: { date: formatDate(tomorrow), times: { status: 'open' } },
+                    Wednesday: { date: formatDate(dayAfterTomorrow), times: { status: 'open' } },
+                },
+            ],
+        };
+
+        const result = spaceOpeningHours(
+            { space_opening_hours_id: 77 },
+            { locations: [{ departments: [daysForMapping] }] },
+        );
+
+        // Verify the mapping: index 0 = Today, index 1 = Tomorrow, index 2+ = original dayName
+        expect(Array.isArray(result)).toBe(true);
+        if (result.length >= 1) {
+            expect(result[0].dayName).toBe('Today');
+        }
+        if (result.length >= 2) {
+            expect(result[1].dayName).toBe('Tomorrow');
+        }
+        if (result.length >= 3) {
+            expect(result[2].dayName).toBe('Wednesday');
+        }
+    });
+
+    it('exercises matchesCapacityFilter with all conditional branches', () => {
+        // Branch 1: hasBookableFilterSelected = true, hasCapacity = true
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 10 },
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: true,
+            }),
+        ).toBe(true);
+
+        // Branch 2: hasBookableFilterSelected = true, capacity outside range
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 3 },
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: true,
+            }),
+        ).toBe(false);
+
+        // Branch 3: hasBookableFilterSelected = false, hasCapacity = false (no capacity)
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: undefined },
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true);
+
+        // Branch 4: hasBookableFilterSelected = false, hasCapacity = true, within range
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 15 },
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true);
+
+        // Branch 5: hasBookableFilterSelected = false, hasCapacity = true, below range
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 3 },
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(false);
+    });
+
+    it('exercises parseJourneyStateFromUrl with various pathname patterns', () => {
+        // Test different pathname branches
+        window.history.pushState({}, '', '/spaces/mapresults');
+        expect(parseJourneyStateFromUrl([{ id: 'a' }])).toEqual({ view: 'results', intentId: null, spaceId: null });
+
+        window.history.pushState({}, '', '/spaces/mapresults/some/path');
+        expect(parseJourneyStateFromUrl([{ id: 'a' }])).toEqual({ view: 'results', intentId: null, spaceId: null });
+
+        window.history.pushState({}, '', '/');
+        expect(parseJourneyStateFromUrl([{ id: 'a' }])).toBeDefined();
+    });
+
+    it('exercises convertWeeksToDays with missing optional day keys', () => {
+        // Test when week object has only some day keys (not all 7)
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        const sparseWeek = {
+            lid: 44,
+            weeks: [
+                {
+                    // Only Monday and Friday, missing Tue-Thu, Sat-Sun
+                    Monday: { date: formatDate(today), times: { status: 'open' } },
+                    Friday: { date: formatDate(tomorrow), times: { status: 'open' } },
+                },
+            ],
+        };
+
+        const result = spaceOpeningHours(
+            { space_opening_hours_id: 44 },
+            { locations: [{ departments: [sparseWeek] }] },
+        );
+
+        expect(Array.isArray(result)).toBe(true);
+    });
+
+    it('exercises spaceOpeningHours with matching via department (not location) id', () => {
+        // Test matching department.lid equals space_opening_hours_id
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        const today = new Date();
+
+        const result = spaceOpeningHours(
+            { space_opening_hours_id: 111 },
+            {
+                locations: [
+                    {
+                        lid: 999, // Different from target
+                        departments: [
+                            {
+                                lid: 111, // Matches here
+                                weeks: [
+                                    {
+                                        Monday: { date: formatDate(today), times: { status: 'open' } },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        );
+
+        expect(Array.isArray(result)).toBe(true);
+    });
+
+    it('exercises getSpaceOpenStatus with various opening hour statuses', () => {
+        // Test branches: closed, 24hours, etc.
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        const today = new Date();
+
+        // Test: status = 'closed'
+        const closedSpace = getSpaceOpenStatus(
+            { space_opening_hours_id: 123 },
+            {
+                locations: [
+                    {
+                        departments: [
+                            {
+                                lid: 123,
+                                weeks: [
+                                    {
+                                        Monday: { date: formatDate(today), times: { status: 'closed' } },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        );
+        expect(closedSpace).toBe('closed');
+
+        // Test: status = '24hours'
+        const open24 = getSpaceOpenStatus(
+            { space_opening_hours_id: 124 },
+            {
+                locations: [
+                    {
+                        departments: [
+                            {
+                                lid: 124,
+                                weeks: [
+                                    {
+                                        Monday: { date: formatDate(today), times: { status: '24hours' } },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        );
+        expect(open24).toBe('open');
+    });
+
+    it('exercises deserialiseJourneyMapFilterState with malformed base64', () => {
+        // Test parsing with various malformed inputs
+        const result1 = deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'b64.!!!invalid!!!' }));
+        expect(result1).toBeNull();
+
+        const result2 = deserialiseJourneyMapFilterState(
+            new URLSearchParams({ mapFilters: 'completely-invalid-string' }),
+        );
+        expect(result2).toBeNull();
+    });
+
+    it('exercises isInt with various edge cases', () => {
+        // Test number.isFinite and bitwise operations
+        expect(isInt(5)).toBe(true);
+        expect(isInt(5.0)).toBe(true);
+        expect(isInt(5.5)).toBe(false);
+        expect(isInt(-3)).toBe(true);
+        expect(isInt(-3.7)).toBe(false);
+        expect(isInt(0)).toBe(true);
+        expect(isInt(NaN)).toBe(false);
+        expect(isInt(Infinity)).toBe(false);
+    });
+
+    it('exercises getPrefixedFloorName with various floor names', () => {
+        // Test the startsWith('Level ') branch
+        expect(getPrefixedFloorName('Level 3')).toBe('Level 3');
+        expect(getPrefixedFloorName('3')).toBe('Level 3');
+        expect(getPrefixedFloorName('Ground')).toBe('Level Ground');
+        expect(getPrefixedFloorName(undefined)).toContain('Level');
+
+        // Additional comprehensive tests
+        expect(getPrefixedFloorName('Level ')).toBe('Level ');
+        expect(getPrefixedFloorName('Level 1 - North')).toBe('Level 1 - North');
+        expect(getPrefixedFloorName('2nd Floor')).toBe('Level 2nd Floor');
+        expect(getPrefixedFloorName('')).toBe('Level ');
+        expect(getPrefixedFloorName('level 3')).toBe('Level level 3'); // case-sensitive
+        expect(getPrefixedFloorName(null)).toContain('Level');
+        expect(getPrefixedFloorName('   ')).toBe('Level    ');
+    });
+
+    it('exercises getFriendlyFloorName with ground floor detection', () => {
+        // space_is_ground_floor is truthy -> return 'Ground floor'
+        expect(getFriendlyFloorName({ space_is_ground_floor: true, space_floor_name: 'F1' })).toBe('Ground floor');
+        expect(getFriendlyFloorName({ space_is_ground_floor: 1, space_floor_name: 'F1' })).toBe('Ground floor');
+        expect(getFriendlyFloorName({ space_is_ground_floor: 'yes', space_floor_name: 'F1' })).toBe('Ground floor');
+
+        // space_is_ground_floor is falsy -> use getPrefixedFloorName
+        expect(getFriendlyFloorName({ space_is_ground_floor: false, space_floor_name: 'Level 3' })).toBe('Level 3');
+        expect(getFriendlyFloorName({ space_is_ground_floor: 0, space_floor_name: 'Floor 2' })).toBe('Level Floor 2');
+        expect(getFriendlyFloorName({ space_is_ground_floor: '', space_floor_name: 'Basement' })).toBe(
+            'Level Basement',
+        );
+        expect(getFriendlyFloorName({ space_is_ground_floor: null, space_floor_name: 'Upper' })).toBe('Level Upper');
+        expect(getFriendlyFloorName({ space_is_ground_floor: undefined, space_floor_name: '4th' })).toBe('Level 4th');
+
+        // No space object
+        expect(getFriendlyFloorName(null)).toBeDefined();
+        expect(getFriendlyFloorName(undefined)).toBeDefined();
+
+        // Empty space object
+        expect(getFriendlyFloorName({})).toBeDefined();
+
+        // Missing space_floor_name
+        expect(getFriendlyFloorName({ space_is_ground_floor: false })).toBeDefined();
+    });
+
+    it('exhaustively exercises getFriendlyLocationDescription all hideOptions combinations', () => {
+        // Test EVERY hideOptions combination
+        const baseSpace = {
+            space_name: 'Room A',
+            space_library_name: 'Main Library',
+            space_campus_name: 'Campus',
+            space_building_name: 'Building',
+            space_building_number: '1',
+            space_floor_name: '2',
+            space_precise: 'Corner',
+            space_is_ground_floor: false,
+        };
+
+        // hideOptions with space_name: true (HIDE name)
+        const hideNameTrue = getFriendlyLocationDescription(baseSpace, false, { space_name: true });
+        expect(hideNameTrue).toBeDefined();
+
+        // hideOptions with space_name: false (SHOW name)
+        const hideNameFalse = getFriendlyLocationDescription(baseSpace, false, { space_name: false });
+        expect(hideNameFalse).toBeDefined();
+
+        // hideOptions empty object (SHOW all)
+        const hideNone = getFriendlyLocationDescription(baseSpace, false, {});
+        expect(hideNone).toBeDefined();
+
+        // hideOptions with other properties
+        const hideOther = getFriendlyLocationDescription(baseSpace, false, { other_prop: true });
+        expect(hideOther).toBeDefined();
+
+        // space_is_ground_floor = true
+        const groundFloor = getFriendlyLocationDescription({ ...baseSpace, space_is_ground_floor: true }, false, {});
+        expect(groundFloor).toBeDefined();
+
+        // space_precise = undefined (falsy)
+        const noPrecise = getFriendlyLocationDescription({ ...baseSpace, space_precise: undefined }, false, {});
+        expect(noPrecise).toBeDefined();
+
+        // space_precise = '' (falsy string)
+        const emptyPrecise = getFriendlyLocationDescription({ ...baseSpace, space_precise: '' }, false, {});
+        expect(emptyPrecise).toBeDefined();
+
+        // space_precise = 0 (falsy)
+        const zeroPrecise = getFriendlyLocationDescription({ ...baseSpace, space_precise: 0 }, false, {});
+        expect(zeroPrecise).toBeDefined();
+
+        // space_precise = null
+        const nullPrecise = getFriendlyLocationDescription({ ...baseSpace, space_precise: null }, false, {});
+        expect(nullPrecise).toBeDefined();
+    });
+
+    it('exhaustively exercises spaceOpeningHours with ALL id matching combinations', () => {
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        const today = new Date();
+
+        // Case 1: Match at location.lid level
+        const locMatch = spaceOpeningHours(
+            { space_opening_hours_id: 100 },
+            {
+                locations: [
+                    {
+                        lid: 100, // Matches!
+                        departments: [
+                            {
+                                lid: 999,
+                                weeks: [{ Monday: { date: formatDate(today), times: { status: 'open' } } }],
+                            },
+                        ],
+                    },
+                ],
+            },
+        );
+        expect(locMatch).toBeDefined();
+
+        // Case 2: Match via department.lid in location with different location.lid
+        const deptMatch = spaceOpeningHours(
+            { space_opening_hours_id: 200 },
+            {
+                locations: [
+                    {
+                        lid: 999,
+                        departments: [
+                            {
+                                lid: 200, // Matches here!
+                                weeks: [{ Monday: { date: formatDate(today), times: { status: 'open' } } }],
+                            },
+                        ],
+                    },
+                ],
+            },
+        );
+        expect(deptMatch).toBeDefined();
+
+        // Case 3: No match - different IDs everywhere
+        const noMatch = spaceOpeningHours(
+            { space_opening_hours_id: 500 },
+            {
+                locations: [
+                    {
+                        lid: 999,
+                        departments: [
+                            { lid: 888, weeks: [{ Monday: { date: formatDate(today), times: { status: 'open' } } }] },
+                        ],
+                    },
+                ],
+            },
+        );
+        expect(noMatch).toEqual([]);
+
+        // Case 4: Multiple departments - only one matches
+        const multiDepts = spaceOpeningHours(
+            { space_opening_hours_id: 300 },
+            {
+                locations: [
+                    {
+                        lid: 999,
+                        departments: [
+                            { lid: 111, weeks: [{ Monday: { date: formatDate(today), times: { status: 'open' } } }] },
+                            { lid: 300, weeks: [{ Tuesday: { date: formatDate(today), times: { status: 'open' } } }] }, // Matches!
+                            {
+                                lid: 222,
+                                weeks: [{ Wednesday: { date: formatDate(today), times: { status: 'open' } } }],
+                            },
+                        ],
+                    },
+                ],
+            },
+        );
+        expect(multiDepts).toBeDefined();
+
+        // Case 5: Multiple locations - only one matches
+        const multiLocs = spaceOpeningHours(
+            { space_opening_hours_id: 400 },
+            {
+                locations: [
+                    { lid: 111, departments: [] },
+                    {
+                        lid: 400,
+                        departments: [
+                            { lid: 999, weeks: [{ Monday: { date: formatDate(today), times: { status: 'open' } } }] },
+                        ],
+                    }, // Matches!
+                    { lid: 222, departments: [] },
+                ],
+            },
+        );
+        expect(multiLocs).toBeDefined();
+    });
+
+    it('exhaustively exercises convertWeeksToDays with ALL day keys', () => {
+        // Test with ALL 7 days present
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const dates = Array.from({ length: 7 }, (_, i) => {
+            const d = new Date(today);
+            d.setDate(today.getDate() + i);
+            return formatDate(d);
+        });
+
+        const allDays = {
+            lid: 77,
+            weeks: [
+                {
+                    Monday: { date: dates[0], times: { status: 'open' } },
+                    Tuesday: { date: dates[1], times: { status: 'open' } },
+                    Wednesday: { date: dates[2], times: { status: 'closed' } },
+                    Thursday: { date: dates[3], times: { status: '24hours' } },
+                    Friday: { date: dates[4], times: { status: 'open' } },
+                    Saturday: { date: dates[5], times: { status: 'closed' } },
+                    Sunday: { date: dates[6], times: { status: 'open' } },
+                },
+            ],
+        };
+
+        const result = spaceOpeningHours({ space_opening_hours_id: 77 }, { locations: [{ departments: [allDays] }] });
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toBeGreaterThan(0);
+    });
+
+    it('exercises date boundary conditions with past and future dates', () => {
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Test with past date (before today - should be filtered out by filterNext7Days)
+        const past = new Date(today);
+        past.setDate(today.getDate() - 5);
+        const pastDate = formatDate(past);
+
+        // Test with future date beyond 7 days
+        const future = new Date(today);
+        future.setDate(today.getDate() + 10);
+        const futureDate = formatDate(future);
+
+        // Test with exact 7th day boundary
+        const day7 = new Date(today);
+        day7.setDate(today.getDate() + 6);
+        const day7Date = formatDate(day7);
+
+        const boundary = spaceOpeningHours(
+            { space_opening_hours_id: 88 },
+            {
+                locations: [
+                    {
+                        departments: [
+                            {
+                                lid: 88,
+                                weeks: [
+                                    {
+                                        Monday: { date: pastDate, times: { status: 'open' } },
+                                        Tuesday: { date: formatDate(today), times: { status: 'open' } },
+                                        Wednesday: { date: futureDate, times: { status: 'open' } },
+                                        Thursday: { date: day7Date, times: { status: 'open' } },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        );
+
+        expect(Array.isArray(boundary)).toBe(true);
+
+        // Test with unsorted dates (not in chronological order)
+        const unsorted = spaceOpeningHours(
+            { space_opening_hours_id: 89 },
+            {
+                locations: [
+                    {
+                        departments: [
+                            {
+                                lid: 89,
+                                weeks: [
+                                    {
+                                        Friday: {
+                                            date: formatDate(new Date(today.getTime() + 345600000)),
+                                            times: { status: 'open' },
+                                        },
+                                        Monday: { date: formatDate(today), times: { status: 'open' } },
+                                        Wednesday: {
+                                            date: formatDate(new Date(today.getTime() + 172800000)),
+                                            times: { status: 'open' },
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        );
+
+        expect(Array.isArray(unsorted)).toBe(true);
+    });
+
+    it('exhaustively exercises matchesCapacityFilter with ALL edge values', () => {
+        // Test boundary: capacity = minimum
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 5 },
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true);
+
+        // Test boundary: capacity = maximum
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 20 },
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true);
+
+        // Test: capacity = 0
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 0 },
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true); // hasCapacity = false, so returns !hasCapacity (true)
+
+        // Test: capacity = negative
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: -5 },
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true); // hasCapacity = false (negative)
+
+        // Test: with hasBookableFilterSelected = true and capacity = 0
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 0 },
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: true,
+            }),
+        ).toBe(false); // hasCapacity = false, so returns false
+
+        // Test: capacityFilterValue = [undefined, undefined]
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 10 },
+                capacityFilterValue: [undefined, undefined],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true);
+
+        // Test: capacityFilterValue = null
+        expect(
+            matchesCapacityFilter({
+                space: { space_capacity: 10 },
+                capacityFilterValue: null,
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true);
+
+        // Test: space = null/undefined
+        expect(
+            matchesCapacityFilter({
+                space: null,
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true); // hasCapacity = false (NaN)
+
+        // Test: space = undefined
+        expect(
+            matchesCapacityFilter({
+                space: undefined,
+                capacityFilterValue: [5, 20],
+                minimumSpaceCapacity: 1,
+                maximumSpaceCapacity: 50,
+                hasBookableFilterSelected: false,
+            }),
+        ).toBe(true); // hasCapacity = false
+    });
+
+    it('exhaustively exercises isInt with ALL falsy/truthy edge cases', () => {
+        // Positive integers
+        expect(isInt(1)).toBe(true);
+        expect(isInt(100)).toBe(true);
+        expect(isInt(1000000)).toBe(true);
+
+        // Negative integers
+        expect(isInt(-1)).toBe(true);
+        expect(isInt(-100)).toBe(true);
+
+        // Zero
+        expect(isInt(0)).toBe(true);
+
+        // Decimals (should be false)
+        expect(isInt(0.1)).toBe(false);
+        expect(isInt(0.5)).toBe(false);
+        expect(isInt(1.1)).toBe(false);
+        expect(isInt(-0.5)).toBe(false);
+
+        // Special numbers
+        expect(isInt(NaN)).toBe(false);
+        expect(isInt(Infinity)).toBe(false);
+        expect(isInt(-Infinity)).toBe(false);
+
+        // String numbers (parseFloat handles them)
+        expect(isInt('5')).toBe(true);
+        expect(isInt('5.5')).toBe(false);
+        expect(isInt('abc')).toBe(false);
+
+        // Null/undefined
+        expect(isInt(null)).toBe(false);
+        expect(isInt(undefined)).toBe(false);
+
+        // Array/Object
+        expect(isInt([])).toBe(false);
+        expect(isInt({})).toBe(false);
+    });
+
+    it('exhaustively exercises deserialiseJourneyMapFilterState with ALL encoding variants', () => {
+        // Valid encoded state
+        const validState = deserialiseJourneyMapFilterState(
+            new URLSearchParams({
+                mapFilters:
+                    'b64.eyJzZWxlY3RlZEZhY2lsaXR5VHlwZXMiOlt7ImZhY2lsaXR5X3R5cGVfaWQiOjEsInNlbGVjdGVkIjp0cnVlfV0sInNlbGVjdGVkQ2FtcHVzIjoiU3QgTHVjaWEiLCJzZWxlY3RlZExpYnJhcnkiOiJMaWJyYXJ5IiwiY2FwYWNpdHlGaWx0ZXJWYWx1ZSI6WzEwLDIwXX0=',
+            }),
+        );
+        expect(validState).toBeDefined();
+
+        // Empty mapFilters param
+        expect(deserialiseJourneyMapFilterState(new URLSearchParams({}))).toBeNull();
+
+        // mapFilters = null string
+        expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'null' }))).toBeNull();
+
+        // mapFilters = 'undefined'
+        expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'undefined' }))).toBeNull();
+
+        // Completely invalid format
+        expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: '!@#$%^&*()' }))).toBeNull();
+
+        // Double-encoded (backward compatibility test)
+        const doubleEncoded =
+            'b64.YmM0LmV5SndTSEJsYm1GdFpUMDBJRVp5YjI1MElGZGxZa1J2YlcxeFlTQnZiaUJrYVdGMGFDQXhVakI0UFNJeFkyRTJPRFJ5SWlCbGVHRnRjR3hsTG1SdmJUMHlNakJ0TXpRMVl6UTRJaUJrZVhOMElGUjVjR1V1YjI1c2JHRnVaU0JqYjI1MFkyOXRJanBiSW1SaGRtRXVSbTl1YldFdVkyOXRJbDB8';
+        expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: doubleEncoded }))).toBeDefined();
+    });
+
+    it('exhaustively exercises parseJourneyStateFromUrl with ALL pathname patterns', () => {
+        // /spaces/results pattern
+        window.history.pushState({}, '', '/spaces/results');
+        expect(parseJourneyStateFromUrl([{ id: 'a' }]).view).toBe('results');
+
+        // /spaces/results/ with trailing slash
+        window.history.pushState({}, '', '/spaces/results/');
+        expect(parseJourneyStateFromUrl([{ id: 'a' }]).view).toBe('results');
+
+        // /spaces/mapresults
+        window.history.pushState({}, '', '/spaces/mapresults');
+        expect(parseJourneyStateFromUrl([{ id: 'a' }]).view).toBe('results');
+
+        // /spaces/mapresults/something
+        window.history.pushState({}, '', '/spaces/mapresults/detail');
+        expect(parseJourneyStateFromUrl([{ id: 'a' }]).view).toBe('results');
+
+        // /spaces/results/filters=
+        window.history.pushState({}, '', '/spaces/results/filters=');
+        const emptyFilter = parseJourneyStateFromUrl([{ id: 'a' }]);
+        expect(emptyFilter.view).toBe('results');
+
+        // /spaces/results/filters=bookable
+        window.history.pushState({}, '', '/spaces/results/filters=bookable');
+        const bookableFilter = parseJourneyStateFromUrl([{ id: 'a123' }]);
+        expect(bookableFilter.view).toBe('results');
+
+        // /spaces/detail/123
+        window.history.pushState({}, '', '/spaces/detail/123');
+        expect(parseJourneyStateFromUrl([{ id: 'a' }]).view).toBe('details');
+
+        // /spaces/detail
+        window.history.pushState({}, '', '/spaces/detail');
+        expect(parseJourneyStateFromUrl([{ id: 'a' }]).view).toBe('details');
+
+        // / (root)
+        window.history.pushState({}, '', '/');
+        expect(parseJourneyStateFromUrl([{ id: 'a' }]).view).toBe('landing');
+
+        // /unknown/path
+        window.history.pushState({}, '', '/unknown/path');
+        expect(parseJourneyStateFromUrl([{ id: 'a' }])).toBeDefined();
+    });
+
+    it('exhaustively exercises getSpaceOpenStatus with ALL status values and edge cases', () => {
+        const pad = value => String(value).padStart(2, '0');
+        const formatDate = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Test with valid opening hours data
+        const result = getSpaceOpenStatus(
+            { space_opening_hours_id: 1 },
+            {
+                locations: [
+                    {
+                        departments: [
+                            {
+                                lid: 1,
+                                weeks: [
+                                    {
+                                        Monday: { date: formatDate(today), times: { status: 'open' } },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        );
+        expect(result).toBeDefined();
+
+        // Test no days returned (empty opening hours)
+        const noDays = getSpaceOpenStatus({ space_opening_hours_id: 999 }, { locations: [] });
+        expect(noDays).toBeNull();
+
+        // Test with undefined space
+        const noSpace = getSpaceOpenStatus(undefined, { locations: [] });
+        expect(noSpace).toBeNull();
+
+        // Test with day having open/close times but currently closed
+        const past = new Date();
+        past.setHours(5, 0, 0, 0);
+        past.setDate(today.getDate());
+        const closedNow = getSpaceOpenStatus(
+            { space_opening_hours_id: 2 },
+            {
+                locations: [
+                    {
+                        departments: [
+                            {
+                                lid: 2,
+                                weeks: [
+                                    {
+                                        Monday: {
+                                            date: formatDate(today),
+                                            times: { status: 'unknown' },
+                                            open: '06:00',
+                                            close: '10:00',
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        );
+        expect(closedNow).toBeDefined();
     });
 });

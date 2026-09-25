@@ -605,13 +605,12 @@ export const deserialiseJourneyMapFilterState = searchParams => {
 
 const getJourneyPathname = url => {
     const hashValue = url?.hash || '';
-    /* istanbul ignore else */
     if (hashValue.startsWith('#/')) {
-        const hashPath = hashValue.slice(1).split('?')[0] || /* istanbul ignore next */ '/spaces';
-        return hashPath.replace(/\/+$/, '') || /* istanbul ignore next */ '/spaces';
+        const hashPath = hashValue.slice(1).split('?')[0] || '/spaces';
+        return hashPath.replace(/\/+$/, '') || '/spaces';
     }
 
-    const pathValue = url?.pathname || /* istanbul ignore next */ '/spaces';
+    const pathValue = url?.pathname || '/spaces';
     return pathValue.replace(/\/+$/, '') || '/spaces';
 };
 

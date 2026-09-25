@@ -1000,4 +1000,147 @@ describe('SidebarFilters campus selector', () => {
 
         expect(container.querySelector('#filterSidebar')).not.toHaveClass('mobileHidden');
     });
+
+    it('handles deSelectAll without onResetAllFilters callback and directly resets state', () => {
+        const setCapacityFilterValue = jest.fn();
+        const handleCampusSelection = jest.fn();
+        const handleLibrarySelection = jest.fn();
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: facilityGroupFixture,
+            filteredFacilityTypeList: facilityGroupFixture,
+            selectedFacilityTypes: [
+                { facility_type_group_id: 1, facility_type_id: 57, selected: true, unselected: false },
+            ],
+            capacityFilterValue: [4, 12],
+            setCapacityFilterValue,
+            handleCampusSelection,
+            handleLibrarySelection,
+            activeFilterCount: 1,
+        });
+
+        fireEvent.click(screen.getByTestId('reset-filters-button'));
+
+        expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
+        expect(handleCampusSelection).toHaveBeenCalledWith({ target: { value: 0 } });
+        expect(handleLibrarySelection).toHaveBeenCalledWith({ target: { value: 0 } });
+    });
+
+    it('exercises max capacity blur on value exceeding maximum', () => {
+        const setCapacityFilterValue = jest.fn();
+        const capacityGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [
+                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: capacityGroupFixture,
+            filteredFacilityTypeList: capacityGroupFixture,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+            ],
+            capacityFilterValue: [10, 40],
+            setCapacityFilterValue,
+        });
+
+        fireEvent.blur(screen.getByTestId('capacitySlider-inputLeft'), { target: { value: '999' } });
+        expect(setCapacityFilterValue).toHaveBeenCalledWith([10, 50]);
+    });
+
+    it('exercises min capacity blur with value exceeding maximum', () => {
+        const setCapacityFilterValue = jest.fn();
+        const capacityGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [
+                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: capacityGroupFixture,
+            filteredFacilityTypeList: capacityGroupFixture,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+            ],
+            capacityFilterValue: [10, 40],
+            setCapacityFilterValue,
+        });
+
+        fireEvent.blur(screen.getByTestId('capacitySlider-inputRight'), { target: { value: '999' } });
+        expect(setCapacityFilterValue).toHaveBeenCalledWith([10, 50]);
+    });
+
+    it('exercises max capacity blur with negative value', () => {
+        const setCapacityFilterValue = jest.fn();
+        const capacityGroupFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [
+                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: capacityGroupFixture,
+            filteredFacilityTypeList: capacityGroupFixture,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+            ],
+            capacityFilterValue: [10, 40],
+            setCapacityFilterValue,
+        });
+
+        fireEvent.blur(screen.getByTestId('capacitySlider-inputLeft'), { target: { value: '-5' } });
+        expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 40]);
+    });
 });

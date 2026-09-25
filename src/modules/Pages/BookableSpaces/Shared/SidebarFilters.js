@@ -316,10 +316,7 @@ export const SidebarFilters = ({
         }
         const usedFilterList = [...filteredFacilityTypeList?.data?.facility_type_groups];
 
-        return (
-            usedFilterList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order) ||
-            /* istanbul ignore next */ []
-        );
+        return usedFilterList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order);
     }
 
     React.useEffect(() => {
@@ -410,7 +407,6 @@ export const SidebarFilters = ({
             lastAutoExpandedGroupKeyRef.current = '';
             return;
         }
-        /* istanbul ignore next */
         const selectedGroupKey = Array.from(selectedGroupIds)
             .sort((a, b) => a - b)
             .join(',');
@@ -516,8 +512,6 @@ export const SidebarFilters = ({
     };
 
     const clearPersistedCapacityFilterValue = () => {
-        // gate for non browser testers.
-        /* istanbul ignore next */
         if (typeof window === 'undefined' || !window.sessionStorage) {
             return;
         }
@@ -656,12 +650,12 @@ export const SidebarFilters = ({
                           Number(minimumSpaceCapacity),
                       ),
                   ]
-                : /* istanbul ignore next */ safeValue;
+                : safeValue;
 
         const normalizedValue =
             Array.isArray(sanitizedValue) && sanitizedValue.length === 2
                 ? [Math.min(sanitizedValue[0], sanitizedValue[1]), Math.max(sanitizedValue[0], sanitizedValue[1])]
-                : /* istanbul ignore next */ sanitizedValue;
+                : sanitizedValue;
 
         setCapacityFilterValue(normalizedValue);
 
@@ -688,8 +682,7 @@ export const SidebarFilters = ({
         const value = e?.target?.value;
         if (value < 0) {
             handleCapacityFilterChange(e, [minimumSpaceCapacity, capacityFilterValue[1]]);
-        }
-        /* istanbul ignore if */ if (value > maximumSpaceCapacity) {
+        } else if (value > maximumSpaceCapacity) {
             handleCapacityFilterChange(e, [capacityFilterValue[0], maximumSpaceCapacity]);
         }
     };
@@ -699,7 +692,6 @@ export const SidebarFilters = ({
     };
     const handleCapacityMaxInputBlur = e => {
         const value = e.target.value;
-        /* istanbul ignore if */
         if (value < 0) {
             handleCapacityFilterChange(e, [minimumSpaceCapacity, capacityFilterValue[1]]);
         }
@@ -753,13 +745,11 @@ export const SidebarFilters = ({
     };
     const deSelectAll = () => {
         clearJourneyIntentId();
-        /* istanbul ignore else */
         if (typeof onResetAllFilters === 'function') {
             clearPersistedCapacityFilterValue();
             onResetAllFilters();
             return;
         }
-        /* istanbul ignore next */
         clearPersistedCapacityFilterValue();
 
         // reset the facility types to all false - the render will clear the buttons and checkboxes for us!
@@ -772,16 +762,13 @@ export const SidebarFilters = ({
                 facility_type: ft?.facility_type,
             };
         });
-        /* istanbul ignore next */
         setSelectedFacilityTypes(newFacilityTypes);
-        /* istanbul ignore next */
         setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
-        /* istanbul ignore next */
         setShowFavouriteSpacesOnly(false);
 
         // Fall back to existing handlers when no explicit reset callback is provided.
-        // handleLibrarySelection?.({ target: { value: 0 } });
-        // handleCampusSelection?.({ target: { value: 0 } });
+        handleLibrarySelection?.({ target: { value: 0 } });
+        handleCampusSelection?.({ target: { value: 0 } });
     };
     const handleResetFiltersButtonClick = () => {
         deSelectAll();
