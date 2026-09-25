@@ -16,8 +16,14 @@ import {
 
 describe('helpers', () => {
     it('returns correct file size units', () => {
+        expect(getFileSizeString(false)).toEqual('');
+        expect(getFileSizeString(null)).toEqual('');
+        expect(getFileSizeString(undefined)).toEqual('');
+
         expect(getFileSizeString(0)).toEqual('');
         expect(getFileSizeString(324)).toEqual('324 KB');
+        expect(getFileSizeString(3.24)).toEqual('3.2 KB');
+        expect(getFileSizeString('324')).toEqual('324 KB');
         expect(getFileSizeString(4543)).toEqual('4.5 MB');
         expect(getFileSizeString(54412)).toEqual('54.4 MB');
         expect(getFileSizeString(324126)).toEqual('324.1 MB');

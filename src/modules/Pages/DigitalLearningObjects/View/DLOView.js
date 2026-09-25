@@ -52,6 +52,7 @@ import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearning
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { breadcrumbs } from 'config/routes';
 import { Chip, Dialog, DialogContent, DialogTitle, Tooltip } from '@mui/material';
+import ObjectFileDownloadButton from './ObjectFileDownloadButton';
 
 const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
     marginBlock: '0px',
@@ -107,6 +108,7 @@ const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
             backgroundColor: theme.palette.white.main,
             color: theme.palette.primary.main,
             textDecoration: 'none',
+            cursor: 'pointer',
         },
     },
     '&:has(button)': {
@@ -268,14 +270,10 @@ export const DLOView = ({
     const [isNotifyOpened, setIsNotifyOpened] = React.useState(false);
     // const [notifyType, setNotifyType] = React.useState('');
     const [confirmLocale, setConfirmLocale] = React.useState({});
-
     // Add this state near your other useState declarations
     const [isFavoriteActionInProgress, setIsFavoriteActionInProgress] = useState(false);
-
-    // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
-    // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
-
     const isLoggedIn = !!account?.id;
+    const hasFileAttachment = dlorItem?.object_file_name;
 
     const defaultFormValues = {
         subjectCode: '',
@@ -385,7 +383,6 @@ export const DLOView = ({
     useEffect(() => {
         /* istanbul ignore else */
         if (!accountLoading) {
-            console.log('Loading Dlor for view page', dlorId, 'with account', account.id);
             actions.clearADlor();
             actions.loadADLOR(dlorId, !!account?.id);
         }
@@ -425,7 +422,6 @@ export const DLOView = ({
         // if they only sent demographics, we only wait for the "in progress" because we dont care what it responds
 
         if (!dlorItemUpdating && !!formValues?.sendDemographics && !dlorUpdatedItemError) {
-            console.log('A');
             setFormValues({ ...defaultFormValues, preferredName: account?.firstName, userEmail: account?.mail });
             setConfirmLocale(demograpicsResponseLocale);
             setIsDemographicsOpened(false);
@@ -434,7 +430,6 @@ export const DLOView = ({
             // navigateToObjectLink();
         }
         if (!dlorItemUpdating && !!formValues?.sendNotify && !dlorUpdatedItemError) {
-            console.log('B');
             const updatingMessage =
                 dlorUpdatedItem?.data?.subscription === false
                     ? 'You are already subscribed'
@@ -454,7 +449,6 @@ export const DLOView = ({
             // navigateToObjectLink();
         }
         if (!!dlorUpdatedItemError && (!!formValues?.sendDemographics || !!formValues?.sendNotify)) {
-            console.log('ERROR IF');
             setFormValues({ ...formValues, sendDemographics: false, sendNotify: false });
             setConfirmLocale({
                 confirmationTitle: 'There was a problem saving your supplied information - please try again later.',
@@ -734,10 +728,6 @@ export const DLOView = ({
         );
     }
 
-    console.log('account is from reducer', account);
-
-    console.log('XXXdlorItem is from reducer', dlorItem);
-
     return (
         <StandardPage>
             <>
@@ -872,7 +862,6 @@ export const DLOView = ({
                 </Dialog>
                 <div>
                     {getTitleBlock()}
-                    {console.log('Can Access object?', canUserAccessObject(account, dlorItem?.object_restrict_to))}
                     {!canUserAccessObject(account, dlorItem?.object_restrict_to) ? (
                         <Box
                             sx={{
@@ -1045,14 +1034,19 @@ export const DLOView = ({
                                         <Grid item xs={12} sm={4}>
                                             {/* Demographics and notification buttons */}
                                             <StyledUQActionButton noMargin>
-                                                <Button
-                                                    aria-label="Click to access the object"
-                                                    onClick={() => navigateToObjectLink()}
-                                                    data-testid="detailpage-clicklink"
-                                                    class="extended"
-                                                >
-                                                    {getItButtonLabel(dlorItem)}
-                                                </Button>
+                                                {hasFileAttachment && (
+                                                    <ObjectFileDownloadButton object={dlorItem} class="extended" />
+                                                )}
+                                                {!hasFileAttachment && (
+                                                    <Button
+                                                        aria-label="Click to access the object"
+                                                        onClick={navigateToObjectLink}
+                                                        data-testid="detailpage-clicklink"
+                                                        class="extended"
+                                                    >
+                                                        {getItButtonLabel(dlorItem)}
+                                                    </Button>
+                                                )}
                                             </StyledUQActionButton>
                                             <div style={{ backgroundColor: '#ddd', padding: '5px', marginTop: '10px' }}>
                                                 <Box

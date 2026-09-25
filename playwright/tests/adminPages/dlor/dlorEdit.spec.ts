@@ -4,11 +4,20 @@ import { readRichTextEditor, typeRichTextEditor } from '@uq/pw/lib/richTextEdito
 import { addToInputValue } from '@uq/pw/lib/helpers';
 import { DLOR_ADMIN_USER, DLOR_NO_EDIT_USER, DLOR_OBJECT_OWNER } from '@uq/pw/lib/constants';
 import moment from 'moment-timezone';
+import {
+    assertDlorFormSubmittedData,
+    createFileMock,
+    selectFileForUpload,
+    setObjectReviewDate,
+} from '@uq/pw/tests/adminPages/dlor/helpers';
+import { Page } from '@playwright/test';
 
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 
 test.describe('Edit an object on the Digital Learning Hub', () => {
+    const image = createFileMock('image.gif', 'image/png', 'a'.repeat(1000));
+
     test.describe('editing an object', () => {
         test.describe.configure({ mode: 'default' });
         test.describe('successfully', () => {
@@ -417,6 +426,226 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 ]);
             });
 
+            test.describe('with file', () => {
+                test('admin can add a file', async ({ page }) => {
+                    const overwrites = {
+                        object_review_date_next: moment().format('YYYY-MM-DD'),
+                    };
+                    await page.goto(
+                        `http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}&responseBody[getDlorObject]=${JSON.stringify(overwrites)}&responseBody[presigned]=s3.amazonaws.com/object/123/image.png`,
+                    );
+                    await assertDlorFormSubmittedData(page, async () => {
+                        // go to the third panel, Link
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('dlor-form-next-button').click();
+
+                        await expect(page.getByTestId('object-link-url').locator('input')).toBeEnabled();
+                        await expect(page.getByTestId('object-link-interaction-type').locator('input')).toBeEnabled();
+                        await expect(page.getByTestId('object-link-file-type').locator('input')).toBeEnabled();
+                        await expect(page.getByTestId('object-link-duration-minutes').locator('input')).toBeEnabled();
+                        await expect(page.getByTestId('object-link-duration-seconds').locator('input')).toBeEnabled();
+                        await selectFileForUpload(page, image);
+                        await expect(page.getByTestId('object-link-url').locator('input')).toBeDisabled();
+                        await expect(page.getByTestId('object-link-interaction-type').locator('input')).toBeDisabled();
+                        await expect(page.getByTestId('object-link-file-type').locator('input')).toBeDisabled();
+                        await expect(page.getByTestId('object-link-duration-minutes').locator('input')).toBeDisabled();
+                        await expect(page.getByTestId('object-link-duration-seconds').locator('input')).toBeDisabled();
+
+                        // go to the fourth panel, Filtering
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('admin-dlor-save-button-submit').click();
+
+                        await expect(
+                            page
+                                .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                                .getByText('Changes have been saved'),
+                        ).toBeVisible();
+                        await expect(
+                            page.getByTestId('confirm-dlor-save-outcome').getByText('View Object'),
+                        ).toBeVisible();
+                        await expect(
+                            page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object'),
+                        ).toBeVisible();
+
+                        return {
+                            object_title: 'Accessibility - Digital Essentials (has Youtube link)',
+                            object_description:
+                                '<p>Understanding the importance of accessibility online and creating accessible content with a longer first line. Ramble a little.</p><p>and a second line of detail in the description</p>',
+                            object_summary:
+                                'Understanding the importance of accessibility online and creating accessible content.',
+                            object_owning_team_id: 1,
+                            object_link_url: 'https://www.youtube.com/watch?v=jwKH6X3cGMg',
+                            object_download_instructions:
+                                "<p>Download the Common Cartridge file and H5P quiz to embed in Blackboard.</p><p>and a second line of detail in the description, looking at an <a href='http://example.com'>example link</a></p>",
+                            object_publishing_user: 'uqldegro',
+                            object_status: 'current',
+                            object_restrict_to: 'none',
+                            object_link_interaction_type: 'view',
+                            object_link_file_type: 'video',
+                            object_is_featured: 1,
+                            object_cultural_advice: 0,
+                            notificationText: '',
+                            object_keyword_ids: [100000, 100001, 100002],
+                            team_name: 'LIB DX Digital Content',
+                            team_manager: 'John Smith',
+                            team_email: 'dlor@library.uq.edu.au',
+                            object_link_size: 2864,
+                            newFile: { path: './image.gif', relativePath: './image.gif' },
+                            facets: [3, 11, 14, 18, 30, 34, 45],
+                            object_keywords: ['accessible content', 'study hacks', 'universal design'],
+                        };
+                    });
+                });
+
+                test('admin can delete a file', async ({ page }) => {
+                    const overwrites = {
+                        object_review_date_next: moment().format('YYYY-MM-DD'),
+                        object_file_name: image.name,
+                        object_file_size: 1000,
+                    };
+                    await page.goto(
+                        `http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}&responseBody[getDlorObject]=${JSON.stringify(overwrites)}`,
+                    );
+                    await assertDlorFormSubmittedData(page, async () => {
+                        // go to the third panel, Link
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('dlor-form-next-button').click();
+
+                        await expect(page.getByTestId('object-link-url').locator('input')).toBeDisabled();
+                        await expect(page.getByTestId('object-link-interaction-type').locator('input')).toBeDisabled();
+                        await expect(page.getByTestId('object-link-file-type').locator('input')).toBeDisabled();
+                        await expect(page.getByTestId('object-link-duration-minutes').locator('input')).toBeDisabled();
+                        await expect(page.getByTestId('object-link-duration-seconds').locator('input')).toBeDisabled();
+                        await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(
+                            `${image.name} 1 KB`,
+                        );
+                        // remove existing file
+                        await page.getByTestId('dlor-object-file-list-clear').click();
+                        await expect(page.getByTestId('dlor-object-file-list-filename')).not.toBeVisible();
+                        await expect(page.getByTestId('object-link-url').locator('input')).toBeEnabled();
+                        await expect(page.getByTestId('object-link-interaction-type').locator('input')).toBeEnabled();
+                        await expect(page.getByTestId('object-link-file-type').locator('input')).toBeEnabled();
+                        await expect(page.getByTestId('object-link-duration-minutes').locator('input')).toBeEnabled();
+                        await expect(page.getByTestId('object-link-duration-seconds').locator('input')).toBeEnabled();
+
+                        // go to the fourth panel, Filtering
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('admin-dlor-save-button-submit').click();
+
+                        await expect(
+                            page
+                                .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                                .getByText('Changes have been saved'),
+                        ).toBeVisible();
+                        await expect(
+                            page.getByTestId('confirm-dlor-save-outcome').getByText('View Object'),
+                        ).toBeVisible();
+                        await expect(
+                            page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object'),
+                        ).toBeVisible();
+
+                        return {
+                            object_title: 'Accessibility - Digital Essentials (has Youtube link)',
+                            object_description:
+                                '<p>Understanding the importance of accessibility online and creating accessible content with a longer first line. Ramble a little.</p><p>and a second line of detail in the description</p>',
+                            object_summary:
+                                'Understanding the importance of accessibility online and creating accessible content.',
+                            object_owning_team_id: 1,
+                            object_link_url: 'https://www.youtube.com/watch?v=jwKH6X3cGMg',
+                            object_download_instructions:
+                                "<p>Download the Common Cartridge file and H5P quiz to embed in Blackboard.</p><p>and a second line of detail in the description, looking at an <a href='http://example.com'>example link</a></p>",
+                            object_publishing_user: 'uqldegro',
+                            object_status: 'current',
+                            object_restrict_to: 'none',
+                            object_link_interaction_type: 'view',
+                            object_link_file_type: 'video',
+                            object_is_featured: 1,
+                            object_cultural_advice: 0,
+                            notificationText: '',
+                            object_keyword_ids: [100000, 100001, 100002],
+                            team_name: 'LIB DX Digital Content',
+                            team_manager: 'John Smith',
+                            team_email: 'dlor@library.uq.edu.au',
+                            object_link_size: 2864,
+                            facets: [3, 11, 14, 18, 30, 34, 45],
+                            object_keywords: ['accessible content', 'study hacks', 'universal design'],
+                            deleteExistingFile: true,
+                        };
+                    });
+                });
+
+                test('admin can replace a file', async ({ page }) => {
+                    const overwrites = {
+                        object_review_date_next: moment().format('YYYY-MM-DD'),
+                        object_file_name: 'old-image.png',
+                        object_file_size: 1000,
+                    };
+                    await page.goto(
+                        `http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}&responseBody[getDlorObject]=${JSON.stringify(overwrites)}&responseBody[presigned]=s3.amazonaws.com/object/123/image.png`,
+                    );
+                    await assertDlorFormSubmittedData(page, async () => {
+                        // go to the third panel, Link
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('dlor-form-next-button').click();
+
+                        // replace file
+                        await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(
+                            `${overwrites.object_file_name} 1 KB`,
+                        );
+                        await page.getByTestId('dlor-object-file-list-clear').click();
+                        await selectFileForUpload(page, image);
+                        await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(
+                            `${image.name} 1 KB`,
+                        );
+
+                        // go to the fourth panel, Filtering
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('admin-dlor-save-button-submit').click();
+
+                        await expect(
+                            page
+                                .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                                .getByText('Changes have been saved'),
+                        ).toBeVisible();
+                        await expect(
+                            page.getByTestId('confirm-dlor-save-outcome').getByText('View Object'),
+                        ).toBeVisible();
+                        await expect(
+                            page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object'),
+                        ).toBeVisible();
+
+                        return {
+                            object_title: 'Accessibility - Digital Essentials (has Youtube link)',
+                            object_description:
+                                '<p>Understanding the importance of accessibility online and creating accessible content with a longer first line. Ramble a little.</p><p>and a second line of detail in the description</p>',
+                            object_summary:
+                                'Understanding the importance of accessibility online and creating accessible content.',
+                            object_owning_team_id: 1,
+                            object_link_url: 'https://www.youtube.com/watch?v=jwKH6X3cGMg',
+                            object_download_instructions:
+                                "<p>Download the Common Cartridge file and H5P quiz to embed in Blackboard.</p><p>and a second line of detail in the description, looking at an <a href='http://example.com'>example link</a></p>",
+                            object_publishing_user: 'uqldegro',
+                            object_status: 'current',
+                            object_restrict_to: 'none',
+                            object_link_interaction_type: 'view',
+                            object_link_file_type: 'video',
+                            object_is_featured: 1,
+                            object_cultural_advice: 0,
+                            notificationText: '',
+                            object_keyword_ids: [100000, 100001, 100002],
+                            team_name: 'LIB DX Digital Content',
+                            team_manager: 'John Smith',
+                            team_email: 'dlor@library.uq.edu.au',
+                            object_link_size: 2864,
+                            facets: [3, 11, 14, 18, 30, 34, 45],
+                            object_keywords: ['accessible content', 'study hacks', 'universal design'],
+                            deleteExistingFile: true,
+                            newFile: { path: './image.gif', relativePath: './image.gif' },
+                        };
+                    });
+                });
+            });
+
             test('admin can edit an object for a new team with notify and return to list', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
                 await page.setViewportSize({ width: 1300, height: 1000 });
@@ -430,13 +659,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('object-owning-team').click();
                 await page.getByTestId('object-form-teamid-new').click();
 
-                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
-
-                await page.locator('[data-testid="object-review-date"] input').click();
-                await page.locator('[data-testid="object-review-date"] input').clear();
-                await page.locator('[data-testid="object-review-date"] input').fill(today);
-                await page.locator('[data-testid="object-review-date"] input').blur();
-                await expect(page.locator('[data-testid="object-review-date"] input')).toHaveValue(today);
+                await setObjectReviewDate(page, moment().format('DD/MM/YYYY'));
 
                 // enter a new team
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team name');
@@ -611,12 +834,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('object-owning-team').click();
                 await page.locator('[data-value="3"]').click();
 
-                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
-
-                await page.locator('[data-testid="object-review-date"] input').click();
-                await page.locator('[data-testid="object-review-date"] input').clear();
-                await page.locator('[data-testid="object-review-date"] input').fill(today);
-                await expect(page.locator('[data-testid="object-review-date"] input')).toHaveValue(today);
+                await setObjectReviewDate(page, moment().format('DD/MM/YYYY'));
 
                 // go to the second panel, Description
                 await page.getByTestId('dlor-form-next-button').click();
@@ -772,13 +990,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 expect(cypressTestDataCookie).toBeDefined();
                 expect(cypressTestDataCookie?.value).toBe('active');
 
-                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
-
-                const reviewDateInput = page.locator('[data-testid="object-review-date"] input');
-                await reviewDateInput.clear();
-                await reviewDateInput.fill(today);
-                await expect(reviewDateInput).toHaveValue(today);
-
+                await setObjectReviewDate(page, moment().format('DD/MM/YYYY'));
                 // go to the second panel, Description
                 const nextButton = page.getByTestId('dlor-form-next-button');
                 await nextButton.click();
@@ -966,6 +1178,51 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
         });
 
         test.describe('fails correctly', () => {
+            test.describe('file upload', () => {
+                const oldFilename = 'another-image.png';
+                const runTest = async (page: Page, uriSuffix: string = '') => {
+                    const overwrites = {
+                        object_review_date_next: moment().format('YYYY-MM-DD'),
+                        object_file_name: oldFilename,
+                        object_file_size: 1000,
+                    };
+                    await page.goto(
+                        `http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}&responseBody[getDlorObject]=${JSON.stringify(overwrites)}&${uriSuffix}`,
+                    );
+                    await page.setViewportSize({ width: 1300, height: 1000 });
+                    await page.getByTestId('dlor-form-next-button').click();
+                    await page.getByTestId('dlor-form-next-button').click();
+
+                    // replace file
+                    await page.getByTestId('dlor-object-file-list-clear').click();
+                    await selectFileForUpload(page, image);
+
+                    await page.getByTestId('dlor-form-next-button').click();
+                    await page.getByTestId('admin-dlor-save-button-submit').click();
+                };
+
+                test('pre-signed url failure', async ({ page }) => {
+                    await runTest(page, 'responseStatus[presigned]=500');
+                    await expect(page.getByText(`Uploading file ${image.name}`)).toBeVisible();
+                    await expect(page.getByText(`Error while uploading file ${image.name}`)).toBeVisible();
+                });
+
+                test('S3 failure', async ({ page }) => {
+                    await runTest(
+                        page,
+                        'responseBody[presigned]=s3.amazonaws.com/object/123/image.png&responseStatus[s3]=500',
+                    );
+                    await expect(page.getByText(`Uploading file ${image.name}`)).toBeVisible();
+                    await expect(page.getByText(`Error while uploading file ${image.name}`)).toBeVisible();
+                });
+
+                test('delete a file', async ({ page }) => {
+                    await runTest(page, 'responseStatus[dlorObjectFileDestroy]=500');
+                    await expect(page.getByText(`Deleting removed file ${oldFilename}`)).toBeVisible();
+                    await expect(page.getByText(`Error while deleting file ${oldFilename}`)).toBeVisible();
+                });
+            });
+
             test('404 page return correctly', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/edit/object_404?user=${DLOR_ADMIN_USER}`);
                 await expect(
@@ -978,12 +1235,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     `http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}&responseType=saveError`,
                 );
 
-                const today = moment().format('DD/MM/YYYY');
-                await page.locator('[data-testid="object-review-date"] input').click();
-                await page.locator('[data-testid="object-review-date"] input').clear();
-                await page.locator('[data-testid="object-review-date"] input').fill(today);
-                await page.locator('[data-testid="object-review-date"] input').blur();
-                await expect(page.locator('[data-testid="object-review-date"] input')).toHaveValue(today);
+                await setObjectReviewDate(page, moment().format('DD/MM/YYYY'));
                 // team is valid as is, so go to the second panel, Description
                 await page.getByTestId('dlor-form-next-button').click();
 

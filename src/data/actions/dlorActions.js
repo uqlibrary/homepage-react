@@ -43,6 +43,8 @@ import {
     DLOR_SCHEDULE_UPDATE_API,
     DLOR_REQUEST_KEYWORD_API,
     DLOR_DASHBOARD_API,
+    DLOR_OBJECT_FILE_DESTROY_API,
+    FILE_UPLOAD_PRESIGNED,
 } from 'repositories/routes';
 import { checkExpireSession } from './actionhelpers';
 
@@ -141,13 +143,14 @@ export function createDlor(request, isDlorAdminUser = true) {
         dispatch({ type: actions.DLOR_CREATING });
         console.log('POINT CHECK');
         return post(isDlorAdminUser ? DLOR_CREATE_API() : DLOR_REQUEST_API(), request)
-            .then(data => {
+            .then(response => {
                 dispatch({
                     type: actions.DLOR_CREATED,
-                    payload: data,
+                    payload: response,
                 });
                 // refresh the list after change, only if the user is an admin
                 !!isDlorAdminUser && dispatch(loadAllDLORs());
+                return response?.data?.object_id;
             })
             .catch(error => {
                 dispatch({
@@ -170,6 +173,7 @@ export function updateDlor(dlorId, request, isDlorAdminUser = true) {
                 });
                 // refresh the list after change
                 !!isDlorAdminUser && dispatch(loadAllDLORs());
+                return response?.data?.object_id;
             })
             .catch(error => {
                 dispatch({
@@ -203,6 +207,69 @@ export const deleteDlor = dlorId => {
         }
     };
 };
+
+export function uploadObjectFile(id, file, onProgress) {
+    return async dispatch => {
+        dispatch({ type: actions.DLOR_UPLOAD_OBJET_FILE_LOADING });
+        let presignedUrls;
+        try {
+            presignedUrls = await post(FILE_UPLOAD_PRESIGNED(), {
+                Key: `dlor/frontend/admin/objects/files/uploader/${id}/${file.name}`,
+            });
+        } catch (error) {
+            dispatch({
+                type: actions.DLOR_UPLOAD_OBJET_FILE_FAILED,
+            });
+            checkExpireSession(dispatch, error);
+            return;
+        }
+
+        return put(
+            {
+                apiUrl: presignedUrls[0],
+                options: {
+                    onUploadProgress: progressEvent => {
+                        const { loaded, total } = progressEvent;
+                        const percentage = Math.floor((loaded * 100) / total);
+                        onProgress?.(percentage);
+                    },
+                },
+            },
+            file,
+        )
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_UPLOAD_OBJET_FILE_SUCCESS,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_UPLOAD_OBJET_FILE_FAILED,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function deleteObjectFile(id, filename) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_DELETE_OBJET_FILE_LOADING });
+        return destroy(DLOR_OBJECT_FILE_DESTROY_API(id, filename))
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_DELETE_OBJET_FILE_SUCCESS,
+                });
+                return true;
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_DELETE_OBJET_FILE_FAILED,
+                });
+                checkExpireSession(dispatch, error);
+                return false;
+            });
+    };
+}
 
 export function loadOwningTeams() {
     return dispatch => {
@@ -692,12 +759,10 @@ export function loadDlorAdminNotes(uuid) {
     };
 }
 
-// eslint-disable-next-line camelcase
 export function saveDlorAdminNote(uuid, object_admin_note_content) {
     return dispatch => {
         dispatch({ type: actions.DLOR_ADMIN_NOTES_LOADING });
         return post(DLOR_ADMIN_NOTES_API(uuid), {
-            // eslint-disable-next-line camelcase
             object_admin_note_content,
         })
             .then(response => {

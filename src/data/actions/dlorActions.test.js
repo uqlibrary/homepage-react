@@ -3,13 +3,16 @@ import * as repositories from 'repositories';
 import {
     clearADlor,
     createDlor,
+    deleteObjectFile,
     loadADLOR,
     loadCurrentDLORs,
     loadDlorSubscriptionConfirmation,
     loadDlorUnsubscribe,
     loadFileTypeList,
     loadOwningTeams,
+    uploadObjectFile,
 } from './dlorActions';
+import { DLOR_OBJECT_FILE_DESTROY_API, FILE_UPLOAD_PRESIGNED } from '../../repositories/routes';
 
 jest.mock('@sentry/browser');
 
@@ -205,11 +208,11 @@ describe('Digital Learning Hub actions', () => {
 
     describe('Dlor subscription confirmation Actions', () => {
         it('dispatches expected actions when dlor subscription confirmation call fails', async () => {
-            mockApi.onGet(repositories.routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: '1a1' })).reply(500);
+            mockApi.onGet(repositories.routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 1 })).reply(500);
 
             const expectedActions = [actions.DLOR_UPDATING, actions.DLOR_UPDATE_FAILED];
 
-            await mockActionsStore.dispatch(loadDlorSubscriptionConfirmation('1a1'));
+            await mockActionsStore.dispatch(loadDlorSubscriptionConfirmation(1));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -225,11 +228,11 @@ describe('Digital Learning Hub actions', () => {
 
     describe('Dlor UNsubscription confirmation Actions', () => {
         it('dispatches expected actions when dlor unsubscription confirmation call fails', async () => {
-            mockApi.onGet(repositories.routes.DLOR_UNSUBSCRIBE_API({ id: '1a1' })).reply(500);
+            mockApi.onGet(repositories.routes.DLOR_UNSUBSCRIBE_API({ id: 1 })).reply(500);
 
             const expectedActions = [actions.DLOR_UPDATING, actions.DLOR_UPDATE_FAILED];
 
-            await mockActionsStore.dispatch(loadDlorUnsubscribe('1a1'));
+            await mockActionsStore.dispatch(loadDlorUnsubscribe(1));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -240,6 +243,93 @@ describe('Digital Learning Hub actions', () => {
 
             await mockActionsStore.dispatch(loadDlorUnsubscribe('2b2'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+    });
+
+    describe('Dlor object file Actions', () => {
+        describe('uploadObjectFile', () => {
+            it('dispatches expected actions when presigned url request fails', async () => {
+                mockApi.onPost(FILE_UPLOAD_PRESIGNED().apiUrl).reply(500);
+
+                const expectedActions = [
+                    actions.DLOR_UPLOAD_OBJET_FILE_LOADING,
+                    actions.APP_ALERT_SHOW,
+                    actions.DLOR_UPLOAD_OBJET_FILE_FAILED,
+                ];
+
+                const result = await mockActionsStore.dispatch(uploadObjectFile(1, { name: 'file.pdf' }));
+                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+                expect(result).toBeUndefined();
+            });
+
+            it('dispatches expected actions when upload to presigned url fails', async () => {
+                mockApi.onPost(FILE_UPLOAD_PRESIGNED().apiUrl).reply(200, ['https://presigned.url/upload']);
+                mockApi.onPut('https://presigned.url/upload').reply(500);
+
+                const expectedActions = [
+                    actions.DLOR_UPLOAD_OBJET_FILE_LOADING,
+                    actions.APP_ALERT_SHOW,
+                    actions.DLOR_UPLOAD_OBJET_FILE_FAILED,
+                ];
+
+                await mockActionsStore.dispatch(uploadObjectFile(1, { name: 'file.pdf' }));
+                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+            });
+
+            it('dispatches expected actions when upload succeeds', async () => {
+                const file = { name: 'file.pdf' };
+                mockApi.onPost(FILE_UPLOAD_PRESIGNED().apiUrl).reply(200, ['https://presigned.url/upload']);
+                mockApi.onPut('https://presigned.url/upload', file).reply(200);
+
+                const expectedActions = [
+                    actions.DLOR_UPLOAD_OBJET_FILE_LOADING,
+                    actions.DLOR_UPLOAD_OBJET_FILE_SUCCESS,
+                ];
+
+                await mockActionsStore.dispatch(uploadObjectFile(1, file));
+                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+            });
+
+            it('calls onProgress with calculated percentage during upload', async () => {
+                mockApi.onPost(FILE_UPLOAD_PRESIGNED().apiUrl).reply(200, ['https://presigned.url/upload']);
+                mockApi.onPut('https://presigned.url/upload').reply(config => {
+                    config.onUploadProgress?.({ loaded: 50, total: 100 });
+                    return [200];
+                });
+
+                const onProgress = jest.fn();
+                await mockActionsStore.dispatch(uploadObjectFile(1, { name: 'file.pdf' }, onProgress));
+                expect(onProgress).toHaveBeenCalledWith(50);
+            });
+        });
+
+        describe('deleteObjectFile', () => {
+            it('dispatches expected actions and returns true when delete succeeds', async () => {
+                mockApi.onDelete(DLOR_OBJECT_FILE_DESTROY_API(1, 'file.pdf').apiUrl).reply(200);
+
+                const expectedActions = [
+                    actions.DLOR_DELETE_OBJET_FILE_LOADING,
+                    actions.DLOR_DELETE_OBJET_FILE_SUCCESS,
+                ];
+
+                const result = await mockActionsStore.dispatch(deleteObjectFile(1, 'file.pdf'));
+                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+                expect(result).toBe(true);
+            });
+
+            it('dispatches expected actions and returns false when delete fails', async () => {
+                mockApi.onDelete(DLOR_OBJECT_FILE_DESTROY_API(1, 'file.pdf').apiUrl).reply(500);
+
+                const expectedActions = [
+                    actions.DLOR_DELETE_OBJET_FILE_LOADING,
+                    actions.APP_ALERT_SHOW,
+                    actions.DLOR_DELETE_OBJET_FILE_FAILED,
+                ];
+
+                const result = await mockActionsStore.dispatch(deleteObjectFile(1, 'file.pdf'));
+                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+                expect(result).toBe(false);
+            });
         });
     });
 });

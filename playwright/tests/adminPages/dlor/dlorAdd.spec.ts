@@ -3,11 +3,24 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
 import { typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 import moment from 'moment-timezone';
+import { BrowserContext, Page } from '@playwright/test';
+import {
+    assertDlorFormSubmittedData,
+    assertHasLinkFileTabError,
+    assertMissingLinkFileTabError,
+    createFileMock,
+    selectFileForUpload,
+    setObjectReviewDate,
+} from '@uq/pw/tests/adminPages/dlor/helpers';
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 const REQUIRED_LENGTH_SUMMARY = 20;
 const REQUIRED_LENGTH_KEYWORDS = 4;
+
 test.describe('Add an object to the Digital Learning Hub', () => {
+    const notAllowedFile = createFileMock('app.bin', 'application/octet-stream');
+    const image = createFileMock('image.gif', 'image/png', 'a'.repeat(1000));
+
     test.describe('adding a new object', () => {
         test.describe('successfully', () => {
             test.beforeEach(async ({ page }) => {
@@ -22,13 +35,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 // first panel is accessible
                 await assertAccessibility(page, '[data-testid="StandardPage"]');
 
-                const today = moment().format('DD/MM/YYYY');
-                const reviewDateInput = page.locator('[data-testid="object-review-date"] input');
-                await reviewDateInput.click();
-                await reviewDateInput.fill(today);
-                await reviewDateInput.blur();
-                await expect(reviewDateInput).toHaveValue(today);
-
+                await setObjectReviewDate(page, moment().format('DD/MM/YYYY'));
                 await typeRichTextEditor(page, 'This is the admin notes');
 
                 // go to the second panel, Description
@@ -83,12 +90,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
 
                 await expect(page.locator('[data-testid="dlor-panel-validity-indicator-1"] span')).not.toBeVisible();
-
-                await page.locator('[data-testid="object-review-date"] input').click();
-                await page.locator('[data-testid="object-review-date"] input').clear();
-                await page.locator('[data-testid="object-review-date"] input').fill(today);
-                await page.locator('[data-testid="object-review-date"] input').blur();
-                await expect(page.locator('[data-testid="object-review-date"] input')).toHaveValue(today);
+                await setObjectReviewDate(page, moment().format('DD/MM/YYYY'));
 
                 await page.getByTestId('dlor-form-next-button').click();
 
@@ -442,6 +444,108 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 ]);
                 await page.goto(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
                 await page.setViewportSize({ width: 1300, height: 1000 });
+            });
+
+            test('with file', async ({ page }) => {
+                await page.goto(
+                    `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseBody[presigned]=s3.amazonaws.com/object/123/image.png`,
+                );
+                await assertDlorFormSubmittedData(page, async () => {
+                    // go to the second panel, Description
+                    await page.getByTestId('dlor-form-next-button').click();
+
+                    await page
+                        .locator('[data-testid="object-title"] input')
+                        .fill('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                    await typeRichTextEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                    await page
+                        .locator('[data-testid="object-summary"] textarea:first-child')
+                        .fill('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+
+                    // go to the third panel, Link
+                    await page.getByTestId('dlor-form-next-button').click();
+
+                    // file upload
+                    // invalid file
+                    await assertHasLinkFileTabError(page);
+                    await selectFileForUpload(page, notAllowedFile);
+                    await expect(page.getByTestId('dlor-object-file-list-filename')).not.toBeVisible();
+                    await assertHasLinkFileTabError(page);
+                    // valid file
+                    await selectFileForUpload(page, image);
+                    await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(`${image.name} 1 KB`);
+                    await assertMissingLinkFileTabError(page);
+                    // clear
+                    await page.getByTestId('dlor-object-file-list-clear').click();
+                    await assertHasLinkFileTabError(page);
+                    // re-add
+                    await selectFileForUpload(page, image);
+                    await assertMissingLinkFileTabError(page);
+
+                    // go to the fourth panel, Filtering
+                    await page.getByTestId('dlor-form-next-button').click();
+
+                    await page
+                        .locator('[data-testid="filter-topic-aboriginal-and-torres-strait-islander"] input')
+                        .check();
+                    await page.locator('[data-testid="filter-media-format-h5p"] input').check();
+                    await page.locator('[data-testid="filter-subject-business-economics"] input').check();
+                    await page.locator('[data-testid="filter-item-type-interactive"] input').check();
+                    await page
+                        .locator('[data-testid="filter-licence-cc-by-nc-attribution-noncommercial"] input')
+                        .check();
+                    // select a keyword so we can save
+                    await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                    await page.locator('#fuzzy-search-option-3').click();
+
+                    // save new dlor
+                    await page.getByTestId('admin-dlor-save-button-submit').click();
+                    // assert progress message
+                    await page.getByText(`Uploading file ${image.name}`);
+
+                    // confirm save happened
+                    await expect(
+                        page
+                            .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                            .getByText('The object has been created'),
+                    ).toBeVisible();
+                    await expect(
+                        page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                    ).toBeVisible();
+                    await expect(
+                        page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                    ).toBeVisible();
+
+                    return {
+                        object_title: 'xxxxxxxx',
+                        object_description:
+                            '<p>new descriptionxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>',
+                        object_summary: 'new summary xxxxxxxx',
+                        object_link_interaction_type: 'none',
+                        object_link_url: '',
+                        object_download_instructions: 'Add this object to your course.',
+                        object_is_featured: 0,
+                        object_cultural_advice: 0,
+                        object_publishing_user: 'dloradmn',
+                        object_review_date_next: '2025-03-26T00:01',
+                        object_status: 'new',
+                        object_restrict_to: 'none',
+                        object_owning_team_id: 1,
+                        object_keywords: ['Research Skills'],
+                        object_keyword_ids: [3],
+                        facets: [
+                            1, // aboriginal_and_torres_strait_islander
+                            24, // media_h5p
+                            35, // business_economics
+                            17, // type_interactive_activity
+                            45, // cc_by_nc_attribution_noncommercial
+                        ],
+                        newFile: {
+                            path: './image.gif',
+                            relativePath: './image.gif',
+                        },
+                    };
+                });
             });
 
             test('when the admin changes their mind about a new team, an old team is saved', async ({ page }) => {
@@ -1251,6 +1355,72 @@ test.describe('Add an object to the Digital Learning Hub', () => {
             });
         });
         test.describe('fails correctly', () => {
+            test.describe('with file', () => {
+                const runTest = async (page: Page, context: BrowserContext, uriSuffix: string = '') => {
+                    await page.goto(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&${uriSuffix}`);
+                    await page.setViewportSize({ width: 1300, height: 1000 });
+
+                    // go to the second panel, Description
+                    await page.getByTestId('dlor-form-next-button').click();
+
+                    await page
+                        .locator('[data-testid="object-title"] input')
+                        .fill('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                    await typeRichTextEditor(page, 'new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                    await page
+                        .locator('[data-testid="object-summary"] textarea:first-child')
+                        .fill('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+
+                    // go to the third panel, Link
+                    await page.getByTestId('dlor-form-next-button').click();
+
+                    // file upload
+                    // invalid file
+                    await assertHasLinkFileTabError(page);
+                    await selectFileForUpload(page, notAllowedFile);
+                    await expect(page.getByTestId('dlor-object-file-list-filename')).not.toBeVisible();
+                    await assertHasLinkFileTabError(page);
+                    // valid file
+                    await selectFileForUpload(page, image);
+                    await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(`${image.name} 1 KB`);
+                    await assertMissingLinkFileTabError(page);
+
+                    // go to the fourth panel, Filtering
+                    await page.getByTestId('dlor-form-next-button').click();
+
+                    await page
+                        .locator('[data-testid="filter-topic-aboriginal-and-torres-strait-islander"] input')
+                        .check();
+                    await page.locator('[data-testid="filter-media-format-h5p"] input').check();
+                    await page.locator('[data-testid="filter-subject-business-economics"] input').check();
+                    await page.locator('[data-testid="filter-item-type-interactive"] input').check();
+                    await page
+                        .locator('[data-testid="filter-licence-cc-by-nc-attribution-noncommercial"] input')
+                        .check();
+                    // select a keyword so we can save
+                    await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                    await page.locator('#fuzzy-search-option-3').click();
+
+                    // save new dlor
+                    await page.getByTestId('admin-dlor-save-button-submit').click();
+                    // assert progress message
+                    await expect(page.getByText(`Uploading file ${image.name}`)).toBeVisible();
+                    // assert error message
+                    await expect(page.getByText(`Error while uploading file ${image.name}`)).toBeVisible();
+                };
+
+                test('pre-signed url failure', async ({ page, context }) => {
+                    await runTest(page, context, 'responseStatus[presigned]=500');
+                });
+
+                test('S3 failure', async ({ page, context }) => {
+                    await runTest(
+                        page,
+                        context,
+                        'responseBody[presigned]=s3.amazonaws.com/object/123/image.png&responseStatus[s3]=500',
+                    );
+                });
+            });
             test('admin gets an error when Teams list api doesnt load', async ({ page }) => {
                 await page.goto(
                     `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseType=teamsLoadError`,
