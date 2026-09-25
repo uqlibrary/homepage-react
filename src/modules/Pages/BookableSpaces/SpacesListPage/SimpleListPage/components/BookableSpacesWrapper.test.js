@@ -44,12 +44,7 @@ import { StyledJourneyPanelSection } from 'modules/Pages/BookableSpaces/SpacesLi
 import OpenSpaceDetailsButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceDetailsButton';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
-import {
-    deserialiseJourneyMapFilterState,
-    parseJourneyStateFromUrl,
-    serialiseJourneyMapFilterState,
-    serialiseJourneyUrl,
-} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { parseJourneyStateFromUrl, serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 jest.mock('@mui/material', () => {
     const actual = jest.requireActual('@mui/material');
@@ -1021,7 +1016,8 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         const parsedUrl = new URL(hrefValue, 'http://localhost:2020');
         expect(parsedUrl.pathname).toBe('/spaces/results');
         expect(parsedUrl.search).toBe('');
-        expect(deserialiseJourneyMapFilterState(parsedUrl.searchParams)).toBeNull();
+        // mapFilters parameter is no longer used
+        expect(parsedUrl.searchParams.get('mapFilters')).toBeNull();
     });
 
     it('applies the matching intent filters when an intent card is clicked', () => {
@@ -1286,44 +1282,6 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
 
         expect(nextUrl).toBe('https://example.com/spaces/mapresults');
-    });
-
-    it('serialises and deserialises journey mapFilters state for the map view', () => {
-        const encodedState = serialiseJourneyMapFilterState({
-            selectedFacilityTypes: [
-                {
-                    facility_type_id: 11,
-                    selected: true,
-                    unselected: false,
-                    facility_special_action: null,
-                },
-                {
-                    facility_type_id: 12,
-                    selected: false,
-                    unselected: true,
-                    facility_special_action: null,
-                },
-            ],
-            selectedCampus: 2,
-            selectedLibrary: 3,
-            capacityFilterValue: [4, 8],
-        });
-
-        expect(encodedState.startsWith('b64.')).toBe(true);
-
-        const params = new URLSearchParams(`mapFilters=${encodedState}`);
-        const parsedState = deserialiseJourneyMapFilterState(params);
-
-        expect(parsedState.selectedCampus).toBe(2);
-        expect(parsedState.selectedLibrary).toBe(3);
-        expect(parsedState.capacityFilterValue).toEqual([4, 8]);
-        expect(parsedState.selectedFacilityTypes).toEqual([
-            {
-                facility_type_id: 11,
-                selected: true,
-                facility_special_action: null,
-            },
-        ]);
     });
 
     it('applies an intent filter when the current filter list is empty on initial load', async () => {

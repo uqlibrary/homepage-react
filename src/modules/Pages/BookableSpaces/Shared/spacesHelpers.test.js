@@ -4,7 +4,6 @@ import {
     FILTER_DISPLAY_ON_BOTH,
     FILTER_DISPLAY_ON_MAP,
     FILTER_DISPLAY_ON_SIMPLE,
-    deserialiseJourneyMapFilterState,
     getActiveSelectedFacilityTypes,
     getFriendlyFloorName,
     getFriendlyLocationDescription,
@@ -18,7 +17,6 @@ import {
     isSpaceCurrentlyOpen,
     normalizeFilterDisplayOn,
     parseJourneyStateFromUrl,
-    serialiseJourneyMapFilterState,
     serialiseJourneyUrl,
     findSpaceById,
     getFlatFacilityTypeList,
@@ -355,26 +353,9 @@ describe('spaces helpers', () => {
         expect(spaceOpeningHours({ space_opening_hours_id: 99 }, hours)).toEqual([]);
     });
 
-    it('serialises and parses journey query state for map and hash routes', () => {
+    it('serialises and parses journey query state for hash routes', () => {
         const url = new URL('https://example.com/spaces/results/filters=bookable?journeyStep=results');
         expect(getJourneySearchParams(url)).toMatchObject({ usesHashQuery: false });
-
-        const serialised = serialiseJourneyMapFilterState({
-            selectedFacilityTypes: [{ facility_type_id: FILTER_BOOKABLE_TYPE_ID, selected: true }],
-            selectedCampus: 'St Lucia',
-            selectedLibrary: 'Library',
-            capacityFilterValue: [10, 20],
-            showFavouriteSpacesOnly: true,
-        });
-        expect(serialised).toContain('b64.');
-
-        const searchParams = new URLSearchParams();
-        searchParams.set('mapFilters', serialised);
-        expect(deserialiseJourneyMapFilterState(searchParams)).toMatchObject({
-            selectedCampus: 'St Lucia',
-            selectedLibrary: 'Library',
-            showFavouriteSpacesOnly: true,
-        });
 
         window.history.pushState({}, '', '/');
         expect(parseJourneyStateFromUrl([{ id: 'a123' }])).toMatchObject({ view: 'landing' });
@@ -584,26 +565,6 @@ describe('spaces helpers', () => {
                     usesHashQuery: true,
                     hashPath: '#/spaces',
                 });
-
-                const outOfBandState = serialiseJourneyMapFilterState({
-                    selectedFacilityTypes: [],
-                    selectedCampus: null,
-                    selectedLibrary: null,
-                    capacityFilterValue: [],
-                    showFavouriteSpacesOnly: false,
-                });
-                expect(outOfBandState).toContain('b64.');
-                expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: outOfBandState }))).toEqual({
-                    selectedFacilityTypes: [],
-                    selectedCampus: null,
-                    selectedLibrary: null,
-                    capacityFilterValue: null,
-                    showFavouriteSpacesOnly: false,
-                });
-                expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'b64.!' }))).toBeNull();
-                expect(
-                    deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'b64.YWJjZGFu' })),
-                ).toBeNull();
             } finally {
                 if (originalJestWorkerId === undefined) {
                     delete process.env.JEST_WORKER_ID;
@@ -613,39 +574,6 @@ describe('spaces helpers', () => {
                 globalThis.btoa = originalBtoa;
                 globalThis.atob = originalAtob;
             }
-
-            const serializedFilters = serialiseJourneyMapFilterState({
-                selectedFacilityTypes: [
-                    { facility_type_id: 1, selected: true },
-                    { facility_type_id: 2, selected: false },
-                ],
-                selectedCampus: 'St Lucia',
-                selectedLibrary: 'Library',
-                capacityFilterValue: [4, 8],
-                showFavouriteSpacesOnly: true,
-            });
-            expect(serializedFilters).toContain('b64.');
-            expect(
-                deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: serializedFilters })),
-            ).toMatchObject({
-                selectedCampus: 'St Lucia',
-                selectedLibrary: 'Library',
-                capacityFilterValue: [4, 8],
-                showFavouriteSpacesOnly: true,
-            });
-
-            const rawLegacyFilters = new URLSearchParams({
-                mapFilters: encodeURIComponent(
-                    JSON.stringify({
-                        selectedFacilityTypes: [{ facility_type_id: 7, selected: true }],
-                        unselectedFacilityTypes: [{ facility_type_id: 7 }],
-                        selectedCampus: 'St Lucia',
-                        selectedLibrary: 'Library',
-                    }),
-                ),
-            });
-            expect(deserialiseJourneyMapFilterState(rawLegacyFilters)).toMatchObject({ selectedCampus: 'St Lucia' });
-            expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'not valid json' }))).toBeNull();
 
             window.history.pushState({}, '', '/spaces/mapresults');
             expect(parseJourneyStateFromUrl([{ id: 'a123' }])).toMatchObject({ view: 'results' });
@@ -668,40 +596,12 @@ describe('spaces helpers', () => {
             window.history.pushState({}, '', '/branch#/spaces');
             expect(serialiseJourneyUrl({ view: 'results' })).toBe('/branch/#/spaces/results');
 
-            const previousBuffer = globalThis.Buffer;
             const previousBtoa = globalThis.btoa;
             const previousAtob = globalThis.atob;
-            try {
-                Object.defineProperty(globalThis, 'btoa', { value: undefined, configurable: true, writable: true });
-                Object.defineProperty(globalThis, 'atob', { value: undefined, configurable: true, writable: true });
-                Object.defineProperty(globalThis, 'Buffer', { value: undefined, configurable: true, writable: true });
-                expect(
-                    serialiseJourneyMapFilterState({
-                        selectedFacilityTypes: [],
-                        selectedCampus: null,
-                        selectedLibrary: null,
-                        capacityFilterValue: [],
-                        showFavouriteSpacesOnly: false,
-                    }),
-                ).toContain('"selectedFacilityTypes":[]');
-                expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'b64.YWJj' }))).toBeNull();
-            } finally {
-                Object.defineProperty(globalThis, 'Buffer', {
-                    value: previousBuffer,
-                    configurable: true,
-                    writable: true,
-                });
-                Object.defineProperty(globalThis, 'btoa', { value: previousBtoa, configurable: true, writable: true });
-                Object.defineProperty(globalThis, 'atob', { value: previousAtob, configurable: true, writable: true });
-            }
-
-            Object.defineProperty(globalThis, 'btoa', { value: undefined, configurable: true, writable: true });
-            Object.defineProperty(globalThis, 'atob', { value: undefined, configurable: true, writable: true });
             try {
                 const noJestUrl = new URL('https://example.com/#/spaces?journeyStep=results');
                 delete process.env.JEST_WORKER_ID;
                 expect(getJourneySearchParams(noJestUrl)).toMatchObject({ usesHashQuery: true, hashPath: '#/spaces' });
-                expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'b64.YWJj' }))).toBeNull();
             } finally {
                 if (originalJestWorkerId === undefined) {
                     delete process.env.JEST_WORKER_ID;
@@ -721,11 +621,6 @@ describe('spaces helpers', () => {
         } finally {
             MockDate.reset();
         }
-    });
-
-    it('returns null when deserialiseJourneyMapFilterState receives empty URLSearchParams', () => {
-        expect(deserialiseJourneyMapFilterState(new URLSearchParams())).toBeNull();
-        expect(deserialiseJourneyMapFilterState(new URLSearchParams({ someOtherParam: 'value' }))).toBeNull();
     });
 
     it('exercises line 609: hashPath fallback when slice+split produces empty string', () => {
@@ -1305,17 +1200,6 @@ describe('spaces helpers', () => {
         expect(open24).toBe('open');
     });
 
-    it('exercises deserialiseJourneyMapFilterState with malformed base64', () => {
-        // Test parsing with various malformed inputs
-        const result1 = deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'b64.!!!invalid!!!' }));
-        expect(result1).toBeNull();
-
-        const result2 = deserialiseJourneyMapFilterState(
-            new URLSearchParams({ mapFilters: 'completely-invalid-string' }),
-        );
-        expect(result2).toBeNull();
-    });
-
     it('exercises isInt with various edge cases', () => {
         // Test number.isFinite and bitwise operations
         expect(isInt(5)).toBe(true);
@@ -1769,34 +1653,6 @@ describe('spaces helpers', () => {
         // Array/Object
         expect(isInt([])).toBe(false);
         expect(isInt({})).toBe(false);
-    });
-
-    it('exhaustively exercises deserialiseJourneyMapFilterState with ALL encoding variants', () => {
-        // Valid encoded state
-        const validState = deserialiseJourneyMapFilterState(
-            new URLSearchParams({
-                mapFilters:
-                    'b64.eyJzZWxlY3RlZEZhY2lsaXR5VHlwZXMiOlt7ImZhY2lsaXR5X3R5cGVfaWQiOjEsInNlbGVjdGVkIjp0cnVlfV0sInNlbGVjdGVkQ2FtcHVzIjoiU3QgTHVjaWEiLCJzZWxlY3RlZExpYnJhcnkiOiJMaWJyYXJ5IiwiY2FwYWNpdHlGaWx0ZXJWYWx1ZSI6WzEwLDIwXX0=',
-            }),
-        );
-        expect(validState).toBeDefined();
-
-        // Empty mapFilters param
-        expect(deserialiseJourneyMapFilterState(new URLSearchParams({}))).toBeNull();
-
-        // mapFilters = null string
-        expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'null' }))).toBeNull();
-
-        // mapFilters = 'undefined'
-        expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: 'undefined' }))).toBeNull();
-
-        // Completely invalid format
-        expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: '!@#$%^&*()' }))).toBeNull();
-
-        // Double-encoded (backward compatibility test)
-        const doubleEncoded =
-            'b64.YmM0LmV5SndTSEJsYm1GdFpUMDBJRVp5YjI1MElGZGxZa1J2YlcxeFlTQnZiaUJrYVdGMGFDQXhVakI0UFNJeFkyRTJPRFJ5SWlCbGVHRnRjR3hsTG1SdmJUMHlNakJ0TXpRMVl6UTRJaUJrZVhOMElGUjVjR1V1YjI1c2JHRnVaU0JqYjI1MFkyOXRJanBiSW1SaGRtRXVSbTl1YldFdVkyOXRJbDB8';
-        expect(deserialiseJourneyMapFilterState(new URLSearchParams({ mapFilters: doubleEncoded }))).toBeDefined();
     });
 
     it('exhaustively exercises parseJourneyStateFromUrl with ALL pathname patterns', () => {

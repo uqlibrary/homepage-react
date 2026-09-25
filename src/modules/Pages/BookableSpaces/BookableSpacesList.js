@@ -1340,6 +1340,14 @@ export const BookableSpacesList = ({
             return;
         }
 
+        // Only proceed if facility type list is loaded
+        if (
+            !Array.isArray(filteredFacilityTypeList?.data?.facility_type_groups) ||
+            filteredFacilityTypeList.data.facility_type_groups.length === 0
+        ) {
+            return;
+        }
+
         const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
 
         try {
@@ -1394,6 +1402,7 @@ export const BookableSpacesList = ({
         getAppliedFacilityFilters,
         persistLiveFilterState,
         selectedCampus,
+        selectedFacilityTypes,
         selectedLibrary,
         showFavouriteSpacesOnly,
     ]);

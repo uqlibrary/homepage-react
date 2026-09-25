@@ -8,10 +8,7 @@ import { useAccountContext } from 'context';
 import * as useCookiesModule from 'react-cookie';
 
 import { BookableSpacesList, buildJourneyNavigationUrl } from 'modules/Pages/BookableSpaces/BookableSpacesList';
-import {
-    deserialiseJourneyMapFilterState,
-    JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
-} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const mockDispatch = jest.fn();
 const mockFlyToSpace = jest.fn();
@@ -410,8 +407,8 @@ describe('BookableSpacesList campus selection', () => {
                 window.location.search ||
                 (window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '');
             const params = new URLSearchParams(searchValue);
-            const parsedState = deserialiseJourneyMapFilterState(params);
-            expect(parsedState).toBeNull();
+            // mapFilters parameter is no longer used
+            expect(params.get('mapFilters')).toBeNull();
         });
     });
 
