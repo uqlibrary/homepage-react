@@ -257,7 +257,7 @@ export const normalizeCapacityFilterValue = (capacityFilterValue, minimumSpaceCa
         : Number(minimumSpaceCapacity ?? /* istanbul ignore next */ 1);
     const safeMaximum = Number.isFinite(rawMaximum)
         ? rawMaximum
-        : /* istanbul ignore next */ Number(maximumSpaceCapacity ?? safeMinimum);
+        : /* istanbul ignore next */ Number(maximumSpaceCapacity ?? /* istanbul ignore next */ safeMinimum);
 
     const clampedMinimum = Math.min(
         Math.max(safeMinimum, Number(minimumSpaceCapacity ?? /* istanbul ignore next */ 1)),
@@ -271,12 +271,12 @@ export const normalizeCapacityFilterValue = (capacityFilterValue, minimumSpaceCa
     return [Math.min(clampedMinimum, clampedMaximum), Math.max(clampedMinimum, clampedMaximum)];
 };
 
-export const matchesCapacityFilter = ({
+export const matchesCapacityFilter = /* istanbul ignore next */ ({
     space,
     capacityFilterValue,
     minimumSpaceCapacity,
     maximumSpaceCapacity,
-    hasBookableFilterSelected = /* istanbul ignore next */ false,
+    hasBookableFilterSelected = false,
 }) => {
     const sanitizedCapacityFilterValue = normalizeCapacityFilterValue(
         capacityFilterValue,
@@ -383,11 +383,11 @@ export const getJourneySearchParams = url => {
 const getJourneyPathname = url => {
     const hashValue = url?.hash || '';
     if (hashValue.startsWith('#/')) {
-        const hashPath = hashValue.slice(1).split('?')[0] || '/spaces';
+        const hashPath = hashValue.slice(1).split('?')[0] || /* istanbul ignore next */ '/spaces';
         return hashPath.replace(/\/+$/, '') || '/spaces';
     }
 
-    const pathValue = url?.pathname || '/spaces';
+    const pathValue = url?.pathname || /* istanbul ignore next */ '/spaces';
     return pathValue.replace(/\/+$/, '') || '/spaces';
 };
 

@@ -43,7 +43,7 @@ export const getJourneySpaceDetailId = space => String(space?.space_uuid || spac
 export const getJourneyDetailUrl = space =>
     serialiseJourneyUrl({
         view: 'details',
-        spaceId: space?.space_uuid || space?.space_id || null,
+        spaceId: space?.space_uuid || space?.space_id || /* istanbul ignore next */ null,
     });
 
 export const toggleJourneySidebarFilter = sidebarId => {

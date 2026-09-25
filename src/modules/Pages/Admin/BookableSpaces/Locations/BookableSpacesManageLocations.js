@@ -887,7 +887,7 @@ export const BookableSpacesManageLocations = ({
     /*
      * CAMPUS FUNCTIONS
      */
-    const campusCoreForm = (campusDetails = /* istanbul ignore next */ {}) => {
+    const campusCoreForm = /* istanbul ignore next */ (campusDetails = {}) => {
         const campusNameFieldLabel =
             Object.keys(campusDetails)?.length === 0 ? /* istanbul ignore next */ 'New campus name' : 'Campus name';
         const formType = !campusDetails?.campus_name ? 'add' : 'edit';

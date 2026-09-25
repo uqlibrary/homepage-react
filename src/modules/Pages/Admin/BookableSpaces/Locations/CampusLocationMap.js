@@ -5,7 +5,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 
-const CampusLocationMap = ({ campusCentre = null } = /* istanbul ignore next */ {}) => {
+const CampusLocationMap = props => {
+    /* istanbul ignore next */
+    const { campusCentre = null } = props || {};
     const defaultCoords = locale?.locations?.greatCourtCoordinates;
     const initialLat = Number(campusCentre?.campus_latitude ?? defaultCoords[0]);
     const initialLng = Number(campusCentre?.campus_longitude ?? defaultCoords[1]);

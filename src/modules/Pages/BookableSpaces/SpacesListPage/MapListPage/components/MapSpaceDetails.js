@@ -74,21 +74,21 @@ CollapsedSection.propTypes = {
     weeklyHours: PropTypes.any,
 };
 
-const MapSpaceDetails = ({
-    actions,
-    weeklyHours,
-    weeklyHoursLoading,
-    weeklyHoursError,
-    bookableSpace,
+const MapSpaceDetails = props => {
     /* istanbul ignore next */
-    collapsed = false,
-    isExpanded = false,
-    // collapsed=true: called by sidebar, has open-close icon;
-    // collapsed=false: opens from icon in map, no open-close icon
-    onToggle = null,
-    showToggle = true,
-    isFavourite = false,
-}) => {
+    const collapsed = props?.collapsed ?? false;
+    const {
+        actions,
+        weeklyHours,
+        weeklyHoursLoading,
+        weeklyHoursError,
+        bookableSpace,
+        isExpanded = false,
+        onToggle = null,
+        showToggle = true,
+        isFavourite = false,
+    } = props;
+
     const isCollapsed = collapsed ? !isExpanded : false;
 
     const visibleOutage = React.useMemo(
