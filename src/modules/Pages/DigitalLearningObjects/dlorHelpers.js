@@ -157,6 +157,7 @@ export const getDlorViewPageUrl = uri => {
 
 export const getDlorFileViewPageUrl = object => {
     // use staging for local dev when not running tests
+    /* istanbul ignore next */
     const appUrl = IS_LOCAL_DEV && !IS_TEST ? STAGING_URL.replace(/\/$/, '') : '';
     return `${appUrl}${getDlorViewPageUrl(`${object.object_id}/file/${object.object_file_name}?version=${object.object_file_version}`)}`;
 };
